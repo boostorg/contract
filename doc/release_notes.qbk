@@ -1,0 +1,124 @@
+
+[/ Copyright (C) 2008-2012 Lorenzo Caminiti ]
+[/ Distributed under the Boost Software License, Version 1.0 ]
+[/ (see accompanying file LICENSE_1_0.txt or a copy at ]
+[/ http://www.boost.org/LICENSE_1_0.txt) ]
+[/ Home at http://sourceforge.net/projects/contractpp ]
+
+[section Release Notes]
+
+This section contains notes on the current and on all previous library releases (in chronological order).
+
+[heading Release 0.4.1]
+
+August 20, 2012
+
+Notes:
+
+# Using non-fix-spaced font in Full Table of Contents section.
+# Added a couple of notes to the documentation.
+# Changed `CONTRACT_MEMBER_BODY(class_type, function_name)` to `class_type::CONTRACT_MEMBER_BODY(function_name)` so the macro can also be used to declare derived classes avoiding using the library syntax even when the base class has contracts.
+
+Release [@http://contractpp.svn.sourceforge.net/viewvc/contractpp/releases/contractpp_0_4_1 files] and [@http://contractpp.svn.sourceforge.net/viewvc/contractpp/releases/contractpp_0_4_1/doc/html/index.html documentation].
+
+[heading Release 0.4.0]
+
+June 4, 2012
+
+Notes:
+
+# Simplified syntax by reducing extra parenthesis to the bare necessary minimum (using some of the preprocessor parsing techniques originally introduced by Boost.LocalFunction).
+# Postcondition old values only copy the old-of expression (e.g., copy just vector size instead of entire vector).
+This improves performance and introduces the `ConstantCopyConstructible` requirement just for the old value expression type (e.g., a vector might not be copyable while its size always is because it is an integral type).
+Removed the `copyable` tag.
+# Body defined outside the macros (so compiler-errors for definitions retain their usual meaning).
+# Added `CONTRACT_CLASS` macro and removed the need to duplicate declaration elements (do not repeat function declaration, do not repeat class name in function declaration, etc).
+# Using `_TPL` macros so to reduce compile-time (instead of internally making all templates contract functions so to use `typename` freely).
+# Overloading no longer requires unique parameter names.
+# Added C++11-like virtual specifiers.
+# Added constant assertions plus constant-expressions for select assertion if-conditions and for loop variants.
+# Added named and deduced parameters.
+# Added concept checking.
+# Removed the interface to use the library without the macro (programmers were required to write too much boiler-plate code for the non-macro interface to be actually usable, plus supporting both the macro and non-macro interfaces limited what the macros could do).
+
+Release [@http://contractpp.svn.sourceforge.net/viewvc/contractpp/releases/contractpp_0_4_0 files] and [@http://contractpp.svn.sourceforge.net/viewvc/contractpp/releases/contractpp_0_4_0/doc/html/index.html documentation].
+
+[heading Release 0.3.490]
+
+March 7, 2010
+
+Notes:
+
+# Added support and examples for `volatile`, `auto`, `explicit`, `export`, `extern`, `friend`, `inline`, `struct`, and `throw` (for exception specifications).
+# Documented that `union` cannot be contracted.
+
+Release [@http://contractpp.svn.sourceforge.net/viewvc/contractpp/releases/contractpp_0_3_490 files] and [@http://contractpp.svn.sourceforge.net/viewvc/contractpp/releases/contractpp_0_3_490/doc/html/index.html documentation].
+
+[heading Release 0.3.469]
+
+February 21, 2010
+
+Notes:
+
+# Removed use of `self`, `variable.now`, and `variable.old` in writing contracts.
+Object `this` and variables are now accessed as usual in member functions.
+`CONTRACT_OLDOF(variable)` is used to access old values in postconditions.
+# Added `(precondition)`, `(postcondition)`, and `(body)` to specify contracts within the function signature sequence.
+If no preconditions then `(precondition) ({...})` is simply omitted from the sequence (same for postconditions, body is mandatory instead).
+For non-void functions, users can name the result argument with `(postcondition) (result-name) ({...})`.
+# Changed contract class template to use same syntax as Boost.Function (i.e., `F` function type).
+# Added support for free functions and static member functions.
+# Added support for subcontracting with multiple inheritance.
+# Added static class invariants which are always checked (also at constructors entry, destructor exit, and by static member functions).
+# Added block invariants and Eiffel-like loop variants.
+# Added handlers to customize action on contract failure (default to `std::terminate()`).
+# Removed feature for automatic contract documentation using Doxygen (this is not compatible with added `(precondition)`, `(postcondition)`, and `(body)` because Doxygen preprocessor is not capable to handle Boost.Preprocessor sequences).
+# Rewritten entire documentation (now using Boost.QuickBook instead of Doxygen).
+
+Release [@http://contractpp.svn.sourceforge.net/viewvc/contractpp/releases/contractpp_0_3_469 files] and [@http://contractpp.svn.sourceforge.net/viewvc/contractpp/releases/contractpp_0_3_469/doc/html/index.html documentation].
+
+[heading Release 0.2.190]
+
+November 21, 2009
+
+Notes:
+
+# Compiled using both GCC (Linux and Cygwin) and MSVC (Windows XP).
+# Required to use void to specify empty function argument list.
+This is to comply with C++03 standard that does not allow to pass empty macro parameters so it does not support empty preprocessor sequences `()`.
+
+Release [@http://contractpp.svn.sourceforge.net/viewvc/contractpp/releases/contractpp_0_2_190 files] and [@http://contractpp.svn.sourceforge.net/viewvc/contractpp/releases/contractpp_0_2_190/doc/html/index.html documentation].
+
+[heading Release 0.1.126]
+
+June 17, 2009
+
+Notes:
+
+# Completed first documentation draft.
+
+Release [@http://contractpp.svn.sourceforge.net/viewvc/contractpp/releases/contractpp_0_1_126 files] and [@http://contractpp.svn.sourceforge.net/viewvc/contractpp/releases/contractpp_0_1_126/doc/html/index.html documentation].
+
+[heading Release 0.1.55]
+
+April 19, 2009
+
+Notes:
+
+# Reorganized files to cleanup root directory.
+# Added installation program.
+
+Release [@http://contractpp.svn.sourceforge.net/viewvc/contractpp/releases/contractpp_0_1_55 files] and [@http://contractpp.svn.sourceforge.net/viewvc/contractpp/releases/contractpp_0_1_55/doc/DBC_Documentation.txt documentation].
+
+[heading Release 0.1.50]
+
+April 19, 2009
+
+Notes:
+
+# First public release.
+
+Release [@http://contractpp.svn.sourceforge.net/viewvc/contractpp/releases/contractpp_0_1_50 files] and [@http://contractpp.svn.sourceforge.net/viewvc/contractpp/releases/contractpp_0_1_50/README.txt documentation].
+
+[endsect]
+

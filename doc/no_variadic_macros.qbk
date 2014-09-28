@@ -1,0 +1,81 @@
+
+[/ Copyright (C) 2008-2012 Lorenzo Caminiti ]
+[/ Distributed under the Boost Software License, Version 1.0 ]
+[/ (see accompanying file LICENSE_1_0.txt or a copy at ]
+[/ http://www.boost.org/LICENSE_1_0.txt) ]
+[/ Home at http://sourceforge.net/projects/contractpp ]
+
+[section No Variadic Macros]
+
+This section illustrates an alternative syntax, the /sequence syntax/, that can be used on compilers that do not support variadic macros.
+Most modern compilers support [@http://en.wikipedia.org/wiki/Variadic_macro variadic macros] (notably, these include GCC, MSVC, and all __CXX11__ compilers).
+
+[warning
+The sequence syntax presented in this section has not been fully tested yet.
+Future revisions of the library are expected to test and support the sequence syntax more thoroughly (see also [@https://sourceforge.net/apps/trac/contractpp/ticket/58 Ticket 58]).
+]
+
+The sequence syntax uses many extra parenthesis and it is significantly less readable than the comma-separated syntax that we have seen so far.
+Therefore, it is strongly recommended to not use the sequence syntax unless it is absolutely necessary to program contracts that are portable to compilers that do not support variadic macros.
+
+[section Sequence Syntax]
+
+In the rare case that programmers need to use this library on compliers without variadic macros, this library also allows to specify its macro parameters using a __Boost_Preprocessor__ sequence in which tokens are separated using round parenthesis `()`:
+
+    (token1) (token2) ... // All compilers.
+
+Instead of the comma-separated lists that we have seen so far which require variadic macros:
+
+    token1, token2, ... // Only compilers with variadic macros (preferred).
+
+This library detects preprocessor support for variadic macros using the __Boost_Config__ macro `BOOST_NO_VARIADIC_MACROS`.
+__Boost_Config__ defines the `BOOST_NO_VARIADIC_MACROS` only on compilers that do not support variadic macros furthermore programmers can forcefully define this macro also on compilers that support variadic macros.
+When this macro is not defined, this library macros support both the camma-separated and sequence syntax, otherwise only the sequence syntax is supported.
+
+[note
+The same macros accept both syntaxes on compilers with variadic macros and only the sequence syntax on compilers without variadic macros.
+]
+
+For example, the syntax on the left hand side works on all compilers with and without variaidic macros (see also [file example/contracts class_template_vector_seq.cpp], [file example/contracts pushable_seq.hpp], [file example/contracts class_template_vector.cpp], and [file example/contracts pushable.hpp]):
+
+[import ../example/contracts/pushable_seq.hpp]
+[import ../example/contracts/class_template_vector_seq.cpp]
+[table
+[ [Sequence Syntax (all compilers)] [Comma-Separated Syntax (variadic macros only, preferred)] ]
+[ [[pushable_seq]] [[pushable]] ]
+[ [[class_template_vector_seq]] [[class_template_vector]] ]
+]
+
+Note the many extra parenthesis around all tokens within the lists: template parameters `(typename T)`, base classes `(public pushable<T>)`, function parameters `(size_type) count`, all assertions, etc.
+Furthermore, empty lists need to be specified using `(void)` instead of just `void`.
+
+When using the sequence syntax, the macro [macroref CONTRACT_LIMIT_OLDOFS] specifies the maximum number of postconditions sequence elements (instead of the maximum possible number of old value declarations as for variadic macros).
+
+[endsect]
+
+[section Commas and Leading Symbols in Macros]
+
+As we have seen in the __Advanced_Topics__ section, syntactic elements containing unwrapped commas and leading symbols need to be wrapped within extra round parenthesis:
+
+    (::std::map<char, int, std::less<char> >)           // With variadic macros.
+
+However, without variadic macros this is no longer sufficient and the number of commas needs to be explicitly specified using the following syntax:
+[footnote
+*Rationale.*
+Using variadic macros, the preprocessor can automatically determine the number of commas within a tuple but without variadic macros that is no longer possible so programmers must manually specify the number of commas.
+]
+
+    comma(2)(::std::map<char, int, std::less<char> >)   // Without variadic macros.
+
+For example (see also [file example/contracts macro_commas_symbols_integral_map_seq.cpp] and [file example/contracts macro_commas_symbols_integral_map.cpp]):
+
+[import ../example/contracts/macro_commas_symbols_integral_map_seq.cpp]
+[table
+[ [Sequence Syntax (all compilers)] [Comma-Separated Syntax (variadic macros only, preferred)] ]
+[ [[macro_commas_symbols_integral_map_seq]] [[macro_commas_symbols_integral_map]] ]
+]
+
+[endsect]
+
+[endsect]
+

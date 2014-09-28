@@ -1,0 +1,54 @@
+
+RELEASE INSTRUCTIONS
+====================
+
+How to release this library version X.Y.Z from SVN trunk to SourceForge (SF).
+
+1.  PREPARE TO RELEASE
+
+* Make sure all examples and test compiles.
+* Make sure that documentation, release version, and release notes are up-to-date.
+* Make sure that "trunk/index.html" redirects to "releases/contractpp_X_Y_Z/doc/html/index.html".
+
+Commit everything (code, documentation, etc) to SVN trunk.
+
+2.  RELEASE BRANCH
+
+Create a SVN branch for the release X.Y.Z for example from trunk, make sure all code is correctly checked into trunk, then:
+    
+    $ svn cp https://contractpp.svn.sourceforge.net/svnroot/contractpp/trunk https://contractpp.svn.sourceforge.net/svnroot/contractpp/releases/contractpp_X_Y_Z
+
+3.  ZIP FILE
+
+Create a "contractpp_X_Y_Z.zip" file from the release branch (this ZIP file
+should not go in SVN, just uploaded it on SF as explained in the next step):
+
+    $ zip contractpp/release/contractpp_X_Y_Z contractpp_X_Y_Z.zip
+
+4.  UPLOAD ZIP FILE TO SF
+
+Log in to SF website and go to Contract++ page, click Files, then "releases", and then Add File to upload "contract_X_Y_Z.zip".
+Click the information icon ("I" icon on the right-hand-side of the file) and select the newly added file as the "Default Download" for all platform then click Save (the file should now show as the "latest version" on the top of the page and SF will link it to the "Download" from the library documentation).
+
+5.  UPLOAD DOCUMENTATION INDEX.HTML
+
+Using FileZilla connect to the location below and drag-and-drop releases/contract_X_Y_Z/index.html to the project-web/contractpp/htdocs/ localtion:
+
+    Host        web.sourceforge.net
+    Protocol    SFTP
+    Port        22
+    Username    ...
+    Password    ...
+    Upload to   /home/project-web/contractpp/htdocs
+
+The LICENSE_1_0.txt and COPYRIGHT.txt files should be copied to this location also (but they might already be there).
+
+6.  FINAL CHECKS
+
+* Go to the project web http://contractpp.sourceforge.net and check that the latest documentation shows up.
+* Click on "Download" for the documentation and check that contractpp_X_Y_Z.zip is downloaded (correct version).
+
+7.  UPDATE INFORMATION ON SF (IF NEEDED)
+
+Update the information on SF if needed: library release status (pre-alpha, beta, etc), library logo on SF, name, description, feature list, screenshots, etc.
+

@@ -1,0 +1,219 @@
+
+[/ Copyright (C) 2008-2012 Lorenzo Caminiti ]
+[/ Distributed under the Boost Software License, Version 1.0 ]
+[/ (see accompanying file LICENSE_1_0.txt or a copy at ]
+[/ http://www.boost.org/LICENSE_1_0.txt) ]
+[/ Home at http://sourceforge.net/projects/contractpp ]
+
+[section Concepts]
+
+This section explains how to use this library to check concepts.
+Concepts are part of the program specifications because they enforce requirements on generic types at compile-time and therefore they are within the scope of this library.
+
+Concepts were proposed for addition to __CXX11__ but they were unfortunately never adopted (see __N2081__).
+The concepts that are checked using this library need to be defined using the __Boost_ConceptCheck__ library.
+This library does not add any extra functionality with respect to the concept checking features already provided by __Boost_ConceptCheck__ but it allows to specify both concepts and contracts together within a unified syntax.
+
+[section Class Templates]
+
+It is possible to list the concepts to check for class templates using `requires` within the [macroref CONTRACT_CLASS] macro, after the template parameter declarations (see also the __Grammar__ section):
+
+    template( ``/template-parameter1/``, ``/template-parameter2/``, ... ) requires( ``/concept1/``, ``/concept2/``, ... )
+
+The following example requires that the generic type `T` specified for the class template `vector` is always __CopyConstructible__ and it uses the `boost::CopyConstructible` concept defined by __Boost_ConceptCheck__ (see also [file example/concepts class_member_concept_vector.hpp], [file example/concepts class_member_concept_vector_error.cpp], and [file example/concepts class_member_concept_vector.cpp]):
+
+[import ../example/concepts/class_member_concept_vector.hpp]
+[class_member_concept_vector_class]
+
+If the class template `vector` is instantiated on a type `T` that is not __CopyConstructible__, the compiler will generate an error (with the usual format of __Boost_ConceptCheck__ errors).
+
+[endsect]
+
+[section Function Templates]
+
+It is possible to list concepts to check for function templates using `requires` within the [macroref CONTRACT_FUNCTION] macro, after the template parameter declarations (see also the __Grammar__ section).
+
+For example, for a constructor function template (see also [file example/concepts class_member_concept_vector.hpp], [file example/concepts class_member_concept_vector_constructor_error.cpp], and [file example/concepts class_member_concept_vector.cpp]):
+
+[class_member_concept_vector_constructor]
+
+And, for a member function template (see also [file example/concepts class_member_concept_vector.hpp], [file example/concepts class_member_concept_vector_member_error.cpp], and [file example/concepts class_member_concept_vector.cpp]):
+
+[class_member_concept_vector_member]
+
+If the `vector` constructor template or the `vector::insert` member function template are instantiated on a type `Iterator` that is not an __InputIterator__, the compiler will generate an error (with the usual format of __Boost_ConceptCheck__ errors).
+
+So far we have used concepts that are predefined by __Boost_ConceptCheck__ but it is also possible to check user-defined concepts as long as they are defined using __Boost_ConceptCheck__.
+For example, consider the following user-defined `Addable` concept (see also [file example/concepts free_concept_operator_preinc.hpp], [file example/concepts free_concept_operator_preinc_error.cpp], and [file example/concepts free_concept_operator_preinc.cpp]):
+
+[import ../example/concepts/free_concept_operator_preinc.hpp]
+[free_concept_operator_preinc]
+
+If this templated operator `++` is instantiated on a type `T` that is not __Assignable__ or not `Addable`, the compiler will generate an error (with the usual format of __Boost_ConceptCheck__ error).
+
+Note that concepts can also be specified for free function templates, for free operator templates, and for member operator templates (as illustrated in some of the above examples).
+
+[endsect]
+
+[section Concept Definitions (Not Implemented)]
+
+Using the preprocessor parsing techniques introduced by the library, it should be possible to implement the following syntax to define [@http://en.wikipedia.org/wiki/Concepts_(C%2B%2B) concepts].
+Note how this syntax resembles the syntax proposed by __N2081__ for adding concepts to __CXX11__ (__N2081__ and concepts were unfortunately not adopted by the standard committee).
+
+    CONTRACT_CONCEPT( // A concept definition.
+        auto concept (LessThanComparable) ( typename T )
+        (
+            bool operator(<)(less) ( T , T )
+        )
+    )
+    
+    CONTRACT_CONCEPT( // Concepts with multiple parameters.
+        auto concept (Convertible) ( typename T, typename U )
+        (
+            operator(U)(U_type) ( T const& )
+        )
+    )
+
+    CONTRACT_CONCEPT( // Concept composition.
+        concept (InputIterator) ( typename Iterator, typename Value )
+        (
+            requires Regular<Iterator>,
+
+            (Value) operator(*)(deref) ( Iterator const& ),
+            (Iterator&) operator(++)(preinc) ( Iterator& ),
+            (Iterator) operator(++)(postinc) ( Iterator&, int )
+        )
+    )
+
+    CONTRACT_CONCEPT( // Derived concepts.
+        concept (ForwardIterator) ( typename Iterator, typename Value )
+            extends( InputIterator<Iterator, Value> )
+        (
+            // Other requirements here...
+        )
+    )
+
+    CONTRACT_CONCEPT( // Typenames within concepts.
+        concept (InputIterator) ( typename Iterator )
+        (
+            typename value_type,
+            typename reference,
+            typename pointer,
+            typename difference_type,
+
+            requires Regular<Iterator>,
+            requires (Convertible<reference, value_type>),
+
+            (reference) operator(*)(deref) ( const Iterator& ),
+            (Iterator&) operator(++)(preinc) ( Iterator& ),
+            (Iterator) operator(++)(postinc) ( Iterator&, int )
+        )
+    )
+    
+    CONTRACT_CONCEPT( // Concept maps.
+        concept_map (InputIterator<char*>)
+        (
+            typedef char value_type,
+            typedef (char&) reference,
+            typedef (char*) pointer,
+            typedef ptrdiff_t difference_type
+        )
+    )
+
+    CONTRACT_CONCEPT( // Concept maps can be templated.
+        template( typename T )
+        concept_map (InputIterator) ( T* )
+        (
+            typedef (T&) value_type,
+            typedef (T&) reference,
+            typedef (T*) pointer,
+            typedef ptrdiff_t difference_type
+        )
+    )
+
+    CONTRACT_CONCEPT( // Concept maps as mini-types.
+        concept (Stack) ( typename X )
+        (
+            typename value_type,
+
+            void (push) ( X&, value_type const& ),
+            void (pop) ( X& ),
+            (value_type) (top) ( X const& ),
+            bool (empty) ( X const& )
+        )
+    )
+
+    CONTRACT_CONCEPT( // Concept maps as mini-types (specializations).
+        template( typename T )
+        concept_map (Stack) ( std::vector<T> )
+        (
+            typedef (T) value_type,
+
+            void (push) ( (std::vector<T>&) v, (T const&) x )
+            (
+                v.push_back(x);
+            ),
+
+            void (pop) ( (std::vector<T>&) v )
+            (
+                v.pop_back();
+            ),
+
+            (T) (top) ( (std::vector<T> const&) v )
+            (
+                return v.back();
+            ),
+
+            bool (empty) ( (std::vector<T> const&) v )
+            (
+                return v.emtpy();
+            )
+        )
+    )
+
+    CONTRACT_CONCEPT( // Axioms.
+        concept (Semigroup) ( typename Op, typename T )
+            extends( CopyConstructible<T> )
+        (
+            (T) operator(())(call) ( Op, T, T ),
+
+            axiom (Associativity) (  (Op) op, (T) x, (T) y, (T) z )
+            (
+                op(x, op(y, z)) == op(op(x, y), z);
+            )
+        )
+    )
+
+Note that:
+
+# Parenthesis around function parameter types can be always allowed but they should be required only when the parameter name is also specified.
+# The function bodies need to be specified within the macros and that will make compiler errors very hard to use (because the errors will all refer to the same line number, the line number on which the `CONTRACT_CONCEPT` macro expanded).
+However, concept definitions, including possible function bodies, might be simple enough for this not to be a major issue at least in the most common cases (the authors do not have enough experience with programming concept definitions to truly assess this).
+
+The authors /think/ this syntax can be implemented and parsed using the preprocessor however the authors have not tried to implement this yet.
+If this syntax can indeed be implemented, it should then be investigated if the actual concept definitions can be programmed from the parsed concept traits using C++ (this seems possible at least for __CXX11__ based on some work done for the [@http://zao.se/~zao/boostcon/11/slides/Boost.Generic.pdf Generic] library).
+
+The authors recognize that implementing concept definitions would be a nice addition to this library (again, concepts are parts of the program specifications, they are contracts on the type system that are checked at compile-time, so both concept checking and concept definition are within the scope of this library).
+However, at the moment there are no concrete plans for extending this library with the concept definitions (see also [@https://sourceforge.net/apps/trac/contractpp/ticket/49 Ticket 49]).
+
+The following is a side-by-side comparison of this possible concept definition syntax with the syntax proposed by __N2081__:
+
+[import ../example/concepts/concept_def.cpp]
+[import ../example/concepts/concept_def_npaper.cpp]
+[table
+[ [Possible Extension of This Library (not implemented)] [\[N2081\] Proposal (not part of C++)] ]
+[ [[concept_def]] [[concept_def_npaper]] ]
+]
+
+Note that:
+
+# Extra wrapping parenthesis are used when expressions contain unwrapped commas `,` or leading symbols.
+# The specifiers `constructor`, `destructor`, and `member` follow the same syntax as the [macroref CONTRACT_CONSTRUCTOR_BODY] and [macroref CONTRACT_DESTRUCTOR_BODY], and they serve a purpose similar to these macros in naming the constructors, destructors, and member functions outside class declarations.
+
+If concept definitions were added to this library, concepts would still be checked using the `requires` specifier in class and function declarations as we have seen so far (it might even be possible for concepts defines using __Boost_ConceptCheck__ to be still specified using some type tagging of this library concept types to internally distinguish between __Boost_ConceptCheck__ concepts and concepts define using this library).
+Furthermore, this library could provide all the standard concepts defined in __N2914__ in an header file =contract/std/concept.hpp=.
+
+[endsect]
+
+[endsect]
+

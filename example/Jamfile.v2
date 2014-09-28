@@ -1,0 +1,422 @@
+
+# Copyright (C) 2008-2012 Lorenzo Caminiti
+# Distributed under the Boost Software License, Version 1.0
+# (see accompanying file LICENSE_1_0.txt or a copy at
+# http://www.boost.org/LICENSE_1_0.txt)
+# Home at http://sourceforge.net/projects/contractpp
+
+import testing ;
+import python ;
+import type ;
+import generators ;
+
+echo """
+Usage: bjam [TARGET]... [BJAM_OPTION]...
+By default, build examples from all directories and with all contract on/off
+combinations (this takes a long time). Targets `all_on` and `all_off` build
+examples from all directories but only with contracts on and off respectively.
+Target `dirname` build examples only in the given directory but with all
+contracts on. See TARGET below for a complete list of targets.
+Other Bjam options (`-q`, `--clean`, etc) are specified as usual.
+
+TARGET
+    [noflags][_dirname][_filename] | dirname_onoff | all_on | all_off
+noflags
+    Turn off specific contract combinations using `no[e][o][i][b][l]`:
+      noe | noo | noi | nob | nol | noeo | noei | nooi | nobl | noeoi | noeoibl
+    Where:
+      e = prEconditions     o = pOstconditions  i = class Invariants
+      b = Block invariants  l = Loop variants
+    Turn off no contract when `noflags` is not specified. (Longer flag names
+    would have caused too long build file names on some OS.)
+dirname
+    Build the specified directory (contracts on if `noflags` not specified).
+filename
+    Build the specified file (contracts on if `noflags` not specified).
+dirname_onoff
+    Build in specified directory name with all contract on/off combinations.
+all_on
+    Build all directories but with all contracts on.
+all_off
+    Build all directories but with all contracts off.
+
+EXAMPLES
+    bjam contracts_push_back      # only contracts/push_back, contracts on
+    bjam noeo_contracts_push_back # contract/push_back, pre and post off
+    bjam contracts                # all in contracts/, contracts on
+    bjam noeo_contracts           # all in contracts/, pre and post off
+    bjam contracts_onoff          # all in contracts/, all on/off combinations
+    bjam all_on                   # all directories, contracts on
+    bjam                          # all directories, all on/off combinations
+""" ;
+
+# Directory Builds #
+
+# Build from the "contracts" directory.
+rule dir-contracts ( name : defines * )
+{
+    test-suite $(name) :
+        [ dir-run contracts : assertion_complexity_factorial
+                : $(name) : $(defines) ]
+        [ dir-run contracts : assertion_requirements_push_back
+                : $(name) : $(defines) ]
+        [ dir-run contracts : assertion_statement_ialloc
+                : $(name) : $(defines) ]
+        [ dir-run contracts : blockinv_loopvar_gcd : $(name) : $(defines) ]
+        [ dir-run contracts : body_natural : $(name) : $(defines) ]
+        [ dir-run contracts : broken_handler_sqrt : $(name) : $(defines) ]
+        [ dir-run contracts : class_ivector : $(name) : $(defines) ]
+        [ dir-run contracts : class_template_vector : $(name) : $(defines) ]
+        [ dir-run contracts : class_template_vector_seq
+                : $(name) : $(defines) ]
+        [ dir-run contracts : class_template_vector_seq_nova
+                : $(name) : $(defines) ]
+        [ dir-run contracts : const_assertion_number : $(name) : $(defines) ]
+        [ dir-run contracts : contract_failure : $(name) : $(defines) ]
+        [ dir-err contracts : const_assertion_number_global_error
+                : $(name) : $(defines) ]
+        [ dir-err contracts : const_assertion_number_static_error
+                : $(name) : $(defines) ]
+        [ dir-run contracts : const_select_assertion_factorial
+                : $(name) : $(defines) ]
+        [ dir-err contracts : const_select_assertion_factorial_error
+                : $(name) : $(defines) ]
+        [ dir-run contracts : copy_inc : $(name) : $(defines) ]
+        [ dir-run contracts : default_subcontracting_base
+                : $(name) : $(defines) ]
+        [ dir-run contracts : exception_array : $(name) : $(defines) ]
+        [ dir-run contracts : friend_counter : $(name) : $(defines) ]
+        [ dir-run contracts : function_template_postinc : $(name) : $(defines) ]
+        [ dir-run contracts : has_oldof_inc : $(name) : $(defines) ]
+        [ dir-run contracts : macro_commas_symbols_integral_map
+                : $(name) : $(defines) ]
+        [ dir-run contracts : macro_commas_symbols_integral_map_seq
+                : $(name) : $(defines) ]
+        [ dir-run contracts : macro_commas_symbols_integral_map_seq_nova
+                : $(name) : $(defines) ]
+        [ dir-run contracts : member_operator_string : $(name) : $(defines) ]
+        [ dir-run contracts : nested_class_bitset : $(name) : $(defines) ]
+        [ dir-run contracts : no_contract_ivector : $(name) : $(defines) ]
+        [ dir-run contracts : no_contract_postinc : $(name) : $(defines) ]
+        [ dir-run contracts : no_pre_post_postinc : $(name) : $(defines) ]
+        [ dir-run contracts : params_funcptr_array_apply
+                : $(name) : $(defines) ]
+        [ dir-run contracts : params_postinc : $(name) : $(defines) ]
+        [ dir-run contracts : post_also_postinc : $(name) : $(defines) ]
+        [ dir-run contracts : pre_only_postinc : $(name) : $(defines) ]
+        [ dir-run contracts : push_back : $(name) : $(defines) ]
+        [ dir-run contracts : select_assertion_factorial
+                : $(name) : $(defines) ]
+        [ dir-run contracts : static_assertion_memcopy : $(name) : $(defines) ]
+        [ dir-run contracts : static_contract_instance_counter
+                : $(name) : $(defines) ]
+        [ dir-run contracts : subcontract_identifiers : $(name) : $(defines) ]
+        [ dir-run contracts : subcontract_pre_natural_failure
+                : $(name) : $(defines) ]
+        [ dir-run contracts : template_params : $(name) : $(defines) ]
+        [ dir-run contracts : template_specializations_vector
+                : $(name) : $(defines) ]
+        [ dir-run contracts : typed_counter : $(name) : $(defines) ]
+        [ dir-run contracts : volatile_contract_shared_instance
+                : $(name) : $(defines) ]
+    ;
+}
+
+# Build from the "virtual_specifiers" directory.
+rule dir-virtual_specifiers ( name : defines * )
+{
+    test-suite $(name) :
+        [ dir-run virtual_specifiers : final_class : $(name) : $(defines) ]
+        [ dir-err virtual_specifiers : final_class_error
+                : $(name) : $(defines) ]
+        [ dir-run virtual_specifiers : final_member : $(name) : $(defines) ]
+        [ dir-err virtual_specifiers : final_member_error
+                : $(name) : $(defines) ]
+        [ dir-run virtual_specifiers : new_member : $(name) : $(defines) ]
+        [ dir-err virtual_specifiers : new_member_error : $(name) : $(defines) ]
+        [ dir-run virtual_specifiers : override_member
+                : $(name) : $(defines) ]
+        [ dir-err virtual_specifiers : override_member_error
+                : $(name) : $(defines) ]
+    ;
+}
+
+# Build from the "concepts" directory.
+rule dir-concepts ( name : defines * )
+{
+    test-suite $(name) :
+        [ dir-run concepts : class_member_concept_vector
+                : $(name) : $(defines) ]
+        [ dir-err concepts : class_member_concept_vector_error
+                : $(name) : $(defines) ]
+        [ dir-err concepts : class_member_concept_vector_constructor_error
+                : $(name) : $(defines) ]
+        [ dir-err concepts : class_member_concept_vector_member_error
+                : $(name) : $(defines) ]
+        [ dir-run concepts : free_concept_operator_preinc
+                : $(name) : $(defines) ]
+        [ dir-err concepts : free_concept_operator_preinc_error
+                : $(name) : $(defines) ]
+    ;
+}
+
+# Build from the "named_parameters" directory.
+rule dir-named_parameters ( name : defines * )
+{
+    test-suite $(name) :
+        [ dir-run named_parameters : constructor_named_params_family
+                : $(name) : $(defines) ]
+        [ dir-run named_parameters : member_named_params_callable2
+                : $(name) : $(defines) ]
+        [ dir-run named_parameters : named_param_identifiers_failure
+                : $(name) : $(defines) ]
+        [ dir-run named_parameters : named_param_identifiers_positive
+                : $(name) : $(defines) ]
+        [ dir-run named_parameters : named_params_dfs
+                : $(name) : $(defines) ]
+        [ dir-pymodule named_parameters : deduced_params_pydef
+                : $(name) : $(defines) ]
+        [ dir-pymodule named_parameters : named_template_params_pyclass
+                : $(name) : $(defines) ]
+    ;
+}
+        
+# Build from the "n1962" directory.
+rule dir-n1962 ( name : defines * )
+{
+    test-suite $(name) :
+        [ dir-run n1962 : block_invariant : $(name) : $(defines) ]
+        [ dir-run n1962 : circle : $(name) : $(defines) ]
+        [ run n1962/equal_main.cpp : : : $(defines) : $(name)_equal ]
+        [ dir-run n1962 : factorial : $(name) : $(defines) ]
+        [ dir-run n1962 : sqrt : $(name) : $(defines) ]
+        [ run n1962/sum.cpp n1962/sum_main.cpp : : : $(defines) : $(name)_sum ]
+        [ dir-run n1962 : vector : $(name) : $(defines) ]
+    ;
+}
+
+# Build from the "n2081" directory.
+rule dir-n2081 ( name : defines * )
+{
+    test-suite $(name) :
+        [ dir-run n2081 : add : $(name) : $(defines) ]
+        [ dir-err n2081 : add_error : $(name) : $(defines) ]
+        [ dir-run n2081 : advance : $(name) : $(defines) ]
+        [ dir-run n2081 : apply : $(name) : $(defines) ]
+        [ dir-run n2081 : convert : $(name) : $(defines) ]
+        [ dir-err n2081 : convert_error : $(name) : $(defines) ]
+        [ dir-run n2081 : count : $(name) : $(defines) ]
+        [ dir-run n2081 : deref : $(name) : $(defines) ]
+        [ dir-run n2081 : equal : $(name) : $(defines) ]
+        [ dir-err n2081 : equal_error : $(name) : $(defines) ]
+        [ dir-run n2081 : find : $(name) : $(defines) ]
+        [ dir-err n2081 : find_error : $(name) : $(defines) ]
+        [ dir-run n2081 : for_each : $(name) : $(defines) ]
+        [ dir-run n2081 : less_eq : $(name) : $(defines) ]
+        [ dir-run n2081 : min : $(name) : $(defines) ]
+        [ dir-err n2081 : min_error : $(name) : $(defines) ]
+        [ dir-run n2081 : transform : $(name) : $(defines) ]
+    ;
+}
+
+# Build from the "meyer97" directory.
+rule dir-meyer97 ( name : defines * )
+{
+    test-suite $(name) :
+        [ dir-run meyer97 : gcd : $(name) : $(defines) ]
+        [ dir-run meyer97 : maxarray : $(name) : $(defines) ]
+        [ dir-run meyer97 : stack3 : $(name) : $(defines) ]
+        [ run meyer97/stack4_main.cpp : : : $(defines) : $(name)_stack4 ]
+    ;
+}
+
+# Build from the "mitchell02" directory.
+rule dir-mitchell02 ( name : defines * )
+{
+    test-suite $(name) :
+        [ run mitchell02/counter_main.cpp : : : $(defines) : $(name)_counter ]
+        [ run mitchell02/courier_main.cpp mitchell02/courier.cpp : :
+                : $(defines) : $(name)_courier ]
+        [ run mitchell02/customer_manager_main.cpp
+                mitchell02/customer_manager.cpp : : : $(defines)
+                : $(name)_customer_manager ]
+        [ dir-run mitchell02 : dictionary : $(name) : $(defines) ]
+        [ run mitchell02/name_list_main.cpp mitchell02/name_list.cpp : :
+                : $(defines) : $(name)_name_list ]
+        [ run mitchell02/observer_main.cpp : : : $(defines) : $(name)_observer ]
+        [ dir-run mitchell02 : simple_queue : $(name) : $(defines) ]
+        [ dir-run mitchell02 : stack : $(name) : $(defines) ]
+    ;
+}
+
+# Build from the "stroustrup97" directory.
+rule dir-stroustrup97 ( name : defines * )
+{
+    test-suite $(name) :
+        [ run stroustrup97/string_main.cpp stroustrup97/string.cpp : :
+                : $(defines) : $(name)_string ]
+    ;
+}
+
+# Build from the "cline90" directory.
+rule dir-cline90 ( name : defines * )
+{
+    test-suite $(name) :
+        [ dir-run cline90 : calendar : $(name) : $(defines) ]
+        [ dir-run cline90 : stack : $(name) : $(defines) ]
+        [ run cline90/vector_main.cpp : : : $(defines) : $(name)_vector ]
+        [ dir-run cline90 : vstack : $(name) : $(defines) ]
+    ;
+}
+
+# Convenience Rules #
+
+# Compile a file in a directory and run it.
+rule dir-run ( dir : cppfile : name : defines * )
+{
+    run $(dir)/$(cppfile).cpp : : : $(defines) : $(name)_$(cppfile) ;
+}
+
+# Check compiler-error for a file in a directory.
+rule dir-err ( dir : cppfile : name : defines * )
+{
+    compile-fail $(dir)/$(cppfile).cpp : $(defines) : $(name)_$(cppfile) ;
+}
+
+type.register UNIT_TEST_RAW : UNIT_TEST ;
+generators.register-standard testing.unit-test : : UNIT_TEST_RAW ;
+if ! [ python.configured ]
+{
+    exit "error: python is not configured" ;
+}
+ 
+# Use Python script to run a test.
+rule py-test ( name : pyscript : commandline )
+{
+    # Unfortunately, unit-test does not stop compilation when `-q` is used but
+    # it will signal the failure and build again the test in next runs.
+    unit-test-raw $(name) : $(pyscript) :
+            <testing.launcher>"python "$(pyscript)" "$(commandline) ;
+    always $(name) ;
+}
+
+# Assume Boost.Python cppfile defines module named `$(name)_$(cppfile)_module`.
+# Assume Python test script to run is named "$(cppfile).py".
+rule dir-pymodule ( dir : cppfile : name : defines * )
+{
+    python-extension $(name)_$(cppfile)_module :
+        # Need this complex file name because file name is always target of
+        # this rule so it must be unique across all on/off combinations.
+        $(dir)/$(cppfile)_module/$(name)_$(cppfile)_module.cpp :
+        <library>/boost/python//boost_python
+        <library>/boost/regex//boost_regex
+        <link>shared:<define>BOOST_REGEX_DYN_LINK=1
+        $(defines)
+    ;
+    install $(name)_$(cppfile)_install1 : 
+        $(name)_$(cppfile)_module :
+        <install-dependencies>on
+        <install-type>SHARED_LIB
+        <install-type>PYTHON_EXTENSION 
+        <location>$(dir)
+    ;
+    install $(name)_$(cppfile)_install2 : 
+        $(name)_$(cppfile)_module :
+        <install-dependencies>on
+        <install-type>SHARED_LIB
+        <install-type>PYTHON_EXTENSION 
+        <location>.
+    ;
+    # On Linux, need to install on both `$(dir)` and `.`.
+    alias $(name)_$(cppfile)_install :
+            $(name)_$(cppfile)_install1 $(name)_$(cppfile)_install2 ;
+    py-test $(name)_$(cppfile)_run
+        : $(dir)/$(cppfile).py
+        : $(name)_$(cppfile)_module
+    ;
+    alias $(name)_$(cppfile) :
+        $(name)_$(cppfile)_install
+        $(name)_$(cppfile)_run
+    ;
+}
+
+# Build all files with all sensible combinations of contract-off config macros.
+rule config-combinations ( name )
+{
+    # Pre, post, and class-inv are combined with each other but not with
+    # block-inv and loop-var (unless for all off) because they do not influence
+    # each other and in the interest to limit the target combinations.
+    # All on. 
+    dir-$(name) $(name) ;
+    # 1 off.
+    dir-$(name) noe_$(name) :
+        <define>CONTRACT_CONFIG_NO_PRECONDITIONS 
+    ;
+    dir-$(name) noo_$(name) :
+        <define>CONTRACT_CONFIG_NO_POSTCONDITIONS 
+    ;
+    dir-$(name) noi_$(name) :
+        <define>CONTRACT_CONFIG_NO_CLASS_INVARIANTS 
+    ;
+    dir-$(name) nob_$(name) :
+        <define>CONTRACT_CONFIG_NO_BLOCK_INVARIANTS 
+    ;
+    dir-$(name) nol_$(name) :
+        <define>CONTRACT_CONFIG_NO_LOOP_VARIANTS 
+    ;
+    # 2 off.
+    dir-$(name) noeo_$(name) :
+        <define>CONTRACT_CONFIG_NO_PRECONDITIONS
+        <define>CONTRACT_CONFIG_NO_POSTCONDITIONS
+    ;
+    dir-$(name) noei_$(name) :
+        <define>CONTRACT_CONFIG_NO_PRECONDITIONS
+        <define>CONTRACT_CONFIG_NO_CLASS_INVARIANTS 
+    ;
+    dir-$(name) nooi_$(name) :
+        <define>CONTRACT_CONFIG_NO_POSTCONDITIONS
+        <define>CONTRACT_CONFIG_NO_CLASS_INVARIANTS
+    ;
+    dir-$(name) nobl_$(name) :
+        <define>CONTRACT_CONFIG_NO_BLOCK_INVARIANTS 
+        <define>CONTRACT_CONFIG_NO_LOOP_VARIANTS 
+    ;
+    # 3 off.
+    dir-$(name) noeoi_$(name) :
+        <define>CONTRACT_CONFIG_NO_PRECONDITIONS
+        <define>CONTRACT_CONFIG_NO_POSTCONDITIONS
+        <define>CONTRACT_CONFIG_NO_CLASS_INVARIANTS
+    ;
+    # All off. 
+    dir-$(name) noeoibl_$(name) :
+        <define>CONTRACT_CONFIG_NO_PRECONDITIONS
+        <define>CONTRACT_CONFIG_NO_POSTCONDITIONS
+        <define>CONTRACT_CONFIG_NO_CLASS_INVARIANTS
+        <define>CONTRACT_CONFIG_NO_BLOCK_INVARIANTS
+        <define>CONTRACT_CONFIG_NO_LOOP_VARIANTS
+    ;
+    # Target for all contract on/off combinations for a given directory.
+    alias $(name)_onoff : $(name) noe_$(name) noo_$(name) noi_$(name)
+            nob_$(name) nol_$(name) noeo_$(name) noei_$(name) nooi_$(name)
+            nobl_$(name) noeoi_$(name) noeoibl_$(name) ;
+}
+
+# Target Definitions #
+
+# Define targets for all directories and all contract on/off combinations.
+config-combinations contracts ;
+config-combinations virtual_specifiers ;
+config-combinations concepts ;
+config-combinations named_parameters ;
+config-combinations n1962 ;
+config-combinations n2081 ;
+config-combinations meyer97 ;
+config-combinations mitchell02 ;
+config-combinations stroustrup97 ;
+config-combinations cline90 ;
+alias all_on : contracts virtual_specifiers concepts named_parameters n1962
+        n2081 meyer97 mitchell02 stroustrup97 cline90 ;
+alias all_off : noeoibl_contracts noeoibl_virtual_specifiers noeoibl_concepts
+        noeoibl_named_parameters noeoibl_n1962 noeoibl_n2081 noeoibl_meyer97
+        noeoibl_mitchell02 noeoibl_stroustrup97 noeoibl_cline90 ;
+

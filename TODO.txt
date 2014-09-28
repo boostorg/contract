@@ -1,0 +1,124 @@
+
+
+*   Possible to remove public/protected/private (simplify syntax)?
+    --> This requires to be able to implement has_public_f meta-function...
+    --> Use CONTRACT_MEMBER/FUNCTION to differentiate function kind.
+
+*   Possible to remove CONTRACT_CLASS_INVARIANT( void ) (simplify syntax)?
+    --> See related ticket.
+
+*   Possible to remove _TPL in C++11 (simplify syntax)?
+
+
+
+*   Assume C++11 variadic-macros (simplify impl).
+    --> No longer need to support sequence-syntax.
+
+*   Assume C++11 auto/decltype or better Boost.Typeof (simplify impl).
+    --> No longer need to support `(type) ...` in syntax.
+
+*   Maybe use lambdas instead of local functions... would this simplify impl of
+    const-blocks?
+
+*   Remove `(f) ( void )` use just `(f) ( )` instead (assuming variadic-macros).
+
+*   Make a note that older revs of the lib did not use any C++11 feature...
+
+*   Remove concepts (simplify impl, plus C++11 decltype-expr-sfinae...).
+
+*   Remove named params (simplify impl, plus C++11 version of Boost.Parameters
+    without macros...).
+
+*   Remove loop-variants and block-invariants.
+
+*   Remove virtual specifiers (simplify impl, plus now in C++11...).
+
+
+*   Allow unnamed parameters (template, function, etc)?
+
+*   Support all C++11 decl features.
+    --> Move semantics (these should all "just work", but try them).
+    --> constexpr (for functions, constructors, operators, etc).
+    --> Default constructor syntax
+        T() = default; T() = delete; ... (use "as" instead of "=")
+        I don't need to support = delete because that's no decl and so has no
+        contracts.
+        However, I'd ideally support = default so I can add contracts for
+        default declarations.
+    --> `extern template class ...` do I need to do anything here given that
+        contracts will not be specified when template instantiation is forced
+        off or on (similar to `template class vector<int>;`)... probably not,
+        but test it!
+    --> std::initializer_list<T> I don't need to do anything special to support
+        initializer constructors but test them!
+    --> Support trailing-return-type using `return` instead of `->`:
+        template<t ypename R, typename L >
+        auto add ( R r, L l ) -> decltype(r + l) ;
+        template( typename R, typename L )
+        FUNC( auto (add) ( (R) r, (L) l ) return(decltype(r + l)) );
+        Or:
+        FUNC( auto (f) ( ) return(int) );
+        FUNC( auto (f) ( ) return int );
+    --> Delegating constructors... Will these pose problems/bugs for contracts?
+        When shall class invariants be checked (i.e., when is an object
+        considered constructed full)? Can these be used to overcome Contract++
+        CONSTRUCTOR_BODY limitations?
+    --> Support virtual specifiers override (func) and final (class and func).
+    --> Explicit conversion operators `explicit operator T() ...`.
+    --> Variadic (templates).
+        I should be able to support variadic templates and variadic functions
+        without changing the syntax:
+        template( typename... Args )
+        void (f) ( (Args...) args )
+        Because `... Args` will be parsed as one token for the template param
+        name then it'll be parsed again as a token `Args...` as the function
+        param type. Same for value- and template- template params.
+        Also I should be able to support C-style variadic functions:
+        void (f) ( int size, ... )
+        Because `...` will be parsed as the parameter type (no name).
+    --> User-define literals `... operator "" ...` (only free or member too?).
+    --> Anything to do for threading... (probably not given that's all in STL).
+    --> Make sure `long long int` can be specified (ideally, the syntax will
+        support `{long}* int` etc so type qualifier can be repeated as many
+        times as the user wants and the compiler will just error if they used
+        incorrectly).
+    --> Double check that alignas(...) cannot be used in class/function decl
+        (but only in var decl). If so, no need to support it.
+    --> Support attributes [[...]] maybe as ((...) -- Or:
+        Support MSVC/GCC/CLang decl-spec (for DLLs, etc).
+        I can support verbatim(...) in the class and function declaration
+        positions used by MSVC, G++, and CLang (I won't support positions used
+        by other compilers).
+        Read more about C++11 attributes [[...]], where they can appear in
+        class/function decl, and the default attributes [[noreturn]] and
+        [[carries_dependency]] so to decide how to support C++11 attributes +
+        MSVC __declspec + GCC __attributes__ in the syntax.
+    --> Type deduction:
+        I should probably allow `auto` and `decltype(...)` (extra paren not
+        necessary) everywhere a type is expected as I do for `int` (`(int)` not
+        necessary), including func param types.
+
+*   Using C++11 delegating constructors --> see if I can remove initialize()
+    (and their function-try-blocks) all together from this library macros
+    (as they belong with constructor definitions and not declarations).
+
+*   C++14
+    --> Function return type deduction:
+        auto f ( ) { return true; }
+        FUNC( auto (f) ( ) /* no return... here */ ) { return true; }
+    --> Check what "variable templates" are... (probably not in class/func decl
+        so OK, but check).
+
+*   Support usual redundant C++ syntax:
+    --> `(f) ( )` and `(f) ( void )` (but only `template< >`, no void here)
+    --> `T const` and `const T`
+    --> `const volatile` and `volatile const`
+    --> Is this valid C++ `struct x : public virtual y` and
+        `struct x : virtual public y`? If so, support both (but I think only
+        the 1st one of these is valid...).
+    --> Optional (template, func, etc) param names.
+
+*   Add all and only (not size_t!!) syntax highlight to both QuickBook and VIM.
+*   Make Boost.Preprocess macros highlighted in VIM in dark yellow.
+
+
