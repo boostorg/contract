@@ -7,7 +7,6 @@
 
 import os
 import sys
-import shutil
 
 entries = [
     {
@@ -32,42 +31,51 @@ for entry in entries:
     for keyword in keywords:
         filename = keyword + ".hpp"
         path = os.path.join(directory, filename)
-        try: 
-            shutil.copyfile(path, path + ".bak")
-        except:
-            pass
         file = open(path, 'w')
 
-        file.write('''
-// WARNING: FILE AUTOMATICALLY GENERATED, DO NOT MODIFY IT!
-// Instead, modify and run the related generation script "{0}".
-
+        file.write(
+'''
 #ifndef BOOST_CONTRACT_EXT_PP_KEYWORD_{1}_HPP_
 #define BOOST_CONTRACT_EXT_PP_KEYWORD_{1}_HPP_
 
+// WARNING: FILE AUTOMATICALLY GENERATED, DO NOT MODIFY IT!
+// Instead, modify and run the related generation script "{0}".
+
 #include <boost/contract/ext_/preprocessor/keyword/utility/is.hpp>
-#include <boost/contract/ext_/preprocessor/keyword/utility/rem.hpp>
+#include <boost/preprocessor/cat.hpp>
 
 // PRIVATE //
 
-// NOTE: These are not local macros, do NOT #undefine them.
-// The following macro must expand to a unary token: `(1)`, etc.
-#define BOOST_CONTRACT_EXT_PP_KEYWORD_{1}_IS_{2} (1)
+// NOTE: These are not local macros, do NOT #undefine them ('x' used to avoid
+// concatenating to reserved symbols).
+// The following macro must expand to a unary token (e.g., `(1)`).
+#define BOOST_CONTRACT_EXT_PP_KEYWORD_{1}_ISx{2} (1)
+#define {2}xBOOST_CONTRACT_EXT_PP_KEYWORD_{1}_IS (1)
 // The following macro must expand to nothing.
-#define BOOST_CONTRACT_EXT_PP_KEYWORD_{1}_REM_{2}
+#define BOOST_CONTRACT_EXT_PP_KEYWORD_{1}_REMOVEx{2}
+#define {2}xBOOST_CONTRACT_EXT_PP_KEYWORD_{1}_REMOVE
 
 // PUBLIC //
 
-#define BOOST_CONTRACT_EXT_PP_KEYWORD_IS_{1}(tokens) \\
-    BOOST_CONTRACT_EXT_PP_KEYWORD_UTILITY_IS(tokens, \\
-            BOOST_CONTRACT_EXT_PP_KEYWORD_{1}_IS_)
+#define BOOST_CONTRACT_EXT_PP_KEYWORD_IS_{1}_FRONT(tokens) \\
+    BOOST_CONTRACT_EXT_PP_KEYWORD_UTILITY_IS_FRONT(tokens, \\
+            BOOST_CONTRACT_EXT_PP_KEYWORD_{1}_ISx)
 
-#define BOOST_CONTRACT_EXT_PP_KEYWORD_{1}_REM(tokens) \\
-    BOOST_CONTRACT_EXT_PP_KEYWORD_UTILITY_REM(tokens, \\
-            BOOST_CONTRACT_EXT_PP_KEYWORD_{1}_REM_)
+#define BOOST_CONTRACT_EXT_PP_KEYWORD_IS_{1}_BACK(token) \\
+    BOOST_CONTRACT_EXT_PP_KEYWORD_UTILITY_IS_BACK(token, \\
+            xBOOST_CONTRACT_EXT_PP_KEYWORD_{1}_IS)
+
+// Precondition: tokens start with keyword to remove (see `..._IS_{1}_FRONT`).
+#define BOOST_CONTRACT_EXT_PP_KEYWORD_{1}_REMOVE_FRONT(tokens) \\
+    BOOST_PP_CAT(BOOST_CONTRACT_EXT_PP_KEYWORD_{1}_REMOVEx, tokens)
+
+// Precondition: token ends with keyword to remove (see `..._IS_{1}_BACK`).
+#define BOOST_CONTRACT_EXT_PP_KEYWORD_{1}_REMOVE_BACK(token) \\
+    BOOST_PP_CAT(token, xBOOST_CONTRACT_EXT_PP_KEYWORD_{1}_REMOVE)
 
 #endif // #include guard
-        '''.format(script, keyword.upper(), keyword.lower()))
+
+'''.format(script, keyword.upper(), keyword.lower()))
 
         file.close()
         print "Written:", path

@@ -13,16 +13,15 @@
 #include <boost/contract/ext_/preprocessor/traits/func/verbatim.hpp>
 #include <boost/contract/ext_/preprocessor/traits/func/access.hpp>
 #include <boost/contract/ext_/preprocessor/traits/func/aux_/index.hpp>
-#include <boost/preprocessor/facilities/empty.hpp>
-#include <boost/preprocessor/tuple/elem.hpp>
+#include <boost/contract/ext_/preprocessor/traits/parse.hpp>
 
 // PRIVATE //
 
 // You can set this internal macro to stop and debug at a func-trait index.
-// define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_DEBUG_AT_
-
-#if defined(BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_DEBUG_AT_) && \
-        BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_DEBUG_AT_ < \
+// define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_AUX_INDEX_TEST
+        
+#if defined(BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_AUX_INDEX_TEST) && \
+        BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_AUX_INDEX_TEST < \
         BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_AUX_TEMPLATE_INDEX
 #   define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_TEMPLATE_(sign_traits) \
         sign_traits
@@ -31,8 +30,8 @@
         BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_TEMPLATE_PARSE(sign_traits)
 #endif
 
-#if defined(BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_DEBUG_AT_) && \
-        BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_DEBUG_AT_ < \
+#if defined(BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_AUX_INDEX_TEST) && \
+        BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_AUX_INDEX_TEST < \
         BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_AUX_EXPORT_INDEX
 #   define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_EXPORT_(sign_traits) \
         sign_traits
@@ -41,8 +40,8 @@
         BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_EXPORT_PARSE(sign_traits)
 #endif
 
-#if defined(BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_DEBUG_AT_) && \
-        BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_DEBUG_AT_ < \
+#if defined(BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_AUX_INDEX_TEST) && \
+        BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_AUX_INDEX_TEST < \
         BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_AUX_VERBATIM_INDEX
 #   define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_VERBATIM_(sign_traits) \
         sign_traits
@@ -51,8 +50,8 @@
         BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_VERBATIM_PARSE(sign_traits)
 #endif
 
-#if defined(BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_DEBUG_AT_) && \
-        BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_DEBUG_AT_ < \
+#if defined(BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_AUX_INDEX_TEST) && \
+        BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_AUX_INDEX_TEST < \
         BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_AUX_ACCESS_INDEX
 #   define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_ACCESS_(sign_traits) \
         sign_traits
@@ -61,14 +60,14 @@
         BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_ACCESS_PARSE(sign_traits)
 #endif
 
-#if defined(BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_DEBUG_AT_) && \
-        BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_DEBUG_AT_ < \
+#if defined(BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_AUX_INDEX_TEST) && \
+        BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_AUX_INDEX_TEST < \
         BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_AUX_DONE_INDEX
 #   define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_DONE_(sign_traits) \
         sign_traits
 #else
-#   define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_DONE_(sign_traits) \
-        BOOST_PP_TUPLE_ELEM(2, 1, sign_traits)
+#   define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_DONE_ \
+        BOOST_CONTRACT_EXT_PP_TRAITS_PARSE_DONE
 #endif
 
 // PUBLIC //
@@ -82,8 +81,9 @@
     BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_EXPORT_( \
     BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_VERBATIM_( \
     BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_ACCESS_( \
-        ( sign, BOOST_PP_EMPTY() ) \
-    )))))
+    BOOST_CONTRACT_EXT_PP_TRAITS_PARSE_INIT( \
+        sign \
+    )))))) \
 
 #endif // #include guard
 

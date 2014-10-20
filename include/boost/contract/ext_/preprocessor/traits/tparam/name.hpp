@@ -23,7 +23,7 @@
 // Expand to `[...] name | EMPTY()` (ellipses `...` for variadic templates).
 #define BOOST_CONTRACT_EXT_PP_TPARAM_TRAITS_NAME(traits) \
     BOOST_CONTRACT_EXT_PP_TRAITS_AUX_ELEM( \
-        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_TPARAM_INDEX_NAME, \
+        BOOST_CONTRACT_EXT_PP_TPARAM_TRAITS_AUX_NAME_INDEX, \
         traits \
     )()
 

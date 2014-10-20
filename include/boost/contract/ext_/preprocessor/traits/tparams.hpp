@@ -30,7 +30,7 @@
 // Expand specified pp-tuple with template parameters signature into pp-list
 // of template parameter traits to inspect using TPARAM_TRAITS macros.
 #define BOOST_CONTRACT_EXT_PP_TPARAMS_TRAITS(sign) \
-    BOOST_CONTRACT_EXT_PP_TPARAM_TRAITS_D_S(1, 1, sign)
+    BOOST_CONTRACT_EXT_PP_TPARAMS_TRAITS_D_S(1, 1, sign)
 
 #endif // #include guard
 

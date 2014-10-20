@@ -1,9 +1,9 @@
 
-// WARNING: FILE AUTOMATICALLY GENERATED, DO NOT MODIFY IT!
-// Instead, modify and run the related generation script "generate.py".
-
 #ifndef BOOST_CONTRACT_EXT_PP_KEYWORD_INVARIANT_HPP_
 #define BOOST_CONTRACT_EXT_PP_KEYWORD_INVARIANT_HPP_
+
+// WARNING: FILE AUTOMATICALLY GENERATED, DO NOT MODIFY IT!
+// Instead, modify and run the related generation script "generate.py".
 
 #include <boost/contract/ext_/preprocessor/keyword/utility/is.hpp>
 #include <boost/preprocessor/cat.hpp>
@@ -38,4 +38,4 @@
     BOOST_PP_CAT(token, xBOOST_CONTRACT_EXT_PP_KEYWORD_INVARIANT_REMOVE)
 
 #endif // #include guard
-        
+
