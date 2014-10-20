@@ -26,3 +26,12 @@
 *.exe
 *.out
 *.app
+
+# Boost.Jam outputs
+bin/
+
+# Boost.Wave outputs
+pp.cpp
+pp.dbg
+pp.cnt
+

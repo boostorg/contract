@@ -1,0 +1,19 @@
+
+import os ;
+
+if ! [ os.environ BOOST_ROOT ]
+{
+    exit "Error: Set BOOST_ROOT environment variable to Boost root directory" ;
+}
+local BOOST_ROOT = [ os.environ BOOST_ROOT ] ;
+echo "Using Boost libraries from:" $(BOOST_ROOT) ;
+
+use-project boost : $(BOOST_ROOT) ;
+
+project
+    :   requirements
+        <include>"./include"
+        <include>$(BOOST_ROOT)
+        <library-path>$(BOOST_ROOT)/stage/lib
+    ;
+
