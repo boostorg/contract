@@ -1,10 +1,4 @@
 
-// Copyright (C) 2008-2012 Lorenzo Caminiti
-// Distributed under the Boost Software License, Version 1.0
-// (see accompanying file LICENSE_1_0.txt or a copy at
-// http://www.boost.org/LICENSE_1_0.txt)
-// Home at http://sourceforge.net/projects/contractpp
-
 #ifndef BOOST_CONTRACT_EXT_PP_KEYWORD_UTILITY_IS_HPP_
 #define BOOST_CONTRACT_EXT_PP_KEYWORD_UTILITY_IS_HPP_
 
@@ -20,15 +14,25 @@
 
 // PUBLIC //
 
-// `checking_prefix ## tokens` expand to unary (e.g., `(1)`) iff `tokens` start
-// with keyword to check.
-#define BOOST_CONTRACT_EXT_PP_KEYWORD_UTILITY_IS( \
+// Precondition: A macro `<checking_prefix><keyword-to-check>` must be #defined
+// to expand to unary (e.g., `(1)`).
+#define BOOST_CONTRACT_EXT_PP_KEYWORD_UTILITY_IS_FRONT( \
         tokens, checking_prefix) \
     BOOST_PP_IIF(BOOST_CONTRACT_EXT_PP_HAS_PAREN(tokens), \
         0 BOOST_PP_TUPLE_EAT(2) \
     , \
         BOOST_CONTRACT_EXT_PP_KEYWORD_UTILITY_IS_ \
     )(checking_prefix, tokens)
+
+// Precondition: A macro `<keyword-to-check><checking_postfix>` must be #defined
+// to expand to unary (e.g., `(1)`).
+// WARNING: This check only works if `token` is a single token, it will always
+// expand to 0 with no errors if token is multiple tokens
+// (e.g., `const *this`). Also, this check will expand to 0 with no error if
+// `token` starts with a non-alphanumeric symbol (e.g., `*this`).
+#define BOOST_CONTRACT_EXT_PP_KEYWORD_UTILITY_IS_BACK( \
+        token, checking_postfix) \
+    BOOST_CONTRACT_EXT_PP_KEYWORD_UTILITY_IS_(token, checking_postfix)
 
 #endif // #include guard
 
