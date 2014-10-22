@@ -14,14 +14,18 @@
 #include <boost/preprocessor/list/at.hpp>
 #include <boost/preprocessor/list/first_n.hpp>
 
-// PRIVATE //
+/* PRIVATE */
+            
+// Indirection needed for proper expansion (on MSVC).
+#define BOOST_CONTRACT_EXT_PP_TRAITS_AUX_PARAMS_TRAITS_(sign_traits) \
+    BOOST_PP_TUPLE_ELEM(2, 1, sign_traits)
 
 #define BOOST_CONTRACT_EXT_PP_TRAITS_AUX_PARAMS_REPLACE_LAST_DEFAULT_( \
         s, sign, d, param_parse_macro, default_replace_macro, traits, last) \
     BOOST_PP_LIST_APPEND_D(d, \
         BOOST_PP_LIST_FIRST_N_D(d, last, traits), \
         ( \
-            BOOST_PP_TUPLE_ELEM(2, 1, \
+            BOOST_CONTRACT_EXT_PP_TRAITS_AUX_PARAMS_TRAITS_( \
                 default_replace_macro(d, s, \
                     ( \
                         sign, \
@@ -55,7 +59,7 @@
         BOOST_PP_LIST_APPEND_D(d, \
             traits, \
             ( \
-                BOOST_PP_TUPLE_ELEM(2, 1, \
+                BOOST_CONTRACT_EXT_PP_TRAITS_AUX_PARAMS_TRAITS_( \
                     param_parse_macro(d, s, \
                         ( \
                             sign, \
@@ -83,7 +87,7 @@
         BOOST_PP_TUPLE_ELEM(4, 3, d_param_default_traits) \
     )
 
-// PUBLIC //
+/* PUBLIC */
 
 #define BOOST_CONTRACT_EXT_PP_TRAITS_AUX_PARAMS_D_S( \
         d, s, sign, param_parse_macro, default_replace_macro) \

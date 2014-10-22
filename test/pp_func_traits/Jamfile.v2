@@ -4,5 +4,5 @@ import testing ;
 run access.cpp ;
 run verbatim.cpp ;
 run export.cpp ;
-exe template.cpp ;
+run template.cpp ;
 

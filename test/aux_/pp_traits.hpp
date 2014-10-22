@@ -14,7 +14,8 @@
 namespace boost { namespace contract { namespace test { namespace aux {
         namespace pp_traits_ {
 
-std::string remove_non_separation_spaces(std::string const& source) {
+// Remove spaces not separating words, etc.
+std::string trim ( std::string const& source ) {
     std::locale locale;
     std::string result = "";
     for(std::string::size_type i = 0; i < source.size(); ++i) {
@@ -36,16 +37,21 @@ std::string remove_non_separation_spaces(std::string const& source) {
 
 } } } } } // namespace
 
+// Indirections for proper expansion of BOOST_TEST generated error message.
+#define BOOST_CONTRACT_TEST_AUX_PP_TRAITS_TEST_2ND_(pred) BOOST_TEST(pred);
+#define BOOST_CONTRACT_TEST_AUX_PP_TRAITS_TEST_(pred) \
+    BOOST_CONTRACT_TEST_AUX_PP_TRAITS_TEST_2ND_(pred)
+
 #define BOOST_CONTRACT_TEST_AUX_PP_TRAITS_EQUAL_(left, right) \
-    BOOST_TEST( \
-        boost::contract::test::aux::pp_traits_::remove_non_separation_spaces( \
+    BOOST_CONTRACT_TEST_AUX_PP_TRAITS_TEST_( \
+        boost::contract::test::aux::pp_traits_::trim( \
             BOOST_CONTRACT_EXT_PP_STRINGIZE(left BOOST_PP_EMPTY()) \
         ) \
         == \
-        boost::contract::test::aux::pp_traits_::remove_non_separation_spaces( \
+        boost::contract::test::aux::pp_traits_::trim( \
             BOOST_CONTRACT_EXT_PP_STRINGIZE(right BOOST_PP_EMPTY()) \
         ) \
-    );
+    )
 
 #define BOOST_CONTRACT_TEST_AUX_PP_TRAITS_( \
         sign_traits, get_trait_macro, parsed_trait, sign_after_trait) \

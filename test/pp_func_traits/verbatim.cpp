@@ -1,4 +1,9 @@
 
+#include <boost/preprocessor/config/config.hpp>
+#if !BOOST_PP_VARIADICS
+#   error "this compiler does not support variadic macros"
+#else
+
 #include <boost/contract/ext_/preprocessor/traits/func/aux_/index.hpp>
 #define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_AUX_INDEX_TEST \
     BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_AUX_VERBATIM_INDEX
@@ -50,4 +55,6 @@ int main ( ) {
     
     return BOOST_CONTRACT_TEST_AUX_PP_TRAITS_REPORT_ERRORS;
 }
+
+#endif // variadics
 
