@@ -10,9 +10,10 @@
 // PUBLIC //
 
 // Precondition: name must always be the last remaining token in signature.
+// Implementation: NIL used as tuples cannot have EMTPY() elems (on MSVC).
 #define BOOST_CONTRACT_EXT_PP_TPARAM_TRAITS_NAME_PARSE(sign_traits) \
     ( \
-        BOOST_PP_EMPTY(), \
+        BOOST_PP_NIL, \
         BOOST_CONTRACT_EXT_PP_TRAITS_AUX_PUSH_BACK( \
             BOOST_PP_TUPLE_ELEM(2, 1, sign_traits), \
             BOOST_PP_TUPLE_ELEM(2, 0, sign_traits) \

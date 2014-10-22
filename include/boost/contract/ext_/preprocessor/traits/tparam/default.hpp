@@ -13,9 +13,10 @@
 // PRIVATE //
 
 // Precondition: sign is `default ...`.
+// Implementation: NIL used as tuples cannot have EMTPY() elems (on MSVC).
 #define BOOST_CONTRACT_EXT_PP_TPARAM_TRAITS_DEFAULT_REPLACE_(sign, traits) \
     ( \
-        BOOST_PP_EMPTY(), \
+        BOOST_PP_NIL, \
         BOOST_CONTRACT_EXT_PP_TRAITS_AUX_REPLACE( \
             traits, \
             BOOST_CONTRACT_EXT_PP_TPARAM_TRAITS_AUX_DEFAULT_INDEX, \
@@ -26,6 +27,7 @@
 
 // PUBLIC //
 
+// Init. default argument to EMPTY without altering sign.
 #define BOOST_CONTRACT_EXT_PP_TPARAM_TRAITS_DEFAULT_PARSE_EMPTY(sign_traits) \
     ( \
         BOOST_PP_TUPLE_ELEM(2, 0, sign_traits), \
@@ -35,6 +37,7 @@
         ) \
     )
 
+// Replace previously init. default argument with what parsed from sign.
 #define BOOST_CONTRACT_EXT_PP_TPARAM_TRAITS_DEFAULT_PARSE_REPLACE_D_S( \
         d, s, sign_traits) \
     BOOST_PP_IIF(BOOST_CONTRACT_EXT_PP_KEYWORD_IS_DEFAULT_FRONT( \
