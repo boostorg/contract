@@ -10,7 +10,7 @@
 
 #include <boost/contract/ext_/preprocessor/traits/func/aux_/index.hpp>
 #include <boost/contract/ext_/preprocessor/traits/aux_/keyword.hpp>
-#include <boost/contract/ext_/preprocessor/traits/aux_/adt.hpp>
+#include <boost/contract/ext_/preprocessor/traits/adt.hpp>
 #include <boost/contract/ext_/preprocessor/keyword/public.hpp>
 #include <boost/contract/ext_/preprocessor/keyword/protected.hpp>
 #include <boost/contract/ext_/preprocessor/keyword/private.hpp>
@@ -30,7 +30,7 @@
     )
 
 #define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_ACCESS_TRAIT_(sign, traits) \
-    BOOST_CONTRACT_EXT_PP_TRAITS_AUX_PUSH_BACK(traits, \
+    BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK(traits, \
         BOOST_CONTRACT_EXT_PP_TRAITS_AUX_KEYWORD3( \
             sign, \
             BOOST_CONTRACT_EXT_PP_KEYWORD_IS_PUBLIC_FRONT, public, \
@@ -51,7 +51,7 @@
 
 // Expand to `public | protected | private | EMPTY()`.
 #define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_ACCESS(traits) \
-    BOOST_CONTRACT_EXT_PP_TRAITS_AUX_ELEM( \
+    BOOST_CONTRACT_EXT_PP_TRAITS_ELEM( \
         BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_AUX_ACCESS_INDEX, \
         traits \
     )()

@@ -10,7 +10,7 @@
 
 #include <boost/contract/ext_/preprocessor/traits/func/aux_/index.hpp>
 #include <boost/contract/ext_/preprocessor/traits/aux_/keyword.hpp>
-#include <boost/contract/ext_/preprocessor/traits/aux_/adt.hpp>
+#include <boost/contract/ext_/preprocessor/traits/adt.hpp>
 #include <boost/contract/ext_/preprocessor/keyword/export.hpp>
 #include <boost/preprocessor/facilities/empty.hpp>
 
@@ -27,7 +27,7 @@
     )
 
 #define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_EXPORT_TRAIT_(sign, traits) \
-    BOOST_CONTRACT_EXT_PP_TRAITS_AUX_PUSH_BACK( \
+    BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK( \
         traits, \
         BOOST_CONTRACT_EXT_PP_TRAITS_AUX_KEYWORD(sign, \
                 BOOST_CONTRACT_EXT_PP_KEYWORD_IS_EXPORT_FRONT, export) \
@@ -45,7 +45,7 @@
 
 // Expand to `export | EMPTY()`.
 #define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_EXPORT(traits) \
-    BOOST_CONTRACT_EXT_PP_TRAITS_AUX_ELEM( \
+    BOOST_CONTRACT_EXT_PP_TRAITS_ELEM( \
         BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_AUX_EXPORT_INDEX, \
         traits \
     )()
