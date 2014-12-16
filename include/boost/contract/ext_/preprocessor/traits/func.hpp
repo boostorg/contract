@@ -13,9 +13,9 @@
 #include <boost/contract/ext_/preprocessor/traits/func/verbatim.hpp>
 #include <boost/contract/ext_/preprocessor/traits/func/access.hpp>
 #include <boost/contract/ext_/preprocessor/traits/func/aux_/index.hpp>
-#include <boost/contract/ext_/preprocessor/traits/parse.hpp>
+#include <boost/contract/ext_/preprocessor/traits/adt.hpp>
 
-// PRIVATE //
+/* PRIVATE */
 
 // You can set this internal macro to stop and debug at a func-trait index.
 // define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_AUX_INDEX_TEST
@@ -67,10 +67,10 @@
         sign_traits
 #else
 #   define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_DONE_ \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PARSE_DONE
+        BOOST_CONTRACT_EXT_PP_SIGN_TRAITS_DONE
 #endif
 
-// PUBLIC //
+/* PUBLIC */
 
 // Expand specified function signature into its traits. Function traits are
 // are inspected using the FUNC_TRAITS macros.
@@ -81,7 +81,7 @@
     BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_EXPORT_( \
     BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_VERBATIM_( \
     BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_ACCESS_( \
-    BOOST_CONTRACT_EXT_PP_TRAITS_PARSE_INIT( \
+    BOOST_CONTRACT_EXT_PP_SIGN_TRAITS_INIT( \
         sign \
     )))))) \
 
