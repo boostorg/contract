@@ -34,8 +34,7 @@
 
 // Create a `sign_traits` data structure to start parsing specified signature.
 // Implementation: Leading NIL is used to handle empty macro params (on MSVC).
-#define BOOST_CONTRACT_EXT_PP_SIGN_TRAITS_INIT(sign) \
-    ( sign, BOOST_PP_NIL )
+#define BOOST_CONTRACT_EXT_PP_SIGN_TRAITS_INIT(sign) (sign, BOOST_PP_NIL)
 
 // Expand to final traits after they have been parsed from signature.
 // Implementation: Also removes leading NIL.
