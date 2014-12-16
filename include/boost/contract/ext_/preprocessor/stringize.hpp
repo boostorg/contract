@@ -2,7 +2,7 @@
 #ifndef BOOST_CONTRACT_EXT_PP_STRINGIZE_HPP_
 #define BOOST_CONTRACT_EXT_PP_STRINGIZE_HPP_
 
-#include <boost/contract/ext_/preprocessor/utility/is_empty.hpp>
+#include <boost/contract/ext_/preprocessor/utility/empty.hpp>
 #include <boost/preprocessor/control/iif.hpp>
 #include <boost/preprocessor/tuple/eat.hpp>
 #include <boost/preprocessor/stringize.hpp>
