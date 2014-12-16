@@ -12,13 +12,102 @@ entries = [
     {
         'directory': '.',
         'keywords': [
-'alignas', 'alignof', 'and', 'and_eq', 'asm', 'auto', 'bitand', 'bitor', 'bool', 'break', 'case', 'catch', 'char', 'char16_t', 'char32_t', 'class', 'compl', 'const', 'constexpr', 'const_cast', 'continue', 'decltype', 'default', 'delete', 'do', 'double', 'dynamic_cast', 'else', 'enum', 'explicit', 'export', 'extern', 'false', 'final', 'float', 'for', 'friend', 'goto', 'if', 'inline', 'int', 'long', 'mutable', 'namespace', 'new', 'noexcept', 'not', 'not_eq', 'nullptr', 'operator', 'or', 'or_eq', 'override', 'private', 'protected', 'public', 'register', 'reinterpret_cast', 'return', 'short', 'signed', 'sizeof', 'static', 'static_assert', 'static_cast', 'struct', 'switch', 'template', 'this', 'thread_local', 'throw', 'true', 'try', 'typedef', 'typeid', 'typename', 'union', 'unsigned', 'using', 'virtual', 'void', 'volatile', 'wchar_t', 'while', 'xor', 'xor_eq'
+            'alignas',
+            'alignof',
+            'and',
+            'and_eq',
+            'asm',
+            'auto',
+            'bitand',
+            'bitor',
+            'bool',
+            'break',
+            'case',
+            'catch',
+            'char',
+            'char16_t',
+            'char32_t',
+            'class',
+            'compl',
+            'const',
+            'constexpr',
+            'const_cast',
+            'continue',
+            'decltype',
+            'default',
+            'delete',
+            'do',
+            'double',
+            'dynamic_cast',
+            'else',
+            'enum',
+            'explicit',
+            'export',
+            'extern',
+            'false',
+            'final',
+            'float',
+            'for',
+            'friend',
+            'goto',
+            'if',
+            'inline',
+            'int',
+            'long',
+            'mutable',
+            'namespace',
+            'new',
+            'noexcept',
+            'not',
+            'not_eq',
+            'nullptr',
+            'operator',
+            'or',
+            'or_eq',
+            'override',
+            'private',
+            'protected',
+            'public',
+            'register',
+            'reinterpret_cast',
+            'return',
+            'short',
+            'signed',
+            'sizeof',
+            'static',
+            'static_assert',
+            'static_cast',
+            'struct',
+            'switch',
+            'template',
+            'this',
+            'thread_local',
+            'throw',
+            'true',
+            'try',
+            'typedef',
+            'typeid',
+            'typename',
+            'union',
+            'unsigned',
+            'using',
+            'virtual',
+            'void',
+            'volatile',
+            'wchar_t',
+            'while',
+            'xor',
+            'xor_eq'
         ]
     },
     {
         'directory': 'contract',
         'keywords': [
-'invariant', 'precondition', 'postcondition', 'extends', 'verbatim'
+            'invariant',
+            'precondition',
+            'postcondition',
+            'extends',
+            'verbatim'
         ]
     }
 ]
@@ -44,34 +133,38 @@ for entry in entries:
 #include <boost/contract/ext_/preprocessor/keyword/utility/is.hpp>
 #include <boost/preprocessor/cat.hpp>
 
-// PRIVATE //
+/* PRIVATE */
 
-// NOTE: These are not local macros, do NOT #undefine them ('x' used to avoid
-// concatenating to reserved symbols).
-// The following macro must expand to a unary token (e.g., `(1)`).
-#define BOOST_CONTRACT_EXT_PP_KEYWORD_{1}_ISx{2} (1)
-#define {2}xBOOST_CONTRACT_EXT_PP_KEYWORD_{1}_IS (1)
-// The following macro must expand to nothing.
-#define BOOST_CONTRACT_EXT_PP_KEYWORD_{1}_REMOVEx{2}
-#define {2}xBOOST_CONTRACT_EXT_PP_KEYWORD_{1}_REMOVE
+// Must expand to a single comma `,` (not local macros, do not #undefine).
+#define BOOST_CONTRACT_EXT_PP_KEYWORD_{1}_CAT_TO_COMMA{2} ,
+#define {2}BOOST_CONTRACT_EXT_PP_KEYWORD_{1}_CAT_TO_COMMA ,
+// Must expand to empty `` (not local macros, do not #undefine).
+#define BOOST_CONTRACT_EXT_PP_KEYWORD_{1}_CAT_TO_EMPTY{2}
+#define {2}BOOST_CONTRACT_EXT_PP_KEYWORD_{1}_CAT_TO_EMPTY
 
-// PUBLIC //
+/* PUBLIC */
 
+// Precondition: tokens must start with a token concatenable to a macro name
+//               (e.g., a literal or integral token) or with parenthesis.
 #define BOOST_CONTRACT_EXT_PP_KEYWORD_IS_{1}_FRONT(tokens) \\
-    BOOST_CONTRACT_EXT_PP_KEYWORD_UTILITY_IS_FRONT(tokens, \\
-            BOOST_CONTRACT_EXT_PP_KEYWORD_{1}_ISx)
+    BOOST_CONTRACT_EXT_PP_KEYWORD_UTILITY_IS_FRONT( \\
+            BOOST_CONTRACT_EXT_PP_KEYWORD_{1}_CAT_TO_COMMA, tokens)
 
-#define BOOST_CONTRACT_EXT_PP_KEYWORD_IS_{1}_BACK(token) \\
-    BOOST_CONTRACT_EXT_PP_KEYWORD_UTILITY_IS_BACK(token, \\
-            xBOOST_CONTRACT_EXT_PP_KEYWORD_{1}_IS)
+// Precondition: tokens must end with a token concatenable to a macro name
+//               (e.g., a literal or integral token) or with parenthesis.
+#define BOOST_CONTRACT_EXT_PP_KEYWORD_IS_{1}_BACK(tokens) \\
+    BOOST_CONTRACT_EXT_PP_KEYWORD_UTILITY_IS_BACK( \\
+            BOOST_CONTRACT_EXT_PP_KEYWORD_{1}_CAT_TO_COMMA, tokens)
 
-// Precondition: tokens start with keyword to remove (see `..._IS_{1}_FRONT`).
+// Precondition: tokens must start with `{2}` (this can be
+//               checked with `..._IS_{1}_FRONT` macro above).
 #define BOOST_CONTRACT_EXT_PP_KEYWORD_{1}_REMOVE_FRONT(tokens) \\
-    BOOST_PP_CAT(BOOST_CONTRACT_EXT_PP_KEYWORD_{1}_REMOVEx, tokens)
+    BOOST_PP_CAT(BOOST_CONTRACT_EXT_PP_KEYWORD_{1}_CAT_TO_EMPTY, tokens)
 
-// Precondition: token ends with keyword to remove (see `..._IS_{1}_BACK`).
-#define BOOST_CONTRACT_EXT_PP_KEYWORD_{1}_REMOVE_BACK(token) \\
-    BOOST_PP_CAT(token, xBOOST_CONTRACT_EXT_PP_KEYWORD_{1}_REMOVE)
+// Precondition: tokens must end with `{2}` (this can be
+//               checked with `..._IS_{1}_BACK` macro above).
+#define BOOST_CONTRACT_EXT_PP_KEYWORD_{1}_REMOVE_BACK(tokens) \\
+    BOOST_PP_CAT(tokens, BOOST_CONTRACT_EXT_PP_KEYWORD_{1}_CAT_TO_EMPTY)
 
 #endif // #include guard
 

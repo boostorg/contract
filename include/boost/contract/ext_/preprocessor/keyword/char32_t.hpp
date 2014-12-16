@@ -8,34 +8,38 @@
 #include <boost/contract/ext_/preprocessor/keyword/utility/is.hpp>
 #include <boost/preprocessor/cat.hpp>
 
-// PRIVATE //
+/* PRIVATE */
 
-// NOTE: These are not local macros, do NOT #undefine them ('x' used to avoid
-// concatenating to reserved symbols).
-// The following macro must expand to a unary token (e.g., `(1)`).
-#define BOOST_CONTRACT_EXT_PP_KEYWORD_CHAR32_T_ISxchar32_t (1)
-#define char32_txBOOST_CONTRACT_EXT_PP_KEYWORD_CHAR32_T_IS (1)
-// The following macro must expand to nothing.
-#define BOOST_CONTRACT_EXT_PP_KEYWORD_CHAR32_T_REMOVExchar32_t
-#define char32_txBOOST_CONTRACT_EXT_PP_KEYWORD_CHAR32_T_REMOVE
+// Must expand to a single comma `,` (not local macros, do not #undefine).
+#define BOOST_CONTRACT_EXT_PP_KEYWORD_CHAR32_T_CAT_TO_COMMAchar32_t ,
+#define char32_tBOOST_CONTRACT_EXT_PP_KEYWORD_CHAR32_T_CAT_TO_COMMA ,
+// Must expand to empty `` (not local macros, do not #undefine).
+#define BOOST_CONTRACT_EXT_PP_KEYWORD_CHAR32_T_CAT_TO_EMPTYchar32_t
+#define char32_tBOOST_CONTRACT_EXT_PP_KEYWORD_CHAR32_T_CAT_TO_EMPTY
 
-// PUBLIC //
+/* PUBLIC */
 
+// Precondition: tokens must start with a token concatenable to a macro name
+//               (e.g., a literal or integral token) or with parenthesis.
 #define BOOST_CONTRACT_EXT_PP_KEYWORD_IS_CHAR32_T_FRONT(tokens) \
-    BOOST_CONTRACT_EXT_PP_KEYWORD_UTILITY_IS_FRONT(tokens, \
-            BOOST_CONTRACT_EXT_PP_KEYWORD_CHAR32_T_ISx)
+    BOOST_CONTRACT_EXT_PP_KEYWORD_UTILITY_IS_FRONT( \
+            BOOST_CONTRACT_EXT_PP_KEYWORD_CHAR32_T_CAT_TO_COMMA, tokens)
 
-#define BOOST_CONTRACT_EXT_PP_KEYWORD_IS_CHAR32_T_BACK(token) \
-    BOOST_CONTRACT_EXT_PP_KEYWORD_UTILITY_IS_BACK(token, \
-            xBOOST_CONTRACT_EXT_PP_KEYWORD_CHAR32_T_IS)
+// Precondition: tokens must end with a token concatenable to a macro name
+//               (e.g., a literal or integral token) or with parenthesis.
+#define BOOST_CONTRACT_EXT_PP_KEYWORD_IS_CHAR32_T_BACK(tokens) \
+    BOOST_CONTRACT_EXT_PP_KEYWORD_UTILITY_IS_BACK( \
+            BOOST_CONTRACT_EXT_PP_KEYWORD_CHAR32_T_CAT_TO_COMMA, tokens)
 
-// Precondition: tokens start with keyword to remove (see `..._IS_CHAR32_T_FRONT`).
+// Precondition: tokens must start with `char32_t` (this can be
+//               checked with `..._IS_CHAR32_T_FRONT` macro above).
 #define BOOST_CONTRACT_EXT_PP_KEYWORD_CHAR32_T_REMOVE_FRONT(tokens) \
-    BOOST_PP_CAT(BOOST_CONTRACT_EXT_PP_KEYWORD_CHAR32_T_REMOVEx, tokens)
+    BOOST_PP_CAT(BOOST_CONTRACT_EXT_PP_KEYWORD_CHAR32_T_CAT_TO_EMPTY, tokens)
 
-// Precondition: token ends with keyword to remove (see `..._IS_CHAR32_T_BACK`).
-#define BOOST_CONTRACT_EXT_PP_KEYWORD_CHAR32_T_REMOVE_BACK(token) \
-    BOOST_PP_CAT(token, xBOOST_CONTRACT_EXT_PP_KEYWORD_CHAR32_T_REMOVE)
+// Precondition: tokens must end with `char32_t` (this can be
+//               checked with `..._IS_CHAR32_T_BACK` macro above).
+#define BOOST_CONTRACT_EXT_PP_KEYWORD_CHAR32_T_REMOVE_BACK(tokens) \
+    BOOST_PP_CAT(tokens, BOOST_CONTRACT_EXT_PP_KEYWORD_CHAR32_T_CAT_TO_EMPTY)
 
 #endif // #include guard
 

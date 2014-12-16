@@ -8,34 +8,38 @@
 #include <boost/contract/ext_/preprocessor/keyword/utility/is.hpp>
 #include <boost/preprocessor/cat.hpp>
 
-// PRIVATE //
+/* PRIVATE */
 
-// NOTE: These are not local macros, do NOT #undefine them ('x' used to avoid
-// concatenating to reserved symbols).
-// The following macro must expand to a unary token (e.g., `(1)`).
-#define BOOST_CONTRACT_EXT_PP_KEYWORD_EXPLICIT_ISxexplicit (1)
-#define explicitxBOOST_CONTRACT_EXT_PP_KEYWORD_EXPLICIT_IS (1)
-// The following macro must expand to nothing.
-#define BOOST_CONTRACT_EXT_PP_KEYWORD_EXPLICIT_REMOVExexplicit
-#define explicitxBOOST_CONTRACT_EXT_PP_KEYWORD_EXPLICIT_REMOVE
+// Must expand to a single comma `,` (not local macros, do not #undefine).
+#define BOOST_CONTRACT_EXT_PP_KEYWORD_EXPLICIT_CAT_TO_COMMAexplicit ,
+#define explicitBOOST_CONTRACT_EXT_PP_KEYWORD_EXPLICIT_CAT_TO_COMMA ,
+// Must expand to empty `` (not local macros, do not #undefine).
+#define BOOST_CONTRACT_EXT_PP_KEYWORD_EXPLICIT_CAT_TO_EMPTYexplicit
+#define explicitBOOST_CONTRACT_EXT_PP_KEYWORD_EXPLICIT_CAT_TO_EMPTY
 
-// PUBLIC //
+/* PUBLIC */
 
+// Precondition: tokens must start with a token concatenable to a macro name
+//               (e.g., a literal or integral token) or with parenthesis.
 #define BOOST_CONTRACT_EXT_PP_KEYWORD_IS_EXPLICIT_FRONT(tokens) \
-    BOOST_CONTRACT_EXT_PP_KEYWORD_UTILITY_IS_FRONT(tokens, \
-            BOOST_CONTRACT_EXT_PP_KEYWORD_EXPLICIT_ISx)
+    BOOST_CONTRACT_EXT_PP_KEYWORD_UTILITY_IS_FRONT( \
+            BOOST_CONTRACT_EXT_PP_KEYWORD_EXPLICIT_CAT_TO_COMMA, tokens)
 
-#define BOOST_CONTRACT_EXT_PP_KEYWORD_IS_EXPLICIT_BACK(token) \
-    BOOST_CONTRACT_EXT_PP_KEYWORD_UTILITY_IS_BACK(token, \
-            xBOOST_CONTRACT_EXT_PP_KEYWORD_EXPLICIT_IS)
+// Precondition: tokens must end with a token concatenable to a macro name
+//               (e.g., a literal or integral token) or with parenthesis.
+#define BOOST_CONTRACT_EXT_PP_KEYWORD_IS_EXPLICIT_BACK(tokens) \
+    BOOST_CONTRACT_EXT_PP_KEYWORD_UTILITY_IS_BACK( \
+            BOOST_CONTRACT_EXT_PP_KEYWORD_EXPLICIT_CAT_TO_COMMA, tokens)
 
-// Precondition: tokens start with keyword to remove (see `..._IS_EXPLICIT_FRONT`).
+// Precondition: tokens must start with `explicit` (this can be
+//               checked with `..._IS_EXPLICIT_FRONT` macro above).
 #define BOOST_CONTRACT_EXT_PP_KEYWORD_EXPLICIT_REMOVE_FRONT(tokens) \
-    BOOST_PP_CAT(BOOST_CONTRACT_EXT_PP_KEYWORD_EXPLICIT_REMOVEx, tokens)
+    BOOST_PP_CAT(BOOST_CONTRACT_EXT_PP_KEYWORD_EXPLICIT_CAT_TO_EMPTY, tokens)
 
-// Precondition: token ends with keyword to remove (see `..._IS_EXPLICIT_BACK`).
-#define BOOST_CONTRACT_EXT_PP_KEYWORD_EXPLICIT_REMOVE_BACK(token) \
-    BOOST_PP_CAT(token, xBOOST_CONTRACT_EXT_PP_KEYWORD_EXPLICIT_REMOVE)
+// Precondition: tokens must end with `explicit` (this can be
+//               checked with `..._IS_EXPLICIT_BACK` macro above).
+#define BOOST_CONTRACT_EXT_PP_KEYWORD_EXPLICIT_REMOVE_BACK(tokens) \
+    BOOST_PP_CAT(tokens, BOOST_CONTRACT_EXT_PP_KEYWORD_EXPLICIT_CAT_TO_EMPTY)
 
 #endif // #include guard
 

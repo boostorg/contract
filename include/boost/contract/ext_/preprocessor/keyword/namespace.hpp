@@ -8,34 +8,38 @@
 #include <boost/contract/ext_/preprocessor/keyword/utility/is.hpp>
 #include <boost/preprocessor/cat.hpp>
 
-// PRIVATE //
+/* PRIVATE */
 
-// NOTE: These are not local macros, do NOT #undefine them ('x' used to avoid
-// concatenating to reserved symbols).
-// The following macro must expand to a unary token (e.g., `(1)`).
-#define BOOST_CONTRACT_EXT_PP_KEYWORD_NAMESPACE_ISxnamespace (1)
-#define namespacexBOOST_CONTRACT_EXT_PP_KEYWORD_NAMESPACE_IS (1)
-// The following macro must expand to nothing.
-#define BOOST_CONTRACT_EXT_PP_KEYWORD_NAMESPACE_REMOVExnamespace
-#define namespacexBOOST_CONTRACT_EXT_PP_KEYWORD_NAMESPACE_REMOVE
+// Must expand to a single comma `,` (not local macros, do not #undefine).
+#define BOOST_CONTRACT_EXT_PP_KEYWORD_NAMESPACE_CAT_TO_COMMAnamespace ,
+#define namespaceBOOST_CONTRACT_EXT_PP_KEYWORD_NAMESPACE_CAT_TO_COMMA ,
+// Must expand to empty `` (not local macros, do not #undefine).
+#define BOOST_CONTRACT_EXT_PP_KEYWORD_NAMESPACE_CAT_TO_EMPTYnamespace
+#define namespaceBOOST_CONTRACT_EXT_PP_KEYWORD_NAMESPACE_CAT_TO_EMPTY
 
-// PUBLIC //
+/* PUBLIC */
 
+// Precondition: tokens must start with a token concatenable to a macro name
+//               (e.g., a literal or integral token) or with parenthesis.
 #define BOOST_CONTRACT_EXT_PP_KEYWORD_IS_NAMESPACE_FRONT(tokens) \
-    BOOST_CONTRACT_EXT_PP_KEYWORD_UTILITY_IS_FRONT(tokens, \
-            BOOST_CONTRACT_EXT_PP_KEYWORD_NAMESPACE_ISx)
+    BOOST_CONTRACT_EXT_PP_KEYWORD_UTILITY_IS_FRONT( \
+            BOOST_CONTRACT_EXT_PP_KEYWORD_NAMESPACE_CAT_TO_COMMA, tokens)
 
-#define BOOST_CONTRACT_EXT_PP_KEYWORD_IS_NAMESPACE_BACK(token) \
-    BOOST_CONTRACT_EXT_PP_KEYWORD_UTILITY_IS_BACK(token, \
-            xBOOST_CONTRACT_EXT_PP_KEYWORD_NAMESPACE_IS)
+// Precondition: tokens must end with a token concatenable to a macro name
+//               (e.g., a literal or integral token) or with parenthesis.
+#define BOOST_CONTRACT_EXT_PP_KEYWORD_IS_NAMESPACE_BACK(tokens) \
+    BOOST_CONTRACT_EXT_PP_KEYWORD_UTILITY_IS_BACK( \
+            BOOST_CONTRACT_EXT_PP_KEYWORD_NAMESPACE_CAT_TO_COMMA, tokens)
 
-// Precondition: tokens start with keyword to remove (see `..._IS_NAMESPACE_FRONT`).
+// Precondition: tokens must start with `namespace` (this can be
+//               checked with `..._IS_NAMESPACE_FRONT` macro above).
 #define BOOST_CONTRACT_EXT_PP_KEYWORD_NAMESPACE_REMOVE_FRONT(tokens) \
-    BOOST_PP_CAT(BOOST_CONTRACT_EXT_PP_KEYWORD_NAMESPACE_REMOVEx, tokens)
+    BOOST_PP_CAT(BOOST_CONTRACT_EXT_PP_KEYWORD_NAMESPACE_CAT_TO_EMPTY, tokens)
 
-// Precondition: token ends with keyword to remove (see `..._IS_NAMESPACE_BACK`).
-#define BOOST_CONTRACT_EXT_PP_KEYWORD_NAMESPACE_REMOVE_BACK(token) \
-    BOOST_PP_CAT(token, xBOOST_CONTRACT_EXT_PP_KEYWORD_NAMESPACE_REMOVE)
+// Precondition: tokens must end with `namespace` (this can be
+//               checked with `..._IS_NAMESPACE_BACK` macro above).
+#define BOOST_CONTRACT_EXT_PP_KEYWORD_NAMESPACE_REMOVE_BACK(tokens) \
+    BOOST_PP_CAT(tokens, BOOST_CONTRACT_EXT_PP_KEYWORD_NAMESPACE_CAT_TO_EMPTY)
 
 #endif // #include guard
 

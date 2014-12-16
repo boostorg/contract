@@ -8,34 +8,38 @@
 #include <boost/contract/ext_/preprocessor/keyword/utility/is.hpp>
 #include <boost/preprocessor/cat.hpp>
 
-// PRIVATE //
+/* PRIVATE */
 
-// NOTE: These are not local macros, do NOT #undefine them ('x' used to avoid
-// concatenating to reserved symbols).
-// The following macro must expand to a unary token (e.g., `(1)`).
-#define BOOST_CONTRACT_EXT_PP_KEYWORD_STRUCT_ISxstruct (1)
-#define structxBOOST_CONTRACT_EXT_PP_KEYWORD_STRUCT_IS (1)
-// The following macro must expand to nothing.
-#define BOOST_CONTRACT_EXT_PP_KEYWORD_STRUCT_REMOVExstruct
-#define structxBOOST_CONTRACT_EXT_PP_KEYWORD_STRUCT_REMOVE
+// Must expand to a single comma `,` (not local macros, do not #undefine).
+#define BOOST_CONTRACT_EXT_PP_KEYWORD_STRUCT_CAT_TO_COMMAstruct ,
+#define structBOOST_CONTRACT_EXT_PP_KEYWORD_STRUCT_CAT_TO_COMMA ,
+// Must expand to empty `` (not local macros, do not #undefine).
+#define BOOST_CONTRACT_EXT_PP_KEYWORD_STRUCT_CAT_TO_EMPTYstruct
+#define structBOOST_CONTRACT_EXT_PP_KEYWORD_STRUCT_CAT_TO_EMPTY
 
-// PUBLIC //
+/* PUBLIC */
 
+// Precondition: tokens must start with a token concatenable to a macro name
+//               (e.g., a literal or integral token) or with parenthesis.
 #define BOOST_CONTRACT_EXT_PP_KEYWORD_IS_STRUCT_FRONT(tokens) \
-    BOOST_CONTRACT_EXT_PP_KEYWORD_UTILITY_IS_FRONT(tokens, \
-            BOOST_CONTRACT_EXT_PP_KEYWORD_STRUCT_ISx)
+    BOOST_CONTRACT_EXT_PP_KEYWORD_UTILITY_IS_FRONT( \
+            BOOST_CONTRACT_EXT_PP_KEYWORD_STRUCT_CAT_TO_COMMA, tokens)
 
-#define BOOST_CONTRACT_EXT_PP_KEYWORD_IS_STRUCT_BACK(token) \
-    BOOST_CONTRACT_EXT_PP_KEYWORD_UTILITY_IS_BACK(token, \
-            xBOOST_CONTRACT_EXT_PP_KEYWORD_STRUCT_IS)
+// Precondition: tokens must end with a token concatenable to a macro name
+//               (e.g., a literal or integral token) or with parenthesis.
+#define BOOST_CONTRACT_EXT_PP_KEYWORD_IS_STRUCT_BACK(tokens) \
+    BOOST_CONTRACT_EXT_PP_KEYWORD_UTILITY_IS_BACK( \
+            BOOST_CONTRACT_EXT_PP_KEYWORD_STRUCT_CAT_TO_COMMA, tokens)
 
-// Precondition: tokens start with keyword to remove (see `..._IS_STRUCT_FRONT`).
+// Precondition: tokens must start with `struct` (this can be
+//               checked with `..._IS_STRUCT_FRONT` macro above).
 #define BOOST_CONTRACT_EXT_PP_KEYWORD_STRUCT_REMOVE_FRONT(tokens) \
-    BOOST_PP_CAT(BOOST_CONTRACT_EXT_PP_KEYWORD_STRUCT_REMOVEx, tokens)
+    BOOST_PP_CAT(BOOST_CONTRACT_EXT_PP_KEYWORD_STRUCT_CAT_TO_EMPTY, tokens)
 
-// Precondition: token ends with keyword to remove (see `..._IS_STRUCT_BACK`).
-#define BOOST_CONTRACT_EXT_PP_KEYWORD_STRUCT_REMOVE_BACK(token) \
-    BOOST_PP_CAT(token, xBOOST_CONTRACT_EXT_PP_KEYWORD_STRUCT_REMOVE)
+// Precondition: tokens must end with `struct` (this can be
+//               checked with `..._IS_STRUCT_BACK` macro above).
+#define BOOST_CONTRACT_EXT_PP_KEYWORD_STRUCT_REMOVE_BACK(tokens) \
+    BOOST_PP_CAT(tokens, BOOST_CONTRACT_EXT_PP_KEYWORD_STRUCT_CAT_TO_EMPTY)
 
 #endif // #include guard
 

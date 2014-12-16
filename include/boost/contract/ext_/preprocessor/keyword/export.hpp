@@ -8,34 +8,38 @@
 #include <boost/contract/ext_/preprocessor/keyword/utility/is.hpp>
 #include <boost/preprocessor/cat.hpp>
 
-// PRIVATE //
+/* PRIVATE */
 
-// NOTE: These are not local macros, do NOT #undefine them ('x' used to avoid
-// concatenating to reserved symbols).
-// The following macro must expand to a unary token (e.g., `(1)`).
-#define BOOST_CONTRACT_EXT_PP_KEYWORD_EXPORT_ISxexport (1)
-#define exportxBOOST_CONTRACT_EXT_PP_KEYWORD_EXPORT_IS (1)
-// The following macro must expand to nothing.
-#define BOOST_CONTRACT_EXT_PP_KEYWORD_EXPORT_REMOVExexport
-#define exportxBOOST_CONTRACT_EXT_PP_KEYWORD_EXPORT_REMOVE
+// Must expand to a single comma `,` (not local macros, do not #undefine).
+#define BOOST_CONTRACT_EXT_PP_KEYWORD_EXPORT_CAT_TO_COMMAexport ,
+#define exportBOOST_CONTRACT_EXT_PP_KEYWORD_EXPORT_CAT_TO_COMMA ,
+// Must expand to empty `` (not local macros, do not #undefine).
+#define BOOST_CONTRACT_EXT_PP_KEYWORD_EXPORT_CAT_TO_EMPTYexport
+#define exportBOOST_CONTRACT_EXT_PP_KEYWORD_EXPORT_CAT_TO_EMPTY
 
-// PUBLIC //
+/* PUBLIC */
 
+// Precondition: tokens must start with a token concatenable to a macro name
+//               (e.g., a literal or integral token) or with parenthesis.
 #define BOOST_CONTRACT_EXT_PP_KEYWORD_IS_EXPORT_FRONT(tokens) \
-    BOOST_CONTRACT_EXT_PP_KEYWORD_UTILITY_IS_FRONT(tokens, \
-            BOOST_CONTRACT_EXT_PP_KEYWORD_EXPORT_ISx)
+    BOOST_CONTRACT_EXT_PP_KEYWORD_UTILITY_IS_FRONT( \
+            BOOST_CONTRACT_EXT_PP_KEYWORD_EXPORT_CAT_TO_COMMA, tokens)
 
-#define BOOST_CONTRACT_EXT_PP_KEYWORD_IS_EXPORT_BACK(token) \
-    BOOST_CONTRACT_EXT_PP_KEYWORD_UTILITY_IS_BACK(token, \
-            xBOOST_CONTRACT_EXT_PP_KEYWORD_EXPORT_IS)
+// Precondition: tokens must end with a token concatenable to a macro name
+//               (e.g., a literal or integral token) or with parenthesis.
+#define BOOST_CONTRACT_EXT_PP_KEYWORD_IS_EXPORT_BACK(tokens) \
+    BOOST_CONTRACT_EXT_PP_KEYWORD_UTILITY_IS_BACK( \
+            BOOST_CONTRACT_EXT_PP_KEYWORD_EXPORT_CAT_TO_COMMA, tokens)
 
-// Precondition: tokens start with keyword to remove (see `..._IS_EXPORT_FRONT`).
+// Precondition: tokens must start with `export` (this can be
+//               checked with `..._IS_EXPORT_FRONT` macro above).
 #define BOOST_CONTRACT_EXT_PP_KEYWORD_EXPORT_REMOVE_FRONT(tokens) \
-    BOOST_PP_CAT(BOOST_CONTRACT_EXT_PP_KEYWORD_EXPORT_REMOVEx, tokens)
+    BOOST_PP_CAT(BOOST_CONTRACT_EXT_PP_KEYWORD_EXPORT_CAT_TO_EMPTY, tokens)
 
-// Precondition: token ends with keyword to remove (see `..._IS_EXPORT_BACK`).
-#define BOOST_CONTRACT_EXT_PP_KEYWORD_EXPORT_REMOVE_BACK(token) \
-    BOOST_PP_CAT(token, xBOOST_CONTRACT_EXT_PP_KEYWORD_EXPORT_REMOVE)
+// Precondition: tokens must end with `export` (this can be
+//               checked with `..._IS_EXPORT_BACK` macro above).
+#define BOOST_CONTRACT_EXT_PP_KEYWORD_EXPORT_REMOVE_BACK(tokens) \
+    BOOST_PP_CAT(tokens, BOOST_CONTRACT_EXT_PP_KEYWORD_EXPORT_CAT_TO_EMPTY)
 
 #endif // #include guard
 
