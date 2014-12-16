@@ -1,6 +1,6 @@
 
-#ifndef BOOST_CONTRACT_EXT_PP_IS_EMPTY_HPP_
-#define BOOST_CONTRACT_EXT_PP_IS_EMPTY_HPP_
+#ifndef BOOST_CONTRACT_EXT_PP_EMPTY_HPP_
+#define BOOST_CONTRACT_EXT_PP_EMPTY_HPP_
 
 #include <boost/contract/ext_/preprocessor/paren/has.hpp>
 #include <boost/preprocessor/control/iif.hpp>
