@@ -7,11 +7,12 @@
 #include <boost/contract/ext_/preprocessor/keyword/class.hpp>
 #include <boost/contract/ext_/preprocessor/keyword/template.hpp>
 #include <boost/contract/ext_/preprocessor/traits/aux_/keyword_paren.hpp>
-#include <boost/contract/ext_/preprocessor/traits/aux_/adt.hpp>
+#include <boost/contract/ext_/preprocessor/traits/aux_/type.hpp>
+#include <boost/contract/ext_/preprocessor/traits/adt.hpp>
 #include <boost/preprocessor/control/iif.hpp>
 #include <boost/preprocessor/tuple/eat.hpp>
 
-// PRIVATE //
+/* PRIVATE */
 
 #define BOOST_CONTRACT_EXT_PP_TPARAM_TRAITS_KIND_SIGN_(sign, traits) \
     BOOST_PP_IIF(BOOST_CONTRACT_EXT_PP_KEYWORD_IS_TYPENAME_FRONT(sign), \
@@ -21,11 +22,11 @@
     , BOOST_PP_IIF(BOOST_CONTRACT_EXT_PP_KEYWORD_IS_TEMPLATE_FRONT(sign), \
         BOOST_CONTRACT_EXT_PP_TPARAM_TRAITS_KIND_TEMPLATE_SIGN_ \
     , \
-        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_PAREN_TYPE_SKIP \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_TYPE_SKIP \
     )))(sign)
         
 #define BOOST_CONTRACT_EXT_PP_TPARAM_TRAITS_KIND_TRAIT_(sign, traits) \
-    BOOST_CONTRACT_EXT_PP_TRAITS_AUX_PUSH_BACK( \
+    BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK( \
         traits, \
         BOOST_PP_IIF(BOOST_CONTRACT_EXT_PP_KEYWORD_IS_TYPENAME_FRONT(sign), \
             typename BOOST_PP_TUPLE_EAT(1) \
@@ -34,11 +35,11 @@
         , BOOST_PP_IIF(BOOST_CONTRACT_EXT_PP_KEYWORD_IS_TEMPLATE_FRONT(sign), \
             BOOST_CONTRACT_EXT_PP_TPARAM_TRAITS_KIND_TEMPLATE_TRAIT_ \
         , \
-            BOOST_CONTRACT_EXT_PP_TRAITS_AUX_PAREN_TYPE \
+            BOOST_CONTRACT_EXT_PP_TRAITS_AUX_TYPE \
         )))(sign) \
     )
 
-// PUBLIC //
+/* PUBLIC */
     
 #define BOOST_CONTRACT_EXT_PP_TPARAM_TRAITS_KIND_PARSE(sign_traits) \
     ( \
@@ -50,7 +51,7 @@
 // value, and template template parameters respectively). See also
 // KIND_TEMPLATE macros below for template template parameters.
 #define BOOST_CONTRACT_EXT_PP_TPARAM_TRAITS_KIND(traits) \
-    BOOST_CONTRACT_EXT_PP_TRAITS_AUX_ELEM( \
+    BOOST_CONTRACT_EXT_PP_TRAITS_ELEM( \
         BOOST_CONTRACT_EXT_PP_TPARAM_TRAITS_AUX_KIND_INDEX, \
         traits \
     )
