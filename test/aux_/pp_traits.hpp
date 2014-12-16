@@ -2,7 +2,7 @@
 #ifndef BOOST_CONTRACT_TEST_AUX_PP_TRAITS_HPP_
 #define BOOST_CONTRACT_TEST_AUX_PP_TRAITS_HPP_
 
-#include <boost/contract/ext_/preprocessor/traits/parse.hpp>
+#include <boost/contract/ext_/preprocessor/traits/adt.hpp>
 #include <boost/contract/ext_/preprocessor/stringize.hpp>
 #include <boost/preprocessor/stringize.hpp>
 #include <boost/detail/lightweight_test.hpp>
@@ -56,11 +56,11 @@ std::string trim ( std::string const& source ) {
 #define BOOST_CONTRACT_TEST_AUX_PP_TRAITS_( \
         sign_traits, get_trait_macro, parsed_trait, sign_after_trait) \
     BOOST_CONTRACT_TEST_AUX_PP_TRAITS_EQUAL_( \
-        get_trait_macro(BOOST_CONTRACT_EXT_PP_TRAITS_PARSE_DONE(sign_traits)), \
+        get_trait_macro(BOOST_CONTRACT_EXT_PP_SIGN_TRAITS_DONE(sign_traits)), \
         parsed_trait \
     ) \
     BOOST_CONTRACT_TEST_AUX_PP_TRAITS_EQUAL_( \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PARSE_REST(sign_traits), \
+        BOOST_CONTRACT_EXT_PP_SIGN_TRAITS_FIRST(sign_traits), \
         sign_after_trait \
     )
 
@@ -68,20 +68,38 @@ std::string trim ( std::string const& source ) {
 
 // Precondition: #define BOOST_CONTRACT_EXT_PP_..._TRAITS_TEST_AT_ to the INDEX
 // of the trait that needs to be tested.
-#define BOOST_CONTRACT_TEST_AUX_PP_TRAITS( \
-    get_trait_macro, \
-    parse_traits_macro, \
-    sign_before_trait, \
-    sign_at_trait, \
-    sign_after_trait, \
-    parsed_trait \
-) \
-    BOOST_CONTRACT_TEST_AUX_PP_TRAITS_( \
-        parse_traits_macro(sign_before_trait sign_at_trait sign_after_trait), \
+#ifndef DEBUG
+#   define BOOST_CONTRACT_TEST_AUX_PP_TRAITS( \
         get_trait_macro, \
-        parsed_trait, \
-        sign_after_trait \
-    )
+        parse_traits_macro, \
+        sign_before_trait, \
+        sign_at_trait, \
+        sign_after_trait, \
+        parsed_trait \
+    ) \
+        BOOST_CONTRACT_TEST_AUX_PP_TRAITS_( \
+            parse_traits_macro( \
+                    sign_before_trait sign_at_trait sign_after_trait), \
+            get_trait_macro, \
+            parsed_trait, \
+            sign_after_trait \
+        )
+#else
+// To #define DEBUG is useful when looking at pre-processed output (the NIL
+// leading parsed_traits will be remove by non-debug invocation of DONE).
+#   define BOOST_CONTRACT_TEST_AUX_PP_TRAITS( \
+        get_trait_macro, \
+        parse_traits_macro, \
+        sign_before_trait, \
+        sign_at_trait, \
+        sign_after_trait, \
+        parsed_trait \
+    ) \
+        sign = sign_before_trait sign_at_trait sign_after_trait \
+        --> \
+        (remaining_sign, BOOST_PP_NIL parsed_traits) = parse_traits_macro( \
+                sign_before_trait sign_at_trait sign_after_trait)
+#endif
 
 #define BOOST_CONTRACT_TEST_AUX_PP_TRAITS_REPORT_ERRORS \
     boost::report_errors()
