@@ -29,28 +29,28 @@
     )
 
 int main ( ) {
-    // None.
+    // Test no attributes (for all C++11, MSVC, GCC, etc).
     BOOST_CONTRACT_TEST_( BOOST_PP_EMPTY() )
     
-    // C++11 attributes with commas.
+    // Test C++11 attributes with commas.
     BOOST_CONTRACT_TEST_( ([[noreturn, deprecated("reason")]]) )
-    // Multiple C++11 attributes.
+    // Test multiple C++11 attributes.
     BOOST_CONTRACT_TEST_( ([[noreturn]] [[deprecated("reason")]]) )
-    // Single C++11 attribute.
+    // Test single C++11 attribute.
     BOOST_CONTRACT_TEST_( ([[export]]) )
     
-    // MSVC declaration specifications do not allow for commas.
-    // Multiple MSVC declaration specifications.
+    // NOTE: MSVC declaration specifications do not allow for commas.
+    // Test multiple MSVC declaration specifications.
     BOOST_CONTRACT_TEST_(
             (__declspec(noreturn) __declspec(deprecated("reason"))) )
-    // Single MSVC declaration specification.
+    // Test single MSVC declaration specification.
     BOOST_CONTRACT_TEST_( (__declspec(dllexport)) )
 
-    // GCC attributes do not allow for commas.
-    // Multiple GCC attributes.
+    // NOTE: GCC attributes do not allow for commas.
+    // Test multiple GCC attributes.
     BOOST_CONTRACT_TEST_(
             (__attribute__((noreturn)) __attribute__((deprecated("reason")))) )
-    // Single GCC attribute.
+    // Test single GCC attribute.
     BOOST_CONTRACT_TEST_( (__attribute__((dllexport))) )
     
     return BOOST_CONTRACT_TEST_AUX_PP_TRAITS_REPORT_ERRORS;

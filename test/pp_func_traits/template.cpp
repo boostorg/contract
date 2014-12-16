@@ -10,11 +10,13 @@
 
 #include "../aux_/pp_traits.hpp"
 #include <boost/contract/ext_/preprocessor/traits/func.hpp>
-#include <boost/contract/ext_/preprocessor/utility/is_empty.hpp>
+#include <boost/contract/ext_/preprocessor/utility/empty.hpp>
+#include <boost/contract/ext_/preprocessor/paren/has.hpp>
 #include <boost/preprocessor/facilities/empty.hpp>
 #include <boost/preprocessor/list/for_each_i.hpp>
 #include <boost/preprocessor/logical/not.hpp>
 #include <boost/preprocessor/control/iif.hpp>
+#include <boost/preprocessor/control/expr_iif.hpp>
 #include <boost/preprocessor/punctuation/comma_if.hpp>
 #include <boost/preprocessor/tuple/eat.hpp>
 #include <boost/preprocessor/tuple/rem.hpp>
@@ -22,10 +24,27 @@
 // NOTE: Some extra test macros are necessary here to regenerate the sign back
 // from the parsed trait to check if the parsing was correct. But, at the end
 // these are valuable tests also because they use the TPARAM_TRAITS macros.
+
+// Assume all 1-tuple types were specified without parenthesis in these tests
+// (in real code generation this is not an issue, but here generated code must
+// match original signature and its parenthesis).
+#define BOOST_CONTRACT_TEST_TPARAM_REM_YES_(tokens) \
+    BOOST_PP_EXPR_IIF(BOOST_PP_EQUAL(BOOST_PP_TUPLE_SIZE(tokens), 1), \
+        BOOST_PP_TUPLE_REM(0) \
+    ) \
+    tokens
+
+#define BOOST_CONTRACT_TEST_TPARAM_REM_(tokens) \
+    BOOST_PP_IIF(BOOST_CONTRACT_EXT_PP_HAS_PAREN(tokens), \
+        BOOST_CONTRACT_TEST_TPARAM_REM_YES_ \
+    , \
+        BOOST_PP_TUPLE_REM(1) \
+    )(tokens)
         
 #define BOOST_CONTRACT_TEST_TPARAM_(r, unused, i, tparam_traits) \
     BOOST_PP_COMMA_IF(i) \
-    BOOST_CONTRACT_EXT_PP_TPARAM_TRAITS_KIND(tparam_traits) \
+    BOOST_CONTRACT_TEST_TPARAM_REM_( \
+            BOOST_CONTRACT_EXT_PP_TPARAM_TRAITS_KIND(tparam_traits)) \
     BOOST_CONTRACT_EXT_PP_TPARAM_TRAITS_NAME(tparam_traits) \
     BOOST_PP_IIF(BOOST_CONTRACT_EXT_PP_IS_EMPTY( \
             BOOST_CONTRACT_EXT_PP_TPARAM_TRAITS_DEFAULT(tparam_traits)), \
@@ -61,69 +80,127 @@
         trait \
     )
 
+    //BOOST_CONTRACT_EXT_PP_TRAITS_AUX_TYPE_PARSE( int I BOOST_PP_EMPTY )
+    //
+    //BOOST_CONTRACT_EXT_PP_TRAITS_AUX_TYPE_PARSE( unsigned long unsigned long const I BOOST_PP_EMPTY )
+    //
+    //BOOST_CONTRACT_EXT_PP_TRAITS_AUX_TYPE_PARSE( (int const* const) I BOOST_PP_EMPTY )
+    //
+    //BOOST_CONTRACT_EXT_PP_TRAITS_AUX_TYPE_PARSE( (::std::map<int, char>) I BOOST_PP_EMPTY )
+    //
+    //BOOST_CONTRACT_EXT_PP_TRAITS_AUX_TYPE_PARSE( auto I BOOST_PP_EMPTY )
+    //
+    //BOOST_CONTRACT_EXT_PP_TRAITS_AUX_TYPE_PARSE( register unsigned int const I BOOST_PP_EMPTY )
+    //
+    //BOOST_CONTRACT_EXT_PP_TRAITS_AUX_TYPE_PARSE( unsigned decltype(std::map<T, U>::value_type() + 1) const I BOOST_PP_EMPTY )
+    
 int main ( ) {
-    BOOST_CONTRACT_TEST_( BOOST_PP_EMPTY() ) // None.
+/*    // Test no template.
+    BOOST_CONTRACT_TEST_( BOOST_PP_EMPTY() )
 
-    BOOST_CONTRACT_TEST_( // Type, w/ default, and variadic.
-        template(
-            typename T,
-            class U, default (std::map<int, char>),
-            typename... V
-        )
-    )
-    
-    //BOOST_CONTRACT_TEST_( template( class... T ) )
-    
-    //BOOST_CONTRACT_TEST_( template( typename T ) )
-    //BOOST_CONTRACT_TEST_( template( typename... T ) )
-    
-    //BOOST_CONTRACT_TEST_( class T, default (std::pair<int, int>) )
-    //BOOST_CONTRACT_TEST_( typename T, default (std::pair<int, int>) )
-    
-/* 
+    // Test template with no parameter.
+    BOOST_CONTRACT_TEST_( template( ) )
+
+    // Test named typename.
+    BOOST_CONTRACT_TEST_( template( typename T ) )
+    // Test named typename with default.
     BOOST_CONTRACT_TEST_(
-        template(
-            typename T,
-            class U,
-            bool B,
-            (std::size_t) S,
-            (std::pair<int, int>::first_type) I,
-            template(
-                typename TT,
-                class UU,
-                bool BB,
-                std::pair<int, int>::first_type II,
-                template<
-                    typename TTT,
-                    class UUU,
-                    bool BBB,
-                    std::pair<int, int>::first_type III
-                > class PP
-            ) class P
-        )
-    )
+            template( typename T, default (std::map<int, char>) ) )
+    // Test named variadic typename.
+    BOOST_CONTRACT_TEST_( template( typename... T) )
+    // Test unnamed typename.
+    BOOST_CONTRACT_TEST_( template( typename ) )
+    // Test unnamed typename with default.
+    BOOST_CONTRACT_TEST_(
+          template( typename, default (std::map<int, char>) ) )
+    // Test unnamed variadic typename.
+    BOOST_CONTRACT_TEST_( template( typename... ) )
     
-    BOOST_CONTRACT_TEST_( // Without names.
-        template(
-            typename,
-            class,
-            bool,
-            std::size_t, // Also without parenthesis.
-            (std::pair<int, int>::first_type),
-            template(
-                typename,
-                class,
-                bool,
-                std::pair<int, int>::first_type,
-                template<
-                    typename,
-                    class,
-                    bool,
-                    std::pair<int, int>::first_type
-                > class
-            ) class
-        )
-    )
+    // Test named class.
+    BOOST_CONTRACT_TEST_( template( class T ) )
+    // Test named class with default.
+    BOOST_CONTRACT_TEST_( template( class T, default (std::map<int, char>) ) )
+    // Test named variadic class.
+    BOOST_CONTRACT_TEST_( template( class... T) )
+    // Test unnamed class.
+    BOOST_CONTRACT_TEST_( template( class ) )
+    // Test unnamed class with default.
+    BOOST_CONTRACT_TEST_( template( class, default (std::map<int, char>) ) )
+    // Test unnamed variadic class.
+    BOOST_CONTRACT_TEST_( template( class... ) )
+    
+    // Test named value.
+    BOOST_CONTRACT_TEST_( template( int I ) )
+    // Test named value with default.
+    BOOST_CONTRACT_TEST_( template( int I, default 123 ) )
+    // Test unnamed value.
+    BOOST_CONTRACT_TEST_( template( int ) )
+    // Test unnamed value with default.
+    BOOST_CONTRACT_TEST_( template( int, default 123 ) )
+*/
+
+    BOOST_CONTRACT_EXT_PP_TRAITS_AUX_TYPE(
+            (std::map<int, char>::key_type) I )
+
+    // Test named value (of parenthesized type).
+    BOOST_CONTRACT_TEST_( template( int I ) )
+
+    BOOST_CONTRACT_TEST_( template( (std::map<int, char>::key_type) I ) )
+    // Test named value (of parenthesized type) with default.
+    //BOOST_CONTRACT_TEST_(
+    //        template( (std::map<int, char>::key_type) I, default 123 ) )
+    // Test unnamed value (of parenthesized type).
+    //BOOST_CONTRACT_TEST_( template( (std::map<int, char>::key_type) ) )
+    // Test unnamed value (of parenthesized type) with default.
+    //BOOST_CONTRACT_TEST_(
+    //        template( (std::map<int, char>::key_type), default 123 ) )
+/*
+    // Test template-template parameter with no parameters.
+    //BOOST_CONTRACT_TEST_( template( template( ) class P ) )
+    // Test template-template parameter with parameters.
+    //BOOST_CONTRACT_TEST_(
+    //    template(
+    //        template(
+    //            typename T,
+    //            class C,
+    //            std::map<int, char>::key_type I,
+    //            typename... V
+    //        ) class P
+    //    )
+    //)
+    // Test template-template parameter with defaults.
+    //BOOST_CONTRACT_TEST_(
+    //    template(
+    //        template(
+    //            typename T = std::map<int, char>::key_type,
+    //            class C = std::map<int, char>::key_type,
+    //            std::map<int, char>::key_type I = 123,
+    //            typename... V
+    //        ) class P
+    //    )
+    //)
+    // Test template-template parameter with unnamed parameters.
+    //BOOST_CONTRACT_TEST_(
+    //    template(
+    //        template(
+    //            typename,
+    //            class,
+    //            std::map<int, char>::key_type,
+    //            typename...
+    //        ) class
+    //    )
+    //)
+    // Test template-template parameter with unnamed and defaults.
+    //BOOST_CONTRACT_TEST_(
+    //    template(
+    //        template(
+    //            typename = std::map<int, char>::key_type,
+    //            class = std::map<int, char>::key_type,
+    //            std::map<int, char>::key_type = 123,
+    //            typename...
+    //        ) class
+    //    )
+    //)
 */
     return BOOST_CONTRACT_TEST_AUX_PP_TRAITS_REPORT_ERRORS;
 }
