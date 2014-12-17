@@ -9,6 +9,7 @@
 #include <boost/contract/ext_/preprocessor/traits/aux_/keyword_paren.hpp>
 #include <boost/contract/ext_/preprocessor/traits/aux_/type.hpp>
 #include <boost/contract/ext_/preprocessor/traits/adt.hpp>
+#include <boost/contract/ext_/preprocessor/utility/expand.hpp>
 #include <boost/preprocessor/control/iif.hpp>
 #include <boost/preprocessor/tuple/eat.hpp>
 
@@ -43,8 +44,11 @@
     
 #define BOOST_CONTRACT_EXT_PP_TPARAM_TRAITS_KIND_PARSE(sign_traits) \
     ( \
-        BOOST_CONTRACT_EXT_PP_TPARAM_TRAITS_KIND_SIGN_ sign_traits, \
-        BOOST_CONTRACT_EXT_PP_TPARAM_TRAITS_KIND_TRAIT_ sign_traits \
+        BOOST_CONTRACT_EXT_PP_EXPAND1( \
+                BOOST_CONTRACT_EXT_PP_TPARAM_TRAITS_KIND_SIGN_ sign_traits) \
+    , \
+        BOOST_CONTRACT_EXT_PP_EXPAND1( \
+                BOOST_CONTRACT_EXT_PP_TPARAM_TRAITS_KIND_TRAIT_ sign_traits) \
     )
 
 // Expand to `typename | class | (,,,) | template( ,,, ) class` (for type,

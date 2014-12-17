@@ -25,9 +25,11 @@
 // from the parsed trait to check if the parsing was correct. But, at the end
 // these are valuable tests also because they use the TPARAM_TRAITS macros.
 
-// Assume all 1-tuple types were specified without parenthesis in these tests
-// (in real code generation this is not an issue, but here generated code must
-// match original signature and its parenthesis).
+// Assume all 1-tuple types were specified without parenthesis. This is usually
+// NOT true, but it is true in these tests. This is relevant only in these
+// tests where generated code must match original signature and its parenthesis
+// (the extra parenthesis of the original signature do not need to be
+// reproduced when generating C++ code so this assumption is not necessary).
 #define BOOST_CONTRACT_TEST_TPARAM_REM_YES_(tokens) \
     BOOST_PP_EXPR_IIF(BOOST_PP_EQUAL(BOOST_PP_TUPLE_SIZE(tokens), 1), \
         BOOST_PP_TUPLE_REM(0) \
@@ -80,22 +82,8 @@
         trait \
     )
 
-    //BOOST_CONTRACT_EXT_PP_TRAITS_AUX_TYPE_PARSE( int I BOOST_PP_EMPTY )
-    //
-    //BOOST_CONTRACT_EXT_PP_TRAITS_AUX_TYPE_PARSE( unsigned long unsigned long const I BOOST_PP_EMPTY )
-    //
-    //BOOST_CONTRACT_EXT_PP_TRAITS_AUX_TYPE_PARSE( (int const* const) I BOOST_PP_EMPTY )
-    //
-    //BOOST_CONTRACT_EXT_PP_TRAITS_AUX_TYPE_PARSE( (::std::map<int, char>) I BOOST_PP_EMPTY )
-    //
-    //BOOST_CONTRACT_EXT_PP_TRAITS_AUX_TYPE_PARSE( auto I BOOST_PP_EMPTY )
-    //
-    //BOOST_CONTRACT_EXT_PP_TRAITS_AUX_TYPE_PARSE( register unsigned int const I BOOST_PP_EMPTY )
-    //
-    //BOOST_CONTRACT_EXT_PP_TRAITS_AUX_TYPE_PARSE( unsigned decltype(std::map<T, U>::value_type() + 1) const I BOOST_PP_EMPTY )
-    
 int main ( ) {
-/*    // Test no template.
+    // Test no template.
     BOOST_CONTRACT_TEST_( BOOST_PP_EMPTY() )
 
     // Test template with no parameter.
@@ -137,23 +125,17 @@ int main ( ) {
     BOOST_CONTRACT_TEST_( template( int ) )
     // Test unnamed value with default.
     BOOST_CONTRACT_TEST_( template( int, default 123 ) )
-*/
-
-    BOOST_CONTRACT_EXT_PP_TRAITS_AUX_TYPE(
-            (std::map<int, char>::key_type) I )
 
     // Test named value (of parenthesized type).
-    BOOST_CONTRACT_TEST_( template( int I ) )
-
     BOOST_CONTRACT_TEST_( template( (std::map<int, char>::key_type) I ) )
     // Test named value (of parenthesized type) with default.
-    //BOOST_CONTRACT_TEST_(
-    //        template( (std::map<int, char>::key_type) I, default 123 ) )
+    BOOST_CONTRACT_TEST_(
+            template( (std::map<int, char>::key_type) I, default 123 ) )
     // Test unnamed value (of parenthesized type).
-    //BOOST_CONTRACT_TEST_( template( (std::map<int, char>::key_type) ) )
+    BOOST_CONTRACT_TEST_( template( (std::map<int, char>::key_type) ) )
     // Test unnamed value (of parenthesized type) with default.
-    //BOOST_CONTRACT_TEST_(
-    //        template( (std::map<int, char>::key_type), default 123 ) )
+    BOOST_CONTRACT_TEST_(
+            template( (std::map<int, char>::key_type), default 123 ) )
 /*
     // Test template-template parameter with no parameters.
     //BOOST_CONTRACT_TEST_( template( template( ) class P ) )

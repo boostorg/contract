@@ -95,6 +95,7 @@ std::string trim ( std::string const& source ) {
         sign_after_trait, \
         parsed_trait \
     ) \
+        "#undefine DEBUG macro `-DDEBUG` for full generated C++ code instead" \
         sign = sign_before_trait sign_at_trait sign_after_trait \
         --> \
         (remaining_sign, BOOST_PP_NIL parsed_traits) = parse_traits_macro( \

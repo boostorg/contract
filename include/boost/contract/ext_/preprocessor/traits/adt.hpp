@@ -3,6 +3,7 @@
 #define BOOST_CONTRACT_EXT_PP_TRAITS_ADT_HPP_
 
 #include <boost/contract/ext_/preprocessor/utility/nil.hpp>
+#include <boost/contract/ext_/preprocessor/utility/expand.hpp>
 #include <boost/preprocessor/seq/elem.hpp>
 #include <boost/preprocessor/seq/replace.hpp>
 
@@ -44,11 +45,13 @@
 
 // NOTE: Using `BOOST_PP_TUPLE_ELEM(2, 0, sign_traits)` confuses MSVC here.
 #define BOOST_CONTRACT_EXT_PP_SIGN_TRAITS_FIRST(sign_traits) \
-    BOOST_CONTRACT_EXT_PP_SIGN_TRAITS_FIRST_ sign_traits
+    BOOST_CONTRACT_EXT_PP_EXPAND1( \
+            BOOST_CONTRACT_EXT_PP_SIGN_TRAITS_FIRST_ sign_traits)
 
 // NOTE: Using `BOOST_PP_TUPLE_ELEM(2, 1, sign_traits)` confuses MSVC here.
 #define BOOST_CONTRACT_EXT_PP_SIGN_TRAITS_SECOND(sign_traits) \
-    BOOST_CONTRACT_EXT_PP_SIGN_TRAITS_SECOND_ sign_traits
+    BOOST_CONTRACT_EXT_PP_EXPAND1( \
+            BOOST_CONTRACT_EXT_PP_SIGN_TRAITS_SECOND_ sign_traits)
 
 #endif // #include guard
 
