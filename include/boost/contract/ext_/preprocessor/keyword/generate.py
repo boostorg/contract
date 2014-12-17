@@ -131,13 +131,14 @@ for entry in entries:
 // Instead, modify and run the related generation script "{0}".
 
 #include <boost/contract/ext_/preprocessor/keyword/utility/is.hpp>
-#include <boost/preprocessor/cat.hpp>
+#include <boost/contract/ext_/preprocessor/keyword/utility/remove.hpp>
 
 /* PRIVATE */
 
 // Must expand to a single comma `,` (not local macros, do not #undefine).
 #define BOOST_CONTRACT_EXT_PP_KEYWORD_{1}_CAT_TO_COMMA{2} ,
 #define {2}BOOST_CONTRACT_EXT_PP_KEYWORD_{1}_CAT_TO_COMMA ,
+
 // Must expand to empty `` (not local macros, do not #undefine).
 #define BOOST_CONTRACT_EXT_PP_KEYWORD_{1}_CAT_TO_EMPTY{2}
 #define {2}BOOST_CONTRACT_EXT_PP_KEYWORD_{1}_CAT_TO_EMPTY
@@ -159,12 +160,14 @@ for entry in entries:
 // Precondition: tokens must start with `{2}` (this can be
 //               checked with `..._IS_{1}_FRONT` macro above).
 #define BOOST_CONTRACT_EXT_PP_KEYWORD_{1}_REMOVE_FRONT(tokens) \\
-    BOOST_PP_CAT(BOOST_CONTRACT_EXT_PP_KEYWORD_{1}_CAT_TO_EMPTY, tokens)
+    BOOST_CONTRACT_EXT_PP_KEYWORD_UTILITY_REMOVE_FRONT( \\
+            BOOST_CONTRACT_EXT_PP_KEYWORD_{1}_CAT_TO_EMPTY, tokens)
 
 // Precondition: tokens must end with `{2}` (this can be
 //               checked with `..._IS_{1}_BACK` macro above).
 #define BOOST_CONTRACT_EXT_PP_KEYWORD_{1}_REMOVE_BACK(tokens) \\
-    BOOST_PP_CAT(tokens, BOOST_CONTRACT_EXT_PP_KEYWORD_{1}_CAT_TO_EMPTY)
+    BOOST_CONTRACT_EXT_PP_KEYWORD_UTILITY_REMOVE_BACK( \\
+            BOOST_CONTRACT_EXT_PP_KEYWORD_{1}_CAT_TO_EMPTY, tokens)
 
 #endif // #include guard
 
