@@ -11,9 +11,30 @@
 #include <boost/contract/ext_/preprocessor/traits/adt.hpp>
 #include <boost/contract/ext_/preprocessor/utility/expand.hpp>
 #include <boost/preprocessor/control/iif.hpp>
+#include <boost/preprocessor/control/expr_iif.hpp>
 #include <boost/preprocessor/tuple/eat.hpp>
+#include <boost/preprocessor/tuple/rem.hpp>
 
 /* PRIVATE */
+
+#define BOOST_CONTRACT_EXT_PP_TPARAM_TRAITS_KIND_REMOVE_CLASS_(tokens) \
+    BOOST_PP_IIF(BOOST_CONTRACT_EXT_PP_KEYWORD_IS_CLASS_FRONT(tokens), \
+        BOOST_CONTRACT_EXT_PP_KEYWORD_CLASS_REMOVE_FRONT \
+    , \
+        BOOST_PP_TUPLE_REM(1) \
+    )(tokens)
+        
+#define BOOST_CONTRACT_EXT_PP_TPARAM_TRAITS_KIND_TEMPLATE_SIGN_(sign) \
+    BOOST_CONTRACT_EXT_PP_TPARAM_TRAITS_KIND_REMOVE_CLASS_( \
+            BOOST_CONTRACT_EXT_PP_TPARAM_TRAITS_KIND_TEMPLATE_CLASS(sign))
+
+#define BOOST_CONTRACT_EXT_PP_TPARAM_TRAITS_KIND_TEMPLATE_TRAIT_(sign) \
+    template \
+    BOOST_CONTRACT_EXT_PP_TPARAM_TRAITS_KIND_TEMPLATE_PARAMS(sign) \
+    BOOST_PP_EXPR_IIF(BOOST_CONTRACT_EXT_PP_KEYWORD_IS_CLASS_FRONT( \
+            BOOST_CONTRACT_EXT_PP_TPARAM_TRAITS_KIND_TEMPLATE_CLASS(sign)), \
+        class \
+    )
 
 #define BOOST_CONTRACT_EXT_PP_TPARAM_TRAITS_KIND_SIGN_(sign, traits) \
     BOOST_PP_IIF(BOOST_CONTRACT_EXT_PP_KEYWORD_IS_TYPENAME_FRONT(sign), \

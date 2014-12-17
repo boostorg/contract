@@ -10,7 +10,7 @@
 
 #include "../aux_/pp_traits.hpp"
 #include <boost/contract/ext_/preprocessor/traits/func.hpp>
-#include <boost/contract/ext_/preprocessor/utility/is_empty.hpp>
+#include <boost/contract/ext_/preprocessor/utility/empty.hpp>
 #include <boost/preprocessor/control/expr_iif.hpp>
 #include <boost/preprocessor/logical/compl.hpp>
 #include <boost/preprocessor/facilities/empty.hpp>

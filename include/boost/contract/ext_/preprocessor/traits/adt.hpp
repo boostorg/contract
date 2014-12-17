@@ -43,12 +43,14 @@
     BOOST_CONTRACT_EXT_PP_NIL_REMOVE_FRONT( \
             BOOST_CONTRACT_EXT_PP_SIGN_TRAITS_SECOND(sign_traits))
 
-// NOTE: Using `BOOST_PP_TUPLE_ELEM(2, 0, sign_traits)` confuses MSVC here.
+// NOTE: Using `BOOST_PP_TUPLE_ELEM(2, 0, sign_traits)` instead of this
+// confuses MSVC macro expansion sometimes (OK on GCC, CLang, Wave, etc.).
 #define BOOST_CONTRACT_EXT_PP_SIGN_TRAITS_FIRST(sign_traits) \
     BOOST_CONTRACT_EXT_PP_EXPAND1( \
             BOOST_CONTRACT_EXT_PP_SIGN_TRAITS_FIRST_ sign_traits)
 
-// NOTE: Using `BOOST_PP_TUPLE_ELEM(2, 1, sign_traits)` confuses MSVC here.
+// NOTE: Using `BOOST_PP_TUPLE_ELEM(2, 1, sign_traits)` instead of this
+// confuses MSVC macro expansion sometimes (OK on GCC, CLang, Wave, etc.).
 #define BOOST_CONTRACT_EXT_PP_SIGN_TRAITS_SECOND(sign_traits) \
     BOOST_CONTRACT_EXT_PP_EXPAND1( \
             BOOST_CONTRACT_EXT_PP_SIGN_TRAITS_SECOND_ sign_traits)

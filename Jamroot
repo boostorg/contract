@@ -24,7 +24,7 @@ Examples:
     $ wave <file-path> # pre-process <file-name> to pp.*
 
     $ b2 -n # find compiler command then cut-n-paste it adding pp only option
-    $ <compile-command-from-above> -E -P -DDEBUG > 00.cpp && vi 00.cpp
+    $ <compile-command-from-above> -E -P -DDEBUG > pp.cpp
 """
     ;
 

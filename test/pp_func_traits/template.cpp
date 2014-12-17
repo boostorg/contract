@@ -136,54 +136,54 @@ int main ( ) {
     // Test unnamed value (of parenthesized type) with default.
     BOOST_CONTRACT_TEST_(
             template( (std::map<int, char>::key_type), default 123 ) )
-/*
+
     // Test template-template parameter with no parameters.
-    //BOOST_CONTRACT_TEST_( template( template( ) class P ) )
+    BOOST_CONTRACT_TEST_( template( template( ) class P ) )
     // Test template-template parameter with parameters.
-    //BOOST_CONTRACT_TEST_(
-    //    template(
-    //        template(
-    //            typename T,
-    //            class C,
-    //            std::map<int, char>::key_type I,
-    //            typename... V
-    //        ) class P
-    //    )
-    //)
+    BOOST_CONTRACT_TEST_(
+        template(
+            template(
+                typename T,
+                class C,
+                std::map<int, char>::key_type I,
+                typename... V
+            ) class P
+        )
+    )
     // Test template-template parameter with defaults.
-    //BOOST_CONTRACT_TEST_(
-    //    template(
-    //        template(
-    //            typename T = std::map<int, char>::key_type,
-    //            class C = std::map<int, char>::key_type,
-    //            std::map<int, char>::key_type I = 123,
-    //            typename... V
-    //        ) class P
-    //    )
-    //)
+    BOOST_CONTRACT_TEST_(
+        template(
+            template(
+                typename T = std::map<int, char>::key_type,
+                class C = std::map<int, char>::key_type,
+                std::map<int, char>::key_type I = 123,
+                typename... V
+            ) class P, default (::n::c<int, char>::template t)
+        )
+    )
     // Test template-template parameter with unnamed parameters.
-    //BOOST_CONTRACT_TEST_(
-    //    template(
-    //        template(
-    //            typename,
-    //            class,
-    //            std::map<int, char>::key_type,
-    //            typename...
-    //        ) class
-    //    )
-    //)
+    BOOST_CONTRACT_TEST_(
+        template(
+            template(
+                typename,
+                class,
+                std::map<int, char>::key_type,
+                typename...
+            ) class
+        )
+    )
     // Test template-template parameter with unnamed and defaults.
-    //BOOST_CONTRACT_TEST_(
-    //    template(
-    //        template(
-    //            typename = std::map<int, char>::key_type,
-    //            class = std::map<int, char>::key_type,
-    //            std::map<int, char>::key_type = 123,
-    //            typename...
-    //        ) class
-    //    )
-    //)
-*/
+    BOOST_CONTRACT_TEST_(
+        template(
+            template(
+                typename = std::map<int, char>::key_type,
+                class = std::map<int, char>::key_type,
+                std::map<int, char>::key_type = 123,
+                typename...
+            ) class, default (::n::c<int, char>::template t)
+        )
+    )
+
     return BOOST_CONTRACT_TEST_AUX_PP_TRAITS_REPORT_ERRORS;
 }
 
