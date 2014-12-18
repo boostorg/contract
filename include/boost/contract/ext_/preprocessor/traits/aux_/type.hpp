@@ -30,6 +30,8 @@
 #include <boost/preprocessor/tuple/eat.hpp>
 #include <boost/preprocessor/facilities/empty.hpp>
 
+// TODO: Consider changing all/most tokens arg names to sign in pp/traits.
+
 /* PRIVATE */
 
 // Expand to (continue_ = 1, remaining_tokens, parsed_type).

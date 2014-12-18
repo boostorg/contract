@@ -5,4 +5,5 @@ run access.cpp ;
 run verbatim.cpp ;
 run export.cpp ;
 run template.cpp ;
+run classifiers.cpp ;
 

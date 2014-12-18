@@ -38,3 +38,7 @@ pp.cpp
 pp.dbg
 pp.cnt
 
+# QuickBook outputs
+reference.xml
+html/
+

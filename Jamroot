@@ -12,8 +12,11 @@ use-project boost : $(BOOST_ROOT) ;
 
 project
     :   requirements
+        <toolset>msvc:<cxxflags>/Wall
         <toolset>gcc:<cxxflags>-std=c++11
+        <toolset>gcc:<cxxflags>-Wall
         <toolset>clang:<cxxflags>-std=c++11
+        <toolset>clang:<cxxflags>-Wall
         <include>"./include"
         <include>$(BOOST_ROOT)
         <library-path>$(BOOST_ROOT)/stage/lib

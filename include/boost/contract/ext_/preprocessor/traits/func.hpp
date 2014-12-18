@@ -8,6 +8,7 @@
 #ifndef BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_HPP_
 #define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_HPP_
 
+#include <boost/contract/ext_/preprocessor/traits/func/classifiers.hpp>
 #include <boost/contract/ext_/preprocessor/traits/func/template.hpp>
 #include <boost/contract/ext_/preprocessor/traits/func/export.hpp>
 #include <boost/contract/ext_/preprocessor/traits/func/verbatim.hpp>
@@ -17,8 +18,15 @@
 
 /* PRIVATE */
 
-// You can set this internal macro to stop and debug at a func-trait index.
-// define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_AUX_INDEX_TEST
+#if defined(BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_AUX_INDEX_TEST) && \
+        BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_AUX_INDEX_TEST < \
+        BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_AUX_CLASSIFIERS_INDEX
+#   define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_CLASSIFIERS_(sign_traits) \
+        sign_traits
+#else
+#   define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_CLASSIFIERS_(sign_traits) \
+        BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_CLASSIFIERS_PARSE(sign_traits)
+#endif
         
 #if defined(BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_AUX_INDEX_TEST) && \
         BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_AUX_INDEX_TEST < \
@@ -77,13 +85,14 @@
 // WARNING: Order of these macros must match ..._INDEX values (see index.hpp).
 #define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS(sign) \
     BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_DONE_( \
+    BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_CLASSIFIERS_( \
     BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_TEMPLATE_( \
     BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_EXPORT_( \
     BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_VERBATIM_( \
     BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_ACCESS_( \
     BOOST_CONTRACT_EXT_PP_SIGN_TRAITS_INIT( \
         sign \
-    )))))) \
+    )))))))
 
 #endif // #include guard
 

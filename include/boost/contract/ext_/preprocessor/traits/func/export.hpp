@@ -12,12 +12,13 @@
 #include <boost/contract/ext_/preprocessor/traits/aux_/keyword.hpp>
 #include <boost/contract/ext_/preprocessor/traits/adt.hpp>
 #include <boost/contract/ext_/preprocessor/keyword/export.hpp>
+#include <boost/contract/ext_/preprocessor/utility/expand.hpp>
 #include <boost/preprocessor/facilities/empty.hpp>
 
 // NOTE: The `export` keyword for templates was deprecated in C++11 but it is
 // supported here for compliance and compatibility with C++03.
 
-// PRIVATE //
+/* PRIVATE */
 
 #define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_EXPORT_SIGN_(sign, traits) \
     BOOST_CONTRACT_EXT_PP_TRAITS_AUX_KEYWORD_SKIP( \
@@ -34,21 +35,21 @@
         BOOST_PP_EMPTY \
     )
 
-// PUBLIC //
+/* PUBLIC */
 
 #define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_EXPORT_PARSE(sign_traits) \
     ( \
-        BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_EXPORT_SIGN_ sign_traits \
+        BOOST_CONTRACT_EXT_PP_EXPAND1( \
+                BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_EXPORT_SIGN_ sign_traits) \
     , \
-        BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_EXPORT_TRAIT_ sign_traits \
+        BOOST_CONTRACT_EXT_PP_EXPAND1( \
+                BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_EXPORT_TRAIT_ sign_traits) \
     )
 
 // Expand to `export | EMPTY()`.
 #define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_EXPORT(traits) \
     BOOST_CONTRACT_EXT_PP_TRAITS_ELEM( \
-        BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_AUX_EXPORT_INDEX, \
-        traits \
-    )()
+            BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_AUX_EXPORT_INDEX, traits)()
 
 #endif // #include guard
 
