@@ -54,9 +54,10 @@ std::string trim ( std::string const& source ) {
     )
 
 #define BOOST_CONTRACT_TEST_AUX_PP_TRAITS_( \
-        sign_traits, get_trait_macro, parsed_trait, sign_after_trait) \
+        sign_traits, traits_elem_macro, parsed_trait, sign_after_trait) \
     BOOST_CONTRACT_TEST_AUX_PP_TRAITS_EQUAL_( \
-        get_trait_macro(BOOST_CONTRACT_EXT_PP_SIGN_TRAITS_DONE(sign_traits)), \
+        traits_elem_macro( \
+                BOOST_CONTRACT_EXT_PP_SIGN_TRAITS_DONE(sign_traits)), \
         parsed_trait \
     ) \
     BOOST_CONTRACT_TEST_AUX_PP_TRAITS_EQUAL_( \
@@ -70,17 +71,17 @@ std::string trim ( std::string const& source ) {
 // of the trait that needs to be tested.
 #ifndef DEBUG
 #   define BOOST_CONTRACT_TEST_AUX_PP_TRAITS( \
-        get_trait_macro, \
-        parse_traits_macro, \
+        traits_elem_macro, \
+        traits_parse_macro, \
         sign_before_trait, \
         sign_at_trait, \
         sign_after_trait, \
         parsed_trait \
     ) \
         BOOST_CONTRACT_TEST_AUX_PP_TRAITS_( \
-            parse_traits_macro( \
+            traits_parse_macro( \
                     sign_before_trait sign_at_trait sign_after_trait), \
-            get_trait_macro, \
+            traits_elem_macro, \
             parsed_trait, \
             sign_after_trait \
         )
@@ -88,17 +89,17 @@ std::string trim ( std::string const& source ) {
 // To #define DEBUG is useful when looking at pre-processed output (the NIL
 // leading parsed_traits will be remove by non-debug invocation of DONE).
 #   define BOOST_CONTRACT_TEST_AUX_PP_TRAITS( \
-        get_trait_macro, \
-        parse_traits_macro, \
+        traits_elem_macro, \
+        traits_parse_macro, \
         sign_before_trait, \
         sign_at_trait, \
         sign_after_trait, \
         parsed_trait \
     ) \
-        "#undefine DEBUG macro `-DDEBUG` to complete C++ code generation" \
+        "#undefine DEBUG macro `-UDEBUG` to complete C++ code generation" \
         sign = sign_before_trait sign_at_trait sign_after_trait \
         --> \
-        (remaining_sign, BOOST_PP_NIL parsed_traits) = parse_traits_macro( \
+        (remaining_sign, BOOST_PP_NIL parsed_traits) = traits_parse_macro( \
                 sign_before_trait sign_at_trait sign_after_trait)
 #endif
 

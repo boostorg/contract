@@ -11,6 +11,7 @@
 #include <boost/contract/ext_/preprocessor/keyword/friend.hpp>
 #include <boost/contract/ext_/preprocessor/keyword/inline.hpp>
 #include <boost/contract/ext_/preprocessor/utility/expand.hpp>
+#include <boost/contract/ext_/preprocessor/utility/idem.hpp>
 #include <boost/preprocessor/tuple/elem.hpp>
 #include <boost/preprocessor/control/while.hpp>
 #include <boost/preprocessor/control/iif.hpp>
@@ -32,7 +33,7 @@
 
 #define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_CLASSIFIERS_OP_ARGS_(continue_, \
         sign, inline_, static_, extern_, explicit_, virtual_, friend_) \
-    BOOST_CONTRACT_EXT_PP_EXPAND1( \
+    BOOST_CONTRACT_EXT_PP_EXPAND_ONCE( \
         BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_CLASSIFIERS_SIGN_ \
         BOOST_PP_IIF(BOOST_PP_BITAND(BOOST_PP_COMPL(inline_), \
                 BOOST_CONTRACT_EXT_PP_KEYWORD_IS_INLINE_FRONT(sign)), \
@@ -59,14 +60,14 @@
             (1, BOOST_CONTRACT_EXT_PP_KEYWORD_FRIEND_REMOVE_FRONT, sign, \
             inline_, static_, extern_, explicit_, virtual_, 1) \
         , \
-            (0, BOOST_CONTRACT_EXT_PP_EXPAND1, sign, \
+            (0, BOOST_CONTRACT_EXT_PP_IDEM, sign, \
             inline_, static_, extern_, explicit_, virtual_, friend_) \
         )))))) \
     )
         
 #define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_CLASSIFIERS_OP_( \
         d, continue_sign_inline_static_extern_explicit_virtual_friend) \
-    BOOST_CONTRACT_EXT_PP_EXPAND1( \
+    BOOST_CONTRACT_EXT_PP_EXPAND_ONCE( \
         BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_CLASSIFIERS_OP_ARGS_ \
         continue_sign_inline_static_extern_explicit_virtual_friend \
     )

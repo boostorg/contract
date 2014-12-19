@@ -8,12 +8,13 @@
 
 // NOTE: All these levels of indirection (instead of doing the PP_CAT directly)
 // are necessary to ensure proper macro expansion on MSVC which would otherwise
-// get confused sometimes.
-
-#define BOOST_CONTRACT_EXT_PP_KEYWORD_UTILITY_REMOVE_EXPAND1_(x) x
+// get confused sometimes. Also, use its own implementation of EXPAND_ONCE to
+// avoid reentrancy issues. 
+#define BOOST_CONTRACT_EXT_PP_KEYWORD_UTILITY_REMOVE_EXPAND_ONCE_(x) x
 
 #define BOOST_CONTRACT_EXT_PP_KEYWORD_UTILITY_REMOVE_CAT_(a, b) \
-    BOOST_CONTRACT_EXT_PP_KEYWORD_UTILITY_REMOVE_EXPAND1_(BOOST_PP_CAT(a, b))
+    BOOST_CONTRACT_EXT_PP_KEYWORD_UTILITY_REMOVE_EXPAND_ONCE_( \
+            BOOST_PP_CAT(a, b))
 
 /* PUBLIC */
 
