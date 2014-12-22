@@ -182,14 +182,18 @@
 #define BOOST_CONTRACT_EXT_PP_TRAITS_AUX_TYPE_PARSE(tokens) \
     BOOST_CONTRACT_EXT_PP_TRAITS_AUX_TYPE_PARSE_D(1, tokens)
 
-// NOTE: If possible, use the single "parse" macro above of this macro (so to
-// avoid executing the implementation while-loop twice).
+// TOOD: Should all _SKIP macros be removed and replaced by PARASE macros
+// that work on both sign and traits at the same time for efficiency and
+// consistency?
+
+// NOTE: If possible, use the single "parse" macro above instead of this macro
+// (so to avoid executing the implementation while-loop twice).
 #define BOOST_CONTRACT_EXT_PP_TRAITS_AUX_TYPE(tokens) \
     BOOST_CONTRACT_EXT_PP_SIGN_TRAITS_SECOND( \
             BOOST_CONTRACT_EXT_PP_TRAITS_AUX_TYPE_PARSE(tokens))
 
-// NOTE: If possible, use the single "parse" macro above of this macro (so to
-// avoid executing the implementation while-loop twice).
+// NOTE: If possible, use the single "parse" macro above instead of this macro
+// (so to avoid executing the implementation while-loop twice).
 #define BOOST_CONTRACT_EXT_PP_TRAITS_AUX_TYPE_SKIP(tokens) \
     BOOST_CONTRACT_EXT_PP_SIGN_TRAITS_FIRST( \
             BOOST_CONTRACT_EXT_PP_TRAITS_AUX_TYPE_PARSE(tokens))
