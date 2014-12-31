@@ -1,5 +1,5 @@
 
-# Copyright (C) 2008-2012 Lorenzo Caminiti
+# Copyright (C) 2008-2015 Lorenzo Caminiti
 # Distributed under the Boost Software License, Version 1.0
 # (see accompanying file LICENSE_1_0.txt or a copy at
 # http://www.boost.org/LICENSE_1_0.txt)
@@ -113,10 +113,11 @@ entries = [
 ]
 
 script = os.path.basename(sys.argv[0])
+root = sys.argv[0].replace('-generate.py', '', 1)
 for entry in entries:
-    directory = entry['directory']
-    keywords = entry['keywords']
+    directory = os.path.join(root, entry['directory'])
     if not os.path.exists(directory): os.makedirs(directory)
+    keywords = entry['keywords']
     for keyword in keywords:
         filename = keyword + ".hpp"
         path = os.path.join(directory, filename)
@@ -128,7 +129,7 @@ for entry in entries:
 #define BOOST_CONTRACT_EXT_PP_KEYWORD_{1}_HPP_
 
 // WARNING: FILE AUTOMATICALLY GENERATED, DO NOT MODIFY IT!
-// Instead, modify and run the related generation script "{0}".
+// Instead, modify and run related generation script "{0}".
 
 #include <boost/contract/ext_/preprocessor/keyword/utility/is.hpp>
 #include <boost/contract/ext_/preprocessor/keyword/utility/remove.hpp>

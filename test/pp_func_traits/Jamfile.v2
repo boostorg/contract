@@ -1,9 +1,26 @@
 
 import testing ;
 
-run access.cpp ;
-run verbatim.cpp ;
-run export.cpp ;
-run template.cpp ;
-run classifiers.cpp ;
+echo "Examples:
+    b2 <file-name>
+            compile and run test program <file-name>.cpp
+    b2 <file-name>-pp [cxxflags=-UDEBUG]
+            stop after preprocessing <file-name>.cpp
+""" ;
+
+rule test-pp ( filename ) {
+    run $(filename).cpp ;
+    preprocessed $(filename)-pp : $(filename).cpp : <cxxflags>-DDEBUG ;
+    explicit filename-pp ;
+}
+
+test-pp access ;
+test-pp verbatim ;
+test-pp export ;
+test-pp template ;
+test-pp classifiers ;
+test-pp return_ ;
+
+# TODO: Try to automatically run and test wave too...
+# SHELL "wave access.cpp" ;
 

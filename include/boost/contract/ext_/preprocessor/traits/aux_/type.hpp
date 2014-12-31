@@ -2,6 +2,7 @@
 #ifndef BOOST_CONTRACT_EXT_PP_TRAITS_AUX_TYPE_HPP_
 #define BOOST_CONTRACT_EXT_PP_TRAITS_AUX_TYPE_HPP_
 
+#include <boost/contract/ext_/preprocessor/traits/adt.hpp>
 #include <boost/contract/ext_/preprocessor/keyword/auto.hpp>
 #include <boost/contract/ext_/preprocessor/keyword/register.hpp>
 #include <boost/contract/ext_/preprocessor/keyword/const.hpp>
@@ -23,7 +24,7 @@
 #include <boost/contract/ext_/preprocessor/paren/has.hpp>
 #include <boost/contract/ext_/preprocessor/paren/front.hpp>
 #include <boost/contract/ext_/preprocessor/utility/nil.hpp>
-#include <boost/contract/ext_/preprocessor/traits/adt.hpp>
+#include <boost/contract/ext_/preprocessor/utility/nil.hpp>
 #include <boost/preprocessor/control/iif.hpp>
 #include <boost/preprocessor/control/while.hpp>
 #include <boost/preprocessor/tuple/elem.hpp>
@@ -182,7 +183,7 @@
 #define BOOST_CONTRACT_EXT_PP_TRAITS_AUX_TYPE_PARSE(tokens) \
     BOOST_CONTRACT_EXT_PP_TRAITS_AUX_TYPE_PARSE_D(1, tokens)
 
-// TOOD: Should all _SKIP macros be removed and replaced by PARASE macros
+// TODO: Should all _SKIP macros be removed and replaced by PARASE macros
 // that work on both sign and traits at the same time for efficiency and
 // consistency?
 

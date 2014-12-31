@@ -48,7 +48,7 @@
 
 #define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_RETURN_YES_(sign, traits) \
     BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_RETURN_TYPE_(traits, \
-            BOOST_CONTRACT_EXT_PP_TRAITS_AUX_TYPE_PRASE(sign))
+            BOOST_CONTRACT_EXT_PP_TRAITS_AUX_TYPE_PARSE(sign))
 
 #define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_RETURN_NO_(sign, traits) \
     (sign, BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK(traits, BOOST_PP_EMPTY))
@@ -69,6 +69,8 @@
 // Expand to `result_type | void | auto | EMPTY()` (auto for unified function
 // syntax in which case for the result type trait use `..._UNIFIED_RETURN`).
 #define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_RETURN(traits) \
+    BOOST_CONTRACT_EXT_PP_TRAITS_ELEM( \
+            BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_AUX_RETURN_INDEX, traits)()
 
 #endif // #include guard
 
