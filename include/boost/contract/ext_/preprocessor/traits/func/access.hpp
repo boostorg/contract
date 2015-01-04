@@ -1,10 +1,4 @@
 
-// Copyright (C) 2008-2012 Lorenzo Caminiti
-// Distributed under the Boost Software License, Version 1.0
-// (see accompanying file LICENSE_1_0.txt or a copy at
-// http://www.boost.org/LICENSE_1_0.txt)
-// Home at http://sourceforge.net/projects/contractpp
-
 #ifndef BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_ACCESS_HPP_
 #define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_ACCESS_HPP_
 
@@ -16,7 +10,7 @@
 #include <boost/contract/ext_/preprocessor/keyword/private.hpp>
 #include <boost/preprocessor/facilities/empty.hpp>
 
-// PRIVATE //
+/* PRIVATE */
 
 #define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_ACCESS_SIGN_(sign, traits) \
     BOOST_CONTRACT_EXT_PP_TRAITS_AUX_KEYWORD3_SKIP( \
@@ -40,7 +34,7 @@
         BOOST_PP_EMPTY \
     )
 
-// PUBLIC //
+/* PUBLIC */
 
 #define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_ACCESS_PARSE(sign_traits) \
     ( \

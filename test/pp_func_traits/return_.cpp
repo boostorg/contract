@@ -39,7 +39,7 @@
     )
 
 int main ( ) {
-    // Return (without and with parenthesis).
+    // Return without and with parenthesis.
     BOOST_CONTRACT_TEST_(
         BOOST_PP_EMPTY(),
         void, (f) ( )
@@ -49,11 +49,17 @@ int main ( ) {
         (std::map<int, char>), (f) ( )
     )
 
-    // No return (constructors, type-conversion operators, etc.).
+    // No return for constructor and destructor.
     BOOST_CONTRACT_TEST_(
         BOOST_PP_EMPTY(),
         BOOST_PP_EMPTY(), (ctor) ( int x )
     )
+    BOOST_CONTRACT_TEST_(
+        BOOST_PP_EMPTY(),
+        BOOST_PP_EMPTY(), (~dtor) ( )
+    )
+
+    // No return for type conversion operators (with and without paren).
     BOOST_CONTRACT_TEST_(
         BOOST_PP_EMPTY(),
         BOOST_PP_EMPTY(), operator int ( )
@@ -62,8 +68,18 @@ int main ( ) {
         BOOST_PP_EMPTY(),
         BOOST_PP_EMPTY(), operator(int*)(int_ptr) ( )
     )
+    
+    // Return for other operators (non type conversions, etc.).
+    BOOST_CONTRACT_TEST_(
+        BOOST_PP_EMPTY(),
+        int, operator(+)(add) ( int, int )
+    )
+    BOOST_CONTRACT_TEST_(
+        BOOST_PP_EMPTY(),
+        (int&), operator(*)(deref) ( )
+    )
 
-    // Unified syntax return.
+    // Return for unified syntax.
     BOOST_CONTRACT_TEST_(
         template( typename L, typename R ),
         auto, (add) ( (L) left, (R) right ) return decltype(left + right)

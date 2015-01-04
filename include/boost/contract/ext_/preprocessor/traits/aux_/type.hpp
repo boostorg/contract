@@ -31,48 +31,59 @@
 #include <boost/preprocessor/tuple/eat.hpp>
 #include <boost/preprocessor/facilities/empty.hpp>
 
-// TODO: Consider changing all/most tokens arg names to sign in pp/traits.
-
 /* PRIVATE */
 
-// Expand to (continue_ = 1, remaining_tokens, parsed_type).
+#define BOOST_CONTRACT_EXT_PP_TRAITS_AUX_TYPE_SEQ_PUSH_BACK_( \
+        type_seq, trait) \
+    type_seq ((trait))
+
+#define BOOST_CONTRACT_EXT_PP_TRAITS_AUX_TYPE_SPACED_PUSH_BACK_( \
+        spaced_type, trait) \
+    spaced_type trait
+
+// Expand to (continue_ = 1, remaining_tokens, parsed_type, push_back_macro).
 // Precondition: tokens = `trait(...) ...` (e.g., for `decltype(...) ...`).
 #define BOOST_CONTRACT_EXT_PP_TRAITS_AUX_TYPE_KEYWORD_PAREN_( \
-        d, tokens, type, trait, remove_macro) \
+        d, tokens, type, push_back_macro, trait, remove_macro) \
     ( \
         1 \
     , \
         BOOST_PP_TUPLE_EAT(0) remove_macro(tokens) \
     , \
-        type trait BOOST_CONTRACT_EXT_PP_PAREN_FRONT(remove_macro(tokens)) \
+        push_back_macro(type, \
+                trait BOOST_CONTRACT_EXT_PP_PAREN_FRONT(remove_macro(tokens))) \
+    , \
+        push_back_macro \
     )
 
-// Expand to (continue_ = 1, remaining-tokens, parsed-type).
+// Expand to (continue_ = 1, remaining-tokens, parsed-type, push_back_macro).
 #define BOOST_CONTRACT_EXT_PP_TRAITS_AUX_TYPE_KEYWORD_TRAIT_( \
-        d, tokens, type, trait, remove_macro) \
-    (1, remove_macro(tokens), type trait)
+        d, tokens, type, push_back_macro, trait, remove_macro) \
+    (1, remove_macro(tokens), push_back_macro(type, trait), push_back_macro)
 
-// Expand to (continue_ = 0, tokens, type).
+// Expand to (continue_ = 0, tokens, type, push_back_macro).
 #define BOOST_CONTRACT_EXT_PP_TRAITS_AUX_TYPE_KEYWORD_DONE_( \
-        d, tokens, type, unused1, unused2) \
-    (0, tokens, type)
+        d, tokens, type, push_back_macro, unused1, unused2) \
+    (0, tokens, type, push_back_macro)
     
 #define BOOST_CONTRACT_EXT_PP_TRAITS_AUX_TYPE_KEYWORD_INVOKE_( \
-        d, tokens, type, invoke_trait_remove) \
+        d, tokens, type, push_back_macro, invoke_trait_remove) \
     BOOST_PP_TUPLE_ELEM(3, 0, invoke_trait_remove)( \
         d, \
         tokens, \
         type, \
+        push_back_macro, \
         BOOST_PP_TUPLE_ELEM(3, 1, invoke_trait_remove), \
         BOOST_PP_TUPLE_ELEM(3, 2, invoke_trait_remove) \
     )
 
 #define BOOST_CONTRACT_EXT_PP_TRAITS_AUX_TYPE_KEYWORD_OP_ARGS_( \
-        d, tokens, type) \
+        d, tokens, type, push_back_macro) \
     BOOST_CONTRACT_EXT_PP_TRAITS_AUX_TYPE_KEYWORD_INVOKE_( \
         d, \
         tokens, \
         type, \
+        push_back_macro, \
         BOOST_PP_IIF(BOOST_CONTRACT_EXT_PP_KEYWORD_IS_AUTO_FRONT(tokens), \
             (BOOST_CONTRACT_EXT_PP_TRAITS_AUX_TYPE_KEYWORD_TRAIT_, \
             auto, BOOST_CONTRACT_EXT_PP_KEYWORD_AUTO_REMOVE_FRONT) \
@@ -133,59 +144,94 @@
     )
 
 #define BOOST_CONTRACT_EXT_PP_TRAITS_AUX_TYPE_KEYWORD_OP_( \
-        d, continue_tokens_type) \
+        d, continue_tokens_type_push) \
     BOOST_CONTRACT_EXT_PP_TRAITS_AUX_TYPE_KEYWORD_OP_ARGS_( \
         d, \
-        BOOST_PP_TUPLE_ELEM(3, 1, continue_tokens_type), \
-        BOOST_PP_TUPLE_ELEM(3, 2, continue_tokens_type) \
+        BOOST_PP_TUPLE_ELEM(4, 1, continue_tokens_type_push), \
+        BOOST_PP_TUPLE_ELEM(4, 2, continue_tokens_type_push), \
+        BOOST_PP_TUPLE_ELEM(4, 3, continue_tokens_type_push) \
     )
 
 #define BOOST_CONTRACT_EXT_PP_TRAITS_AUX_TYPE_KEYWORD_PRED_( \
-        d, continue_tokens_type) \
-    BOOST_PP_TUPLE_ELEM(3, 0, continue_tokens_type)
+        d, continue_tokens_type_push) \
+    BOOST_PP_TUPLE_ELEM(4, 0, continue_tokens_type_push)
 
 // Do not return continue_ and wrap type in paren (so same as paren type).
 #define BOOST_CONTRACT_EXT_PP_TRAITS_AUX_TYPE_KEYWORD_RETURN_( \
-        continue_tokens_type) \
+        continue_tokens_type_push) \
     ( \
-        BOOST_PP_TUPLE_ELEM(3, 1, continue_tokens_type), \
+        BOOST_PP_TUPLE_ELEM(4, 1, continue_tokens_type_push), \
         ( BOOST_CONTRACT_EXT_PP_NIL_REMOVE_FRONT( \
-                BOOST_PP_TUPLE_ELEM(3, 2, continue_tokens_type)) ) \
+                BOOST_PP_TUPLE_ELEM(4, 2, continue_tokens_type_push)) ) \
     )
 
 // Precondition: tokens does not start with paren (it's formed by keywords).
-#define BOOST_CONTRACT_EXT_PP_TRAITS_AUX_TYPE_KEYWORD_D_(d, tokens) \
+#define BOOST_CONTRACT_EXT_PP_TRAITS_AUX_TYPE_KEYWORD_D_( \
+        d, tokens, push_back_macro) \
     BOOST_CONTRACT_EXT_PP_TRAITS_AUX_TYPE_KEYWORD_RETURN_( \
         BOOST_PP_WHILE_ ## d( \
             BOOST_CONTRACT_EXT_PP_TRAITS_AUX_TYPE_KEYWORD_PRED_, \
             BOOST_CONTRACT_EXT_PP_TRAITS_AUX_TYPE_KEYWORD_OP_, \
-            (1, tokens, BOOST_PP_NIL) \
+            (1, tokens, BOOST_PP_NIL, push_back_macro) \
         ) \
     )
 
 // Precondition: tokens = `(...) ...`.
-#define BOOST_CONTRACT_EXT_PP_TRAITS_AUX_TYPE_PAREN_D_(d, tokens) \
+#define BOOST_CONTRACT_EXT_PP_TRAITS_AUX_TYPE_PAREN_D_( \
+        d, tokens, push_back_macro) \
     ( \
         BOOST_PP_TUPLE_EAT(0) tokens, \
-        BOOST_CONTRACT_EXT_PP_PAREN_FRONT(tokens) \
+        push_back_macro(BOOST_PP_EMPTY(), \
+                BOOST_CONTRACT_EXT_PP_PAREN_FRONT(tokens)) \
     )
 
-/* PUBLIC */
-
-#define BOOST_CONTRACT_EXT_PP_TRAITS_AUX_TYPE_PARSE_D(d, tokens) \
+#define BOOST_CONTRACT_EXT_PP_TRAITS_AUX_TYPE_PARSE_D_( \
+        d, tokens, push_back_macro) \
     BOOST_PP_IIF(BOOST_CONTRACT_EXT_PP_HAS_PAREN(tokens), \
         BOOST_CONTRACT_EXT_PP_TRAITS_AUX_TYPE_PAREN_D_ \
     , \
         BOOST_CONTRACT_EXT_PP_TRAITS_AUX_TYPE_KEYWORD_D_ \
-    )(d, tokens)
+    )(d, tokens, push_back_macro)
 
-// Expand to 2-tuple `(remaining_tokens, parsed_type)`.
+// Remove an extra set of parenthesis around sequence (originally added to
+// handle commas by algorithms in common with spaced tokens).
+#define BOOST_CONTRACT_EXT_PP_TRAITS_AUX_TYPE_PARSE_SEQ_RETURN_( \
+        tokens, type) \
+    (tokens, BOOST_PP_TUPLE_REM_CTOR(1, type))
+
+/* PUBLIC */
+
+#define BOOST_CONTRACT_EXT_PP_TRAITS_AUX_TYPE_PARSE_D(d, tokens) \
+    BOOST_CONTRACT_EXT_PP_TRAITS_AUX_TYPE_PARSE_D_(d, tokens, \
+            BOOST_CONTRACT_EXT_PP_TRAITS_AUX_TYPE_SPACED_PUSH_BACK_)
+
+// Expand to 2-tuple `(remaining_tokens, parsed_type_spaced)`.
+// Where parsed_type_spaced are space-separated type tokens (e.g.,
+// `(int const)`, extra parenthesis to handle possible commas).
+// NOTE: Use ..._SEQ macro below to access single tokens instead.
 #define BOOST_CONTRACT_EXT_PP_TRAITS_AUX_TYPE_PARSE(tokens) \
     BOOST_CONTRACT_EXT_PP_TRAITS_AUX_TYPE_PARSE_D(1, tokens)
 
+#define BOOST_CONTRACT_EXT_PP_TRAITS_AUX_TYPE_PARSE_SEQ_D(d, tokens) \
+    BOOST_CONTRACT_EXT_PP_EXPAND_ONCE( \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_TYPE_PARSE_SEQ_RETURN_ \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_TYPE_PARSE_D_(d, tokens, \
+                BOOST_CONTRACT_EXT_PP_TRAITS_AUX_TYPE_SEQ_PUSH_BACK_) \
+    )
+
+// Expand to 2-tuple `(remaining_tokens, parsed_type_seq)`.
+// Where parsed_type_seq is a double parenthesized sequence of type tokens
+// (e.g., `((int)) ((const))`, extra parenthesis to handle possible commas).
+// NOTE: It is more efficient to use the non-..._SEQ macros above when only a
+// space-separated concatenation of the type tokes is needed.
+#define BOOST_CONTRACT_EXT_PP_TRAITS_AUX_TYPE_PARSE_SEQ(tokens) \
+    BOOST_CONTRACT_EXT_PP_TRAITS_AUX_TYPE_PARSE_SEQ_D(1, tokens)
+
+// TODO: Consider changing all/most tokens arg names to sign in pp/traits.
+
 // TODO: Should all _SKIP macros be removed and replaced by PARASE macros
 // that work on both sign and traits at the same time for efficiency and
-// consistency?
+// consistency? Then maybe just remove the two macros below...
 
 // NOTE: If possible, use the single "parse" macro above instead of this macro
 // (so to avoid executing the implementation while-loop twice).

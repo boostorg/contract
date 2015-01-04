@@ -20,7 +20,8 @@ test-pp export ;
 test-pp template ;
 test-pp classifiers ;
 test-pp return_ ;
+test-pp name ;
 
-# TODO: Try to automatically run and test wave too...
-# SHELL "wave access.cpp" ;
+# TODO: Try to automatically run and test wave too... Maybe something like this:
+#   SHELL "wave access.cpp" ;
 
