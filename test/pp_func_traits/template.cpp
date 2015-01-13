@@ -23,45 +23,45 @@
 
 // NOTE: Some extra test macros are necessary here to regenerate the sign back
 // from the parsed trait to check if the parsing was correct. But, at the end
-// these are valuable tests also because they use the TPARAM_TRAITS macros.
+// these are valuable tests also because they use the PARAM_TRAITS macros.
 
 // Assume all 1-tuple types were specified without parenthesis. This is usually
 // NOT true, but it is true in these tests. This is relevant only in these
 // tests where generated code must match original signature and its parenthesis
 // (the extra parenthesis of the original signature do not need to be
 // reproduced when generating C++ code so this assumption is not necessary).
-#define BOOST_CONTRACT_TEST_TPARAM_REM_YES_(tokens) \
-    BOOST_PP_EXPR_IIF(BOOST_PP_EQUAL(BOOST_PP_TUPLE_SIZE(tokens), 1), \
+#define BOOST_CONTRACT_TEST_TEMPLATE_PARAM_REM_YES_(type) \
+    BOOST_PP_EXPR_IIF(BOOST_PP_EQUAL(BOOST_PP_TUPLE_SIZE(type), 1), \
         BOOST_PP_TUPLE_REM(0) \
     ) \
-    tokens
+    type
 
-#define BOOST_CONTRACT_TEST_TPARAM_REM_(tokens) \
-    BOOST_PP_IIF(BOOST_CONTRACT_EXT_PP_HAS_PAREN(tokens), \
-        BOOST_CONTRACT_TEST_TPARAM_REM_YES_ \
+#define BOOST_CONTRACT_TEST_TEMPLATE_PARAM_REM_(type) \
+    BOOST_PP_IIF(BOOST_CONTRACT_EXT_PP_HAS_PAREN(type), \
+        BOOST_CONTRACT_TEST_TEMPLATE_PARAM_REM_YES_ \
     , \
         BOOST_PP_TUPLE_REM(1) \
-    )(tokens)
+    )(type)
         
-#define BOOST_CONTRACT_TEST_TPARAM_(r, unused, i, tparam_traits) \
+#define BOOST_CONTRACT_TEST_TEMPLATE_PARAM_(r, unused, i, template_param) \
     BOOST_PP_COMMA_IF(i) \
-    BOOST_CONTRACT_TEST_TPARAM_REM_( \
-            BOOST_CONTRACT_EXT_PP_TPARAM_TRAITS_KIND(tparam_traits)) \
-    BOOST_CONTRACT_EXT_PP_TPARAM_TRAITS_NAME(tparam_traits) \
+    BOOST_CONTRACT_TEST_TEMPLATE_PARAM_REM_( \
+            BOOST_CONTRACT_EXT_PP_PARAM_TRAITS_TYPE(template_param)) \
+    BOOST_CONTRACT_EXT_PP_PARAM_TRAITS_NAME(template_param) \
     BOOST_PP_IIF(BOOST_CONTRACT_EXT_PP_IS_EMPTY( \
-            BOOST_CONTRACT_EXT_PP_TPARAM_TRAITS_DEFAULT(tparam_traits)), \
+            BOOST_CONTRACT_EXT_PP_PARAM_TRAITS_DEFAULT(template_param)), \
         BOOST_PP_TUPLE_EAT(2) \
     , \
         BOOST_PP_TUPLE_REM(2) \
     )( \
         BOOST_PP_EMPTY(), \
-        default BOOST_CONTRACT_EXT_PP_TPARAM_TRAITS_DEFAULT(tparam_traits) \
+        default BOOST_CONTRACT_EXT_PP_PARAM_TRAITS_DEFAULT(template_param) \
     )
 
-#define BOOST_CONTRACT_TEST_TPARAMS_(func_traits) \
+#define BOOST_CONTRACT_TEST_TEMPLATE_PARAMS_(func_traits) \
     ( \
-        BOOST_PP_LIST_FOR_EACH_I(BOOST_CONTRACT_TEST_TPARAM_, ~, \
-                BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_TPARAMS(func_traits)) \
+        BOOST_PP_LIST_FOR_EACH_I(BOOST_CONTRACT_TEST_TEMPLATE_PARAM_, ~, \
+                BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_TEMPLATE_PARAMS(func_traits))\
     )
 
 #define BOOST_CONTRACT_TEST_TEMPLATE_(func_traits) \
@@ -69,7 +69,7 @@
             BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_TEMPLATE(func_traits)), \
         BOOST_PP_TUPLE_EAT(1) \
     , \
-        template BOOST_CONTRACT_TEST_TPARAMS_ \
+        template BOOST_CONTRACT_TEST_TEMPLATE_PARAMS_ \
     )(func_traits)
 
 #define BOOST_CONTRACT_TEST_(trait) \

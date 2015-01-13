@@ -108,7 +108,7 @@
 // Precondition: sign is 1-tuple and sign != ().
 #define BOOST_CONTRACT_EXT_PP_TRAITS_AUX_PARAMS_HANDLE_VOID_( \
         d, s, allow_void, sign, param_parse_macro, default_replace_macro) \
-    BOOST_PP_IIF(BOOST_CONTRACT_EXT_KEYWORD_IS_VOID_FRONT( \
+    BOOST_PP_IIF(BOOST_CONTRACT_EXT_PP_KEYWORD_IS_VOID_FRONT( \
             BOOST_PP_TUPLE_REM_CTOR(sign)), \
         BOOST_PP_NIL BOOST_PP_TUPLE_EAT(6) \
     , \

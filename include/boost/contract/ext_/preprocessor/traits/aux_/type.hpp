@@ -229,7 +229,9 @@
 
 // TODO: Consider changing all/most tokens arg names to sign in pp/traits.
 
-// TODO: Should all _SKIP macros be removed and replaced by PARASE macros
+// TODO: Consider renaming all sign to decl.
+
+// TODO: Should all _SKIP macros be removed and replaced by PARSE macros
 // that work on both sign and traits at the same time for efficiency and
 // consistency? Then maybe just remove the two macros below...
 

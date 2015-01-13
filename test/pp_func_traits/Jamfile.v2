@@ -21,6 +21,8 @@ test-pp template ;
 test-pp classifiers ;
 test-pp return_ ;
 test-pp name ;
+test-pp params ;
+test-pp cv_qualifiers ;
 
 # TODO: Try to automatically run and test wave too... Maybe something like this:
 #   SHELL "wave access.cpp" ;

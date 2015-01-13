@@ -8,7 +8,7 @@
 [def __assertion__ [link assertion_anchor [^['assertion]]]]
 [def __assertion_condition__ [link assertion_condition_anchor [^['assertion-condition]]]]
 [def __assertion_expression__ [link assertion_expression_anchor [^['assertion-expression]]]]
-[def __preconditions__ [link preconditions_anchor [^['preconditions]]]]
+[def __assertions__ [link assertions_anchor [^['assertions]]]]
 [def __base_classes__ [link base_classes_anchor [^['base-classes]]]]
 [def __boolean_condition__ [link boolean_condition_anchor [^['boolean-condition]]]]
 [def __class_declaration__ [link class_declaration_anchor [^['class-declaration]]]]
@@ -16,6 +16,11 @@
 [def __class_invariants__ [link class_invariants_anchor [^['class-invariants]]]]
 [def __concepts__ [link concepts_anchor [^['concepts]]]]
 [def __exception_specifications__ [link exception_specifications_anchor [^['exception-specifications]]]]
+[def __function_parameter__ [link function_parameter_anchor [^['function-paramter]]]]
+[def __classifiers__ [link classifiers_anchor [^['classifiers]]]]
+[def __cv_qualifiers__ [link cv_qualifiers_anchor [^['cv-qualifiers]]]]
+[def __ref_qualifiers__ [link ref_qualifiers_anchor [^['ref-qualifiers]]]]
+[def __virtual_specifiers__ [link virtual_specifiers_anchor [^['virtual-specifiers]]]]
 [def __function_declaration__ [link function_declaration_anchor [^['function-declaration]]]]
 [def __function_name__ [link function_name_anchor [^['function-name]]]]
 [def __function_parameters__ [link function_parameters_anchor [^['function-parameters]]]]
@@ -39,8 +44,8 @@
 [def __type_template_parameter__ [link type_template_parameter_anchor [^['type-template-parameter]]]]
 [def __value_template_parameter__ [link value_template_parameter_anchor [^['value-template-parameter]]]]
 [def __template_template_parameter__ [link template_template_parameter_anchor [^['template-template-parameter]]]]
-[def __postconditions__ [link postconditions_anchor [^['postconditions]]]]
-[def __return_type__ [link return_type_anchor [^['result-type]]]]
+[def __oldof_assertions__ [link oldof_assertions_anchor [^['oldof-assertions]]]]
+[def __return_type__ [link return_type_anchor [^['return-type]]]]
 [def __cv_qualifier__ [link cv_qualifier_anchor [^['cv-qualifier]]]]
 [def __select_assertion__ [link select_assertion_anchor [^['select-assertion]]]]
 [def __template_parameters__ [link template_parameters_anchor [^['template-parameters]]]]
@@ -208,24 +213,45 @@ In general, every token which is not a known keyword (e.g., `int` is a known key
 
 This library uses the following macros.
 
-    ``[macroref CONTRACT_CLASS]``(__class_declaration__)
-    ``[macroref CONTRACT_CLASS_TPL]``(__class_declaration__)
+    // Class declarations.
+    
+    ``[macroref BOOST_CONTRACT_CLASS]``(__class_declaration__)
+    ``[macroref BOOST_CONTRACT_CLASS_TPL]``(__class_declaration__)
+    
+    // Class invariants.
 
-    ``[macroref CONTRACT_CONSTRUCTOR]``(__function_declaration__)
-    ``[macroref CONTRACT_CONSTRUCTOR_TPL]``(__function_declaration__)
-    ``[macroref CONTRACT_CONSTRUCTOR_BODY]``(__class_type__, __class_name__)
+    ``[macroref BOOST_CONTRACT_INVARIANT]``(__assertions__)
+    ``[macroref BOOST_CONTRACT_INVARIANT_TPL]``(__assertions__)
+
+    ``[macroref BOOST_CONTRACT_STATIC_INVARIANT]``(__assertions__)
+    ``[macroref BOOST_CONTRACT_STATIC_INVARIANT_TPL]``(__assertions__)
     
-    ``[macroref CONTRACT_DESTRUCTOR]``(__function_declaration__)
-    ``[macroref CONTRACT_DESTRUCTOR_TPL]``(__function_declaration__)
-    ``[macroref CONTRACT_DESTRUCTOR_BODY]``(__class_type__, ~__class_name__)
+    ``[macroref BOOST_CONTRACT_INVARIANT_VOLATILE]``(__assertions__)
+    ``[macroref BOOST_CONTRACT_INVARIANT_VOLATILE_TPL]``(__assertions__)
+
+    // Constructor declarations.
+
+    ``[macroref BOOST_CONTRACT_CONSTRUCTOR]``(__function_declaration__)
+    ``[macroref BOOST_CONTRACT_CONSTRUCTOR_TPL]``(__function_declaration__)
+    ``[macroref BOOST_CONTRACT_CONSTRUCTOR_BODY]``(__class_type__, __class_name__)
     
-    ``[macroref CONTRACT_MEMBER]``(__function_declaration__)
-    ``[macroref CONTRACT_MEMBER_TPL]``(__function_declaration__)
-    ``[macroref CONTRACT_MEMBER_BODY]``(__function_name__)
+    // Destructor declarations.
+
+    ``[macroref BOOST_CONTRACT_DESTRUCTOR]``(__function_declaration__)
+    ``[macroref BOOST_CONTRACT_DESTRUCTOR_TPL]``(__function_declaration__)
+    ``[macroref BOOST_CONTRACT_DESTRUCTOR_BODY]``(__class_type__, ~__class_name__)
     
-    ``[macroref CONTRACT_FUNCTION]``(__function_declaration__)
-    ``[macroref CONTRACT_FUNCTION_TPL]``(__function_declaration__)
-    ``[macroref CONTRACT_FUNCTION_BODY]``(__function_name__)
+    // Member function (and member operator) declarations.
+
+    ``[macroref BOOST_CONTRACT_MEMBER]``(__function_declaration__)
+    ``[macroref BOOST_CONTRACT_MEMBER_TPL]``(__function_declaration__)
+    ``[macroref BOOST_CONTRACT_MEMBER_BODY]``(__function_name__)
+    
+    // Free function (and free operator) declarations.
+
+    ``[macroref BOOST_CONTRACT_FUNCTION]``(__function_declaration__)
+    ``[macroref BOOST_CONTRACT_FUNCTION_TPL]``(__function_declaration__)
+    ``[macroref BOOST_CONTRACT_FUNCTION_BODY]``(__function_name__)
 
 The macros with the trailing `_TPL` must be used when the enclosing scope is type-dependent (e.g., within templates).
 
@@ -283,9 +309,6 @@ Dash separated words in italic font.
             ``/[/````/[/``export``/]/`` template( ``/[/``__template_parameters__``/]/`` )``/]/``
             ``/[/``friend``/]/`` ``/{/``class ``/|/`` struct``/}/`` ``/[/``verbatim(__attributes__)``/]/`` (__class_name__)``/[/``( __template_specialization_arguments__ )``/]/``
             ``/[/``final``/]/`` ``/[/``extends( __base_classes__ )``/]/``
-            ``/[/``invariant(__class_invariants__)``/]/``
-            ``/[/``static invariant(__class_invariants__)``/]/``
-            ``/[/``invariant volatile(__class_invariants__)``/]/``
 
 [endsect]
 
@@ -359,18 +382,23 @@ Note that the type wrapped within parenthesis can contain trailing ellipses in c
     __function_declaration__``/:/ [#function_declaration_anchor]``
             ``/[/``verbatim(__attributes__)``/]/``
             ``/[/````/[/``export``/]/`` ``/[/``template( ``/[/``__template_parameters__``/]/`` )``/]/``
-            __classifiers__ ``/[/``__return_type__``/]/`` __function_name__ ( __function_parameters__ ) __qualifiers__
-            ``/[/``__exception_specifications__``/]/`` ``/[/``return __wrapped_type__``/]/``
-            ``/[/``precondition( __preconditions__ )``/]/``
-            ``/[/``postcondition( __postconditions__ )``/]/``
+            __classifiers__ ``/[/``__return_type__``/]/`` __function_name__ ( __function_parameters__ )
+            __cv_qualifiers__ __ref_qualifiers__ __exception_specifications__
+            ``/[/``return __wrapped_type__``/]/`` __virtual_specifiers__
+            ``/[/``precondition( __assertions__ )``/]/``
+            ``/[/``postcondition( __oldof_assertions__ )``/]/``
             
 This is the syntax used to declare all functions: Free functions, member functions, constructors, destructors, and operators.
 The usual constraints of C++ function declarations apply (it is not possible to declare a static virtual member function, only constructors can use the class name as the function name, constructors and destructors have no result type, etc).
+
+[endsect]
+
+[section Classifiers (`static`, etc.)]
+
+    __classifiers__``/:/ [#classifiers_anchor]``
+            ``/[/``explicit``/]/`` ``/[/``inline``/]/`` ``/[/``extern``/]/`` ``/[/``static``/]/`` ``/[/``virtual``/]/`` ``/[/``friend``/]/``
+
 The `static` specifier can only be used for member functions (because it was deprecated for free functions from C to __CXX03__).
-
-In __CXX11__ the object `this` of a member functions case be specified as lvalue using `ref` (instead of the usual __CXX11__ `&`) or as a rvalue using `ref ref` (instead of the usual CXX11 `&&`) after the function parameters and the optional cv-qualifier.
-
-Exception specifications apply only to exceptions thrown by the function body and not to exceptions thrown by the contracts themselves (if any) and by the contract checking code generated by this library's macros.
 
 [note
 C++ automatically promotes the memory member operators `operator new`, `operator delete`, `operator new[]`, and `operator delete[]` to be static members so the `static` specifier is allowed but optional for declarations of these member operators.
@@ -379,12 +407,12 @@ This library cannot automatically perform such a promotion so the `static` speci
 
 [endsect]
 
-[section Function Return Type]
+[section Return Type]
 
     __return_type__``/:/ [#return_type_anchor]``
             __wrapped_type__ ``/|/`` auto
 
-As always with this syntax's wrapped types, note that fundamental types containing no symbol can be specified without extra parenthesis (`void`, `bool`, `int`, `unsigned long const`, `decltype(x), etc.).
+As always with this syntax's wrapped types, note that fundamental types containing no symbol can be specified without extra parenthesis (`void`, `bool`, `int`, `unsigned long const`, `decltype(...)`, etc.).
 
 __CXX11__ trailing return types can be specified using `auto` for the return type and then using `return __wrapped_type__` after the function parameters (instead of the usual `->` syntax).
 Contrary to when `return` is used to specify a return value within a function definition, in this case `return` is followed by a type expression (and not by a value expression) as it is specifying the return type (and not the return value).
@@ -441,49 +469,53 @@ Similarly, the parenthesis and alphanumeric identifier are optional for the `new
             ``/[/``__function_parameter__``/, .../````/]/`` ``/[/``...``/]/`` ``/|/`` void
     
     __function_parameter__``/:/ [#function_parameter_anchor]``
-            ``/{/````/[/``__storage_classifier__``/]/`` __wrapped_type__ ``/[/``__parameter_name__``/]/````/|/``
-            __type__``/}/``
+            ``/[/``auto ``/|/`` register``/]/`` __wrapped_type__ ``/[/``__parameter_name__``/]/``
             ``/[/``, default __default_argument__``/]/``
 
-    __storage_classifier__``/:/``
-            auto ``/|/`` register
 
-Note how this syntax allows to specify variadic functions as usual in C++ using ellipses `...` at the end of the parameter list.
+This syntax allows to specify variadic functions as usual in C++ using ellipses `...` at the end of the parameter list.
 
-Note that the storage classifier `auto` is supported by this library but it is deprecated in __CXX11__ (so use it with the usual care when writing code portable to __CXX11__).
-
-Note that when the parameter name is not specified, the parenthesis wrapping the parameter type are optional.
+The storage classifier `auto` is supported by this library but it is deprecated in __CXX11__ (so use it with the usual care when writing code portable to __CXX11__).
 
 If present, default parameters must be specified at the end of the parameter list as usual in C++.
 
 [endsect]
     
-[section Function Classifiers (`static`, etc.)]
+[section CV-Qualifiers]
 
-    __classifiers__``/:/``
-            ``/[/``explicit``/]/`` ``/[/``inline``/]/`` ``/[/``extern``/]/`` ``/[/``static``/]/`` ``/[/``virtual``/]/`` ``/[/``friend``/]/``
+    __cv_qualifiers__``/:/ [#cv_qualifiers_anchor]``
+            ``/[/``const ``/|/`` volatile ``/|/`` const volatile ``/|/`` volatile const``/]/``
 
 [endsect]
 
-[section Function Qualifiers (`const`, etc.)]
+[section Ref-Qualifiers]
 
-    __qualifiers__``/:/``
-            ``/[/``const ``/|/`` volatile ``/|/`` const volatile ``/|/`` volatile const``/]/`` ``/[/``ref ``/[/``ref``/]/````/]/`` ``/[/``override``/]/`` ``/[/``final``/]/``
+    __ref_qualifiers__``/:/ [#ref_qualifiers_anchor]``
+            ``/[/``ref ``/|/ ``refref``/]/``
 
-Note that member functions are lvalue reference qualified using `ref` (instead of C++11 usual `&`) and rvalue reference qualified using `ref ref` (instead of C++11 usual `&&`).
+Member functions are qualified as lvalue references using `ref` (instead of C++11 usual `&`) and as rvalue references using `refref` (instead of C++11 usual `&&`).
 
 [endsect]
 
 [section Exception Specifications]
 
-    __exception_specifications__``/:/``
-            ``/[/``throw( ``/[/``__exception_type__``/, .../````/]/`` ) ``/|/`` noexcept ``/|/`` noexcept(__boolean_constant_expression__)``/]/``
+    __exception_specifications__``/:/ [#exception_specifications_anchor]``
+            ``/[/``noexcept``/[/``(__constant_boolean_expression__)``/]/`` ``/|/`` throw( ``/[/``__exception_type__``/, .../````/]/`` )``/]/``
+
+Exception specifications apply only to exceptions thrown by the function body and not to exceptions thrown by the contracts themselves (if any) and by the contract checking code generated by this library's macros.
+
+[endsect]
+
+[section Virtual Specifiers]
+
+    __virtual_specifiers__``/:/ [#virtual_specifiers_anchor]``
+            ``/[/``final ``/|/`` override ``/|/`` final override ``/|/`` override``/]/``
 
 [endsect]
 
 [section Preconditions]
 
-    __preconditions__``/:/ [#preconditions_anchor]``
+    __assertions__``/:/ [#assertions_anchor]``
             ``/[/``__aliasing__``/, .../````/]/``
             __assertion__``/, .../``
 
@@ -528,7 +560,7 @@ The type of the in-scope variable __inscope_variable__ is optional and it is aut
 
 [section Postconditions] 
 
-    __postconditions__``/:/ [#postconditions_anchor]``
+    __oldof_assertions__``/:/ [#oldof_assertions_anchor]``
             ``/[/``__aliasing__``/, .../````/]/``
             ``/[/``auto __variable_name__ = return,``/]/``
             ``/{/``auto __variable_name__ = ``[macroref CONTRACT_OLDOF]`` __oldof_expression__,``/}*/``
