@@ -3,6 +3,7 @@
 #define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_RETURN_HPP_
 
 #include <boost/contract/ext_/preprocessor/traits/aux_/type.hpp>
+#include <boost/contract/ext_/preprocessor/keyword/return.hpp>
 #include <boost/contract/ext_/preprocessor/keyword/operator.hpp>
 #include <boost/contract/ext_/preprocessor/paren/has.hpp>
 #include <boost/contract/ext_/preprocessor/utility/expand.hpp>
@@ -56,24 +57,50 @@
 #define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_RETURN_NO_(sign, traits) \
     (sign, BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK(traits, BOOST_PP_EMPTY))
 
-#define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_RETURN_(sign, traits) \
+#define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_RETURN_PARSE_ARGS_(sign, traits) \
     BOOST_PP_IIF(BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_HAS_RETURN_(sign), \
         BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_RETURN_YES_ \
     , \
         BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_RETURN_NO_ \
     )(sign, traits)
 
+// Precondition: sign = `return ...`.
+#define BOST_CONTRACT_EXT_PP_FUNC_TRAITS_TRAILING_RETURN_YES_(sign, traits) \
+    BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_RETURN_YES_( \
+            BOOST_CONTRACT_EXT_PP_KEYWORD_RETURN_REMOVE_FRONT(sign), traits)
+
+#define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_TRAILING_RETURN_PARSE_ARGS_( \
+        sign, traits) \
+    BOOST_PP_IIF(BOOST_CONTRACT_EXT_PP_KEYWORD_IS_RETURN_FRONT(sign), \
+        BOST_CONTRACT_EXT_PP_FUNC_TRAITS_TRAILING_RETURN_YES_ \
+    , \
+        BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_RETURN_NO_ \
+    )(sign, traits)
+    
 /* PUBLIC */
 
 #define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_RETURN_PARSE(sign_traits) \
     BOOST_CONTRACT_EXT_PP_EXPAND_ONCE( \
-            BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_RETURN_ sign_traits)
+            BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_RETURN_PARSE_ARGS_ sign_traits)
 
-// Expand to `result_type | void | auto | EMPTY()` (auto for unified function
-// syntax in which case for the result type trait use `..._UNIFIED_RETURN`).
+#define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_TRAILING_RETURN_PARSE(sign_traits) \
+    BOOST_CONTRACT_EXT_PP_EXPAND_ONCE( \
+        BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_TRAILING_RETURN_PARSE_ARGS_ \
+        sign_traits \
+    )
+
+// Expand to `result_type | void | auto | EMPTY()` (`auto` for alternative
+// function syntax, see also `..._TRAILING_RETURN`).
 #define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_RETURN(traits) \
     BOOST_CONTRACT_EXT_PP_TRAITS_ELEM( \
             BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_AUX_RETURN_INDEX, traits)()
+
+// Expand to `result_type | void | EMPTY()`.
+#define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_TRAILING_RETURN(traits) \
+    BOOST_CONTRACT_EXT_PP_TRAITS_ELEM( \
+        BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_AUX_TRAILING_RETURN_INDEX, \
+        traits \
+    )()
 
 #endif // #include guard
 

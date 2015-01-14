@@ -6,7 +6,7 @@
 
 #include <boost/contract/ext_/preprocessor/traits/func/aux_/index.hpp>
 #define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_AUX_INDEX_TEST \
-    BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_AUX_RETURN_INDEX
+    BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_AUX_TRAILING_RETURN_INDEX
 
 #include "../aux_/pp_traits.hpp"
 #include <boost/contract/ext_/preprocessor/traits/func.hpp>
@@ -20,15 +20,16 @@
 // Wrap with parenthesis (if no parenthesis already).
 // Precondition: trait != EMPTY().
 #define BOOST_CONTRACT_TEST_PARENTHESIZE_(trait) \
-    BOOST_PP_IIF(BOOST_CONTRACT_EXT_PP_HAS_PAREN(trait), \
+    BOOST_PP_IIF(BOOST_CONTRACT_EXT_PP_HAS_PAREN( \
+            BOOST_CONTRACT_EXT_PP_KEYWORD_RETURN_REMOVE_FRONT(trait)), \
         BOOST_PP_TUPLE_REM(1) \
     , \
         BOOST_PP_EMPTY() \
-    )(trait)
+    )(BOOST_CONTRACT_EXT_PP_KEYWORD_RETURN_REMOVE_FRONT(trait))
         
 #define BOOST_CONTRACT_TEST_(before, trait, after) \
     BOOST_CONTRACT_TEST_AUX_PP_TRAITS( \
-        BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_RETURN, \
+        BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_TRAILING_RETURN, \
         BOOST_CONTRACT_EXT_PP_FUNC_TRAITS, \
         before, \
         trait, \
@@ -41,50 +42,33 @@
     )
 
 int main ( ) {
-    // Return without and with parenthesis.
+    // No trailing return.
     BOOST_CONTRACT_TEST_(
-        BOOST_PP_EMPTY(),
-        void, (f) ( )
-    )
-    BOOST_CONTRACT_TEST_(
-        BOOST_PP_EMPTY(),
-        (std::map<int, char>), (f) ( )
+        void (f) ( ), BOOST_PP_EMPTY(), final override
     )
 
-    // No return for constructor and destructor.
+    // Trailing return with decltype.
     BOOST_CONTRACT_TEST_(
-        BOOST_PP_EMPTY(),
-        BOOST_PP_EMPTY(), (ctor) ( int x )
+        template( typename L, typename R )
+        auto (add) ( (L) left, (R) right ), return decltype(left + right),
+                final override
     )
+    // Trailing return with decltype and commas.
     BOOST_CONTRACT_TEST_(
-        BOOST_PP_EMPTY(),
-        BOOST_PP_EMPTY(), (~dtor) ( )
-    )
-
-    // No return for type conversion operators (with and without paren).
-    BOOST_CONTRACT_TEST_(
-        BOOST_PP_EMPTY(),
-        BOOST_PP_EMPTY(), operator int ( )
-    )
-    BOOST_CONTRACT_TEST_(
-        BOOST_PP_EMPTY(),
-        BOOST_PP_EMPTY(), operator(int*)(int_ptr) ( )
+        auto (f) ( ), return decltype(std::map<int, char>()), final override
     )
     
-    // Return for other operators (non type conversions, etc.).
+    // Trailing return without parenthesis.
     BOOST_CONTRACT_TEST_(
-        BOOST_PP_EMPTY(),
-        int, operator(+)(add) ( int, int )
+        auto (f) ( ), return int const, final override
     )
+    // Trailing return with parenthesis.
     BOOST_CONTRACT_TEST_(
-        BOOST_PP_EMPTY(),
-        (int&), operator(*)(deref) ( )
+        auto (f) ( ), return (std::ostream&), final override
     )
-
-    // Return for unified syntax.
+    // Trailing return with parenthesis and commas.
     BOOST_CONTRACT_TEST_(
-        template( typename L, typename R ),
-        auto, (add) ( (L) left, (R) right ) return decltype(left + right)
+        auto (f) ( ), return (std::map<int, char>), final override
     )
     
     return BOOST_CONTRACT_TEST_AUX_PP_TRAITS_REPORT_ERRORS;

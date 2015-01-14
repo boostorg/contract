@@ -25,7 +25,7 @@
         (std::map<int, char>&) (f) ( int x, (std::map<int, char>&) y ) \
                 throw(int, double), \
         trait, \
-        precondition(x > 0) postcondition(x == 0 ? y.empty() : true), \
+        precondition(x >= 0) postcondition(x == 0 ? y.empty() : true), \
         parsed \
     )
 
