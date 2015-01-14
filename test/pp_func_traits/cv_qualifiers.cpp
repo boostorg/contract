@@ -33,10 +33,8 @@
 
 int main ( ) {
     BOOST_CONTRACT_TEST_( BOOST_PP_EMPTY() )
-
     BOOST_CONTRACT_TEST_( const )
     BOOST_CONTRACT_TEST_( volatile )
-    
     BOOST_CONTRACT_TEST_( const volatile )
     // Same as `const volatile` once parsed (this order does not matter in C++).
     BOOST_CONTRACT_TEST_PARSED_( volatile const, const volatile )

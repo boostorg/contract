@@ -103,11 +103,12 @@ entries = [
     {
         'directory': 'contract',
         'keywords': [
-            'invariant',
             'precondition',
             'postcondition',
             'extends',
-            'verbatim'
+            'verbatim',
+            'ref',
+            'refref'
         ]
     }
 ]

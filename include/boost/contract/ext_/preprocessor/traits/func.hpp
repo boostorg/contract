@@ -8,6 +8,7 @@
 #ifndef BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_HPP_
 #define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_HPP_
 
+#include <boost/contract/ext_/preprocessor/traits/func/ref.hpp>
 #include <boost/contract/ext_/preprocessor/traits/func/cv_qualifiers.hpp>
 #include <boost/contract/ext_/preprocessor/traits/func/params.hpp>
 #include <boost/contract/ext_/preprocessor/traits/func/name.hpp>
@@ -24,6 +25,16 @@
 
 // NOTE: These macros #definitions read TRITS_FUNC instead of FUNC_TRAITS to
 // avoid name clashes with macro #define in func/*.
+
+#if defined(BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_AUX_INDEX_TEST) && \
+        BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_AUX_INDEX_TEST < \
+        BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_AUX_REF_INDEX
+#   define BOOST_CONTRACT_EXT_PP_TRAITS_FUNC_REF_(sign_traits) \
+        sign_traits
+#else
+#   define BOOST_CONTRACT_EXT_PP_TRAITS_FUNC_REF_(sign_traits) \
+        BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_REF_PARSE(sign_traits)
+#endif
 
 #if defined(BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_AUX_INDEX_TEST) && \
         BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_AUX_INDEX_TEST < \
@@ -132,6 +143,7 @@
 // WARNING: Order of these macros must match ..._INDEX values (see index.hpp).
 #define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS(sign) \
     BOOST_CONTRACT_EXT_PP_TRAITS_FUNC_DONE_( \
+    BOOST_CONTRACT_EXT_PP_TRAITS_FUNC_REF_( \
     BOOST_CONTRACT_EXT_PP_TRAITS_FUNC_CV_QUALIFIERS_( \
     BOOST_CONTRACT_EXT_PP_TRAITS_FUNC_PARAMS_( \
     BOOST_CONTRACT_EXT_PP_TRAITS_FUNC_NAME_( \
@@ -143,7 +155,7 @@
     BOOST_CONTRACT_EXT_PP_TRAITS_FUNC_ACCESS_( \
     BOOST_CONTRACT_EXT_PP_SIGN_TRAITS_INIT( \
         sign \
-    )))))))))))
+    ))))))))))))
 
 #endif // #include guard
 

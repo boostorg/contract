@@ -3,7 +3,7 @@
 #define BOOST_CONTRACT_EXT_PP_KEYWORD_OPERATOR_HPP_
 
 // WARNING: FILE AUTOMATICALLY GENERATED, DO NOT MODIFY IT!
-// Instead, modify and run the related generation script "generate.py".
+// Instead, modify and run related generation script "keyword-generate.py".
 
 #include <boost/contract/ext_/preprocessor/keyword/utility/is.hpp>
 #include <boost/contract/ext_/preprocessor/keyword/utility/remove.hpp>

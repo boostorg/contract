@@ -14,9 +14,12 @@
 #include <boost/preprocessor/facilities/empty.hpp>
 #include <boost/preprocessor/tuple/rem.hpp>
 
-// PUBLIC //
+/* PUBLIC */
 
 // A keyword (among 1 single possible one).
+
+// TODO: Consider listing keyword before is_keyword_macro (in general:
+// keyword, is_keyword_macro, remove_keyword_macro, etc.).
 
 // IMPLEMENTATION: EXPAND needed for MSVC.
 #define BOOST_CONTRACT_EXT_PP_TRAITS_AUX_KEYWORD( \
@@ -51,6 +54,34 @@
     ))()
 
 #define BOOST_CONTRACT_EXT_PP_TRAITS_AUX_KEYWORD2_SKIP( \
+    tokens, \
+    is_keyword_macro1, remove_keyword_macro1, \
+    is_keyword_macro2, remove_keyword_macro2 \
+) \
+    BOOST_PP_IIF(is_keyword_macro1(tokens), \
+        remove_keyword_macro1 \
+    , BOOST_PP_IIF(is_keyword_macro2(tokens), \
+        remove_keyword_macro2 \
+    , \
+        BOOST_PP_TUPLE_REM(1) \
+    ))(tokens)
+
+// A keyword among 2 possible ones.
+
+#define BOOST_CONTRACT_EXT_PP_TRAITS_AUX_KEYWORD2( \
+    tokens, \
+    is_keyword_macro1, keyword1, \
+    is_keyword_macro2, keyword2 \
+) \
+    BOOST_PP_IIF(is_keyword_macro1(tokens), \
+        keyword1 BOOST_PP_EMPTY \
+    , BOOST_PP_IIF(is_keyword_macro2(tokens), \
+        keyword2 BOOST_PP_EMPTY \
+    , \
+        BOOST_PP_EMPTY \
+    ))()
+
+#define BOOST_CONTRACT_EXT_PP_TRAITS_AUX_KEYWORD2_SKIP(\
     tokens, \
     is_keyword_macro1, remove_keyword_macro1, \
     is_keyword_macro2, remove_keyword_macro2 \
