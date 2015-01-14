@@ -24,6 +24,8 @@ test-pp name ;
 test-pp params ;
 test-pp cv_qualifiers ;
 test-pp ref ;
+test-pp except ;
+test-pp virt_specifiers ;
 
 # TODO: Try to automatically run and test wave too... Maybe something like this:
 #   SHELL "wave access.cpp" ;

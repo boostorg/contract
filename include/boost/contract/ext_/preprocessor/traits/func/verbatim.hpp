@@ -8,7 +8,7 @@
 #include <boost/contract/ext_/preprocessor/keyword/contract/verbatim.hpp>
 #include <boost/preprocessor/facilities/empty.hpp>
 
-// PRIVATE //
+/* PRIVATE */
 
 #define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_VERBATIM_SIGN_(sign, traits) \
     BOOST_CONTRACT_EXT_PP_TRAITS_AUX_KEYWORD_PAREN_SKIP( \
@@ -28,7 +28,7 @@
         BOOST_PP_EMPTY \
     )
 
-// PUBLIC //
+/* PUBLIC */
 
 #define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_VERBATIM_PARSE(sign_traits) \
     ( \
@@ -40,9 +40,7 @@
 // Expand to `(,,,) | EMPTY()`.
 #define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_VERBATIM(traits) \
     BOOST_CONTRACT_EXT_PP_TRAITS_ELEM( \
-        BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_AUX_VERBATIM_INDEX, \
-        traits \
-    )()
+            BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_AUX_VERBATIM_INDEX, traits)()
 
 #endif // #include guard
 

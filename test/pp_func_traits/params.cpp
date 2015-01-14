@@ -56,7 +56,7 @@
     )
 
 // Variadic to allow to specify empty params `( )`.
-#define BOOST_CONTRACT_TEST_PARSED_(params_sign, parsed_params) \
+#define BOOST_CONTRACT_TEST_EQUAL_(params_sign, parsed_params) \
     BOOST_CONTRACT_TEST_AUX_PP_TRAITS( \
         BOOST_CONTRACT_TEST_PARAMS_, \
         BOOST_CONTRACT_EXT_PP_FUNC_TRAITS, \
@@ -67,12 +67,12 @@
     )
 
 #define BOOST_CONTRACT_TEST_(...) \
-    BOOST_CONTRACT_TEST_PARSED_( (__VA_ARGS__), (__VA_ARGS__) )
+    BOOST_CONTRACT_TEST_EQUAL_( (__VA_ARGS__), (__VA_ARGS__) )
 
 int main ( ) {
     // Test empty and void.
     BOOST_CONTRACT_TEST_( )
-    BOOST_CONTRACT_TEST_PARSED_( ( void ), ( ) )
+    BOOST_CONTRACT_TEST_EQUAL_( ( void ), ( ) )
 
     // Test named.
     BOOST_CONTRACT_TEST_( int x )
@@ -112,7 +112,7 @@ int main ( ) {
     )
     
     // Test variadics.
-    BOOST_CONTRACT_TEST_PARSED_( ( int count, (...) ), ( int count, ... ) )
+    BOOST_CONTRACT_TEST_EQUAL_( ( int count, (...) ), ( int count, ... ) )
 
     return BOOST_CONTRACT_TEST_AUX_PP_TRAITS_REPORT_ERRORS;
 }

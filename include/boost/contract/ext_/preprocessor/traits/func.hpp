@@ -8,6 +8,8 @@
 #ifndef BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_HPP_
 #define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_HPP_
 
+#include <boost/contract/ext_/preprocessor/traits/func/virt_specifiers.hpp>
+#include <boost/contract/ext_/preprocessor/traits/func/except.hpp>
 #include <boost/contract/ext_/preprocessor/traits/func/ref.hpp>
 #include <boost/contract/ext_/preprocessor/traits/func/cv_qualifiers.hpp>
 #include <boost/contract/ext_/preprocessor/traits/func/params.hpp>
@@ -25,6 +27,26 @@
 
 // NOTE: These macros #definitions read TRITS_FUNC instead of FUNC_TRAITS to
 // avoid name clashes with macro #define in func/*.
+
+#if defined(BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_AUX_INDEX_TEST) && \
+        BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_AUX_INDEX_TEST < \
+        BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_AUX_VIRT_SPECIFIERS_INDEX
+#   define BOOST_CONTRACT_EXT_PP_TRAITS_FUNC_VIRT_SPECIFIERS_(sign_traits) \
+        sign_traits
+#else
+#   define BOOST_CONTRACT_EXT_PP_TRAITS_FUNC_VIRT_SPECIFIERS_(sign_traits) \
+        BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_VIRT_SPECIFIERS_PARSE(sign_traits)
+#endif
+
+#if defined(BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_AUX_INDEX_TEST) && \
+        BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_AUX_INDEX_TEST < \
+        BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_AUX_EXCEPT_INDEX
+#   define BOOST_CONTRACT_EXT_PP_TRAITS_FUNC_EXCEPT_(sign_traits) \
+        sign_traits
+#else
+#   define BOOST_CONTRACT_EXT_PP_TRAITS_FUNC_EXCEPT_(sign_traits) \
+        BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_EXCEPT_PARSE(sign_traits)
+#endif
 
 #if defined(BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_AUX_INDEX_TEST) && \
         BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_AUX_INDEX_TEST < \
@@ -143,6 +165,8 @@
 // WARNING: Order of these macros must match ..._INDEX values (see index.hpp).
 #define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS(sign) \
     BOOST_CONTRACT_EXT_PP_TRAITS_FUNC_DONE_( \
+    BOOST_CONTRACT_EXT_PP_TRAITS_FUNC_VIRT_SPECIFIERS_( \
+    BOOST_CONTRACT_EXT_PP_TRAITS_FUNC_EXCEPT_( \
     BOOST_CONTRACT_EXT_PP_TRAITS_FUNC_REF_( \
     BOOST_CONTRACT_EXT_PP_TRAITS_FUNC_CV_QUALIFIERS_( \
     BOOST_CONTRACT_EXT_PP_TRAITS_FUNC_PARAMS_( \
@@ -155,7 +179,7 @@
     BOOST_CONTRACT_EXT_PP_TRAITS_FUNC_ACCESS_( \
     BOOST_CONTRACT_EXT_PP_SIGN_TRAITS_INIT( \
         sign \
-    ))))))))))))
+    ))))))))))))))
 
 #endif // #include guard
 

@@ -6,7 +6,7 @@
 
 #include <boost/contract/ext_/preprocessor/traits/func/aux_/index.hpp>
 #define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_AUX_INDEX_TEST \
-    BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_AUX_CV_QUALIFIERS_INDEX
+    BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_AUX_VIRT_SPECIFIERS_INDEX
 
 #include "../aux_/pp_traits.hpp"
 #include <boost/contract/ext_/preprocessor/traits/func.hpp>
@@ -14,17 +14,18 @@
 
 #include <boost/preprocessor/variadic/size.hpp>
 
-#define BOOST_CONTRACT_TEST_CV_QUALIFIERS_(func_traits) \
-    BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_CONST(func_traits) \
-    BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_VOLATILE(func_traits)
+#define BOOST_CONTRACT_TEST_VIRT_SPECIFIERS_(func_traits) \
+    BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_FINAL(func_traits) \
+    BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_OVERRIDE(func_traits)
 
 #define BOOST_CONTRACT_TEST_EQUAL_(trait, parsed) \
     BOOST_CONTRACT_TEST_AUX_PP_TRAITS( \
-        BOOST_CONTRACT_TEST_CV_QUALIFIERS_, \
+        BOOST_CONTRACT_TEST_VIRT_SPECIFIERS_, \
         BOOST_CONTRACT_EXT_PP_FUNC_TRAITS, \
-        (std::map<int, char>&) (f) ( int x, (std::map<int, char>&) y ), \
+        (std::map<int, char>&) (f) ( int x, (std::map<int, char>&) y ) \
+                throw(int, double), \
         trait, \
-        refref throw(int, double) final override, \
+        precondition(x > 0) postcondition(x == 0 ? y.empty() : true), \
         parsed \
     )
 
@@ -33,11 +34,11 @@
 
 int main ( ) {
     BOOST_CONTRACT_TEST_( BOOST_PP_EMPTY() )
-    BOOST_CONTRACT_TEST_( const )
-    BOOST_CONTRACT_TEST_( volatile )
-    BOOST_CONTRACT_TEST_( const volatile )
+    BOOST_CONTRACT_TEST_( final )
+    BOOST_CONTRACT_TEST_( override )
+    BOOST_CONTRACT_TEST_( final override )
     // Same as `const volatile` once parsed (this order does not matter in C++).
-    BOOST_CONTRACT_TEST_EQUAL_( volatile const, const volatile )
+    BOOST_CONTRACT_TEST_EQUAL_( override final, final override )
 
     return BOOST_CONTRACT_TEST_AUX_PP_TRAITS_REPORT_ERRORS;
 }
