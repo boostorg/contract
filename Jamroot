@@ -20,8 +20,18 @@ project
     ;
 
 echo """
-Examples:
-    $ wave <file-path> # pre-process <file-name> to pp.*
+EXAMPLES
+    Parse specified file using to bin/.../<file-stem>-pp.ii:
+    $ bjam [-a] <file-stem>-pp [cxxflags=-UDEBUG] [toolset=msvc|gcc|clang]
+
+    Parse specified file to ./pp.cpp (and ./pp.dbg, see also <root>/wave.cfg):
+    $ wave <file-name>
+
+    Compile and run program <file-stem>.cpp:
+    $ bjam [-a] <file-stem> [toolset=msvc|gcc|clang]
+
+    Compile and run all programs in current directory:
+    $ bjam [-a] [toolset=msvc|gcc|clang]
 """
     ;
 

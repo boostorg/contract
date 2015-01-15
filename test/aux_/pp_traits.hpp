@@ -54,15 +54,15 @@ std::string trim ( std::string const& source ) {
     )
 
 #define BOOST_CONTRACT_TEST_AUX_PP_TRAITS_( \
-        sign_traits, traits_elem_macro, parsed_trait, sign_after_trait) \
+        decl_traits, traits_elem_macro, parsed_trait, decl_after_trait) \
     BOOST_CONTRACT_TEST_AUX_PP_TRAITS_EQUAL_( \
         traits_elem_macro( \
-                BOOST_CONTRACT_EXT_PP_SIGN_TRAITS_DONE(sign_traits)), \
+                BOOST_CONTRACT_EXT_PP_DECL_TRAITS_DONE(decl_traits)), \
         parsed_trait \
     ) \
     BOOST_CONTRACT_TEST_AUX_PP_TRAITS_EQUAL_( \
-        BOOST_CONTRACT_EXT_PP_SIGN_TRAITS_FIRST(sign_traits), \
-        sign_after_trait \
+        BOOST_CONTRACT_EXT_PP_DECL_TRAITS_FIRST(decl_traits), \
+        decl_after_trait \
     )
 
 /* PUBLIC */
@@ -73,17 +73,17 @@ std::string trim ( std::string const& source ) {
 #   define BOOST_CONTRACT_TEST_AUX_PP_TRAITS( \
         traits_elem_macro, \
         traits_parse_macro, \
-        sign_before_trait, \
-        sign_at_trait, \
-        sign_after_trait, \
+        decl_before_trait, \
+        decl_at_trait, \
+        decl_after_trait, \
         parsed_trait \
     ) \
         BOOST_CONTRACT_TEST_AUX_PP_TRAITS_( \
             traits_parse_macro( \
-                    sign_before_trait sign_at_trait sign_after_trait), \
+                    decl_before_trait decl_at_trait decl_after_trait), \
             traits_elem_macro, \
             parsed_trait, \
-            sign_after_trait \
+            decl_after_trait \
         )
 #else
 // To #define DEBUG is useful when looking at pre-processed output (the NIL
@@ -91,16 +91,16 @@ std::string trim ( std::string const& source ) {
 #   define BOOST_CONTRACT_TEST_AUX_PP_TRAITS( \
         traits_elem_macro, \
         traits_parse_macro, \
-        sign_before_trait, \
-        sign_at_trait, \
-        sign_after_trait, \
+        decl_before_trait, \
+        decl_at_trait, \
+        decl_after_trait, \
         parsed_trait \
     ) \
         "NOTE: #undefine DEBUG macro (e.g., `bjam cxxflags=-UDEBUG ...`) to see fully generated C++ code" \
-        sign = sign_before_trait sign_at_trait sign_after_trait \
+        decl = decl_before_trait decl_at_trait decl_after_trait \
         --> \
-        (remaining_sign, BOOST_PP_NIL parsed_traits) = traits_parse_macro( \
-                sign_before_trait sign_at_trait sign_after_trait)
+        (remaining_decl, BOOST_PP_NIL parsed_traits) = traits_parse_macro( \
+                decl_before_trait decl_at_trait decl_after_trait)
 #endif
 
 #define BOOST_CONTRACT_TEST_AUX_PP_TRAITS_REPORT_ERRORS \
