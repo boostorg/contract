@@ -22,14 +22,14 @@
 /* PRIVATE */
             
 #define BOOST_CONTRACT_EXT_PP_TRAITS_AUX_PARAMS_REPLACE_LAST_DEFAULT_( \
-        s, sign, d, param_parse_macro, default_replace_macro, traits, last) \
+        s, decl, d, param_parse_macro, default_replace_macro, traits, last) \
     BOOST_PP_LIST_APPEND_D(d, \
         BOOST_PP_LIST_FIRST_N_D(d, last, traits), \
         ( \
-            BOOST_CONTRACT_EXT_PP_SIGN_TRAITS_SECOND( \
+            BOOST_CONTRACT_EXT_PP_DECL_TRAITS_SECOND( \
                 default_replace_macro(d, s, \
                     ( \
-                        sign, \
+                        decl, \
                         BOOST_PP_LIST_AT_D(d, traits, last) \
                     ) \
                 ) \
@@ -40,20 +40,20 @@
 
 // Now parsing `default ...` so replace default value of last parsed parameter.
 #define BOOST_CONTRACT_EXT_PP_TRAITS_AUX_PARAMS_REPLACE_DEFAULT_( \
-        s, sign, d, param_parse_macro, default_replace_macro, traits) \
+        s, decl, d, param_parse_macro, default_replace_macro, traits) \
     ( \
         d, \
         param_parse_macro, \
         default_replace_macro, \
         BOOST_CONTRACT_EXT_PP_TRAITS_AUX_PARAMS_REPLACE_LAST_DEFAULT_( \
-                s, sign, d, param_parse_macro, default_replace_macro, traits, \
+                s, decl, d, param_parse_macro, default_replace_macro, traits, \
                 BOOST_PP_DEC(BOOST_PP_LIST_SIZE_D(d, traits))) \
     )
 
 // Now paring parameter declaration (assume default is EMPTY at first).
-// Implementation: `sign BOOST_PP_EMPTY` to handle unnamed params.
+// Implementation: `decl BOOST_PP_EMPTY` to handle unnamed params.
 #define BOOST_CONTRACT_EXT_PP_TRAITS_AUX_PARAMS_APPEND_PARAM_( \
-        s, sign, d, param_parse_macro, default_replace_macro, traits) \
+        s, decl, d, param_parse_macro, default_replace_macro, traits) \
     ( \
         d, \
         param_parse_macro, \
@@ -61,10 +61,10 @@
         BOOST_PP_LIST_APPEND_D(d, \
             traits, \
             ( \
-                BOOST_CONTRACT_EXT_PP_SIGN_TRAITS_SECOND( \
+                BOOST_CONTRACT_EXT_PP_DECL_TRAITS_SECOND( \
                     param_parse_macro(d, s, \
                         ( \
-                            sign BOOST_PP_EMPTY, \
+                            decl BOOST_PP_EMPTY, \
                             BOOST_PP_EMPTY() \
                         ) \
                     ) \
@@ -75,14 +75,14 @@
     )
 
 #define BOOST_CONTRACT_EXT_PP_TRAITS_AUX_PARAM_( \
-        s, d_param_default_traits, sign) \
-    BOOST_PP_IIF(BOOST_CONTRACT_EXT_PP_KEYWORD_IS_DEFAULT_FRONT(sign), \
+        s, d_param_default_traits, decl) \
+    BOOST_PP_IIF(BOOST_CONTRACT_EXT_PP_KEYWORD_IS_DEFAULT_FRONT(decl), \
         BOOST_CONTRACT_EXT_PP_TRAITS_AUX_PARAMS_REPLACE_DEFAULT_ \
     , \
         BOOST_CONTRACT_EXT_PP_TRAITS_AUX_PARAMS_APPEND_PARAM_ \
     )( \
         s, \
-        sign, \
+        decl, \
         BOOST_PP_TUPLE_ELEM(4, 0, d_param_default_traits), \
         BOOST_PP_TUPLE_ELEM(4, 1, d_param_default_traits), \
         BOOST_PP_TUPLE_ELEM(4, 2, d_param_default_traits), \
@@ -90,7 +90,7 @@
     )
 
 #define BOOST_CONTRACT_EXT_PP_TRAITS_AUX_PARAMS_( \
-        d, s, allow_void, sign, param_parse_macro, default_replace_macro) \
+        d, s, allow_void, decl, param_parse_macro, default_replace_macro) \
     BOOST_PP_TUPLE_ELEM(4, 3, \
         BOOST_PP_SEQ_FOLD_LEFT_ ## s( \
             BOOST_CONTRACT_EXT_PP_TRAITS_AUX_PARAM_, \
@@ -100,62 +100,62 @@
                 default_replace_macro, \
                 BOOST_PP_NIL \
             ), \
-            BOOST_PP_TUPLE_TO_SEQ(sign) \
+            BOOST_PP_TUPLE_TO_SEQ(decl) \
         ) \
     )
 
-// Handle `sign == (void)` (i.e., void parameters).
-// Precondition: sign is 1-tuple and sign != ().
+// Handle `decl == (void)` (i.e., void parameters).
+// Precondition: decl is 1-tuple and decl != ().
 #define BOOST_CONTRACT_EXT_PP_TRAITS_AUX_PARAMS_HANDLE_VOID_( \
-        d, s, allow_void, sign, param_parse_macro, default_replace_macro) \
+        d, s, allow_void, decl, param_parse_macro, default_replace_macro) \
     BOOST_PP_IIF(BOOST_CONTRACT_EXT_PP_KEYWORD_IS_VOID_FRONT( \
-            BOOST_PP_TUPLE_REM_CTOR(sign)), \
+            BOOST_PP_TUPLE_REM_CTOR(decl)), \
         BOOST_PP_NIL BOOST_PP_TUPLE_EAT(6) \
     , \
         BOOST_CONTRACT_EXT_PP_TRAITS_AUX_PARAMS_ \
-    )(d, s, allow_void, sign, param_parse_macro, default_replace_macro)
+    )(d, s, allow_void, decl, param_parse_macro, default_replace_macro)
 
-// Handle `sign == ()` (i.e., empty parameters).
-// Precondition: sign is 1-tuple.
+// Handle `decl == ()` (i.e., empty parameters).
+// Precondition: decl is 1-tuple.
 #define BOOST_CONTRACT_EXT_PP_TRAITS_AUX_PARAMS_HANDLE_EMPTY_( \
-        d, s, allow_void, sign, param_parse_macro, default_replace_macro) \
-    BOOST_PP_IIF(BOOST_PP_IS_EMPTY(BOOST_PP_TUPLE_REM_CTOR(sign)), \
+        d, s, allow_void, decl, param_parse_macro, default_replace_macro) \
+    BOOST_PP_IIF(BOOST_PP_IS_EMPTY(BOOST_PP_TUPLE_REM_CTOR(decl)), \
         BOOST_PP_NIL BOOST_PP_TUPLE_EAT(6) \
     , BOOST_PP_IIF(allow_void, \
         BOOST_CONTRACT_EXT_PP_TRAITS_AUX_PARAMS_HANDLE_VOID_ \
     , \
         BOOST_CONTRACT_EXT_PP_TRAITS_AUX_PARAMS_ \
-    ))(d, s, allow_void, sign, param_parse_macro, default_replace_macro)
+    ))(d, s, allow_void, decl, param_parse_macro, default_replace_macro)
 
 #define BOOST_CONTRACT_EXT_PP_TRAITS_AUX_PARAMS_D_S_( \
-        d, s, allow_void, sign, param_parse_macro, default_replace_macro) \
-    BOOST_PP_IIF(BOOST_PP_EQUAL(BOOST_PP_TUPLE_SIZE(sign), 1), \
+        d, s, allow_void, decl, param_parse_macro, default_replace_macro) \
+    BOOST_PP_IIF(BOOST_PP_EQUAL(BOOST_PP_TUPLE_SIZE(decl), 1), \
         BOOST_CONTRACT_EXT_PP_TRAITS_AUX_PARAMS_HANDLE_EMPTY_ \
     , \
         BOOST_CONTRACT_EXT_PP_TRAITS_AUX_PARAMS_ \
-    )(d, s, allow_void, sign, param_parse_macro, default_replace_macro)
+    )(d, s, allow_void, decl, param_parse_macro, default_replace_macro)
 
 /* PUBLIC */
 
 #define BOOST_CONTRACT_EXT_PP_TRAITS_AUX_PARAMS_D_S( \
-        d, s, sign, param_parse_macro, default_replace_macro) \
+        d, s, decl, param_parse_macro, default_replace_macro) \
     BOOST_CONTRACT_EXT_PP_TRAITS_AUX_PARAMS_D_S_( \
-            d, s, 0, sign, param_parse_macro, default_replace_macro)
+            d, s, 0, decl, param_parse_macro, default_replace_macro)
 
-// Expand specified pp-tuple of parameters signatures into a pp-list of
+// Expand specified pp-tuple of parameter declarations into a pp-list of
 // parameters traits (handles empty parameters and default arguments).
-#define BOOST_CONTRACT_EXT_PP_TRAITS_AUX_PARAMS(sign) \
-    BOOST_CONTRACT_EXT_PP_TRAITS_AUX_PARAMS_D_S(1, 1, sign)
+#define BOOST_CONTRACT_EXT_PP_TRAITS_AUX_PARAMS(decl) \
+    BOOST_CONTRACT_EXT_PP_TRAITS_AUX_PARAMS_D_S(1, 1, decl)
 
 #define BOOST_CONTRACT_EXT_PP_TRAITS_AUX_VOID_PARAMS_D_S( \
-        d, s, sign, param_parse_macro, default_replace_macro) \
+        d, s, decl, param_parse_macro, default_replace_macro) \
     BOOST_CONTRACT_EXT_PP_TRAITS_AUX_PARAMS_D_S_( \
-            d, s, 1, sign, param_parse_macro, default_replace_macro)
+            d, s, 1, decl, param_parse_macro, default_replace_macro)
 
-// Expand specified pp-tuple of parameters signatures into a pp-list of
+// Expand specified pp-tuple of parameter declarations into a pp-list of
 // parameters traits (handles void and empty parameters, and default arguments).
-#define BOOST_CONTRACT_EXT_PP_TRAITS_AUX_VOID_PARAMS(sign) \
-    BOOST_CONTRACT_EXT_PP_TRAITS_AUX_VOID_PARAMS_D_S(1, 1, sign)
+#define BOOST_CONTRACT_EXT_PP_TRAITS_AUX_VOID_PARAMS(decl) \
+    BOOST_CONTRACT_EXT_PP_TRAITS_AUX_VOID_PARAMS_D_S(1, 1, decl)
 
 #endif // #include guard
 
