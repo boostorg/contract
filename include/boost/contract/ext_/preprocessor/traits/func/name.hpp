@@ -16,41 +16,42 @@
 #include <boost/preprocessor/tuple/eat.hpp>
 #include <boost/preprocessor/tuple/rem.hpp>
 #include <boost/preprocessor/control/iif.hpp>
+#include <boost/preprocessor/control/expr_iif.hpp>
 #include <boost/preprocessor/facilities/empty.hpp>
 
 /* PRIVATE */
 
-// Precondition: sign = `(func_name) ...`.
-#define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_NAME_(sign, traits) \
+// Precondition: decl = `(func_name) ...`.
+#define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_NAME_(decl, traits) \
     ( \
-        BOOST_PP_TUPLE_EAT(1) sign \
+        BOOST_PP_TUPLE_EAT(1) decl \
     , \
         BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK(traits, BOOST_PP_TUPLE_REM_CTOR(\
-                1, BOOST_CONTRACT_EXT_PP_PAREN_FRONT(sign))) \
+                1, BOOST_CONTRACT_EXT_PP_PAREN_FRONT(decl))) \
     )
 
 // Add empty operator name (i.e., not an operator).
-#define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_NAME_WITHOUT_OPERATOR_(sign, traits) \
-    BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_NAME_(sign, \
+#define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_NAME_OPERATOR_NO_(decl, traits) \
+    BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_NAME_(decl, \
             BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK(traits, BOOST_PP_EMPTY))
 
-// Precondition: sign = `(operator_name,,,) (func_name) ...`.
-#define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_NAME_WITH_OPERATOR_(sign, traits) \
+// Precondition: decl = `(operator_name,,,) (func_name) ...`.
+#define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_NAME_OPERATOR_PAREN_(decl, traits) \
     BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_NAME_( \
-        BOOST_PP_TUPLE_EAT(0) sign, \
+        BOOST_PP_TUPLE_EAT(0) decl, \
         BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK(traits, \
-                BOOST_CONTRACT_EXT_PP_PAREN_FRONT(sign) BOOST_PP_EMPTY) \
+                BOOST_CONTRACT_EXT_PP_PAREN_FRONT(decl) BOOST_PP_EMPTY) \
     )
 
-// Precondition: sign = `new ...`.
-#define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_NAME_OPERATOR_NEW_(sign, traits) \
-    BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_NAME_WITH_OPERATOR_( (new) (new) \
-            BOOST_CONTRACT_EXT_PP_KEYWORD_NEW_REMOVE_FRONT(sign), traits)
+// Precondition: decl = `new ...`.
+#define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_NAME_OPERATOR_NEW_(decl, traits) \
+    BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_NAME_OPERATOR_PAREN_( (new) (new) \
+            BOOST_CONTRACT_EXT_PP_KEYWORD_NEW_REMOVE_FRONT(decl), traits)
 
-// Precondition: sign = `delete ...`.
-#define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_NAME_OPERATOR_DELETE_(sign, traits) \
-    BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_NAME_WITH_OPERATOR_( (delete) (delete) \
-            BOOST_CONTRACT_EXT_PP_KEYWORD_DELETE_REMOVE_FRONT(sign), traits)
+// Precondition: decl = `delete ...`.
+#define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_NAME_OPERATOR_DELETE_(decl, traits) \
+    BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_NAME_OPERATOR_PAREN_( (delete) (delete) \
+            BOOST_CONTRACT_EXT_PP_KEYWORD_DELETE_REMOVE_FRONT(decl), traits)
 
 // This macro already removes one set of parenthesis via the SEQ_FOR_EACH
 // (from `((elem))` to `(elem)`). Furthermore, if remove_all_paren is 1, it also
@@ -58,22 +59,20 @@
 // parenthesized sequence element, from `((elem))` to `elem`).
 #define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_NAME_OPERATOR_TYPE_REM_( \
         r, remove_all_paren, paren_type_trait) \
-    BOOST_PP_IIF(remove_all_paren, \
-        BOOST_PP_TUPLE_REM_CTOR(1, paren_type_trait) \
-    , \
-        paren_type_trait \
-    )
+    BOOST_PP_EXPR_IIF(remove_all_paren, \
+        BOOST_PP_TUPLE_REM(1) \
+    ) paren_type_trait
 
-// Precondition: typetraits is a double parenthesized sequence of type traits
-// (e.g., `((int)) ((const))`).
+// Precondition: SECOND(decl_type) is a double parenthesized sequence of type
+// traits (e.g., `((int)) ((const))`).
 #define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_NAME_OPERATOR_TYPE_SEQ_( \
-        remainingsign_typetraits, traits) \
-    BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_NAME_WITH_OPERATOR_( \
+        decl_type, traits) \
+    BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_NAME_OPERATOR_PAREN_( \
         ( \
             BOOST_PP_SEQ_FOR_EACH( \
                 BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_NAME_OPERATOR_TYPE_REM_,\
                 1, \
-                BOOST_PP_TUPLE_ELEM(2, 1, remainingsign_typetraits) \
+                BOOST_CONTRACT_EXT_PP_DECL_TRAITS_SECOND(decl_type) \
             ) \
         ) \
         ( \
@@ -81,49 +80,47 @@
                 BOOST_PP_SEQ_FOR_EACH( \
                     BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_NAME_OPERATOR_TYPE_REM_, \
                     0, \
-                    BOOST_PP_TUPLE_ELEM(2, 1, remainingsign_typetraits) \
+                    BOOST_CONTRACT_EXT_PP_DECL_TRAITS_SECOND(decl_type) \
                 ) \
             ) \
         ) \
-        BOOST_PP_TUPLE_ELEM(2, 0, remainingsign_typetraits), \
+        BOOST_CONTRACT_EXT_PP_DECL_TRAITS_FIRST(decl_type), \
         traits \
     )
 
-// Precondition: sign = `parenthesized-type ...`.
-#define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_NAME_OPERATOR_TYPE_(sign, traits) \
+// Precondition: decl = `parenthesized-type ...`.
+#define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_NAME_OPERATOR_TYPE_(decl, traits) \
     BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_NAME_OPERATOR_TYPE_SEQ_( \
-            BOOST_CONTRACT_EXT_PP_TRAITS_AUX_TYPE_PARSE_SEQ(sign), traits)
+            BOOST_CONTRACT_EXT_PP_TRAITS_AUX_TYPE_SEQ(decl), traits)
 
-#define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_NAME_OPERATOR_DISPATCH_( \
-        sign, traits) \
-    BOOST_PP_IIF(BOOST_CONTRACT_EXT_PP_HAS_PAREN(sign), \
-        BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_NAME_WITH_OPERATOR_ \
-    , BOOST_PP_IIF(BOOST_CONTRACT_EXT_PP_KEYWORD_IS_NEW_FRONT(sign), \
+#define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_NAME_OPERATOR_(decl, traits) \
+    BOOST_PP_IIF(BOOST_CONTRACT_EXT_PP_HAS_PAREN(decl), \
+        BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_NAME_OPERATOR_PAREN_ \
+    , BOOST_PP_IIF(BOOST_CONTRACT_EXT_PP_KEYWORD_IS_NEW_FRONT(decl), \
         BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_NAME_OPERATOR_NEW_ \
-    , BOOST_PP_IIF(BOOST_CONTRACT_EXT_PP_KEYWORD_IS_DELETE_FRONT(sign), \
+    , BOOST_PP_IIF(BOOST_CONTRACT_EXT_PP_KEYWORD_IS_DELETE_FRONT(decl), \
         BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_NAME_OPERATOR_DELETE_ \
     , \
         BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_NAME_OPERATOR_TYPE_ \
-    )))(sign, traits)
+    )))(decl, traits)
 
-// Precondition: sign = `operator ...`
-#define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_NAME_OPERATOR_( \
-        sign, traits) \
-    BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_NAME_OPERATOR_DISPATCH_( \
-            BOOST_CONTRACT_EXT_PP_KEYWORD_OPERATOR_REMOVE_FRONT(sign), traits)
+// Precondition: decl = `operator ...`
+#define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_NAME_OPERATOR_YES_(decl, traits) \
+    BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_NAME_OPERATOR_( \
+            BOOST_CONTRACT_EXT_PP_KEYWORD_OPERATOR_REMOVE_FRONT(decl), traits)
 
-#define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_NAME_ARGS_(sign, traits) \
-    BOOST_PP_IIF(BOOST_CONTRACT_EXT_PP_KEYWORD_IS_OPERATOR_FRONT(sign), \
-        BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_NAME_OPERATOR_ \
+#define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_NAME_ARGS_(decl, traits) \
+    BOOST_PP_IIF(BOOST_CONTRACT_EXT_PP_KEYWORD_IS_OPERATOR_FRONT(decl), \
+        BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_NAME_OPERATOR_YES_ \
     , \
-        BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_NAME_WITHOUT_OPERATOR_ \
-    )(sign, traits)
+        BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_NAME_OPERATOR_NO_ \
+    )(decl, traits)
 
 /* PUBLIC */
 
-#define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_NAME_PARSE(sign_traits) \
+#define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_NAME_PARSE(decl_traits) \
     BOOST_CONTRACT_EXT_PP_EXPAND_ONCE( \
-            BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_NAME_ARGS_ sign_traits)
+            BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_NAME_ARGS_ decl_traits)
 
 // Expand to `(operator_name,,,) | EMPTY()` (EMPTY if not an operator).
 // This is the usual C++ operator's symbolic name (often NOT alphanumeric like
@@ -136,7 +133,7 @@
 
 // Expand to `func_name`.
 // This is always an alphanumeric name (also for operators like `plus`, etc.),
-// but for destructors where the alphanumeric name contains a leading `~`.
+// but for destructors where name has the leading symbol `~`.
 #define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_NAME(traits) \
     BOOST_CONTRACT_EXT_PP_TRAITS_ELEM( \
             BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_AUX_NAME_INDEX, traits)

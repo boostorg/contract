@@ -10,34 +10,32 @@
 #include <boost/preprocessor/facilities/empty.hpp>
 
 // NOTE: The `export` keyword for templates was deprecated in C++11 but it is
-// supported here for compliance and compatibility with C++03.
+// still supported here for compliance and compatibility with C++03.
 
 /* PRIVATE */
 
-#define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_EXPORT_SIGN_(sign, traits) \
-    BOOST_CONTRACT_EXT_PP_TRAITS_AUX_KEYWORD_SKIP( \
-        sign, \
-        BOOST_CONTRACT_EXT_PP_KEYWORD_IS_EXPORT_FRONT, \
-        BOOST_CONTRACT_EXT_PP_KEYWORD_EXPORT_REMOVE_FRONT \
-    )
-
-#define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_EXPORT_TRAIT_(sign, traits) \
-    BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK( \
-        traits, \
-        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_KEYWORD(sign, \
-                BOOST_CONTRACT_EXT_PP_KEYWORD_IS_EXPORT_FRONT, export) \
-        BOOST_PP_EMPTY \
+#define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_EXPORT_(decl_export, traits) \
+    ( \
+        BOOST_CONTRACT_EXT_PP_DECL_TRAITS_FIRST(decl_export) \
+    , \
+        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK( \
+            traits, \
+            BOOST_CONTRACT_EXT_PP_DECL_TRAITS_SECOND(decl_export) \
+            BOOST_PP_EMPTY \
+        ) \
     )
 
 /* PUBLIC */
 
-#define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_EXPORT_PARSE(sign_traits) \
-    ( \
-        BOOST_CONTRACT_EXT_PP_EXPAND_ONCE( \
-                BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_EXPORT_SIGN_ sign_traits) \
-    , \
-        BOOST_CONTRACT_EXT_PP_EXPAND_ONCE( \
-                BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_EXPORT_TRAIT_ sign_traits) \
+#define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_EXPORT_PARSE(decl_traits) \
+    BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_EXPORT_( \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_KEYWORD1( \
+            BOOST_CONTRACT_EXT_PP_DECL_TRAITS_FIRST(decl_traits), \
+            export, \
+            BOOST_CONTRACT_EXT_PP_KEYWORD_IS_EXPORT_FRONT, \
+            BOOST_CONTRACT_EXT_PP_KEYWORD_EXPORT_REMOVE_FRONT \
+        ), \
+        BOOST_CONTRACT_EXT_PP_DECL_TRAITS_SECOND(decl_traits) \
     )
 
 // Expand to `export | EMPTY()`.

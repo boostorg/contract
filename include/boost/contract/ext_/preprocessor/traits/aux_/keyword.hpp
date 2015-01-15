@@ -1,132 +1,88 @@
 
-// Copyright (C) 2008-2012 Lorenzo Caminiti
-// Distributed under the Boost Software License, Version 1.0
-// (see accompanying file LICENSE_1_0.txt or a copy at
-// http://www.boost.org/LICENSE_1_0.txt)
-// Home at http://sourceforge.net/projects/contractpp
-
 #ifndef BOOST_CONTRACT_EXT_PP_TRAITS_AUX_KEYWORD_HPP_
 #define BOOST_CONTRACT_EXT_PP_TRAITS_AUX_KEYWORD_HPP_
 
-#include <boost/preprocessor/control/expr_iif.hpp>
+#include <boost/contract/ext_/preprocessor/functional/invoke.hpp>
 #include <boost/preprocessor/control/iif.hpp>
-#include <boost/preprocessor/facilities/expand.hpp>
 #include <boost/preprocessor/facilities/empty.hpp>
-#include <boost/preprocessor/tuple/rem.hpp>
+#include <boost/preprocessor/facilities/expand.hpp>
+
+/* PRIVATE */
+
+// Precondition: decl = `keyword ...`.
+#define BOOST_CONTRACT_EXT_PP_TRAITS_AUX_KEYWORD_YES_( \
+        decl, keyword, remove_keyword_macro) \
+    (remove_keyword_macro(decl), keyword)
+
+#define BOOST_CONTRACT_EXT_PP_TRAITS_AUX_KEYWORD_NO_(decl, unsued1, unused2) \
+    (decl, BOOST_PP_EMPTY())
 
 /* PUBLIC */
 
-// A keyword (among 1 single possible one).
-
-// TODO: Consider listing keyword before is_keyword_macro (in general:
-// keyword, is_keyword_macro, remove_keyword_macro, etc.).
-
-// IMPLEMENTATION: EXPAND needed for MSVC.
-#define BOOST_CONTRACT_EXT_PP_TRAITS_AUX_KEYWORD( \
-    tokens, \
-    is_keyword_macro, keyword \
+// Expand:
+//  decl = `keyword ...`    to `(..., keyword)`.
+//  decl = `...`            to `(..., EMPTY())`.
+#define BOOST_CONTRACT_EXT_PP_TRAITS_AUX_KEYWORD1( \
+    decl, \
+    keyword1, is_keyword1_macro, remove_keyword1_macro \
 ) \
-    BOOST_PP_EXPR_IIF(BOOST_PP_EXPAND(is_keyword_macro(tokens)), keyword)
+    BOOST_PP_EXPAND( \
+        BOOST_CONTRACT_EXT_PP_INVOKE3 \
+        BOOST_PP_IIF(is_keyword1_macro(decl), \
+            (BOOST_CONTRACT_EXT_PP_TRAITS_AUX_KEYWORD_YES_, decl, \
+            keyword1, remove_keyword1_macro) \
+        , \
+            (BOOST_CONTRACT_EXT_PP_TRAITS_AUX_KEYWORD_NO_, decl, ~, ~) \
+        ) \
+    )
 
-#define BOOST_CONTRACT_EXT_PP_TRAITS_AUX_KEYWORD_SKIP( \
-    tokens, \
-    is_keyword_macro, remove_keyword_macro \
-) \
-    BOOST_PP_IIF(is_keyword_macro(tokens), \
-        remove_keyword_macro \
-    , \
-        BOOST_PP_TUPLE_REM(1) \
-    )(tokens)
-
-// A keyword among 2 possible ones.
-
+// Expand:
+//  decl = `keyword ...`    to `(..., keyword)`.
+//  decl = `...`            to `(..., EMPTY())`.
+// Where keyword can be one among 2 possible keywords.
 #define BOOST_CONTRACT_EXT_PP_TRAITS_AUX_KEYWORD2( \
-    tokens, \
-    is_keyword_macro1, keyword1, \
-    is_keyword_macro2, keyword2 \
+    decl, \
+    keyword1, is_keyword1_macro, remove_keyword1_macro, \
+    keyword2, is_keyword2_macro, remove_keyword2_macro \
 ) \
-    BOOST_PP_IIF(is_keyword_macro1(tokens), \
-        keyword1 BOOST_PP_EMPTY \
-    , BOOST_PP_IIF(is_keyword_macro2(tokens), \
-        keyword2 BOOST_PP_EMPTY \
-    , \
-        BOOST_PP_EMPTY \
-    ))()
+    BOOST_PP_EXPAND( \
+        BOOST_CONTRACT_EXT_PP_INVOKE3 \
+        BOOST_PP_IIF(is_keyword1_macro(decl), \
+            (BOOST_CONTRACT_EXT_PP_TRAITS_AUX_KEYWORD_YES_, decl, \
+            keyword1, remove_keyword1_macro) \
+        , BOOST_PP_IIF(is_keyword2_macro(decl), \
+            (BOOST_CONTRACT_EXT_PP_TRAITS_AUX_KEYWORD_YES_, decl, \
+            keyword2, remove_keyword2_macro) \
+        , \
+            (BOOST_CONTRACT_EXT_PP_TRAITS_AUX_KEYWORD_NO_, decl, ~, ~) \
+        )) \
+    )
 
-#define BOOST_CONTRACT_EXT_PP_TRAITS_AUX_KEYWORD2_SKIP( \
-    tokens, \
-    is_keyword_macro1, remove_keyword_macro1, \
-    is_keyword_macro2, remove_keyword_macro2 \
-) \
-    BOOST_PP_IIF(is_keyword_macro1(tokens), \
-        remove_keyword_macro1 \
-    , BOOST_PP_IIF(is_keyword_macro2(tokens), \
-        remove_keyword_macro2 \
-    , \
-        BOOST_PP_TUPLE_REM(1) \
-    ))(tokens)
-
-// A keyword among 2 possible ones.
-
-#define BOOST_CONTRACT_EXT_PP_TRAITS_AUX_KEYWORD2( \
-    tokens, \
-    is_keyword_macro1, keyword1, \
-    is_keyword_macro2, keyword2 \
-) \
-    BOOST_PP_IIF(is_keyword_macro1(tokens), \
-        keyword1 BOOST_PP_EMPTY \
-    , BOOST_PP_IIF(is_keyword_macro2(tokens), \
-        keyword2 BOOST_PP_EMPTY \
-    , \
-        BOOST_PP_EMPTY \
-    ))()
-
-#define BOOST_CONTRACT_EXT_PP_TRAITS_AUX_KEYWORD2_SKIP(\
-    tokens, \
-    is_keyword_macro1, remove_keyword_macro1, \
-    is_keyword_macro2, remove_keyword_macro2 \
-) \
-    BOOST_PP_IIF(is_keyword_macro1(tokens), \
-        remove_keyword_macro1 \
-    , BOOST_PP_IIF(is_keyword_macro2(tokens), \
-        remove_keyword_macro2 \
-    , \
-        BOOST_PP_TUPLE_REM(1) \
-    ))(tokens)
-
-// A keyword among 3 possible ones.
-
+// Expand:
+//  decl = `keyword ...`    to `(..., keyword)`.
+//  decl = `...`            to `(..., EMPTY())`.
+// Where keyword can be one among 3 possible keywords.
 #define BOOST_CONTRACT_EXT_PP_TRAITS_AUX_KEYWORD3( \
-    tokens, \
-    is_keyword_macro1, keyword1, \
-    is_keyword_macro2, keyword2, \
-    is_keyword_macro3, keyword3 \
+    decl, \
+    keyword1, is_keyword1_macro, remove_keyword1_macro, \
+    keyword2, is_keyword2_macro, remove_keyword2_macro, \
+    keyword3, is_keyword3_macro, remove_keyword3_macro \
 ) \
-    BOOST_PP_IIF(is_keyword_macro1(tokens), \
-        keyword1 BOOST_PP_EMPTY \
-    , BOOST_PP_IIF(is_keyword_macro2(tokens), \
-        keyword2 BOOST_PP_EMPTY \
-    , BOOST_PP_IIF(is_keyword_macro3(tokens), \
-        keyword3 BOOST_PP_EMPTY \
-    , \
-        BOOST_PP_EMPTY \
-    )))()
-
-#define BOOST_CONTRACT_EXT_PP_TRAITS_AUX_KEYWORD3_SKIP(\
-    tokens, \
-    is_keyword_macro1, remove_keyword_macro1, \
-    is_keyword_macro2, remove_keyword_macro2, \
-    is_keyword_macro3, remove_keyword_macro3 \
-) \
-    BOOST_PP_IIF(is_keyword_macro1(tokens), \
-        remove_keyword_macro1 \
-    , BOOST_PP_IIF(is_keyword_macro2(tokens), \
-        remove_keyword_macro2 \
-    , BOOST_PP_IIF(is_keyword_macro3(tokens), \
-        remove_keyword_macro3 \
-    , \
-        BOOST_PP_TUPLE_REM(1) \
-    )))(tokens)
+    BOOST_PP_EXPAND( \
+        BOOST_CONTRACT_EXT_PP_INVOKE3 \
+        BOOST_PP_IIF(is_keyword1_macro(decl), \
+            (BOOST_CONTRACT_EXT_PP_TRAITS_AUX_KEYWORD_YES_, decl, \
+            keyword1, remove_keyword1_macro) \
+        , BOOST_PP_IIF(is_keyword2_macro(decl), \
+            (BOOST_CONTRACT_EXT_PP_TRAITS_AUX_KEYWORD_YES_, decl, \
+            keyword2, remove_keyword2_macro) \
+        , BOOST_PP_IIF(is_keyword3_macro(decl), \
+            (BOOST_CONTRACT_EXT_PP_TRAITS_AUX_KEYWORD_YES_, decl, \
+            keyword3, remove_keyword3_macro) \
+        , \
+            (BOOST_CONTRACT_EXT_PP_TRAITS_AUX_KEYWORD_NO_, decl, ~, ~) \
+        ))) \
+    )
 
 #endif // #include guard
 

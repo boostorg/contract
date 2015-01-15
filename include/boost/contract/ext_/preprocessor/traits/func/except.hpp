@@ -12,52 +12,57 @@
 
 /* PRIVATE */
 
-#define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_EXCEPT_( \
-        sign, traits, keyword, is_keyword_macro, remove_keyword_macro) \
+#define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_EXCEPT_(decl_paren, keyword, traits) \
     ( \
-        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_KEYWORD_PAREN_SKIP(sign, \
-                is_keyword_macro, remove_keyword_macro) \
+        BOOST_CONTRACT_EXT_PP_DECL_TRAITS_FIRST(decl_paren) \
     , \
         BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK( \
             traits, \
             keyword \
-            BOOST_CONTRACT_EXT_PP_TRAITS_AUX_KEYWORD_PAREN(sign, \
-                    is_keyword_macro, remove_keyword_macro) \
+            BOOST_CONTRACT_EXT_PP_DECL_TRAITS_SECOND(decl_paren) \
             BOOST_PP_EMPTY \
         ) \
     )
 
-#define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_EXCEPT_NONE_(sign, traits) \
-    (sign, BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK(traits, BOOST_PP_EMPTY))
-        
-#define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_EXCEPT_NOEXCEPT_(sign, traits) \
-    BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_EXCEPT_(sign, traits, \
-        noexcept, \
-        BOOST_CONTRACT_EXT_PP_KEYWORD_IS_NOEXCEPT_FRONT, \
-        BOOST_CONTRACT_EXT_PP_KEYWORD_NOEXCEPT_REMOVE_FRONT \
-    )
+#define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_EXCEPT_NONE_(decl, traits) \
+    (decl, BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK(traits, BOOST_PP_EMPTY))
 
-#define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_EXCEPT_THROW_(sign, traits) \
-    BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_EXCEPT_(sign, traits, \
+#define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_EXCEPT_THROW_(decl, traits) \
+    BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_EXCEPT_( \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_KEYWORD_PAREN( \
+            decl, \
+            BOOST_CONTRACT_EXT_PP_KEYWORD_IS_THROW_FRONT, \
+            BOOST_CONTRACT_EXT_PP_KEYWORD_THROW_REMOVE_FRONT \
+        ), \
         throw, \
-        BOOST_CONTRACT_EXT_PP_KEYWORD_IS_THROW_FRONT, \
-        BOOST_CONTRACT_EXT_PP_KEYWORD_THROW_REMOVE_FRONT \
+        traits \
     )
 
-#define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_EXCEPT_PARSE_ARGS_(sign, traits) \
-    BOOST_PP_IIF(BOOST_CONTRACT_EXT_PP_KEYWORD_IS_NOEXCEPT_FRONT(sign), \
+#define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_EXCEPT_NOEXCEPT_(decl, traits) \
+    BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_EXCEPT_( \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_KEYWORD_PAREN( \
+            decl, \
+            BOOST_CONTRACT_EXT_PP_KEYWORD_IS_NOEXCEPT_FRONT, \
+            BOOST_CONTRACT_EXT_PP_KEYWORD_NOEXCEPT_REMOVE_FRONT \
+        ), \
+        noexcept, \
+        traits \
+    )
+
+#define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_EXCEPT_PARSE_ARGS_(decl, traits) \
+    BOOST_PP_IIF(BOOST_CONTRACT_EXT_PP_KEYWORD_IS_NOEXCEPT_FRONT(decl), \
         BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_EXCEPT_NOEXCEPT_ \
-    , BOOST_PP_IIF(BOOST_CONTRACT_EXT_PP_KEYWORD_IS_THROW_FRONT(sign), \
+    , BOOST_PP_IIF(BOOST_CONTRACT_EXT_PP_KEYWORD_IS_THROW_FRONT(decl), \
         BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_EXCEPT_THROW_ \
     , \
         BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_EXCEPT_NONE_ \
-    ))(sign, traits)
+    ))(decl, traits)
 
 /* PUBLIC */
 
-#define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_EXCEPT_PARSE(sign_traits) \
+#define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_EXCEPT_PARSE(decl_traits) \
     BOOST_CONTRACT_EXT_PP_EXPAND_ONCE( \
-            BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_EXCEPT_PARSE_ARGS_ sign_traits)
+            BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_EXCEPT_PARSE_ARGS_ decl_traits)
 
 // Expand to `noexcept | noexcept(,,,) | throw(,,,) | EMPTY()`.
 #define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_EXCEPT(traits) \

@@ -11,32 +11,31 @@
 
 /* PRIVATE */
 
-#define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_REF_SIGN_(sign, traits) \
-    BOOST_CONTRACT_EXT_PP_TRAITS_AUX_KEYWORD2_SKIP( \
-        sign, \
-        BOOST_CONTRACT_EXT_PP_KEYWORD_IS_REF_FRONT, \
-        BOOST_CONTRACT_EXT_PP_KEYWORD_REF_REMOVE_FRONT, \
-        BOOST_CONTRACT_EXT_PP_KEYWORD_IS_REFREF_FRONT, \
-        BOOST_CONTRACT_EXT_PP_KEYWORD_REFREF_REMOVE_FRONT \
-    )
-
-#define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_REF_TRAIT_(sign, traits) \
-    BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK(traits, \
-        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_KEYWORD2( \
-            sign, \
-            BOOST_CONTRACT_EXT_PP_KEYWORD_IS_REF_FRONT, ref, \
-            BOOST_CONTRACT_EXT_PP_KEYWORD_IS_REFREF_FRONT, refref \
+#define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_REF_(decl_ref, traits) \
+    ( \
+        BOOST_CONTRACT_EXT_PP_DECL_TRAITS_FIRST(decl_ref) \
+    , \
+        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK( \
+            traits, \
+            BOOST_CONTRACT_EXT_PP_DECL_TRAITS_SECOND(decl_ref) \
+            BOOST_PP_EMPTY \
         ) \
-        BOOST_PP_EMPTY \
     )
 
 /* PUBLIC */
 
-#define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_REF_PARSE(sign_traits) \
-    ( \
-        BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_REF_SIGN_ sign_traits \
-    , \
-        BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_REF_TRAIT_ sign_traits \
+#define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_REF_PARSE(decl_traits) \
+    BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_REF_( \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_KEYWORD2( \
+            BOOST_CONTRACT_EXT_PP_DECL_TRAITS_FIRST(decl_traits), \
+            ref, \
+            BOOST_CONTRACT_EXT_PP_KEYWORD_IS_REF_FRONT, \
+            BOOST_CONTRACT_EXT_PP_KEYWORD_REF_REMOVE_FRONT, \
+            refref, \
+            BOOST_CONTRACT_EXT_PP_KEYWORD_IS_REFREF_FRONT, \
+            BOOST_CONTRACT_EXT_PP_KEYWORD_REFREF_REMOVE_FRONT \
+        ), \
+        BOOST_CONTRACT_EXT_PP_DECL_TRAITS_SECOND(decl_traits) \
     )
 
 // Expand to `ref | refref | EMPTY()` (ref for lvalue &, refref for rvalue &&).

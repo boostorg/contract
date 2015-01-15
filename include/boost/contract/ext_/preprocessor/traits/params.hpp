@@ -10,48 +10,48 @@
 /* PRIVATE */
 
 #define BOOST_CONTRACT_EXT_PP_PARAMS_TRAITS_PARAM_PARSE_D_S_( \
-        d, s, sign_traits) \
+        d, s, decl_traits) \
     BOOST_CONTRACT_EXT_PP_PARAM_TRAITS_DEFAULT_PARSE_EMPTY( \
     BOOST_CONTRACT_EXT_PP_PARAM_TRAITS_NAME_PARSE( \
     BOOST_CONTRACT_EXT_PP_PARAM_TRAITS_TYPE_PARSE( \
-        sign_traits \
+        decl_traits \
     )))
 
 #define BOOST_CONTRACT_EXT_PP_PARAMS_TRAITS_TEMPLATE_PARAM_PARSE_D_S_( \
-        d, s, sign_traits) \
+        d, s, decl_traits) \
     BOOST_CONTRACT_EXT_PP_PARAM_TRAITS_DEFAULT_PARSE_EMPTY( \
     BOOST_CONTRACT_EXT_PP_PARAM_TRAITS_NAME_PARSE( \
     BOOST_CONTRACT_EXT_PP_TEMPLATE_PARAM_TRAITS_TYPE_PARSE( \
-        sign_traits \
+        decl_traits \
     )))
 
 /* PUBLIC */
 
-// Function formal (not template) parameters (handle `(void)` and empty `()`).
-#define BOOST_CONTRACT_EXT_PP_PARAMS_TRAITS_D_S(d, s, sign) \
+#define BOOST_CONTRACT_EXT_PP_PARAMS_TRAITS_D_S(d, s, decl) \
     BOOST_CONTRACT_EXT_PP_TRAITS_AUX_VOID_PARAMS_D_S(d, s, \
-        sign, \
+        decl, \
         BOOST_CONTRACT_EXT_PP_PARAMS_TRAITS_PARAM_PARSE_D_S_, \
         BOOST_CONTRACT_EXT_PP_PARAM_TRAITS_DEFAULT_REPLACE_PARSE_D_S \
     )
 
-// Expand specified pp-tuple with template parameters signature into pp-list
-// of template parameter traits to inspect using PARAM_TRAITS macros.
-#define BOOST_CONTRACT_EXT_PP_PARAMS_TRAITS(sign) \
-    BOOST_CONTRACT_EXT_PP_PARAMS_TRAITS_D_S(1, 1, sign)
+// Expand decl = `(,,,)` containing (function formal, not template) parameter
+// declarations into pp-list of parameter traits (to then be inspected using
+// PARAM_TRAITS macros). Handle both `(void)` and empty `()`.
+#define BOOST_CONTRACT_EXT_PP_PARAMS_TRAITS(decl) \
+    BOOST_CONTRACT_EXT_PP_PARAMS_TRAITS_D_S(1, 1, decl)
 
-// Template parameters (handle empty `()`).
-#define BOOST_CONTRACT_EXT_PP_TEMPLATE_PARAMS_TRAITS_D_S(d, s, sign) \
+#define BOOST_CONTRACT_EXT_PP_TEMPLATE_PARAMS_TRAITS_D_S(d, s, decl) \
     BOOST_CONTRACT_EXT_PP_TRAITS_AUX_PARAMS_D_S(d, s, \
-        sign, \
+        decl, \
         BOOST_CONTRACT_EXT_PP_PARAMS_TRAITS_TEMPLATE_PARAM_PARSE_D_S_, \
         BOOST_CONTRACT_EXT_PP_PARAM_TRAITS_DEFAULT_REPLACE_PARSE_D_S \
     )
 
-// Expand specified pp-tuple with template parameters signature into pp-list
-// of template parameter traits to inspect using PARAM_TRAITS macros.
-#define BOOST_CONTRACT_EXT_PP_TEMPLATE_PARAMS_TRAITS(sign) \
-    BOOST_CONTRACT_EXT_PP_TEMPLATE_PARAMS_TRAITS_D_S(1, 1, sign)
+// Expand decl = `(,,,)` containing template parameter declarations into pp-list
+// of template parameter traits (to then be inspected using PARAM_TRAITS
+// macros). Handle empty `()`.
+#define BOOST_CONTRACT_EXT_PP_TEMPLATE_PARAMS_TRAITS(decl) \
+    BOOST_CONTRACT_EXT_PP_TEMPLATE_PARAMS_TRAITS_D_S(1, 1, decl)
 
 #endif // #include guard
 
