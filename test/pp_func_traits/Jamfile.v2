@@ -1,13 +1,6 @@
 
 import testing ;
 
-echo "Examples:
-    b2 <file-name>
-            compile and run test program <file-name>.cpp
-    b2 <file-name>-pp [cxxflags=-UDEBUG]
-            stop after preprocessing <file-name>.cpp
-""" ;
-
 rule test-pp ( filename ) {
     run $(filename).cpp ;
     preprocessed $(filename)-pp : $(filename).cpp : <cxxflags>-DDEBUG ;
@@ -22,11 +15,11 @@ test-pp classifiers ;
 test-pp return_ ;
 test-pp name ;
 test-pp params ;
-test-pp cv_qualifiers ;
+test-pp cv ;
 test-pp ref ;
 test-pp except ;
 test-pp trailing_return ;
-test-pp virt_specifiers ;
+test-pp virt ;
 
 # TODO: Try to automatically run and test wave too... Maybe something like this:
 #   SHELL "wave access.cpp" ;

@@ -15,17 +15,17 @@
 #include <boost/preprocessor/logical/compl.hpp>
 #include <boost/preprocessor/facilities/empty.hpp>
 
-#define BOOST_CONTRACT_TEST_(trait) \
+#define BOOST_CONTRACT_TEST_(verbatim_paren) \
     BOOST_CONTRACT_TEST_AUX_PP_TRAITS( \
         BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_VERBATIM, \
         BOOST_CONTRACT_EXT_PP_FUNC_TRAITS, \
         BOOST_PP_EMPTY(), \
         BOOST_PP_EXPR_IIF(BOOST_PP_COMPL( \
-                BOOST_CONTRACT_EXT_PP_IS_EMPTY(trait)), \
+                BOOST_CONTRACT_EXT_PP_IS_EMPTY(verbatim_paren)), \
             verbatim \
-        ) trait, \
+        ) verbatim_paren, \
         (std::map<int, char>&) (f) ( int x, (std::map<int, char>&) y ), \
-        trait \
+        verbatim_paren \
     )
 
 int main ( ) {

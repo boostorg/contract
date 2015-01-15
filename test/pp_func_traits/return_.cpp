@@ -18,26 +18,26 @@
 #include <boost/preprocessor/control/iif.hpp>
 
 // Wrap with parenthesis (if no parenthesis already).
-// Precondition: trait != EMPTY().
-#define BOOST_CONTRACT_TEST_PARENTHESIZE_(trait) \
-    BOOST_PP_IIF(BOOST_CONTRACT_EXT_PP_HAS_PAREN(trait), \
+// Precondition: return_ != EMPTY().
+#define BOOST_CONTRACT_TEST_PARENTHESIZE_(return_) \
+    BOOST_PP_IIF(BOOST_CONTRACT_EXT_PP_HAS_PAREN(return_), \
         BOOST_PP_TUPLE_REM(1) \
     , \
         BOOST_PP_EMPTY() \
-    )(trait)
+    )(return_)
         
-#define BOOST_CONTRACT_TEST_(before, trait, after) \
+#define BOOST_CONTRACT_TEST_(before, return_, after) \
     BOOST_CONTRACT_TEST_AUX_PP_TRAITS( \
         BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_RETURN, \
         BOOST_CONTRACT_EXT_PP_FUNC_TRAITS, \
         before, \
-        trait, \
+        return_, \
         after, \
-        BOOST_PP_IIF(BOOST_CONTRACT_EXT_PP_IS_EMPTY(trait), \
+        BOOST_PP_IIF(BOOST_CONTRACT_EXT_PP_IS_EMPTY(return_), \
             BOOST_PP_TUPLE_EAT(1) \
         , \
             BOOST_CONTRACT_TEST_PARENTHESIZE_ \
-        )(trait) \
+        )(return_) \
     )
 
 int main ( ) {

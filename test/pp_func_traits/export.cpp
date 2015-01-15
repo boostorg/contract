@@ -12,15 +12,15 @@
 #include <boost/contract/ext_/preprocessor/traits/func.hpp>
 #include <boost/preprocessor/facilities/empty.hpp>
 
-#define BOOST_CONTRACT_TEST_(trait) \
+#define BOOST_CONTRACT_TEST_(export_) \
     BOOST_CONTRACT_TEST_AUX_PP_TRAITS( \
         BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_EXPORT, \
         BOOST_CONTRACT_EXT_PP_FUNC_TRAITS, \
         BOOST_PP_EMPTY(), \
-        trait, \
+        export_, \
         template( typename T, (std::map<int, char>::value_type) V ) \
         (std::map<int, char>&) (f) ( int x, (std::map<int, char>&) y ), \
-        trait \
+        export_ \
     )
     
 int main ( ) {

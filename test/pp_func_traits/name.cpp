@@ -12,22 +12,22 @@
 #include <boost/contract/ext_/preprocessor/traits/func.hpp>
 #include <boost/preprocessor/facilities/empty.hpp>
 
-#define BOOST_CONTRACT_TEST_(sign_before_name, sign_at_name, \
-        sign_after_name, parsed_operator_name, parsed_func_name) \
+#define BOOST_CONTRACT_TEST_(before, name, after, \
+        parsed_operator_name, parsed_func_name) \
     BOOST_CONTRACT_TEST_AUX_PP_TRAITS( \
         BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_OPERATOR_NAME, \
         BOOST_CONTRACT_EXT_PP_FUNC_TRAITS, \
-        sign_before_name, \
-        sign_at_name, \
-        sign_after_name, \
+        before, \
+        name, \
+        after, \
         parsed_operator_name \
     ) \
     BOOST_CONTRACT_TEST_AUX_PP_TRAITS( \
         BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_NAME, \
         BOOST_CONTRACT_EXT_PP_FUNC_TRAITS, \
-        sign_before_name, \
-        sign_at_name, \
-        sign_after_name, \
+        before, \
+        name, \
+        after, \
         parsed_func_name \
     )
 

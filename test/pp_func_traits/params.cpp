@@ -19,15 +19,16 @@
 #include <boost/preprocessor/control/iif.hpp>
 #include <boost/preprocessor/punctuation/comma_if.hpp>
 
-// NOTE: Some extra test macros are necessary here to regenerate the sign back
+// NOTE: Some extra test macros are necessary here to regenerate the decl back
 // from the parsed trait to check if the parsing was correct. But, at the end
 // these are valuable tests also because they use the PARAM_TRAITS macros.
 
 // Assume all 1-tuple types were specified without parenthesis. This is usually
 // NOT true, but it is true in these tests. This is relevant only in these
-// tests where generated code must match original signature and its parenthesis
-// (the extra parenthesis of the original signature do not need to be
-// reproduced when generating C++ code so this assumption is not necessary).
+// tests where generated code must match original declaration and its
+// parenthesis (the extra parenthesis of the original declaration do not need
+// to be reproduced when generating C++ code so this assumption is not
+// necessary).
 #define BOOST_CONTRACT_TEST_PARAM_REM_(type) \
     BOOST_PP_EXPR_IIF(BOOST_PP_EQUAL(BOOST_PP_TUPLE_SIZE(type), 1), \
         BOOST_PP_TUPLE_REM(0) \
@@ -56,12 +57,12 @@
     )
 
 // Variadic to allow to specify empty params `( )`.
-#define BOOST_CONTRACT_TEST_EQUAL_(params_sign, parsed_params) \
+#define BOOST_CONTRACT_TEST_EQUAL_(params, parsed_params) \
     BOOST_CONTRACT_TEST_AUX_PP_TRAITS( \
         BOOST_CONTRACT_TEST_PARAMS_, \
         BOOST_CONTRACT_EXT_PP_FUNC_TRAITS, \
         (std::map<int, char>&) (f), \
-        params_sign, \
+        params, \
         const volatile, \
         parsed_params \
     )

@@ -14,14 +14,14 @@
 
 #include <boost/preprocessor/variadic/size.hpp>
 
-#define BOOST_CONTRACT_TEST_(trait) \
+#define BOOST_CONTRACT_TEST_(ref_) \
     BOOST_CONTRACT_TEST_AUX_PP_TRAITS( \
         BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_REF, \
         BOOST_CONTRACT_EXT_PP_FUNC_TRAITS, \
         (std::map<int, char>&) (f) ( int x, (std::map<int, char>&) y ) const, \
-        trait, \
+        ref_, \
         noexcept(my::map<int, char>::key_size) final override, \
-        trait \
+        ref_ \
     )
 
 int main ( ) {

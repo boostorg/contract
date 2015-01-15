@@ -21,15 +21,16 @@
 #include <boost/preprocessor/tuple/eat.hpp>
 #include <boost/preprocessor/tuple/rem.hpp>
 
-// NOTE: Some extra test macros are necessary here to regenerate the sign back
+// NOTE: Some extra test macros are necessary here to regenerate the decl back
 // from the parsed trait to check if the parsing was correct. But, at the end
 // these are valuable tests also because they use the PARAM_TRAITS macros.
 
 // Assume all 1-tuple types were specified without parenthesis. This is usually
 // NOT true, but it is true in these tests. This is relevant only in these
-// tests where generated code must match original signature and its parenthesis
-// (the extra parenthesis of the original signature do not need to be
-// reproduced when generating C++ code so this assumption is not necessary).
+// tests where generated code must match original declaration and its
+// parenthesis (the extra parenthesis of the original declaration do not need
+// to be reproduced when generating C++ code so this assumption is not
+// necessary).
 #define BOOST_CONTRACT_TEST_TEMPLATE_PARAM_REM_YES_(type) \
     BOOST_PP_EXPR_IIF(BOOST_PP_EQUAL(BOOST_PP_TUPLE_SIZE(type), 1), \
         BOOST_PP_TUPLE_REM(0) \
@@ -72,14 +73,14 @@
         template BOOST_CONTRACT_TEST_TEMPLATE_PARAMS_ \
     )(func_traits)
 
-#define BOOST_CONTRACT_TEST_(trait) \
+#define BOOST_CONTRACT_TEST_(template_params) \
     BOOST_CONTRACT_TEST_AUX_PP_TRAITS( \
         BOOST_CONTRACT_TEST_TEMPLATE_, \
         BOOST_CONTRACT_EXT_PP_FUNC_TRAITS, \
         BOOST_PP_EMPTY(), \
-        trait, \
+        template_params, \
         (std::map<int, char>&) (f) ( int x, (std::map<int, char>&) y ), \
-        trait \
+        template_params \
     )
 
 int main ( ) {

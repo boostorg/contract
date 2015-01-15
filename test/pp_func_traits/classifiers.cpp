@@ -19,45 +19,47 @@
 #include <boost/preprocessor/control/iif.hpp>
 #include <boost/preprocessor/cat.hpp>
         
-#define BOOST_CONTRACT_TEST_FIND_(r, trait_id, trait) \
+#define BOOST_CONTRACT_TEST_FIND_(r, classifier_upper, classifier) \
     BOOST_PP_EXPR_IIF(BOOST_PP_SEQ_CAT((BOOST_CONTRACT_EXT_PP_KEYWORD_IS_) \
-            (trait_id)(_FRONT))(trait), \
-        trait \
+            (classifier_upper)(_FRONT))(classifier), \
+        classifier \
     )
 
-#define BOOST_CONTRACT_TEST_ELEM_(r, unused, trait) trait
+#define BOOST_CONTRACT_TEST_ELEM_(r, unused, classifier) classifier
 
-#define BOOST_CONTRACT_TEST_TRAIT_(trait_id, traits) \
+#define BOOST_CONTRACT_TEST_TRAIT_(classifier_upper, classifiers_list) \
     BOOST_CONTRACT_TEST_AUX_PP_TRAITS( \
-        BOOST_PP_CAT(BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_, trait_id), \
+        BOOST_PP_CAT(BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_, classifier_upper), \
         BOOST_CONTRACT_EXT_PP_FUNC_TRAITS, \
         template( typename T, (std::map<int, char>::value_type) V ), \
-        BOOST_PP_LIST_FOR_EACH(BOOST_CONTRACT_TEST_ELEM_, ~, traits), \
+        BOOST_PP_LIST_FOR_EACH(BOOST_CONTRACT_TEST_ELEM_, ~, \
+                classifiers_list), \
         (std::map<int, char>&) (f) ( int x, (std::map<int, char>&) y ), \
-        BOOST_PP_LIST_FOR_EACH(BOOST_CONTRACT_TEST_FIND_, trait_id, traits) \
+        BOOST_PP_LIST_FOR_EACH(BOOST_CONTRACT_TEST_FIND_, classifier_upper, \
+                classifiers_list) \
     )
 
-#define BOOST_CONTRACT_TEST_LIST_(traits) \
-    BOOST_CONTRACT_TEST_TRAIT_(INLINE, traits) \
-    BOOST_CONTRACT_TEST_TRAIT_(STATIC, traits) \
-    BOOST_CONTRACT_TEST_TRAIT_(EXTERN, traits) \
-    BOOST_CONTRACT_TEST_TRAIT_(EXPLICIT, traits) \
-    BOOST_CONTRACT_TEST_TRAIT_(VIRTUAL, traits) \
-    BOOST_CONTRACT_TEST_TRAIT_(FRIEND, traits)
+#define BOOST_CONTRACT_TEST_LIST_(classifiers_list) \
+    BOOST_CONTRACT_TEST_TRAIT_(INLINE, classifiers_list) \
+    BOOST_CONTRACT_TEST_TRAIT_(STATIC, classifiers_list) \
+    BOOST_CONTRACT_TEST_TRAIT_(EXTERN, classifiers_list) \
+    BOOST_CONTRACT_TEST_TRAIT_(EXPLICIT, classifiers_list) \
+    BOOST_CONTRACT_TEST_TRAIT_(VIRTUAL, classifiers_list) \
+    BOOST_CONTRACT_TEST_TRAIT_(FRIEND, classifiers_list)
 
-#define BOOST_CONTRACT_TEST_(traits) \
+#define BOOST_CONTRACT_TEST_(classifiers_seq) \
     BOOST_CONTRACT_TEST_LIST_( \
-        BOOST_PP_IIF(BOOST_CONTRACT_EXT_PP_IS_EMPTY(traits), \
+        BOOST_PP_IIF(BOOST_CONTRACT_EXT_PP_IS_EMPTY(classifiers_seq), \
             BOOST_PP_NIL BOOST_PP_TUPLE_EAT(1) \
         , \
             BOOST_PP_SEQ_TO_LIST \
-        )(traits) \
+        )(classifiers_seq) \
     )
     
 int main ( ) {
-    // Test a few combination verified to be valid C++. (Other combinations are
-    // also supported by the macro syntax but it would be overwhelming to test
-    // them all and of little use given they are not valid C++.)
+    // Test a few combinations verified to be valid C++. (Other combinations
+    // are also supported by the macro syntax but it would be overwhelming to
+    // test them all and of little use given they are not valid C++.)
 
     BOOST_CONTRACT_TEST_( BOOST_PP_EMPTY() )
 

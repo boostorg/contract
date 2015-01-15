@@ -14,14 +14,14 @@
 
 #include <boost/preprocessor/variadic/size.hpp>
 
-#define BOOST_CONTRACT_TEST_(trait) \
+#define BOOST_CONTRACT_TEST_(access) \
     BOOST_CONTRACT_TEST_AUX_PP_TRAITS( \
         BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_ACCESS, \
         BOOST_CONTRACT_EXT_PP_FUNC_TRAITS, \
         BOOST_PP_EMPTY(), \
-        trait, \
+        access, \
         (std::map<int, char>&) (f) ( int x, (std::map<int, char>&) y ), \
-        trait \
+        access \
     )
 
 int main ( ) {

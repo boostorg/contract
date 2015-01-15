@@ -18,27 +18,30 @@
 #include <boost/preprocessor/control/iif.hpp>
 
 // Wrap with parenthesis (if no parenthesis already).
-// Precondition: trait != EMPTY().
-#define BOOST_CONTRACT_TEST_PARENTHESIZE_(trait) \
-    BOOST_PP_IIF(BOOST_CONTRACT_EXT_PP_HAS_PAREN( \
-            BOOST_CONTRACT_EXT_PP_KEYWORD_RETURN_REMOVE_FRONT(trait)), \
+// Precondition: trailing_return != EMPTY().
+#define BOOST_CONTRACT_TEST_PARENTHESIZE_(trailing_return) \
+    BOOST_PP_IIF( \
+        BOOST_CONTRACT_EXT_PP_HAS_PAREN( \
+            BOOST_CONTRACT_EXT_PP_KEYWORD_RETURN_REMOVE_FRONT(trailing_return) \
+        ) \
+    , \
         BOOST_PP_TUPLE_REM(1) \
     , \
         BOOST_PP_EMPTY() \
-    )(BOOST_CONTRACT_EXT_PP_KEYWORD_RETURN_REMOVE_FRONT(trait))
+    )(BOOST_CONTRACT_EXT_PP_KEYWORD_RETURN_REMOVE_FRONT(trailing_return))
         
-#define BOOST_CONTRACT_TEST_(before, trait, after) \
+#define BOOST_CONTRACT_TEST_(before, trailing_return, after) \
     BOOST_CONTRACT_TEST_AUX_PP_TRAITS( \
         BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_TRAILING_RETURN, \
         BOOST_CONTRACT_EXT_PP_FUNC_TRAITS, \
         before, \
-        trait, \
+        trailing_return, \
         after, \
-        BOOST_PP_IIF(BOOST_CONTRACT_EXT_PP_IS_EMPTY(trait), \
+        BOOST_PP_IIF(BOOST_CONTRACT_EXT_PP_IS_EMPTY(trailing_return), \
             BOOST_PP_TUPLE_EAT(1) \
         , \
             BOOST_CONTRACT_TEST_PARENTHESIZE_ \
-        )(trait) \
+        )(trailing_return) \
     )
 
 int main ( ) {
