@@ -5,6 +5,12 @@
 [/ http://www.boost.org/LICENSE_1_0.txt) ]
 [/ Home at http://sourceforge.net/projects/contractpp ]
 
+[def __typedef_declaration__ [link typedef_declaration_anchor [^['typedef-declaration]]]]
+[def __using_alias__ [link using_alias_anchor [^['using-alias]]]]
+[def __using_declaration__ [link using_declaration_anchor [^['using-declaration]]]]
+[def __static_select_assertion__ [link static_select_assertion_anchor [^['static-select-assertion]]]]
+[def __alias__ [link alias_anchor [^['alias]]]]
+[def __auto_type__ [link auto_type [^['auto-type]]]]
 [def __assertion__ [link assertion_anchor [^['assertion]]]]
 [def __assertion_condition__ [link assertion_condition_anchor [^['assertion-condition]]]]
 [def __assertion_expression__ [link assertion_expression_anchor [^['assertion-expression]]]]
@@ -54,6 +60,10 @@
 [def __type_qualifier__ [link type_qualifier_anchor [^['type-qualifier]]]]
 [def __wrapped_type__ [link wrapped_type_anchor [^['wrapped-type]]]]
 
+[def __capture_boolean_expression__ [link capture_boolean_expression_anchor [^[*capture-boolean-expression]]]]
+[def __capture__ [link capture_anchor [^[*capture]]]]
+[def __name__ [link name_anchor [^[*name]]]]
+[def __new_name__ [link new_name_anchor [^[*new-name]]]]
 [def __boolean_expression__ [link boolean_expression_anchor [^[*boolean-expression]]]]
 [def __boolean_expression_of_inscope_variables__ [link boolean_expression_of_inscope_variables_anchor [^[*boolean-expression-of-inscope-variables]]]]
 [def __boost_concept__ [link boost_concept_anchor [^[*boost-concept]]]]
@@ -366,6 +376,9 @@ Note that when specified, `virtual` must appear after the inheritance access lev
     __fundamental_type__``/:/ [#fundamental_type_anchor]``
             ``/{/``const ``/|/`` volatile ``/|/`` long ``/|/`` short ``/|/`` signed ``/|/`` unsigned ``/|/`` 
             void ``/|/`` bool ``/|/`` char ``/|/`` char16_t ``/|/`` char32_t ``/|/`` double ``/|/`` float ``/|/`` int ``/|/`` wchar_t``/}+/``
+            
+    __auto_type__``/:/ [#auto_type_anchor]``
+            __wrapped_type__ ``/|/`` auto
 
 This is the syntax used to specify types of different entities such as the function return type, the function parameter types, the types of value template parameters, etc.
 The usual constraints of C++ for qualified fundamental type apply (it invalid to specify `int int`, `long int long`, `unsigned void`, etc).
@@ -410,7 +423,7 @@ This library cannot automatically perform such a promotion so the `static` speci
 [section Return Type]
 
     __return_type__``/:/ [#return_type_anchor]``
-            __wrapped_type__ ``/|/`` auto
+            __auto_type__
 
 As always with this syntax's wrapped types, note that fundamental types containing no symbol can be specified without extra parenthesis (`void`, `bool`, `int`, `unsigned long const`, `decltype(...)`, etc.).
 
@@ -513,6 +526,76 @@ Exception specifications apply only to exceptions thrown by the function body an
 
 [endsect]
 
+[section Assertions]
+
+    __assertions__``/:/``
+            ``/[/``__assertion__, ... ``/[/``,``/]/````/]/``
+
+Note that an extra trailing comma `,` is always allowed here but never required (similarly to C++ trailing comma that can be used to end an enumeration declaration list).
+
+    __assertion__``/:/``
+            __alias__ ``/|/``
+            
+            __auto_type__ __new_name__ = return ``/|/``
+            __auto_type__ __new_name__ = ``[macroref CONTRACT_OLDOF]`` __oldof_expression__ ``/|/``
+            
+            __boolean_condition__ ``/|/``
+
+            __select_assertion__ ``/|/``
+            __static_select_assertion__
+
+Where return and old-of declarations are allowed only within postconditions.
+
+    __boolean_condition__``/:/``
+            __boolean_expression__ ``/|/``
+            const( ``/[/``__capture__, ...``/]/`` ) __capture_boolean_expression__
+
+Parenthesis around __boolean_expression__ are always allowed here but they are actually required only when __boolean_expression__ starts with a non-alphanumeric symbol (e.g., `(!vector.empty())`) or it contains unwrapped commas `,`.
+Parenthesis around __capture_boolean_expression__ are always allowed but they are actually required only when __capture_boolean_expression__ contains unwrapped commas `,`.
+
+    __select_assertion__``/:/``
+            if(__boolean_condition__) ( ``/[/``__assertion__, ...``/]/`` )
+            ``/[/``else ( ``/[/``__assertion__, ...``/]/`` )
+    
+    __static_select_assertion__``/:/``
+            static if(__constant_boolean_expression__) ( ``/[/``__assertion__, ...``/]/`` )
+            ``/[/``else ( ``/[/``__assertion__, ...``/]/`` )
+
+For example, static select assertions can be used in generic programming to selectively check some assertions only when the types involved fulfill all operations required for the assertion checking.
+
+[endsect]
+
+[section Aliases]
+    
+    __alias__``/:/ [#alias_anchor]``
+            __namespace_alias__ ``/|/`` __using_directive__ ``/|/`` __using_declaration__ ``/|/`` __using_alias__ ``/|/`` __typedef_declaration__
+
+    __namespace_alias__``/:/``
+            namespace (__new_name__) as __name__
+
+    __using_directive__``/:/``
+            using namespace __name__
+    
+    __using_declaration__``/:/``
+            using {``/[/``typename``/]/`` __name__ ``/|/`` (``/[/``typename``/]/`` __name__)}
+
+    __using_alias__``/:/``
+            ``/[/``template( ``/[/``__cxx_template_parameter__, ...``/]/`` )``/]/``
+            using (__new_name__) as {__type__ | (__type__)}
+
+    __typedef_declaration__``/:/``
+            typedef __wrapped_type__ __new_name__
+
+In __using_declaration__, parenthesis around __name__ are always allowed here but they are actually required only when __name__ contains unwrapped commas `,`.
+As usual in C++, __name__ can be prefixed by `typename` if that it is needed to resolve dependent names.
+
+In __using_alias__, parenthesis around __type__ are always allowed here but they are actually required only when __type__ contains unwrapped commas `,`.
+
+For example, all the aliases above can be used to simplify and short types and names used to program assertions (aliases do not alter the run-time state of the program so they can be safely used to program assertions).
+
+[endsect]
+
+
 [section Preconditions]
 
     __assertions__``/:/ [#assertions_anchor]``
@@ -559,12 +642,6 @@ The type of the in-scope variable __inscope_variable__ is optional and it is aut
 [endsect]
 
 [section Postconditions] 
-
-    __oldof_assertions__``/:/ [#oldof_assertions_anchor]``
-            ``/[/``__aliasing__``/, .../````/]/``
-            ``/[/``auto __variable_name__ = return,``/]/``
-            ``/{/``auto __variable_name__ = ``[macroref CONTRACT_OLDOF]`` __oldof_expression__,``/}*/``
-            __assertion__``/, .../``
 
 If present, result and old value declarations should appear before any assertion because they will always be visible to all assertions, plus these declarations cannot be nested (within select-assertions, etc).
 

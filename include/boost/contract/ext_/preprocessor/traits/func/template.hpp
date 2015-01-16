@@ -3,19 +3,20 @@
 #define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_TEMPLATE_HPP_
 
 #include <boost/contract/ext_/preprocessor/traits/params.hpp>
-#include <boost/contract/ext_/preprocessor/traits/aux_/keyword_paren.hpp>
 #include <boost/contract/ext_/preprocessor/traits/adt.hpp>
 #include <boost/contract/ext_/preprocessor/keyword/template.hpp>
+#include <boost/contract/ext_/preprocessor/paren/front.hpp>
+#include <boost/preprocessor/tuple/eat.hpp>
 #include <boost/preprocessor/control/iif.hpp>
 #include <boost/preprocessor/facilities/empty.hpp>
 
 /* PRIVATE */
 
-// params = `(,,,)` from `template(,,,) ...` originally in decl, and now this
-// also parses params into a pp-list of actual template parameter traits.
-#define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_TEMPLATE_(decl_params, traits) \
+// Precondition: decl = `(,,,) ...` from `template(,,,) ...` originally in decl.
+// This macro will also parse `(,,,)` into a pp-list of template param traits.
+#define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_TEMPLATE_(decl, traits) \
     ( \
-        BOOST_CONTRACT_EXT_PP_DECL_TRAITS_FIRST(decl_params) \
+        BOOST_PP_TUPLE_EAT(0) decl \
     , \
         BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK( \
             BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK( \
@@ -23,19 +24,14 @@
                 template BOOST_PP_EMPTY \
             ), \
             BOOST_CONTRACT_EXT_PP_TEMPLATE_PARAMS_TRAITS( \
-                    BOOST_CONTRACT_EXT_PP_DECL_TRAITS_SECOND(decl_params)) \
+                    BOOST_CONTRACT_EXT_PP_PAREN_FRONT(decl)) \
         ) \
     )
 
+// Precondition: decl = `template(,,,) ...`.
 #define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_TEMPLATE_YES_(decl, traits) \
     BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_TEMPLATE_( \
-        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_KEYWORD_PAREN( \
-            decl, \
-            BOOST_CONTRACT_EXT_PP_KEYWORD_IS_TEMPLATE_FRONT, \
-            BOOST_CONTRACT_EXT_PP_KEYWORD_TEMPLATE_REMOVE_FRONT \
-        ), \
-        traits \
-    )
+            BOOST_CONTRACT_EXT_PP_KEYWORD_TEMPLATE_REMOVE_FRONT(decl), traits)
 
 #define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_TEMPLATE_NO_(decl, traits) \
     ( \

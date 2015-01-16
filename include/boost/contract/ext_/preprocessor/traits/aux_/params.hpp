@@ -115,11 +115,12 @@
         BOOST_CONTRACT_EXT_PP_TRAITS_AUX_PARAMS_ \
     )(d, s, allow_void, decl, param_parse_macro, default_replace_macro)
 
-// Handle `decl == ()` (i.e., empty parameters).
+// Handle `decl == ( )` (i.e., empty parameters).
 // Precondition: decl is 1-tuple.
 #define BOOST_CONTRACT_EXT_PP_TRAITS_AUX_PARAMS_HANDLE_EMPTY_( \
         d, s, allow_void, decl, param_parse_macro, default_replace_macro) \
-    BOOST_PP_IIF(BOOST_PP_IS_EMPTY(BOOST_PP_TUPLE_REM_CTOR(decl)), \
+    BOOST_PP_IIF(BOOST_CONTRACT_EXT_PP_IS_EMPTY( \
+            BOOST_PP_TUPLE_REM_CTOR(1, decl)), \
         BOOST_PP_NIL BOOST_PP_TUPLE_EAT(6) \
     , BOOST_PP_IIF(allow_void, \
         BOOST_CONTRACT_EXT_PP_TRAITS_AUX_PARAMS_HANDLE_VOID_ \

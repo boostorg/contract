@@ -108,7 +108,8 @@ entries = [
             'extends',
             'verbatim',
             'ref',
-            'refref'
+            'refref',
+            'as'
         ]
     }
 ]

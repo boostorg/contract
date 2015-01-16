@@ -37,7 +37,8 @@
 // Declaration and traits (2-tuple).
 
 // Create a `decl_traits` data structure to start parsing specified declaration.
-// Implementation: Leading NIL needed to handle empty macro params (on MSVC).
+// Implementation: NIL in front of traits needed to handle empty macro params
+// (on MSVC).
 #define BOOST_CONTRACT_EXT_PP_DECL_TRAITS_INIT(decl) (decl, BOOST_PP_NIL)
 
 // Expand to final traits after they have been parsed from declaration.

@@ -2,6 +2,7 @@
 #ifndef BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_HPP_
 #define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_HPP_
 
+#include <boost/contract/ext_/preprocessor/traits/func/precondition.hpp>
 #include <boost/contract/ext_/preprocessor/traits/func/virt.hpp>
 #include <boost/contract/ext_/preprocessor/traits/func/except.hpp>
 #include <boost/contract/ext_/preprocessor/traits/func/ref.hpp>
@@ -26,6 +27,16 @@
 
 // NOTE: These macros #definitions read TRITS_FUNC instead of FUNC_TRAITS to
 // avoid name clashes with macro #define in func/*.
+
+#if defined(BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_AUX_INDEX_TEST) && \
+        BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_AUX_INDEX_TEST < \
+        BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_AUX_PRECONDITION_INDEX
+#   define BOOST_CONTRACT_EXT_PP_TRAITS_FUNC_PRECONDITION_PARSE_(decl_traits) \
+        decl_traits
+#else
+#   define BOOST_CONTRACT_EXT_PP_TRAITS_FUNC_PRECONDITION_PARSE_(decl_traits) \
+        BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_PRECONDITION_PARSE(decl_traits)
+#endif
 
 #if defined(BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_AUX_INDEX_TEST) && \
         BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_AUX_INDEX_TEST < \
@@ -176,6 +187,7 @@
 // WARNING: Order of these macros must match ..._INDEX values (see index.hpp).
 #define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS(decl) \
     BOOST_CONTRACT_EXT_PP_TRAITS_FUNC_DONE_( \
+    BOOST_CONTRACT_EXT_PP_TRAITS_FUNC_PRECONDITION_PARSE_( \
     BOOST_CONTRACT_EXT_PP_TRAITS_FUNC_VIRT_PARSE_( \
     BOOST_CONTRACT_EXT_PP_TRAITS_FUNC_TRAILING_RETURN_PARSE_( \
     BOOST_CONTRACT_EXT_PP_TRAITS_FUNC_EXCEPT_PARSE_( \
@@ -191,7 +203,7 @@
     BOOST_CONTRACT_EXT_PP_TRAITS_FUNC_ACCESS_PARSE_( \
     BOOST_CONTRACT_EXT_PP_DECL_TRAITS_INIT( \
         decl \
-    )))))))))))))))
+    ))))))))))))))))
 
 #endif // #include guard
 

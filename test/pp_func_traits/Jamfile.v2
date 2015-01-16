@@ -20,6 +20,7 @@ test-pp ref ;
 test-pp except ;
 test-pp trailing_return ;
 test-pp virt ;
+test-pp precondition ;
 
 # TODO: Try to automatically run and test wave too... Maybe something like this:
 #   SHELL "wave access.cpp" ;

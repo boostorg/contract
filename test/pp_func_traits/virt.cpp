@@ -12,8 +12,6 @@
 #include <boost/contract/ext_/preprocessor/traits/func.hpp>
 #include <boost/preprocessor/facilities/empty.hpp>
 
-#include <boost/preprocessor/variadic/size.hpp>
-
 #define BOOST_CONTRACT_TEST_VIRT_(func_traits) \
     BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_FINAL(func_traits) \
     BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_OVERRIDE(func_traits)
