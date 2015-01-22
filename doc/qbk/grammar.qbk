@@ -528,40 +528,62 @@ Exception specifications apply only to exceptions thrown by the function body an
 
 [section Assertions]
 
-    __assertions__``/:/``
-            ``/[/``__assertion__, ... ``/[/``,``/]/````/]/``
-
-Note that an extra trailing comma `,` is always allowed here but never required (similarly to C++ trailing comma that can be used to end an enumeration declaration list).
-
     __assertion__``/:/``
-            __alias__ ``/|/``
-            
-            __auto_type__ __new_name__ = return ``/|/``
-            __auto_type__ __new_name__ = ``[macroref CONTRACT_OLDOF]`` __oldof_expression__ ``/|/``
-            
             __boolean_condition__ ``/|/``
-
             __select_assertion__ ``/|/``
             __static_select_assertion__
-
-Where return and old-of declarations are allowed only within postconditions.
 
     __boolean_condition__``/:/``
             __boolean_expression__ ``/|/``
             const( ``/[/``__capture__, ...``/]/`` ) __capture_boolean_expression__
+    
+    __select_assertion__``/:/``
+            if(__boolean_condition__) ``/{/``( ``/[/``__assertion__, ...``/]/`` ) ``/|/`` ``/[/``__assertion__,``/]/````/}/``
+            ``/[/``else ``/{/``( ``/[/``__assertion__, ...``/]/`` ) ``/|/`` ``/[/``__assertion__,``/]/````/}/````/]/``
+            ``/[/``,``/]/``
+    
+    __static_select_assertion__``/:/``
+            static if(__boolean_condition__) ``/{/``( ``/[/``__assertion__, ...``/]/`` ) ``/|/`` ``/[/``__assertion__,``/]/````/}/``
+            ``/[/``else ``/{/``( ``/[/``__assertion__, ...``/]/`` ) ``/|/`` ``/[/``__assertion__,``/]/````/}/````/]/``
+            ``/[/``,``/]/``
 
 Parenthesis around __boolean_expression__ are always allowed here but they are actually required only when __boolean_expression__ starts with a non-alphanumeric symbol (e.g., `(!vector.empty())`) or it contains unwrapped commas `,`.
 Parenthesis around __capture_boolean_expression__ are always allowed but they are actually required only when __capture_boolean_expression__ contains unwrapped commas `,`.
+However, these parenthesis cannot be used when the assertion is used as the single statement of a static selection assertion or a selection assertion `if` or `else`, double parenthesis or `bool` must be used in this case, for example (and similarly for `static if`):
 
-    __select_assertion__``/:/``
-            if(__boolean_condition__) ( ``/[/``__assertion__, ...``/]/`` )
-            ``/[/``else ( ``/[/``__assertion__, ...``/]/`` )
+    if(c) (map<int, char>::key_size > 16) // Error (this is interpreted as a select assertion with two `if` assertions `matp<int` and `char>::key_size > 16`).
+    if(c) ( (map<int, char>::key_size > 16) ) // OK.
+    if(c) bool(map<int, char>::key_size > 16) // Also OK.
+
+It is not possible to explicitly specify the capture types (these types are always automatically deduced using Boost.Typeof native or emulation support of type-of).
+[footnote
+*Rationale.*
+Previous version of this library allowed to optionally specify these types for compilers that did not support type-of.
+However, C++11 now supports native type-of via the `decltype` operator and most modern C++03 compiler support either native type-of as an extension of type-of emulation via the __Boost_Typeof__ library.
+Automatically return value declaration, old value declaration, and __constant_assertion__ capture types simplifies the implementation of this library and the syntax of this library macros for the user.
+Therefore, this library now require support for native of emulation type-of emulation via __Boost_Typeof__.
+]
+
+When listing one assertion after another, a comma after __select_assertion__ and __static_select_assertion__ is allowed but it is always optional (similarly to a semicolon `;` after a C++ if-else-statement which is also always optional).
+In general, select assertions and static select assertions follow a syntax similar to C++ if-else-statement but where curly brackets `{ ... }` are replaced by parenthesis `( ... )` and semicolons `;` by commas `,`.
+For example, all the following are valid:
     
-    __static_select_assertion__``/:/``
-            static if(__constant_boolean_expression__) ( ``/[/``__assertion__, ...``/]/`` )
-            ``/[/``else ( ``/[/``__assertion__, ...``/]/`` )
+    if(c) ( t1, t2``/[/``,``/]/`` ), // This cannot be followed by an `else`.
 
-For example, static select assertions can be used in generic programming to selectively check some assertions only when the types involved fulfill all operations required for the assertion checking.
+    if(c),
+    if(c) t1,
+    if(c) ( t1, t2``/[/``,``/]/`` )
+    // All of the above combined with all below:
+    else,
+    else e1,
+    else ( e1, e2``/[/``,``/]/`` )
+    else ( e1, e2``/[/``,``/]/`` ),
+    
+    // These are invalid instead:
+    if(c) ( t1, t2``/[/``,``/]/`` ), else
+    if(c) else ... // this is invalid
+
+Note that static select assertions are useful in generic programming to selectively check some assertions only when the types involved fulfill all operations required for the assertion checking.
 
 [endsect]
 
@@ -643,7 +665,34 @@ The type of the in-scope variable __inscope_variable__ is optional and it is aut
 
 [section Postconditions] 
 
-If present, result and old value declarations should appear before any assertion because they will always be visible to all assertions, plus these declarations cannot be nested (within select-assertions, etc).
+    __postconditions__``/:/ [#postconditions_anchor]``
+            ``/[/``__alias__``/, .../````/]/``
+            ``/[/``auto __new_name__ = return``/,/````/]/``
+            ``/[/``auto __new_name__ = ``[macroref BOOST_CONTRACT_OLDOF]`` __oldof_expression__``/, .../````/]/``
+            ``/[/``assertion``/, .../````/]/``
+            ``/[,/````/]/``
+
+If present, aliases should appear at the very top because they will always apply to all return value declaration, old value declarations, and assertions.
+If present, return and old value declarations should appear before any assertion because they will always be visible to all assertions (instead the relative order between return value and old value declaration does not matter).
+[footnote
+*Rationale.*
+This fixed ordering (which also implies that aliases, return value declarations, and old value declarations cannot be nested within select assertions and static select assertions) simplifies somewhat the implementation of this library while posing no significant limitation to users.
+]
+
+When present, there can be only one return value declaration (that is because a function only has one return value).
+
+Both return value and old value declarations must use `auto` for automatic type deduction (no type can be explicitly specified here).
+[footnote
+*Rationale.*
+Previous version of this library allowed to optionally specify these types for compilers that did not support type-of.
+However, C++11 now supports native type-of via the `decltype` operator and most modern C++03 compiler support either native type-of as an extension of type-of emulation via the __Boost_Typeof__ library.
+Automatically return value declaration, old value declaration, and __constant_assertion__ capture types simplifies the implementation of this library and the syntax of this library macros for the user.
+Therefore, this library now require support for native of emulation type-of emulation via __Boost_Typeof__.
+]
+
+An optional comma `,` is always allowed (but never required) after the very last precondition statement (this is similar to the trailing optional comma `,` allowed after the last C++ `enum` value declaration which makes it easier to indent an maintain the code).
+
+=====
 
 The macro [macroref CONTRACT_OLDOF] allows but does not require parenthesis around the value expression __oldof_expression__, for example the following are both valid:
 [footnote
