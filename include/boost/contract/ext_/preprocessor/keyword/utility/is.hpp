@@ -22,7 +22,8 @@
 // Precondition: A macro named `cat_to_comma_prefix ## token-to-check` must be
 //               #defined to expand to `,`.
 // Precondition: tokens must start with a token concatenable to a macro name
-//               (e.g., a literal or integral token) or with parenthesis.
+//               (e.g., a literal or integral token) or with parenthesis (i.e.,
+//               leading parenthesis are allowed).
 #define BOOST_CONTRACT_EXT_PP_KEYWORD_UTILITY_IS_FRONT( \
         cat_to_comma_prefix, tokens) \
     BOOST_PP_IIF(BOOST_CONTRACT_EXT_PP_HAS_PAREN(tokens), \
@@ -34,14 +35,12 @@
 // Precondition: A macro named `token-to-check ## cat_to_comma_postfix` must be
 //               #defined to expand to `,`.
 // Precondition: tokens must end with a token concatenable to a macro name
-//               (e.g., a literal or integral token) or with parenthesis.
+//               (e.g., a literal or integral token) and trailing parenthesis
+//               are NOT allowed.
 #define BOOST_CONTRACT_EXT_PP_KEYWORD_UTILITY_IS_BACK( \
         cat_to_comma_postfix, tokens) \
-    BOOST_PP_IIF(BOOST_CONTRACT_EXT_PP_HAS_PAREN(tokens), \
-        0 BOOST_PP_TUPLE_EAT(2) \
-    , \
-        BOOST_CONTRACT_EXT_PP_KEYWORD_UTILITY_IS_CHECK_ \
-    )(tokens, cat_to_comma_postfix)
+    BOOST_CONTRACT_EXT_PP_KEYWORD_UTILITY_IS_CHECK_( \
+            tokens, cat_to_comma_postfix)
 
 #endif // #include guard
 

@@ -4,6 +4,11 @@
 
 /* PUBLIC */
 
+// TODO: Is this /really/ needed? After all pp-traits are impl, try to remove
+// this and see if it's really needed.
+// TODO: Same thing for *any* use of BOOST_PP_EXPAND: make sure these are all
+// absolutely necessary!
+
 // Expand its argument once
 // NOTE: `BOOST_PP_EXPAND` expands it twice instead:
 //  EXPAND_ONCE(x)  --> x                   (x expanded once)
