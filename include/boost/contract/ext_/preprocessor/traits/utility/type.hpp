@@ -1,6 +1,6 @@
 
-#ifndef BOOST_CONTRACT_EXT_PP_TRAITS_AUX_TYPE_HPP_
-#define BOOST_CONTRACT_EXT_PP_TRAITS_AUX_TYPE_HPP_
+#ifndef BOOST_CONTRACT_EXT_PP_TRAITS_TYPE_HPP_
+#define BOOST_CONTRACT_EXT_PP_TRAITS_TYPE_HPP_
 
 #include <boost/contract/ext_/preprocessor/traits/adt.hpp>
 #include <boost/contract/ext_/preprocessor/keyword/auto.hpp>
@@ -33,17 +33,17 @@
 
 /* PRIVATE */
 
-#define BOOST_CONTRACT_EXT_PP_TRAITS_AUX_TYPE_SEQ_PUSH_BACK_( \
+#define BOOST_CONTRACT_EXT_PP_TRAITS_TYPE_SEQ_PUSH_BACK_( \
         type_seq, trait) \
     type_seq ((trait))
 
-#define BOOST_CONTRACT_EXT_PP_TRAITS_AUX_TYPE_SPACED_PUSH_BACK_( \
+#define BOOST_CONTRACT_EXT_PP_TRAITS_TYPE_SPACED_PUSH_BACK_( \
         spaced_type, trait) \
     spaced_type trait
 
 // Expand to (continue_ = 1, remaining_decl, parsed_type, push_back_macro).
 // Precondition: decl = `trait(...) ...` (e.g., for `decltype(...) ...`).
-#define BOOST_CONTRACT_EXT_PP_TRAITS_AUX_TYPE_KEYWORD_PAREN_( \
+#define BOOST_CONTRACT_EXT_PP_TRAITS_TYPE_KEYWORD_PAREN_( \
         d, decl, type, push_back_macro, trait, remove_macro) \
     ( \
         1 \
@@ -57,16 +57,16 @@
     )
 
 // Expand to (continue_ = 1, remaining_decl, parsed_type, push_back_macro).
-#define BOOST_CONTRACT_EXT_PP_TRAITS_AUX_TYPE_KEYWORD_TRAIT_( \
+#define BOOST_CONTRACT_EXT_PP_TRAITS_TYPE_KEYWORD_TRAIT_( \
         d, decl, type, push_back_macro, trait, remove_macro) \
     (1, remove_macro(decl), push_back_macro(type, trait), push_back_macro)
 
 // Expand to (continue_ = 0, decl, type, push_back_macro).
-#define BOOST_CONTRACT_EXT_PP_TRAITS_AUX_TYPE_KEYWORD_DONE_( \
+#define BOOST_CONTRACT_EXT_PP_TRAITS_TYPE_KEYWORD_DONE_( \
         d, decl, type, push_back_macro, unused1, unused2) \
     (0, decl, type, push_back_macro)
     
-#define BOOST_CONTRACT_EXT_PP_TRAITS_AUX_TYPE_KEYWORD_INVOKE_( \
+#define BOOST_CONTRACT_EXT_PP_TRAITS_TYPE_KEYWORD_INVOKE_( \
         d, decl, type, push_back_macro, invoke_trait_remove) \
     BOOST_PP_TUPLE_ELEM(3, 0, invoke_trait_remove)( \
         d, \
@@ -77,87 +77,87 @@
         BOOST_PP_TUPLE_ELEM(3, 2, invoke_trait_remove) \
     )
 
-#define BOOST_CONTRACT_EXT_PP_TRAITS_AUX_TYPE_KEYWORD_OP_ARGS_( \
+#define BOOST_CONTRACT_EXT_PP_TRAITS_TYPE_KEYWORD_OP_ARGS_( \
         d, decl, type, push_back_macro) \
-    BOOST_CONTRACT_EXT_PP_TRAITS_AUX_TYPE_KEYWORD_INVOKE_( \
+    BOOST_CONTRACT_EXT_PP_TRAITS_TYPE_KEYWORD_INVOKE_( \
         d, \
         decl, \
         type, \
         push_back_macro, \
         BOOST_PP_IIF(BOOST_CONTRACT_EXT_PP_KEYWORD_IS_AUTO_FRONT(decl), \
-            (BOOST_CONTRACT_EXT_PP_TRAITS_AUX_TYPE_KEYWORD_TRAIT_, \
+            (BOOST_CONTRACT_EXT_PP_TRAITS_TYPE_KEYWORD_TRAIT_, \
             auto, BOOST_CONTRACT_EXT_PP_KEYWORD_AUTO_REMOVE_FRONT) \
         , BOOST_PP_IIF(BOOST_CONTRACT_EXT_PP_KEYWORD_IS_REGISTER_FRONT(decl), \
-            (BOOST_CONTRACT_EXT_PP_TRAITS_AUX_TYPE_KEYWORD_TRAIT_, \
+            (BOOST_CONTRACT_EXT_PP_TRAITS_TYPE_KEYWORD_TRAIT_, \
             register, BOOST_CONTRACT_EXT_PP_KEYWORD_REGISTER_REMOVE_FRONT) \
         , BOOST_PP_IIF(BOOST_CONTRACT_EXT_PP_KEYWORD_IS_CONST_FRONT(decl), \
-            (BOOST_CONTRACT_EXT_PP_TRAITS_AUX_TYPE_KEYWORD_TRAIT_, \
+            (BOOST_CONTRACT_EXT_PP_TRAITS_TYPE_KEYWORD_TRAIT_, \
             const, BOOST_CONTRACT_EXT_PP_KEYWORD_CONST_REMOVE_FRONT) \
         , BOOST_PP_IIF(BOOST_CONTRACT_EXT_PP_KEYWORD_IS_VOLATILE_FRONT(decl), \
-            (BOOST_CONTRACT_EXT_PP_TRAITS_AUX_TYPE_KEYWORD_TRAIT_, \
+            (BOOST_CONTRACT_EXT_PP_TRAITS_TYPE_KEYWORD_TRAIT_, \
             volatile, BOOST_CONTRACT_EXT_PP_KEYWORD_VOLATILE_REMOVE_FRONT) \
         , BOOST_PP_IIF(BOOST_CONTRACT_EXT_PP_KEYWORD_IS_LONG_FRONT(decl), \
-            (BOOST_CONTRACT_EXT_PP_TRAITS_AUX_TYPE_KEYWORD_TRAIT_, \
+            (BOOST_CONTRACT_EXT_PP_TRAITS_TYPE_KEYWORD_TRAIT_, \
             long, BOOST_CONTRACT_EXT_PP_KEYWORD_LONG_REMOVE_FRONT) \
         , BOOST_PP_IIF(BOOST_CONTRACT_EXT_PP_KEYWORD_IS_SHORT_FRONT(decl), \
-            (BOOST_CONTRACT_EXT_PP_TRAITS_AUX_TYPE_KEYWORD_TRAIT_, \
+            (BOOST_CONTRACT_EXT_PP_TRAITS_TYPE_KEYWORD_TRAIT_, \
             short, BOOST_CONTRACT_EXT_PP_KEYWORD_SHORT_REMOVE_FRONT) \
         , BOOST_PP_IIF(BOOST_CONTRACT_EXT_PP_KEYWORD_IS_SIGNED_FRONT(decl), \
-            (BOOST_CONTRACT_EXT_PP_TRAITS_AUX_TYPE_KEYWORD_TRAIT_, \
+            (BOOST_CONTRACT_EXT_PP_TRAITS_TYPE_KEYWORD_TRAIT_, \
             signed, BOOST_CONTRACT_EXT_PP_KEYWORD_SIGNED_REMOVE_FRONT) \
         , BOOST_PP_IIF(BOOST_CONTRACT_EXT_PP_KEYWORD_IS_UNSIGNED_FRONT(decl), \
-            (BOOST_CONTRACT_EXT_PP_TRAITS_AUX_TYPE_KEYWORD_TRAIT_, \
+            (BOOST_CONTRACT_EXT_PP_TRAITS_TYPE_KEYWORD_TRAIT_, \
             unsigned, BOOST_CONTRACT_EXT_PP_KEYWORD_UNSIGNED_REMOVE_FRONT) \
         , BOOST_PP_IIF(BOOST_CONTRACT_EXT_PP_KEYWORD_IS_VOID_FRONT(decl), \
-            (BOOST_CONTRACT_EXT_PP_TRAITS_AUX_TYPE_KEYWORD_TRAIT_, \
+            (BOOST_CONTRACT_EXT_PP_TRAITS_TYPE_KEYWORD_TRAIT_, \
             void, BOOST_CONTRACT_EXT_PP_KEYWORD_VOID_REMOVE_FRONT) \
         , BOOST_PP_IIF(BOOST_CONTRACT_EXT_PP_KEYWORD_IS_BOOL_FRONT(decl), \
-            (BOOST_CONTRACT_EXT_PP_TRAITS_AUX_TYPE_KEYWORD_TRAIT_, \
+            (BOOST_CONTRACT_EXT_PP_TRAITS_TYPE_KEYWORD_TRAIT_, \
             bool, BOOST_CONTRACT_EXT_PP_KEYWORD_BOOL_REMOVE_FRONT) \
         , BOOST_PP_IIF(BOOST_CONTRACT_EXT_PP_KEYWORD_IS_CHAR_FRONT(decl), \
-            (BOOST_CONTRACT_EXT_PP_TRAITS_AUX_TYPE_KEYWORD_TRAIT_, \
+            (BOOST_CONTRACT_EXT_PP_TRAITS_TYPE_KEYWORD_TRAIT_, \
             char, BOOST_CONTRACT_EXT_PP_KEYWORD_CHAR_REMOVE_FRONT) \
         , BOOST_PP_IIF(BOOST_CONTRACT_EXT_PP_KEYWORD_IS_CHAR16_T_FRONT(decl), \
-            (BOOST_CONTRACT_EXT_PP_TRAITS_AUX_TYPE_KEYWORD_TRAIT_, \
+            (BOOST_CONTRACT_EXT_PP_TRAITS_TYPE_KEYWORD_TRAIT_, \
             char16_t, BOOST_CONTRACT_EXT_PP_KEYWORD_CHAR16_T_REMOVE_FRONT) \
         , BOOST_PP_IIF(BOOST_CONTRACT_EXT_PP_KEYWORD_IS_CHAR32_T_FRONT(decl), \
-            (BOOST_CONTRACT_EXT_PP_TRAITS_AUX_TYPE_KEYWORD_TRAIT_, \
+            (BOOST_CONTRACT_EXT_PP_TRAITS_TYPE_KEYWORD_TRAIT_, \
             char32_t, BOOST_CONTRACT_EXT_PP_KEYWORD_CHAR32_T_REMOVE_FRONT) \
         , BOOST_PP_IIF(BOOST_CONTRACT_EXT_PP_KEYWORD_IS_WCHAR_T_FRONT(decl), \
-            (BOOST_CONTRACT_EXT_PP_TRAITS_AUX_TYPE_KEYWORD_TRAIT_, \
+            (BOOST_CONTRACT_EXT_PP_TRAITS_TYPE_KEYWORD_TRAIT_, \
             wchar_t, BOOST_CONTRACT_EXT_PP_KEYWORD_WCHAR_T_REMOVE_FRONT) \
         , BOOST_PP_IIF(BOOST_CONTRACT_EXT_PP_KEYWORD_IS_INT_FRONT(decl), \
-            (BOOST_CONTRACT_EXT_PP_TRAITS_AUX_TYPE_KEYWORD_TRAIT_, \
+            (BOOST_CONTRACT_EXT_PP_TRAITS_TYPE_KEYWORD_TRAIT_, \
             int, BOOST_CONTRACT_EXT_PP_KEYWORD_INT_REMOVE_FRONT) \
         , BOOST_PP_IIF(BOOST_CONTRACT_EXT_PP_KEYWORD_IS_FLOAT_FRONT(decl), \
-            (BOOST_CONTRACT_EXT_PP_TRAITS_AUX_TYPE_KEYWORD_TRAIT_, \
+            (BOOST_CONTRACT_EXT_PP_TRAITS_TYPE_KEYWORD_TRAIT_, \
             float, BOOST_CONTRACT_EXT_PP_KEYWORD_FLOAT_REMOVE_FRONT) \
         , BOOST_PP_IIF(BOOST_CONTRACT_EXT_PP_KEYWORD_IS_DOUBLE_FRONT(decl), \
-            (BOOST_CONTRACT_EXT_PP_TRAITS_AUX_TYPE_KEYWORD_TRAIT_, \
+            (BOOST_CONTRACT_EXT_PP_TRAITS_TYPE_KEYWORD_TRAIT_, \
             double, BOOST_CONTRACT_EXT_PP_KEYWORD_DOUBLE_REMOVE_FRONT) \
         , BOOST_PP_IIF(BOOST_CONTRACT_EXT_PP_KEYWORD_IS_DECLTYPE_FRONT(decl), \
-            (BOOST_CONTRACT_EXT_PP_TRAITS_AUX_TYPE_KEYWORD_PAREN_, \
+            (BOOST_CONTRACT_EXT_PP_TRAITS_TYPE_KEYWORD_PAREN_, \
             decltype, BOOST_CONTRACT_EXT_PP_KEYWORD_DECLTYPE_REMOVE_FRONT) \
         , \
-            (BOOST_CONTRACT_EXT_PP_TRAITS_AUX_TYPE_KEYWORD_DONE_, ~, ~) \
+            (BOOST_CONTRACT_EXT_PP_TRAITS_TYPE_KEYWORD_DONE_, ~, ~) \
         )))))))))))))))))) \
     )
 
-#define BOOST_CONTRACT_EXT_PP_TRAITS_AUX_TYPE_KEYWORD_OP_( \
+#define BOOST_CONTRACT_EXT_PP_TRAITS_TYPE_KEYWORD_OP_( \
         d, continue_decl_type_push) \
-    BOOST_CONTRACT_EXT_PP_TRAITS_AUX_TYPE_KEYWORD_OP_ARGS_( \
+    BOOST_CONTRACT_EXT_PP_TRAITS_TYPE_KEYWORD_OP_ARGS_( \
         d, \
         BOOST_PP_TUPLE_ELEM(4, 1, continue_decl_type_push), \
         BOOST_PP_TUPLE_ELEM(4, 2, continue_decl_type_push), \
         BOOST_PP_TUPLE_ELEM(4, 3, continue_decl_type_push) \
     )
 
-#define BOOST_CONTRACT_EXT_PP_TRAITS_AUX_TYPE_KEYWORD_PRED_( \
+#define BOOST_CONTRACT_EXT_PP_TRAITS_TYPE_KEYWORD_PRED_( \
         d, continue_decl_type_push) \
     BOOST_PP_TUPLE_ELEM(4, 0, continue_decl_type_push)
 
 // Do not return continue_ and wrap type in paren (so same as paren type).
-#define BOOST_CONTRACT_EXT_PP_TRAITS_AUX_TYPE_KEYWORD_RETURN_( \
+#define BOOST_CONTRACT_EXT_PP_TRAITS_TYPE_KEYWORD_RETURN_( \
         continue_decl_type_push) \
     ( \
         BOOST_PP_TUPLE_ELEM(4, 1, continue_decl_type_push), \
@@ -166,18 +166,18 @@
     )
 
 // Precondition: decl does not start with paren (it's formed by keywords).
-#define BOOST_CONTRACT_EXT_PP_TRAITS_AUX_TYPE_KEYWORD_D_( \
+#define BOOST_CONTRACT_EXT_PP_TRAITS_TYPE_KEYWORD_D_( \
         d, decl, push_back_macro) \
-    BOOST_CONTRACT_EXT_PP_TRAITS_AUX_TYPE_KEYWORD_RETURN_( \
+    BOOST_CONTRACT_EXT_PP_TRAITS_TYPE_KEYWORD_RETURN_( \
         BOOST_PP_WHILE_ ## d( \
-            BOOST_CONTRACT_EXT_PP_TRAITS_AUX_TYPE_KEYWORD_PRED_, \
-            BOOST_CONTRACT_EXT_PP_TRAITS_AUX_TYPE_KEYWORD_OP_, \
+            BOOST_CONTRACT_EXT_PP_TRAITS_TYPE_KEYWORD_PRED_, \
+            BOOST_CONTRACT_EXT_PP_TRAITS_TYPE_KEYWORD_OP_, \
             (1, decl, BOOST_PP_NIL, push_back_macro) \
         ) \
     )
 
 // Precondition: decl = `(...) ...`.
-#define BOOST_CONTRACT_EXT_PP_TRAITS_AUX_TYPE_PAREN_D_( \
+#define BOOST_CONTRACT_EXT_PP_TRAITS_TYPE_PAREN_D_( \
         d, decl, push_back_macro) \
     ( \
         BOOST_PP_TUPLE_EAT(0) decl, \
@@ -185,47 +185,48 @@
                 BOOST_CONTRACT_EXT_PP_PAREN_FRONT(decl)) \
     )
 
-#define BOOST_CONTRACT_EXT_PP_TRAITS_AUX_TYPE_D_( \
+#define BOOST_CONTRACT_EXT_PP_TRAITS_TYPE_D_( \
         d, decl, push_back_macro) \
     BOOST_PP_IIF(BOOST_CONTRACT_EXT_PP_HAS_PAREN(decl), \
-        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_TYPE_PAREN_D_ \
+        BOOST_CONTRACT_EXT_PP_TRAITS_TYPE_PAREN_D_ \
     , \
-        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_TYPE_KEYWORD_D_ \
+        BOOST_CONTRACT_EXT_PP_TRAITS_TYPE_KEYWORD_D_ \
     )(d, decl, push_back_macro)
 
 // Remove an extra set of parenthesis around sequence (originally added to
 // handle commas by algorithms in common with spaced type traits).
-#define BOOST_CONTRACT_EXT_PP_TRAITS_AUX_TYPE_SEQ_RETURN_( \
+// Implementation: Always return `(())` (double paren seq with 1 empty elem) in
+// case no type was parsed.
+#define BOOST_CONTRACT_EXT_PP_TRAITS_TYPE_SEQ_RETURN_( \
         decl, type) \
-    (decl, BOOST_PP_TUPLE_REM_CTOR(1, type))
+    ( \
+        decl, \
+        BOOST_PP_EXPR_IIF(BOOST_CONTRACT_EXT_PP_IS_EMPTY type, \
+            (()) \
+        ) \
+        BOOST_PP_TUPLE_REM_CTOR(1, type) \
+    )
 
 /* PUBLIC */
 
-#define BOOST_CONTRACT_EXT_PP_TRAITS_AUX_TYPE_D(d, decl) \
-    BOOST_CONTRACT_EXT_PP_TRAITS_AUX_TYPE_D_(d, decl, \
-            BOOST_CONTRACT_EXT_PP_TRAITS_AUX_TYPE_SPACED_PUSH_BACK_)
+// Expand decl = `[type | (type)] ...` to `(..., (type) | ())`.
+// For example, `int const ...` to `(..., (int const))`.
+// Precondition: `...` in decl cannot be EMPTY() (so expanded 2-tuple is valid).
+#define BOOST_CONTRACT_EXT_PP_TRAITS_TYPE_PARSE_D(d, decl) \
+    BOOST_CONTRACT_EXT_PP_TRAITS_TYPE_D_(d, decl, \
+            BOOST_CONTRACT_EXT_PP_TRAITS_TYPE_SPACED_PUSH_BACK_)
 
-// Expand to 2-tuple `(remaining_decl, parsed_type_spaced)`.
-// Where parsed_type_spaced are space-separated type decl (e.g.,
-// `(int const)`, extra parenthesis to handle possible commas).
-// NOTE: Use ..._SEQ macro below to access single decl instead.
-#define BOOST_CONTRACT_EXT_PP_TRAITS_AUX_TYPE(decl) \
-    BOOST_CONTRACT_EXT_PP_TRAITS_AUX_TYPE_D(1, decl)
-
-#define BOOST_CONTRACT_EXT_PP_TRAITS_AUX_TYPE_SEQ_D(d, decl) \
+// Expand decl = `[type | (type)] ...` to
+// `(..., ((keyword1))...((keyword-n)) | (()))`.
+// For example, `int const ...` to `(..., ((int)) ((const)))` (useful to access
+// single type keywords `int`, `const`, etc.).
+// Precondition: `...` in decl cannot be EMPTY() (so expanded 2-tuple is valid).
+#define BOOST_CONTRACT_EXT_PP_TRAITS_TYPE_SEQ_PARSE_D(d, decl) \
     BOOST_CONTRACT_EXT_PP_EXPAND_ONCE( \
-        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_TYPE_SEQ_RETURN_ \
-        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_TYPE_D_(d, decl, \
-                BOOST_CONTRACT_EXT_PP_TRAITS_AUX_TYPE_SEQ_PUSH_BACK_) \
+        BOOST_CONTRACT_EXT_PP_TRAITS_TYPE_SEQ_RETURN_ \
+        BOOST_CONTRACT_EXT_PP_TRAITS_TYPE_D_(d, decl, \
+                BOOST_CONTRACT_EXT_PP_TRAITS_TYPE_SEQ_PUSH_BACK_) \
     )
-
-// Expand to 2-tuple `(remaining_decl, parsed_type_seq)`.
-// Where parsed_type_seq is a double parenthesized sequence of type decl
-// (e.g., `((int)) ((const))`, extra parenthesis to handle possible commas).
-// NOTE: It is more efficient to use the non-..._SEQ macros above when only a
-// space-separated concatenation of the type tokes is needed.
-#define BOOST_CONTRACT_EXT_PP_TRAITS_AUX_TYPE_SEQ(decl) \
-    BOOST_CONTRACT_EXT_PP_TRAITS_AUX_TYPE_SEQ_D(1, decl)
 
 #endif // #include guard
 

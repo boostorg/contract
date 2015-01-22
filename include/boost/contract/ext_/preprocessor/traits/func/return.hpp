@@ -3,7 +3,7 @@
 #define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_RETURN_HPP_
 
 #include <boost/contract/ext_/preprocessor/traits/func/aux_/index.hpp>
-#include <boost/contract/ext_/preprocessor/traits/aux_/type.hpp>
+#include <boost/contract/ext_/preprocessor/traits/utility/type.hpp>
 #include <boost/contract/ext_/preprocessor/traits/adt.hpp>
 #include <boost/contract/ext_/preprocessor/keyword/return.hpp>
 #include <boost/contract/ext_/preprocessor/keyword/operator.hpp>
@@ -43,54 +43,53 @@
         1 BOOST_PP_TUPLE_EAT(1) \
     ))(decl)
 
-#define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_RETURN_NO_(decl, traits) \
+#define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_RETURN_NO_(d, decl, traits) \
     (decl, BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK(traits, BOOST_PP_EMPTY))
 
 #define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_RETURN_(decl_return, traits) \
     ( \
-        BOOST_CONTRACT_EXT_PP_DECL_TRAITS_FIRST(decl_return) \
-    , \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK( \
-            traits, \
-            BOOST_CONTRACT_EXT_PP_DECL_TRAITS_SECOND(decl_return) \
-            BOOST_PP_EMPTY \
-        ) \
+        BOOST_PP_TUPLE_ELEM(2, 0, decl_return), \
+        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK(traits, \
+                BOOST_PP_TUPLE_ELEM(2, 1, decl_return) BOOST_PP_EMPTY) \
     )
 
-#define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_RETURN_YES_(decl, traits) \
+#define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_RETURN_YES_(d, decl, traits) \
     BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_RETURN_( \
-            BOOST_CONTRACT_EXT_PP_TRAITS_AUX_TYPE(decl), traits)
+            BOOST_CONTRACT_EXT_PP_TRAITS_TYPE_PARSE_D(d, decl), traits)
 
-#define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_RETURN_PARSE_ARGS_(decl, traits) \
+#define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_RETURN_PARSE_ARGS_(d, decl, traits) \
     BOOST_PP_IIF(BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_HAS_RETURN_(decl), \
         BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_RETURN_YES_ \
     , \
         BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_RETURN_NO_ \
-    )(decl, traits)
+    )(d, decl, traits)
 
 // Precondition: decl = `return ...`.
-#define BOST_CONTRACT_EXT_PP_FUNC_TRAITS_TRAILING_RETURN_YES_(decl, traits) \
-    BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_RETURN_YES_( \
+#define BOST_CONTRACT_EXT_PP_FUNC_TRAITS_TRAILING_RETURN_YES_(d, decl, traits) \
+    BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_RETURN_YES_(d, \
             BOOST_CONTRACT_EXT_PP_KEYWORD_RETURN_REMOVE_FRONT(decl), traits)
 
 #define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_TRAILING_RETURN_PARSE_ARGS_( \
-        decl, traits) \
+        d, decl, traits) \
     BOOST_PP_IIF(BOOST_CONTRACT_EXT_PP_KEYWORD_IS_RETURN_FRONT(decl), \
         BOST_CONTRACT_EXT_PP_FUNC_TRAITS_TRAILING_RETURN_YES_ \
     , \
         BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_RETURN_NO_ \
-    )(decl, traits)
+    )(d, decl, traits)
     
 /* PUBLIC */
 
-#define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_RETURN_PARSE(decl_traits) \
-    BOOST_CONTRACT_EXT_PP_EXPAND_ONCE( \
-            BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_RETURN_PARSE_ARGS_ decl_traits)
+#define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_RETURN_PARSE_D(d, decl_traits) \
+    BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_RETURN_PARSE_ARGS_(d, \
+        BOOST_PP_TUPLE_ELEM(2, 0, decl_traits), \
+        BOOST_PP_TUPLE_ELEM(2, 1, decl_traits) \
+    )
 
-#define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_TRAILING_RETURN_PARSE(decl_traits) \
-    BOOST_CONTRACT_EXT_PP_EXPAND_ONCE( \
-        BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_TRAILING_RETURN_PARSE_ARGS_ \
-        decl_traits \
+#define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_TRAILING_RETURN_PARSE_D( \
+        d, decl_traits) \
+    BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_TRAILING_RETURN_PARSE_ARGS_(d, \
+        BOOST_PP_TUPLE_ELEM(2, 0, decl_traits), \
+        BOOST_PP_TUPLE_ELEM(2, 1, decl_traits) \
     )
 
 // Expand to `result_type | void | auto | EMPTY()` (`auto` for alternative

@@ -8,14 +8,16 @@
 /* PUBLIC */
 
 // Precondition: name must always be the last remaining token in decl.
-// NOTE: Trailing EMPTY after name is already in decl.
-// Implementation: NIL used as tuples cannot have EMPTY() elems (in MSVC).
+// Implementation: Must remove trailing NIL from decl to get actual name
+// (NIL added so to avoid pp-tuple empty elems even after decl fully parsed).
 #define BOOST_CONTRACT_EXT_PP_PARAM_TRAITS_NAME_PARSE(decl_traits) \
     ( \
         BOOST_PP_NIL, \
         BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK( \
-            BOOST_CONTRACT_EXT_PP_DECL_TRAITS_SECOND(decl_traits), \
-            BOOST_CONTRACT_EXT_PP_DECL_TRAITS_FIRST(decl_traits) \
+            BOOST_PP_TUPLE_ELEM(2, 1, decl_traits), \
+            BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK( \
+                    BOOST_PP_TUPLE_ELEM(2, 0, decl_traits)) \
+            BOOST_PP_EMPTY \
         ) \
     )
 

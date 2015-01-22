@@ -3,7 +3,7 @@
 #define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_EXCEPT_HPP_
 
 #include <boost/contract/ext_/preprocessor/traits/adt.hpp>
-#include <boost/contract/ext_/preprocessor/traits/aux_/keyword_paren.hpp>
+#include <boost/contract/ext_/preprocessor/traits/utility/keyword_paren.hpp>
 #include <boost/contract/ext_/preprocessor/keyword/noexcept.hpp>
 #include <boost/contract/ext_/preprocessor/keyword/throw.hpp>
 #include <boost/contract/ext_/preprocessor/utility/expand.hpp>
@@ -12,16 +12,14 @@
 
 /* PRIVATE */
 
-#define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_EXCEPT_(decl_paren, keyword, traits) \
+// Precondition: except = `[(,,,)] EMPTY` (so trailing EMPTY already there).
+#define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_EXCEPT_( \
+        decl_except, keyword, traits) \
     ( \
-        BOOST_CONTRACT_EXT_PP_DECL_TRAITS_FIRST(decl_paren) \
+        BOOST_PP_TUPLE_ELEM(2, 0, decl_except) \
     , \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK( \
-            traits, \
-            keyword \
-            BOOST_CONTRACT_EXT_PP_DECL_TRAITS_SECOND(decl_paren) \
-            BOOST_PP_EMPTY \
-        ) \
+        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK(traits, \
+                keyword BOOST_PP_TUPLE_ELEM(2, 1, decl_except)) \
     )
 
 #define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_EXCEPT_NONE_(decl, traits) \
@@ -29,7 +27,7 @@
 
 #define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_EXCEPT_THROW_(decl, traits) \
     BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_EXCEPT_( \
-        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_KEYWORD_PAREN( \
+        BOOST_CONTRACT_EXT_PP_TRAITS_KEYWORD_PAREN_PARSE( \
             decl, \
             BOOST_CONTRACT_EXT_PP_KEYWORD_IS_THROW_FRONT, \
             BOOST_CONTRACT_EXT_PP_KEYWORD_THROW_REMOVE_FRONT \
@@ -40,7 +38,7 @@
 
 #define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_EXCEPT_NOEXCEPT_(decl, traits) \
     BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_EXCEPT_( \
-        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_KEYWORD_PAREN( \
+        BOOST_CONTRACT_EXT_PP_TRAITS_KEYWORD_PAREN_PARSE( \
             decl, \
             BOOST_CONTRACT_EXT_PP_KEYWORD_IS_NOEXCEPT_FRONT, \
             BOOST_CONTRACT_EXT_PP_KEYWORD_NOEXCEPT_REMOVE_FRONT \

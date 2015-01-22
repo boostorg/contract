@@ -3,7 +3,7 @@
 #define BOOST_CONTRACT_EXT_PP_PARAM_TRAITS_TYPE_HPP_
 
 #include <boost/contract/ext_/preprocessor/traits/param/aux_/index.hpp>
-#include <boost/contract/ext_/preprocessor/traits/aux_/type.hpp>
+#include <boost/contract/ext_/preprocessor/traits/utility/type.hpp>
 #include <boost/contract/ext_/preprocessor/traits/adt.hpp>
 #include <boost/contract/ext_/preprocessor/keyword/typename.hpp>
 #include <boost/contract/ext_/preprocessor/keyword/class.hpp>
@@ -28,8 +28,7 @@
             BOOST_CONTRACT_EXT_PP_KEYWORD_CLASS_REMOVE_FRONT \
         , \
             BOOST_PP_TUPLE_REM(1) \
-        )(template_template_class_etc) \
-    , \
+        )(template_template_class_etc), \
         BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK( \
             traits, \
             template \
@@ -43,7 +42,7 @@
 
 // Precondition: decl = `template(,,,) ...`.
 #define BOOST_CONTRACT_EXT_PP_TEMPLATE_PARAM_TRAITS_TYPE_TEMPLATE_( \
-        decl, traits) \
+        d, decl, traits) \
     BOOST_CONTRACT_EXT_PP_TEMPLATE_PARAM_TRAITS_TYPE_TEMPLATE_PUSH_BACK_( \
         BOOST_CONTRACT_EXT_PP_TEMPLATE_PARAM_TRAITS_TYPE_TEMPLATE_CLASS_ETC( \
                 decl), \
@@ -54,39 +53,34 @@
 
 // Precondition: decl = `class ...`.
 #define BOOST_CONTRACT_EXT_PP_TEMPLATE_PARAM_TRAITS_TYPE_CLASS_( \
-        decl, traits) \
+        d, decl, traits) \
     ( \
-        BOOST_CONTRACT_EXT_PP_KEYWORD_CLASS_REMOVE_FRONT(decl) \
-    , \
+        BOOST_CONTRACT_EXT_PP_KEYWORD_CLASS_REMOVE_FRONT(decl), \
         BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK(traits, class) \
     )
 
 // Precondition: decl = `typename ...`.
 #define BOOST_CONTRACT_EXT_PP_TEMPLATE_PARAM_TRAITS_TYPE_TYPENAME_( \
-        decl, traits) \
+        d, decl, traits) \
     ( \
-        BOOST_CONTRACT_EXT_PP_KEYWORD_TYPENAME_REMOVE_FRONT(decl) \
-    , \
+        BOOST_CONTRACT_EXT_PP_KEYWORD_TYPENAME_REMOVE_FRONT(decl), \
         BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK(traits, typename) \
     )
-
+            
 #define BOOST_CONTRACT_EXT_PP_PARAM_TRAITS_TYPE_(decl_type, traits) \
     ( \
-        BOOST_CONTRACT_EXT_PP_DECL_TRAITS_FIRST(decl_type) \
-    , \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK( \
-            traits, \
-            BOOST_CONTRACT_EXT_PP_DECL_TRAITS_SECOND(decl_type) \
-        ) \
+        BOOST_PP_TUPLE_ELEM(2, 0, decl_type), \
+        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK(traits, \
+                BOOST_PP_TUPLE_ELEM(2, 1, decl_type)) \
     )
 
 // Precondition: decl = `wrapped-type`.
-#define BOOST_CONTRACT_EXT_PP_PARAM_TRAITS_TYPE_PARSE_ARGS_(decl, traits) \
+#define BOOST_CONTRACT_EXT_PP_PARAM_TRAITS_TYPE_PARSE_ARGS_(d, decl, traits) \
     BOOST_CONTRACT_EXT_PP_PARAM_TRAITS_TYPE_( \
-            BOOST_CONTRACT_EXT_PP_TRAITS_AUX_TYPE(decl), traits)
+            BOOST_CONTRACT_EXT_PP_TRAITS_TYPE_PARSE_D(d, decl), traits)
     
 #define BOOST_CONTRACT_EXT_PP_TEMPLATE_PARAM_TRAITS_TYPE_PARSE_ARGS_( \
-        decl, traits) \
+        d, decl, traits) \
     BOOST_PP_IIF(BOOST_CONTRACT_EXT_PP_KEYWORD_IS_TYPENAME_FRONT(decl), \
         BOOST_CONTRACT_EXT_PP_TEMPLATE_PARAM_TRAITS_TYPE_TYPENAME_ \
     , BOOST_PP_IIF(BOOST_CONTRACT_EXT_PP_KEYWORD_IS_CLASS_FRONT(decl), \
@@ -95,20 +89,23 @@
         BOOST_CONTRACT_EXT_PP_TEMPLATE_PARAM_TRAITS_TYPE_TEMPLATE_ \
     , \
         BOOST_CONTRACT_EXT_PP_PARAM_TRAITS_TYPE_PARSE_ARGS_ \
-    )))(decl, traits)
+    )))(d, decl, traits)
 
 /* PUBLIC */
 
 // Parse type for (function formal, not template) parameters.
-#define BOOST_CONTRACT_EXT_PP_PARAM_TRAITS_TYPE_PARSE(decl_traits) \
-    BOOST_CONTRACT_EXT_PP_EXPAND_ONCE( \
-            BOOST_CONTRACT_EXT_PP_PARAM_TRAITS_TYPE_PARSE_ARGS_ decl_traits)
+#define BOOST_CONTRACT_EXT_PP_PARAM_TRAITS_TYPE_PARSE_D(d, decl_traits) \
+    BOOST_CONTRACT_EXT_PP_PARAM_TRAITS_TYPE_PARSE_ARGS_(d, \
+        BOOST_PP_TUPLE_ELEM(2, 0, decl_traits), \
+        BOOST_PP_TUPLE_ELEM(2, 1, decl_traits) \
+    )
 
 // Parse "type" (or "kind") for template parameters.
-#define BOOST_CONTRACT_EXT_PP_TEMPLATE_PARAM_TRAITS_TYPE_PARSE(decl_traits) \
-    BOOST_CONTRACT_EXT_PP_EXPAND_ONCE( \
-        BOOST_CONTRACT_EXT_PP_TEMPLATE_PARAM_TRAITS_TYPE_PARSE_ARGS_ \
-        decl_traits \
+#define BOOST_CONTRACT_EXT_PP_TEMPLATE_PARAM_TRAITS_TYPE_PARSE_D( \
+        d, decl_traits) \
+    BOOST_CONTRACT_EXT_PP_TEMPLATE_PARAM_TRAITS_TYPE_PARSE_ARGS_(d, \
+        BOOST_PP_TUPLE_ELEM(2, 0, decl_traits), \
+        BOOST_PP_TUPLE_ELEM(2, 1, decl_traits) \
     )
 
 // Expand to `typename | class | (,,,) | template( ,,, ) class` (for

@@ -3,7 +3,7 @@
 #define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_EXPORT_HPP_
 
 #include <boost/contract/ext_/preprocessor/traits/func/aux_/index.hpp>
-#include <boost/contract/ext_/preprocessor/traits/aux_/keyword.hpp>
+#include <boost/contract/ext_/preprocessor/traits/utility/keyword.hpp>
 #include <boost/contract/ext_/preprocessor/traits/adt.hpp>
 #include <boost/contract/ext_/preprocessor/keyword/export.hpp>
 #include <boost/contract/ext_/preprocessor/utility/expand.hpp>
@@ -14,28 +14,25 @@
 
 /* PRIVATE */
 
+// Precondition: export = `[keyword] EMPTY` (so trailing EMPTY already there).
 #define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_EXPORT_(decl_export, traits) \
     ( \
-        BOOST_CONTRACT_EXT_PP_DECL_TRAITS_FIRST(decl_export) \
-    , \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK( \
-            traits, \
-            BOOST_CONTRACT_EXT_PP_DECL_TRAITS_SECOND(decl_export) \
-            BOOST_PP_EMPTY \
-        ) \
+        BOOST_PP_TUPLE_ELEM(2, 0, decl_export), \
+        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK(traits, \
+                BOOST_PP_TUPLE_ELEM(2, 1, decl_export)) \
     )
 
 /* PUBLIC */
 
 #define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_EXPORT_PARSE(decl_traits) \
     BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_EXPORT_( \
-        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_KEYWORD1( \
-            BOOST_CONTRACT_EXT_PP_DECL_TRAITS_FIRST(decl_traits), \
+        BOOST_CONTRACT_EXT_PP_TRAITS_KEYWORD1_PARSE( \
+            BOOST_PP_TUPLE_ELEM(2, 0, decl_traits), \
             export, \
             BOOST_CONTRACT_EXT_PP_KEYWORD_IS_EXPORT_FRONT, \
             BOOST_CONTRACT_EXT_PP_KEYWORD_EXPORT_REMOVE_FRONT \
         ), \
-        BOOST_CONTRACT_EXT_PP_DECL_TRAITS_SECOND(decl_traits) \
+        BOOST_PP_TUPLE_ELEM(2, 1, decl_traits) \
     )
 
 // Expand to `export | EMPTY()`.
