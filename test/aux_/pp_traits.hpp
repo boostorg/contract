@@ -56,13 +56,19 @@ std::string trim ( std::string const& source ) {
 #define BOOST_CONTRACT_TEST_AUX_PP_TRAITS_( \
         decl_traits, traits_elem_macro, parsed_trait, decl_after_trait) \
     BOOST_CONTRACT_TEST_AUX_PP_TRAITS_EQUAL_( \
-        traits_elem_macro( \
-                BOOST_CONTRACT_EXT_PP_DECL_TRAITS_DONE(decl_traits)), \
+        traits_elem_macro(BOOST_PP_TUPLE_ELEM(2, 1, decl_traits)), \
         parsed_trait \
     ) \
     BOOST_CONTRACT_TEST_AUX_PP_TRAITS_EQUAL_( \
-        BOOST_CONTRACT_EXT_PP_DECL_TRAITS_FIRST(decl_traits), \
-        decl_after_trait \
+        BOOST_PP_TUPLE_ELEM(2, 0, decl_traits), \
+        decl_after_trait BOOST_PP_NIL \
+    )
+
+#define BOOST_CONTRACT_TEST_AUX_PP_TRAITS_DONE_(decl_traits) \
+    ( \
+        BOOST_PP_TUPLE_ELEM(2, 0, decl_traits), \
+        BOOST_CONTRACT_EXT_PP_TRAITS_DONE(BOOST_PP_TUPLE_ELEM(2, 1, \
+                decl_traits)) \
     )
 
 /* PUBLIC */
@@ -79,8 +85,8 @@ std::string trim ( std::string const& source ) {
         parsed_trait \
     ) \
         BOOST_CONTRACT_TEST_AUX_PP_TRAITS_( \
-            traits_parse_macro( \
-                    decl_before_trait decl_at_trait decl_after_trait), \
+            BOOST_CONTRACT_TEST_AUX_PP_TRAITS_DONE_(traits_parse_macro(1, \
+                    decl_before_trait decl_at_trait decl_after_trait)), \
             traits_elem_macro, \
             parsed_trait, \
             decl_after_trait \
@@ -96,11 +102,12 @@ std::string trim ( std::string const& source ) {
         decl_after_trait, \
         parsed_trait \
     ) \
-        "NOTE: #undefine DEBUG macro (e.g., `bjam cxxflags=-UDEBUG ...`) to see fully generated C++ code" \
+        "NOTE: #undefine DEBUG macro (e.g., `bjam cxxflags=-UDEBUG ...`) to complete generation of C++ code" \
         decl = decl_before_trait decl_at_trait decl_after_trait \
         --> \
-        (remaining_decl, BOOST_PP_NIL parsed_traits) = traits_parse_macro( \
-                decl_before_trait decl_at_trait decl_after_trait)
+        (remaining_decl BOOST_PP_NIL, (BOOST_PP_NIL) parsed_traits) = \
+            traits_parse_macro(1, \
+                    decl_before_trait decl_at_trait decl_after_trait)
 #endif
 
 #define BOOST_CONTRACT_TEST_AUX_PP_TRAITS_REPORT_ERRORS \
