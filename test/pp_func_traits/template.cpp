@@ -13,41 +13,34 @@
 #include <boost/contract/ext_/preprocessor/utility/empty.hpp>
 #include <boost/contract/ext_/preprocessor/paren/has.hpp>
 #include <boost/preprocessor/facilities/empty.hpp>
-#include <boost/preprocessor/list/for_each_i.hpp>
-#include <boost/preprocessor/logical/not.hpp>
-#include <boost/preprocessor/control/iif.hpp>
-#include <boost/preprocessor/control/expr_iif.hpp>
-#include <boost/preprocessor/punctuation/comma_if.hpp>
+#include <boost/preprocessor/seq/for_each_i.hpp>
 #include <boost/preprocessor/tuple/eat.hpp>
 #include <boost/preprocessor/tuple/rem.hpp>
+#include <boost/preprocessor/tuple/size.hpp>
+#include <boost/preprocessor/comparison/equal.hpp>
+#include <boost/preprocessor/control/expr_iif.hpp>
+#include <boost/preprocessor/control/iif.hpp>
+#include <boost/preprocessor/punctuation/comma_if.hpp>
 
 // NOTE: Some extra test macros are necessary here to regenerate the decl back
 // from the parsed trait to check if the parsing was correct. But, at the end
 // these are valuable tests also because they use the PARAM_TRAITS macros.
 
-// Assume all 1-tuple types were specified without parenthesis. This is usually
-// NOT true, but it is true in these tests. This is relevant only in these
-// tests where generated code must match original declaration and its
-// parenthesis (the extra parenthesis of the original declaration do not need
-// to be reproduced when generating C++ code so this assumption is not
-// necessary).
-#define BOOST_CONTRACT_TEST_TEMPLATE_PARAM_REM_YES_(type) \
-    BOOST_PP_EXPR_IIF(BOOST_PP_EQUAL(BOOST_PP_TUPLE_SIZE(type), 1), \
+// Just for these tests, assumes all 1-tuples were specified without paren.
+#define BOOST_CONTRACT_TEST_PAREN_REM_(trait) \
+    BOOST_PP_EXPR_IIF(BOOST_PP_EQUAL(BOOST_PP_TUPLE_SIZE(trait), 1), \
         BOOST_PP_TUPLE_REM(0) \
     ) \
-    type
+    trait
 
-#define BOOST_CONTRACT_TEST_TEMPLATE_PARAM_REM_(type) \
-    BOOST_PP_IIF(BOOST_CONTRACT_EXT_PP_HAS_PAREN(type), \
-        BOOST_CONTRACT_TEST_TEMPLATE_PARAM_REM_YES_ \
-    , \
-        BOOST_PP_TUPLE_REM(1) \
-    )(type)
-        
 #define BOOST_CONTRACT_TEST_TEMPLATE_PARAM_(r, unused, i, template_param) \
     BOOST_PP_COMMA_IF(i) \
-    BOOST_CONTRACT_TEST_TEMPLATE_PARAM_REM_( \
-            BOOST_CONTRACT_EXT_PP_PARAM_TRAITS_TYPE(template_param)) \
+    BOOST_PP_IIF(BOOST_CONTRACT_EXT_PP_HAS_PAREN( \
+            BOOST_CONTRACT_EXT_PP_PARAM_TRAITS_TYPE(template_param)), \
+        BOOST_CONTRACT_TEST_PAREN_REM_ \
+    , \
+        BOOST_PP_TUPLE_REM(1) \
+    )(BOOST_CONTRACT_EXT_PP_PARAM_TRAITS_TYPE(template_param)) \
     BOOST_CONTRACT_EXT_PP_PARAM_TRAITS_NAME(template_param) \
     BOOST_PP_IIF(BOOST_CONTRACT_EXT_PP_IS_EMPTY( \
             BOOST_CONTRACT_EXT_PP_PARAM_TRAITS_DEFAULT(template_param)), \
@@ -56,12 +49,21 @@
         BOOST_PP_TUPLE_REM(2) \
     )( \
         BOOST_PP_EMPTY(), \
-        default BOOST_CONTRACT_EXT_PP_PARAM_TRAITS_DEFAULT(template_param) \
+        default BOOST_CONTRACT_TEST_PAREN_REM_( \
+                BOOST_CONTRACT_EXT_PP_PARAM_TRAITS_DEFAULT(template_param)) \
     )
 
 #define BOOST_CONTRACT_TEST_TEMPLATE_PARAMS_(func_traits) \
     ( \
-        BOOST_PP_LIST_FOR_EACH_I(BOOST_CONTRACT_TEST_TEMPLATE_PARAM_, ~, \
+        BOOST_PP_IIF( \
+            BOOST_CONTRACT_EXT_PP_IS_EMPTY( \
+                BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_TEMPLATE_PARAMS(func_traits) \
+            ) \
+        , \
+            BOOST_PP_TUPLE_EAT(3) \
+        , \
+            BOOST_PP_SEQ_FOR_EACH_I \
+        )(BOOST_CONTRACT_TEST_TEMPLATE_PARAM_, ~, \
                 BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_TEMPLATE_PARAMS(func_traits))\
     )
 
@@ -76,7 +78,7 @@
 #define BOOST_CONTRACT_TEST_(template_params) \
     BOOST_CONTRACT_TEST_AUX_PP_TRAITS( \
         BOOST_CONTRACT_TEST_TEMPLATE_, \
-        BOOST_CONTRACT_EXT_PP_FUNC_TRAITS, \
+        BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_PARSE_D, \
         BOOST_PP_EMPTY(), \
         template_params, \
         (std::map<int, char>&) (f) ( int x, (std::map<int, char>&) y ), \

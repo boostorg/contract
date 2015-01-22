@@ -30,7 +30,7 @@
 #define BOOST_CONTRACT_TEST_TRAIT_(classifier_upper, classifiers_list) \
     BOOST_CONTRACT_TEST_AUX_PP_TRAITS( \
         BOOST_PP_CAT(BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_, classifier_upper), \
-        BOOST_CONTRACT_EXT_PP_FUNC_TRAITS, \
+        BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_PARSE_D, \
         template( typename T, (std::map<int, char>::value_type) V ), \
         BOOST_PP_LIST_FOR_EACH(BOOST_CONTRACT_TEST_ELEM_, ~, \
                 classifiers_list), \

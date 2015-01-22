@@ -21,7 +21,7 @@
 #define BOOST_CONTRACT_TEST_EQUAL_(cv, parsed_cv) \
     BOOST_CONTRACT_TEST_AUX_PP_TRAITS( \
         BOOST_CONTRACT_TEST_CV_, \
-        BOOST_CONTRACT_EXT_PP_FUNC_TRAITS, \
+        BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_PARSE_D, \
         (std::map<int, char>&) (f) ( int x, (std::map<int, char>&) y ), \
         cv, \
         refref throw(int, double) final override, \

@@ -29,7 +29,7 @@
 #define BOOST_CONTRACT_TEST_(before, return_, after) \
     BOOST_CONTRACT_TEST_AUX_PP_TRAITS( \
         BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_RETURN, \
-        BOOST_CONTRACT_EXT_PP_FUNC_TRAITS, \
+        BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_PARSE_D, \
         before, \
         return_, \
         after, \

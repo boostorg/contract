@@ -15,7 +15,7 @@
 #define BOOST_CONTRACT_TEST_(except) \
     BOOST_CONTRACT_TEST_AUX_PP_TRAITS( \
         BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_EXCEPT, \
-        BOOST_CONTRACT_EXT_PP_FUNC_TRAITS, \
+        BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_PARSE_D, \
         (std::map<int, char>&) (f) ( int x, (std::map<int, char>&) y ) const, \
         except, \
         final override, \

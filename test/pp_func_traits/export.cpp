@@ -15,7 +15,7 @@
 #define BOOST_CONTRACT_TEST_(export_) \
     BOOST_CONTRACT_TEST_AUX_PP_TRAITS( \
         BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_EXPORT, \
-        BOOST_CONTRACT_EXT_PP_FUNC_TRAITS, \
+        BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_PARSE_D, \
         BOOST_PP_EMPTY(), \
         export_, \
         template( typename T, (std::map<int, char>::value_type) V ) \

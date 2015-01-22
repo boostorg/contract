@@ -10,7 +10,8 @@
 
 #include "../aux_/pp_traits.hpp"
 #include <boost/contract/ext_/preprocessor/traits/func.hpp>
-#include <boost/preprocessor/list/for_each_i.hpp>
+#include <boost/contract/ext_/preprocessor/utility/empty.hpp>
+#include <boost/preprocessor/seq/for_each_i.hpp>
 #include <boost/preprocessor/tuple/eat.hpp>
 #include <boost/preprocessor/tuple/rem.hpp>
 #include <boost/preprocessor/tuple/size.hpp>
@@ -23,21 +24,16 @@
 // from the parsed trait to check if the parsing was correct. But, at the end
 // these are valuable tests also because they use the PARAM_TRAITS macros.
 
-// Assume all 1-tuple types were specified without parenthesis. This is usually
-// NOT true, but it is true in these tests. This is relevant only in these
-// tests where generated code must match original declaration and its
-// parenthesis (the extra parenthesis of the original declaration do not need
-// to be reproduced when generating C++ code so this assumption is not
-// necessary).
-#define BOOST_CONTRACT_TEST_PARAM_REM_(type) \
-    BOOST_PP_EXPR_IIF(BOOST_PP_EQUAL(BOOST_PP_TUPLE_SIZE(type), 1), \
+// Just for these tests, assumes all 1-tuples were specified without paren.
+#define BOOST_CONTRACT_TEST_PAREN_REM_(trait) \
+    BOOST_PP_EXPR_IIF(BOOST_PP_EQUAL(BOOST_PP_TUPLE_SIZE(trait), 1), \
         BOOST_PP_TUPLE_REM(0) \
     ) \
-    type
+    trait
 
 #define BOOST_CONTRACT_TEST_PARAM_(r, unused, i, param) \
     BOOST_PP_COMMA_IF(i) \
-    BOOST_CONTRACT_TEST_PARAM_REM_( \
+    BOOST_CONTRACT_TEST_PAREN_REM_( \
             BOOST_CONTRACT_EXT_PP_PARAM_TRAITS_TYPE(param)) \
     BOOST_CONTRACT_EXT_PP_PARAM_TRAITS_NAME(param) \
     BOOST_PP_IIF(BOOST_CONTRACT_EXT_PP_IS_EMPTY( \
@@ -47,12 +43,18 @@
         BOOST_PP_TUPLE_REM(2) \
     )( \
         BOOST_PP_EMPTY(), \
-        default BOOST_CONTRACT_EXT_PP_PARAM_TRAITS_DEFAULT(param) \
+        default BOOST_CONTRACT_TEST_PAREN_REM_( \
+                BOOST_CONTRACT_EXT_PP_PARAM_TRAITS_DEFAULT(param)) \
     )
 
 #define BOOST_CONTRACT_TEST_PARAMS_(func_traits) \
     ( \
-        BOOST_PP_LIST_FOR_EACH_I(BOOST_CONTRACT_TEST_PARAM_, ~, \
+        BOOST_PP_IIF(BOOST_CONTRACT_EXT_PP_IS_EMPTY( \
+                BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_PARAMS(func_traits)), \
+            BOOST_PP_TUPLE_EAT(3) \
+        , \
+            BOOST_PP_SEQ_FOR_EACH_I \
+        )(BOOST_CONTRACT_TEST_PARAM_, ~, \
                 BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_PARAMS(func_traits)) \
     )
 
@@ -60,7 +62,7 @@
 #define BOOST_CONTRACT_TEST_EQUAL_(params, parsed_params) \
     BOOST_CONTRACT_TEST_AUX_PP_TRAITS( \
         BOOST_CONTRACT_TEST_PARAMS_, \
-        BOOST_CONTRACT_EXT_PP_FUNC_TRAITS, \
+        BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_PARSE_D, \
         (std::map<int, char>&) (f), \
         params, \
         const volatile, \
