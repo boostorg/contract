@@ -83,7 +83,7 @@
     ( \
         BOOST_PP_TUPLE_ELEM(2, 0, decl_traits), \
         BOOST_CONTRACT_EXT_PP_TRAITS_DONE(BOOST_PP_TUPLE_ELEM(2, 1, \
-                decl_traits)) \
+                decl_traits)) BOOST_PP_EMPTY \
     )
 
 // TODO: If all assertions, params, tparams, etc use the WHILE to iterate the
@@ -111,7 +111,7 @@
 // can be transformed to EMPTY() or pp-seq using EXT_PP_VARIADIC_ENUM_TO_SEQ.
 #define BOOST_CONTRACT_EXT_PP_ASSERTIONS_TRAITS_PARSE_D(d, decl_seq) \
     BOOST_PP_IIF(BOOST_CONTRACT_EXT_PP_IS_EMPTY(decl_seq), \
-        ((BOOST_PP_NIL), BOOST_PP_EMPTY) BOOST_PP_TUPLE_EAT(2) \
+        ((BOOST_PP_NILxx), BOOST_PP_EMPTY) BOOST_PP_TUPLE_EAT(2) \
     , \
         BOOST_CONTRACT_EXT_PP_ASSERTIONS_TRAITS_ \
     )(d, decl_seq)
