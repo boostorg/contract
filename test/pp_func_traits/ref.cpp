@@ -27,7 +27,7 @@
 int main ( ) {
     BOOST_CONTRACT_TEST_( BOOST_PP_EMPTY() )
     BOOST_CONTRACT_TEST_( ref )
-    BOOST_CONTRACT_TEST_( refref )
+    BOOST_CONTRACT_TEST_( ref ref )
 
     return BOOST_CONTRACT_TEST_AUX_PP_TRAITS_REPORT_ERRORS;
 }

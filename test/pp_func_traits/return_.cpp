@@ -17,14 +17,16 @@
 #include <boost/preprocessor/facilities/empty.hpp>
 #include <boost/preprocessor/control/iif.hpp>
 
-// Wrap with parenthesis (if no parenthesis already).
+// Wrap with parenthesis (if no parenthesis already and it is not `auto`).
 // Precondition: return_ != EMPTY().
 #define BOOST_CONTRACT_TEST_PARENTHESIZE_(return_) \
     BOOST_PP_IIF(BOOST_CONTRACT_EXT_PP_HAS_PAREN(return_), \
         BOOST_PP_TUPLE_REM(1) \
+    , BOOST_PP_IIF(BOOST_CONTRACT_EXT_PP_KEYWORD_IS_AUTO_FRONT(return_), \
+        BOOST_PP_TUPLE_REM(1) \
     , \
         BOOST_PP_EMPTY() \
-    )(return_)
+    ))(return_)
         
 #define BOOST_CONTRACT_TEST_(before, return_, after) \
     BOOST_CONTRACT_TEST_AUX_PP_TRAITS( \
@@ -48,7 +50,7 @@ int main ( ) {
     )
     BOOST_CONTRACT_TEST_(
         BOOST_PP_EMPTY(),
-        (std::map<int, char>), (f) ( )
+        (::std::map<int, char>), (f) ( )
     )
 
     // No return for constructor and destructor.
@@ -78,7 +80,7 @@ int main ( ) {
     )
     BOOST_CONTRACT_TEST_(
         BOOST_PP_EMPTY(),
-        (int&), operator(*)(deref) ( )
+        (::std::map<int, char>&), operator(*)(deref) ( )
     )
 
     // Return for unified syntax.

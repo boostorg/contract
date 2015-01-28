@@ -1,10 +1,17 @@
 
 import testing ;
+    
+actions wave { wave $(>) -o $(<) --timer }
 
-rule test-pp ( filename ) {
-    run $(filename).cpp ;
-    preprocessed $(filename)-pp : $(filename).cpp : <cxxflags>-DDEBUG ;
-    explicit filename-pp ;
+rule test-pp ( filestem ) {
+    run $(filestem).cpp ;
+
+    preprocessed $(filestem)-pp : $(filestem).cpp : <cxxflags>-DDEBUG ;
+    alias $(filestem)-pp.ii : $(filestem)-pp ;
+    explicit $(filestem)-pp $(filestem)-pp.ii ;
+
+    make $(filestem)-wave.ii : $(filestem).cpp : @wave ;
+    alias $(filestem)-wave : $(filestem)-wave.ii ;
 }
 
 test-pp access ;
@@ -20,8 +27,5 @@ test-pp ref ;
 test-pp except ;
 test-pp trailing_return ;
 test-pp virt ;
-#test-pp postcondition ;
-
-# TODO: Try to automatically run and test wave too... Maybe something like this:
-#   SHELL "wave access.cpp" ;
+test-pp postconditions ;
 
