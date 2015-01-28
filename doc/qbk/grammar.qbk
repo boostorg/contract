@@ -5,6 +5,8 @@
 [/ http://www.boost.org/LICENSE_1_0.txt) ]
 [/ Home at http://sourceforge.net/projects/contractpp ]
 
+[def __using_directive__ [link using_directive_anchor [^['using-directive]]]]
+[def __namespace_alias__ [link namespace_alias_anchor [^['namespace-alias]]]]
 [def __typedef_declaration__ [link typedef_declaration_anchor [^['typedef-declaration]]]]
 [def __using_alias__ [link using_alias_anchor [^['using-alias]]]]
 [def __using_declaration__ [link using_declaration_anchor [^['using-declaration]]]]
@@ -80,7 +82,6 @@
 [def __member_initializer__ [link member_initializer_anchor [^[*member-initializer]]]]
 [def __named_argument_identifier_name__ [link named_argument_identifier_anchor [^[*named-argument-identifier]]]]
 [def __named_parameter_identifier_namespace__ [link named_parameter_identifier_namespace_anchor [^[*named-parameter-identifier-namespace]]]]
-[def __namespace_alias__ [link namespace_alias_anchor [^[*namespace-alias]]]]
 [def __natural_expression__ [link natural_expression_anchor [^[*natural-expression]]]]
 [def __natural_expression_using_inscope_variables__ [link natural_expression_using_inscope_variables_anchor [^[*natural-expression-using-inscope-variables]]]]
 [def __new_type_name__ [link new_type_name_anchor [^[*new-type-name]]]]
@@ -94,7 +95,6 @@
 [def __type__ [link type_anchor [^[*type]]]]
 [def __typedef_type__ [link typedef_type_anchor [^[*typedef-type]]]]
 [def __unary_boolean_metafunction__ [link unary_boolean_metafunction_anchor [^[*unary-boolean-metafunction]]]]
-[def __using_directive__ [link using_directive_anchor [^[*using-directive]]]]
 [def __variable_name__ [link variable_name_anchor [^[*variable-name]]]]
 [def __attributes__ [link attributes_anchor [^[*attributes]]]]
 
@@ -378,7 +378,7 @@ Note that when specified, `virtual` must appear after the inheritance access lev
             void ``/|/`` bool ``/|/`` char ``/|/`` char16_t ``/|/`` char32_t ``/|/`` double ``/|/`` float ``/|/`` int ``/|/`` wchar_t``/}+/``
             
     __auto_type__``/:/ [#auto_type_anchor]``
-            __wrapped_type__ ``/|/`` auto
+            auto ``/|/`` __wrapped_type__
 
 This is the syntax used to specify types of different entities such as the function return type, the function parameter types, the types of value template parameters, etc.
 The usual constraints of C++ for qualified fundamental type apply (it invalid to specify `int int`, `long int long`, `unsigned void`, etc).
@@ -482,9 +482,10 @@ Similarly, the parenthesis and alphanumeric identifier are optional for the `new
             ``/[/``__function_parameter__``/, .../````/]/`` ``/[/``...``/]/`` ``/|/`` void
     
     __function_parameter__``/:/ [#function_parameter_anchor]``
-            ``/[/``auto ``/|/`` register``/]/`` __wrapped_type__ ``/[/``__parameter_name__``/]/``
+            ``/[/``auto ``/|/`` register``/]/`` ``/{/``__wrapped_type__ ``/[/``__parameter_name__``/]/`` ``/|/`` __type__``/}/``
             ``/[/``, default __default_argument__``/]/``
 
+The parenthesis around the parameter type are always allowed but when the parameter name is not specified they are necessary only if the type contains unwrapped commas.
 
 This syntax allows to specify variadic functions as usual in C++ using ellipses `...` at the end of the parameter list.
 
@@ -504,9 +505,9 @@ If present, default parameters must be specified at the end of the parameter lis
 [section Reference Qualifiers]
 
     __ref_qualifiers__``/:/ [#ref_qualifiers_anchor]``
-            ``/[/``ref ``/|/ ``refref``/]/``
+            ``/[/``ref ``/[/``fef``/]/````/]/``
 
-Member functions are qualified as lvalue references using `ref` (instead of C++11 usual `&`) and as rvalue references using `refref` (instead of C++11 usual `&&`).
+Member functions are qualified as lvalue references using `ref` (instead of C++11 usual `&`) and as rvalue references using `ref ref` (instead of C++11 usual `&&`).
 
 [endsect]
 
@@ -528,24 +529,52 @@ Exception specifications apply only to exceptions thrown by the function body an
 
 [section Assertions]
 
+    __assertions__``/:/``
+            ``/[/``__assertion__``[', ...[,\]]````/]/``                                                   // An optional ending comma `,` always allowed (like in C++ enumeration declarations).
+            
     __assertion__``/:/``
+            __alias__ ``/|/``
+
+            __auto_type__ __new_name__ = return ``/|/``                                         // Return value declarations allowed only in postconditions.
+            __auto_type__ __new_name__ = CONTRACT_OLDOF __oldof_expression__ ``/|/``                // Old value declarations allowed only in postconditions.
+
             __boolean_condition__ ``/|/``
+            
             __select_assertion__ ``/|/``
             __static_select_assertion__
 
     __boolean_condition__``/:/``
             __boolean_expression__ ``/|/``
-            const( ``/[/``__capture__, ...``/]/`` ) __capture_boolean_expression__
+            const( ``/[/````/[/``__wrapped_type__``/]/`` __capture__``/, .../````/]/`` ) __capture_boolean_expression__
     
     __select_assertion__``/:/``
-            if(__boolean_condition__) ``/{/``( ``/[/``__assertion__, ...``/]/`` ) ``/|/`` ``/[/``__assertion__,``/]/````/}/``
-            ``/[/``else ``/{/``( ``/[/``__assertion__, ...``/]/`` ) ``/|/`` ``/[/``__assertion__,``/]/````/}/````/]/``
-            ``/[/``,``/]/``
-    
+            if(__boolean_condition__) ``/{/``( __assertions__ ) ``/|/`` ``/[/``__assertion__``/]/``,``/}/``
+            ``/[/``else ``/{/``( __assertions__ ) ``/|/`` ``/[/``__assertion__``/]/``,``/}/````/]/``
+            ``/[/``__assertion__``/]/``                                                            // This makes comma `,` after select assertion always optional.
+
     __static_select_assertion__``/:/``
-            static if(__boolean_condition__) ``/{/``( ``/[/``__assertion__, ...``/]/`` ) ``/|/`` ``/[/``__assertion__,``/]/````/}/``
-            ``/[/``else ``/{/``( ``/[/``__assertion__, ...``/]/`` ) ``/|/`` ``/[/``__assertion__,``/]/````/}/````/]/``
-            ``/[/``,``/]/``
+            static if(__constant_boolean_expression__) ``/{/``( __assertions__ ) ``/|/`` ``/[/``__assertion__``/]/``,``/}/``
+            ``/[/``else ``/{/``( __assertions__ ) ``/|/`` ``/[/``__assertion__``/]/``,``/}/````/]/``
+            ``/[/``__assertion__``/]/``                                                            // This makes comma `,` after select assertion always optional.
+    
+    __alias__``/:/ [#alias_anchor]``
+            __namespace_alias__ ``/|/`` __using_directive__ ``/|/`` __using_declaration__ ``/|/`` __using_alias__ ``/|/`` __typedef_declaration__
+
+    __namespace_alias__``/:/``
+            namespace (__new_name__) as __name__
+
+    __using_directive__``/:/``
+            using namespace __name__
+    
+    __using_declaration__``/:/``
+            using {``/[/``typename``/]/`` __name__ ``/|/`` (``/[/``typename``/]/`` __name__)}
+
+    __using_alias__``/:/``
+            ``/[/``template( ``/[/``__cxx_template_parameter__, ...``/]/`` )``/]/``
+            using (__new_name__) as {__type__ | (__type__)}
+
+    __typedef_declaration__``/:/``
+            typedef __wrapped_type__ __new_name__
 
 Parenthesis around __boolean_expression__ are always allowed here but they are actually required only when __boolean_expression__ starts with a non-alphanumeric symbol (e.g., `(!vector.empty())`) or it contains unwrapped commas `,`.
 Parenthesis around __capture_boolean_expression__ are always allowed but they are actually required only when __capture_boolean_expression__ contains unwrapped commas `,`.

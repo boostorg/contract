@@ -1,8 +1,7 @@
 
 import os ;
 
-if ! [ os.environ BOOST_ROOT ]
-{
+if ! [ os.environ BOOST_ROOT ] {
     exit "Error: Set BOOST_ROOT environment variable to Boost root directory" ;
 }
 local BOOST_ROOT = [ os.environ BOOST_ROOT ] ;
@@ -21,11 +20,12 @@ project
 
 echo """
 EXAMPLES
-    Parse specified file using to bin/.../<file-stem>-pp.ii:
+    Pre-process specified file to bin/.../<file-stem>-pp.ii using compiler:
     $ bjam [-aq] <file-stem>-pp [cxxflags=-UDEBUG] [toolset=msvc|gcc|clang]
 
-    Parse specified file to ./pp.cpp (and ./pp.dbg, see also <root>/wave.cfg):
-    $ wave <file-name>
+    Pre-process specified file to bin/.../<file-stem>-wave.ii using WAVE:
+    $ bjam [-aq] <file-stem>-wave
+    (Edit wave.cfg for -UDEBUG, lib paths, etc.)
 
     Compile and run program <file-stem>.cpp:
     $ bjam [-aq] <file-stem> [toolset=msvc,gcc,clang]
