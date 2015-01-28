@@ -108,7 +108,6 @@ entries = [
             'extends',
             'verbatim',
             'ref',
-            'refref',
             'as'
         ]
     }
@@ -125,8 +124,7 @@ for entry in entries:
         path = os.path.join(directory, filename)
         file = open(path, 'w')
 
-        file.write(
-'''
+        file.write('''
 #ifndef BOOST_CONTRACT_EXT_PP_KEYWORD_{1}_HPP_
 #define BOOST_CONTRACT_EXT_PP_KEYWORD_{1}_HPP_
 

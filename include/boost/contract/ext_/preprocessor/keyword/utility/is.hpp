@@ -8,6 +8,9 @@
 #include <boost/preprocessor/tuple/eat.hpp>
 #include <boost/preprocessor/variadic/size.hpp>
 
+// TODO: Make IS return false if tokens are EMPTY() -- use BOOST_PP_IS_EMPTY
+// directly to be tested *after* HAS_PAREN (so it's safe).
+
 /* PRIVATE */
 
 #define BOOST_CONTRACT_EXT_PP_KEYWORD_UTILITY_IS_1 0
