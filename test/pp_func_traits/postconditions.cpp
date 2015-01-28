@@ -6,22 +6,22 @@
 
 #include <boost/contract/ext_/preprocessor/traits/func/aux_/index.hpp>
 #define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_AUX_INDEX_TEST \
-    BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_AUX_POSTCONDITION_INDEX
+    BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_AUX_POSTCONDITIONS_INDEX
 
 #include "../aux_/pp_traits.hpp"
 #include <boost/contract/oldof.hpp>
 #include <boost/contract/ext_/preprocessor/traits/func.hpp>
 #include <boost/preprocessor/facilities/empty.hpp>
 
-#define BOOST_CONTRACT_TEST_(postcondition_) \
+#define BOOST_CONTRACT_TEST_(postconditions) \
     BOOST_CONTRACT_TEST_AUX_PP_TRAITS( \
-        BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_POSTCONDITION, \
+        BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_POSTCONDITIONS, \
         BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_PARSE_D, \
         (std::map<int, char>&) (f) ( int x, (std::map<int, char>&) y ) \
                 throw(int, double) override final, \
-        postcondition_, \
+        postconditions, \
         remove_this_trailing_stuff, \
-        postcondition_ \
+        postconditions \
     )
 
 #define Z(z) BOOST_PP_EXPAND(BOOST_CONTRACT_EXT_PP_IS_EMPTY z)
