@@ -1,6 +1,6 @@
 
 #ifndef BOOST_CONTRACT_EXT_PP_CAPTURE_TRAITS_TYPE_HPP_
-#define BOOST_CONTRACT_EXT_PP__TRAITS_TYPE_HPP_
+#define BOOST_CONTRACT_EXT_PP_CAPTURE_TRAITS_TYPE_HPP_
 
 // TODO: Fix all #include for all files.
 #include <boost/contract/ext_/preprocessor/traits/capture/aux_/index.hpp>

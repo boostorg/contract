@@ -27,5 +27,5 @@ test-pp ref ;
 test-pp except ;
 test-pp trailing_return ;
 test-pp virt ;
-test-pp postconditions ;
+#test-pp postconditions ;
 
