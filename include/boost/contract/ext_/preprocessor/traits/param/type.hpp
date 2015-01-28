@@ -4,19 +4,15 @@
 
 #include <boost/contract/ext_/preprocessor/traits/param/aux_/index.hpp>
 #include <boost/contract/ext_/preprocessor/traits/utility/type.hpp>
-#include <boost/contract/ext_/preprocessor/traits/adt.hpp>
+#include <boost/contract/ext_/preprocessor/traits/utility/traits.hpp>
 #include <boost/contract/ext_/preprocessor/keyword/typename.hpp>
 #include <boost/contract/ext_/preprocessor/keyword/class.hpp>
 #include <boost/contract/ext_/preprocessor/keyword/template.hpp>
-#include <boost/contract/ext_/preprocessor/utility/expand.hpp>
 #include <boost/preprocessor/tuple/eat.hpp>
 #include <boost/preprocessor/tuple/rem.hpp>
 #include <boost/preprocessor/control/iif.hpp>
 #include <boost/preprocessor/control/expr_iif.hpp>
 #include <boost/preprocessor/facilities/empty.hpp>
-
-// NOTE: This file contains macros for the type (or "kind") of both function
-// formal parameters and template parameters.
 
 /* PRIVATE */
 
@@ -67,14 +63,36 @@
         BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK(traits, typename) \
     )
             
-#define BOOST_CONTRACT_EXT_PP_PARAM_TRAITS_TYPE_(decl_type, traits) \
+#define BOOST_CONTRACT_EXT_PP_PARAM_TRAITS_TYPE_PARSED_(decl_type, traits) \
     ( \
         BOOST_PP_TUPLE_ELEM(2, 0, decl_type), \
         BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK(traits, \
                 BOOST_PP_TUPLE_ELEM(2, 1, decl_type)) \
     )
 
-// Precondition: decl = `wrapped-type`.
+// Precondition: Unable to parse type so assume decl = `type NIL` (i.e., the
+// non-keyword type was specified unwrapped). That is allowed only when no
+// parameter name is given so all tokens in decl are for the type and remaining
+// decl is set to NIL here (which will be parsed as no parameter name).
+#define BOOST_CONTRACT_EXT_PP_PARAM_TRAITS_TYPE_NOT_PARSED_(decl_type, traits) \
+    ( \
+        BOOST_PP_NIL, \
+        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK( \
+            traits, \
+            BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK( \
+                    BOOST_PP_TUPLE_ELEM(2, 0, decl_type)) \
+        ) \
+    )
+
+#define BOOST_CONTRACT_EXT_PP_PARAM_TRAITS_TYPE_(decl_type, traits) \
+    BOOST_PP_IIF(BOOST_PP_EXPAND(BOOST_CONTRACT_EXT_PP_IS_EMPTY \
+            BOOST_PP_TUPLE_ELEM(2, 1, decl_type)), \
+        BOOST_CONTRACT_EXT_PP_PARAM_TRAITS_TYPE_NOT_PARSED_ \
+    , \
+        BOOST_CONTRACT_EXT_PP_PARAM_TRAITS_TYPE_PARSED_ \
+    )(decl_type, traits)
+
+// Precondition: decl = `wrapped-type ... | type`.
 #define BOOST_CONTRACT_EXT_PP_PARAM_TRAITS_TYPE_PARSE_ARGS_(d, decl, traits) \
     BOOST_CONTRACT_EXT_PP_PARAM_TRAITS_TYPE_( \
             BOOST_CONTRACT_EXT_PP_TRAITS_TYPE_PARSE_D(d, decl), traits)

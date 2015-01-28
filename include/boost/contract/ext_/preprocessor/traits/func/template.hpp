@@ -4,7 +4,7 @@
 
 #include <boost/contract/ext_/preprocessor/traits/func/aux_/index.hpp>
 #include <boost/contract/ext_/preprocessor/traits/params.hpp>
-#include <boost/contract/ext_/preprocessor/traits/adt.hpp>
+#include <boost/contract/ext_/preprocessor/traits/utility/traits.hpp>
 #include <boost/contract/ext_/preprocessor/keyword/template.hpp>
 #include <boost/contract/ext_/preprocessor/variadic/to_seq.hpp>
 #include <boost/contract/ext_/preprocessor/paren/front.hpp>
@@ -15,7 +15,7 @@
 
 /* PRIVATE */
 
-// Level of indirection needed for proper macro expansion (on MSVC).
+// Extra level of indirection needed for proper macro expansion (on MSVC).
 #define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_TEMPLATE_EXPAND_TRAITS_(decl_traits) \
     BOOST_PP_TUPLE_ELEM(2, 1, decl_traits)
 
@@ -45,7 +45,7 @@
     BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_TEMPLATE_(d, \
             BOOST_CONTRACT_EXT_PP_KEYWORD_TEMPLATE_REMOVE_FRONT(decl), traits)
 
-#define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_TEMPLATE_NO_(d, decl, traits) \
+#define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_TEMPLATE_NO_(unused, decl, traits) \
     ( \
         decl, \
         BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK( \

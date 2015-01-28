@@ -4,7 +4,7 @@
 
 #include <boost/contract/ext_/preprocessor/traits/func/aux_/index.hpp>
 #include <boost/contract/ext_/preprocessor/traits/utility/keyword_comb.hpp>
-#include <boost/contract/ext_/preprocessor/traits/adt.hpp>
+#include <boost/contract/ext_/preprocessor/traits/utility/traits.hpp>
 #include <boost/contract/ext_/preprocessor/keyword/const.hpp>
 #include <boost/contract/ext_/preprocessor/keyword/volatile.hpp>
 #include <boost/preprocessor/tuple/elem.hpp>

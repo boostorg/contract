@@ -3,7 +3,7 @@
 #define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_CLASSIFIERS_HPP_
 
 #include <boost/contract/ext_/preprocessor/traits/func/aux_/index.hpp>
-#include <boost/contract/ext_/preprocessor/traits/adt.hpp>
+#include <boost/contract/ext_/preprocessor/traits/utility/traits.hpp>
 #include <boost/contract/ext_/preprocessor/keyword/inline.hpp>
 #include <boost/contract/ext_/preprocessor/keyword/static.hpp>
 #include <boost/contract/ext_/preprocessor/keyword/extern.hpp>
@@ -11,7 +11,6 @@
 #include <boost/contract/ext_/preprocessor/keyword/virtual.hpp>
 #include <boost/contract/ext_/preprocessor/keyword/friend.hpp>
 #include <boost/contract/ext_/preprocessor/keyword/inline.hpp>
-#include <boost/contract/ext_/preprocessor/utility/expand.hpp>
 #include <boost/preprocessor/tuple/elem.hpp>
 #include <boost/preprocessor/tuple/rem.hpp>
 #include <boost/preprocessor/control/while.hpp>
@@ -20,6 +19,7 @@
 #include <boost/preprocessor/logical/bitand.hpp>
 #include <boost/preprocessor/logical/compl.hpp>
 #include <boost/preprocessor/facilities/empty.hpp>
+#include <boost/preprocessor/facilities/expand.hpp>
 
 // Function classifiers `inline static extern explicit virtual friend` can
 // appear in any general order (so they are parsed all together here).
@@ -36,7 +36,7 @@
 
 #define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_CLASSIFIERS_OP_ARGS_(continue_, \
         decl, inline_, static_, extern_, explicit_, virtual_, friend_) \
-    BOOST_CONTRACT_EXT_PP_EXPAND_ONCE( \
+    BOOST_PP_EXPAND( \
         BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_CLASSIFIERS_ \
         BOOST_PP_IIF(BOOST_PP_BITAND(BOOST_PP_COMPL(inline_), \
                 BOOST_CONTRACT_EXT_PP_KEYWORD_IS_INLINE_FRONT(decl)), \
@@ -70,10 +70,8 @@
         
 #define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_CLASSIFIERS_OP_( \
         d, continue_decl_inline_static_extern_explicit_virtual_friend) \
-    BOOST_CONTRACT_EXT_PP_EXPAND_ONCE( \
-        BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_CLASSIFIERS_OP_ARGS_ \
-        continue_decl_inline_static_extern_explicit_virtual_friend \
-    )
+    BOOST_PP_EXPAND(BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_CLASSIFIERS_OP_ARGS_ \
+            continue_decl_inline_static_extern_explicit_virtual_friend)
 
 #define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_CLASSIFIERS_PRED_( \
         d, continue_decl_inline_static_extern_explicit_virtual_friend) \

@@ -1,6 +1,6 @@
 
-#ifndef BOOST_CONTRACT_EXT_PP_TRAITS_ADT_HPP_
-#define BOOST_CONTRACT_EXT_PP_TRAITS_ADT_HPP_
+#ifndef BOOST_CONTRACT_EXT_PP_TRAITS_TRAITS_HPP_
+#define BOOST_CONTRACT_EXT_PP_TRAITS_TRAITS_HPP_
 
 #include <boost/preprocessor/seq/pop_front.hpp>
 #include <boost/preprocessor/seq/elem.hpp>
@@ -8,11 +8,13 @@
 #include <boost/preprocessor/seq/size.hpp>
 #include <boost/preprocessor/arithmetic/dec.hpp>
 
-// TODO: Move this file to utility/traits.hpp.
+// TODO: Consider renaming the directory preprocessor/traits to
+// preprocessor/decl_traits, because these really are function, calss, etc
+// declaration traits (then DECL does not have to be repeated in all macro names
+// for brevity FUNC_TRAITS is enough, instead of FUNC_DECL_TRAITS).
 
 /* PUBLIC */
 
-// Abstract Data Type (ADT) used to represent traits (pp-sequence, etc.).
 // These macros are not usually used by the users (unless they re-implement
 // their own parsing macros).
 

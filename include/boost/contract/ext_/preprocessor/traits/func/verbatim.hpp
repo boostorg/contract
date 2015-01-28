@@ -4,7 +4,7 @@
 
 #include <boost/contract/ext_/preprocessor/traits/func/aux_/index.hpp>
 #include <boost/contract/ext_/preprocessor/traits/utility/keyword_paren.hpp>
-#include <boost/contract/ext_/preprocessor/traits/adt.hpp>
+#include <boost/contract/ext_/preprocessor/traits/utility/traits.hpp>
 #include <boost/contract/ext_/preprocessor/keyword/contract/verbatim.hpp>
 #include <boost/preprocessor/facilities/empty.hpp>
 

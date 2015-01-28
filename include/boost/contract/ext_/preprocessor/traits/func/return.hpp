@@ -4,11 +4,10 @@
 
 #include <boost/contract/ext_/preprocessor/traits/func/aux_/index.hpp>
 #include <boost/contract/ext_/preprocessor/traits/utility/type.hpp>
-#include <boost/contract/ext_/preprocessor/traits/adt.hpp>
+#include <boost/contract/ext_/preprocessor/traits/utility/traits.hpp>
 #include <boost/contract/ext_/preprocessor/keyword/return.hpp>
 #include <boost/contract/ext_/preprocessor/keyword/operator.hpp>
 #include <boost/contract/ext_/preprocessor/paren/has.hpp>
-#include <boost/contract/ext_/preprocessor/utility/expand.hpp>
 #include <boost/preprocessor/tuple/eat.hpp>
 #include <boost/preprocessor/facilities/empty.hpp>
 #include <boost/preprocessor/control/iif.hpp>
@@ -55,7 +54,7 @@
 
 #define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_RETURN_YES_(d, decl, traits) \
     BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_RETURN_( \
-            BOOST_CONTRACT_EXT_PP_TRAITS_TYPE_PARSE_D(d, decl), traits)
+            BOOST_CONTRACT_EXT_PP_TRAITS_AUTO_TYPE_PARSE_D(d, decl), traits)
 
 #define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_RETURN_PARSE_ARGS_(d, decl, traits) \
     BOOST_PP_IIF(BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_HAS_RETURN_(decl), \

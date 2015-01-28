@@ -3,7 +3,7 @@
 #define BOOST_CONTRACT_EXT_PP_PARAMS_TRAITS_HPP_
 
 #include <boost/contract/ext_/preprocessor/traits/param.hpp>
-#include <boost/contract/ext_/preprocessor/traits/adt.hpp>
+#include <boost/contract/ext_/preprocessor/traits/utility/traits.hpp>
 #include <boost/contract/ext_/preprocessor/keyword/default.hpp>
 #include <boost/contract/ext_/preprocessor/keyword/void.hpp>
 #include <boost/contract/ext_/preprocessor/utility/empty.hpp>
@@ -57,8 +57,7 @@
     )(d, decl_seq, traits, param_parse_macro, default_replace_macro)
 
 #define BOOST_CONTRACT_EXT_PP_PARAMS_TRAITS_OP_(d, decl_traits_param_default) \
-    BOOST_CONTRACT_EXT_PP_PARAMS_TRAITS_OP_ARGS_( \
-        d, \
+    BOOST_CONTRACT_EXT_PP_PARAMS_TRAITS_OP_ARGS_(d, \
         BOOST_PP_TUPLE_ELEM(4, 0, decl_traits_param_default), \
         BOOST_PP_TUPLE_ELEM(4, 1, decl_traits_param_default), \
         BOOST_PP_TUPLE_ELEM(4, 2, decl_traits_param_default), \
@@ -67,8 +66,8 @@
 
 #define BOOST_CONTRACT_EXT_PP_PARAMS_TRAITS_PRED_( \
         d, decl_traits_param_default) \
-    BOOST_PP_NOT_EQUAL(BOOST_PP_SEQ_SIZE(BOOST_PP_TUPLE_ELEM(4, 0, \
-            decl_traits_param_default)), 1)
+    BOOST_PP_NOT_EQUAL(BOOST_PP_SEQ_SIZE(BOOST_PP_TUPLE_ELEM( \
+            4, 0, decl_traits_param_default)), 1)
     
 // Trailing EMPTY to traits to handle EMPTY() parameters.
 #define BOOST_CONTRACT_EXT_PP_PARAMS_TRAITS_RETURN_(decl_traits_param_default) \
@@ -120,6 +119,19 @@
     BOOST_CONTRACT_EXT_PP_PARAM_TRAITS_DEFAULT_REPLACE_PARSE(decl_traits)
 
 /* PUBLIC */
+
+// TODO: Assuming all assertions can be parsed at once, then params, assertions,
+// etc. (all "collections") can be parsed efficiently also accepting them
+// as variadic tuples (,,,) instead of sequence and that would be preferred
+// because that is how they are specified in decl in the first place. Therefore,
+// if that is the case, change params, assertions, etc. APIs to take decl as
+// variadic tuples (,,,) instead of pp-seq ()().
+// Also, it that is the case, the params, assertions, etc. internal alg can
+// use SEQ_FOLD_LEFT_s instead of WHILE_d (but maybe we can leave the alg to
+// use WHILE_d because more generic in case the alg need to change their
+// exit condition PRED in the future and because code using these traits
+// macros will instead probably use SEQ_FOLD_LEFT_s and so we can leave all
+// s iteration values to the user while internal alg use d iteration values).
 
 // Expand decl_seq = `(param1)...(param-n)` to pp-seq of parameter traits,
 // otherwise expand decl_seq = `EMPTY() | (void)` to EMPTY().

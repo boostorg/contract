@@ -3,11 +3,12 @@
 #define BOOST_CONTRACT_EXT_PP_PARAM_TRAITS_DEFAULT_HPP_
 
 #include <boost/contract/ext_/preprocessor/traits/param/aux_/index.hpp>
-#include <boost/contract/ext_/preprocessor/traits/adt.hpp>
+#include <boost/contract/ext_/preprocessor/traits/utility/traits.hpp>
 #include <boost/contract/ext_/preprocessor/keyword/default.hpp>
 #include <boost/preprocessor/tuple/eat.hpp>
 #include <boost/preprocessor/control/iif.hpp>
 #include <boost/preprocessor/facilities/empty.hpp>
+#include <boost/preprocessor/facilities/expand.hpp>
 
 /* PRIVATE */
 
@@ -34,6 +35,10 @@
 
 /* PUBLIC */
 
+// TODO: For consistency with all other PARSE macros, and REPLACE_PARSE below,
+// this should be called EMPTY_DEFAULT_PARSE, and the one below
+// REPLACE_DEFAULT_PARSE.
+
 // Init. default argument to EMPTY without altering decl.
 #define BOOST_CONTRACT_EXT_PP_PARAM_TRAITS_DEFAULT_PARSE_EMPTY(decl_traits) \
     ( \
@@ -45,7 +50,7 @@
 // Replace previously init. default argument with what's parsed from decl.
 // Precondition: decl = `default ...`.
 #define BOOST_CONTRACT_EXT_PP_PARAM_TRAITS_DEFAULT_REPLACE_PARSE(decl_traits) \
-    BOOST_CONTRACT_EXT_PP_EXPAND_ONCE( \
+    BOOST_PP_EXPAND( \
         BOOST_CONTRACT_EXT_PP_PARAM_TRAITS_DEFAULT_REPLACE_PARSE_ARGS_ \
         decl_traits \
     )

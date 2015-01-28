@@ -2,7 +2,7 @@
 #ifndef BOOST_CONTRACT_EXT_PP_TRAITS_TYPE_HPP_
 #define BOOST_CONTRACT_EXT_PP_TRAITS_TYPE_HPP_
 
-#include <boost/contract/ext_/preprocessor/traits/adt.hpp>
+#include <boost/contract/ext_/preprocessor/traits/utility/traits.hpp>
 #include <boost/contract/ext_/preprocessor/keyword/auto.hpp>
 #include <boost/contract/ext_/preprocessor/keyword/register.hpp>
 #include <boost/contract/ext_/preprocessor/keyword/const.hpp>
@@ -30,6 +30,7 @@
 #include <boost/preprocessor/tuple/elem.hpp>
 #include <boost/preprocessor/tuple/eat.hpp>
 #include <boost/preprocessor/facilities/empty.hpp>
+#include <boost/preprocessor/facilities/expand.hpp>
 
 /* PRIVATE */
 
@@ -68,13 +69,15 @@
     
 #define BOOST_CONTRACT_EXT_PP_TRAITS_TYPE_KEYWORD_INVOKE_( \
         d, decl, type, push_back_macro, invoke_trait_remove) \
-    BOOST_PP_TUPLE_ELEM(3, 0, invoke_trait_remove)( \
-        d, \
-        decl, \
-        type, \
-        push_back_macro, \
-        BOOST_PP_TUPLE_ELEM(3, 1, invoke_trait_remove), \
-        BOOST_PP_TUPLE_ELEM(3, 2, invoke_trait_remove) \
+    BOOST_PP_EXPAND( \
+        BOOST_PP_TUPLE_ELEM(3, 0, invoke_trait_remove)( \
+            d, \
+            decl, \
+            type, \
+            push_back_macro, \
+            BOOST_PP_TUPLE_ELEM(3, 1, invoke_trait_remove), \
+            BOOST_PP_TUPLE_ELEM(3, 2, invoke_trait_remove) \
+        ) \
     )
 
 #define BOOST_CONTRACT_EXT_PP_TRAITS_TYPE_KEYWORD_OP_ARGS_( \
@@ -197,7 +200,7 @@
 // handle commas by algorithms in common with spaced type traits).
 // Implementation: Always return `(())` (double paren seq with 1 empty elem) in
 // case no type was parsed.
-#define BOOST_CONTRACT_EXT_PP_TRAITS_TYPE_SEQ_RETURN_( \
+#define BOOST_CONTRACT_EXT_PP_TRAITS_TYPE_SEQ_RETURN_ARGS_( \
         decl, type) \
     ( \
         decl, \
@@ -207,23 +210,44 @@
         BOOST_PP_TUPLE_REM_CTOR(1, type) \
     )
 
+// Extra level of indirection needed for proper macro expansion (on MSVC).
+#define BOOST_CONTRACT_EXT_PP_TRAITS_TYPE_SEQ_RETURN_(decl_type) \
+    BOOST_PP_EXPAND(BOOST_CONTRACT_EXT_PP_TRAITS_TYPE_SEQ_RETURN_ARGS_ \
+            decl_type)
+
+// Precondition: decl = `auto ...`.
+#define BOOST_CONTRACT_EXT_PP_TRAITS_AUTO_TYPE_(unused, decl) \
+    (BOOST_CONTRACT_EXT_PP_KEYWORD_AUTO_REMOVE_FRONT(decl), auto)
+
 /* PUBLIC */
 
-// Expand decl = `[type | (type)] ...` to `(..., (type) | ())`.
+// Expand decl = `[type | (type)] ...` (type can also be `void`) to
+// `(..., (type) | ())`.
 // For example, `int const ...` to `(..., (int const))`.
 // Precondition: `...` in decl cannot be EMPTY() (so expanded 2-tuple is valid).
 #define BOOST_CONTRACT_EXT_PP_TRAITS_TYPE_PARSE_D(d, decl) \
     BOOST_CONTRACT_EXT_PP_TRAITS_TYPE_D_(d, decl, \
             BOOST_CONTRACT_EXT_PP_TRAITS_TYPE_SPACED_PUSH_BACK_)
 
-// Expand decl = `[type | (type)] ...` to
+// Expand decl = `[auto | type | (type)] ...` (type can also be `void`) to
+// `(..., auto | (type) | ())` (note that auto is not wrapped in parenthesis).
+// For example, `auto ...` to `(..., auto)`.
+// Precondition: `...` in decl cannot be EMPTY() (so expanded 2-tuple is valid).
+// NOTE: So far, there is no need of a SEQ version of this macro.
+#define BOOST_CONTRACT_EXT_PP_TRAITS_AUTO_TYPE_PARSE_D(d, decl) \
+    BOOST_PP_IIF(BOOST_CONTRACT_EXT_PP_KEYWORD_IS_AUTO_FRONT(decl), \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUTO_TYPE_ \
+    , \
+        BOOST_CONTRACT_EXT_PP_TRAITS_TYPE_PARSE_D \
+    )(d, decl)
+
+// Expand decl = `[type | (type)] ...` (type can also be `void`) to
 // `(..., ((keyword1))...((keyword-n)) | (()))`.
 // For example, `int const ...` to `(..., ((int)) ((const)))` (useful to access
 // single type keywords `int`, `const`, etc.).
 // Precondition: `...` in decl cannot be EMPTY() (so expanded 2-tuple is valid).
 #define BOOST_CONTRACT_EXT_PP_TRAITS_TYPE_SEQ_PARSE_D(d, decl) \
-    BOOST_CONTRACT_EXT_PP_EXPAND_ONCE( \
-        BOOST_CONTRACT_EXT_PP_TRAITS_TYPE_SEQ_RETURN_ \
+    BOOST_CONTRACT_EXT_PP_TRAITS_TYPE_SEQ_RETURN_( \
         BOOST_CONTRACT_EXT_PP_TRAITS_TYPE_D_(d, decl, \
                 BOOST_CONTRACT_EXT_PP_TRAITS_TYPE_SEQ_PUSH_BACK_) \
     )

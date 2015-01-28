@@ -4,9 +4,8 @@
 
 #include <boost/contract/ext_/preprocessor/traits/func/aux_/index.hpp>
 #include <boost/contract/ext_/preprocessor/traits/utility/keyword.hpp>
-#include <boost/contract/ext_/preprocessor/traits/adt.hpp>
+#include <boost/contract/ext_/preprocessor/traits/utility/traits.hpp>
 #include <boost/contract/ext_/preprocessor/keyword/export.hpp>
-#include <boost/contract/ext_/preprocessor/utility/expand.hpp>
 #include <boost/preprocessor/facilities/empty.hpp>
 
 // NOTE: The `export` keyword for templates was deprecated in C++11 but it is

@@ -4,7 +4,7 @@
 
 #include <boost/contract/ext_/preprocessor/traits/func/aux_/index.hpp>
 #include <boost/contract/ext_/preprocessor/traits/params.hpp>
-#include <boost/contract/ext_/preprocessor/traits/adt.hpp>
+#include <boost/contract/ext_/preprocessor/traits/utility/traits.hpp>
 #include <boost/contract/ext_/preprocessor/variadic/to_seq.hpp>
 #include <boost/contract/ext_/preprocessor/paren/front.hpp>
 #include <boost/preprocessor/tuple/eat.hpp>
@@ -12,15 +12,14 @@
 
 /* PRIVATE */
             
-// Level of indirection needed for proper macro expansion (on MSVC).
+// Extra level of indirection needed for proper macro expansion (on MSVC).
 #define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_PARAMS_EXPAND_TRAITS_(decl_traits) \
     BOOST_PP_TUPLE_ELEM(2, 1, decl_traits)
 
 // Precondition: decl = `(,,,) ...`.
 #define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_PARAMS_PARSE_ARGS_(d, decl, traits) \
     ( \
-        BOOST_PP_TUPLE_EAT(0) decl \
-    , \
+        BOOST_PP_TUPLE_EAT(0) decl, \
         BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK( \
             traits, \
             BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_PARAMS_EXPAND_TRAITS_( \

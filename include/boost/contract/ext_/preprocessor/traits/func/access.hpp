@@ -4,7 +4,7 @@
 
 #include <boost/contract/ext_/preprocessor/traits/func/aux_/index.hpp>
 #include <boost/contract/ext_/preprocessor/traits/utility/keyword.hpp>
-#include <boost/contract/ext_/preprocessor/traits/adt.hpp>
+#include <boost/contract/ext_/preprocessor/traits/utility/traits.hpp>
 #include <boost/contract/ext_/preprocessor/keyword/public.hpp>
 #include <boost/contract/ext_/preprocessor/keyword/protected.hpp>
 #include <boost/contract/ext_/preprocessor/keyword/private.hpp>

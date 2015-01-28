@@ -2,13 +2,13 @@
 #ifndef BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_EXCEPT_HPP_
 #define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_EXCEPT_HPP_
 
-#include <boost/contract/ext_/preprocessor/traits/adt.hpp>
 #include <boost/contract/ext_/preprocessor/traits/utility/keyword_paren.hpp>
+#include <boost/contract/ext_/preprocessor/traits/utility/traits.hpp>
 #include <boost/contract/ext_/preprocessor/keyword/noexcept.hpp>
 #include <boost/contract/ext_/preprocessor/keyword/throw.hpp>
-#include <boost/contract/ext_/preprocessor/utility/expand.hpp>
 #include <boost/preprocessor/control/iif.hpp>
 #include <boost/preprocessor/facilities/empty.hpp>
+#include <boost/preprocessor/facilities/expand.hpp>
 
 /* PRIVATE */
 
@@ -59,8 +59,8 @@
 /* PUBLIC */
 
 #define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_EXCEPT_PARSE(decl_traits) \
-    BOOST_CONTRACT_EXT_PP_EXPAND_ONCE( \
-            BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_EXCEPT_PARSE_ARGS_ decl_traits)
+    BOOST_PP_EXPAND(BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_EXCEPT_PARSE_ARGS_ \
+            decl_traits)
 
 // Expand to `noexcept | noexcept(,,,) | throw(,,,) | EMPTY()`.
 #define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_EXCEPT(traits) \

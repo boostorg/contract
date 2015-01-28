@@ -4,13 +4,12 @@
 
 #include <boost/contract/ext_/preprocessor/traits/func/aux_/index.hpp>
 #include <boost/contract/ext_/preprocessor/traits/utility/type.hpp>
-#include <boost/contract/ext_/preprocessor/traits/adt.hpp>
+#include <boost/contract/ext_/preprocessor/traits/utility/traits.hpp>
 #include <boost/contract/ext_/preprocessor/keyword/operator.hpp>
 #include <boost/contract/ext_/preprocessor/keyword/new.hpp>
 #include <boost/contract/ext_/preprocessor/keyword/delete.hpp>
 #include <boost/contract/ext_/preprocessor/paren/front.hpp>
 #include <boost/contract/ext_/preprocessor/paren/has.hpp>
-#include <boost/contract/ext_/preprocessor/utility/expand.hpp>
 #include <boost/preprocessor/seq/cat.hpp>
 #include <boost/preprocessor/seq/for_each.hpp>
 #include <boost/preprocessor/tuple/eat.hpp>

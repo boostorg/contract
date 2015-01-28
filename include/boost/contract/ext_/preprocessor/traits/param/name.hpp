@@ -3,7 +3,7 @@
 #define BOOST_CONTRACT_EXT_PP_PARAM_TRAITS_NAME_HPP_
 
 #include <boost/contract/ext_/preprocessor/traits/param/aux_/index.hpp>
-#include <boost/contract/ext_/preprocessor/traits/adt.hpp>
+#include <boost/contract/ext_/preprocessor/traits/utility/traits.hpp>
 
 /* PUBLIC */
 
