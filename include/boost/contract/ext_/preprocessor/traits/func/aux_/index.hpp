@@ -2,6 +2,9 @@
 #ifndef BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_AUX_INDEX_HPP_
 #define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_AUX_INDEX_HPP_
 
+// TODO: It is confusing to have all these many aux_ subdirs... move all those
+// into a single traits/aux_/ as traits/aux_/func_index.hpp, etc.
+
 // WARNING: These indexes must match order traits are parsed (see func.hpp).
 
 #define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_AUX_ACCESS_INDEX          0

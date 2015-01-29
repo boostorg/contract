@@ -25,8 +25,13 @@ def data(size):
 #define BOOST_CONTRACT_EXT_PP_ISWITCH{0}_NO_(cond, case1, op1, {2}) \\
     BOOST_CONTRACT_EXT_PP_ISWITCH{1}(cond, {2})
 
+#define BOOST_CONTRACT_EXT_PP_ISWITCH{0}_EXPAND_ONCE_(x) x
+
+#define BOOST_CONTRACT_EXT_PP_ISWITCH{0}_EXPAND_(x) \\
+    BOOST_CONTRACT_EXT_PP_ISWITCH{0}_EXPAND_ONCE_(x)
+
 #define BOOST_CONTRACT_EXT_PP_ISWITCH{0}(cond, case1, op1, {2}) \\
-    BOOST_PP_EXPAND(BOOST_PP_IIF(case1 cond, \\
+    BOOST_CONTRACT_EXT_PP_ISWITCH{0}_EXPAND_(BOOST_PP_IIF(case1 cond, \\
         BOOST_CONTRACT_EXT_PP_ISWITCH{0}_YES_ \\
     , \\
         BOOST_CONTRACT_EXT_PP_ISWITCH{0}_NO_ \\
@@ -89,8 +94,11 @@ file.write('''
 #include <boost/preprocessor/config/config.hpp>
 #if BOOST_PP_VARIADICS
 #   include <boost/preprocessor/facilities/overload.hpp>
+#   define BOOST_CONTRACT_EXT_PP_ISWITCH_EXPAND_ONCE_(x) x
+#   define BOOST_CONTRACT_EXT_PP_ISWITCH_EXPAND_(x) \\
+        BOOST_CONTRACT_EXT_PP_ISWITCH_EXPAND_ONCE_(x)
 #   define BOOST_CONTRACT_EXT_PP_ISWITCH(...) \\
-        BOOST_PP_EXPAND( \\
+        BOOST_CONTRACT_EXT_PP_ISWITCH_EXPAND_( \\
             BOOST_PP_OVERLOAD(BOOST_CONTRACT_EXT_PP_ISWITCH_, __VA_ARGS__) \\
             (__VA_ARGS__) \\
         )
@@ -98,12 +106,20 @@ file.write('''
 
 /* ISWITCH1 */
 
-#define BOOST_CONTRACT_EXT_PP_ISWITCH1(cond, case1, op1, default_, data) \\
-    BOOST_PP_EXPAND(BOOST_PP_IIF(case1 cond, \\
+#define BOOST_CONTRACT_EXT_PP_ISWITCH1_EXPAND_ONCE_(x) x
+
+#define BOOST_CONTRACT_EXT_PP_ISWITCH1_EXPAND_(x) \\
+    BOOST_CONTRACT_EXT_PP_ISWITCH1_EXPAND_ONCE_(x)
+
+#define BOOST_CONTRACT_EXT_PP_ISWITCH1_I(cond, case1, op1, default_, data) \\
+    BOOST_CONTRACT_EXT_PP_ISWITCH1_EXPAND_(BOOST_PP_IIF(case1 cond, \\
         op1 \\
     , \\
         default_ \\
     ) data)
+
+#define BOOST_CONTRACT_EXT_PP_ISWITCH1(cond, case1, op1, default_, data) \\
+    BOOST_CONTRACT_EXT_PP_ISWITCH1_I(cond, case1, op1, default_, data)
 
 #define BOOST_CONTRACT_EXT_PP_ISWITCH_5 BOOST_CONTRACT_EXT_PP_ISWITCH1
 {2}

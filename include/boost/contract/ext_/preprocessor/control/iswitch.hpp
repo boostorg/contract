@@ -42,8 +42,11 @@
 #include <boost/preprocessor/config/config.hpp>
 #if BOOST_PP_VARIADICS
 #   include <boost/preprocessor/facilities/overload.hpp>
+#   define BOOST_CONTRACT_EXT_PP_ISWITCH_EXPAND_ONCE_(x) x
+#   define BOOST_CONTRACT_EXT_PP_ISWITCH_EXPAND_(x) \
+        BOOST_CONTRACT_EXT_PP_ISWITCH_EXPAND_ONCE_(x)
 #   define BOOST_CONTRACT_EXT_PP_ISWITCH(...) \
-        BOOST_PP_EXPAND( \
+        BOOST_CONTRACT_EXT_PP_ISWITCH_EXPAND_( \
             BOOST_PP_OVERLOAD(BOOST_CONTRACT_EXT_PP_ISWITCH_, __VA_ARGS__) \
             (__VA_ARGS__) \
         )
@@ -51,12 +54,20 @@
 
 /* ISWITCH1 */
 
-#define BOOST_CONTRACT_EXT_PP_ISWITCH1(cond, case1, op1, default_, data) \
-    BOOST_PP_EXPAND(BOOST_PP_IIF(case1 cond, \
+#define BOOST_CONTRACT_EXT_PP_ISWITCH1_EXPAND_ONCE_(x) x
+
+#define BOOST_CONTRACT_EXT_PP_ISWITCH1_EXPAND_(x) \
+    BOOST_CONTRACT_EXT_PP_ISWITCH1_EXPAND_ONCE_(x)
+
+#define BOOST_CONTRACT_EXT_PP_ISWITCH1_I(cond, case1, op1, default_, data) \
+    BOOST_CONTRACT_EXT_PP_ISWITCH1_EXPAND_(BOOST_PP_IIF(case1 cond, \
         op1 \
     , \
         default_ \
     ) data)
+
+#define BOOST_CONTRACT_EXT_PP_ISWITCH1(cond, case1, op1, default_, data) \
+    BOOST_CONTRACT_EXT_PP_ISWITCH1_I(cond, case1, op1, default_, data)
 
 #define BOOST_CONTRACT_EXT_PP_ISWITCH_5 BOOST_CONTRACT_EXT_PP_ISWITCH1
 
@@ -67,8 +78,13 @@
 #define BOOST_CONTRACT_EXT_PP_ISWITCH2_NO_(cond, case1, op1, case2, op2, default_, data) \
     BOOST_CONTRACT_EXT_PP_ISWITCH1(cond, case2, op2, default_, data)
 
+#define BOOST_CONTRACT_EXT_PP_ISWITCH2_EXPAND_ONCE_(x) x
+
+#define BOOST_CONTRACT_EXT_PP_ISWITCH2_EXPAND_(x) \
+    BOOST_CONTRACT_EXT_PP_ISWITCH2_EXPAND_ONCE_(x)
+
 #define BOOST_CONTRACT_EXT_PP_ISWITCH2(cond, case1, op1, case2, op2, default_, data) \
-    BOOST_PP_EXPAND(BOOST_PP_IIF(case1 cond, \
+    BOOST_CONTRACT_EXT_PP_ISWITCH2_EXPAND_(BOOST_PP_IIF(case1 cond, \
         BOOST_CONTRACT_EXT_PP_ISWITCH2_YES_ \
     , \
         BOOST_CONTRACT_EXT_PP_ISWITCH2_NO_ \
@@ -83,8 +99,13 @@
 #define BOOST_CONTRACT_EXT_PP_ISWITCH3_NO_(cond, case1, op1, case2, op2, case3, op3, default_, data) \
     BOOST_CONTRACT_EXT_PP_ISWITCH2(cond, case2, op2, case3, op3, default_, data)
 
+#define BOOST_CONTRACT_EXT_PP_ISWITCH3_EXPAND_ONCE_(x) x
+
+#define BOOST_CONTRACT_EXT_PP_ISWITCH3_EXPAND_(x) \
+    BOOST_CONTRACT_EXT_PP_ISWITCH3_EXPAND_ONCE_(x)
+
 #define BOOST_CONTRACT_EXT_PP_ISWITCH3(cond, case1, op1, case2, op2, case3, op3, default_, data) \
-    BOOST_PP_EXPAND(BOOST_PP_IIF(case1 cond, \
+    BOOST_CONTRACT_EXT_PP_ISWITCH3_EXPAND_(BOOST_PP_IIF(case1 cond, \
         BOOST_CONTRACT_EXT_PP_ISWITCH3_YES_ \
     , \
         BOOST_CONTRACT_EXT_PP_ISWITCH3_NO_ \
@@ -99,8 +120,13 @@
 #define BOOST_CONTRACT_EXT_PP_ISWITCH4_NO_(cond, case1, op1, case2, op2, case3, op3, case4, op4, default_, data) \
     BOOST_CONTRACT_EXT_PP_ISWITCH3(cond, case2, op2, case3, op3, case4, op4, default_, data)
 
+#define BOOST_CONTRACT_EXT_PP_ISWITCH4_EXPAND_ONCE_(x) x
+
+#define BOOST_CONTRACT_EXT_PP_ISWITCH4_EXPAND_(x) \
+    BOOST_CONTRACT_EXT_PP_ISWITCH4_EXPAND_ONCE_(x)
+
 #define BOOST_CONTRACT_EXT_PP_ISWITCH4(cond, case1, op1, case2, op2, case3, op3, case4, op4, default_, data) \
-    BOOST_PP_EXPAND(BOOST_PP_IIF(case1 cond, \
+    BOOST_CONTRACT_EXT_PP_ISWITCH4_EXPAND_(BOOST_PP_IIF(case1 cond, \
         BOOST_CONTRACT_EXT_PP_ISWITCH4_YES_ \
     , \
         BOOST_CONTRACT_EXT_PP_ISWITCH4_NO_ \
@@ -115,8 +141,13 @@
 #define BOOST_CONTRACT_EXT_PP_ISWITCH5_NO_(cond, case1, op1, case2, op2, case3, op3, case4, op4, case5, op5, default_, data) \
     BOOST_CONTRACT_EXT_PP_ISWITCH4(cond, case2, op2, case3, op3, case4, op4, case5, op5, default_, data)
 
+#define BOOST_CONTRACT_EXT_PP_ISWITCH5_EXPAND_ONCE_(x) x
+
+#define BOOST_CONTRACT_EXT_PP_ISWITCH5_EXPAND_(x) \
+    BOOST_CONTRACT_EXT_PP_ISWITCH5_EXPAND_ONCE_(x)
+
 #define BOOST_CONTRACT_EXT_PP_ISWITCH5(cond, case1, op1, case2, op2, case3, op3, case4, op4, case5, op5, default_, data) \
-    BOOST_PP_EXPAND(BOOST_PP_IIF(case1 cond, \
+    BOOST_CONTRACT_EXT_PP_ISWITCH5_EXPAND_(BOOST_PP_IIF(case1 cond, \
         BOOST_CONTRACT_EXT_PP_ISWITCH5_YES_ \
     , \
         BOOST_CONTRACT_EXT_PP_ISWITCH5_NO_ \
@@ -131,8 +162,13 @@
 #define BOOST_CONTRACT_EXT_PP_ISWITCH6_NO_(cond, case1, op1, case2, op2, case3, op3, case4, op4, case5, op5, case6, op6, default_, data) \
     BOOST_CONTRACT_EXT_PP_ISWITCH5(cond, case2, op2, case3, op3, case4, op4, case5, op5, case6, op6, default_, data)
 
+#define BOOST_CONTRACT_EXT_PP_ISWITCH6_EXPAND_ONCE_(x) x
+
+#define BOOST_CONTRACT_EXT_PP_ISWITCH6_EXPAND_(x) \
+    BOOST_CONTRACT_EXT_PP_ISWITCH6_EXPAND_ONCE_(x)
+
 #define BOOST_CONTRACT_EXT_PP_ISWITCH6(cond, case1, op1, case2, op2, case3, op3, case4, op4, case5, op5, case6, op6, default_, data) \
-    BOOST_PP_EXPAND(BOOST_PP_IIF(case1 cond, \
+    BOOST_CONTRACT_EXT_PP_ISWITCH6_EXPAND_(BOOST_PP_IIF(case1 cond, \
         BOOST_CONTRACT_EXT_PP_ISWITCH6_YES_ \
     , \
         BOOST_CONTRACT_EXT_PP_ISWITCH6_NO_ \
@@ -147,8 +183,13 @@
 #define BOOST_CONTRACT_EXT_PP_ISWITCH7_NO_(cond, case1, op1, case2, op2, case3, op3, case4, op4, case5, op5, case6, op6, case7, op7, default_, data) \
     BOOST_CONTRACT_EXT_PP_ISWITCH6(cond, case2, op2, case3, op3, case4, op4, case5, op5, case6, op6, case7, op7, default_, data)
 
+#define BOOST_CONTRACT_EXT_PP_ISWITCH7_EXPAND_ONCE_(x) x
+
+#define BOOST_CONTRACT_EXT_PP_ISWITCH7_EXPAND_(x) \
+    BOOST_CONTRACT_EXT_PP_ISWITCH7_EXPAND_ONCE_(x)
+
 #define BOOST_CONTRACT_EXT_PP_ISWITCH7(cond, case1, op1, case2, op2, case3, op3, case4, op4, case5, op5, case6, op6, case7, op7, default_, data) \
-    BOOST_PP_EXPAND(BOOST_PP_IIF(case1 cond, \
+    BOOST_CONTRACT_EXT_PP_ISWITCH7_EXPAND_(BOOST_PP_IIF(case1 cond, \
         BOOST_CONTRACT_EXT_PP_ISWITCH7_YES_ \
     , \
         BOOST_CONTRACT_EXT_PP_ISWITCH7_NO_ \
@@ -163,8 +204,13 @@
 #define BOOST_CONTRACT_EXT_PP_ISWITCH8_NO_(cond, case1, op1, case2, op2, case3, op3, case4, op4, case5, op5, case6, op6, case7, op7, case8, op8, default_, data) \
     BOOST_CONTRACT_EXT_PP_ISWITCH7(cond, case2, op2, case3, op3, case4, op4, case5, op5, case6, op6, case7, op7, case8, op8, default_, data)
 
+#define BOOST_CONTRACT_EXT_PP_ISWITCH8_EXPAND_ONCE_(x) x
+
+#define BOOST_CONTRACT_EXT_PP_ISWITCH8_EXPAND_(x) \
+    BOOST_CONTRACT_EXT_PP_ISWITCH8_EXPAND_ONCE_(x)
+
 #define BOOST_CONTRACT_EXT_PP_ISWITCH8(cond, case1, op1, case2, op2, case3, op3, case4, op4, case5, op5, case6, op6, case7, op7, case8, op8, default_, data) \
-    BOOST_PP_EXPAND(BOOST_PP_IIF(case1 cond, \
+    BOOST_CONTRACT_EXT_PP_ISWITCH8_EXPAND_(BOOST_PP_IIF(case1 cond, \
         BOOST_CONTRACT_EXT_PP_ISWITCH8_YES_ \
     , \
         BOOST_CONTRACT_EXT_PP_ISWITCH8_NO_ \
@@ -179,8 +225,13 @@
 #define BOOST_CONTRACT_EXT_PP_ISWITCH9_NO_(cond, case1, op1, case2, op2, case3, op3, case4, op4, case5, op5, case6, op6, case7, op7, case8, op8, case9, op9, default_, data) \
     BOOST_CONTRACT_EXT_PP_ISWITCH8(cond, case2, op2, case3, op3, case4, op4, case5, op5, case6, op6, case7, op7, case8, op8, case9, op9, default_, data)
 
+#define BOOST_CONTRACT_EXT_PP_ISWITCH9_EXPAND_ONCE_(x) x
+
+#define BOOST_CONTRACT_EXT_PP_ISWITCH9_EXPAND_(x) \
+    BOOST_CONTRACT_EXT_PP_ISWITCH9_EXPAND_ONCE_(x)
+
 #define BOOST_CONTRACT_EXT_PP_ISWITCH9(cond, case1, op1, case2, op2, case3, op3, case4, op4, case5, op5, case6, op6, case7, op7, case8, op8, case9, op9, default_, data) \
-    BOOST_PP_EXPAND(BOOST_PP_IIF(case1 cond, \
+    BOOST_CONTRACT_EXT_PP_ISWITCH9_EXPAND_(BOOST_PP_IIF(case1 cond, \
         BOOST_CONTRACT_EXT_PP_ISWITCH9_YES_ \
     , \
         BOOST_CONTRACT_EXT_PP_ISWITCH9_NO_ \
@@ -195,8 +246,13 @@
 #define BOOST_CONTRACT_EXT_PP_ISWITCH10_NO_(cond, case1, op1, case2, op2, case3, op3, case4, op4, case5, op5, case6, op6, case7, op7, case8, op8, case9, op9, case10, op10, default_, data) \
     BOOST_CONTRACT_EXT_PP_ISWITCH9(cond, case2, op2, case3, op3, case4, op4, case5, op5, case6, op6, case7, op7, case8, op8, case9, op9, case10, op10, default_, data)
 
+#define BOOST_CONTRACT_EXT_PP_ISWITCH10_EXPAND_ONCE_(x) x
+
+#define BOOST_CONTRACT_EXT_PP_ISWITCH10_EXPAND_(x) \
+    BOOST_CONTRACT_EXT_PP_ISWITCH10_EXPAND_ONCE_(x)
+
 #define BOOST_CONTRACT_EXT_PP_ISWITCH10(cond, case1, op1, case2, op2, case3, op3, case4, op4, case5, op5, case6, op6, case7, op7, case8, op8, case9, op9, case10, op10, default_, data) \
-    BOOST_PP_EXPAND(BOOST_PP_IIF(case1 cond, \
+    BOOST_CONTRACT_EXT_PP_ISWITCH10_EXPAND_(BOOST_PP_IIF(case1 cond, \
         BOOST_CONTRACT_EXT_PP_ISWITCH10_YES_ \
     , \
         BOOST_CONTRACT_EXT_PP_ISWITCH10_NO_ \
@@ -211,8 +267,13 @@
 #define BOOST_CONTRACT_EXT_PP_ISWITCH11_NO_(cond, case1, op1, case2, op2, case3, op3, case4, op4, case5, op5, case6, op6, case7, op7, case8, op8, case9, op9, case10, op10, case11, op11, default_, data) \
     BOOST_CONTRACT_EXT_PP_ISWITCH10(cond, case2, op2, case3, op3, case4, op4, case5, op5, case6, op6, case7, op7, case8, op8, case9, op9, case10, op10, case11, op11, default_, data)
 
+#define BOOST_CONTRACT_EXT_PP_ISWITCH11_EXPAND_ONCE_(x) x
+
+#define BOOST_CONTRACT_EXT_PP_ISWITCH11_EXPAND_(x) \
+    BOOST_CONTRACT_EXT_PP_ISWITCH11_EXPAND_ONCE_(x)
+
 #define BOOST_CONTRACT_EXT_PP_ISWITCH11(cond, case1, op1, case2, op2, case3, op3, case4, op4, case5, op5, case6, op6, case7, op7, case8, op8, case9, op9, case10, op10, case11, op11, default_, data) \
-    BOOST_PP_EXPAND(BOOST_PP_IIF(case1 cond, \
+    BOOST_CONTRACT_EXT_PP_ISWITCH11_EXPAND_(BOOST_PP_IIF(case1 cond, \
         BOOST_CONTRACT_EXT_PP_ISWITCH11_YES_ \
     , \
         BOOST_CONTRACT_EXT_PP_ISWITCH11_NO_ \
@@ -227,8 +288,13 @@
 #define BOOST_CONTRACT_EXT_PP_ISWITCH12_NO_(cond, case1, op1, case2, op2, case3, op3, case4, op4, case5, op5, case6, op6, case7, op7, case8, op8, case9, op9, case10, op10, case11, op11, case12, op12, default_, data) \
     BOOST_CONTRACT_EXT_PP_ISWITCH11(cond, case2, op2, case3, op3, case4, op4, case5, op5, case6, op6, case7, op7, case8, op8, case9, op9, case10, op10, case11, op11, case12, op12, default_, data)
 
+#define BOOST_CONTRACT_EXT_PP_ISWITCH12_EXPAND_ONCE_(x) x
+
+#define BOOST_CONTRACT_EXT_PP_ISWITCH12_EXPAND_(x) \
+    BOOST_CONTRACT_EXT_PP_ISWITCH12_EXPAND_ONCE_(x)
+
 #define BOOST_CONTRACT_EXT_PP_ISWITCH12(cond, case1, op1, case2, op2, case3, op3, case4, op4, case5, op5, case6, op6, case7, op7, case8, op8, case9, op9, case10, op10, case11, op11, case12, op12, default_, data) \
-    BOOST_PP_EXPAND(BOOST_PP_IIF(case1 cond, \
+    BOOST_CONTRACT_EXT_PP_ISWITCH12_EXPAND_(BOOST_PP_IIF(case1 cond, \
         BOOST_CONTRACT_EXT_PP_ISWITCH12_YES_ \
     , \
         BOOST_CONTRACT_EXT_PP_ISWITCH12_NO_ \
@@ -243,8 +309,13 @@
 #define BOOST_CONTRACT_EXT_PP_ISWITCH13_NO_(cond, case1, op1, case2, op2, case3, op3, case4, op4, case5, op5, case6, op6, case7, op7, case8, op8, case9, op9, case10, op10, case11, op11, case12, op12, case13, op13, default_, data) \
     BOOST_CONTRACT_EXT_PP_ISWITCH12(cond, case2, op2, case3, op3, case4, op4, case5, op5, case6, op6, case7, op7, case8, op8, case9, op9, case10, op10, case11, op11, case12, op12, case13, op13, default_, data)
 
+#define BOOST_CONTRACT_EXT_PP_ISWITCH13_EXPAND_ONCE_(x) x
+
+#define BOOST_CONTRACT_EXT_PP_ISWITCH13_EXPAND_(x) \
+    BOOST_CONTRACT_EXT_PP_ISWITCH13_EXPAND_ONCE_(x)
+
 #define BOOST_CONTRACT_EXT_PP_ISWITCH13(cond, case1, op1, case2, op2, case3, op3, case4, op4, case5, op5, case6, op6, case7, op7, case8, op8, case9, op9, case10, op10, case11, op11, case12, op12, case13, op13, default_, data) \
-    BOOST_PP_EXPAND(BOOST_PP_IIF(case1 cond, \
+    BOOST_CONTRACT_EXT_PP_ISWITCH13_EXPAND_(BOOST_PP_IIF(case1 cond, \
         BOOST_CONTRACT_EXT_PP_ISWITCH13_YES_ \
     , \
         BOOST_CONTRACT_EXT_PP_ISWITCH13_NO_ \
@@ -259,8 +330,13 @@
 #define BOOST_CONTRACT_EXT_PP_ISWITCH14_NO_(cond, case1, op1, case2, op2, case3, op3, case4, op4, case5, op5, case6, op6, case7, op7, case8, op8, case9, op9, case10, op10, case11, op11, case12, op12, case13, op13, case14, op14, default_, data) \
     BOOST_CONTRACT_EXT_PP_ISWITCH13(cond, case2, op2, case3, op3, case4, op4, case5, op5, case6, op6, case7, op7, case8, op8, case9, op9, case10, op10, case11, op11, case12, op12, case13, op13, case14, op14, default_, data)
 
+#define BOOST_CONTRACT_EXT_PP_ISWITCH14_EXPAND_ONCE_(x) x
+
+#define BOOST_CONTRACT_EXT_PP_ISWITCH14_EXPAND_(x) \
+    BOOST_CONTRACT_EXT_PP_ISWITCH14_EXPAND_ONCE_(x)
+
 #define BOOST_CONTRACT_EXT_PP_ISWITCH14(cond, case1, op1, case2, op2, case3, op3, case4, op4, case5, op5, case6, op6, case7, op7, case8, op8, case9, op9, case10, op10, case11, op11, case12, op12, case13, op13, case14, op14, default_, data) \
-    BOOST_PP_EXPAND(BOOST_PP_IIF(case1 cond, \
+    BOOST_CONTRACT_EXT_PP_ISWITCH14_EXPAND_(BOOST_PP_IIF(case1 cond, \
         BOOST_CONTRACT_EXT_PP_ISWITCH14_YES_ \
     , \
         BOOST_CONTRACT_EXT_PP_ISWITCH14_NO_ \
@@ -275,8 +351,13 @@
 #define BOOST_CONTRACT_EXT_PP_ISWITCH15_NO_(cond, case1, op1, case2, op2, case3, op3, case4, op4, case5, op5, case6, op6, case7, op7, case8, op8, case9, op9, case10, op10, case11, op11, case12, op12, case13, op13, case14, op14, case15, op15, default_, data) \
     BOOST_CONTRACT_EXT_PP_ISWITCH14(cond, case2, op2, case3, op3, case4, op4, case5, op5, case6, op6, case7, op7, case8, op8, case9, op9, case10, op10, case11, op11, case12, op12, case13, op13, case14, op14, case15, op15, default_, data)
 
+#define BOOST_CONTRACT_EXT_PP_ISWITCH15_EXPAND_ONCE_(x) x
+
+#define BOOST_CONTRACT_EXT_PP_ISWITCH15_EXPAND_(x) \
+    BOOST_CONTRACT_EXT_PP_ISWITCH15_EXPAND_ONCE_(x)
+
 #define BOOST_CONTRACT_EXT_PP_ISWITCH15(cond, case1, op1, case2, op2, case3, op3, case4, op4, case5, op5, case6, op6, case7, op7, case8, op8, case9, op9, case10, op10, case11, op11, case12, op12, case13, op13, case14, op14, case15, op15, default_, data) \
-    BOOST_PP_EXPAND(BOOST_PP_IIF(case1 cond, \
+    BOOST_CONTRACT_EXT_PP_ISWITCH15_EXPAND_(BOOST_PP_IIF(case1 cond, \
         BOOST_CONTRACT_EXT_PP_ISWITCH15_YES_ \
     , \
         BOOST_CONTRACT_EXT_PP_ISWITCH15_NO_ \
@@ -291,8 +372,13 @@
 #define BOOST_CONTRACT_EXT_PP_ISWITCH16_NO_(cond, case1, op1, case2, op2, case3, op3, case4, op4, case5, op5, case6, op6, case7, op7, case8, op8, case9, op9, case10, op10, case11, op11, case12, op12, case13, op13, case14, op14, case15, op15, case16, op16, default_, data) \
     BOOST_CONTRACT_EXT_PP_ISWITCH15(cond, case2, op2, case3, op3, case4, op4, case5, op5, case6, op6, case7, op7, case8, op8, case9, op9, case10, op10, case11, op11, case12, op12, case13, op13, case14, op14, case15, op15, case16, op16, default_, data)
 
+#define BOOST_CONTRACT_EXT_PP_ISWITCH16_EXPAND_ONCE_(x) x
+
+#define BOOST_CONTRACT_EXT_PP_ISWITCH16_EXPAND_(x) \
+    BOOST_CONTRACT_EXT_PP_ISWITCH16_EXPAND_ONCE_(x)
+
 #define BOOST_CONTRACT_EXT_PP_ISWITCH16(cond, case1, op1, case2, op2, case3, op3, case4, op4, case5, op5, case6, op6, case7, op7, case8, op8, case9, op9, case10, op10, case11, op11, case12, op12, case13, op13, case14, op14, case15, op15, case16, op16, default_, data) \
-    BOOST_PP_EXPAND(BOOST_PP_IIF(case1 cond, \
+    BOOST_CONTRACT_EXT_PP_ISWITCH16_EXPAND_(BOOST_PP_IIF(case1 cond, \
         BOOST_CONTRACT_EXT_PP_ISWITCH16_YES_ \
     , \
         BOOST_CONTRACT_EXT_PP_ISWITCH16_NO_ \
@@ -307,8 +393,13 @@
 #define BOOST_CONTRACT_EXT_PP_ISWITCH17_NO_(cond, case1, op1, case2, op2, case3, op3, case4, op4, case5, op5, case6, op6, case7, op7, case8, op8, case9, op9, case10, op10, case11, op11, case12, op12, case13, op13, case14, op14, case15, op15, case16, op16, case17, op17, default_, data) \
     BOOST_CONTRACT_EXT_PP_ISWITCH16(cond, case2, op2, case3, op3, case4, op4, case5, op5, case6, op6, case7, op7, case8, op8, case9, op9, case10, op10, case11, op11, case12, op12, case13, op13, case14, op14, case15, op15, case16, op16, case17, op17, default_, data)
 
+#define BOOST_CONTRACT_EXT_PP_ISWITCH17_EXPAND_ONCE_(x) x
+
+#define BOOST_CONTRACT_EXT_PP_ISWITCH17_EXPAND_(x) \
+    BOOST_CONTRACT_EXT_PP_ISWITCH17_EXPAND_ONCE_(x)
+
 #define BOOST_CONTRACT_EXT_PP_ISWITCH17(cond, case1, op1, case2, op2, case3, op3, case4, op4, case5, op5, case6, op6, case7, op7, case8, op8, case9, op9, case10, op10, case11, op11, case12, op12, case13, op13, case14, op14, case15, op15, case16, op16, case17, op17, default_, data) \
-    BOOST_PP_EXPAND(BOOST_PP_IIF(case1 cond, \
+    BOOST_CONTRACT_EXT_PP_ISWITCH17_EXPAND_(BOOST_PP_IIF(case1 cond, \
         BOOST_CONTRACT_EXT_PP_ISWITCH17_YES_ \
     , \
         BOOST_CONTRACT_EXT_PP_ISWITCH17_NO_ \
@@ -323,8 +414,13 @@
 #define BOOST_CONTRACT_EXT_PP_ISWITCH18_NO_(cond, case1, op1, case2, op2, case3, op3, case4, op4, case5, op5, case6, op6, case7, op7, case8, op8, case9, op9, case10, op10, case11, op11, case12, op12, case13, op13, case14, op14, case15, op15, case16, op16, case17, op17, case18, op18, default_, data) \
     BOOST_CONTRACT_EXT_PP_ISWITCH17(cond, case2, op2, case3, op3, case4, op4, case5, op5, case6, op6, case7, op7, case8, op8, case9, op9, case10, op10, case11, op11, case12, op12, case13, op13, case14, op14, case15, op15, case16, op16, case17, op17, case18, op18, default_, data)
 
+#define BOOST_CONTRACT_EXT_PP_ISWITCH18_EXPAND_ONCE_(x) x
+
+#define BOOST_CONTRACT_EXT_PP_ISWITCH18_EXPAND_(x) \
+    BOOST_CONTRACT_EXT_PP_ISWITCH18_EXPAND_ONCE_(x)
+
 #define BOOST_CONTRACT_EXT_PP_ISWITCH18(cond, case1, op1, case2, op2, case3, op3, case4, op4, case5, op5, case6, op6, case7, op7, case8, op8, case9, op9, case10, op10, case11, op11, case12, op12, case13, op13, case14, op14, case15, op15, case16, op16, case17, op17, case18, op18, default_, data) \
-    BOOST_PP_EXPAND(BOOST_PP_IIF(case1 cond, \
+    BOOST_CONTRACT_EXT_PP_ISWITCH18_EXPAND_(BOOST_PP_IIF(case1 cond, \
         BOOST_CONTRACT_EXT_PP_ISWITCH18_YES_ \
     , \
         BOOST_CONTRACT_EXT_PP_ISWITCH18_NO_ \
@@ -339,8 +435,13 @@
 #define BOOST_CONTRACT_EXT_PP_ISWITCH19_NO_(cond, case1, op1, case2, op2, case3, op3, case4, op4, case5, op5, case6, op6, case7, op7, case8, op8, case9, op9, case10, op10, case11, op11, case12, op12, case13, op13, case14, op14, case15, op15, case16, op16, case17, op17, case18, op18, case19, op19, default_, data) \
     BOOST_CONTRACT_EXT_PP_ISWITCH18(cond, case2, op2, case3, op3, case4, op4, case5, op5, case6, op6, case7, op7, case8, op8, case9, op9, case10, op10, case11, op11, case12, op12, case13, op13, case14, op14, case15, op15, case16, op16, case17, op17, case18, op18, case19, op19, default_, data)
 
+#define BOOST_CONTRACT_EXT_PP_ISWITCH19_EXPAND_ONCE_(x) x
+
+#define BOOST_CONTRACT_EXT_PP_ISWITCH19_EXPAND_(x) \
+    BOOST_CONTRACT_EXT_PP_ISWITCH19_EXPAND_ONCE_(x)
+
 #define BOOST_CONTRACT_EXT_PP_ISWITCH19(cond, case1, op1, case2, op2, case3, op3, case4, op4, case5, op5, case6, op6, case7, op7, case8, op8, case9, op9, case10, op10, case11, op11, case12, op12, case13, op13, case14, op14, case15, op15, case16, op16, case17, op17, case18, op18, case19, op19, default_, data) \
-    BOOST_PP_EXPAND(BOOST_PP_IIF(case1 cond, \
+    BOOST_CONTRACT_EXT_PP_ISWITCH19_EXPAND_(BOOST_PP_IIF(case1 cond, \
         BOOST_CONTRACT_EXT_PP_ISWITCH19_YES_ \
     , \
         BOOST_CONTRACT_EXT_PP_ISWITCH19_NO_ \
@@ -355,8 +456,13 @@
 #define BOOST_CONTRACT_EXT_PP_ISWITCH20_NO_(cond, case1, op1, case2, op2, case3, op3, case4, op4, case5, op5, case6, op6, case7, op7, case8, op8, case9, op9, case10, op10, case11, op11, case12, op12, case13, op13, case14, op14, case15, op15, case16, op16, case17, op17, case18, op18, case19, op19, case20, op20, default_, data) \
     BOOST_CONTRACT_EXT_PP_ISWITCH19(cond, case2, op2, case3, op3, case4, op4, case5, op5, case6, op6, case7, op7, case8, op8, case9, op9, case10, op10, case11, op11, case12, op12, case13, op13, case14, op14, case15, op15, case16, op16, case17, op17, case18, op18, case19, op19, case20, op20, default_, data)
 
+#define BOOST_CONTRACT_EXT_PP_ISWITCH20_EXPAND_ONCE_(x) x
+
+#define BOOST_CONTRACT_EXT_PP_ISWITCH20_EXPAND_(x) \
+    BOOST_CONTRACT_EXT_PP_ISWITCH20_EXPAND_ONCE_(x)
+
 #define BOOST_CONTRACT_EXT_PP_ISWITCH20(cond, case1, op1, case2, op2, case3, op3, case4, op4, case5, op5, case6, op6, case7, op7, case8, op8, case9, op9, case10, op10, case11, op11, case12, op12, case13, op13, case14, op14, case15, op15, case16, op16, case17, op17, case18, op18, case19, op19, case20, op20, default_, data) \
-    BOOST_PP_EXPAND(BOOST_PP_IIF(case1 cond, \
+    BOOST_CONTRACT_EXT_PP_ISWITCH20_EXPAND_(BOOST_PP_IIF(case1 cond, \
         BOOST_CONTRACT_EXT_PP_ISWITCH20_YES_ \
     , \
         BOOST_CONTRACT_EXT_PP_ISWITCH20_NO_ \
@@ -371,8 +477,13 @@
 #define BOOST_CONTRACT_EXT_PP_ISWITCH21_NO_(cond, case1, op1, case2, op2, case3, op3, case4, op4, case5, op5, case6, op6, case7, op7, case8, op8, case9, op9, case10, op10, case11, op11, case12, op12, case13, op13, case14, op14, case15, op15, case16, op16, case17, op17, case18, op18, case19, op19, case20, op20, case21, op21, default_, data) \
     BOOST_CONTRACT_EXT_PP_ISWITCH20(cond, case2, op2, case3, op3, case4, op4, case5, op5, case6, op6, case7, op7, case8, op8, case9, op9, case10, op10, case11, op11, case12, op12, case13, op13, case14, op14, case15, op15, case16, op16, case17, op17, case18, op18, case19, op19, case20, op20, case21, op21, default_, data)
 
+#define BOOST_CONTRACT_EXT_PP_ISWITCH21_EXPAND_ONCE_(x) x
+
+#define BOOST_CONTRACT_EXT_PP_ISWITCH21_EXPAND_(x) \
+    BOOST_CONTRACT_EXT_PP_ISWITCH21_EXPAND_ONCE_(x)
+
 #define BOOST_CONTRACT_EXT_PP_ISWITCH21(cond, case1, op1, case2, op2, case3, op3, case4, op4, case5, op5, case6, op6, case7, op7, case8, op8, case9, op9, case10, op10, case11, op11, case12, op12, case13, op13, case14, op14, case15, op15, case16, op16, case17, op17, case18, op18, case19, op19, case20, op20, case21, op21, default_, data) \
-    BOOST_PP_EXPAND(BOOST_PP_IIF(case1 cond, \
+    BOOST_CONTRACT_EXT_PP_ISWITCH21_EXPAND_(BOOST_PP_IIF(case1 cond, \
         BOOST_CONTRACT_EXT_PP_ISWITCH21_YES_ \
     , \
         BOOST_CONTRACT_EXT_PP_ISWITCH21_NO_ \
@@ -387,8 +498,13 @@
 #define BOOST_CONTRACT_EXT_PP_ISWITCH22_NO_(cond, case1, op1, case2, op2, case3, op3, case4, op4, case5, op5, case6, op6, case7, op7, case8, op8, case9, op9, case10, op10, case11, op11, case12, op12, case13, op13, case14, op14, case15, op15, case16, op16, case17, op17, case18, op18, case19, op19, case20, op20, case21, op21, case22, op22, default_, data) \
     BOOST_CONTRACT_EXT_PP_ISWITCH21(cond, case2, op2, case3, op3, case4, op4, case5, op5, case6, op6, case7, op7, case8, op8, case9, op9, case10, op10, case11, op11, case12, op12, case13, op13, case14, op14, case15, op15, case16, op16, case17, op17, case18, op18, case19, op19, case20, op20, case21, op21, case22, op22, default_, data)
 
+#define BOOST_CONTRACT_EXT_PP_ISWITCH22_EXPAND_ONCE_(x) x
+
+#define BOOST_CONTRACT_EXT_PP_ISWITCH22_EXPAND_(x) \
+    BOOST_CONTRACT_EXT_PP_ISWITCH22_EXPAND_ONCE_(x)
+
 #define BOOST_CONTRACT_EXT_PP_ISWITCH22(cond, case1, op1, case2, op2, case3, op3, case4, op4, case5, op5, case6, op6, case7, op7, case8, op8, case9, op9, case10, op10, case11, op11, case12, op12, case13, op13, case14, op14, case15, op15, case16, op16, case17, op17, case18, op18, case19, op19, case20, op20, case21, op21, case22, op22, default_, data) \
-    BOOST_PP_EXPAND(BOOST_PP_IIF(case1 cond, \
+    BOOST_CONTRACT_EXT_PP_ISWITCH22_EXPAND_(BOOST_PP_IIF(case1 cond, \
         BOOST_CONTRACT_EXT_PP_ISWITCH22_YES_ \
     , \
         BOOST_CONTRACT_EXT_PP_ISWITCH22_NO_ \
@@ -403,8 +519,13 @@
 #define BOOST_CONTRACT_EXT_PP_ISWITCH23_NO_(cond, case1, op1, case2, op2, case3, op3, case4, op4, case5, op5, case6, op6, case7, op7, case8, op8, case9, op9, case10, op10, case11, op11, case12, op12, case13, op13, case14, op14, case15, op15, case16, op16, case17, op17, case18, op18, case19, op19, case20, op20, case21, op21, case22, op22, case23, op23, default_, data) \
     BOOST_CONTRACT_EXT_PP_ISWITCH22(cond, case2, op2, case3, op3, case4, op4, case5, op5, case6, op6, case7, op7, case8, op8, case9, op9, case10, op10, case11, op11, case12, op12, case13, op13, case14, op14, case15, op15, case16, op16, case17, op17, case18, op18, case19, op19, case20, op20, case21, op21, case22, op22, case23, op23, default_, data)
 
+#define BOOST_CONTRACT_EXT_PP_ISWITCH23_EXPAND_ONCE_(x) x
+
+#define BOOST_CONTRACT_EXT_PP_ISWITCH23_EXPAND_(x) \
+    BOOST_CONTRACT_EXT_PP_ISWITCH23_EXPAND_ONCE_(x)
+
 #define BOOST_CONTRACT_EXT_PP_ISWITCH23(cond, case1, op1, case2, op2, case3, op3, case4, op4, case5, op5, case6, op6, case7, op7, case8, op8, case9, op9, case10, op10, case11, op11, case12, op12, case13, op13, case14, op14, case15, op15, case16, op16, case17, op17, case18, op18, case19, op19, case20, op20, case21, op21, case22, op22, case23, op23, default_, data) \
-    BOOST_PP_EXPAND(BOOST_PP_IIF(case1 cond, \
+    BOOST_CONTRACT_EXT_PP_ISWITCH23_EXPAND_(BOOST_PP_IIF(case1 cond, \
         BOOST_CONTRACT_EXT_PP_ISWITCH23_YES_ \
     , \
         BOOST_CONTRACT_EXT_PP_ISWITCH23_NO_ \
@@ -419,8 +540,13 @@
 #define BOOST_CONTRACT_EXT_PP_ISWITCH24_NO_(cond, case1, op1, case2, op2, case3, op3, case4, op4, case5, op5, case6, op6, case7, op7, case8, op8, case9, op9, case10, op10, case11, op11, case12, op12, case13, op13, case14, op14, case15, op15, case16, op16, case17, op17, case18, op18, case19, op19, case20, op20, case21, op21, case22, op22, case23, op23, case24, op24, default_, data) \
     BOOST_CONTRACT_EXT_PP_ISWITCH23(cond, case2, op2, case3, op3, case4, op4, case5, op5, case6, op6, case7, op7, case8, op8, case9, op9, case10, op10, case11, op11, case12, op12, case13, op13, case14, op14, case15, op15, case16, op16, case17, op17, case18, op18, case19, op19, case20, op20, case21, op21, case22, op22, case23, op23, case24, op24, default_, data)
 
+#define BOOST_CONTRACT_EXT_PP_ISWITCH24_EXPAND_ONCE_(x) x
+
+#define BOOST_CONTRACT_EXT_PP_ISWITCH24_EXPAND_(x) \
+    BOOST_CONTRACT_EXT_PP_ISWITCH24_EXPAND_ONCE_(x)
+
 #define BOOST_CONTRACT_EXT_PP_ISWITCH24(cond, case1, op1, case2, op2, case3, op3, case4, op4, case5, op5, case6, op6, case7, op7, case8, op8, case9, op9, case10, op10, case11, op11, case12, op12, case13, op13, case14, op14, case15, op15, case16, op16, case17, op17, case18, op18, case19, op19, case20, op20, case21, op21, case22, op22, case23, op23, case24, op24, default_, data) \
-    BOOST_PP_EXPAND(BOOST_PP_IIF(case1 cond, \
+    BOOST_CONTRACT_EXT_PP_ISWITCH24_EXPAND_(BOOST_PP_IIF(case1 cond, \
         BOOST_CONTRACT_EXT_PP_ISWITCH24_YES_ \
     , \
         BOOST_CONTRACT_EXT_PP_ISWITCH24_NO_ \
@@ -435,8 +561,13 @@
 #define BOOST_CONTRACT_EXT_PP_ISWITCH25_NO_(cond, case1, op1, case2, op2, case3, op3, case4, op4, case5, op5, case6, op6, case7, op7, case8, op8, case9, op9, case10, op10, case11, op11, case12, op12, case13, op13, case14, op14, case15, op15, case16, op16, case17, op17, case18, op18, case19, op19, case20, op20, case21, op21, case22, op22, case23, op23, case24, op24, case25, op25, default_, data) \
     BOOST_CONTRACT_EXT_PP_ISWITCH24(cond, case2, op2, case3, op3, case4, op4, case5, op5, case6, op6, case7, op7, case8, op8, case9, op9, case10, op10, case11, op11, case12, op12, case13, op13, case14, op14, case15, op15, case16, op16, case17, op17, case18, op18, case19, op19, case20, op20, case21, op21, case22, op22, case23, op23, case24, op24, case25, op25, default_, data)
 
+#define BOOST_CONTRACT_EXT_PP_ISWITCH25_EXPAND_ONCE_(x) x
+
+#define BOOST_CONTRACT_EXT_PP_ISWITCH25_EXPAND_(x) \
+    BOOST_CONTRACT_EXT_PP_ISWITCH25_EXPAND_ONCE_(x)
+
 #define BOOST_CONTRACT_EXT_PP_ISWITCH25(cond, case1, op1, case2, op2, case3, op3, case4, op4, case5, op5, case6, op6, case7, op7, case8, op8, case9, op9, case10, op10, case11, op11, case12, op12, case13, op13, case14, op14, case15, op15, case16, op16, case17, op17, case18, op18, case19, op19, case20, op20, case21, op21, case22, op22, case23, op23, case24, op24, case25, op25, default_, data) \
-    BOOST_PP_EXPAND(BOOST_PP_IIF(case1 cond, \
+    BOOST_CONTRACT_EXT_PP_ISWITCH25_EXPAND_(BOOST_PP_IIF(case1 cond, \
         BOOST_CONTRACT_EXT_PP_ISWITCH25_YES_ \
     , \
         BOOST_CONTRACT_EXT_PP_ISWITCH25_NO_ \
@@ -451,8 +582,13 @@
 #define BOOST_CONTRACT_EXT_PP_ISWITCH26_NO_(cond, case1, op1, case2, op2, case3, op3, case4, op4, case5, op5, case6, op6, case7, op7, case8, op8, case9, op9, case10, op10, case11, op11, case12, op12, case13, op13, case14, op14, case15, op15, case16, op16, case17, op17, case18, op18, case19, op19, case20, op20, case21, op21, case22, op22, case23, op23, case24, op24, case25, op25, case26, op26, default_, data) \
     BOOST_CONTRACT_EXT_PP_ISWITCH25(cond, case2, op2, case3, op3, case4, op4, case5, op5, case6, op6, case7, op7, case8, op8, case9, op9, case10, op10, case11, op11, case12, op12, case13, op13, case14, op14, case15, op15, case16, op16, case17, op17, case18, op18, case19, op19, case20, op20, case21, op21, case22, op22, case23, op23, case24, op24, case25, op25, case26, op26, default_, data)
 
+#define BOOST_CONTRACT_EXT_PP_ISWITCH26_EXPAND_ONCE_(x) x
+
+#define BOOST_CONTRACT_EXT_PP_ISWITCH26_EXPAND_(x) \
+    BOOST_CONTRACT_EXT_PP_ISWITCH26_EXPAND_ONCE_(x)
+
 #define BOOST_CONTRACT_EXT_PP_ISWITCH26(cond, case1, op1, case2, op2, case3, op3, case4, op4, case5, op5, case6, op6, case7, op7, case8, op8, case9, op9, case10, op10, case11, op11, case12, op12, case13, op13, case14, op14, case15, op15, case16, op16, case17, op17, case18, op18, case19, op19, case20, op20, case21, op21, case22, op22, case23, op23, case24, op24, case25, op25, case26, op26, default_, data) \
-    BOOST_PP_EXPAND(BOOST_PP_IIF(case1 cond, \
+    BOOST_CONTRACT_EXT_PP_ISWITCH26_EXPAND_(BOOST_PP_IIF(case1 cond, \
         BOOST_CONTRACT_EXT_PP_ISWITCH26_YES_ \
     , \
         BOOST_CONTRACT_EXT_PP_ISWITCH26_NO_ \
@@ -467,8 +603,13 @@
 #define BOOST_CONTRACT_EXT_PP_ISWITCH27_NO_(cond, case1, op1, case2, op2, case3, op3, case4, op4, case5, op5, case6, op6, case7, op7, case8, op8, case9, op9, case10, op10, case11, op11, case12, op12, case13, op13, case14, op14, case15, op15, case16, op16, case17, op17, case18, op18, case19, op19, case20, op20, case21, op21, case22, op22, case23, op23, case24, op24, case25, op25, case26, op26, case27, op27, default_, data) \
     BOOST_CONTRACT_EXT_PP_ISWITCH26(cond, case2, op2, case3, op3, case4, op4, case5, op5, case6, op6, case7, op7, case8, op8, case9, op9, case10, op10, case11, op11, case12, op12, case13, op13, case14, op14, case15, op15, case16, op16, case17, op17, case18, op18, case19, op19, case20, op20, case21, op21, case22, op22, case23, op23, case24, op24, case25, op25, case26, op26, case27, op27, default_, data)
 
+#define BOOST_CONTRACT_EXT_PP_ISWITCH27_EXPAND_ONCE_(x) x
+
+#define BOOST_CONTRACT_EXT_PP_ISWITCH27_EXPAND_(x) \
+    BOOST_CONTRACT_EXT_PP_ISWITCH27_EXPAND_ONCE_(x)
+
 #define BOOST_CONTRACT_EXT_PP_ISWITCH27(cond, case1, op1, case2, op2, case3, op3, case4, op4, case5, op5, case6, op6, case7, op7, case8, op8, case9, op9, case10, op10, case11, op11, case12, op12, case13, op13, case14, op14, case15, op15, case16, op16, case17, op17, case18, op18, case19, op19, case20, op20, case21, op21, case22, op22, case23, op23, case24, op24, case25, op25, case26, op26, case27, op27, default_, data) \
-    BOOST_PP_EXPAND(BOOST_PP_IIF(case1 cond, \
+    BOOST_CONTRACT_EXT_PP_ISWITCH27_EXPAND_(BOOST_PP_IIF(case1 cond, \
         BOOST_CONTRACT_EXT_PP_ISWITCH27_YES_ \
     , \
         BOOST_CONTRACT_EXT_PP_ISWITCH27_NO_ \
@@ -483,8 +624,13 @@
 #define BOOST_CONTRACT_EXT_PP_ISWITCH28_NO_(cond, case1, op1, case2, op2, case3, op3, case4, op4, case5, op5, case6, op6, case7, op7, case8, op8, case9, op9, case10, op10, case11, op11, case12, op12, case13, op13, case14, op14, case15, op15, case16, op16, case17, op17, case18, op18, case19, op19, case20, op20, case21, op21, case22, op22, case23, op23, case24, op24, case25, op25, case26, op26, case27, op27, case28, op28, default_, data) \
     BOOST_CONTRACT_EXT_PP_ISWITCH27(cond, case2, op2, case3, op3, case4, op4, case5, op5, case6, op6, case7, op7, case8, op8, case9, op9, case10, op10, case11, op11, case12, op12, case13, op13, case14, op14, case15, op15, case16, op16, case17, op17, case18, op18, case19, op19, case20, op20, case21, op21, case22, op22, case23, op23, case24, op24, case25, op25, case26, op26, case27, op27, case28, op28, default_, data)
 
+#define BOOST_CONTRACT_EXT_PP_ISWITCH28_EXPAND_ONCE_(x) x
+
+#define BOOST_CONTRACT_EXT_PP_ISWITCH28_EXPAND_(x) \
+    BOOST_CONTRACT_EXT_PP_ISWITCH28_EXPAND_ONCE_(x)
+
 #define BOOST_CONTRACT_EXT_PP_ISWITCH28(cond, case1, op1, case2, op2, case3, op3, case4, op4, case5, op5, case6, op6, case7, op7, case8, op8, case9, op9, case10, op10, case11, op11, case12, op12, case13, op13, case14, op14, case15, op15, case16, op16, case17, op17, case18, op18, case19, op19, case20, op20, case21, op21, case22, op22, case23, op23, case24, op24, case25, op25, case26, op26, case27, op27, case28, op28, default_, data) \
-    BOOST_PP_EXPAND(BOOST_PP_IIF(case1 cond, \
+    BOOST_CONTRACT_EXT_PP_ISWITCH28_EXPAND_(BOOST_PP_IIF(case1 cond, \
         BOOST_CONTRACT_EXT_PP_ISWITCH28_YES_ \
     , \
         BOOST_CONTRACT_EXT_PP_ISWITCH28_NO_ \
@@ -499,8 +645,13 @@
 #define BOOST_CONTRACT_EXT_PP_ISWITCH29_NO_(cond, case1, op1, case2, op2, case3, op3, case4, op4, case5, op5, case6, op6, case7, op7, case8, op8, case9, op9, case10, op10, case11, op11, case12, op12, case13, op13, case14, op14, case15, op15, case16, op16, case17, op17, case18, op18, case19, op19, case20, op20, case21, op21, case22, op22, case23, op23, case24, op24, case25, op25, case26, op26, case27, op27, case28, op28, case29, op29, default_, data) \
     BOOST_CONTRACT_EXT_PP_ISWITCH28(cond, case2, op2, case3, op3, case4, op4, case5, op5, case6, op6, case7, op7, case8, op8, case9, op9, case10, op10, case11, op11, case12, op12, case13, op13, case14, op14, case15, op15, case16, op16, case17, op17, case18, op18, case19, op19, case20, op20, case21, op21, case22, op22, case23, op23, case24, op24, case25, op25, case26, op26, case27, op27, case28, op28, case29, op29, default_, data)
 
+#define BOOST_CONTRACT_EXT_PP_ISWITCH29_EXPAND_ONCE_(x) x
+
+#define BOOST_CONTRACT_EXT_PP_ISWITCH29_EXPAND_(x) \
+    BOOST_CONTRACT_EXT_PP_ISWITCH29_EXPAND_ONCE_(x)
+
 #define BOOST_CONTRACT_EXT_PP_ISWITCH29(cond, case1, op1, case2, op2, case3, op3, case4, op4, case5, op5, case6, op6, case7, op7, case8, op8, case9, op9, case10, op10, case11, op11, case12, op12, case13, op13, case14, op14, case15, op15, case16, op16, case17, op17, case18, op18, case19, op19, case20, op20, case21, op21, case22, op22, case23, op23, case24, op24, case25, op25, case26, op26, case27, op27, case28, op28, case29, op29, default_, data) \
-    BOOST_PP_EXPAND(BOOST_PP_IIF(case1 cond, \
+    BOOST_CONTRACT_EXT_PP_ISWITCH29_EXPAND_(BOOST_PP_IIF(case1 cond, \
         BOOST_CONTRACT_EXT_PP_ISWITCH29_YES_ \
     , \
         BOOST_CONTRACT_EXT_PP_ISWITCH29_NO_ \
@@ -515,8 +666,13 @@
 #define BOOST_CONTRACT_EXT_PP_ISWITCH30_NO_(cond, case1, op1, case2, op2, case3, op3, case4, op4, case5, op5, case6, op6, case7, op7, case8, op8, case9, op9, case10, op10, case11, op11, case12, op12, case13, op13, case14, op14, case15, op15, case16, op16, case17, op17, case18, op18, case19, op19, case20, op20, case21, op21, case22, op22, case23, op23, case24, op24, case25, op25, case26, op26, case27, op27, case28, op28, case29, op29, case30, op30, default_, data) \
     BOOST_CONTRACT_EXT_PP_ISWITCH29(cond, case2, op2, case3, op3, case4, op4, case5, op5, case6, op6, case7, op7, case8, op8, case9, op9, case10, op10, case11, op11, case12, op12, case13, op13, case14, op14, case15, op15, case16, op16, case17, op17, case18, op18, case19, op19, case20, op20, case21, op21, case22, op22, case23, op23, case24, op24, case25, op25, case26, op26, case27, op27, case28, op28, case29, op29, case30, op30, default_, data)
 
+#define BOOST_CONTRACT_EXT_PP_ISWITCH30_EXPAND_ONCE_(x) x
+
+#define BOOST_CONTRACT_EXT_PP_ISWITCH30_EXPAND_(x) \
+    BOOST_CONTRACT_EXT_PP_ISWITCH30_EXPAND_ONCE_(x)
+
 #define BOOST_CONTRACT_EXT_PP_ISWITCH30(cond, case1, op1, case2, op2, case3, op3, case4, op4, case5, op5, case6, op6, case7, op7, case8, op8, case9, op9, case10, op10, case11, op11, case12, op12, case13, op13, case14, op14, case15, op15, case16, op16, case17, op17, case18, op18, case19, op19, case20, op20, case21, op21, case22, op22, case23, op23, case24, op24, case25, op25, case26, op26, case27, op27, case28, op28, case29, op29, case30, op30, default_, data) \
-    BOOST_PP_EXPAND(BOOST_PP_IIF(case1 cond, \
+    BOOST_CONTRACT_EXT_PP_ISWITCH30_EXPAND_(BOOST_PP_IIF(case1 cond, \
         BOOST_CONTRACT_EXT_PP_ISWITCH30_YES_ \
     , \
         BOOST_CONTRACT_EXT_PP_ISWITCH30_NO_ \
