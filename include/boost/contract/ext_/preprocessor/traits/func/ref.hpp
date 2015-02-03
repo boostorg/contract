@@ -31,11 +31,12 @@
     )
 
 #define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_REF_REF_(decl, traits) \
-    BOOST_PP_IIF(BOOST_CONTRACT_EXT_PP_KEYWORD_IS_REF_FRONT(decl), \
+    BOOST_PP_EXPAND(BOOST_PP_IIF( \
+            BOOST_CONTRACT_EXT_PP_KEYWORD_IS_REF_FRONT(decl), \
         BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_REF_REF_YES_ \
     , \
         BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_REF_REF_NO_ \
-    )(decl, traits)
+    )(decl, traits))
         
 // Precondition: decl = `ref ...`.
 #define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_REF_YES_(decl, traits) \
@@ -43,11 +44,12 @@
             BOOST_CONTRACT_EXT_PP_KEYWORD_REF_REMOVE_FRONT(decl), traits)
         
 #define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_REF_PARSE_ARGS_(decl, traits) \
-    BOOST_PP_IIF(BOOST_CONTRACT_EXT_PP_KEYWORD_IS_REF_FRONT(decl), \
+    BOOST_PP_EXPAND(BOOST_PP_IIF( \
+            BOOST_CONTRACT_EXT_PP_KEYWORD_IS_REF_FRONT(decl), \
         BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_REF_YES_ \
     , \
         BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_REF_NO_ \
-    )(decl, traits)
+    )(decl, traits))
 
 /* PUBLIC */
 

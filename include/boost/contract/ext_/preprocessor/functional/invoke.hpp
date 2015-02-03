@@ -2,6 +2,8 @@
 #ifndef BOOST_CONTRACT_EXT_PP_INVOKE_HPP_
 #define BOOST_CONTRACT_EXT_PP_INVOKE_HPP_
 
+// TODO: Remove INVOKE and also ISWITCH because they are not reentrant.
+
 // This is sometimes useful first associate a macro with its arguments (in a
 // tuple `(macro, arg1, arg2, ...)`) but then lazily invoke the macro onto its
 // arguments only at some later point.

@@ -23,10 +23,12 @@
 // Precondition: decl = `(func_name) ...`.
 #define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_NAME_(decl, traits) \
     ( \
-        BOOST_PP_TUPLE_EAT(1) decl \
-    , \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK(traits, BOOST_PP_TUPLE_REM_CTOR(\
-                1, BOOST_CONTRACT_EXT_PP_PAREN_FRONT(decl))) \
+        BOOST_PP_EXPAND(BOOST_PP_TUPLE_EAT(1) decl), \
+        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK( \
+            traits, \
+            BOOST_PP_TUPLE_REM_CTOR(1, \
+                    BOOST_CONTRACT_EXT_PP_PAREN_FRONT(decl)) \
+        ) \
     )
 
 // Add empty operator name (i.e., not an operator).
@@ -39,7 +41,7 @@
 #define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_NAME_OPERATOR_PAREN_( \
         unused, decl, traits) \
     BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_NAME_( \
-        BOOST_PP_TUPLE_EAT(0) decl, \
+        BOOST_PP_EXPAND(BOOST_PP_TUPLE_EAT(0) decl), \
         BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK(traits, \
                 BOOST_CONTRACT_EXT_PP_PAREN_FRONT(decl) BOOST_PP_EMPTY) \
     )
@@ -62,9 +64,9 @@
 // parenthesized sequence element, from `((elem))` to `elem`).
 #define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_NAME_OPERATOR_TYPE_REM_( \
         r, remove_all_paren, paren_type_trait) \
-    BOOST_PP_EXPR_IIF(remove_all_paren, \
+    BOOST_PP_EXPAND(BOOST_PP_EXPR_IIF(remove_all_paren, \
         BOOST_PP_TUPLE_REM(1) \
-    ) paren_type_trait
+    ) paren_type_trait)
 
 // Precondition: SECOND(decl_type) is a double parenthesized sequence of type
 // traits (e.g., `((int)) ((const))`).
@@ -94,10 +96,10 @@
 // Precondition: decl = `parenthesized-type ...`.
 #define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_NAME_OPERATOR_TYPE_(d, decl, traits) \
     BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_NAME_OPERATOR_TYPE_SEQ_( \
-            BOOST_CONTRACT_EXT_PP_TRAITS_TYPE_SEQ_PARSE_D(d, decl), traits)
+            BOOST_CONTRACT_EXT_PP_TYPE_TRAITS_SEQ_PARSE_D(d, decl), traits)
 
 #define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_NAME_OPERATOR_(d, decl, traits) \
-    BOOST_PP_IIF(BOOST_CONTRACT_EXT_PP_HAS_PAREN(decl), \
+    BOOST_PP_EXPAND(BOOST_PP_IIF(BOOST_CONTRACT_EXT_PP_HAS_PAREN(decl), \
         BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_NAME_OPERATOR_PAREN_ \
     , BOOST_PP_IIF(BOOST_CONTRACT_EXT_PP_KEYWORD_IS_NEW_FRONT(decl), \
         BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_NAME_OPERATOR_NEW_ \
@@ -105,13 +107,14 @@
         BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_NAME_OPERATOR_DELETE_ \
     , \
         BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_NAME_OPERATOR_TYPE_ \
-    )))(d, decl, traits)
+    )))(d, decl, traits))
 
 // Precondition: decl = `operator ...`
 #define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_NAME_OPERATOR_YES_(d, decl, traits) \
     BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_NAME_OPERATOR_(d, \
             BOOST_CONTRACT_EXT_PP_KEYWORD_OPERATOR_REMOVE_FRONT(decl), traits)
 
+// TODO: Why can't I use EXPAND here?
 #define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_NAME_ARGS_(d, decl, traits) \
     BOOST_PP_IIF(BOOST_CONTRACT_EXT_PP_KEYWORD_IS_OPERATOR_FRONT(decl), \
         BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_NAME_OPERATOR_YES_ \

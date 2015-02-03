@@ -8,8 +8,6 @@
 /* PUBLIC */
 
 // Precondition: name must always be the last remaining token in decl.
-// Implementation: Must remove trailing NIL from decl to get actual name
-// (NIL added so to avoid pp-tuple empty elems even after decl fully parsed).
 #define BOOST_CONTRACT_EXT_PP_PARAM_TRAITS_NAME_PARSE(decl_traits) \
     ( \
         BOOST_PP_NIL, \

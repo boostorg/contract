@@ -19,12 +19,14 @@
 #define BOOST_CONTRACT_EXT_PP_TEMPLATE_PARAM_TRAITS_TYPE_TEMPLATE_PUSH_BACK_( \
         template_template_class_etc, template_template_params, traits) \
     ( \
-        BOOST_PP_IIF(BOOST_CONTRACT_EXT_PP_KEYWORD_IS_CLASS_FRONT( \
-                template_template_class_etc), \
+        BOOST_PP_EXPAND(BOOST_PP_IIF( \
+            BOOST_CONTRACT_EXT_PP_KEYWORD_IS_CLASS_FRONT( \
+                    template_template_class_etc) \
+        , \
             BOOST_CONTRACT_EXT_PP_KEYWORD_CLASS_REMOVE_FRONT \
         , \
             BOOST_PP_TUPLE_REM(1) \
-        )(template_template_class_etc), \
+        )(template_template_class_etc)), \
         BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK( \
             traits, \
             template \
@@ -63,13 +65,6 @@
         BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK(traits, typename) \
     )
             
-#define BOOST_CONTRACT_EXT_PP_PARAM_TRAITS_TYPE_PARSED_(decl_type, traits) \
-    ( \
-        BOOST_PP_TUPLE_ELEM(2, 0, decl_type), \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK(traits, \
-                BOOST_PP_TUPLE_ELEM(2, 1, decl_type)) \
-    )
-
 // Precondition: Unable to parse type so assume decl = `type NIL` (i.e., the
 // non-keyword type was specified unwrapped). That is allowed only when no
 // parameter name is given so all tokens in decl are for the type and remaining
@@ -85,18 +80,22 @@
     )
 
 #define BOOST_CONTRACT_EXT_PP_PARAM_TRAITS_TYPE_(decl_type, traits) \
-    BOOST_PP_IIF(BOOST_PP_EXPAND(BOOST_CONTRACT_EXT_PP_IS_EMPTY \
-            BOOST_PP_TUPLE_ELEM(2, 1, decl_type)), \
+    BOOST_PP_EXPAND(BOOST_PP_IIF( \
+        BOOST_PP_EXPAND(BOOST_CONTRACT_EXT_PP_IS_EMPTY \
+                BOOST_PP_TUPLE_ELEM(2, 1, decl_type)) \
+    , \
         BOOST_CONTRACT_EXT_PP_PARAM_TRAITS_TYPE_NOT_PARSED_ \
     , \
-        BOOST_CONTRACT_EXT_PP_PARAM_TRAITS_TYPE_PARSED_ \
-    )(decl_type, traits)
+        BOOST_CONTRACT_EXT_PP_DECL_TRAITS_PUSH_BACK \
+    )(decl_type, traits))
 
 // Precondition: decl = `wrapped-type ... | type`.
 #define BOOST_CONTRACT_EXT_PP_PARAM_TRAITS_TYPE_PARSE_ARGS_(d, decl, traits) \
     BOOST_CONTRACT_EXT_PP_PARAM_TRAITS_TYPE_( \
-            BOOST_CONTRACT_EXT_PP_TRAITS_TYPE_PARSE_D(d, decl), traits)
-    
+            BOOST_CONTRACT_EXT_PP_TYPE_TRAITS_PARSE_D(d, decl), traits)
+
+// TODO: I could use ISWITCH here.
+// TODO: Why can't I use PP_EXPAND here?
 #define BOOST_CONTRACT_EXT_PP_TEMPLATE_PARAM_TRAITS_TYPE_PARSE_ARGS_( \
         d, decl, traits) \
     BOOST_PP_IIF(BOOST_CONTRACT_EXT_PP_KEYWORD_IS_TYPENAME_FRONT(decl), \

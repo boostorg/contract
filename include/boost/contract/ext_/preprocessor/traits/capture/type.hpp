@@ -31,7 +31,7 @@
 // Precondition: decl = `[wrapped-type] ...`.
 #define BOOST_CONTRACT_EXT_PP_CAPTURE_TRAITS_TYPE_PARSE_ARGS_(d, decl, traits) \
     BOOST_CONTRACT_EXT_PP_CAPTURE_TRAITS_TYPE_( \
-            BOOST_CONTRACT_EXT_PP_TRAITS_TYPE_PARSE_D(d, decl), traits)
+            BOOST_CONTRACT_EXT_PP_TYPE_TRAITS_PARSE_D(d, decl), traits)
     
 /* PUBLIC */
 
