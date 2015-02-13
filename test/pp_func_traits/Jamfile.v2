@@ -10,8 +10,8 @@ rule test-pp ( filestem ) {
     alias $(filestem)-pp.ii : $(filestem)-pp ;
     explicit $(filestem)-pp $(filestem)-pp.ii ;
 
-    # This is "good enough"... but it'd be better is wave was ran by something
-    # like `bjam ... toolset=wave`.
+    # TODO: This is "good enough"... but it'd be better is wave was ran by
+    # something like `bjam ... toolset=wave`.
     make $(filestem)-wave.ii : $(filestem).cpp : @wave ;
     alias $(filestem)-wave : $(filestem)-wave.ii ;
 }
@@ -29,5 +29,5 @@ test-pp ref ;
 test-pp except ;
 test-pp trailing_return ;
 test-pp virt ;
-#test-pp postconditions ;
+test-pp postconditions ;
 

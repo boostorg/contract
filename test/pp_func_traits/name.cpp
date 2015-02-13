@@ -4,10 +4,8 @@
 #   error "this compiler does not support variadic macros"
 #else
 
-#include <boost/contract/ext_/preprocessor/traits/func/aux_/index.hpp>
 #define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_AUX_INDEX_TEST \
     BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_AUX_NAME_INDEX
-
 #include "../aux_/pp_traits.hpp"
 #include <boost/contract/ext_/preprocessor/traits/func.hpp>
 #include <boost/preprocessor/facilities/empty.hpp>
