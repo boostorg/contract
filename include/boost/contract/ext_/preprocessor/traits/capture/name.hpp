@@ -2,7 +2,7 @@
 #ifndef BOOST_CONTRACT_EXT_PP_CAPTURE_TRAITS_NAME_HPP_
 #define BOOST_CONTRACT_EXT_PP_CAPTURE_TRAITS_NAME_HPP_
 
-#include <boost/contract/ext_/preprocessor/traits/capture/aux_/index.hpp>
+#include <boost/contract/ext_/preprocessor/traits/aux_/capture_index.hpp>
 
 /* PUBLIC */
 

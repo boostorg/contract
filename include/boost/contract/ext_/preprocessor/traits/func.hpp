@@ -15,7 +15,7 @@
 #include <boost/contract/ext_/preprocessor/traits/func/export.hpp>
 #include <boost/contract/ext_/preprocessor/traits/func/verbatim.hpp>
 #include <boost/contract/ext_/preprocessor/traits/func/access.hpp>
-#include <boost/contract/ext_/preprocessor/traits/func/aux_/index.hpp>
+#include <boost/contract/ext_/preprocessor/traits/aux_/func_index.hpp>
 #include <boost/contract/ext_/preprocessor/traits/utility/traits.hpp>
 
 /* PUBLIC */
@@ -23,7 +23,6 @@
 // Expand function declaration to `(remaining-declaration, parsed-traits)`:
 // * Parsed traits can be inspected using the FUNC_TRAITS macros.
 // * Reaming declaration is `BOOST_PP_NIL` if there was no error.
-// Implementation: These macros order must match INDEX values (see index.hpp).
 #define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_PARSE_D(d, decl) \
     BOOST_CONTRACT_EXT_PP_TRAITS_FUNC_DONE_( \
     BOOST_CONTRACT_EXT_PP_TRAITS_FUNC_POSTCONDITIONS_PARSE_(d, \
@@ -46,9 +45,9 @@
 
 /* PRIVATE */
 
-// To debug the pp parsing code, you can #define this internal macro to stop
-// parsing at a given trait index as #defined in index.hpp (this is what some
-// of this library tests do).
+// To debug or test the pp parsing code, you can #define this internal macro to
+// stop parsing at a given trait index as #defined in func_index.hpp (this is
+// what some of this library tests do).
 // #define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_AUX_INDEX_TEST ..._INDEX
 
 // NOTE: These macros #definitions read TRITS_FUNC instead of FUNC_TRAITS to

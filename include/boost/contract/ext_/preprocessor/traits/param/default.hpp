@@ -2,7 +2,7 @@
 #ifndef BOOST_CONTRACT_EXT_PP_PARAM_TRAITS_DEFAULT_HPP_
 #define BOOST_CONTRACT_EXT_PP_PARAM_TRAITS_DEFAULT_HPP_
 
-#include <boost/contract/ext_/preprocessor/traits/param/aux_/index.hpp>
+#include <boost/contract/ext_/preprocessor/traits/aux_/param_index.hpp>
 #include <boost/contract/ext_/preprocessor/traits/utility/traits.hpp>
 #include <boost/contract/ext_/preprocessor/keyword/default.hpp>
 #include <boost/contract/ext_/preprocessor/parenthesize.hpp>
@@ -10,7 +10,12 @@
 
 /* PUBLIC */
 
-// Init. default argument to EMPTY without altering decl.
+// Expand to `(,,,) | EMPTY()`.
+#define BOOST_CONTRACT_EXT_PP_PARAM_TRAITS_DEFAULT(traits) \
+    BOOST_CONTRACT_EXT_PP_TRAITS_ELEM( \
+            BOOST_CONTRACT_EXT_PP_PARAM_TRAITS_AUX_DEFAULT_INDEX, traits)()
+
+// Initialize default argument to EMPTY without altering decl.
 #define BOOST_CONTRACT_EXT_PP_PARAM_TRAITS_EMPTY_DEFAULT_PARSE(decl_traits) \
     ( \
         BOOST_PP_TUPLE_ELEM(2, 0, decl_traits), \
@@ -36,11 +41,5 @@
         ) \
     )
 
-// Expand to `(,,,) | EMPTY()`.
-#define BOOST_CONTRACT_EXT_PP_PARAM_TRAITS_DEFAULT(traits) \
-    BOOST_CONTRACT_EXT_PP_TRAITS_ELEM( \
-            BOOST_CONTRACT_EXT_PP_PARAM_TRAITS_AUX_DEFAULT_INDEX, traits)()
-
 #endif // #include guard
-
 

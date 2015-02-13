@@ -20,7 +20,6 @@
 #include <boost/contract/ext_/preprocessor/keyword/return.hpp>
 #include <boost/contract/ext_/preprocessor/keyword/const.hpp>
 #include <boost/contract/ext_/preprocessor/keyword/if.hpp>
-#include <boost/contract/ext_/preprocessor/keyword/else.hpp>
 #include <boost/contract/ext_/preprocessor/paren/has.hpp>
 #include <boost/preprocessor/tuple/eat.hpp>
 #include <boost/preprocessor/control/iif.hpp>
@@ -47,33 +46,8 @@
         BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_BOOL_PARSE_1_ \
     ))))))(d, l, decl)
 
-// EXPAND and IIF (instead of BITOR, etc.) for proper expansion (on MSVC).
-#define BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_IS_REPLACEMENT_D_L_1( \
-        d, l, decl) \
-    BOOST_PP_EXPAND(BOOST_PP_IIF(BOOST_CONTRACT_EXT_PP_KEYWORD_IS_ELSE_FRONT( \
-            decl), \
-        1 \
-    , BOOST_PP_IIF(BOOST_CONTRACT_EXT_PP_OLDOF_ASSERTION_TRAITS_IS(decl), \
-        1 \
-    , \
-        0 \
-    )))
-
-#define BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_REPLACE_PARSE_D_L_1( \
-        d, l, decl_traits) \
-    BOOST_PP_IIF(BOOST_CONTRACT_EXT_PP_KEYWORD_IS_ELSE_FRONT( \
-            BOOST_PP_TUPLE_ELEM(2, 0, decl_traits)), \
-        BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_REPLACE_ELSES_PARSE_D_L \
-    , \
-        BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_REPLACE_OLDOF_PARSE_D_L_1_ \
-    )(d, l, decl_traits)
-
 /* PRIVATE (1) */
 
-#define BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_REPLACE_OLDOF_PARSE_D_L_1_( \
-        d, l, decl_traits) \
-    BOOST_CONTRACT_EXT_PP_OLDOF_ASSERTION_TRAITS_REPLACE_PARSE_D(d, decl_traits)
-        
 #define BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_NAMESPACE_PARSE_1_( \
         d, l, decl) \
     BOOST_CONTRACT_EXT_PP_NAMESPACE_ASSERTION_TRAITS_PARSE(decl)
@@ -91,16 +65,16 @@
     BOOST_CONTRACT_EXT_PP_BOOL_ASSERTION_TRAITS_PARSE(decl)
 
 // Expand to 1 if decl = `[template(,,,)] using ...`, otherwise to 0.
-// EXPAND for proper expansion (on MSVC).
 #define BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_IS_USING_1_(decl) \
-    BOOST_PP_EXPAND(BOOST_PP_IIF(BOOST_CONTRACT_EXT_PP_KEYWORD_IS_USING_FRONT(\
-            decl), \
-        1 BOOST_PP_TUPLE_EAT(1) \
-    , BOOST_PP_IIF(BOOST_CONTRACT_EXT_PP_KEYWORD_IS_TEMPLATE_FRONT(decl), \
-        BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_IS_USING_TEMPLATE_1_ \
-    , \
-        0 BOOST_PP_TUPLE_EAT(1) \
-    ))(decl))
+    BOOST_PP_EXPAND( \
+        BOOST_PP_IIF(BOOST_CONTRACT_EXT_PP_KEYWORD_IS_USING_FRONT(decl), \
+            1 BOOST_PP_TUPLE_EAT(1) \
+        , BOOST_PP_IIF(BOOST_CONTRACT_EXT_PP_KEYWORD_IS_TEMPLATE_FRONT(decl), \
+            BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_IS_USING_TEMPLATE_1_ \
+        , \
+            0 BOOST_PP_TUPLE_EAT(1) \
+        ))(decl) \
+    )
 
 // Precondition: decl = `template ...`
 #define BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_IS_USING_TEMPLATE_1_(decl) \
@@ -139,33 +113,8 @@
         BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_BOOL_PARSE_2_ \
     ))))))(d, l, decl)
 
-// EXPAND and IIF (instead of BITOR, etc.) for proper expansion (on MSVC).
-#define BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_IS_REPLACEMENT_D_L_2( \
-        d, l, decl) \
-    BOOST_PP_EXPAND(BOOST_PP_IIF(BOOST_CONTRACT_EXT_PP_KEYWORD_IS_ELSE_FRONT( \
-            decl), \
-        1 \
-    , BOOST_PP_IIF(BOOST_CONTRACT_EXT_PP_OLDOF_ASSERTION_TRAITS_IS(decl), \
-        1 \
-    , \
-        0 \
-    )))
-
-#define BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_REPLACE_PARSE_D_L_2( \
-        d, l, decl_traits) \
-    BOOST_PP_IIF(BOOST_CONTRACT_EXT_PP_KEYWORD_IS_ELSE_FRONT( \
-            BOOST_PP_TUPLE_ELEM(2, 0, decl_traits)), \
-        BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_REPLACE_ELSES_PARSE_D_L \
-    , \
-        BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_REPLACE_OLDOF_PARSE_D_L_2_ \
-    )(d, l, decl_traits)
-
 /* PRIVATE (2) */
 
-#define BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_REPLACE_OLDOF_PARSE_D_L_2_( \
-        d, l, decl_traits) \
-    BOOST_CONTRACT_EXT_PP_OLDOF_ASSERTION_TRAITS_REPLACE_PARSE_D(d, decl_traits)
-        
 #define BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_NAMESPACE_PARSE_2_( \
         d, l, decl) \
     BOOST_CONTRACT_EXT_PP_NAMESPACE_ASSERTION_TRAITS_PARSE(decl)
@@ -183,16 +132,16 @@
     BOOST_CONTRACT_EXT_PP_BOOL_ASSERTION_TRAITS_PARSE(decl)
 
 // Expand to 1 if decl = `[template(,,,)] using ...`, otherwise to 0.
-// EXPAND for proper expansion (on MSVC).
 #define BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_IS_USING_2_(decl) \
-    BOOST_PP_EXPAND(BOOST_PP_IIF(BOOST_CONTRACT_EXT_PP_KEYWORD_IS_USING_FRONT(\
-            decl), \
-        1 BOOST_PP_TUPLE_EAT(1) \
-    , BOOST_PP_IIF(BOOST_CONTRACT_EXT_PP_KEYWORD_IS_TEMPLATE_FRONT(decl), \
-        BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_IS_USING_TEMPLATE_2_ \
-    , \
-        0 BOOST_PP_TUPLE_EAT(1) \
-    ))(decl))
+    BOOST_PP_EXPAND( \
+        BOOST_PP_IIF(BOOST_CONTRACT_EXT_PP_KEYWORD_IS_USING_FRONT(decl), \
+            1 BOOST_PP_TUPLE_EAT(1) \
+        , BOOST_PP_IIF(BOOST_CONTRACT_EXT_PP_KEYWORD_IS_TEMPLATE_FRONT(decl), \
+            BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_IS_USING_TEMPLATE_2_ \
+        , \
+            0 BOOST_PP_TUPLE_EAT(1) \
+        ))(decl) \
+    )
 
 // Precondition: decl = `template ...`
 #define BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_IS_USING_TEMPLATE_2_(decl) \

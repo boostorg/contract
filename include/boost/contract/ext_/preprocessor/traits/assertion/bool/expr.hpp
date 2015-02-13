@@ -2,7 +2,7 @@
 #ifndef BOOST_CONTRACT_EXT_PP_BOOL_ASSERTION_EXPR_HPP_
 #define BOOST_CONTRACT_EXT_PP_BOOL_ASSERTION_EXPR_HPP_
 
-#include <boost/contract/ext_/preprocessor/traits/assertion/aux_/index.hpp>
+#include <boost/contract/ext_/preprocessor/traits/aux_/assertion_index.hpp>
 
 /* PRIVATE */
 

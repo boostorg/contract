@@ -2,20 +2,9 @@
 #ifndef BOOST_CONTRACT_EXT_PP_KEYWORD_TRAITS_HPP_
 #define BOOST_CONTRACT_EXT_PP_KEYWORD_TRAITS_HPP_
 
-#include <boost/contract/ext_/preprocessor/functional/invoke.hpp>
 #include <boost/preprocessor/control/iif.hpp>
 #include <boost/preprocessor/facilities/empty.hpp>
 #include <boost/preprocessor/facilities/expand.hpp>
-
-/* PRIVATE */
-
-// Precondition: decl = `keyword ...`.
-#define BOOST_CONTRACT_EXT_PP_KEYWORD_TRAITS_YES_( \
-        decl, keyword, remove_keyword_macro) \
-    (remove_keyword_macro(decl), keyword BOOST_PP_EMPTY)
-
-#define BOOST_CONTRACT_EXT_PP_KEYWORD_TRAITS_NO_(decl, unsued1, unused2) \
-    (decl, BOOST_PP_EMPTY)
 
 /* PUBLIC */
 
@@ -26,7 +15,7 @@
     keyword1, is_keyword1_macro, remove_keyword1_macro \
 ) \
     BOOST_PP_EXPAND( \
-        BOOST_CONTRACT_EXT_PP_INVOKE3 \
+        BOOST_CONTRACT_EXT_PP_KEYWORD_TRAITS_ \
         BOOST_PP_IIF(is_keyword1_macro(decl), \
             (BOOST_CONTRACT_EXT_PP_KEYWORD_TRAITS_YES_, decl, \
             keyword1, remove_keyword1_macro) \
@@ -45,7 +34,7 @@
     keyword3, is_keyword3_macro, remove_keyword3_macro \
 ) \
     BOOST_PP_EXPAND( \
-        BOOST_CONTRACT_EXT_PP_INVOKE3 \
+        BOOST_CONTRACT_EXT_PP_KEYWORD_TRAITS_ \
         BOOST_PP_IIF(is_keyword1_macro(decl), \
             (BOOST_CONTRACT_EXT_PP_KEYWORD_TRAITS_YES_, decl, \
             keyword1, remove_keyword1_macro) \
@@ -59,6 +48,19 @@
             (BOOST_CONTRACT_EXT_PP_KEYWORD_TRAITS_NO_, decl, ~, ~) \
         ))) \
     )
+
+/* PRIVATE */
+
+#define BOOST_CONTRACT_EXT_PP_KEYWORD_TRAITS_(macro, _1, _2, _3) \
+    macro(_1, _2, _3)
+
+// Precondition: decl = `keyword ...`.
+#define BOOST_CONTRACT_EXT_PP_KEYWORD_TRAITS_YES_( \
+        decl, keyword, remove_keyword_macro) \
+    (remove_keyword_macro(decl), keyword BOOST_PP_EMPTY)
+
+#define BOOST_CONTRACT_EXT_PP_KEYWORD_TRAITS_NO_(decl, unsued1, unused2) \
+    (decl, BOOST_PP_EMPTY)
 
 #endif // #include guard
 

@@ -8,32 +8,6 @@
 #include <boost/preprocessor/seq/size.hpp>
 #include <boost/preprocessor/arithmetic/dec.hpp>
 
-// TODO: IIF(c, X, Y)(a, b) does not need to be wrapped by EXPAND
-// (Boost.PP docs).
-
-// TODO: #define macro order does NOT matter, so I can put PUBLIC before
-// PRIVATE (Boost.PP docs).
-
-// TODO: BOOST_PP_EXPAND has been used pervasively in many/most places by all
-// the traits/* macros. This is an *EXPERIMENT* to see if I can get MSVC to
-// expand better (e.g., never needed DEC_TRAITS_FIRST/SECOND instead of
-// BOOST_PP_TUPLE_ELEM). At the end, clean this up by removing the EXPAND
-// macros that are not actually needed. There are TODO comments where it was
-// for some not clear reason not possible to use EXPAND. It seems that EXPAND
-// should truly be needed only in the following cases:
-//  EXPAND(X BOOST_PP_IIF(c, (a), (b))) --> X(a | b)
-//  EXPAND(X a) --> X(b), where a = (b)
-// And *NOT* by:
-//  IIF(c, X, Y)(a) --> X(a) | Y(a)
-//  EAT(n) ...
-//  REM(n) ...
-// But I still have to fully understand these... plus MSVC occasionally needs
-// an extra EXPAND or level of indirection for proper expansion without an
-// apparent logic for it (these might just be MSVC expansions bugs I have to
-// deal with on a case-by-case bases, they seem to be limited in number...).
-
-// TODO: Rename this file adt.hpp.
-
 /* PUBLIC */
 
 // These macros are not usually used by the users (unless they re-implement
@@ -59,17 +33,14 @@
 // iteration instead of recursion) and largest (up to 256 elements) data
 // structure so there should be no reason to change representation from pp-seq.
 
-// TODO: Can I make this private to this file (i.e., postfix it with "_")?
 #define BOOST_CONTRACT_EXT_PP_TRAITS_INIT (BOOST_PP_NIL)
         
-// TODO: Can I make this private to this file (i.e., postfix it with "_")?
 // Usage: DONE(traits) (could expand to EMPTY()).
 #define BOOST_CONTRACT_EXT_PP_TRAITS_DONE BOOST_PP_SEQ_POP_FRONT
 
 // Usage: ELEM(index, traits)
 #define BOOST_CONTRACT_EXT_PP_TRAITS_ELEM BOOST_PP_SEQ_ELEM
 
-// TODO: Can I make this private to this file (i.e., postfix it with "_")?
 #define BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK(traits, trait) traits (trait)
 
 // Usage: POP_BACK(taits)
@@ -80,14 +51,12 @@
 
 // DECLaration TRAITS.
 
-// IMPORTANT: These DECL_TRAITS macros must not modify decl, they can only
-// operate on traits. That is because different algorithms represent decl
-// differently (as tokens, pp-seq, etc.) so it is up these algorithms using
-// these DECL_TRAITS macro to maintain decl (which is here just passed along).
-// Thus, these DECL_TRAITS macros are provided here just for convenience, they
-// do not really add any functionality on top of the TRAITS macros #define
-// above (but when possible use the DECL_TRAITS macros instead of re-writing
-// them from scratch using the TRAITS macros above).
+// NOTE: These DECL_TRAITS macros are provided for convenience only (but use
+// them whenever possible instead of the TRAITS_INIT, TRAITS_DONE, etc. macros
+// above so to make your code more readable and compact).
+// These DECL_TRAITS macros cannot alter `decl` so they just pass that
+// parameter throw (because the format of `decl` is up to the user, sometime
+// it is a pp-seq, sometimes just tokens, etc.).
 
 #define BOOST_CONTRACT_EXT_PP_DECL_TRAITS_INIT(decl) \
     (decl, BOOST_CONTRACT_EXT_PP_TRAITS_INIT)

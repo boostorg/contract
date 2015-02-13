@@ -11,7 +11,7 @@
         BOOST_PP_TUPLE_EAT(1) decl, \
         BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK( \
             traits, \
-            BOOST_CONTRACT_EXT_PP_TRAITS_OLDOF_REMOVE_FRONT( \
+            BOOST_CONTRACT_EXT_PP_OLDOF_ASSERTION_TRAITS_OPERATOR_REMOVE_FRONT(\
                 BOOST_PP_TUPLE_REM_CTOR( \
                     1, BOOST_CONTRACT_EXT_PP_PAREN_FRONT(decl) \
                 ) \

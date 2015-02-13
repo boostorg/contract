@@ -2,8 +2,6 @@
 #ifndef BOOST_CONTRACT_EXT_PP_CONST_ASSERTION_EXPR_HPP_
 #define BOOST_CONTRACT_EXT_PP_CONST_ASSERTION_EXPR_HPP_
 
-#include <boost/contract/ext_/preprocessor/traits/assertion/aux_/index.hpp>
-
 /* PRIVATE */
 
 // Precondition: decl = `... NIL`.

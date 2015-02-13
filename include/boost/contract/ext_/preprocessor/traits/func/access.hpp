@@ -2,7 +2,7 @@
 #ifndef BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_ACCESS_HPP_
 #define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_ACCESS_HPP_
 
-#include <boost/contract/ext_/preprocessor/traits/func/aux_/index.hpp>
+#include <boost/contract/ext_/preprocessor/traits/aux_/func_index.hpp>
 #include <boost/contract/ext_/preprocessor/traits/utility/keyword.hpp>
 #include <boost/contract/ext_/preprocessor/traits/utility/traits.hpp>
 #include <boost/contract/ext_/preprocessor/keyword/public.hpp>

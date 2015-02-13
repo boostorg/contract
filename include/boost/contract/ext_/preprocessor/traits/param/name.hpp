@@ -2,10 +2,15 @@
 #ifndef BOOST_CONTRACT_EXT_PP_PARAM_TRAITS_NAME_HPP_
 #define BOOST_CONTRACT_EXT_PP_PARAM_TRAITS_NAME_HPP_
 
-#include <boost/contract/ext_/preprocessor/traits/param/aux_/index.hpp>
+#include <boost/contract/ext_/preprocessor/traits/aux_/param_index.hpp>
 #include <boost/contract/ext_/preprocessor/traits/utility/traits.hpp>
 
 /* PUBLIC */
+
+// Expand to `[...] name | EMPTY()` (ellipses `...` for variadic templates).
+#define BOOST_CONTRACT_EXT_PP_PARAM_TRAITS_NAME(traits) \
+    BOOST_CONTRACT_EXT_PP_TRAITS_ELEM( \
+            BOOST_CONTRACT_EXT_PP_PARAM_TRAITS_AUX_NAME_INDEX, traits)()
 
 // Precondition: name must always be the last remaining token in decl.
 #define BOOST_CONTRACT_EXT_PP_PARAM_TRAITS_NAME_PARSE(decl_traits) \
@@ -18,11 +23,6 @@
             BOOST_PP_EMPTY \
         ) \
     )
-
-// Expand to `[...] name | EMPTY()` (ellipses `...` for variadic templates).
-#define BOOST_CONTRACT_EXT_PP_PARAM_TRAITS_NAME(traits) \
-    BOOST_CONTRACT_EXT_PP_TRAITS_ELEM( \
-            BOOST_CONTRACT_EXT_PP_PARAM_TRAITS_AUX_NAME_INDEX, traits)()
 
 #endif // #include guard
 
