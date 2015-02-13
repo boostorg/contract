@@ -18,6 +18,13 @@
 
 /* PUBLIC */
 
+// This macro name must NOT be #defined (used here like a "keyword"). The
+// Boost.Preprocessor doc indicates the purpose of BOOST_PP_NIL is to NOT be
+// a macro (i.e., to be #undefined, according with its usage here).
+#ifdef BOOST_PP_NIL
+#   error "#definition of reserved macro name"
+#endif
+
 // Precondition: tokens must start with a token concatenable to a macro name
 //               (e.g., a literal or integral token) or with parenthesis.
 #define BOOST_CONTRACT_EXT_PP_IS_NIL_FRONT(tokens) \
