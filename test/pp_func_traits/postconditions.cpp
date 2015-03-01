@@ -33,43 +33,51 @@ int main ( ) {
 
     BOOST_CONTRACT_TEST_(
         postcondition(
-//            namespace (py) as boost::python,
-//
-//            // Using directives.
-//            using namespace std,
-//            // Using declarations.
-//            using std::placeholders::_1,
-//            using typename T::value_type,
-//            using (std::map<int, char>::insert),
-//            using (typename M<int, char>::key_type),
-//            // Using aliases.
-//            using (iv) as vector<int>,
-//            using (icmap) as (map<int, char>),
-//            template( typename T ) using (vt) as vector<T>,
-//            template( typename T, int U ) using (xtu) as (x<T, int, U>),
-//
-//            typedef unsigned long ul,
-//            typedef (map<int, char>) icmap,
-//
-//            auto result1 = return,
-//            int const result2 = return,
-//            (map<int, char> const&) result3 = return,
-//
+            first,
+
+            namespace (py) as boost::python,
+
+            // Using directives.
+            using namespace std,
+            // Using declarations.
+            using std::placeholders::_1,
+            using typename T::value_type,
+            using (std::map<int, char>::insert),
+            using (typename M<int, char>::key_type),
+            // Using aliases.
+            using (iv) as vector<int>,
+            using (icmap) as (map<int, char>),
+            template( typename T ) using (vt) as vector<T>,
+            template( typename T, int U ) using (xtu) as (x<T, int, U>),
+
+            typedef unsigned long ul,
+            typedef (map<int, char>) icmap,
+
+            auto result1 = return,
+            int const result2 = return,
+            (map<int, char> const&) result3 = return,
+
             auto old_size = BOOST_CONTRACT_OLDOF v.size(),
             unsigned int const old_capacity = oldof v.capacity(),
             (map<int, char> const) old_map =
                     BOOST_CONTRACT_OLDOF (map<int, char>::clone(m)),
-//
-//            x >= 0,
-//            x == 0 ? !result : true,
-//            (!y),
-//            (std::map<int, char>::key_size > 0),
-//
-//            const( std::cout ) !std::cout.error(),
-//            const( std::cout, x ) std::cout.flags == x,
-//            const( ) true,
-//            const( int const n, x, (::std::map<int, char> const&) m )
-//                    (m.size() == map<int, char>::key_size == x),
+
+            x >= 0,
+            x == 0 ? !result : true,
+            (!y),
+            (std::map<int, char>::key_size > 0),
+
+            const( std::cout ) !std::cout.error(),
+            const( std::cout, x ) std::cout.flags == x,
+            const( ) true,
+            const( int const n, x, (::std::map<int, char> const&) m )
+                    (m.size() == map<int, char>::key_size == x),
+            
+            static if(m<x, y>::value) (
+                u,
+            ) else (
+                v,
+            )
 
             if(const( int const x ) x >= 0) (
                 a >= 0,
@@ -77,13 +85,15 @@ int main ( ) {
                 auto c = return,
                 long long const d = BOOST_CONTRACT_OLDOF v.size(),
                 d >= v.size(),
-            ) else (
+            ) else if(x) (
                 x,
                 y,
-                z,
+            ) else (
+                u,
+                v,
             )
-            u, v, w,
 
+            last,
         )
     )
     
@@ -231,9 +241,38 @@ int main ( ) {
         if(c) ( t1, t2, ), else e1, else e2,
     after, ) )
 
-    // TODO: Test `if ... else if ...` and `static if ... else if ...` (note
-    // that static-if's else-if does NOT repeat static but it is still static).
+    BOOST_CONTRACT_TEST_( postcondition( before,
+        if(c1) (
+            t11,
+            t12,
+        ) else if(c2) (
+            t21,
+            t22,
+        ) else if(c3) (
+            t31,
+            t32,
+        ) else (
+            e1,
+            e2,
+        )
+    after, ) )
     
+    BOOST_CONTRACT_TEST_( postcondition( before,
+        static if(c1) (
+            t11,
+            t12,
+        ) else static if(c2) (
+            t21,
+            t22,
+        ) else static if(c3) (
+            t31,
+            t32,
+        ) else (
+            e1,
+            e2,
+        )
+    after, ) )
+          
     return BOOST_CONTRACT_TEST_AUX_PP_TRAITS_REPORT_ERRORS;
 }
 

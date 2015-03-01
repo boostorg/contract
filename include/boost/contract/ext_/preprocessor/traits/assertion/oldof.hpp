@@ -22,10 +22,22 @@
     BOOST_PP_CAT(BOOST_CONTRACT_EXT_PP_OLDOF_ASSERTION_TRAITS_CAT_TO_EMPTY, \
             tokens)
 
+// Precondition: tokens must end with `..._TRAITS_OLDOF`.
+#define BOOST_CONTRACT_EXT_PP_OLDOF_ASSERTION_TRAITS_OPERATOR_REMOVE_BACK( \
+        tokens) \
+    BOOST_PP_CAT(tokens, \
+            BOOST_CONTRACT_EXT_PP_OLDOF_ASSERTION_TRAITS_CAT_TO_EMPTY)
+
 // This is the operator that decl. syntax must use to prefix old-of expressions:
 // `{auto | wrapper-type} var = ..._OPERATOR exr`.
+// Implementation: The OPERATOR_ before the comma `,` is used so that old-of
+// assertion assignments can be cat-back by KEYWORD_..._BACK macros (PP_NIL
+// could have been used as well). The OPERATOR_ after the comma `,` is used to
+// tag the front of an old-of expression so old-of assertions can be recognized
+// during parsing.
 #define BOOST_CONTRACT_EXT_PP_OLDOF_ASSERTION_TRAITS_OPERATOR \
-    , BOOST_CONTRACT_EXT_PP_OLDOF_ASSERTION_TRAITS_OPERATOR_
+    BOOST_CONTRACT_EXT_PP_OLDOF_ASSERTION_TRAITS_OPERATOR_, \
+            BOOST_CONTRACT_EXT_PP_OLDOF_ASSERTION_TRAITS_OPERATOR_
 
 // Precondition: oldofdecl_booltraits =
 // `(OLDOF expr, (bool) (auto-wrapped-type assign =)` (which is here transformed
@@ -58,6 +70,7 @@
 #define BOOST_CONTRACT_EXT_PP_OLDOF_ASSERTION_TRAITS_CAT_TO_COMMABOOST_CONTRACT_EXT_PP_OLDOF_ASSERTION_TRAITS_OPERATOR_ ,
 // Must expand to empty `` (not local macros, do not #undefine).
 #define BOOST_CONTRACT_EXT_PP_OLDOF_ASSERTION_TRAITS_CAT_TO_EMPTYBOOST_CONTRACT_EXT_PP_OLDOF_ASSERTION_TRAITS_OPERATOR_
+#define BOOST_CONTRACT_EXT_PP_OLDOF_ASSERTION_TRAITS_OPERATOR_BOOST_CONTRACT_EXT_PP_OLDOF_ASSERTION_TRAITS_CAT_TO_EMPTY
 
 #define BOOST_CONTRACT_EXT_PP_OLDOF_ASSERTION_TRAITS_DONE_(decl_traits) \
     ( \

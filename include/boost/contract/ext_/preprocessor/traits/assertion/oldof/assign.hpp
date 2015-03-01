@@ -4,13 +4,17 @@
 
 /* PRIVATE */
 
-// Precondition: decl = `name = NIL`.
+// Precondition: decl = `name = OLDOF_OPERATOR_ NIL`.
 #define BOOST_CONTRACT_EXT_PP_OLDOF_ASSERTION_TRAITS_ASSIGN_PARSE_ARGS_( \
         decl, traits) \
     ( \
         BOOST_PP_NIL, \
         BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK(traits, \
-                BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK(decl)) \
+            BOOST_CONTRACT_EXT_PP_OLDOF_ASSERTION_TRAITS_OPERATOR_REMOVE_BACK( \
+            BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK( \
+                decl \
+            )) \
+        ) \
     )
 
 /* PUBLIC */

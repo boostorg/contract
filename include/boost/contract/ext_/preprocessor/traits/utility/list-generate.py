@@ -2,9 +2,11 @@
 import os
 import sys
 
-def code(limit):
+LIMIT = 64
+
+def code():
     result = ''
-    for i in range(1, limit + 1):
+    for i in range(1, LIMIT + 1):
         result = result + '''
 /* PUBLIC ({0}) */
 
@@ -162,7 +164,6 @@ def code(limit):
 '''.format(i, i + 1)
     return result
 
-limit = 2
 script = os.path.basename(sys.argv[0])
 path = sys.argv[0].replace('-generate.py', '', 1) + ".hpp"
 file = open(path, 'w')
@@ -186,7 +187,9 @@ file.write('''
 #include <boost/preprocessor/tuple/elem.hpp>
 #include <boost/preprocessor/tuple/eat.hpp>
 
-// Maximum number of list iterations `l` (e.g., max number of nested lists).
+/* PUBLIC */
+
+// Maximum number of nested lists that can be parsed (before pp errors).
 #define BOOST_CONTRACT_EXT_PP_LIST_TRAITS_LIMIT {1}
 
 // Usage:
@@ -237,7 +240,8 @@ file.write('''
 // Note: no-void, yes-replace, yes-enum (e.g., for assertions).
 {2}
 #endif // #include guard
-'''.format(script, limit, code(limit)))
+
+'''.format(script, LIMIT, code()))
 file.close()
 print "Written:", path
 
