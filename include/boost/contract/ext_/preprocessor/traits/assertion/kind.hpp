@@ -2,6 +2,10 @@
 #ifndef BOOST_CONTRACT_EXT_PP_ASSERTION_KIND_HPP_
 #define BOOST_CONTRACT_EXT_PP_ASSERTION_KIND_HPP_
 
+#include <boost/contract/ext_/preprocessor/traits/aux_/assertion_index.hpp>
+#include <boost/contract/ext_/preprocessor/traits/utility/traits.hpp>
+#include <boost/preprocessor/tuple/elem.hpp>
+
 /* PUBLIC */
 
 #define BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_SET_KIND_PARSE( \

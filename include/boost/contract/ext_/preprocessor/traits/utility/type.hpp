@@ -244,5 +244,7 @@
         push_back_macro \
     )
 
+// TODO: Consider returning EMPTY in case no type is parsed...
+
 #endif // #include guard
 

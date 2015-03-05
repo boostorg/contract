@@ -5,28 +5,21 @@
 #include <boost/contract/ext_/preprocessor/traits/assertion/const/expr.hpp>
 #include <boost/contract/ext_/preprocessor/traits/assertion/const/captures.hpp>
 #include <boost/contract/ext_/preprocessor/traits/assertion/kind.hpp>
-
-/* PRIVATE */
-
-#define BOOST_CONTRACT_EXT_PP_CONST_ASSERTION_TRAITS_DONE_(decl_traits) \
-    ( \
-        BOOST_PP_TUPLE_ELEM(2, 0, decl_traits), \
-        BOOST_CONTRACT_EXT_PP_TRAITS_DONE( \
-                BOOST_PP_TUPLE_ELEM(2, 1, decl_traits)) \
-    )
+#include <boost/contract/ext_/preprocessor/traits/utility/traits.hpp>
 
 /* PUBLIC */
 
+// ASSERTION_TRAITS_KIND(traits) expands to `const` for this assertion.
+
 // Precondition: decl = `const( [[(wrapped-type)] name, ...] ) expr`.
 #define BOOST_CONTRACT_EXT_PP_CONST_ASSERTION_TRAITS_PARSE_D_L(d, l, decl) \
-    BOOST_CONTRACT_EXT_PP_CONST_ASSERTION_TRAITS_DONE_( \
+    BOOST_CONTRACT_EXT_PP_DECL_TRAITS_DONE( \
     BOOST_CONTRACT_EXT_PP_CONST_ASSERTION_TRAITS_EXPR_PARSE( \
     BOOST_CONTRACT_EXT_PP_CONST_ASSERTION_TRAITS_CAPTURES_PARSE_D_L(d, l, \
     BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_SET_KIND_PARSE(const, \
-        (decl BOOST_PP_NIL, BOOST_CONTRACT_EXT_PP_TRAITS_INIT) \
-    ))))
-
-// ASSERTION_TRAITS_KIND(traits) expands to `const` for this assertion.
+    BOOST_CONTRACT_EXT_PP_DECL_TRAITS_INIT( \
+        decl BOOST_PP_NIL \
+    )))))
 
 #endif // #include guard
 

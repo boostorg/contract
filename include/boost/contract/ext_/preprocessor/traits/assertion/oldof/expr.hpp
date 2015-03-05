@@ -1,6 +1,25 @@
 
-#ifndef BOOST_CONTRACT_EXT_PP_OLDOF_ASSERTION_EXPR_HPP_
-#define BOOST_CONTRACT_EXT_PP_OLDOF_ASSERTION_EXPR_HPP_
+#ifndef BOOST_CONTRACT_EXT_PP_OLDOF_ASSERTION_TRAITS_EXPR_HPP_
+#define BOOST_CONTRACT_EXT_PP_OLDOF_ASSERTION_TRAITS_EXPR_HPP_
+
+#include <boost/contract/ext_/preprocessor/traits/utility/traits.hpp>
+#include <boost/contract/ext_/preprocessor/traits/aux_/assertion_index.hpp>
+#include <boost/preprocessor/facilities/expand.hpp>
+#include <boost/preprocessor/tuple/eat.hpp>
+#include <boost/preprocessor/tuple/rem.hpp>
+
+/* PUBLIC */
+
+// Expand to `...` (tokens).
+#define BOOST_CONTRACT_EXT_PP_OLDOF_ASSERTION_TRAITS_EXPR(traits) \
+    BOOST_CONTRACT_EXT_PP_TRAITS_ELEM( \
+            BOOST_CONTRACT_EXT_PP_OLDOF_ASSERTION_TRAITS_AUX_EXPR_INDEX, traits)
+
+#define BOOST_CONTRACT_EXT_PP_OLDOF_ASSERTION_TRAITS_EXPR_PARSE(decl_traits) \
+    BOOST_PP_EXPAND( \
+        BOOST_CONTRACT_EXT_PP_OLDOF_ASSERTION_TRAITS_EXPR_PARSE_ARGS_ \
+        decl_traits \
+    )
 
 /* PRIVATE */
 
@@ -18,19 +37,6 @@
             ) \
         ) \
     )
-
-/* PUBLIC */
-
-#define BOOST_CONTRACT_EXT_PP_OLDOF_ASSERTION_TRAITS_EXPR_PARSE(decl_traits) \
-    BOOST_PP_EXPAND( \
-        BOOST_CONTRACT_EXT_PP_OLDOF_ASSERTION_TRAITS_EXPR_PARSE_ARGS_ \
-        decl_traits \
-    )
-
-// Expand to `...` (tokens).
-#define BOOST_CONTRACT_EXT_PP_OLDOF_ASSERTION_TRAITS_EXPR(traits) \
-    BOOST_CONTRACT_EXT_PP_TRAITS_ELEM( \
-            BOOST_CONTRACT_EXT_PP_OLDOF_ASSERTION_TRAITS_AUX_EXPR_INDEX, traits)
 
 #endif // #include guard
 

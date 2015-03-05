@@ -2,7 +2,13 @@
 #ifndef BOOST_CONTRACT_EXT_PP_CONST_ASSERTION_TRAITS_CAPTURES_HPP_
 #define BOOST_CONTRACT_EXT_PP_CONST_ASSERTION_TRAITS_CAPTURES_HPP_
 
+#include <boost/contract/ext_/preprocessor/traits/utility/traits.hpp>
+#include <boost/contract/ext_/preprocessor/traits/aux_/assertion_index.hpp>
 #include <boost/contract/ext_/preprocessor/traits/capture.hpp>
+#include <boost/contract/ext_/preprocessor/keyword/const.hpp>
+#include <boost/contract/ext_/preprocessor/paren/front.hpp>
+#include <boost/preprocessor/tuple/elem.hpp>
+#include <boost/preprocessor/tuple/eat.hpp>
 
 /* PUBLIC */
 
@@ -12,7 +18,7 @@
     BOOST_CONTRACT_EXT_PP_TRAITS_ELEM( \
         BOOST_CONTRACT_EXT_PP_CONST_ASSERTION_TRAITS_AUX_CAPTURES_INDEX, \
         traits \
-    )
+    )()
 
 #define BOOST_CONTRACT_EXT_PP_CONST_ASSERTION_TRAITS_CAPTURES_PARSE_D_L( \
         d, l, decl_traits) \

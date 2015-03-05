@@ -8,16 +8,6 @@
 #include <boost/contract/ext_/preprocessor/keyword/utility/is.hpp>
 #include <boost/contract/ext_/preprocessor/keyword/utility/remove.hpp>
 
-/* PRIVATE */
-
-// Must expand to a single comma `,` (not local macros, do not #undefine).
-#define BOOST_CONTRACT_EXT_PP_KEYWORD_DECLTYPE_CAT_TO_COMMAdecltype ,
-#define decltypeBOOST_CONTRACT_EXT_PP_KEYWORD_DECLTYPE_CAT_TO_COMMA ,
-
-// Must expand to empty `` (not local macros, do not #undefine).
-#define BOOST_CONTRACT_EXT_PP_KEYWORD_DECLTYPE_CAT_TO_EMPTYdecltype
-#define decltypeBOOST_CONTRACT_EXT_PP_KEYWORD_DECLTYPE_CAT_TO_EMPTY
-
 /* PUBLIC */
 
 // Precondition: tokens must start with a token concatenable to a macro name
@@ -43,6 +33,16 @@
 #define BOOST_CONTRACT_EXT_PP_KEYWORD_DECLTYPE_REMOVE_BACK(tokens) \
     BOOST_CONTRACT_EXT_PP_KEYWORD_UTILITY_REMOVE_BACK( \
             BOOST_CONTRACT_EXT_PP_KEYWORD_DECLTYPE_CAT_TO_EMPTY, tokens)
+
+/* PRIVATE */
+
+// Must expand to a single comma `,` (not local macros, do not #undefine).
+#define BOOST_CONTRACT_EXT_PP_KEYWORD_DECLTYPE_CAT_TO_COMMAdecltype ,
+#define decltypeBOOST_CONTRACT_EXT_PP_KEYWORD_DECLTYPE_CAT_TO_COMMA ,
+
+// Must expand to empty `` (not local macros, do not #undefine).
+#define BOOST_CONTRACT_EXT_PP_KEYWORD_DECLTYPE_CAT_TO_EMPTYdecltype
+#define decltypeBOOST_CONTRACT_EXT_PP_KEYWORD_DECLTYPE_CAT_TO_EMPTY
 
 #endif // #include guard
 

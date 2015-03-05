@@ -8,6 +8,17 @@
 #include <boost/preprocessor/seq/size.hpp>
 #include <boost/preprocessor/arithmetic/dec.hpp>
 
+// TODO: I've been going back and forth about this... but at the end, once all
+// traits parsing have been implemented, consider moving utility/ into aux_/
+// and also consider making all _PARSE macros AUX_PARSE (even if they remained
+// defined in that trait header file not under the aux_/ dir). That way the
+// public API might be more clear (and for now no one will every use the
+// utility/ etc macro to implement they own parsing, that's an all different
+// story which might require redesign of this lib API so it's even better to
+// not give the impression that can be done by providing public PARSE macros).
+
+// TODO: Rename this header back to adt.hpp when it's moved into aux_/.
+
 /* PUBLIC */
 
 // These macros are not usually used by the users (unless they re-implement

@@ -6,6 +6,10 @@
 #include <boost/contract/ext_/preprocessor/traits/assertion/oldof/type.hpp>
 #include <boost/contract/ext_/preprocessor/traits/assertion/oldof/expr.hpp>
 #include <boost/contract/ext_/preprocessor/traits/assertion/bool/expr.hpp>
+#include <boost/contract/ext_/preprocessor/traits/assertion/kind.hpp>
+#include <boost/contract/ext_/preprocessor/traits/utility/traits.hpp>
+#include <boost/contract/ext_/preprocessor/keyword/utility/is.hpp>
+#include <boost/contract/ext_/preprocessor/keyword/utility/remove.hpp>
 
 /* PUBLIC */
 
@@ -19,14 +23,14 @@
 //               checked with `..._TRAITS_IS_OLDOF_FRONT` macro above).
 #define BOOST_CONTRACT_EXT_PP_OLDOF_ASSERTION_TRAITS_OPERATOR_REMOVE_FRONT( \
         tokens) \
-    BOOST_PP_CAT(BOOST_CONTRACT_EXT_PP_OLDOF_ASSERTION_TRAITS_CAT_TO_EMPTY, \
-            tokens)
+    BOOST_CONTRACT_EXT_PP_KEYWORD_UTILITY_REMOVE_FRONT( \
+            BOOST_CONTRACT_EXT_PP_OLDOF_ASSERTION_TRAITS_CAT_TO_EMPTY, tokens)
 
 // Precondition: tokens must end with `..._TRAITS_OLDOF`.
 #define BOOST_CONTRACT_EXT_PP_OLDOF_ASSERTION_TRAITS_OPERATOR_REMOVE_BACK( \
         tokens) \
-    BOOST_PP_CAT(tokens, \
-            BOOST_CONTRACT_EXT_PP_OLDOF_ASSERTION_TRAITS_CAT_TO_EMPTY)
+    BOOST_CONTRACT_EXT_PP_KEYWORD_UTILITY_REMOVE_BACK( \
+            BOOST_CONTRACT_EXT_PP_OLDOF_ASSERTION_TRAITS_CAT_TO_EMPTY, tokens)
 
 // This is the operator that decl. syntax must use to prefix old-of expressions:
 // `{auto | wrapper-type} var = ..._OPERATOR exr`.
@@ -39,31 +43,32 @@
     BOOST_CONTRACT_EXT_PP_OLDOF_ASSERTION_TRAITS_OPERATOR_, \
             BOOST_CONTRACT_EXT_PP_OLDOF_ASSERTION_TRAITS_OPERATOR_
 
+// ASSERTION_TRAITS_KIND(traits) expands to `...OPERATOR_` above for this
+// assertion (must check using the `..._IS` macro above).
+
 // Precondition: oldofdecl_booltraits =
 // `(OLDOF expr, (bool) (auto-wrapped-type assign =)` (which is here transformed
 // to the parsalbe decl = `(OLDOF expr) auto-wrapped-type assign =`).
 #define BOOST_CONTRACT_EXT_PP_OLDOF_ASSERTION_TRAITS_REPLACE_PARSE_D( \
         d, oldofdecl_booltraits) \
-    BOOST_CONTRACT_EXT_PP_OLDOF_ASSERTION_TRAITS_DONE_( \
+    BOOST_CONTRACT_EXT_PP_DECL_TRAITS_DONE( \
     BOOST_CONTRACT_EXT_PP_OLDOF_ASSERTION_TRAITS_ASSIGN_PARSE( \
     BOOST_CONTRACT_EXT_PP_OLDOF_ASSERTION_TRAITS_TYPE_PARSE_D(d, \
     BOOST_CONTRACT_EXT_PP_OLDOF_ASSERTION_TRAITS_EXPR_PARSE( \
     BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_SET_KIND_PARSE( \
-        BOOST_CONTRACT_EXT_PP_OLDOF_ASSERTION_TRAITS_OPERATOR_, \
-        ( \
-            (BOOST_PP_TUPLE_ELEM(2, 0, oldofdecl_booltraits)) \
-            BOOST_CONTRACT_EXT_PP_BOOL_ASSERTION_TRAITS_EXPR( \
-                    BOOST_PP_TUPLE_ELEM(2, 1, oldofdecl_booltraits)) \
-            BOOST_PP_NIL, \
-            BOOST_CONTRACT_EXT_PP_TRAITS_INIT \
-        ) \
-    )))))
+            BOOST_CONTRACT_EXT_PP_OLDOF_ASSERTION_TRAITS_OPERATOR_, \
+    BOOST_CONTRACT_EXT_PP_DECL_TRAITS_INIT( \
+        (BOOST_PP_TUPLE_ELEM(2, 0, oldofdecl_booltraits)) \
+        BOOST_CONTRACT_EXT_PP_BOOL_ASSERTION_TRAITS_EXPR( \
+                BOOST_PP_TUPLE_ELEM(2, 1, oldofdecl_booltraits)) \
+        BOOST_PP_NIL \
+    ))))))
 
 /* PRIVATE */
       
 // This macro name must NOT be #defined (used like a "keyword").
 #ifdef BOOST_CONTRACT_EXT_PP_OLDOF_ASSERTION_TRAITS_OPERATOR_
-#   error "#definition of reserved macro name"
+#   error "reserved macro name must not be #defined"
 #endif
 
 // Must expand to a single comma `,` (not local macros, do not #undefine).
@@ -71,13 +76,6 @@
 // Must expand to empty `` (not local macros, do not #undefine).
 #define BOOST_CONTRACT_EXT_PP_OLDOF_ASSERTION_TRAITS_CAT_TO_EMPTYBOOST_CONTRACT_EXT_PP_OLDOF_ASSERTION_TRAITS_OPERATOR_
 #define BOOST_CONTRACT_EXT_PP_OLDOF_ASSERTION_TRAITS_OPERATOR_BOOST_CONTRACT_EXT_PP_OLDOF_ASSERTION_TRAITS_CAT_TO_EMPTY
-
-#define BOOST_CONTRACT_EXT_PP_OLDOF_ASSERTION_TRAITS_DONE_(decl_traits) \
-    ( \
-        BOOST_PP_TUPLE_ELEM(2, 0, decl_traits), \
-        BOOST_CONTRACT_EXT_PP_TRAITS_DONE( \
-                BOOST_PP_TUPLE_ELEM(2, 1, decl_traits)) \
-    )
 
 #endif // #include guard
 

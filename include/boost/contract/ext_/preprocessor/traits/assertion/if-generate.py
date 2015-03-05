@@ -187,43 +187,21 @@ BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_REPLACE_ELSES_PARSE_YES_{0}_( \\
 // Precondition: decl = `assertion BOOST_PP_NIL` (single assertion).
 #define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_YES_{0}_( \\
         d, l, is_post, decl, traits) \\
-    BOOST_PP_IIF(is_post, \\
-        BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_POST_{0}_ \\
-    , \\
-        BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_NOT_POST_{0}_ \\
-    )(d, l, decl, traits)
-
-#define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_POST_{0}_( \\
-        d, l, decl, traits) \\
-    ( \\
-        BOOST_PP_NIL, \\
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK( \\
-            traits, \\
-            ( \\
-                BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_EXPAND_TRAITS_{0}_( \\
-                BOOST_CONTRACT_EXT_PP_POST_ASSERTION_TRAITS_PARSE_D_L_{1}( \\
-                        d, l, \\
-                BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK( \\
-                    decl \\
-                ))) \\
-            ) BOOST_PP_EMPTY \\
-        ) \\
+    BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_PUSH_BACK_{0}_(d, l, \\
+        BOOST_PP_IIF(is_post, \\
+            BOOST_CONTRACT_EXT_PP_POST_ASSERTION_TRAITS_PARSE_D_L_{1} \\
+        , \\
+            BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_PARSE_D_L_{1} \\
+        )(d, l, BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK(decl)), \\
+        traits \\
     )
 
-#define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_NOT_POST_{0}_( \\
-        d, l, decl, traits) \\
+#define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_PUSH_BACK_{0}_( \\
+        d, l, decl_assertion, traits) \\
     ( \\
-        BOOST_PP_NIL, \\
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK( \\
-            traits, \\
-            ( \\
-                BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_EXPAND_TRAITS_{0}_( \\
-                BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_PARSE_D_L_{1}(d, l, \\
-                BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK( \\
-                    decl \\
-                ))) \\
-            ) BOOST_PP_EMPTY \\
-        ) \\
+        BOOST_PP_TUPLE_ELEM(2, 0, decl_assertion), \\
+        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK(traits, \\
+                ( BOOST_PP_TUPLE_ELEM(2, 1, decl_assertion) ) BOOST_PP_EMPTY) \\
     )
 
 // Precondition: decl = `( assertions,,, ) ...` (multiple assertions).
@@ -295,8 +273,17 @@ file.write('''
 
 /* PUBLIC */
 
-// Maximum number of nested if-assertions that can be parsed (before pp errors).
+// NOTE: This same file provides APIs to parse both if-assertion and
+// static-if-assertion traits (because the code re-uses same implementation
+// macros and because the traits inspection public macros are the same).
+
+// Maximum number of nested if and static-if assertions that can be parsed
+// (before pp errors).
 #define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_LIMIT {1}
+
+// ASSERTION_TRAITS_KIND(traits) expands to `if` for if-assertion and to
+// `static if` for static-if-assertion (this can be checked in "one step" using
+// the ..._STATIC_IF_..._IS macro below).
 
 #define BOOST_CONTRACT_EXT_PP_STATIC_IF_ASSERTION_TRAITS_IS(tokens) \\
     BOOST_PP_IIF(BOOST_CONTRACT_EXT_PP_KEYWORD_IS_STATIC_FRONT(tokens), \\

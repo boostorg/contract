@@ -13,8 +13,17 @@
 
 /* PUBLIC */
 
-// Maximum number of nested if-assertions that can be parsed (before pp errors).
+// NOTE: This same file provides APIs to parse both if-assertion and
+// static-if-assertion traits (because the code re-uses same implementation
+// macros and because the traits inspection public macros are the same).
+
+// Maximum number of nested if and static-if assertions that can be parsed
+// (before pp errors).
 #define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_LIMIT 64
+
+// ASSERTION_TRAITS_KIND(traits) expands to `if` for if-assertion and to
+// `static if` for static-if-assertion (this can be checked in "one step" using
+// the ..._STATIC_IF_..._IS macro below).
 
 #define BOOST_CONTRACT_EXT_PP_STATIC_IF_ASSERTION_TRAITS_IS(tokens) \
     BOOST_PP_IIF(BOOST_CONTRACT_EXT_PP_KEYWORD_IS_STATIC_FRONT(tokens), \
@@ -211,43 +220,21 @@ BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_REPLACE_ELSES_PARSE_YES_1_( \
 // Precondition: decl = `assertion BOOST_PP_NIL` (single assertion).
 #define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_YES_1_( \
         d, l, is_post, decl, traits) \
-    BOOST_PP_IIF(is_post, \
-        BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_POST_1_ \
-    , \
-        BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_NOT_POST_1_ \
-    )(d, l, decl, traits)
-
-#define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_POST_1_( \
-        d, l, decl, traits) \
-    ( \
-        BOOST_PP_NIL, \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK( \
-            traits, \
-            ( \
-                BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_EXPAND_TRAITS_1_( \
-                BOOST_CONTRACT_EXT_PP_POST_ASSERTION_TRAITS_PARSE_D_L_2( \
-                        d, l, \
-                BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK( \
-                    decl \
-                ))) \
-            ) BOOST_PP_EMPTY \
-        ) \
+    BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_PUSH_BACK_1_(d, l, \
+        BOOST_PP_IIF(is_post, \
+            BOOST_CONTRACT_EXT_PP_POST_ASSERTION_TRAITS_PARSE_D_L_2 \
+        , \
+            BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_PARSE_D_L_2 \
+        )(d, l, BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK(decl)), \
+        traits \
     )
 
-#define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_NOT_POST_1_( \
-        d, l, decl, traits) \
+#define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_PUSH_BACK_1_( \
+        d, l, decl_assertion, traits) \
     ( \
-        BOOST_PP_NIL, \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK( \
-            traits, \
-            ( \
-                BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_EXPAND_TRAITS_1_( \
-                BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_PARSE_D_L_2(d, l, \
-                BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK( \
-                    decl \
-                ))) \
-            ) BOOST_PP_EMPTY \
-        ) \
+        BOOST_PP_TUPLE_ELEM(2, 0, decl_assertion), \
+        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK(traits, \
+                ( BOOST_PP_TUPLE_ELEM(2, 1, decl_assertion) ) BOOST_PP_EMPTY) \
     )
 
 // Precondition: decl = `( assertions,,, ) ...` (multiple assertions).
@@ -476,43 +463,21 @@ BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_REPLACE_ELSES_PARSE_YES_2_( \
 // Precondition: decl = `assertion BOOST_PP_NIL` (single assertion).
 #define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_YES_2_( \
         d, l, is_post, decl, traits) \
-    BOOST_PP_IIF(is_post, \
-        BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_POST_2_ \
-    , \
-        BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_NOT_POST_2_ \
-    )(d, l, decl, traits)
-
-#define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_POST_2_( \
-        d, l, decl, traits) \
-    ( \
-        BOOST_PP_NIL, \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK( \
-            traits, \
-            ( \
-                BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_EXPAND_TRAITS_2_( \
-                BOOST_CONTRACT_EXT_PP_POST_ASSERTION_TRAITS_PARSE_D_L_3( \
-                        d, l, \
-                BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK( \
-                    decl \
-                ))) \
-            ) BOOST_PP_EMPTY \
-        ) \
+    BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_PUSH_BACK_2_(d, l, \
+        BOOST_PP_IIF(is_post, \
+            BOOST_CONTRACT_EXT_PP_POST_ASSERTION_TRAITS_PARSE_D_L_3 \
+        , \
+            BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_PARSE_D_L_3 \
+        )(d, l, BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK(decl)), \
+        traits \
     )
 
-#define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_NOT_POST_2_( \
-        d, l, decl, traits) \
+#define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_PUSH_BACK_2_( \
+        d, l, decl_assertion, traits) \
     ( \
-        BOOST_PP_NIL, \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK( \
-            traits, \
-            ( \
-                BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_EXPAND_TRAITS_2_( \
-                BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_PARSE_D_L_3(d, l, \
-                BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK( \
-                    decl \
-                ))) \
-            ) BOOST_PP_EMPTY \
-        ) \
+        BOOST_PP_TUPLE_ELEM(2, 0, decl_assertion), \
+        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK(traits, \
+                ( BOOST_PP_TUPLE_ELEM(2, 1, decl_assertion) ) BOOST_PP_EMPTY) \
     )
 
 // Precondition: decl = `( assertions,,, ) ...` (multiple assertions).
@@ -741,43 +706,21 @@ BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_REPLACE_ELSES_PARSE_YES_3_( \
 // Precondition: decl = `assertion BOOST_PP_NIL` (single assertion).
 #define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_YES_3_( \
         d, l, is_post, decl, traits) \
-    BOOST_PP_IIF(is_post, \
-        BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_POST_3_ \
-    , \
-        BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_NOT_POST_3_ \
-    )(d, l, decl, traits)
-
-#define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_POST_3_( \
-        d, l, decl, traits) \
-    ( \
-        BOOST_PP_NIL, \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK( \
-            traits, \
-            ( \
-                BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_EXPAND_TRAITS_3_( \
-                BOOST_CONTRACT_EXT_PP_POST_ASSERTION_TRAITS_PARSE_D_L_4( \
-                        d, l, \
-                BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK( \
-                    decl \
-                ))) \
-            ) BOOST_PP_EMPTY \
-        ) \
+    BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_PUSH_BACK_3_(d, l, \
+        BOOST_PP_IIF(is_post, \
+            BOOST_CONTRACT_EXT_PP_POST_ASSERTION_TRAITS_PARSE_D_L_4 \
+        , \
+            BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_PARSE_D_L_4 \
+        )(d, l, BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK(decl)), \
+        traits \
     )
 
-#define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_NOT_POST_3_( \
-        d, l, decl, traits) \
+#define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_PUSH_BACK_3_( \
+        d, l, decl_assertion, traits) \
     ( \
-        BOOST_PP_NIL, \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK( \
-            traits, \
-            ( \
-                BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_EXPAND_TRAITS_3_( \
-                BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_PARSE_D_L_4(d, l, \
-                BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK( \
-                    decl \
-                ))) \
-            ) BOOST_PP_EMPTY \
-        ) \
+        BOOST_PP_TUPLE_ELEM(2, 0, decl_assertion), \
+        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK(traits, \
+                ( BOOST_PP_TUPLE_ELEM(2, 1, decl_assertion) ) BOOST_PP_EMPTY) \
     )
 
 // Precondition: decl = `( assertions,,, ) ...` (multiple assertions).
@@ -1006,43 +949,21 @@ BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_REPLACE_ELSES_PARSE_YES_4_( \
 // Precondition: decl = `assertion BOOST_PP_NIL` (single assertion).
 #define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_YES_4_( \
         d, l, is_post, decl, traits) \
-    BOOST_PP_IIF(is_post, \
-        BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_POST_4_ \
-    , \
-        BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_NOT_POST_4_ \
-    )(d, l, decl, traits)
-
-#define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_POST_4_( \
-        d, l, decl, traits) \
-    ( \
-        BOOST_PP_NIL, \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK( \
-            traits, \
-            ( \
-                BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_EXPAND_TRAITS_4_( \
-                BOOST_CONTRACT_EXT_PP_POST_ASSERTION_TRAITS_PARSE_D_L_5( \
-                        d, l, \
-                BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK( \
-                    decl \
-                ))) \
-            ) BOOST_PP_EMPTY \
-        ) \
+    BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_PUSH_BACK_4_(d, l, \
+        BOOST_PP_IIF(is_post, \
+            BOOST_CONTRACT_EXT_PP_POST_ASSERTION_TRAITS_PARSE_D_L_5 \
+        , \
+            BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_PARSE_D_L_5 \
+        )(d, l, BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK(decl)), \
+        traits \
     )
 
-#define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_NOT_POST_4_( \
-        d, l, decl, traits) \
+#define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_PUSH_BACK_4_( \
+        d, l, decl_assertion, traits) \
     ( \
-        BOOST_PP_NIL, \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK( \
-            traits, \
-            ( \
-                BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_EXPAND_TRAITS_4_( \
-                BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_PARSE_D_L_5(d, l, \
-                BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK( \
-                    decl \
-                ))) \
-            ) BOOST_PP_EMPTY \
-        ) \
+        BOOST_PP_TUPLE_ELEM(2, 0, decl_assertion), \
+        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK(traits, \
+                ( BOOST_PP_TUPLE_ELEM(2, 1, decl_assertion) ) BOOST_PP_EMPTY) \
     )
 
 // Precondition: decl = `( assertions,,, ) ...` (multiple assertions).
@@ -1271,43 +1192,21 @@ BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_REPLACE_ELSES_PARSE_YES_5_( \
 // Precondition: decl = `assertion BOOST_PP_NIL` (single assertion).
 #define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_YES_5_( \
         d, l, is_post, decl, traits) \
-    BOOST_PP_IIF(is_post, \
-        BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_POST_5_ \
-    , \
-        BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_NOT_POST_5_ \
-    )(d, l, decl, traits)
-
-#define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_POST_5_( \
-        d, l, decl, traits) \
-    ( \
-        BOOST_PP_NIL, \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK( \
-            traits, \
-            ( \
-                BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_EXPAND_TRAITS_5_( \
-                BOOST_CONTRACT_EXT_PP_POST_ASSERTION_TRAITS_PARSE_D_L_6( \
-                        d, l, \
-                BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK( \
-                    decl \
-                ))) \
-            ) BOOST_PP_EMPTY \
-        ) \
+    BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_PUSH_BACK_5_(d, l, \
+        BOOST_PP_IIF(is_post, \
+            BOOST_CONTRACT_EXT_PP_POST_ASSERTION_TRAITS_PARSE_D_L_6 \
+        , \
+            BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_PARSE_D_L_6 \
+        )(d, l, BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK(decl)), \
+        traits \
     )
 
-#define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_NOT_POST_5_( \
-        d, l, decl, traits) \
+#define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_PUSH_BACK_5_( \
+        d, l, decl_assertion, traits) \
     ( \
-        BOOST_PP_NIL, \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK( \
-            traits, \
-            ( \
-                BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_EXPAND_TRAITS_5_( \
-                BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_PARSE_D_L_6(d, l, \
-                BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK( \
-                    decl \
-                ))) \
-            ) BOOST_PP_EMPTY \
-        ) \
+        BOOST_PP_TUPLE_ELEM(2, 0, decl_assertion), \
+        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK(traits, \
+                ( BOOST_PP_TUPLE_ELEM(2, 1, decl_assertion) ) BOOST_PP_EMPTY) \
     )
 
 // Precondition: decl = `( assertions,,, ) ...` (multiple assertions).
@@ -1536,43 +1435,21 @@ BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_REPLACE_ELSES_PARSE_YES_6_( \
 // Precondition: decl = `assertion BOOST_PP_NIL` (single assertion).
 #define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_YES_6_( \
         d, l, is_post, decl, traits) \
-    BOOST_PP_IIF(is_post, \
-        BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_POST_6_ \
-    , \
-        BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_NOT_POST_6_ \
-    )(d, l, decl, traits)
-
-#define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_POST_6_( \
-        d, l, decl, traits) \
-    ( \
-        BOOST_PP_NIL, \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK( \
-            traits, \
-            ( \
-                BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_EXPAND_TRAITS_6_( \
-                BOOST_CONTRACT_EXT_PP_POST_ASSERTION_TRAITS_PARSE_D_L_7( \
-                        d, l, \
-                BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK( \
-                    decl \
-                ))) \
-            ) BOOST_PP_EMPTY \
-        ) \
+    BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_PUSH_BACK_6_(d, l, \
+        BOOST_PP_IIF(is_post, \
+            BOOST_CONTRACT_EXT_PP_POST_ASSERTION_TRAITS_PARSE_D_L_7 \
+        , \
+            BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_PARSE_D_L_7 \
+        )(d, l, BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK(decl)), \
+        traits \
     )
 
-#define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_NOT_POST_6_( \
-        d, l, decl, traits) \
+#define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_PUSH_BACK_6_( \
+        d, l, decl_assertion, traits) \
     ( \
-        BOOST_PP_NIL, \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK( \
-            traits, \
-            ( \
-                BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_EXPAND_TRAITS_6_( \
-                BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_PARSE_D_L_7(d, l, \
-                BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK( \
-                    decl \
-                ))) \
-            ) BOOST_PP_EMPTY \
-        ) \
+        BOOST_PP_TUPLE_ELEM(2, 0, decl_assertion), \
+        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK(traits, \
+                ( BOOST_PP_TUPLE_ELEM(2, 1, decl_assertion) ) BOOST_PP_EMPTY) \
     )
 
 // Precondition: decl = `( assertions,,, ) ...` (multiple assertions).
@@ -1801,43 +1678,21 @@ BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_REPLACE_ELSES_PARSE_YES_7_( \
 // Precondition: decl = `assertion BOOST_PP_NIL` (single assertion).
 #define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_YES_7_( \
         d, l, is_post, decl, traits) \
-    BOOST_PP_IIF(is_post, \
-        BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_POST_7_ \
-    , \
-        BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_NOT_POST_7_ \
-    )(d, l, decl, traits)
-
-#define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_POST_7_( \
-        d, l, decl, traits) \
-    ( \
-        BOOST_PP_NIL, \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK( \
-            traits, \
-            ( \
-                BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_EXPAND_TRAITS_7_( \
-                BOOST_CONTRACT_EXT_PP_POST_ASSERTION_TRAITS_PARSE_D_L_8( \
-                        d, l, \
-                BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK( \
-                    decl \
-                ))) \
-            ) BOOST_PP_EMPTY \
-        ) \
+    BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_PUSH_BACK_7_(d, l, \
+        BOOST_PP_IIF(is_post, \
+            BOOST_CONTRACT_EXT_PP_POST_ASSERTION_TRAITS_PARSE_D_L_8 \
+        , \
+            BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_PARSE_D_L_8 \
+        )(d, l, BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK(decl)), \
+        traits \
     )
 
-#define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_NOT_POST_7_( \
-        d, l, decl, traits) \
+#define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_PUSH_BACK_7_( \
+        d, l, decl_assertion, traits) \
     ( \
-        BOOST_PP_NIL, \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK( \
-            traits, \
-            ( \
-                BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_EXPAND_TRAITS_7_( \
-                BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_PARSE_D_L_8(d, l, \
-                BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK( \
-                    decl \
-                ))) \
-            ) BOOST_PP_EMPTY \
-        ) \
+        BOOST_PP_TUPLE_ELEM(2, 0, decl_assertion), \
+        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK(traits, \
+                ( BOOST_PP_TUPLE_ELEM(2, 1, decl_assertion) ) BOOST_PP_EMPTY) \
     )
 
 // Precondition: decl = `( assertions,,, ) ...` (multiple assertions).
@@ -2066,43 +1921,21 @@ BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_REPLACE_ELSES_PARSE_YES_8_( \
 // Precondition: decl = `assertion BOOST_PP_NIL` (single assertion).
 #define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_YES_8_( \
         d, l, is_post, decl, traits) \
-    BOOST_PP_IIF(is_post, \
-        BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_POST_8_ \
-    , \
-        BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_NOT_POST_8_ \
-    )(d, l, decl, traits)
-
-#define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_POST_8_( \
-        d, l, decl, traits) \
-    ( \
-        BOOST_PP_NIL, \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK( \
-            traits, \
-            ( \
-                BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_EXPAND_TRAITS_8_( \
-                BOOST_CONTRACT_EXT_PP_POST_ASSERTION_TRAITS_PARSE_D_L_9( \
-                        d, l, \
-                BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK( \
-                    decl \
-                ))) \
-            ) BOOST_PP_EMPTY \
-        ) \
+    BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_PUSH_BACK_8_(d, l, \
+        BOOST_PP_IIF(is_post, \
+            BOOST_CONTRACT_EXT_PP_POST_ASSERTION_TRAITS_PARSE_D_L_9 \
+        , \
+            BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_PARSE_D_L_9 \
+        )(d, l, BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK(decl)), \
+        traits \
     )
 
-#define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_NOT_POST_8_( \
-        d, l, decl, traits) \
+#define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_PUSH_BACK_8_( \
+        d, l, decl_assertion, traits) \
     ( \
-        BOOST_PP_NIL, \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK( \
-            traits, \
-            ( \
-                BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_EXPAND_TRAITS_8_( \
-                BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_PARSE_D_L_9(d, l, \
-                BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK( \
-                    decl \
-                ))) \
-            ) BOOST_PP_EMPTY \
-        ) \
+        BOOST_PP_TUPLE_ELEM(2, 0, decl_assertion), \
+        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK(traits, \
+                ( BOOST_PP_TUPLE_ELEM(2, 1, decl_assertion) ) BOOST_PP_EMPTY) \
     )
 
 // Precondition: decl = `( assertions,,, ) ...` (multiple assertions).
@@ -2331,43 +2164,21 @@ BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_REPLACE_ELSES_PARSE_YES_9_( \
 // Precondition: decl = `assertion BOOST_PP_NIL` (single assertion).
 #define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_YES_9_( \
         d, l, is_post, decl, traits) \
-    BOOST_PP_IIF(is_post, \
-        BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_POST_9_ \
-    , \
-        BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_NOT_POST_9_ \
-    )(d, l, decl, traits)
-
-#define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_POST_9_( \
-        d, l, decl, traits) \
-    ( \
-        BOOST_PP_NIL, \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK( \
-            traits, \
-            ( \
-                BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_EXPAND_TRAITS_9_( \
-                BOOST_CONTRACT_EXT_PP_POST_ASSERTION_TRAITS_PARSE_D_L_10( \
-                        d, l, \
-                BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK( \
-                    decl \
-                ))) \
-            ) BOOST_PP_EMPTY \
-        ) \
+    BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_PUSH_BACK_9_(d, l, \
+        BOOST_PP_IIF(is_post, \
+            BOOST_CONTRACT_EXT_PP_POST_ASSERTION_TRAITS_PARSE_D_L_10 \
+        , \
+            BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_PARSE_D_L_10 \
+        )(d, l, BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK(decl)), \
+        traits \
     )
 
-#define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_NOT_POST_9_( \
-        d, l, decl, traits) \
+#define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_PUSH_BACK_9_( \
+        d, l, decl_assertion, traits) \
     ( \
-        BOOST_PP_NIL, \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK( \
-            traits, \
-            ( \
-                BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_EXPAND_TRAITS_9_( \
-                BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_PARSE_D_L_10(d, l, \
-                BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK( \
-                    decl \
-                ))) \
-            ) BOOST_PP_EMPTY \
-        ) \
+        BOOST_PP_TUPLE_ELEM(2, 0, decl_assertion), \
+        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK(traits, \
+                ( BOOST_PP_TUPLE_ELEM(2, 1, decl_assertion) ) BOOST_PP_EMPTY) \
     )
 
 // Precondition: decl = `( assertions,,, ) ...` (multiple assertions).
@@ -2596,43 +2407,21 @@ BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_REPLACE_ELSES_PARSE_YES_10_( \
 // Precondition: decl = `assertion BOOST_PP_NIL` (single assertion).
 #define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_YES_10_( \
         d, l, is_post, decl, traits) \
-    BOOST_PP_IIF(is_post, \
-        BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_POST_10_ \
-    , \
-        BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_NOT_POST_10_ \
-    )(d, l, decl, traits)
-
-#define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_POST_10_( \
-        d, l, decl, traits) \
-    ( \
-        BOOST_PP_NIL, \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK( \
-            traits, \
-            ( \
-                BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_EXPAND_TRAITS_10_( \
-                BOOST_CONTRACT_EXT_PP_POST_ASSERTION_TRAITS_PARSE_D_L_11( \
-                        d, l, \
-                BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK( \
-                    decl \
-                ))) \
-            ) BOOST_PP_EMPTY \
-        ) \
+    BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_PUSH_BACK_10_(d, l, \
+        BOOST_PP_IIF(is_post, \
+            BOOST_CONTRACT_EXT_PP_POST_ASSERTION_TRAITS_PARSE_D_L_11 \
+        , \
+            BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_PARSE_D_L_11 \
+        )(d, l, BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK(decl)), \
+        traits \
     )
 
-#define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_NOT_POST_10_( \
-        d, l, decl, traits) \
+#define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_PUSH_BACK_10_( \
+        d, l, decl_assertion, traits) \
     ( \
-        BOOST_PP_NIL, \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK( \
-            traits, \
-            ( \
-                BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_EXPAND_TRAITS_10_( \
-                BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_PARSE_D_L_11(d, l, \
-                BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK( \
-                    decl \
-                ))) \
-            ) BOOST_PP_EMPTY \
-        ) \
+        BOOST_PP_TUPLE_ELEM(2, 0, decl_assertion), \
+        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK(traits, \
+                ( BOOST_PP_TUPLE_ELEM(2, 1, decl_assertion) ) BOOST_PP_EMPTY) \
     )
 
 // Precondition: decl = `( assertions,,, ) ...` (multiple assertions).
@@ -2861,43 +2650,21 @@ BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_REPLACE_ELSES_PARSE_YES_11_( \
 // Precondition: decl = `assertion BOOST_PP_NIL` (single assertion).
 #define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_YES_11_( \
         d, l, is_post, decl, traits) \
-    BOOST_PP_IIF(is_post, \
-        BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_POST_11_ \
-    , \
-        BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_NOT_POST_11_ \
-    )(d, l, decl, traits)
-
-#define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_POST_11_( \
-        d, l, decl, traits) \
-    ( \
-        BOOST_PP_NIL, \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK( \
-            traits, \
-            ( \
-                BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_EXPAND_TRAITS_11_( \
-                BOOST_CONTRACT_EXT_PP_POST_ASSERTION_TRAITS_PARSE_D_L_12( \
-                        d, l, \
-                BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK( \
-                    decl \
-                ))) \
-            ) BOOST_PP_EMPTY \
-        ) \
+    BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_PUSH_BACK_11_(d, l, \
+        BOOST_PP_IIF(is_post, \
+            BOOST_CONTRACT_EXT_PP_POST_ASSERTION_TRAITS_PARSE_D_L_12 \
+        , \
+            BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_PARSE_D_L_12 \
+        )(d, l, BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK(decl)), \
+        traits \
     )
 
-#define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_NOT_POST_11_( \
-        d, l, decl, traits) \
+#define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_PUSH_BACK_11_( \
+        d, l, decl_assertion, traits) \
     ( \
-        BOOST_PP_NIL, \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK( \
-            traits, \
-            ( \
-                BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_EXPAND_TRAITS_11_( \
-                BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_PARSE_D_L_12(d, l, \
-                BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK( \
-                    decl \
-                ))) \
-            ) BOOST_PP_EMPTY \
-        ) \
+        BOOST_PP_TUPLE_ELEM(2, 0, decl_assertion), \
+        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK(traits, \
+                ( BOOST_PP_TUPLE_ELEM(2, 1, decl_assertion) ) BOOST_PP_EMPTY) \
     )
 
 // Precondition: decl = `( assertions,,, ) ...` (multiple assertions).
@@ -3126,43 +2893,21 @@ BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_REPLACE_ELSES_PARSE_YES_12_( \
 // Precondition: decl = `assertion BOOST_PP_NIL` (single assertion).
 #define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_YES_12_( \
         d, l, is_post, decl, traits) \
-    BOOST_PP_IIF(is_post, \
-        BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_POST_12_ \
-    , \
-        BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_NOT_POST_12_ \
-    )(d, l, decl, traits)
-
-#define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_POST_12_( \
-        d, l, decl, traits) \
-    ( \
-        BOOST_PP_NIL, \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK( \
-            traits, \
-            ( \
-                BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_EXPAND_TRAITS_12_( \
-                BOOST_CONTRACT_EXT_PP_POST_ASSERTION_TRAITS_PARSE_D_L_13( \
-                        d, l, \
-                BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK( \
-                    decl \
-                ))) \
-            ) BOOST_PP_EMPTY \
-        ) \
+    BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_PUSH_BACK_12_(d, l, \
+        BOOST_PP_IIF(is_post, \
+            BOOST_CONTRACT_EXT_PP_POST_ASSERTION_TRAITS_PARSE_D_L_13 \
+        , \
+            BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_PARSE_D_L_13 \
+        )(d, l, BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK(decl)), \
+        traits \
     )
 
-#define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_NOT_POST_12_( \
-        d, l, decl, traits) \
+#define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_PUSH_BACK_12_( \
+        d, l, decl_assertion, traits) \
     ( \
-        BOOST_PP_NIL, \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK( \
-            traits, \
-            ( \
-                BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_EXPAND_TRAITS_12_( \
-                BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_PARSE_D_L_13(d, l, \
-                BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK( \
-                    decl \
-                ))) \
-            ) BOOST_PP_EMPTY \
-        ) \
+        BOOST_PP_TUPLE_ELEM(2, 0, decl_assertion), \
+        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK(traits, \
+                ( BOOST_PP_TUPLE_ELEM(2, 1, decl_assertion) ) BOOST_PP_EMPTY) \
     )
 
 // Precondition: decl = `( assertions,,, ) ...` (multiple assertions).
@@ -3391,43 +3136,21 @@ BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_REPLACE_ELSES_PARSE_YES_13_( \
 // Precondition: decl = `assertion BOOST_PP_NIL` (single assertion).
 #define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_YES_13_( \
         d, l, is_post, decl, traits) \
-    BOOST_PP_IIF(is_post, \
-        BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_POST_13_ \
-    , \
-        BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_NOT_POST_13_ \
-    )(d, l, decl, traits)
-
-#define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_POST_13_( \
-        d, l, decl, traits) \
-    ( \
-        BOOST_PP_NIL, \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK( \
-            traits, \
-            ( \
-                BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_EXPAND_TRAITS_13_( \
-                BOOST_CONTRACT_EXT_PP_POST_ASSERTION_TRAITS_PARSE_D_L_14( \
-                        d, l, \
-                BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK( \
-                    decl \
-                ))) \
-            ) BOOST_PP_EMPTY \
-        ) \
+    BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_PUSH_BACK_13_(d, l, \
+        BOOST_PP_IIF(is_post, \
+            BOOST_CONTRACT_EXT_PP_POST_ASSERTION_TRAITS_PARSE_D_L_14 \
+        , \
+            BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_PARSE_D_L_14 \
+        )(d, l, BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK(decl)), \
+        traits \
     )
 
-#define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_NOT_POST_13_( \
-        d, l, decl, traits) \
+#define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_PUSH_BACK_13_( \
+        d, l, decl_assertion, traits) \
     ( \
-        BOOST_PP_NIL, \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK( \
-            traits, \
-            ( \
-                BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_EXPAND_TRAITS_13_( \
-                BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_PARSE_D_L_14(d, l, \
-                BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK( \
-                    decl \
-                ))) \
-            ) BOOST_PP_EMPTY \
-        ) \
+        BOOST_PP_TUPLE_ELEM(2, 0, decl_assertion), \
+        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK(traits, \
+                ( BOOST_PP_TUPLE_ELEM(2, 1, decl_assertion) ) BOOST_PP_EMPTY) \
     )
 
 // Precondition: decl = `( assertions,,, ) ...` (multiple assertions).
@@ -3656,43 +3379,21 @@ BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_REPLACE_ELSES_PARSE_YES_14_( \
 // Precondition: decl = `assertion BOOST_PP_NIL` (single assertion).
 #define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_YES_14_( \
         d, l, is_post, decl, traits) \
-    BOOST_PP_IIF(is_post, \
-        BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_POST_14_ \
-    , \
-        BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_NOT_POST_14_ \
-    )(d, l, decl, traits)
-
-#define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_POST_14_( \
-        d, l, decl, traits) \
-    ( \
-        BOOST_PP_NIL, \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK( \
-            traits, \
-            ( \
-                BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_EXPAND_TRAITS_14_( \
-                BOOST_CONTRACT_EXT_PP_POST_ASSERTION_TRAITS_PARSE_D_L_15( \
-                        d, l, \
-                BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK( \
-                    decl \
-                ))) \
-            ) BOOST_PP_EMPTY \
-        ) \
+    BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_PUSH_BACK_14_(d, l, \
+        BOOST_PP_IIF(is_post, \
+            BOOST_CONTRACT_EXT_PP_POST_ASSERTION_TRAITS_PARSE_D_L_15 \
+        , \
+            BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_PARSE_D_L_15 \
+        )(d, l, BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK(decl)), \
+        traits \
     )
 
-#define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_NOT_POST_14_( \
-        d, l, decl, traits) \
+#define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_PUSH_BACK_14_( \
+        d, l, decl_assertion, traits) \
     ( \
-        BOOST_PP_NIL, \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK( \
-            traits, \
-            ( \
-                BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_EXPAND_TRAITS_14_( \
-                BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_PARSE_D_L_15(d, l, \
-                BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK( \
-                    decl \
-                ))) \
-            ) BOOST_PP_EMPTY \
-        ) \
+        BOOST_PP_TUPLE_ELEM(2, 0, decl_assertion), \
+        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK(traits, \
+                ( BOOST_PP_TUPLE_ELEM(2, 1, decl_assertion) ) BOOST_PP_EMPTY) \
     )
 
 // Precondition: decl = `( assertions,,, ) ...` (multiple assertions).
@@ -3921,43 +3622,21 @@ BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_REPLACE_ELSES_PARSE_YES_15_( \
 // Precondition: decl = `assertion BOOST_PP_NIL` (single assertion).
 #define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_YES_15_( \
         d, l, is_post, decl, traits) \
-    BOOST_PP_IIF(is_post, \
-        BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_POST_15_ \
-    , \
-        BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_NOT_POST_15_ \
-    )(d, l, decl, traits)
-
-#define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_POST_15_( \
-        d, l, decl, traits) \
-    ( \
-        BOOST_PP_NIL, \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK( \
-            traits, \
-            ( \
-                BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_EXPAND_TRAITS_15_( \
-                BOOST_CONTRACT_EXT_PP_POST_ASSERTION_TRAITS_PARSE_D_L_16( \
-                        d, l, \
-                BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK( \
-                    decl \
-                ))) \
-            ) BOOST_PP_EMPTY \
-        ) \
+    BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_PUSH_BACK_15_(d, l, \
+        BOOST_PP_IIF(is_post, \
+            BOOST_CONTRACT_EXT_PP_POST_ASSERTION_TRAITS_PARSE_D_L_16 \
+        , \
+            BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_PARSE_D_L_16 \
+        )(d, l, BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK(decl)), \
+        traits \
     )
 
-#define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_NOT_POST_15_( \
-        d, l, decl, traits) \
+#define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_PUSH_BACK_15_( \
+        d, l, decl_assertion, traits) \
     ( \
-        BOOST_PP_NIL, \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK( \
-            traits, \
-            ( \
-                BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_EXPAND_TRAITS_15_( \
-                BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_PARSE_D_L_16(d, l, \
-                BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK( \
-                    decl \
-                ))) \
-            ) BOOST_PP_EMPTY \
-        ) \
+        BOOST_PP_TUPLE_ELEM(2, 0, decl_assertion), \
+        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK(traits, \
+                ( BOOST_PP_TUPLE_ELEM(2, 1, decl_assertion) ) BOOST_PP_EMPTY) \
     )
 
 // Precondition: decl = `( assertions,,, ) ...` (multiple assertions).
@@ -4186,43 +3865,21 @@ BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_REPLACE_ELSES_PARSE_YES_16_( \
 // Precondition: decl = `assertion BOOST_PP_NIL` (single assertion).
 #define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_YES_16_( \
         d, l, is_post, decl, traits) \
-    BOOST_PP_IIF(is_post, \
-        BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_POST_16_ \
-    , \
-        BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_NOT_POST_16_ \
-    )(d, l, decl, traits)
-
-#define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_POST_16_( \
-        d, l, decl, traits) \
-    ( \
-        BOOST_PP_NIL, \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK( \
-            traits, \
-            ( \
-                BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_EXPAND_TRAITS_16_( \
-                BOOST_CONTRACT_EXT_PP_POST_ASSERTION_TRAITS_PARSE_D_L_17( \
-                        d, l, \
-                BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK( \
-                    decl \
-                ))) \
-            ) BOOST_PP_EMPTY \
-        ) \
+    BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_PUSH_BACK_16_(d, l, \
+        BOOST_PP_IIF(is_post, \
+            BOOST_CONTRACT_EXT_PP_POST_ASSERTION_TRAITS_PARSE_D_L_17 \
+        , \
+            BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_PARSE_D_L_17 \
+        )(d, l, BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK(decl)), \
+        traits \
     )
 
-#define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_NOT_POST_16_( \
-        d, l, decl, traits) \
+#define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_PUSH_BACK_16_( \
+        d, l, decl_assertion, traits) \
     ( \
-        BOOST_PP_NIL, \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK( \
-            traits, \
-            ( \
-                BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_EXPAND_TRAITS_16_( \
-                BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_PARSE_D_L_17(d, l, \
-                BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK( \
-                    decl \
-                ))) \
-            ) BOOST_PP_EMPTY \
-        ) \
+        BOOST_PP_TUPLE_ELEM(2, 0, decl_assertion), \
+        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK(traits, \
+                ( BOOST_PP_TUPLE_ELEM(2, 1, decl_assertion) ) BOOST_PP_EMPTY) \
     )
 
 // Precondition: decl = `( assertions,,, ) ...` (multiple assertions).
@@ -4451,43 +4108,21 @@ BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_REPLACE_ELSES_PARSE_YES_17_( \
 // Precondition: decl = `assertion BOOST_PP_NIL` (single assertion).
 #define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_YES_17_( \
         d, l, is_post, decl, traits) \
-    BOOST_PP_IIF(is_post, \
-        BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_POST_17_ \
-    , \
-        BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_NOT_POST_17_ \
-    )(d, l, decl, traits)
-
-#define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_POST_17_( \
-        d, l, decl, traits) \
-    ( \
-        BOOST_PP_NIL, \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK( \
-            traits, \
-            ( \
-                BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_EXPAND_TRAITS_17_( \
-                BOOST_CONTRACT_EXT_PP_POST_ASSERTION_TRAITS_PARSE_D_L_18( \
-                        d, l, \
-                BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK( \
-                    decl \
-                ))) \
-            ) BOOST_PP_EMPTY \
-        ) \
+    BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_PUSH_BACK_17_(d, l, \
+        BOOST_PP_IIF(is_post, \
+            BOOST_CONTRACT_EXT_PP_POST_ASSERTION_TRAITS_PARSE_D_L_18 \
+        , \
+            BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_PARSE_D_L_18 \
+        )(d, l, BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK(decl)), \
+        traits \
     )
 
-#define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_NOT_POST_17_( \
-        d, l, decl, traits) \
+#define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_PUSH_BACK_17_( \
+        d, l, decl_assertion, traits) \
     ( \
-        BOOST_PP_NIL, \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK( \
-            traits, \
-            ( \
-                BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_EXPAND_TRAITS_17_( \
-                BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_PARSE_D_L_18(d, l, \
-                BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK( \
-                    decl \
-                ))) \
-            ) BOOST_PP_EMPTY \
-        ) \
+        BOOST_PP_TUPLE_ELEM(2, 0, decl_assertion), \
+        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK(traits, \
+                ( BOOST_PP_TUPLE_ELEM(2, 1, decl_assertion) ) BOOST_PP_EMPTY) \
     )
 
 // Precondition: decl = `( assertions,,, ) ...` (multiple assertions).
@@ -4716,43 +4351,21 @@ BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_REPLACE_ELSES_PARSE_YES_18_( \
 // Precondition: decl = `assertion BOOST_PP_NIL` (single assertion).
 #define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_YES_18_( \
         d, l, is_post, decl, traits) \
-    BOOST_PP_IIF(is_post, \
-        BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_POST_18_ \
-    , \
-        BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_NOT_POST_18_ \
-    )(d, l, decl, traits)
-
-#define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_POST_18_( \
-        d, l, decl, traits) \
-    ( \
-        BOOST_PP_NIL, \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK( \
-            traits, \
-            ( \
-                BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_EXPAND_TRAITS_18_( \
-                BOOST_CONTRACT_EXT_PP_POST_ASSERTION_TRAITS_PARSE_D_L_19( \
-                        d, l, \
-                BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK( \
-                    decl \
-                ))) \
-            ) BOOST_PP_EMPTY \
-        ) \
+    BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_PUSH_BACK_18_(d, l, \
+        BOOST_PP_IIF(is_post, \
+            BOOST_CONTRACT_EXT_PP_POST_ASSERTION_TRAITS_PARSE_D_L_19 \
+        , \
+            BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_PARSE_D_L_19 \
+        )(d, l, BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK(decl)), \
+        traits \
     )
 
-#define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_NOT_POST_18_( \
-        d, l, decl, traits) \
+#define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_PUSH_BACK_18_( \
+        d, l, decl_assertion, traits) \
     ( \
-        BOOST_PP_NIL, \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK( \
-            traits, \
-            ( \
-                BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_EXPAND_TRAITS_18_( \
-                BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_PARSE_D_L_19(d, l, \
-                BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK( \
-                    decl \
-                ))) \
-            ) BOOST_PP_EMPTY \
-        ) \
+        BOOST_PP_TUPLE_ELEM(2, 0, decl_assertion), \
+        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK(traits, \
+                ( BOOST_PP_TUPLE_ELEM(2, 1, decl_assertion) ) BOOST_PP_EMPTY) \
     )
 
 // Precondition: decl = `( assertions,,, ) ...` (multiple assertions).
@@ -4981,43 +4594,21 @@ BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_REPLACE_ELSES_PARSE_YES_19_( \
 // Precondition: decl = `assertion BOOST_PP_NIL` (single assertion).
 #define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_YES_19_( \
         d, l, is_post, decl, traits) \
-    BOOST_PP_IIF(is_post, \
-        BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_POST_19_ \
-    , \
-        BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_NOT_POST_19_ \
-    )(d, l, decl, traits)
-
-#define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_POST_19_( \
-        d, l, decl, traits) \
-    ( \
-        BOOST_PP_NIL, \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK( \
-            traits, \
-            ( \
-                BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_EXPAND_TRAITS_19_( \
-                BOOST_CONTRACT_EXT_PP_POST_ASSERTION_TRAITS_PARSE_D_L_20( \
-                        d, l, \
-                BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK( \
-                    decl \
-                ))) \
-            ) BOOST_PP_EMPTY \
-        ) \
+    BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_PUSH_BACK_19_(d, l, \
+        BOOST_PP_IIF(is_post, \
+            BOOST_CONTRACT_EXT_PP_POST_ASSERTION_TRAITS_PARSE_D_L_20 \
+        , \
+            BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_PARSE_D_L_20 \
+        )(d, l, BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK(decl)), \
+        traits \
     )
 
-#define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_NOT_POST_19_( \
-        d, l, decl, traits) \
+#define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_PUSH_BACK_19_( \
+        d, l, decl_assertion, traits) \
     ( \
-        BOOST_PP_NIL, \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK( \
-            traits, \
-            ( \
-                BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_EXPAND_TRAITS_19_( \
-                BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_PARSE_D_L_20(d, l, \
-                BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK( \
-                    decl \
-                ))) \
-            ) BOOST_PP_EMPTY \
-        ) \
+        BOOST_PP_TUPLE_ELEM(2, 0, decl_assertion), \
+        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK(traits, \
+                ( BOOST_PP_TUPLE_ELEM(2, 1, decl_assertion) ) BOOST_PP_EMPTY) \
     )
 
 // Precondition: decl = `( assertions,,, ) ...` (multiple assertions).
@@ -5246,43 +4837,21 @@ BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_REPLACE_ELSES_PARSE_YES_20_( \
 // Precondition: decl = `assertion BOOST_PP_NIL` (single assertion).
 #define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_YES_20_( \
         d, l, is_post, decl, traits) \
-    BOOST_PP_IIF(is_post, \
-        BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_POST_20_ \
-    , \
-        BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_NOT_POST_20_ \
-    )(d, l, decl, traits)
-
-#define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_POST_20_( \
-        d, l, decl, traits) \
-    ( \
-        BOOST_PP_NIL, \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK( \
-            traits, \
-            ( \
-                BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_EXPAND_TRAITS_20_( \
-                BOOST_CONTRACT_EXT_PP_POST_ASSERTION_TRAITS_PARSE_D_L_21( \
-                        d, l, \
-                BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK( \
-                    decl \
-                ))) \
-            ) BOOST_PP_EMPTY \
-        ) \
+    BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_PUSH_BACK_20_(d, l, \
+        BOOST_PP_IIF(is_post, \
+            BOOST_CONTRACT_EXT_PP_POST_ASSERTION_TRAITS_PARSE_D_L_21 \
+        , \
+            BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_PARSE_D_L_21 \
+        )(d, l, BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK(decl)), \
+        traits \
     )
 
-#define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_NOT_POST_20_( \
-        d, l, decl, traits) \
+#define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_PUSH_BACK_20_( \
+        d, l, decl_assertion, traits) \
     ( \
-        BOOST_PP_NIL, \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK( \
-            traits, \
-            ( \
-                BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_EXPAND_TRAITS_20_( \
-                BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_PARSE_D_L_21(d, l, \
-                BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK( \
-                    decl \
-                ))) \
-            ) BOOST_PP_EMPTY \
-        ) \
+        BOOST_PP_TUPLE_ELEM(2, 0, decl_assertion), \
+        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK(traits, \
+                ( BOOST_PP_TUPLE_ELEM(2, 1, decl_assertion) ) BOOST_PP_EMPTY) \
     )
 
 // Precondition: decl = `( assertions,,, ) ...` (multiple assertions).
@@ -5511,43 +5080,21 @@ BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_REPLACE_ELSES_PARSE_YES_21_( \
 // Precondition: decl = `assertion BOOST_PP_NIL` (single assertion).
 #define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_YES_21_( \
         d, l, is_post, decl, traits) \
-    BOOST_PP_IIF(is_post, \
-        BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_POST_21_ \
-    , \
-        BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_NOT_POST_21_ \
-    )(d, l, decl, traits)
-
-#define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_POST_21_( \
-        d, l, decl, traits) \
-    ( \
-        BOOST_PP_NIL, \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK( \
-            traits, \
-            ( \
-                BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_EXPAND_TRAITS_21_( \
-                BOOST_CONTRACT_EXT_PP_POST_ASSERTION_TRAITS_PARSE_D_L_22( \
-                        d, l, \
-                BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK( \
-                    decl \
-                ))) \
-            ) BOOST_PP_EMPTY \
-        ) \
+    BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_PUSH_BACK_21_(d, l, \
+        BOOST_PP_IIF(is_post, \
+            BOOST_CONTRACT_EXT_PP_POST_ASSERTION_TRAITS_PARSE_D_L_22 \
+        , \
+            BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_PARSE_D_L_22 \
+        )(d, l, BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK(decl)), \
+        traits \
     )
 
-#define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_NOT_POST_21_( \
-        d, l, decl, traits) \
+#define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_PUSH_BACK_21_( \
+        d, l, decl_assertion, traits) \
     ( \
-        BOOST_PP_NIL, \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK( \
-            traits, \
-            ( \
-                BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_EXPAND_TRAITS_21_( \
-                BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_PARSE_D_L_22(d, l, \
-                BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK( \
-                    decl \
-                ))) \
-            ) BOOST_PP_EMPTY \
-        ) \
+        BOOST_PP_TUPLE_ELEM(2, 0, decl_assertion), \
+        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK(traits, \
+                ( BOOST_PP_TUPLE_ELEM(2, 1, decl_assertion) ) BOOST_PP_EMPTY) \
     )
 
 // Precondition: decl = `( assertions,,, ) ...` (multiple assertions).
@@ -5776,43 +5323,21 @@ BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_REPLACE_ELSES_PARSE_YES_22_( \
 // Precondition: decl = `assertion BOOST_PP_NIL` (single assertion).
 #define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_YES_22_( \
         d, l, is_post, decl, traits) \
-    BOOST_PP_IIF(is_post, \
-        BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_POST_22_ \
-    , \
-        BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_NOT_POST_22_ \
-    )(d, l, decl, traits)
-
-#define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_POST_22_( \
-        d, l, decl, traits) \
-    ( \
-        BOOST_PP_NIL, \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK( \
-            traits, \
-            ( \
-                BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_EXPAND_TRAITS_22_( \
-                BOOST_CONTRACT_EXT_PP_POST_ASSERTION_TRAITS_PARSE_D_L_23( \
-                        d, l, \
-                BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK( \
-                    decl \
-                ))) \
-            ) BOOST_PP_EMPTY \
-        ) \
+    BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_PUSH_BACK_22_(d, l, \
+        BOOST_PP_IIF(is_post, \
+            BOOST_CONTRACT_EXT_PP_POST_ASSERTION_TRAITS_PARSE_D_L_23 \
+        , \
+            BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_PARSE_D_L_23 \
+        )(d, l, BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK(decl)), \
+        traits \
     )
 
-#define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_NOT_POST_22_( \
-        d, l, decl, traits) \
+#define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_PUSH_BACK_22_( \
+        d, l, decl_assertion, traits) \
     ( \
-        BOOST_PP_NIL, \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK( \
-            traits, \
-            ( \
-                BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_EXPAND_TRAITS_22_( \
-                BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_PARSE_D_L_23(d, l, \
-                BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK( \
-                    decl \
-                ))) \
-            ) BOOST_PP_EMPTY \
-        ) \
+        BOOST_PP_TUPLE_ELEM(2, 0, decl_assertion), \
+        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK(traits, \
+                ( BOOST_PP_TUPLE_ELEM(2, 1, decl_assertion) ) BOOST_PP_EMPTY) \
     )
 
 // Precondition: decl = `( assertions,,, ) ...` (multiple assertions).
@@ -6041,43 +5566,21 @@ BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_REPLACE_ELSES_PARSE_YES_23_( \
 // Precondition: decl = `assertion BOOST_PP_NIL` (single assertion).
 #define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_YES_23_( \
         d, l, is_post, decl, traits) \
-    BOOST_PP_IIF(is_post, \
-        BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_POST_23_ \
-    , \
-        BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_NOT_POST_23_ \
-    )(d, l, decl, traits)
-
-#define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_POST_23_( \
-        d, l, decl, traits) \
-    ( \
-        BOOST_PP_NIL, \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK( \
-            traits, \
-            ( \
-                BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_EXPAND_TRAITS_23_( \
-                BOOST_CONTRACT_EXT_PP_POST_ASSERTION_TRAITS_PARSE_D_L_24( \
-                        d, l, \
-                BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK( \
-                    decl \
-                ))) \
-            ) BOOST_PP_EMPTY \
-        ) \
+    BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_PUSH_BACK_23_(d, l, \
+        BOOST_PP_IIF(is_post, \
+            BOOST_CONTRACT_EXT_PP_POST_ASSERTION_TRAITS_PARSE_D_L_24 \
+        , \
+            BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_PARSE_D_L_24 \
+        )(d, l, BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK(decl)), \
+        traits \
     )
 
-#define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_NOT_POST_23_( \
-        d, l, decl, traits) \
+#define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_PUSH_BACK_23_( \
+        d, l, decl_assertion, traits) \
     ( \
-        BOOST_PP_NIL, \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK( \
-            traits, \
-            ( \
-                BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_EXPAND_TRAITS_23_( \
-                BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_PARSE_D_L_24(d, l, \
-                BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK( \
-                    decl \
-                ))) \
-            ) BOOST_PP_EMPTY \
-        ) \
+        BOOST_PP_TUPLE_ELEM(2, 0, decl_assertion), \
+        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK(traits, \
+                ( BOOST_PP_TUPLE_ELEM(2, 1, decl_assertion) ) BOOST_PP_EMPTY) \
     )
 
 // Precondition: decl = `( assertions,,, ) ...` (multiple assertions).
@@ -6306,43 +5809,21 @@ BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_REPLACE_ELSES_PARSE_YES_24_( \
 // Precondition: decl = `assertion BOOST_PP_NIL` (single assertion).
 #define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_YES_24_( \
         d, l, is_post, decl, traits) \
-    BOOST_PP_IIF(is_post, \
-        BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_POST_24_ \
-    , \
-        BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_NOT_POST_24_ \
-    )(d, l, decl, traits)
-
-#define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_POST_24_( \
-        d, l, decl, traits) \
-    ( \
-        BOOST_PP_NIL, \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK( \
-            traits, \
-            ( \
-                BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_EXPAND_TRAITS_24_( \
-                BOOST_CONTRACT_EXT_PP_POST_ASSERTION_TRAITS_PARSE_D_L_25( \
-                        d, l, \
-                BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK( \
-                    decl \
-                ))) \
-            ) BOOST_PP_EMPTY \
-        ) \
+    BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_PUSH_BACK_24_(d, l, \
+        BOOST_PP_IIF(is_post, \
+            BOOST_CONTRACT_EXT_PP_POST_ASSERTION_TRAITS_PARSE_D_L_25 \
+        , \
+            BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_PARSE_D_L_25 \
+        )(d, l, BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK(decl)), \
+        traits \
     )
 
-#define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_NOT_POST_24_( \
-        d, l, decl, traits) \
+#define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_PUSH_BACK_24_( \
+        d, l, decl_assertion, traits) \
     ( \
-        BOOST_PP_NIL, \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK( \
-            traits, \
-            ( \
-                BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_EXPAND_TRAITS_24_( \
-                BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_PARSE_D_L_25(d, l, \
-                BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK( \
-                    decl \
-                ))) \
-            ) BOOST_PP_EMPTY \
-        ) \
+        BOOST_PP_TUPLE_ELEM(2, 0, decl_assertion), \
+        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK(traits, \
+                ( BOOST_PP_TUPLE_ELEM(2, 1, decl_assertion) ) BOOST_PP_EMPTY) \
     )
 
 // Precondition: decl = `( assertions,,, ) ...` (multiple assertions).
@@ -6571,43 +6052,21 @@ BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_REPLACE_ELSES_PARSE_YES_25_( \
 // Precondition: decl = `assertion BOOST_PP_NIL` (single assertion).
 #define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_YES_25_( \
         d, l, is_post, decl, traits) \
-    BOOST_PP_IIF(is_post, \
-        BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_POST_25_ \
-    , \
-        BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_NOT_POST_25_ \
-    )(d, l, decl, traits)
-
-#define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_POST_25_( \
-        d, l, decl, traits) \
-    ( \
-        BOOST_PP_NIL, \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK( \
-            traits, \
-            ( \
-                BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_EXPAND_TRAITS_25_( \
-                BOOST_CONTRACT_EXT_PP_POST_ASSERTION_TRAITS_PARSE_D_L_26( \
-                        d, l, \
-                BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK( \
-                    decl \
-                ))) \
-            ) BOOST_PP_EMPTY \
-        ) \
+    BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_PUSH_BACK_25_(d, l, \
+        BOOST_PP_IIF(is_post, \
+            BOOST_CONTRACT_EXT_PP_POST_ASSERTION_TRAITS_PARSE_D_L_26 \
+        , \
+            BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_PARSE_D_L_26 \
+        )(d, l, BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK(decl)), \
+        traits \
     )
 
-#define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_NOT_POST_25_( \
-        d, l, decl, traits) \
+#define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_PUSH_BACK_25_( \
+        d, l, decl_assertion, traits) \
     ( \
-        BOOST_PP_NIL, \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK( \
-            traits, \
-            ( \
-                BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_EXPAND_TRAITS_25_( \
-                BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_PARSE_D_L_26(d, l, \
-                BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK( \
-                    decl \
-                ))) \
-            ) BOOST_PP_EMPTY \
-        ) \
+        BOOST_PP_TUPLE_ELEM(2, 0, decl_assertion), \
+        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK(traits, \
+                ( BOOST_PP_TUPLE_ELEM(2, 1, decl_assertion) ) BOOST_PP_EMPTY) \
     )
 
 // Precondition: decl = `( assertions,,, ) ...` (multiple assertions).
@@ -6836,43 +6295,21 @@ BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_REPLACE_ELSES_PARSE_YES_26_( \
 // Precondition: decl = `assertion BOOST_PP_NIL` (single assertion).
 #define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_YES_26_( \
         d, l, is_post, decl, traits) \
-    BOOST_PP_IIF(is_post, \
-        BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_POST_26_ \
-    , \
-        BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_NOT_POST_26_ \
-    )(d, l, decl, traits)
-
-#define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_POST_26_( \
-        d, l, decl, traits) \
-    ( \
-        BOOST_PP_NIL, \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK( \
-            traits, \
-            ( \
-                BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_EXPAND_TRAITS_26_( \
-                BOOST_CONTRACT_EXT_PP_POST_ASSERTION_TRAITS_PARSE_D_L_27( \
-                        d, l, \
-                BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK( \
-                    decl \
-                ))) \
-            ) BOOST_PP_EMPTY \
-        ) \
+    BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_PUSH_BACK_26_(d, l, \
+        BOOST_PP_IIF(is_post, \
+            BOOST_CONTRACT_EXT_PP_POST_ASSERTION_TRAITS_PARSE_D_L_27 \
+        , \
+            BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_PARSE_D_L_27 \
+        )(d, l, BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK(decl)), \
+        traits \
     )
 
-#define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_NOT_POST_26_( \
-        d, l, decl, traits) \
+#define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_PUSH_BACK_26_( \
+        d, l, decl_assertion, traits) \
     ( \
-        BOOST_PP_NIL, \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK( \
-            traits, \
-            ( \
-                BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_EXPAND_TRAITS_26_( \
-                BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_PARSE_D_L_27(d, l, \
-                BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK( \
-                    decl \
-                ))) \
-            ) BOOST_PP_EMPTY \
-        ) \
+        BOOST_PP_TUPLE_ELEM(2, 0, decl_assertion), \
+        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK(traits, \
+                ( BOOST_PP_TUPLE_ELEM(2, 1, decl_assertion) ) BOOST_PP_EMPTY) \
     )
 
 // Precondition: decl = `( assertions,,, ) ...` (multiple assertions).
@@ -7101,43 +6538,21 @@ BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_REPLACE_ELSES_PARSE_YES_27_( \
 // Precondition: decl = `assertion BOOST_PP_NIL` (single assertion).
 #define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_YES_27_( \
         d, l, is_post, decl, traits) \
-    BOOST_PP_IIF(is_post, \
-        BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_POST_27_ \
-    , \
-        BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_NOT_POST_27_ \
-    )(d, l, decl, traits)
-
-#define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_POST_27_( \
-        d, l, decl, traits) \
-    ( \
-        BOOST_PP_NIL, \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK( \
-            traits, \
-            ( \
-                BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_EXPAND_TRAITS_27_( \
-                BOOST_CONTRACT_EXT_PP_POST_ASSERTION_TRAITS_PARSE_D_L_28( \
-                        d, l, \
-                BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK( \
-                    decl \
-                ))) \
-            ) BOOST_PP_EMPTY \
-        ) \
+    BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_PUSH_BACK_27_(d, l, \
+        BOOST_PP_IIF(is_post, \
+            BOOST_CONTRACT_EXT_PP_POST_ASSERTION_TRAITS_PARSE_D_L_28 \
+        , \
+            BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_PARSE_D_L_28 \
+        )(d, l, BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK(decl)), \
+        traits \
     )
 
-#define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_NOT_POST_27_( \
-        d, l, decl, traits) \
+#define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_PUSH_BACK_27_( \
+        d, l, decl_assertion, traits) \
     ( \
-        BOOST_PP_NIL, \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK( \
-            traits, \
-            ( \
-                BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_EXPAND_TRAITS_27_( \
-                BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_PARSE_D_L_28(d, l, \
-                BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK( \
-                    decl \
-                ))) \
-            ) BOOST_PP_EMPTY \
-        ) \
+        BOOST_PP_TUPLE_ELEM(2, 0, decl_assertion), \
+        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK(traits, \
+                ( BOOST_PP_TUPLE_ELEM(2, 1, decl_assertion) ) BOOST_PP_EMPTY) \
     )
 
 // Precondition: decl = `( assertions,,, ) ...` (multiple assertions).
@@ -7366,43 +6781,21 @@ BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_REPLACE_ELSES_PARSE_YES_28_( \
 // Precondition: decl = `assertion BOOST_PP_NIL` (single assertion).
 #define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_YES_28_( \
         d, l, is_post, decl, traits) \
-    BOOST_PP_IIF(is_post, \
-        BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_POST_28_ \
-    , \
-        BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_NOT_POST_28_ \
-    )(d, l, decl, traits)
-
-#define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_POST_28_( \
-        d, l, decl, traits) \
-    ( \
-        BOOST_PP_NIL, \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK( \
-            traits, \
-            ( \
-                BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_EXPAND_TRAITS_28_( \
-                BOOST_CONTRACT_EXT_PP_POST_ASSERTION_TRAITS_PARSE_D_L_29( \
-                        d, l, \
-                BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK( \
-                    decl \
-                ))) \
-            ) BOOST_PP_EMPTY \
-        ) \
+    BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_PUSH_BACK_28_(d, l, \
+        BOOST_PP_IIF(is_post, \
+            BOOST_CONTRACT_EXT_PP_POST_ASSERTION_TRAITS_PARSE_D_L_29 \
+        , \
+            BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_PARSE_D_L_29 \
+        )(d, l, BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK(decl)), \
+        traits \
     )
 
-#define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_NOT_POST_28_( \
-        d, l, decl, traits) \
+#define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_PUSH_BACK_28_( \
+        d, l, decl_assertion, traits) \
     ( \
-        BOOST_PP_NIL, \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK( \
-            traits, \
-            ( \
-                BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_EXPAND_TRAITS_28_( \
-                BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_PARSE_D_L_29(d, l, \
-                BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK( \
-                    decl \
-                ))) \
-            ) BOOST_PP_EMPTY \
-        ) \
+        BOOST_PP_TUPLE_ELEM(2, 0, decl_assertion), \
+        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK(traits, \
+                ( BOOST_PP_TUPLE_ELEM(2, 1, decl_assertion) ) BOOST_PP_EMPTY) \
     )
 
 // Precondition: decl = `( assertions,,, ) ...` (multiple assertions).
@@ -7631,43 +7024,21 @@ BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_REPLACE_ELSES_PARSE_YES_29_( \
 // Precondition: decl = `assertion BOOST_PP_NIL` (single assertion).
 #define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_YES_29_( \
         d, l, is_post, decl, traits) \
-    BOOST_PP_IIF(is_post, \
-        BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_POST_29_ \
-    , \
-        BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_NOT_POST_29_ \
-    )(d, l, decl, traits)
-
-#define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_POST_29_( \
-        d, l, decl, traits) \
-    ( \
-        BOOST_PP_NIL, \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK( \
-            traits, \
-            ( \
-                BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_EXPAND_TRAITS_29_( \
-                BOOST_CONTRACT_EXT_PP_POST_ASSERTION_TRAITS_PARSE_D_L_30( \
-                        d, l, \
-                BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK( \
-                    decl \
-                ))) \
-            ) BOOST_PP_EMPTY \
-        ) \
+    BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_PUSH_BACK_29_(d, l, \
+        BOOST_PP_IIF(is_post, \
+            BOOST_CONTRACT_EXT_PP_POST_ASSERTION_TRAITS_PARSE_D_L_30 \
+        , \
+            BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_PARSE_D_L_30 \
+        )(d, l, BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK(decl)), \
+        traits \
     )
 
-#define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_NOT_POST_29_( \
-        d, l, decl, traits) \
+#define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_PUSH_BACK_29_( \
+        d, l, decl_assertion, traits) \
     ( \
-        BOOST_PP_NIL, \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK( \
-            traits, \
-            ( \
-                BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_EXPAND_TRAITS_29_( \
-                BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_PARSE_D_L_30(d, l, \
-                BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK( \
-                    decl \
-                ))) \
-            ) BOOST_PP_EMPTY \
-        ) \
+        BOOST_PP_TUPLE_ELEM(2, 0, decl_assertion), \
+        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK(traits, \
+                ( BOOST_PP_TUPLE_ELEM(2, 1, decl_assertion) ) BOOST_PP_EMPTY) \
     )
 
 // Precondition: decl = `( assertions,,, ) ...` (multiple assertions).
@@ -7896,43 +7267,21 @@ BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_REPLACE_ELSES_PARSE_YES_30_( \
 // Precondition: decl = `assertion BOOST_PP_NIL` (single assertion).
 #define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_YES_30_( \
         d, l, is_post, decl, traits) \
-    BOOST_PP_IIF(is_post, \
-        BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_POST_30_ \
-    , \
-        BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_NOT_POST_30_ \
-    )(d, l, decl, traits)
-
-#define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_POST_30_( \
-        d, l, decl, traits) \
-    ( \
-        BOOST_PP_NIL, \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK( \
-            traits, \
-            ( \
-                BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_EXPAND_TRAITS_30_( \
-                BOOST_CONTRACT_EXT_PP_POST_ASSERTION_TRAITS_PARSE_D_L_31( \
-                        d, l, \
-                BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK( \
-                    decl \
-                ))) \
-            ) BOOST_PP_EMPTY \
-        ) \
+    BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_PUSH_BACK_30_(d, l, \
+        BOOST_PP_IIF(is_post, \
+            BOOST_CONTRACT_EXT_PP_POST_ASSERTION_TRAITS_PARSE_D_L_31 \
+        , \
+            BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_PARSE_D_L_31 \
+        )(d, l, BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK(decl)), \
+        traits \
     )
 
-#define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_NOT_POST_30_( \
-        d, l, decl, traits) \
+#define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_PUSH_BACK_30_( \
+        d, l, decl_assertion, traits) \
     ( \
-        BOOST_PP_NIL, \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK( \
-            traits, \
-            ( \
-                BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_EXPAND_TRAITS_30_( \
-                BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_PARSE_D_L_31(d, l, \
-                BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK( \
-                    decl \
-                ))) \
-            ) BOOST_PP_EMPTY \
-        ) \
+        BOOST_PP_TUPLE_ELEM(2, 0, decl_assertion), \
+        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK(traits, \
+                ( BOOST_PP_TUPLE_ELEM(2, 1, decl_assertion) ) BOOST_PP_EMPTY) \
     )
 
 // Precondition: decl = `( assertions,,, ) ...` (multiple assertions).
@@ -8161,43 +7510,21 @@ BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_REPLACE_ELSES_PARSE_YES_31_( \
 // Precondition: decl = `assertion BOOST_PP_NIL` (single assertion).
 #define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_YES_31_( \
         d, l, is_post, decl, traits) \
-    BOOST_PP_IIF(is_post, \
-        BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_POST_31_ \
-    , \
-        BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_NOT_POST_31_ \
-    )(d, l, decl, traits)
-
-#define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_POST_31_( \
-        d, l, decl, traits) \
-    ( \
-        BOOST_PP_NIL, \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK( \
-            traits, \
-            ( \
-                BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_EXPAND_TRAITS_31_( \
-                BOOST_CONTRACT_EXT_PP_POST_ASSERTION_TRAITS_PARSE_D_L_32( \
-                        d, l, \
-                BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK( \
-                    decl \
-                ))) \
-            ) BOOST_PP_EMPTY \
-        ) \
+    BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_PUSH_BACK_31_(d, l, \
+        BOOST_PP_IIF(is_post, \
+            BOOST_CONTRACT_EXT_PP_POST_ASSERTION_TRAITS_PARSE_D_L_32 \
+        , \
+            BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_PARSE_D_L_32 \
+        )(d, l, BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK(decl)), \
+        traits \
     )
 
-#define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_NOT_POST_31_( \
-        d, l, decl, traits) \
+#define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_PUSH_BACK_31_( \
+        d, l, decl_assertion, traits) \
     ( \
-        BOOST_PP_NIL, \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK( \
-            traits, \
-            ( \
-                BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_EXPAND_TRAITS_31_( \
-                BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_PARSE_D_L_32(d, l, \
-                BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK( \
-                    decl \
-                ))) \
-            ) BOOST_PP_EMPTY \
-        ) \
+        BOOST_PP_TUPLE_ELEM(2, 0, decl_assertion), \
+        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK(traits, \
+                ( BOOST_PP_TUPLE_ELEM(2, 1, decl_assertion) ) BOOST_PP_EMPTY) \
     )
 
 // Precondition: decl = `( assertions,,, ) ...` (multiple assertions).
@@ -8426,43 +7753,21 @@ BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_REPLACE_ELSES_PARSE_YES_32_( \
 // Precondition: decl = `assertion BOOST_PP_NIL` (single assertion).
 #define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_YES_32_( \
         d, l, is_post, decl, traits) \
-    BOOST_PP_IIF(is_post, \
-        BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_POST_32_ \
-    , \
-        BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_NOT_POST_32_ \
-    )(d, l, decl, traits)
-
-#define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_POST_32_( \
-        d, l, decl, traits) \
-    ( \
-        BOOST_PP_NIL, \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK( \
-            traits, \
-            ( \
-                BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_EXPAND_TRAITS_32_( \
-                BOOST_CONTRACT_EXT_PP_POST_ASSERTION_TRAITS_PARSE_D_L_33( \
-                        d, l, \
-                BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK( \
-                    decl \
-                ))) \
-            ) BOOST_PP_EMPTY \
-        ) \
+    BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_PUSH_BACK_32_(d, l, \
+        BOOST_PP_IIF(is_post, \
+            BOOST_CONTRACT_EXT_PP_POST_ASSERTION_TRAITS_PARSE_D_L_33 \
+        , \
+            BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_PARSE_D_L_33 \
+        )(d, l, BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK(decl)), \
+        traits \
     )
 
-#define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_NOT_POST_32_( \
-        d, l, decl, traits) \
+#define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_PUSH_BACK_32_( \
+        d, l, decl_assertion, traits) \
     ( \
-        BOOST_PP_NIL, \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK( \
-            traits, \
-            ( \
-                BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_EXPAND_TRAITS_32_( \
-                BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_PARSE_D_L_33(d, l, \
-                BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK( \
-                    decl \
-                ))) \
-            ) BOOST_PP_EMPTY \
-        ) \
+        BOOST_PP_TUPLE_ELEM(2, 0, decl_assertion), \
+        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK(traits, \
+                ( BOOST_PP_TUPLE_ELEM(2, 1, decl_assertion) ) BOOST_PP_EMPTY) \
     )
 
 // Precondition: decl = `( assertions,,, ) ...` (multiple assertions).
@@ -8691,43 +7996,21 @@ BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_REPLACE_ELSES_PARSE_YES_33_( \
 // Precondition: decl = `assertion BOOST_PP_NIL` (single assertion).
 #define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_YES_33_( \
         d, l, is_post, decl, traits) \
-    BOOST_PP_IIF(is_post, \
-        BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_POST_33_ \
-    , \
-        BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_NOT_POST_33_ \
-    )(d, l, decl, traits)
-
-#define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_POST_33_( \
-        d, l, decl, traits) \
-    ( \
-        BOOST_PP_NIL, \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK( \
-            traits, \
-            ( \
-                BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_EXPAND_TRAITS_33_( \
-                BOOST_CONTRACT_EXT_PP_POST_ASSERTION_TRAITS_PARSE_D_L_34( \
-                        d, l, \
-                BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK( \
-                    decl \
-                ))) \
-            ) BOOST_PP_EMPTY \
-        ) \
+    BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_PUSH_BACK_33_(d, l, \
+        BOOST_PP_IIF(is_post, \
+            BOOST_CONTRACT_EXT_PP_POST_ASSERTION_TRAITS_PARSE_D_L_34 \
+        , \
+            BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_PARSE_D_L_34 \
+        )(d, l, BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK(decl)), \
+        traits \
     )
 
-#define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_NOT_POST_33_( \
-        d, l, decl, traits) \
+#define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_PUSH_BACK_33_( \
+        d, l, decl_assertion, traits) \
     ( \
-        BOOST_PP_NIL, \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK( \
-            traits, \
-            ( \
-                BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_EXPAND_TRAITS_33_( \
-                BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_PARSE_D_L_34(d, l, \
-                BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK( \
-                    decl \
-                ))) \
-            ) BOOST_PP_EMPTY \
-        ) \
+        BOOST_PP_TUPLE_ELEM(2, 0, decl_assertion), \
+        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK(traits, \
+                ( BOOST_PP_TUPLE_ELEM(2, 1, decl_assertion) ) BOOST_PP_EMPTY) \
     )
 
 // Precondition: decl = `( assertions,,, ) ...` (multiple assertions).
@@ -8956,43 +8239,21 @@ BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_REPLACE_ELSES_PARSE_YES_34_( \
 // Precondition: decl = `assertion BOOST_PP_NIL` (single assertion).
 #define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_YES_34_( \
         d, l, is_post, decl, traits) \
-    BOOST_PP_IIF(is_post, \
-        BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_POST_34_ \
-    , \
-        BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_NOT_POST_34_ \
-    )(d, l, decl, traits)
-
-#define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_POST_34_( \
-        d, l, decl, traits) \
-    ( \
-        BOOST_PP_NIL, \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK( \
-            traits, \
-            ( \
-                BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_EXPAND_TRAITS_34_( \
-                BOOST_CONTRACT_EXT_PP_POST_ASSERTION_TRAITS_PARSE_D_L_35( \
-                        d, l, \
-                BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK( \
-                    decl \
-                ))) \
-            ) BOOST_PP_EMPTY \
-        ) \
+    BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_PUSH_BACK_34_(d, l, \
+        BOOST_PP_IIF(is_post, \
+            BOOST_CONTRACT_EXT_PP_POST_ASSERTION_TRAITS_PARSE_D_L_35 \
+        , \
+            BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_PARSE_D_L_35 \
+        )(d, l, BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK(decl)), \
+        traits \
     )
 
-#define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_NOT_POST_34_( \
-        d, l, decl, traits) \
+#define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_PUSH_BACK_34_( \
+        d, l, decl_assertion, traits) \
     ( \
-        BOOST_PP_NIL, \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK( \
-            traits, \
-            ( \
-                BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_EXPAND_TRAITS_34_( \
-                BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_PARSE_D_L_35(d, l, \
-                BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK( \
-                    decl \
-                ))) \
-            ) BOOST_PP_EMPTY \
-        ) \
+        BOOST_PP_TUPLE_ELEM(2, 0, decl_assertion), \
+        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK(traits, \
+                ( BOOST_PP_TUPLE_ELEM(2, 1, decl_assertion) ) BOOST_PP_EMPTY) \
     )
 
 // Precondition: decl = `( assertions,,, ) ...` (multiple assertions).
@@ -9221,43 +8482,21 @@ BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_REPLACE_ELSES_PARSE_YES_35_( \
 // Precondition: decl = `assertion BOOST_PP_NIL` (single assertion).
 #define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_YES_35_( \
         d, l, is_post, decl, traits) \
-    BOOST_PP_IIF(is_post, \
-        BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_POST_35_ \
-    , \
-        BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_NOT_POST_35_ \
-    )(d, l, decl, traits)
-
-#define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_POST_35_( \
-        d, l, decl, traits) \
-    ( \
-        BOOST_PP_NIL, \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK( \
-            traits, \
-            ( \
-                BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_EXPAND_TRAITS_35_( \
-                BOOST_CONTRACT_EXT_PP_POST_ASSERTION_TRAITS_PARSE_D_L_36( \
-                        d, l, \
-                BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK( \
-                    decl \
-                ))) \
-            ) BOOST_PP_EMPTY \
-        ) \
+    BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_PUSH_BACK_35_(d, l, \
+        BOOST_PP_IIF(is_post, \
+            BOOST_CONTRACT_EXT_PP_POST_ASSERTION_TRAITS_PARSE_D_L_36 \
+        , \
+            BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_PARSE_D_L_36 \
+        )(d, l, BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK(decl)), \
+        traits \
     )
 
-#define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_NOT_POST_35_( \
-        d, l, decl, traits) \
+#define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_PUSH_BACK_35_( \
+        d, l, decl_assertion, traits) \
     ( \
-        BOOST_PP_NIL, \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK( \
-            traits, \
-            ( \
-                BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_EXPAND_TRAITS_35_( \
-                BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_PARSE_D_L_36(d, l, \
-                BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK( \
-                    decl \
-                ))) \
-            ) BOOST_PP_EMPTY \
-        ) \
+        BOOST_PP_TUPLE_ELEM(2, 0, decl_assertion), \
+        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK(traits, \
+                ( BOOST_PP_TUPLE_ELEM(2, 1, decl_assertion) ) BOOST_PP_EMPTY) \
     )
 
 // Precondition: decl = `( assertions,,, ) ...` (multiple assertions).
@@ -9486,43 +8725,21 @@ BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_REPLACE_ELSES_PARSE_YES_36_( \
 // Precondition: decl = `assertion BOOST_PP_NIL` (single assertion).
 #define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_YES_36_( \
         d, l, is_post, decl, traits) \
-    BOOST_PP_IIF(is_post, \
-        BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_POST_36_ \
-    , \
-        BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_NOT_POST_36_ \
-    )(d, l, decl, traits)
-
-#define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_POST_36_( \
-        d, l, decl, traits) \
-    ( \
-        BOOST_PP_NIL, \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK( \
-            traits, \
-            ( \
-                BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_EXPAND_TRAITS_36_( \
-                BOOST_CONTRACT_EXT_PP_POST_ASSERTION_TRAITS_PARSE_D_L_37( \
-                        d, l, \
-                BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK( \
-                    decl \
-                ))) \
-            ) BOOST_PP_EMPTY \
-        ) \
+    BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_PUSH_BACK_36_(d, l, \
+        BOOST_PP_IIF(is_post, \
+            BOOST_CONTRACT_EXT_PP_POST_ASSERTION_TRAITS_PARSE_D_L_37 \
+        , \
+            BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_PARSE_D_L_37 \
+        )(d, l, BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK(decl)), \
+        traits \
     )
 
-#define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_NOT_POST_36_( \
-        d, l, decl, traits) \
+#define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_PUSH_BACK_36_( \
+        d, l, decl_assertion, traits) \
     ( \
-        BOOST_PP_NIL, \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK( \
-            traits, \
-            ( \
-                BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_EXPAND_TRAITS_36_( \
-                BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_PARSE_D_L_37(d, l, \
-                BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK( \
-                    decl \
-                ))) \
-            ) BOOST_PP_EMPTY \
-        ) \
+        BOOST_PP_TUPLE_ELEM(2, 0, decl_assertion), \
+        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK(traits, \
+                ( BOOST_PP_TUPLE_ELEM(2, 1, decl_assertion) ) BOOST_PP_EMPTY) \
     )
 
 // Precondition: decl = `( assertions,,, ) ...` (multiple assertions).
@@ -9751,43 +8968,21 @@ BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_REPLACE_ELSES_PARSE_YES_37_( \
 // Precondition: decl = `assertion BOOST_PP_NIL` (single assertion).
 #define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_YES_37_( \
         d, l, is_post, decl, traits) \
-    BOOST_PP_IIF(is_post, \
-        BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_POST_37_ \
-    , \
-        BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_NOT_POST_37_ \
-    )(d, l, decl, traits)
-
-#define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_POST_37_( \
-        d, l, decl, traits) \
-    ( \
-        BOOST_PP_NIL, \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK( \
-            traits, \
-            ( \
-                BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_EXPAND_TRAITS_37_( \
-                BOOST_CONTRACT_EXT_PP_POST_ASSERTION_TRAITS_PARSE_D_L_38( \
-                        d, l, \
-                BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK( \
-                    decl \
-                ))) \
-            ) BOOST_PP_EMPTY \
-        ) \
+    BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_PUSH_BACK_37_(d, l, \
+        BOOST_PP_IIF(is_post, \
+            BOOST_CONTRACT_EXT_PP_POST_ASSERTION_TRAITS_PARSE_D_L_38 \
+        , \
+            BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_PARSE_D_L_38 \
+        )(d, l, BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK(decl)), \
+        traits \
     )
 
-#define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_NOT_POST_37_( \
-        d, l, decl, traits) \
+#define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_PUSH_BACK_37_( \
+        d, l, decl_assertion, traits) \
     ( \
-        BOOST_PP_NIL, \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK( \
-            traits, \
-            ( \
-                BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_EXPAND_TRAITS_37_( \
-                BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_PARSE_D_L_38(d, l, \
-                BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK( \
-                    decl \
-                ))) \
-            ) BOOST_PP_EMPTY \
-        ) \
+        BOOST_PP_TUPLE_ELEM(2, 0, decl_assertion), \
+        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK(traits, \
+                ( BOOST_PP_TUPLE_ELEM(2, 1, decl_assertion) ) BOOST_PP_EMPTY) \
     )
 
 // Precondition: decl = `( assertions,,, ) ...` (multiple assertions).
@@ -10016,43 +9211,21 @@ BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_REPLACE_ELSES_PARSE_YES_38_( \
 // Precondition: decl = `assertion BOOST_PP_NIL` (single assertion).
 #define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_YES_38_( \
         d, l, is_post, decl, traits) \
-    BOOST_PP_IIF(is_post, \
-        BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_POST_38_ \
-    , \
-        BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_NOT_POST_38_ \
-    )(d, l, decl, traits)
-
-#define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_POST_38_( \
-        d, l, decl, traits) \
-    ( \
-        BOOST_PP_NIL, \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK( \
-            traits, \
-            ( \
-                BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_EXPAND_TRAITS_38_( \
-                BOOST_CONTRACT_EXT_PP_POST_ASSERTION_TRAITS_PARSE_D_L_39( \
-                        d, l, \
-                BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK( \
-                    decl \
-                ))) \
-            ) BOOST_PP_EMPTY \
-        ) \
+    BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_PUSH_BACK_38_(d, l, \
+        BOOST_PP_IIF(is_post, \
+            BOOST_CONTRACT_EXT_PP_POST_ASSERTION_TRAITS_PARSE_D_L_39 \
+        , \
+            BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_PARSE_D_L_39 \
+        )(d, l, BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK(decl)), \
+        traits \
     )
 
-#define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_NOT_POST_38_( \
-        d, l, decl, traits) \
+#define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_PUSH_BACK_38_( \
+        d, l, decl_assertion, traits) \
     ( \
-        BOOST_PP_NIL, \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK( \
-            traits, \
-            ( \
-                BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_EXPAND_TRAITS_38_( \
-                BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_PARSE_D_L_39(d, l, \
-                BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK( \
-                    decl \
-                ))) \
-            ) BOOST_PP_EMPTY \
-        ) \
+        BOOST_PP_TUPLE_ELEM(2, 0, decl_assertion), \
+        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK(traits, \
+                ( BOOST_PP_TUPLE_ELEM(2, 1, decl_assertion) ) BOOST_PP_EMPTY) \
     )
 
 // Precondition: decl = `( assertions,,, ) ...` (multiple assertions).
@@ -10281,43 +9454,21 @@ BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_REPLACE_ELSES_PARSE_YES_39_( \
 // Precondition: decl = `assertion BOOST_PP_NIL` (single assertion).
 #define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_YES_39_( \
         d, l, is_post, decl, traits) \
-    BOOST_PP_IIF(is_post, \
-        BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_POST_39_ \
-    , \
-        BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_NOT_POST_39_ \
-    )(d, l, decl, traits)
-
-#define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_POST_39_( \
-        d, l, decl, traits) \
-    ( \
-        BOOST_PP_NIL, \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK( \
-            traits, \
-            ( \
-                BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_EXPAND_TRAITS_39_( \
-                BOOST_CONTRACT_EXT_PP_POST_ASSERTION_TRAITS_PARSE_D_L_40( \
-                        d, l, \
-                BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK( \
-                    decl \
-                ))) \
-            ) BOOST_PP_EMPTY \
-        ) \
+    BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_PUSH_BACK_39_(d, l, \
+        BOOST_PP_IIF(is_post, \
+            BOOST_CONTRACT_EXT_PP_POST_ASSERTION_TRAITS_PARSE_D_L_40 \
+        , \
+            BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_PARSE_D_L_40 \
+        )(d, l, BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK(decl)), \
+        traits \
     )
 
-#define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_NOT_POST_39_( \
-        d, l, decl, traits) \
+#define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_PUSH_BACK_39_( \
+        d, l, decl_assertion, traits) \
     ( \
-        BOOST_PP_NIL, \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK( \
-            traits, \
-            ( \
-                BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_EXPAND_TRAITS_39_( \
-                BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_PARSE_D_L_40(d, l, \
-                BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK( \
-                    decl \
-                ))) \
-            ) BOOST_PP_EMPTY \
-        ) \
+        BOOST_PP_TUPLE_ELEM(2, 0, decl_assertion), \
+        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK(traits, \
+                ( BOOST_PP_TUPLE_ELEM(2, 1, decl_assertion) ) BOOST_PP_EMPTY) \
     )
 
 // Precondition: decl = `( assertions,,, ) ...` (multiple assertions).
@@ -10546,43 +9697,21 @@ BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_REPLACE_ELSES_PARSE_YES_40_( \
 // Precondition: decl = `assertion BOOST_PP_NIL` (single assertion).
 #define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_YES_40_( \
         d, l, is_post, decl, traits) \
-    BOOST_PP_IIF(is_post, \
-        BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_POST_40_ \
-    , \
-        BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_NOT_POST_40_ \
-    )(d, l, decl, traits)
-
-#define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_POST_40_( \
-        d, l, decl, traits) \
-    ( \
-        BOOST_PP_NIL, \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK( \
-            traits, \
-            ( \
-                BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_EXPAND_TRAITS_40_( \
-                BOOST_CONTRACT_EXT_PP_POST_ASSERTION_TRAITS_PARSE_D_L_41( \
-                        d, l, \
-                BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK( \
-                    decl \
-                ))) \
-            ) BOOST_PP_EMPTY \
-        ) \
+    BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_PUSH_BACK_40_(d, l, \
+        BOOST_PP_IIF(is_post, \
+            BOOST_CONTRACT_EXT_PP_POST_ASSERTION_TRAITS_PARSE_D_L_41 \
+        , \
+            BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_PARSE_D_L_41 \
+        )(d, l, BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK(decl)), \
+        traits \
     )
 
-#define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_NOT_POST_40_( \
-        d, l, decl, traits) \
+#define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_PUSH_BACK_40_( \
+        d, l, decl_assertion, traits) \
     ( \
-        BOOST_PP_NIL, \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK( \
-            traits, \
-            ( \
-                BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_EXPAND_TRAITS_40_( \
-                BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_PARSE_D_L_41(d, l, \
-                BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK( \
-                    decl \
-                ))) \
-            ) BOOST_PP_EMPTY \
-        ) \
+        BOOST_PP_TUPLE_ELEM(2, 0, decl_assertion), \
+        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK(traits, \
+                ( BOOST_PP_TUPLE_ELEM(2, 1, decl_assertion) ) BOOST_PP_EMPTY) \
     )
 
 // Precondition: decl = `( assertions,,, ) ...` (multiple assertions).
@@ -10811,43 +9940,21 @@ BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_REPLACE_ELSES_PARSE_YES_41_( \
 // Precondition: decl = `assertion BOOST_PP_NIL` (single assertion).
 #define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_YES_41_( \
         d, l, is_post, decl, traits) \
-    BOOST_PP_IIF(is_post, \
-        BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_POST_41_ \
-    , \
-        BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_NOT_POST_41_ \
-    )(d, l, decl, traits)
-
-#define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_POST_41_( \
-        d, l, decl, traits) \
-    ( \
-        BOOST_PP_NIL, \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK( \
-            traits, \
-            ( \
-                BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_EXPAND_TRAITS_41_( \
-                BOOST_CONTRACT_EXT_PP_POST_ASSERTION_TRAITS_PARSE_D_L_42( \
-                        d, l, \
-                BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK( \
-                    decl \
-                ))) \
-            ) BOOST_PP_EMPTY \
-        ) \
+    BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_PUSH_BACK_41_(d, l, \
+        BOOST_PP_IIF(is_post, \
+            BOOST_CONTRACT_EXT_PP_POST_ASSERTION_TRAITS_PARSE_D_L_42 \
+        , \
+            BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_PARSE_D_L_42 \
+        )(d, l, BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK(decl)), \
+        traits \
     )
 
-#define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_NOT_POST_41_( \
-        d, l, decl, traits) \
+#define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_PUSH_BACK_41_( \
+        d, l, decl_assertion, traits) \
     ( \
-        BOOST_PP_NIL, \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK( \
-            traits, \
-            ( \
-                BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_EXPAND_TRAITS_41_( \
-                BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_PARSE_D_L_42(d, l, \
-                BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK( \
-                    decl \
-                ))) \
-            ) BOOST_PP_EMPTY \
-        ) \
+        BOOST_PP_TUPLE_ELEM(2, 0, decl_assertion), \
+        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK(traits, \
+                ( BOOST_PP_TUPLE_ELEM(2, 1, decl_assertion) ) BOOST_PP_EMPTY) \
     )
 
 // Precondition: decl = `( assertions,,, ) ...` (multiple assertions).
@@ -11076,43 +10183,21 @@ BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_REPLACE_ELSES_PARSE_YES_42_( \
 // Precondition: decl = `assertion BOOST_PP_NIL` (single assertion).
 #define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_YES_42_( \
         d, l, is_post, decl, traits) \
-    BOOST_PP_IIF(is_post, \
-        BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_POST_42_ \
-    , \
-        BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_NOT_POST_42_ \
-    )(d, l, decl, traits)
-
-#define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_POST_42_( \
-        d, l, decl, traits) \
-    ( \
-        BOOST_PP_NIL, \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK( \
-            traits, \
-            ( \
-                BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_EXPAND_TRAITS_42_( \
-                BOOST_CONTRACT_EXT_PP_POST_ASSERTION_TRAITS_PARSE_D_L_43( \
-                        d, l, \
-                BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK( \
-                    decl \
-                ))) \
-            ) BOOST_PP_EMPTY \
-        ) \
+    BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_PUSH_BACK_42_(d, l, \
+        BOOST_PP_IIF(is_post, \
+            BOOST_CONTRACT_EXT_PP_POST_ASSERTION_TRAITS_PARSE_D_L_43 \
+        , \
+            BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_PARSE_D_L_43 \
+        )(d, l, BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK(decl)), \
+        traits \
     )
 
-#define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_NOT_POST_42_( \
-        d, l, decl, traits) \
+#define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_PUSH_BACK_42_( \
+        d, l, decl_assertion, traits) \
     ( \
-        BOOST_PP_NIL, \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK( \
-            traits, \
-            ( \
-                BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_EXPAND_TRAITS_42_( \
-                BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_PARSE_D_L_43(d, l, \
-                BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK( \
-                    decl \
-                ))) \
-            ) BOOST_PP_EMPTY \
-        ) \
+        BOOST_PP_TUPLE_ELEM(2, 0, decl_assertion), \
+        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK(traits, \
+                ( BOOST_PP_TUPLE_ELEM(2, 1, decl_assertion) ) BOOST_PP_EMPTY) \
     )
 
 // Precondition: decl = `( assertions,,, ) ...` (multiple assertions).
@@ -11341,43 +10426,21 @@ BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_REPLACE_ELSES_PARSE_YES_43_( \
 // Precondition: decl = `assertion BOOST_PP_NIL` (single assertion).
 #define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_YES_43_( \
         d, l, is_post, decl, traits) \
-    BOOST_PP_IIF(is_post, \
-        BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_POST_43_ \
-    , \
-        BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_NOT_POST_43_ \
-    )(d, l, decl, traits)
-
-#define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_POST_43_( \
-        d, l, decl, traits) \
-    ( \
-        BOOST_PP_NIL, \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK( \
-            traits, \
-            ( \
-                BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_EXPAND_TRAITS_43_( \
-                BOOST_CONTRACT_EXT_PP_POST_ASSERTION_TRAITS_PARSE_D_L_44( \
-                        d, l, \
-                BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK( \
-                    decl \
-                ))) \
-            ) BOOST_PP_EMPTY \
-        ) \
+    BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_PUSH_BACK_43_(d, l, \
+        BOOST_PP_IIF(is_post, \
+            BOOST_CONTRACT_EXT_PP_POST_ASSERTION_TRAITS_PARSE_D_L_44 \
+        , \
+            BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_PARSE_D_L_44 \
+        )(d, l, BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK(decl)), \
+        traits \
     )
 
-#define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_NOT_POST_43_( \
-        d, l, decl, traits) \
+#define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_PUSH_BACK_43_( \
+        d, l, decl_assertion, traits) \
     ( \
-        BOOST_PP_NIL, \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK( \
-            traits, \
-            ( \
-                BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_EXPAND_TRAITS_43_( \
-                BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_PARSE_D_L_44(d, l, \
-                BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK( \
-                    decl \
-                ))) \
-            ) BOOST_PP_EMPTY \
-        ) \
+        BOOST_PP_TUPLE_ELEM(2, 0, decl_assertion), \
+        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK(traits, \
+                ( BOOST_PP_TUPLE_ELEM(2, 1, decl_assertion) ) BOOST_PP_EMPTY) \
     )
 
 // Precondition: decl = `( assertions,,, ) ...` (multiple assertions).
@@ -11606,43 +10669,21 @@ BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_REPLACE_ELSES_PARSE_YES_44_( \
 // Precondition: decl = `assertion BOOST_PP_NIL` (single assertion).
 #define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_YES_44_( \
         d, l, is_post, decl, traits) \
-    BOOST_PP_IIF(is_post, \
-        BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_POST_44_ \
-    , \
-        BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_NOT_POST_44_ \
-    )(d, l, decl, traits)
-
-#define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_POST_44_( \
-        d, l, decl, traits) \
-    ( \
-        BOOST_PP_NIL, \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK( \
-            traits, \
-            ( \
-                BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_EXPAND_TRAITS_44_( \
-                BOOST_CONTRACT_EXT_PP_POST_ASSERTION_TRAITS_PARSE_D_L_45( \
-                        d, l, \
-                BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK( \
-                    decl \
-                ))) \
-            ) BOOST_PP_EMPTY \
-        ) \
+    BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_PUSH_BACK_44_(d, l, \
+        BOOST_PP_IIF(is_post, \
+            BOOST_CONTRACT_EXT_PP_POST_ASSERTION_TRAITS_PARSE_D_L_45 \
+        , \
+            BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_PARSE_D_L_45 \
+        )(d, l, BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK(decl)), \
+        traits \
     )
 
-#define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_NOT_POST_44_( \
-        d, l, decl, traits) \
+#define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_PUSH_BACK_44_( \
+        d, l, decl_assertion, traits) \
     ( \
-        BOOST_PP_NIL, \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK( \
-            traits, \
-            ( \
-                BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_EXPAND_TRAITS_44_( \
-                BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_PARSE_D_L_45(d, l, \
-                BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK( \
-                    decl \
-                ))) \
-            ) BOOST_PP_EMPTY \
-        ) \
+        BOOST_PP_TUPLE_ELEM(2, 0, decl_assertion), \
+        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK(traits, \
+                ( BOOST_PP_TUPLE_ELEM(2, 1, decl_assertion) ) BOOST_PP_EMPTY) \
     )
 
 // Precondition: decl = `( assertions,,, ) ...` (multiple assertions).
@@ -11871,43 +10912,21 @@ BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_REPLACE_ELSES_PARSE_YES_45_( \
 // Precondition: decl = `assertion BOOST_PP_NIL` (single assertion).
 #define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_YES_45_( \
         d, l, is_post, decl, traits) \
-    BOOST_PP_IIF(is_post, \
-        BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_POST_45_ \
-    , \
-        BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_NOT_POST_45_ \
-    )(d, l, decl, traits)
-
-#define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_POST_45_( \
-        d, l, decl, traits) \
-    ( \
-        BOOST_PP_NIL, \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK( \
-            traits, \
-            ( \
-                BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_EXPAND_TRAITS_45_( \
-                BOOST_CONTRACT_EXT_PP_POST_ASSERTION_TRAITS_PARSE_D_L_46( \
-                        d, l, \
-                BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK( \
-                    decl \
-                ))) \
-            ) BOOST_PP_EMPTY \
-        ) \
+    BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_PUSH_BACK_45_(d, l, \
+        BOOST_PP_IIF(is_post, \
+            BOOST_CONTRACT_EXT_PP_POST_ASSERTION_TRAITS_PARSE_D_L_46 \
+        , \
+            BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_PARSE_D_L_46 \
+        )(d, l, BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK(decl)), \
+        traits \
     )
 
-#define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_NOT_POST_45_( \
-        d, l, decl, traits) \
+#define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_PUSH_BACK_45_( \
+        d, l, decl_assertion, traits) \
     ( \
-        BOOST_PP_NIL, \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK( \
-            traits, \
-            ( \
-                BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_EXPAND_TRAITS_45_( \
-                BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_PARSE_D_L_46(d, l, \
-                BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK( \
-                    decl \
-                ))) \
-            ) BOOST_PP_EMPTY \
-        ) \
+        BOOST_PP_TUPLE_ELEM(2, 0, decl_assertion), \
+        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK(traits, \
+                ( BOOST_PP_TUPLE_ELEM(2, 1, decl_assertion) ) BOOST_PP_EMPTY) \
     )
 
 // Precondition: decl = `( assertions,,, ) ...` (multiple assertions).
@@ -12136,43 +11155,21 @@ BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_REPLACE_ELSES_PARSE_YES_46_( \
 // Precondition: decl = `assertion BOOST_PP_NIL` (single assertion).
 #define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_YES_46_( \
         d, l, is_post, decl, traits) \
-    BOOST_PP_IIF(is_post, \
-        BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_POST_46_ \
-    , \
-        BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_NOT_POST_46_ \
-    )(d, l, decl, traits)
-
-#define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_POST_46_( \
-        d, l, decl, traits) \
-    ( \
-        BOOST_PP_NIL, \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK( \
-            traits, \
-            ( \
-                BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_EXPAND_TRAITS_46_( \
-                BOOST_CONTRACT_EXT_PP_POST_ASSERTION_TRAITS_PARSE_D_L_47( \
-                        d, l, \
-                BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK( \
-                    decl \
-                ))) \
-            ) BOOST_PP_EMPTY \
-        ) \
+    BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_PUSH_BACK_46_(d, l, \
+        BOOST_PP_IIF(is_post, \
+            BOOST_CONTRACT_EXT_PP_POST_ASSERTION_TRAITS_PARSE_D_L_47 \
+        , \
+            BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_PARSE_D_L_47 \
+        )(d, l, BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK(decl)), \
+        traits \
     )
 
-#define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_NOT_POST_46_( \
-        d, l, decl, traits) \
+#define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_PUSH_BACK_46_( \
+        d, l, decl_assertion, traits) \
     ( \
-        BOOST_PP_NIL, \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK( \
-            traits, \
-            ( \
-                BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_EXPAND_TRAITS_46_( \
-                BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_PARSE_D_L_47(d, l, \
-                BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK( \
-                    decl \
-                ))) \
-            ) BOOST_PP_EMPTY \
-        ) \
+        BOOST_PP_TUPLE_ELEM(2, 0, decl_assertion), \
+        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK(traits, \
+                ( BOOST_PP_TUPLE_ELEM(2, 1, decl_assertion) ) BOOST_PP_EMPTY) \
     )
 
 // Precondition: decl = `( assertions,,, ) ...` (multiple assertions).
@@ -12401,43 +11398,21 @@ BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_REPLACE_ELSES_PARSE_YES_47_( \
 // Precondition: decl = `assertion BOOST_PP_NIL` (single assertion).
 #define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_YES_47_( \
         d, l, is_post, decl, traits) \
-    BOOST_PP_IIF(is_post, \
-        BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_POST_47_ \
-    , \
-        BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_NOT_POST_47_ \
-    )(d, l, decl, traits)
-
-#define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_POST_47_( \
-        d, l, decl, traits) \
-    ( \
-        BOOST_PP_NIL, \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK( \
-            traits, \
-            ( \
-                BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_EXPAND_TRAITS_47_( \
-                BOOST_CONTRACT_EXT_PP_POST_ASSERTION_TRAITS_PARSE_D_L_48( \
-                        d, l, \
-                BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK( \
-                    decl \
-                ))) \
-            ) BOOST_PP_EMPTY \
-        ) \
+    BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_PUSH_BACK_47_(d, l, \
+        BOOST_PP_IIF(is_post, \
+            BOOST_CONTRACT_EXT_PP_POST_ASSERTION_TRAITS_PARSE_D_L_48 \
+        , \
+            BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_PARSE_D_L_48 \
+        )(d, l, BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK(decl)), \
+        traits \
     )
 
-#define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_NOT_POST_47_( \
-        d, l, decl, traits) \
+#define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_PUSH_BACK_47_( \
+        d, l, decl_assertion, traits) \
     ( \
-        BOOST_PP_NIL, \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK( \
-            traits, \
-            ( \
-                BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_EXPAND_TRAITS_47_( \
-                BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_PARSE_D_L_48(d, l, \
-                BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK( \
-                    decl \
-                ))) \
-            ) BOOST_PP_EMPTY \
-        ) \
+        BOOST_PP_TUPLE_ELEM(2, 0, decl_assertion), \
+        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK(traits, \
+                ( BOOST_PP_TUPLE_ELEM(2, 1, decl_assertion) ) BOOST_PP_EMPTY) \
     )
 
 // Precondition: decl = `( assertions,,, ) ...` (multiple assertions).
@@ -12666,43 +11641,21 @@ BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_REPLACE_ELSES_PARSE_YES_48_( \
 // Precondition: decl = `assertion BOOST_PP_NIL` (single assertion).
 #define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_YES_48_( \
         d, l, is_post, decl, traits) \
-    BOOST_PP_IIF(is_post, \
-        BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_POST_48_ \
-    , \
-        BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_NOT_POST_48_ \
-    )(d, l, decl, traits)
-
-#define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_POST_48_( \
-        d, l, decl, traits) \
-    ( \
-        BOOST_PP_NIL, \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK( \
-            traits, \
-            ( \
-                BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_EXPAND_TRAITS_48_( \
-                BOOST_CONTRACT_EXT_PP_POST_ASSERTION_TRAITS_PARSE_D_L_49( \
-                        d, l, \
-                BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK( \
-                    decl \
-                ))) \
-            ) BOOST_PP_EMPTY \
-        ) \
+    BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_PUSH_BACK_48_(d, l, \
+        BOOST_PP_IIF(is_post, \
+            BOOST_CONTRACT_EXT_PP_POST_ASSERTION_TRAITS_PARSE_D_L_49 \
+        , \
+            BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_PARSE_D_L_49 \
+        )(d, l, BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK(decl)), \
+        traits \
     )
 
-#define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_NOT_POST_48_( \
-        d, l, decl, traits) \
+#define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_PUSH_BACK_48_( \
+        d, l, decl_assertion, traits) \
     ( \
-        BOOST_PP_NIL, \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK( \
-            traits, \
-            ( \
-                BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_EXPAND_TRAITS_48_( \
-                BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_PARSE_D_L_49(d, l, \
-                BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK( \
-                    decl \
-                ))) \
-            ) BOOST_PP_EMPTY \
-        ) \
+        BOOST_PP_TUPLE_ELEM(2, 0, decl_assertion), \
+        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK(traits, \
+                ( BOOST_PP_TUPLE_ELEM(2, 1, decl_assertion) ) BOOST_PP_EMPTY) \
     )
 
 // Precondition: decl = `( assertions,,, ) ...` (multiple assertions).
@@ -12931,43 +11884,21 @@ BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_REPLACE_ELSES_PARSE_YES_49_( \
 // Precondition: decl = `assertion BOOST_PP_NIL` (single assertion).
 #define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_YES_49_( \
         d, l, is_post, decl, traits) \
-    BOOST_PP_IIF(is_post, \
-        BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_POST_49_ \
-    , \
-        BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_NOT_POST_49_ \
-    )(d, l, decl, traits)
-
-#define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_POST_49_( \
-        d, l, decl, traits) \
-    ( \
-        BOOST_PP_NIL, \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK( \
-            traits, \
-            ( \
-                BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_EXPAND_TRAITS_49_( \
-                BOOST_CONTRACT_EXT_PP_POST_ASSERTION_TRAITS_PARSE_D_L_50( \
-                        d, l, \
-                BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK( \
-                    decl \
-                ))) \
-            ) BOOST_PP_EMPTY \
-        ) \
+    BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_PUSH_BACK_49_(d, l, \
+        BOOST_PP_IIF(is_post, \
+            BOOST_CONTRACT_EXT_PP_POST_ASSERTION_TRAITS_PARSE_D_L_50 \
+        , \
+            BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_PARSE_D_L_50 \
+        )(d, l, BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK(decl)), \
+        traits \
     )
 
-#define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_NOT_POST_49_( \
-        d, l, decl, traits) \
+#define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_PUSH_BACK_49_( \
+        d, l, decl_assertion, traits) \
     ( \
-        BOOST_PP_NIL, \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK( \
-            traits, \
-            ( \
-                BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_EXPAND_TRAITS_49_( \
-                BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_PARSE_D_L_50(d, l, \
-                BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK( \
-                    decl \
-                ))) \
-            ) BOOST_PP_EMPTY \
-        ) \
+        BOOST_PP_TUPLE_ELEM(2, 0, decl_assertion), \
+        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK(traits, \
+                ( BOOST_PP_TUPLE_ELEM(2, 1, decl_assertion) ) BOOST_PP_EMPTY) \
     )
 
 // Precondition: decl = `( assertions,,, ) ...` (multiple assertions).
@@ -13196,43 +12127,21 @@ BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_REPLACE_ELSES_PARSE_YES_50_( \
 // Precondition: decl = `assertion BOOST_PP_NIL` (single assertion).
 #define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_YES_50_( \
         d, l, is_post, decl, traits) \
-    BOOST_PP_IIF(is_post, \
-        BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_POST_50_ \
-    , \
-        BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_NOT_POST_50_ \
-    )(d, l, decl, traits)
-
-#define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_POST_50_( \
-        d, l, decl, traits) \
-    ( \
-        BOOST_PP_NIL, \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK( \
-            traits, \
-            ( \
-                BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_EXPAND_TRAITS_50_( \
-                BOOST_CONTRACT_EXT_PP_POST_ASSERTION_TRAITS_PARSE_D_L_51( \
-                        d, l, \
-                BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK( \
-                    decl \
-                ))) \
-            ) BOOST_PP_EMPTY \
-        ) \
+    BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_PUSH_BACK_50_(d, l, \
+        BOOST_PP_IIF(is_post, \
+            BOOST_CONTRACT_EXT_PP_POST_ASSERTION_TRAITS_PARSE_D_L_51 \
+        , \
+            BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_PARSE_D_L_51 \
+        )(d, l, BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK(decl)), \
+        traits \
     )
 
-#define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_NOT_POST_50_( \
-        d, l, decl, traits) \
+#define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_PUSH_BACK_50_( \
+        d, l, decl_assertion, traits) \
     ( \
-        BOOST_PP_NIL, \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK( \
-            traits, \
-            ( \
-                BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_EXPAND_TRAITS_50_( \
-                BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_PARSE_D_L_51(d, l, \
-                BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK( \
-                    decl \
-                ))) \
-            ) BOOST_PP_EMPTY \
-        ) \
+        BOOST_PP_TUPLE_ELEM(2, 0, decl_assertion), \
+        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK(traits, \
+                ( BOOST_PP_TUPLE_ELEM(2, 1, decl_assertion) ) BOOST_PP_EMPTY) \
     )
 
 // Precondition: decl = `( assertions,,, ) ...` (multiple assertions).
@@ -13461,43 +12370,21 @@ BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_REPLACE_ELSES_PARSE_YES_51_( \
 // Precondition: decl = `assertion BOOST_PP_NIL` (single assertion).
 #define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_YES_51_( \
         d, l, is_post, decl, traits) \
-    BOOST_PP_IIF(is_post, \
-        BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_POST_51_ \
-    , \
-        BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_NOT_POST_51_ \
-    )(d, l, decl, traits)
-
-#define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_POST_51_( \
-        d, l, decl, traits) \
-    ( \
-        BOOST_PP_NIL, \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK( \
-            traits, \
-            ( \
-                BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_EXPAND_TRAITS_51_( \
-                BOOST_CONTRACT_EXT_PP_POST_ASSERTION_TRAITS_PARSE_D_L_52( \
-                        d, l, \
-                BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK( \
-                    decl \
-                ))) \
-            ) BOOST_PP_EMPTY \
-        ) \
+    BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_PUSH_BACK_51_(d, l, \
+        BOOST_PP_IIF(is_post, \
+            BOOST_CONTRACT_EXT_PP_POST_ASSERTION_TRAITS_PARSE_D_L_52 \
+        , \
+            BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_PARSE_D_L_52 \
+        )(d, l, BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK(decl)), \
+        traits \
     )
 
-#define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_NOT_POST_51_( \
-        d, l, decl, traits) \
+#define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_PUSH_BACK_51_( \
+        d, l, decl_assertion, traits) \
     ( \
-        BOOST_PP_NIL, \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK( \
-            traits, \
-            ( \
-                BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_EXPAND_TRAITS_51_( \
-                BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_PARSE_D_L_52(d, l, \
-                BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK( \
-                    decl \
-                ))) \
-            ) BOOST_PP_EMPTY \
-        ) \
+        BOOST_PP_TUPLE_ELEM(2, 0, decl_assertion), \
+        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK(traits, \
+                ( BOOST_PP_TUPLE_ELEM(2, 1, decl_assertion) ) BOOST_PP_EMPTY) \
     )
 
 // Precondition: decl = `( assertions,,, ) ...` (multiple assertions).
@@ -13726,43 +12613,21 @@ BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_REPLACE_ELSES_PARSE_YES_52_( \
 // Precondition: decl = `assertion BOOST_PP_NIL` (single assertion).
 #define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_YES_52_( \
         d, l, is_post, decl, traits) \
-    BOOST_PP_IIF(is_post, \
-        BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_POST_52_ \
-    , \
-        BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_NOT_POST_52_ \
-    )(d, l, decl, traits)
-
-#define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_POST_52_( \
-        d, l, decl, traits) \
-    ( \
-        BOOST_PP_NIL, \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK( \
-            traits, \
-            ( \
-                BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_EXPAND_TRAITS_52_( \
-                BOOST_CONTRACT_EXT_PP_POST_ASSERTION_TRAITS_PARSE_D_L_53( \
-                        d, l, \
-                BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK( \
-                    decl \
-                ))) \
-            ) BOOST_PP_EMPTY \
-        ) \
+    BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_PUSH_BACK_52_(d, l, \
+        BOOST_PP_IIF(is_post, \
+            BOOST_CONTRACT_EXT_PP_POST_ASSERTION_TRAITS_PARSE_D_L_53 \
+        , \
+            BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_PARSE_D_L_53 \
+        )(d, l, BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK(decl)), \
+        traits \
     )
 
-#define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_NOT_POST_52_( \
-        d, l, decl, traits) \
+#define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_PUSH_BACK_52_( \
+        d, l, decl_assertion, traits) \
     ( \
-        BOOST_PP_NIL, \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK( \
-            traits, \
-            ( \
-                BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_EXPAND_TRAITS_52_( \
-                BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_PARSE_D_L_53(d, l, \
-                BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK( \
-                    decl \
-                ))) \
-            ) BOOST_PP_EMPTY \
-        ) \
+        BOOST_PP_TUPLE_ELEM(2, 0, decl_assertion), \
+        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK(traits, \
+                ( BOOST_PP_TUPLE_ELEM(2, 1, decl_assertion) ) BOOST_PP_EMPTY) \
     )
 
 // Precondition: decl = `( assertions,,, ) ...` (multiple assertions).
@@ -13991,43 +12856,21 @@ BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_REPLACE_ELSES_PARSE_YES_53_( \
 // Precondition: decl = `assertion BOOST_PP_NIL` (single assertion).
 #define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_YES_53_( \
         d, l, is_post, decl, traits) \
-    BOOST_PP_IIF(is_post, \
-        BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_POST_53_ \
-    , \
-        BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_NOT_POST_53_ \
-    )(d, l, decl, traits)
-
-#define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_POST_53_( \
-        d, l, decl, traits) \
-    ( \
-        BOOST_PP_NIL, \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK( \
-            traits, \
-            ( \
-                BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_EXPAND_TRAITS_53_( \
-                BOOST_CONTRACT_EXT_PP_POST_ASSERTION_TRAITS_PARSE_D_L_54( \
-                        d, l, \
-                BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK( \
-                    decl \
-                ))) \
-            ) BOOST_PP_EMPTY \
-        ) \
+    BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_PUSH_BACK_53_(d, l, \
+        BOOST_PP_IIF(is_post, \
+            BOOST_CONTRACT_EXT_PP_POST_ASSERTION_TRAITS_PARSE_D_L_54 \
+        , \
+            BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_PARSE_D_L_54 \
+        )(d, l, BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK(decl)), \
+        traits \
     )
 
-#define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_NOT_POST_53_( \
-        d, l, decl, traits) \
+#define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_PUSH_BACK_53_( \
+        d, l, decl_assertion, traits) \
     ( \
-        BOOST_PP_NIL, \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK( \
-            traits, \
-            ( \
-                BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_EXPAND_TRAITS_53_( \
-                BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_PARSE_D_L_54(d, l, \
-                BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK( \
-                    decl \
-                ))) \
-            ) BOOST_PP_EMPTY \
-        ) \
+        BOOST_PP_TUPLE_ELEM(2, 0, decl_assertion), \
+        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK(traits, \
+                ( BOOST_PP_TUPLE_ELEM(2, 1, decl_assertion) ) BOOST_PP_EMPTY) \
     )
 
 // Precondition: decl = `( assertions,,, ) ...` (multiple assertions).
@@ -14256,43 +13099,21 @@ BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_REPLACE_ELSES_PARSE_YES_54_( \
 // Precondition: decl = `assertion BOOST_PP_NIL` (single assertion).
 #define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_YES_54_( \
         d, l, is_post, decl, traits) \
-    BOOST_PP_IIF(is_post, \
-        BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_POST_54_ \
-    , \
-        BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_NOT_POST_54_ \
-    )(d, l, decl, traits)
-
-#define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_POST_54_( \
-        d, l, decl, traits) \
-    ( \
-        BOOST_PP_NIL, \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK( \
-            traits, \
-            ( \
-                BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_EXPAND_TRAITS_54_( \
-                BOOST_CONTRACT_EXT_PP_POST_ASSERTION_TRAITS_PARSE_D_L_55( \
-                        d, l, \
-                BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK( \
-                    decl \
-                ))) \
-            ) BOOST_PP_EMPTY \
-        ) \
+    BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_PUSH_BACK_54_(d, l, \
+        BOOST_PP_IIF(is_post, \
+            BOOST_CONTRACT_EXT_PP_POST_ASSERTION_TRAITS_PARSE_D_L_55 \
+        , \
+            BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_PARSE_D_L_55 \
+        )(d, l, BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK(decl)), \
+        traits \
     )
 
-#define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_NOT_POST_54_( \
-        d, l, decl, traits) \
+#define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_PUSH_BACK_54_( \
+        d, l, decl_assertion, traits) \
     ( \
-        BOOST_PP_NIL, \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK( \
-            traits, \
-            ( \
-                BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_EXPAND_TRAITS_54_( \
-                BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_PARSE_D_L_55(d, l, \
-                BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK( \
-                    decl \
-                ))) \
-            ) BOOST_PP_EMPTY \
-        ) \
+        BOOST_PP_TUPLE_ELEM(2, 0, decl_assertion), \
+        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK(traits, \
+                ( BOOST_PP_TUPLE_ELEM(2, 1, decl_assertion) ) BOOST_PP_EMPTY) \
     )
 
 // Precondition: decl = `( assertions,,, ) ...` (multiple assertions).
@@ -14521,43 +13342,21 @@ BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_REPLACE_ELSES_PARSE_YES_55_( \
 // Precondition: decl = `assertion BOOST_PP_NIL` (single assertion).
 #define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_YES_55_( \
         d, l, is_post, decl, traits) \
-    BOOST_PP_IIF(is_post, \
-        BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_POST_55_ \
-    , \
-        BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_NOT_POST_55_ \
-    )(d, l, decl, traits)
-
-#define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_POST_55_( \
-        d, l, decl, traits) \
-    ( \
-        BOOST_PP_NIL, \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK( \
-            traits, \
-            ( \
-                BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_EXPAND_TRAITS_55_( \
-                BOOST_CONTRACT_EXT_PP_POST_ASSERTION_TRAITS_PARSE_D_L_56( \
-                        d, l, \
-                BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK( \
-                    decl \
-                ))) \
-            ) BOOST_PP_EMPTY \
-        ) \
+    BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_PUSH_BACK_55_(d, l, \
+        BOOST_PP_IIF(is_post, \
+            BOOST_CONTRACT_EXT_PP_POST_ASSERTION_TRAITS_PARSE_D_L_56 \
+        , \
+            BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_PARSE_D_L_56 \
+        )(d, l, BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK(decl)), \
+        traits \
     )
 
-#define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_NOT_POST_55_( \
-        d, l, decl, traits) \
+#define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_PUSH_BACK_55_( \
+        d, l, decl_assertion, traits) \
     ( \
-        BOOST_PP_NIL, \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK( \
-            traits, \
-            ( \
-                BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_EXPAND_TRAITS_55_( \
-                BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_PARSE_D_L_56(d, l, \
-                BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK( \
-                    decl \
-                ))) \
-            ) BOOST_PP_EMPTY \
-        ) \
+        BOOST_PP_TUPLE_ELEM(2, 0, decl_assertion), \
+        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK(traits, \
+                ( BOOST_PP_TUPLE_ELEM(2, 1, decl_assertion) ) BOOST_PP_EMPTY) \
     )
 
 // Precondition: decl = `( assertions,,, ) ...` (multiple assertions).
@@ -14786,43 +13585,21 @@ BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_REPLACE_ELSES_PARSE_YES_56_( \
 // Precondition: decl = `assertion BOOST_PP_NIL` (single assertion).
 #define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_YES_56_( \
         d, l, is_post, decl, traits) \
-    BOOST_PP_IIF(is_post, \
-        BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_POST_56_ \
-    , \
-        BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_NOT_POST_56_ \
-    )(d, l, decl, traits)
-
-#define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_POST_56_( \
-        d, l, decl, traits) \
-    ( \
-        BOOST_PP_NIL, \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK( \
-            traits, \
-            ( \
-                BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_EXPAND_TRAITS_56_( \
-                BOOST_CONTRACT_EXT_PP_POST_ASSERTION_TRAITS_PARSE_D_L_57( \
-                        d, l, \
-                BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK( \
-                    decl \
-                ))) \
-            ) BOOST_PP_EMPTY \
-        ) \
+    BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_PUSH_BACK_56_(d, l, \
+        BOOST_PP_IIF(is_post, \
+            BOOST_CONTRACT_EXT_PP_POST_ASSERTION_TRAITS_PARSE_D_L_57 \
+        , \
+            BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_PARSE_D_L_57 \
+        )(d, l, BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK(decl)), \
+        traits \
     )
 
-#define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_NOT_POST_56_( \
-        d, l, decl, traits) \
+#define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_PUSH_BACK_56_( \
+        d, l, decl_assertion, traits) \
     ( \
-        BOOST_PP_NIL, \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK( \
-            traits, \
-            ( \
-                BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_EXPAND_TRAITS_56_( \
-                BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_PARSE_D_L_57(d, l, \
-                BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK( \
-                    decl \
-                ))) \
-            ) BOOST_PP_EMPTY \
-        ) \
+        BOOST_PP_TUPLE_ELEM(2, 0, decl_assertion), \
+        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK(traits, \
+                ( BOOST_PP_TUPLE_ELEM(2, 1, decl_assertion) ) BOOST_PP_EMPTY) \
     )
 
 // Precondition: decl = `( assertions,,, ) ...` (multiple assertions).
@@ -15051,43 +13828,21 @@ BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_REPLACE_ELSES_PARSE_YES_57_( \
 // Precondition: decl = `assertion BOOST_PP_NIL` (single assertion).
 #define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_YES_57_( \
         d, l, is_post, decl, traits) \
-    BOOST_PP_IIF(is_post, \
-        BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_POST_57_ \
-    , \
-        BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_NOT_POST_57_ \
-    )(d, l, decl, traits)
-
-#define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_POST_57_( \
-        d, l, decl, traits) \
-    ( \
-        BOOST_PP_NIL, \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK( \
-            traits, \
-            ( \
-                BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_EXPAND_TRAITS_57_( \
-                BOOST_CONTRACT_EXT_PP_POST_ASSERTION_TRAITS_PARSE_D_L_58( \
-                        d, l, \
-                BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK( \
-                    decl \
-                ))) \
-            ) BOOST_PP_EMPTY \
-        ) \
+    BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_PUSH_BACK_57_(d, l, \
+        BOOST_PP_IIF(is_post, \
+            BOOST_CONTRACT_EXT_PP_POST_ASSERTION_TRAITS_PARSE_D_L_58 \
+        , \
+            BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_PARSE_D_L_58 \
+        )(d, l, BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK(decl)), \
+        traits \
     )
 
-#define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_NOT_POST_57_( \
-        d, l, decl, traits) \
+#define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_PUSH_BACK_57_( \
+        d, l, decl_assertion, traits) \
     ( \
-        BOOST_PP_NIL, \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK( \
-            traits, \
-            ( \
-                BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_EXPAND_TRAITS_57_( \
-                BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_PARSE_D_L_58(d, l, \
-                BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK( \
-                    decl \
-                ))) \
-            ) BOOST_PP_EMPTY \
-        ) \
+        BOOST_PP_TUPLE_ELEM(2, 0, decl_assertion), \
+        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK(traits, \
+                ( BOOST_PP_TUPLE_ELEM(2, 1, decl_assertion) ) BOOST_PP_EMPTY) \
     )
 
 // Precondition: decl = `( assertions,,, ) ...` (multiple assertions).
@@ -15316,43 +14071,21 @@ BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_REPLACE_ELSES_PARSE_YES_58_( \
 // Precondition: decl = `assertion BOOST_PP_NIL` (single assertion).
 #define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_YES_58_( \
         d, l, is_post, decl, traits) \
-    BOOST_PP_IIF(is_post, \
-        BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_POST_58_ \
-    , \
-        BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_NOT_POST_58_ \
-    )(d, l, decl, traits)
-
-#define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_POST_58_( \
-        d, l, decl, traits) \
-    ( \
-        BOOST_PP_NIL, \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK( \
-            traits, \
-            ( \
-                BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_EXPAND_TRAITS_58_( \
-                BOOST_CONTRACT_EXT_PP_POST_ASSERTION_TRAITS_PARSE_D_L_59( \
-                        d, l, \
-                BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK( \
-                    decl \
-                ))) \
-            ) BOOST_PP_EMPTY \
-        ) \
+    BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_PUSH_BACK_58_(d, l, \
+        BOOST_PP_IIF(is_post, \
+            BOOST_CONTRACT_EXT_PP_POST_ASSERTION_TRAITS_PARSE_D_L_59 \
+        , \
+            BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_PARSE_D_L_59 \
+        )(d, l, BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK(decl)), \
+        traits \
     )
 
-#define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_NOT_POST_58_( \
-        d, l, decl, traits) \
+#define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_PUSH_BACK_58_( \
+        d, l, decl_assertion, traits) \
     ( \
-        BOOST_PP_NIL, \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK( \
-            traits, \
-            ( \
-                BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_EXPAND_TRAITS_58_( \
-                BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_PARSE_D_L_59(d, l, \
-                BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK( \
-                    decl \
-                ))) \
-            ) BOOST_PP_EMPTY \
-        ) \
+        BOOST_PP_TUPLE_ELEM(2, 0, decl_assertion), \
+        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK(traits, \
+                ( BOOST_PP_TUPLE_ELEM(2, 1, decl_assertion) ) BOOST_PP_EMPTY) \
     )
 
 // Precondition: decl = `( assertions,,, ) ...` (multiple assertions).
@@ -15581,43 +14314,21 @@ BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_REPLACE_ELSES_PARSE_YES_59_( \
 // Precondition: decl = `assertion BOOST_PP_NIL` (single assertion).
 #define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_YES_59_( \
         d, l, is_post, decl, traits) \
-    BOOST_PP_IIF(is_post, \
-        BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_POST_59_ \
-    , \
-        BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_NOT_POST_59_ \
-    )(d, l, decl, traits)
-
-#define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_POST_59_( \
-        d, l, decl, traits) \
-    ( \
-        BOOST_PP_NIL, \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK( \
-            traits, \
-            ( \
-                BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_EXPAND_TRAITS_59_( \
-                BOOST_CONTRACT_EXT_PP_POST_ASSERTION_TRAITS_PARSE_D_L_60( \
-                        d, l, \
-                BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK( \
-                    decl \
-                ))) \
-            ) BOOST_PP_EMPTY \
-        ) \
+    BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_PUSH_BACK_59_(d, l, \
+        BOOST_PP_IIF(is_post, \
+            BOOST_CONTRACT_EXT_PP_POST_ASSERTION_TRAITS_PARSE_D_L_60 \
+        , \
+            BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_PARSE_D_L_60 \
+        )(d, l, BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK(decl)), \
+        traits \
     )
 
-#define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_NOT_POST_59_( \
-        d, l, decl, traits) \
+#define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_PUSH_BACK_59_( \
+        d, l, decl_assertion, traits) \
     ( \
-        BOOST_PP_NIL, \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK( \
-            traits, \
-            ( \
-                BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_EXPAND_TRAITS_59_( \
-                BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_PARSE_D_L_60(d, l, \
-                BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK( \
-                    decl \
-                ))) \
-            ) BOOST_PP_EMPTY \
-        ) \
+        BOOST_PP_TUPLE_ELEM(2, 0, decl_assertion), \
+        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK(traits, \
+                ( BOOST_PP_TUPLE_ELEM(2, 1, decl_assertion) ) BOOST_PP_EMPTY) \
     )
 
 // Precondition: decl = `( assertions,,, ) ...` (multiple assertions).
@@ -15846,43 +14557,21 @@ BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_REPLACE_ELSES_PARSE_YES_60_( \
 // Precondition: decl = `assertion BOOST_PP_NIL` (single assertion).
 #define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_YES_60_( \
         d, l, is_post, decl, traits) \
-    BOOST_PP_IIF(is_post, \
-        BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_POST_60_ \
-    , \
-        BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_NOT_POST_60_ \
-    )(d, l, decl, traits)
-
-#define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_POST_60_( \
-        d, l, decl, traits) \
-    ( \
-        BOOST_PP_NIL, \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK( \
-            traits, \
-            ( \
-                BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_EXPAND_TRAITS_60_( \
-                BOOST_CONTRACT_EXT_PP_POST_ASSERTION_TRAITS_PARSE_D_L_61( \
-                        d, l, \
-                BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK( \
-                    decl \
-                ))) \
-            ) BOOST_PP_EMPTY \
-        ) \
+    BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_PUSH_BACK_60_(d, l, \
+        BOOST_PP_IIF(is_post, \
+            BOOST_CONTRACT_EXT_PP_POST_ASSERTION_TRAITS_PARSE_D_L_61 \
+        , \
+            BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_PARSE_D_L_61 \
+        )(d, l, BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK(decl)), \
+        traits \
     )
 
-#define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_NOT_POST_60_( \
-        d, l, decl, traits) \
+#define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_PUSH_BACK_60_( \
+        d, l, decl_assertion, traits) \
     ( \
-        BOOST_PP_NIL, \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK( \
-            traits, \
-            ( \
-                BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_EXPAND_TRAITS_60_( \
-                BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_PARSE_D_L_61(d, l, \
-                BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK( \
-                    decl \
-                ))) \
-            ) BOOST_PP_EMPTY \
-        ) \
+        BOOST_PP_TUPLE_ELEM(2, 0, decl_assertion), \
+        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK(traits, \
+                ( BOOST_PP_TUPLE_ELEM(2, 1, decl_assertion) ) BOOST_PP_EMPTY) \
     )
 
 // Precondition: decl = `( assertions,,, ) ...` (multiple assertions).
@@ -16111,43 +14800,21 @@ BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_REPLACE_ELSES_PARSE_YES_61_( \
 // Precondition: decl = `assertion BOOST_PP_NIL` (single assertion).
 #define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_YES_61_( \
         d, l, is_post, decl, traits) \
-    BOOST_PP_IIF(is_post, \
-        BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_POST_61_ \
-    , \
-        BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_NOT_POST_61_ \
-    )(d, l, decl, traits)
-
-#define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_POST_61_( \
-        d, l, decl, traits) \
-    ( \
-        BOOST_PP_NIL, \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK( \
-            traits, \
-            ( \
-                BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_EXPAND_TRAITS_61_( \
-                BOOST_CONTRACT_EXT_PP_POST_ASSERTION_TRAITS_PARSE_D_L_62( \
-                        d, l, \
-                BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK( \
-                    decl \
-                ))) \
-            ) BOOST_PP_EMPTY \
-        ) \
+    BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_PUSH_BACK_61_(d, l, \
+        BOOST_PP_IIF(is_post, \
+            BOOST_CONTRACT_EXT_PP_POST_ASSERTION_TRAITS_PARSE_D_L_62 \
+        , \
+            BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_PARSE_D_L_62 \
+        )(d, l, BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK(decl)), \
+        traits \
     )
 
-#define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_NOT_POST_61_( \
-        d, l, decl, traits) \
+#define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_PUSH_BACK_61_( \
+        d, l, decl_assertion, traits) \
     ( \
-        BOOST_PP_NIL, \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK( \
-            traits, \
-            ( \
-                BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_EXPAND_TRAITS_61_( \
-                BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_PARSE_D_L_62(d, l, \
-                BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK( \
-                    decl \
-                ))) \
-            ) BOOST_PP_EMPTY \
-        ) \
+        BOOST_PP_TUPLE_ELEM(2, 0, decl_assertion), \
+        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK(traits, \
+                ( BOOST_PP_TUPLE_ELEM(2, 1, decl_assertion) ) BOOST_PP_EMPTY) \
     )
 
 // Precondition: decl = `( assertions,,, ) ...` (multiple assertions).
@@ -16376,43 +15043,21 @@ BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_REPLACE_ELSES_PARSE_YES_62_( \
 // Precondition: decl = `assertion BOOST_PP_NIL` (single assertion).
 #define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_YES_62_( \
         d, l, is_post, decl, traits) \
-    BOOST_PP_IIF(is_post, \
-        BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_POST_62_ \
-    , \
-        BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_NOT_POST_62_ \
-    )(d, l, decl, traits)
-
-#define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_POST_62_( \
-        d, l, decl, traits) \
-    ( \
-        BOOST_PP_NIL, \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK( \
-            traits, \
-            ( \
-                BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_EXPAND_TRAITS_62_( \
-                BOOST_CONTRACT_EXT_PP_POST_ASSERTION_TRAITS_PARSE_D_L_63( \
-                        d, l, \
-                BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK( \
-                    decl \
-                ))) \
-            ) BOOST_PP_EMPTY \
-        ) \
+    BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_PUSH_BACK_62_(d, l, \
+        BOOST_PP_IIF(is_post, \
+            BOOST_CONTRACT_EXT_PP_POST_ASSERTION_TRAITS_PARSE_D_L_63 \
+        , \
+            BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_PARSE_D_L_63 \
+        )(d, l, BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK(decl)), \
+        traits \
     )
 
-#define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_NOT_POST_62_( \
-        d, l, decl, traits) \
+#define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_PUSH_BACK_62_( \
+        d, l, decl_assertion, traits) \
     ( \
-        BOOST_PP_NIL, \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK( \
-            traits, \
-            ( \
-                BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_EXPAND_TRAITS_62_( \
-                BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_PARSE_D_L_63(d, l, \
-                BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK( \
-                    decl \
-                ))) \
-            ) BOOST_PP_EMPTY \
-        ) \
+        BOOST_PP_TUPLE_ELEM(2, 0, decl_assertion), \
+        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK(traits, \
+                ( BOOST_PP_TUPLE_ELEM(2, 1, decl_assertion) ) BOOST_PP_EMPTY) \
     )
 
 // Precondition: decl = `( assertions,,, ) ...` (multiple assertions).
@@ -16641,43 +15286,21 @@ BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_REPLACE_ELSES_PARSE_YES_63_( \
 // Precondition: decl = `assertion BOOST_PP_NIL` (single assertion).
 #define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_YES_63_( \
         d, l, is_post, decl, traits) \
-    BOOST_PP_IIF(is_post, \
-        BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_POST_63_ \
-    , \
-        BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_NOT_POST_63_ \
-    )(d, l, decl, traits)
-
-#define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_POST_63_( \
-        d, l, decl, traits) \
-    ( \
-        BOOST_PP_NIL, \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK( \
-            traits, \
-            ( \
-                BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_EXPAND_TRAITS_63_( \
-                BOOST_CONTRACT_EXT_PP_POST_ASSERTION_TRAITS_PARSE_D_L_64( \
-                        d, l, \
-                BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK( \
-                    decl \
-                ))) \
-            ) BOOST_PP_EMPTY \
-        ) \
+    BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_PUSH_BACK_63_(d, l, \
+        BOOST_PP_IIF(is_post, \
+            BOOST_CONTRACT_EXT_PP_POST_ASSERTION_TRAITS_PARSE_D_L_64 \
+        , \
+            BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_PARSE_D_L_64 \
+        )(d, l, BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK(decl)), \
+        traits \
     )
 
-#define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_NOT_POST_63_( \
-        d, l, decl, traits) \
+#define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_PUSH_BACK_63_( \
+        d, l, decl_assertion, traits) \
     ( \
-        BOOST_PP_NIL, \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK( \
-            traits, \
-            ( \
-                BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_EXPAND_TRAITS_63_( \
-                BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_PARSE_D_L_64(d, l, \
-                BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK( \
-                    decl \
-                ))) \
-            ) BOOST_PP_EMPTY \
-        ) \
+        BOOST_PP_TUPLE_ELEM(2, 0, decl_assertion), \
+        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK(traits, \
+                ( BOOST_PP_TUPLE_ELEM(2, 1, decl_assertion) ) BOOST_PP_EMPTY) \
     )
 
 // Precondition: decl = `( assertions,,, ) ...` (multiple assertions).
@@ -16906,43 +15529,21 @@ BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_REPLACE_ELSES_PARSE_YES_64_( \
 // Precondition: decl = `assertion BOOST_PP_NIL` (single assertion).
 #define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_YES_64_( \
         d, l, is_post, decl, traits) \
-    BOOST_PP_IIF(is_post, \
-        BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_POST_64_ \
-    , \
-        BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_NOT_POST_64_ \
-    )(d, l, decl, traits)
-
-#define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_POST_64_( \
-        d, l, decl, traits) \
-    ( \
-        BOOST_PP_NIL, \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK( \
-            traits, \
-            ( \
-                BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_EXPAND_TRAITS_64_( \
-                BOOST_CONTRACT_EXT_PP_POST_ASSERTION_TRAITS_PARSE_D_L_65( \
-                        d, l, \
-                BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK( \
-                    decl \
-                ))) \
-            ) BOOST_PP_EMPTY \
-        ) \
+    BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_PUSH_BACK_64_(d, l, \
+        BOOST_PP_IIF(is_post, \
+            BOOST_CONTRACT_EXT_PP_POST_ASSERTION_TRAITS_PARSE_D_L_65 \
+        , \
+            BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_PARSE_D_L_65 \
+        )(d, l, BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK(decl)), \
+        traits \
     )
 
-#define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_NOT_POST_64_( \
-        d, l, decl, traits) \
+#define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_PUSH_BACK_64_( \
+        d, l, decl_assertion, traits) \
     ( \
-        BOOST_PP_NIL, \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK( \
-            traits, \
-            ( \
-                BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_EXPAND_TRAITS_64_( \
-                BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_PARSE_D_L_65(d, l, \
-                BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK( \
-                    decl \
-                ))) \
-            ) BOOST_PP_EMPTY \
-        ) \
+        BOOST_PP_TUPLE_ELEM(2, 0, decl_assertion), \
+        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK(traits, \
+                ( BOOST_PP_TUPLE_ELEM(2, 1, decl_assertion) ) BOOST_PP_EMPTY) \
     )
 
 // Precondition: decl = `( assertions,,, ) ...` (multiple assertions).
