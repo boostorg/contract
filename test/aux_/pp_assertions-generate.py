@@ -212,14 +212,13 @@ file.write('''
 // WARNING: FILE AUTOMATICALLY GENERATED, DO NOT MODIFY IT!
 // Instead, modify and run related generation script "{0}".
 
-#include "pp_tuple.hpp"
+#include "pp_1tuple_rem.hpp"
 #include <boost/contract/ext_/preprocessor/traits/assertion.hpp>
 #include <boost/contract/ext_/preprocessor/keyword/namespace.hpp>
 #include <boost/contract/ext_/preprocessor/keyword/using.hpp>
 #include <boost/contract/ext_/preprocessor/keyword/typedef.hpp>
 #include <boost/contract/ext_/preprocessor/keyword/const.hpp>
 #include <boost/contract/ext_/preprocessor/keyword/return.hpp>
-#include <boost/contract/ext_/preprocessor/variadic/tuple_append.hpp>
 #include <boost/contract/ext_/preprocessor/utility/empty.hpp>
 #include <boost/preprocessor/seq/fold_left.hpp>
 #include <boost/preprocessor/tuple/eat.hpp>

@@ -5,20 +5,22 @@
 // WARNING: FILE AUTOMATICALLY GENERATED, DO NOT MODIFY IT!
 // Instead, modify and run related generation script "pp_assertions-generate.py".
 
-#include "pp_tuple.hpp"
+#include "pp_1tuple_rem.hpp"
 #include <boost/contract/ext_/preprocessor/traits/assertion.hpp>
 #include <boost/contract/ext_/preprocessor/keyword/namespace.hpp>
 #include <boost/contract/ext_/preprocessor/keyword/using.hpp>
 #include <boost/contract/ext_/preprocessor/keyword/typedef.hpp>
 #include <boost/contract/ext_/preprocessor/keyword/const.hpp>
 #include <boost/contract/ext_/preprocessor/keyword/return.hpp>
-#include <boost/contract/ext_/preprocessor/variadic/tuple_append.hpp>
 #include <boost/contract/ext_/preprocessor/utility/empty.hpp>
 #include <boost/preprocessor/seq/fold_left.hpp>
 #include <boost/preprocessor/tuple/eat.hpp>
+#include <boost/preprocessor/tuple/rem.hpp>
+#include <boost/preprocessor/punctuation/comma_if.hpp>
 #include <boost/preprocessor/control/iif.hpp>
 #include <boost/preprocessor/control/expr_iif.hpp>
 #include <boost/preprocessor/logical/compl.hpp>
+#include <boost/preprocessor/facilities/expand.hpp>
 
 /* PIBLIC */
 
@@ -28,13 +30,16 @@
 /* PRIVATE */
 
 #define BOOST_CONTRACT_TEST_AUX_PP_CAPTURE_S_(s, captures, traits) \
-    BOOST_CONTRACT_EXT_PP_VARIADIC_TUPLE_APPEND(captures, \
+    BOOST_CONTRACT_TEST_AUX_PP_CAPTURE_PUSH_BACK_( \
+        captures, \
         ( \
             BOOST_CONTRACT_TEST_AUX_PP_1TUPLE_REM( \
                     BOOST_CONTRACT_EXT_PP_CAPTURE_TRAITS_TYPE(traits)) \
             BOOST_CONTRACT_EXT_PP_CAPTURE_TRAITS_NAME(traits) \
         ) \
     )
+
+#define BOOST_CONTRACT_TEST_AUX_PP_CAPTURE_PUSH_BACK_(captures, capture)     (         BOOST_PP_TUPLE_REM_CTOR(captures)         BOOST_PP_COMMA_IF(BOOST_PP_COMPL(                 BOOST_PP_EXPAND(BOOST_CONTRACT_EXT_PP_IS_EMPTY captures)))         BOOST_PP_TUPLE_REM_CTOR(capture)     )
 
 /* PUBLIC (1) */
 
