@@ -3,6 +3,7 @@
 #define BOOST_CONTRACT_EXT_PP_PARENTHESIZE_HPP_
 
 #include <boost/contract/ext_/preprocessor/paren/has.hpp>
+#include <boost/preprocessor/control/iif.hpp>
 
 /* PUBLIC */
 

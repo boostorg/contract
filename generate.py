@@ -6,6 +6,7 @@ for root, dirs, files in os.walk('.'):
     for file in fnmatch.filter(files, '*-generate.py'):
         cwd = os.getcwd()
         os.chdir(root)
+        print "In directory:", root
         os.system("python " + file)
         os.chdir(cwd)
 
