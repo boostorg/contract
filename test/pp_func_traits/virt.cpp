@@ -30,8 +30,10 @@
 
 int main ( ) {
     BOOST_CONTRACT_TEST_( BOOST_PP_EMPTY() )
+
     BOOST_CONTRACT_TEST_( final )
     BOOST_CONTRACT_TEST_( override )
+
     BOOST_CONTRACT_TEST_( final override )
     // Same as `final override` once parsed (this order does not matter in C++).
     BOOST_CONTRACT_TEST_EQUAL_( override final, final override )

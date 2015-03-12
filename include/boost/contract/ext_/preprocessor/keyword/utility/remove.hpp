@@ -4,16 +4,6 @@
 
 #include <boost/preprocessor/cat.hpp>
 
-/* PRIVATE */
-
-// Extra level of indirection needed for proper macro expansion (on MSVC).
-#define BOOST_CONTRACT_EXT_PP_KEYWORD_UTILITY_REMOVE_EXPAND_(x) x
-
-// Extra level of indirection needed for proper macro expansion (on MSVC).
-#define BOOST_CONTRACT_EXT_PP_KEYWORD_UTILITY_REMOVE_CAT_(a, b) \
-    BOOST_CONTRACT_EXT_PP_KEYWORD_UTILITY_REMOVE_EXPAND_( \
-            BOOST_PP_CAT(a, b))
-
 /* PUBLIC */
 
 // Precondition: A macro named `cat_to_empty_prefix ## token-to-remove` must be
@@ -33,6 +23,16 @@
         cat_to_empty_postfix, tokens) \
     BOOST_CONTRACT_EXT_PP_KEYWORD_UTILITY_REMOVE_CAT_( \
             tokens, cat_to_empty_postfix)
+
+/* PRIVATE */
+
+// Extra level of indirection needed for proper macro expansion (on MSVC).
+#define BOOST_CONTRACT_EXT_PP_KEYWORD_UTILITY_REMOVE_CAT_(a, b) \
+    BOOST_CONTRACT_EXT_PP_KEYWORD_UTILITY_REMOVE_EXPAND_( \
+            BOOST_PP_CAT(a, b))
+
+// Extra level of indirection needed for proper macro expansion (on MSVC).
+#define BOOST_CONTRACT_EXT_PP_KEYWORD_UTILITY_REMOVE_EXPAND_(x) x
 
 #endif // #include guard
 

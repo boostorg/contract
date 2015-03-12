@@ -3,6 +3,7 @@
 #define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_HPP_
 
 #include <boost/contract/ext_/preprocessor/traits/func/postconditions.hpp>
+#include <boost/contract/ext_/preprocessor/traits/func/preconditions.hpp>
 #include <boost/contract/ext_/preprocessor/traits/func/virt.hpp>
 #include <boost/contract/ext_/preprocessor/traits/func/except.hpp>
 #include <boost/contract/ext_/preprocessor/traits/func/ref.hpp>
@@ -20,12 +21,13 @@
 
 /* PUBLIC */
 
-// Expand function declaration to `(remaining-declaration, parsed-traits)`:
-// * Parsed traits can be inspected using the FUNC_TRAITS macros.
-// * Reaming declaration is `BOOST_PP_NIL` if there was no error.
+// Expand class declaration to `(remaining-declaration, parsed-traits)`. If
+// there was no error, remaining declaration is `BOOST_PP_NIL`. Parsed traits
+// can be inspected via the FUNC_TRAITS_... macros.
 #define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_PARSE_D(d, decl) \
     BOOST_CONTRACT_EXT_PP_TRAITS_FUNC_DONE_( \
     BOOST_CONTRACT_EXT_PP_TRAITS_FUNC_POSTCONDITIONS_PARSE_(d, \
+    BOOST_CONTRACT_EXT_PP_TRAITS_FUNC_PRECONDITIONS_PARSE_(d, \
     BOOST_CONTRACT_EXT_PP_TRAITS_FUNC_VIRT_PARSE_( \
     BOOST_CONTRACT_EXT_PP_TRAITS_FUNC_TRAILING_RETURN_PARSE_(d, \
     BOOST_CONTRACT_EXT_PP_TRAITS_FUNC_EXCEPT_PARSE_( \
@@ -41,7 +43,7 @@
     BOOST_CONTRACT_EXT_PP_TRAITS_FUNC_ACCESS_PARSE_( \
     BOOST_CONTRACT_EXT_PP_DECL_TRAITS_INIT( \
         decl BOOST_PP_NIL \
-    ))))))))))))))))
+    )))))))))))))))))
 
 /* PRIVATE */
 
@@ -50,7 +52,7 @@
 // what some of this library tests do).
 // #define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_AUX_INDEX_TEST ..._INDEX
 
-// NOTE: These macros #definitions read TRITS_FUNC instead of FUNC_TRAITS to
+// NOTE: These macros #definitions read TRAITS_FUNC instead of FUNC_TRAITS to
 // avoid name clashes with macro #define in func/*.
 
 #if defined(BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_AUX_INDEX_TEST) && \
@@ -193,6 +195,17 @@
 #else
 #   define BOOST_CONTRACT_EXT_PP_TRAITS_FUNC_VIRT_PARSE_ \
         BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_VIRT_PARSE
+#endif
+
+#if defined(BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_AUX_INDEX_TEST) && \
+        BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_AUX_INDEX_TEST < \
+        BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_AUX_PRECONDITIONS_INDEX
+#   define BOOST_CONTRACT_EXT_PP_TRAITS_FUNC_PRECONDITIONS_PARSE_( \
+            d, decl_traits) \
+        decl_traits
+#else
+#   define BOOST_CONTRACT_EXT_PP_TRAITS_FUNC_PRECONDITIONS_PARSE_ \
+        BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_PRECONDITIONS_PARSE_D
 #endif
 
 #if defined(BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_AUX_INDEX_TEST) && \

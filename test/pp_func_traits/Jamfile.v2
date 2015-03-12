@@ -1,21 +1,4 @@
 
-import testing ;
-    
-actions wave { wave $(>) -o $(<) --timer }
-
-rule test-pp ( filestem ) {
-    run $(filestem).cpp ;
-
-    preprocessed $(filestem)-pp : $(filestem).cpp : <cxxflags>-DDEBUG ;
-    alias $(filestem)-pp.ii : $(filestem)-pp ;
-    explicit $(filestem)-pp $(filestem)-pp.ii ;
-
-    # TODO: This is "good enough"... but it'd be better is wave was ran by
-    # something like `bjam ... toolset=wave`.
-    make $(filestem)-wave.ii : $(filestem).cpp : @wave ;
-    alias $(filestem)-wave : $(filestem)-wave.ii ;
-}
-
 test-pp access ;
 test-pp verbatim ;
 test-pp export ;
@@ -29,5 +12,6 @@ test-pp ref ;
 test-pp except ;
 test-pp trailing_return ;
 test-pp virt ;
+test-pp preconditions ;
 test-pp postconditions ;
 

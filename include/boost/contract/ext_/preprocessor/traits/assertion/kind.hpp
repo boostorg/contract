@@ -6,6 +6,8 @@
 #include <boost/contract/ext_/preprocessor/traits/utility/traits.hpp>
 #include <boost/preprocessor/tuple/elem.hpp>
 
+// TODO: Rename this from kind to key (so its consistent with class-key).
+
 /* PUBLIC */
 
 #define BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_SET_KIND_PARSE( \

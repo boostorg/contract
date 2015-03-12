@@ -3,6 +3,7 @@
 #define BOOST_CONTRACT_TEST_AUX_PP_TRAITS_HPP_
 
 #include <boost/contract/ext_/preprocessor/traits/utility/traits.hpp>
+#include <boost/contract/ext_/preprocessor/utility/nil.hpp>
 #include <boost/contract/ext_/preprocessor/stringize.hpp>
 #include <boost/preprocessor/stringize.hpp>
 #include <boost/detail/lightweight_test.hpp>

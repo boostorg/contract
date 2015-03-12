@@ -8,11 +8,7 @@
 /* PUBLIC */
 
 #define BOOST_CONTRACT_EXT_PP_PARENTHESIZE(tokens) \
-    BOOST_PP_IIF(BOOST_CONTRACT_EXT_PP_HAS_PAREN(tokens), \
-        tokens \
-    , \
-        (tokens) \
-    )
+    BOOST_PP_IIF(BOOST_CONTRACT_EXT_PP_HAS_PAREN(tokens), tokens, (tokens))
 
 #endif // #include guard
 

@@ -5,7 +5,7 @@
 #else
 
 #define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_AUX_INDEX_TEST \
-    BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_AUX_POSTCONDITIONS_INDEX
+    BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_AUX_PRECONDITIONS_INDEX
 #include "../aux_/pp_traits.hpp"
 #include "../aux_/pp_assertions.hpp"
 #include <boost/contract/oldof.hpp>
@@ -17,49 +17,37 @@
 #include <boost/preprocessor/control/expr_iif.hpp>
 #include <boost/preprocessor/facilities/empty.hpp>
 
-#define BOOST_CONTRACT_TEST_POSTCONDITIONS_(f) \
+#define BOOST_CONTRACT_TEST_PRECONDITIONS_(f) \
     BOOST_PP_IIF(BOOST_CONTRACT_EXT_PP_IS_EMPTY( \
-            BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_POSTCONDITIONS(f)), \
+            BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_PRECONDITIONS(f)), \
         () BOOST_PP_TUPLE_EAT(3) \
     , \
         BOOST_PP_SEQ_FOLD_LEFT \
-    )(BOOST_CONTRACT_TEST_AUX_PP_POST_ASSERTIONS_S_1, (), \
-            BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_POSTCONDITIONS(f))
+    )(BOOST_CONTRACT_TEST_AUX_PP_ASSERTIONS_S_1, (), \
+            BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_PRECONDITIONS(f))
 
-#define BOOST_CONTRACT_TEST_EQUAL_(postconditions, parsed_postconditions) \
+#define BOOST_CONTRACT_TEST_EQUAL_(preconditions, parsed_preconditions) \
     BOOST_CONTRACT_TEST_AUX_PP_TRAITS( \
-        BOOST_CONTRACT_TEST_POSTCONDITIONS_, \
+        BOOST_CONTRACT_TEST_PRECONDITIONS_, \
         BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_PARSE_D, \
         (std::map<int, char>&) (f) ( ) throw(int, double) override final, \
         BOOST_PP_EXPR_IIF(BOOST_PP_COMPL( \
-                BOOST_CONTRACT_EXT_PP_IS_EMPTY(postconditions)), \
-            postcondition \
+                BOOST_CONTRACT_EXT_PP_IS_EMPTY(preconditions)), \
+            precondition \
         ) \
-        postconditions, \
-        BOOST_PP_EMPTY(), \
-        parsed_postconditions \
+        preconditions, \
+        postcondition( auto result = return, result == x * x ), \
+        parsed_preconditions \
     )
 
-#define BOOST_CONTRACT_TEST_(postconditions) \
-    BOOST_CONTRACT_TEST_EQUAL_(postconditions, postconditions)
-
-#define oldof BOOST_CONTRACT_OLDOF
+#define BOOST_CONTRACT_TEST_(preconditions) \
+    BOOST_CONTRACT_TEST_EQUAL_(preconditions, preconditions)
 
 int main ( ) {
     #define BOOST_CONTRACT_TEST_ASSERTIONS_equal BOOST_CONTRACT_TEST_EQUAL_
     #define BOOST_CONTRACT_TEST_ASSERTIONS_check BOOST_CONTRACT_TEST_
-    #define BOOST_CONTRACT_TEST_ASSERTIONS_post \
-        auto result1 = return, \
-        int const result2 = return, \
-        (map<int, char> const&) result3 = return, \
-        \
-        auto old_size = BOOST_CONTRACT_OLDOF v.size(), \
-        unsigned int const old_capacity = oldof v.capacity(), \
-        (map<int, char> const) old_map = \
-                BOOST_CONTRACT_OLDOF (map<int, char>::clone(m)),
-    #define BOOST_CONTRACT_TEST_ASSERTIONS_post_if \
-        auto c = return, \
-        long long const d = BOOST_CONTRACT_OLDOF v.size(),
+    #define BOOST_CONTRACT_TEST_ASSERTIONS_post
+    #define BOOST_CONTRACT_TEST_ASSERTIONS_post_if
 
     #include "./assertions.hpp" // Include actual assertion tests.
     

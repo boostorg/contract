@@ -1,5 +1,22 @@
 
 import os ;
+import testing ;
+
+#actions wave { wave $(>) -o $(<) --timer }
+
+rule test-pp ( filestem ) {
+    run $(filestem).cpp ;
+
+    preprocessed $(filestem)-pp : $(filestem).cpp : <cxxflags>-DDEBUG ;
+    alias $(filestem)-pp.ii : $(filestem)-pp ;
+    explicit $(filestem)-pp $(filestem)-pp.ii ;
+
+    # TODO: This is "good enough"... but it'd be better is wave was ran by
+    # something like `bjam ... toolset=wave`.
+    # TODO: Fix and uncomment the following.
+    #make $(filestem)-wave.ii : $(filestem).cpp : @wave ;
+    #alias $(filestem)-wave : $(filestem)-wave.ii ;
+}
 
 if ! [ os.environ BOOST_ROOT ] {
     exit "Error: Set BOOST_ROOT environment variable to Boost root directory" ;

@@ -25,7 +25,6 @@ int main ( ) {
     BOOST_CONTRACT_TEST_( public )
     BOOST_CONTRACT_TEST_( protected )
     BOOST_CONTRACT_TEST_( private )
-
     return BOOST_CONTRACT_TEST_AUX_PP_TRAITS_REPORT_ERRORS;
 }
 
