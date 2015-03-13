@@ -7,7 +7,7 @@
 /* PUBLIC */
 
 // Expand to const-assertion-traits or bool-assertion-traits (depending on
-// ASSERTION_TRAITS_KIND) to be inspected using CONST_ASSERTION_TRAITS and
+// ASSERTION_TRAITS_KEY) to be inspected using CONST_ASSERTION_TRAITS and
 // BOOL_ASSERTION_TRAITS respectively.
 // For static-if, always expand to bool-assertion-traits.
 #define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_COND(traits) \

@@ -6,7 +6,7 @@
 #include <boost/contract/ext_/preprocessor/traits/assertion/oldof/type.hpp>
 #include <boost/contract/ext_/preprocessor/traits/assertion/oldof/expr.hpp>
 #include <boost/contract/ext_/preprocessor/traits/assertion/bool/expr.hpp>
-#include <boost/contract/ext_/preprocessor/traits/assertion/kind.hpp>
+#include <boost/contract/ext_/preprocessor/traits/assertion/key.hpp>
 #include <boost/contract/ext_/preprocessor/traits/utility/traits.hpp>
 #include <boost/contract/ext_/preprocessor/keyword/utility/is.hpp>
 #include <boost/contract/ext_/preprocessor/keyword/utility/remove.hpp>
@@ -43,7 +43,7 @@
     BOOST_CONTRACT_EXT_PP_OLDOF_ASSERTION_TRAITS_OPERATOR_, \
             BOOST_CONTRACT_EXT_PP_OLDOF_ASSERTION_TRAITS_OPERATOR_
 
-// ASSERTION_TRAITS_KIND(traits) expands to `...OPERATOR_` above for this
+// ASSERTION_TRAITS_KEY(traits) expands to `...OPERATOR_` above for this
 // assertion (must check using the `..._IS` macro above).
 
 // Precondition: oldofdecl_booltraits =
@@ -55,7 +55,7 @@
     BOOST_CONTRACT_EXT_PP_OLDOF_ASSERTION_TRAITS_ASSIGN_PARSE( \
     BOOST_CONTRACT_EXT_PP_OLDOF_ASSERTION_TRAITS_TYPE_PARSE_D(d, \
     BOOST_CONTRACT_EXT_PP_OLDOF_ASSERTION_TRAITS_EXPR_PARSE( \
-    BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_SET_KIND_PARSE( \
+    BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_SET_KEY_PARSE( \
             BOOST_CONTRACT_EXT_PP_OLDOF_ASSERTION_TRAITS_OPERATOR_, \
     BOOST_CONTRACT_EXT_PP_DECL_TRAITS_INIT( \
         (BOOST_PP_TUPLE_ELEM(2, 0, oldofdecl_booltraits)) \

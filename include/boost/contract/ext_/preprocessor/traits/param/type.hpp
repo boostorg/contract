@@ -33,11 +33,11 @@
     BOOST_CONTRACT_EXT_PP_PAREN_FRONT( \
             BOOST_CONTRACT_EXT_PP_KEYWORD_TEMPLATE_REMOVE_FRONT(tokens))
 
-// Expand `template( ,,, ) ...` to `...` (this is useful to get the class
-// specifier of a template template parameter, without assuming it is `class`).
+// Expand `template( ,,, ) ...` to `...` (for example, this is useful to get
+// the `class` key specifier of a template template parameter, without assuming
+// it is `class`).
 // Precondition: tokens = `template( ,,, ) ...`.
-#define BOOST_CONTRACT_EXT_PP_TEMPLATE_PARAM_TRAITS_TYPE_TEMPLATE_CLASS_ETC( \
-        tokens) \
+#define BOOST_CONTRACT_EXT_PP_TEMPLATE_PARAM_TRAITS_TYPE_TEMPLATE_KEY(tokens) \
     BOOST_PP_TUPLE_EAT(0) \
     BOOST_CONTRACT_EXT_PP_KEYWORD_TEMPLATE_REMOVE_FRONT(tokens)
 
@@ -48,7 +48,7 @@
         BOOST_PP_TUPLE_ELEM(2, 1, decl_traits) \
     )
 
-// Parse "type" (or "kind") for template parameters.
+// Parse "type" (or "key") for template parameters.
 #define BOOST_CONTRACT_EXT_PP_TEMPLATE_PARAM_TRAITS_TYPE_PARSE_D( \
         d, decl_traits) \
     BOOST_CONTRACT_EXT_PP_TEMPLATE_PARAM_TRAITS_TYPE_PARSE_ARGS_(d, \
@@ -117,7 +117,7 @@
 #define BOOST_CONTRACT_EXT_PP_TEMPLATE_PARAM_TRAITS_TYPE_TEMPLATE_( \
         d, decl, traits) \
     BOOST_CONTRACT_EXT_PP_TEMPLATE_PARAM_TRAITS_TYPE_TEMPLATE_PUSH_BACK_( \
-        BOOST_CONTRACT_EXT_PP_TEMPLATE_PARAM_TRAITS_TYPE_TEMPLATE_CLASS_ETC( \
+        BOOST_CONTRACT_EXT_PP_TEMPLATE_PARAM_TRAITS_TYPE_TEMPLATE_KEY( \
                 decl), \
         BOOST_CONTRACT_EXT_PP_TEMPLATE_PARAM_TRAITS_TYPE_TEMPLATE_PARAMS( \
                 decl), \
@@ -125,22 +125,22 @@
     )
 
 #define BOOST_CONTRACT_EXT_PP_TEMPLATE_PARAM_TRAITS_TYPE_TEMPLATE_PUSH_BACK_( \
-        template_template_class_etc, template_template_params, traits) \
+        template_template_key, template_template_params, traits) \
     ( \
         BOOST_PP_IIF( \
             BOOST_CONTRACT_EXT_PP_KEYWORD_IS_CLASS_FRONT( \
-                    template_template_class_etc) \
+                    template_template_key) \
         , \
             BOOST_CONTRACT_EXT_PP_KEYWORD_CLASS_REMOVE_FRONT \
         , \
             BOOST_PP_TUPLE_REM(1) \
-        )(template_template_class_etc), \
+        )(template_template_key), \
         BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK( \
             traits, \
             template \
             template_template_params \
             BOOST_PP_EXPR_IIF(BOOST_CONTRACT_EXT_PP_KEYWORD_IS_CLASS_FRONT( \
-                    template_template_class_etc), \
+                    template_template_key), \
                 class \
             ) \
         ) \

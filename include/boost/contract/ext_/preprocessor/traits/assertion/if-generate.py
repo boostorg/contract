@@ -78,7 +78,7 @@ BOOST_CONTRACT_EXT_PP_POST_IF_ASSERTION_TRAITS_REPLACE_ELSES_PARSE_D_L_{0}( \\
             d, l, is_post, \\
     BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_COND_PARSE_D_L_{0}( \\
             d, l, is_static, \\
-    BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_SET_KIND_PARSE( \\
+    BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_SET_KEY_PARSE( \\
             BOOST_PP_EXPR_IIF(is_static, static) if, \\
     BOOST_CONTRACT_EXT_PP_DECL_TRAITS_INIT( \\
         decl BOOST_PP_NIL \\
@@ -281,7 +281,7 @@ file.write('''
 // (before pp errors).
 #define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_LIMIT {1}
 
-// ASSERTION_TRAITS_KIND(traits) expands to `if` for if-assertion and to
+// ASSERTION_TRAITS_KEY(traits) expands to `if` for if-assertion and to
 // `static if` for static-if-assertion (this can be checked in "one step" using
 // the ..._STATIC_IF_..._IS macro below).
 
