@@ -1,10 +1,20 @@
 
+echo """Usage:
+    Compile and run test file <dir>/<name>.cpp:                      [implicit]
+    $ bjam <dir>/<name> ...
+
+    Preprocess file <dir>/<name>.cpp (stop at preprocessed traits, -UDEBUG to
+    generate all C++ test code instead):                             [explicit]
+    $ bjam <dir>/<name>-pp [cxxflags=-UDEBUG] ...
+
+    Preprocess file <dir>/<name>.cpp using Boost.Wave (instead of toolset's
+    preprocessor):                                                   [explicit]
+    $ bjam <dir>/<name>-wave ...
+""" ;
+
 import testing ;
 
-actions run_wave {
-    echo wave $(>) -o wave.ii
-    wave $(>) -o wave.ii --timer
-}
+actions wave { wave $(>) -o $(<) --timer }
 
 rule test-pp ( dir file ) {
     run $(dir)/$(file).cpp : : : <include>$(dir) : $(dir)/$(file) ;
@@ -14,9 +24,13 @@ rule test-pp ( dir file ) {
     alias $(dir)/$(file)-pp.ii : $(dir)/$(file)-pp ;
     explicit $(dir)/$(file)-pp $(dir)/$(file)-pp.ii ;
 
-    make $(dir)/$(file)-wave.ii : $(dir)/$(file).cpp : @run_wave ;
-    run wave.ii : : : <include>$(dir) : $(dir)/$(file)-wave ;
-    explicit $(dir)/$(file)-wave.ii $(dir)/$(file)-wave ;
+    # TODO: It'd be nice to automatically run the generate.py before building
+    # using something like `bjam --generate ...` or `bjam generate ...`.
+    # TODO: It'd be nice to run all ...-wave targets at once using something
+    # like `bjam wave ...` or `bjam --wave ...`.
+    make $(dir)/$(file)-wave.ii : $(dir)/$(file).cpp : @wave ;
+    alias $(dir)/$(file)-wave : $(dir)/$(file)-wave.ii ;
+    explicit $(dir)/$(file)-wave $(dir)/$(file)-wave.ii ;
 }
 
 test-pp pp_func_traits access ;

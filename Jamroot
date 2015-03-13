@@ -5,7 +5,18 @@ if ! [ os.environ BOOST_ROOT ] {
     exit "Error: Set BOOST_ROOT environment variable to Boost root directory" ;
 }
 local BOOST_ROOT = [ os.environ BOOST_ROOT ] ;
-echo "Using Boost libraries from:" $(BOOST_ROOT) ;
+
+echo "Build Boost.Contract's source, tests, examples, documentation, etc." ;
+echo "Using Boost libraries from (see $BOOST_ROOT): $(BOOST_ROOT)" ;
+echo ;
+
+echo """Usage:
+    Build all (-a), quit on first error (-q), using MSVC, GCC, and CLANG:
+    $ bjam -aq toolset=msvc,gcc,clang ...
+
+    Clock how long the build takes:
+    $ time bjam ...
+""" ;
 
 use-project boost : $(BOOST_ROOT) ;
 
@@ -16,22 +27,5 @@ project
         <include>"./include"
         <include>$(BOOST_ROOT)
         <library-path>$(BOOST_ROOT)/stage/lib
-    ;
-
-echo """
-EXAMPLES
-    Pre-process specified file to bin/.../<file-stem>-pp.ii using compiler:
-    $ bjam [-aq] <file-stem>-pp [cxxflags=-UDEBUG] [toolset=msvc|gcc|clang]
-
-    Pre-process specified file to bin/.../<file-stem>-wave.ii using WAVE:
-    $ bjam [-aq] <file-stem>-wave
-    (Edit wave.cfg for -UDEBUG, lib paths, etc.)
-
-    Compile and run program <file-stem>.cpp:
-    $ bjam [-aq] <file-stem> [toolset=msvc,gcc,clang]
-
-    Compile and run all programs in current directory:
-    $ bjam [-aq] [toolset=msvc,gcc,clang]
-"""
     ;
 
