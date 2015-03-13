@@ -5,6 +5,7 @@
 #include <boost/contract/ext_/preprocessor/traits/aux_/assertion_index.hpp>
 #include <boost/contract/ext_/preprocessor/traits/utility/traits.hpp>
 #include <boost/contract/ext_/preprocessor/utility/nil.hpp>
+#include <boost/preprocessor/facilities/expand.hpp>
 
 /* PUBLIC */
 
@@ -17,8 +18,10 @@
 
 #define BOOST_CONTRACT_EXT_PP_NAMESPACE_ASSERTION_TRAITS_NAME_PARSE( \
         decl_traits) \
-    BOOST_CONTRACT_EXT_PP_NAMESPACE_ASSERTION_TRAITS_NAME_PARSE_ARGS_ \
-    decl_traits
+    BOOST_PP_EXPAND( \
+        BOOST_CONTRACT_EXT_PP_NAMESPACE_ASSERTION_TRAITS_NAME_PARSE_ARGS_ \
+        decl_traits \
+    )
     
 /* PRIVATE */
 

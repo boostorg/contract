@@ -82,7 +82,8 @@
 
 // Extra level of indirection needed for proper macro expansion (on MSVC).
 #define BOOST_CONTRACT_EXT_PP_TYPE_TRAITS_SEQ_RETURN_(decl_type) \
-    BOOST_CONTRACT_EXT_PP_TYPE_TRAITS_SEQ_RETURN_ARGS_ decl_type
+    BOOST_PP_EXPAND(BOOST_CONTRACT_EXT_PP_TYPE_TRAITS_SEQ_RETURN_ARGS_ \
+            decl_type)
 
 // Remove an extra set of parenthesis around sequence (originally added to
 // handle commas by algorithms in common with spaced type traits).

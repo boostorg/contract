@@ -7,6 +7,7 @@
 #include <boost/contract/ext_/preprocessor/utility/nil.hpp>
 #include <boost/contract/ext_/preprocessor/parenthesize.hpp>
 #include <boost/preprocessor/tuple/rem.hpp>
+#include <boost/preprocessor/facilities/expand.hpp>
 
 /* PUBLIC */
 
@@ -23,7 +24,8 @@
 /* PRIVATE */
 
 #define BOOST_CONTRACT_EXT_PP_BASE_TRAITS_TYPE_PARSE_EXPAND_(decl_traits) \
-    BOOST_CONTRACT_EXT_PP_BASE_TRAITS_TYPE_PARSE_ARGS_ decl_traits
+    BOOST_PP_EXPAND(BOOST_CONTRACT_EXT_PP_BASE_TRAITS_TYPE_PARSE_ARGS_ \
+            decl_traits)
 
 #define BOOST_CONTRACT_EXT_PP_BASE_TRAITS_TYPE_PARSE_ARGS_(decl, traits) \
     ( \

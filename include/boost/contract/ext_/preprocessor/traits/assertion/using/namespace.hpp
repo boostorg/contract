@@ -17,17 +17,6 @@
         traits \
     )()
 
-// TODO: The EXPAND below seem to be needed at least on MSVC (and at least most
-// of the times...). Apply EXPAND everywhere based on following rule: The
-// general rule could be to use EXPAND whenever the macro invocation does not
-// explicitly read the parameter list's parenthesis, for example:
-//  F(x) // explicit paren => no expand
-//  IF(c, F, G)(x, y) // explicit paren (after the IF) => no expand
-//  EXPAND(M IF(c, (x, y), (a, b))) // no explicit paren (they are "hidden"
-//                                  // inside IF(...)) => use expand
-//  M args // no explicit paren (they are "hidden" inside args = (x, y)) =>
-//         // use expand
-
 #define BOOST_CONTRACT_EXT_PP_USING_ASSERTION_TRAITS_NAMESPACE_PARSE( \
         decl_traits) \
     BOOST_PP_EXPAND( \

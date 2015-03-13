@@ -25,7 +25,7 @@
     BOOST_CONTRACT_EXT_PP_TRAITS_ELEM( \
             BOOST_CONTRACT_EXT_PP_BASE_TRAITS_AUX_VIRTUAL_INDEX, traits)()
 
-// Implementation: Do NOT use EXPAND here for proper macro expansion (on MSVC).
+// Implementation: Do NOT use EXPAND for proper expansion (on MSVC).
 #define BOOST_CONTRACT_EXT_PP_BASE_TRAITS_CLASSIFIERS_PARSE(decl_traits) \
     BOOST_CONTRACT_EXT_PP_BASE_TRAITS_VIRTUAL_1ST_CHECK_ decl_traits
 

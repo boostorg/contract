@@ -12,8 +12,6 @@
 
 /* PUBLIC */
 
-// TODO: Use this macro in all tests that need to remove type's parenthesis.
-
 // Expand `(x)` to x, but `x` (no parenthesis) to `x` and `(x, ...)` (tuple
 // size > `) to `(x, ...)`.
 #define BOOST_CONTRACT_TEST_AUX_PP_1TUPLE_REM(tuple) \

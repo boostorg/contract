@@ -7,6 +7,7 @@
 #define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_AUX_INDEX_TEST \
     BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_AUX_PARAMS_INDEX
 #include "../aux_/pp_traits.hpp"
+#include "../aux_/pp_1tuple_rem.hpp"
 #include <boost/contract/ext_/preprocessor/traits/func.hpp>
 #include <boost/contract/ext_/preprocessor/utility/empty.hpp>
 #include <boost/preprocessor/seq/for_each_i.hpp>
@@ -18,20 +19,9 @@
 #include <boost/preprocessor/control/iif.hpp>
 #include <boost/preprocessor/punctuation/comma_if.hpp>
 
-// NOTE: Some extra test macros are necessary here to regenerate the decl back
-// from the parsed trait to check if the parsing was correct. But, at the end
-// these are valuable tests also because they use the PARAM_TRAITS macros.
-
-// Just for these tests, assumes all 1-tuples were specified without paren.
-#define BOOST_CONTRACT_TEST_PAREN_REM_(trait) \
-    BOOST_PP_EXPR_IIF(BOOST_PP_EQUAL(BOOST_PP_TUPLE_SIZE(trait), 1), \
-        BOOST_PP_TUPLE_REM(0) \
-    ) \
-    trait
-
 #define BOOST_CONTRACT_TEST_PARAM_(r, unused, i, param) \
     BOOST_PP_COMMA_IF(i) \
-    BOOST_CONTRACT_TEST_PAREN_REM_( \
+    BOOST_CONTRACT_TEST_AUX_PP_1TUPLE_REM( \
             BOOST_CONTRACT_EXT_PP_PARAM_TRAITS_TYPE(param)) \
     BOOST_CONTRACT_EXT_PP_PARAM_TRAITS_NAME(param) \
     BOOST_PP_IIF(BOOST_CONTRACT_EXT_PP_IS_EMPTY( \
@@ -41,7 +31,7 @@
         BOOST_PP_TUPLE_REM(2) \
     )( \
         BOOST_PP_EMPTY(), \
-        default BOOST_CONTRACT_TEST_PAREN_REM_( \
+        default BOOST_CONTRACT_TEST_AUX_PP_1TUPLE_REM( \
                 BOOST_CONTRACT_EXT_PP_PARAM_TRAITS_DEFAULT(param)) \
     )
 
