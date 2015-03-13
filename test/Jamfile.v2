@@ -1,0 +1,47 @@
+
+import testing ;
+
+actions run_wave {
+    echo wave $(>) -o wave.ii
+    wave $(>) -o wave.ii --timer
+}
+
+rule test-pp ( dir file ) {
+    run $(dir)/$(file).cpp : : : <include>$(dir) : $(dir)/$(file) ;
+
+    preprocessed $(dir)/$(file)-pp : $(dir)/$(file).cpp :
+            <include>$(dir) <cxxflags>-DDEBUG ;
+    alias $(dir)/$(file)-pp.ii : $(dir)/$(file)-pp ;
+    explicit $(dir)/$(file)-pp $(dir)/$(file)-pp.ii ;
+
+    make $(dir)/$(file)-wave.ii : $(dir)/$(file).cpp : @run_wave ;
+    run wave.ii : : : <include>$(dir) : $(dir)/$(file)-wave ;
+    explicit $(dir)/$(file)-wave.ii $(dir)/$(file)-wave ;
+}
+
+test-pp pp_func_traits access ;
+test-pp pp_func_traits verbatim ;
+test-pp pp_func_traits export ;
+test-pp pp_func_traits template ;
+test-pp pp_func_traits classifiers ;
+test-pp pp_func_traits return_ ;
+test-pp pp_func_traits name ;
+test-pp pp_func_traits params ;
+test-pp pp_func_traits cv ;
+test-pp pp_func_traits ref ;
+test-pp pp_func_traits except ;
+test-pp pp_func_traits trailing_return ;
+test-pp pp_func_traits virt ;
+test-pp pp_func_traits preconditions ;
+test-pp pp_func_traits postconditions ;
+
+test-pp pp_class_traits export ;
+test-pp pp_class_traits template ;
+test-pp pp_class_traits friend ;
+test-pp pp_class_traits key ;
+test-pp pp_class_traits verbatim ;
+test-pp pp_class_traits name ;
+test-pp pp_class_traits specialization ;
+test-pp pp_class_traits virt ;
+test-pp pp_class_traits bases ;
+

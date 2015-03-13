@@ -34,9 +34,7 @@
 bin/
 
 # Boost.Wave outputs
-pp.cpp
-pp.dbg
-pp.cnt
+wave.ii
 
 # QuickBook outputs
 reference.xml
