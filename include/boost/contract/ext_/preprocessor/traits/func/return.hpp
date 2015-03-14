@@ -51,11 +51,11 @@
     )(d, decl, traits)
 
 // Precondition: decl = `return ...`.
+// Implementation: Trailing EMPTY already added by AUX_TYPE_PARSE.
 #define BOST_CONTRACT_EXT_PP_FUNC_TRAITS_TRAILING_RETURN_YES_(d, decl, traits) \
-    BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_RETURN_( \
+    BOOST_CONTRACT_EXT_PP_DECL_TRAITS_AUX_PUSH_BACK( \
         BOOST_CONTRACT_EXT_PP_TRAITS_AUX_TYPE_PARSE_D(d, \
-            BOOST_CONTRACT_EXT_PP_KEYWORD_RETURN_REMOVE_FRONT(decl) \
-        ), \
+                BOOST_CONTRACT_EXT_PP_KEYWORD_RETURN_REMOVE_FRONT(decl)), \
         traits \
     )
 
@@ -67,24 +67,13 @@
         BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_RETURN_NO_ \
     )(d, decl, traits)
 
+// Implementation: Trailing EMPTY already added by AUX_AUTO_TYPE_PARSE.
 #define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_RETURN_YES_(d, decl, traits) \
-    BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_RETURN_( \
+    BOOST_CONTRACT_EXT_PP_DECL_TRAITS_AUX_PUSH_BACK( \
             BOOST_CONTRACT_EXT_PP_TRAITS_AUX_AUTO_TYPE_PARSE_D(d, decl), traits)
 
-#define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_RETURN_(decl_return, traits) \
-    BOOST_CONTRACT_EXT_PP_DECL_TRAITS_AUX_PUSH_BACK( \
-        ( \
-            BOOST_PP_TUPLE_ELEM(2, 0, decl_return), \
-            BOOST_PP_TUPLE_ELEM(2, 1, decl_return) BOOST_PP_EMPTY \
-        ), \
-        traits \
-    )
-
 #define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_RETURN_NO_(d, decl, traits) \
-    ( \
-        decl, \
-        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_PUSH_BACK(traits, BOOST_PP_EMPTY) \
-    )
+    (decl, BOOST_CONTRACT_EXT_PP_TRAITS_AUX_PUSH_BACK(traits, BOOST_PP_EMPTY))
 
 // Constructors, destructors, type conversion operators, etc. do no have a
 // return type so this checks first if this declaration is supposed to have

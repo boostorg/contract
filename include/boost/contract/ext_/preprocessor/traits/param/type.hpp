@@ -76,18 +76,18 @@
             BOOST_CONTRACT_EXT_PP_TRAITS_AUX_TYPE_PARSE_D(d, decl), traits)
 
 #define BOOST_CONTRACT_EXT_PP_PARAM_TRAITS_TYPE_(decl_type, traits) \
-    BOOST_PP_IIF(BOOST_PP_EXPAND(BOOST_CONTRACT_EXT_PP_IS_EMPTY \
-            BOOST_PP_TUPLE_ELEM(2, 1, decl_type)), \
-        BOOST_CONTRACT_EXT_PP_PARAM_TRAITS_TYPE_NOT_PARSED_ \
+    BOOST_PP_IIF(BOOST_CONTRACT_EXT_PP_IS_EMPTY( \
+            BOOST_PP_TUPLE_ELEM(2, 1, decl_type)()), \
+        BOOST_CONTRACT_EXT_PP_PARAM_TRAITS_TYPE_NO_ \
     , \
-        BOOST_CONTRACT_EXT_PP_DECL_TRAITS_AUX_PUSH_BACK \
+        BOOST_CONTRACT_EXT_PP_PARAM_TRAITS_TYPE_YES_ \
     )(decl_type, traits)
 
 // Precondition: Unable to parse type so assume decl = `type NIL` (i.e., the
 // non-keyword type was specified unwrapped). That is allowed only when no
 // parameter name is given so all tokens in decl are for the type and remaining
 // decl is set to NIL here (which will be parsed as no parameter name).
-#define BOOST_CONTRACT_EXT_PP_PARAM_TRAITS_TYPE_NOT_PARSED_(decl_type, traits) \
+#define BOOST_CONTRACT_EXT_PP_PARAM_TRAITS_TYPE_NO_(decl_type, traits) \
     ( \
         BOOST_PP_NIL, \
         BOOST_CONTRACT_EXT_PP_TRAITS_AUX_PUSH_BACK( \
@@ -95,6 +95,13 @@
             BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK( \
                     BOOST_PP_TUPLE_ELEM(2, 0, decl_type)) \
         ) \
+    )
+
+#define BOOST_CONTRACT_EXT_PP_PARAM_TRAITS_TYPE_YES_(decl_type, traits) \
+    ( \
+        BOOST_PP_TUPLE_ELEM(2, 0, decl_type), \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_PUSH_BACK(traits, \
+                BOOST_PP_TUPLE_ELEM(2, 1, decl_type)()) \
     )
 
 // Precondition: decl = `typename ...`.

@@ -33,16 +33,24 @@
 /* PUBLIC */
 
 // Expand decl = `[type | (type)] ...` (type can also be `void`) to
-// `(..., (type) | ())`.
-// For example, `int const ...` to `(..., (int const))`.
+// `(..., [(type)] EMPTY)`.
+// For example, expand:
+//  decl = `int const ...` to `(..., (int const) EMPTY)`.
+//  decl = `(map<T, U>) ...` to `(..., (map<T, U>) EMPTY)`.
+//  decl = `auto ...` to `(..., (auto) EMPTY)`.
+//  decl = `f ...` to `(f ..., EMPTY)`.
 // Precondition: `...` in decl cannot be EMPTY() (so expanded 2-tuple is valid).
 #define BOOST_CONTRACT_EXT_PP_TRAITS_AUX_TYPE_PARSE_D(d, decl) \
     BOOST_CONTRACT_EXT_PP_TRAITS_AUX_TYPE_D_(d, decl, \
             BOOST_CONTRACT_EXT_PP_TRAITS_AUX_TYPE_SPACED_PUSH_BACK_)
 
 // Expand decl = `[auto | type | (type)] ...` (type can also be `void`) to
-// `(..., auto | (type) | ())` (note that auto is not wrapped in parenthesis).
-// For example, `auto ...` to `(..., auto)`.
+// `(..., [auto | (type)] EMPTY)` (note that auto not wrapped in parenthesis).
+// For example, expand:
+//  decl = `int const ...` to `(..., (int const) EMPTY)`.
+//  decl = `(map<T, U>) ...` to `(..., (map<T, U>) EMPTY)`.
+//  decl = `auto ...` to `(..., auto EMPTY)`.
+//  decl = `f ...` to `(f ..., EMPTY)`.
 // Precondition: `...` in decl cannot be EMPTY() (so expanded 2-tuple is valid).
 // NOTE: So far, there is no need of a SEQ version of this macro.
 #define BOOST_CONTRACT_EXT_PP_TRAITS_AUX_AUTO_TYPE_PARSE_D(d, decl) \
@@ -54,9 +62,13 @@
     )(d, decl)
 
 // Expand decl = `[type | (type)] ...` (type can also be `void`) to
-// `(..., ((keyword1))...((keyword-n)) | (()))`.
-// For example, `int const ...` to `(..., ((int)) ((const)))` (useful to access
+// `(..., [((keyword1))...((keyword-n))] EMTPY)` (this is useful to access
 // single type keywords `int`, `const`, etc.).
+// For example, expand:
+//  decl = `int const ...` to `(..., ((int)) ((const)) EMPTY)`.
+//  decl = `(map<T, U>) ...` to `(..., ((map<T, U>)) EMPTY)`.
+//  decl = `auto ...` to `(..., ((auto)) EMPTY)`.
+//  decl = `f ...` to `(f ..., EMPTY)`.
 // Precondition: `...` in decl cannot be EMPTY() (so expanded 2-tuple is valid).
 #define BOOST_CONTRACT_EXT_PP_TRAITS_AUX_TYPE_SEQ_PARSE_D(d, decl) \
     BOOST_CONTRACT_EXT_PP_TRAITS_AUX_TYPE_SEQ_RETURN_( \
@@ -75,7 +87,7 @@
 
 // Precondition: decl = `auto ...`.
 #define BOOST_CONTRACT_EXT_PP_TRAITS_AUX_AUTO_TYPE_(unused, decl) \
-    (BOOST_CONTRACT_EXT_PP_KEYWORD_AUTO_REMOVE_FRONT(decl), auto)
+    (BOOST_CONTRACT_EXT_PP_KEYWORD_AUTO_REMOVE_FRONT(decl), auto BOOST_PP_EMPTY)
 
 // Extra level of indirection needed for proper macro expansion (on MSVC).
 #define BOOST_CONTRACT_EXT_PP_TRAITS_AUX_TYPE_SEQ_RETURN_(decl_type) \
@@ -84,15 +96,14 @@
 
 // Remove an extra set of parenthesis around sequence (originally added to
 // handle commas by algorithms in common with spaced type traits).
-// Implementation: Always return `(())` (double paren seq with 1 empty elem) in
-// case no type was parsed.
 #define BOOST_CONTRACT_EXT_PP_TRAITS_AUX_TYPE_SEQ_RETURN_ARGS_(decl, type) \
     ( \
         decl, \
-        BOOST_PP_EXPR_IIF(BOOST_CONTRACT_EXT_PP_IS_EMPTY type, \
-            (()) \
+        BOOST_PP_EXPR_IIF(BOOST_PP_COMPL(BOOST_CONTRACT_EXT_PP_IS_EMPTY( \
+                type())), \
+            BOOST_PP_TUPLE_REM(1) \
         ) \
-        BOOST_PP_TUPLE_REM_CTOR(1, type) \
+        type \
     )
 
 #define BOOST_CONTRACT_EXT_PP_TRAITS_AUX_TYPE_D_(d, decl, push_back_macro) \
@@ -109,6 +120,7 @@
         BOOST_PP_TUPLE_EAT(0) decl, \
         push_back_macro(BOOST_PP_EMPTY(), \
                 BOOST_CONTRACT_EXT_PP_PAREN_FRONT(decl)) \
+        BOOST_PP_EMPTY \
     )
 
 // Precondition: decl does not start with paren (it's formed by keywords).
@@ -127,8 +139,16 @@
         continue_decl_type_push) \
     ( \
         BOOST_PP_TUPLE_ELEM(4, 1, continue_decl_type_push), \
-        ( BOOST_CONTRACT_EXT_PP_NIL_REMOVE_FRONT( \
-                BOOST_PP_TUPLE_ELEM(4, 2, continue_decl_type_push)) ) \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_TYPE_KEYWORD_PARENTHESIZE_( \
+            BOOST_CONTRACT_EXT_PP_NIL_REMOVE_FRONT( \
+                    BOOST_PP_TUPLE_ELEM(4, 2, continue_decl_type_push)) \
+        ) \
+        BOOST_PP_EMPTY \
+    )
+
+#define BOOST_CONTRACT_EXT_PP_TRAITS_AUX_TYPE_KEYWORD_PARENTHESIZE_(tokens) \
+    BOOST_PP_EXPR_IIF(BOOST_PP_COMPL(BOOST_CONTRACT_EXT_PP_IS_EMPTY(tokens)), \
+        (tokens) \
     )
 
 #define BOOST_CONTRACT_EXT_PP_TRAITS_AUX_TYPE_KEYWORD_PRED_( \
@@ -237,8 +257,6 @@
                 BOOST_CONTRACT_EXT_PP_PAREN_FRONT(remove_macro(decl))), \
         push_back_macro \
     )
-
-// TODO: Consider returning EMPTY in case no type is parsed...
 
 #endif // #include guard
 

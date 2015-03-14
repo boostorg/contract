@@ -80,7 +80,7 @@
             BOOST_PP_SEQ_FOR_EACH( \
                 BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_NAME_OPERATOR_TYPE_REM_,\
                 1, \
-                BOOST_PP_TUPLE_ELEM(2, 1, decl_type) \
+                BOOST_PP_TUPLE_ELEM(2, 1, decl_type)() \
             ) \
         ) \
         ( \
@@ -88,7 +88,7 @@
                 BOOST_PP_SEQ_FOR_EACH( \
                     BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_NAME_OPERATOR_TYPE_REM_, \
                     0, \
-                    BOOST_PP_TUPLE_ELEM(2, 1, decl_type) \
+                    BOOST_PP_TUPLE_ELEM(2, 1, decl_type)() \
                 ) \
             ) \
         ) \

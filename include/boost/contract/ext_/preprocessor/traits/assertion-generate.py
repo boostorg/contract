@@ -114,7 +114,7 @@ def code():
 #define BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_BOOL_PARSE_{0}_(d, l, decl) \\
     BOOST_CONTRACT_EXT_PP_BOOL_ASSERTION_TRAITS_PARSE(decl)
 
-// This more complex because it has to eventually use IS_RETURN_BACK which does
+// This is needed because it has to eventually use IS_RETURN_BACK which does
 // not allow decl to end with parenthesis `... (...)` (so type is first parsed
 // to make sure this is a valid return assertion with a type (possibly auto),
 // a not-nil assignment, etc.). Only after that, IS_RETURN_BACK is safely used.
@@ -133,8 +133,8 @@ def code():
                 BOOST_PP_TUPLE_ELEM(2, 1, decl_type)), \\
             0 \\
         , \\
-            BOOST_PP_EXPAND(BOOST_CONTRACT_EXT_PP_IS_EMPTY \\
-                    BOOST_PP_TUPLE_ELEM(2, 1, decl_type)) \\
+            BOOST_CONTRACT_EXT_PP_IS_EMPTY( \\
+                    BOOST_PP_TUPLE_ELEM(2, 1, decl_type)()) \\
         ) \\
     ) , \\
         BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_BOOL_PARSE_{0}_ \\

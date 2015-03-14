@@ -166,7 +166,7 @@
 #define BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_BOOL_PARSE_1_(d, l, decl) \
     BOOST_CONTRACT_EXT_PP_BOOL_ASSERTION_TRAITS_PARSE(decl)
 
-// This more complex because it has to eventually use IS_RETURN_BACK which does
+// This is needed because it has to eventually use IS_RETURN_BACK which does
 // not allow decl to end with parenthesis `... (...)` (so type is first parsed
 // to make sure this is a valid return assertion with a type (possibly auto),
 // a not-nil assignment, etc.). Only after that, IS_RETURN_BACK is safely used.
@@ -185,8 +185,8 @@
                 BOOST_PP_TUPLE_ELEM(2, 1, decl_type)), \
             0 \
         , \
-            BOOST_PP_EXPAND(BOOST_CONTRACT_EXT_PP_IS_EMPTY \
-                    BOOST_PP_TUPLE_ELEM(2, 1, decl_type)) \
+            BOOST_CONTRACT_EXT_PP_IS_EMPTY( \
+                    BOOST_PP_TUPLE_ELEM(2, 1, decl_type)()) \
         ) \
     ) , \
         BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_BOOL_PARSE_1_ \
@@ -315,7 +315,7 @@
 #define BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_BOOL_PARSE_2_(d, l, decl) \
     BOOST_CONTRACT_EXT_PP_BOOL_ASSERTION_TRAITS_PARSE(decl)
 
-// This more complex because it has to eventually use IS_RETURN_BACK which does
+// This is needed because it has to eventually use IS_RETURN_BACK which does
 // not allow decl to end with parenthesis `... (...)` (so type is first parsed
 // to make sure this is a valid return assertion with a type (possibly auto),
 // a not-nil assignment, etc.). Only after that, IS_RETURN_BACK is safely used.
@@ -334,8 +334,8 @@
                 BOOST_PP_TUPLE_ELEM(2, 1, decl_type)), \
             0 \
         , \
-            BOOST_PP_EXPAND(BOOST_CONTRACT_EXT_PP_IS_EMPTY \
-                    BOOST_PP_TUPLE_ELEM(2, 1, decl_type)) \
+            BOOST_CONTRACT_EXT_PP_IS_EMPTY( \
+                    BOOST_PP_TUPLE_ELEM(2, 1, decl_type)()) \
         ) \
     ) , \
         BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_BOOL_PARSE_2_ \
@@ -464,7 +464,7 @@
 #define BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_BOOL_PARSE_3_(d, l, decl) \
     BOOST_CONTRACT_EXT_PP_BOOL_ASSERTION_TRAITS_PARSE(decl)
 
-// This more complex because it has to eventually use IS_RETURN_BACK which does
+// This is needed because it has to eventually use IS_RETURN_BACK which does
 // not allow decl to end with parenthesis `... (...)` (so type is first parsed
 // to make sure this is a valid return assertion with a type (possibly auto),
 // a not-nil assignment, etc.). Only after that, IS_RETURN_BACK is safely used.
@@ -483,8 +483,8 @@
                 BOOST_PP_TUPLE_ELEM(2, 1, decl_type)), \
             0 \
         , \
-            BOOST_PP_EXPAND(BOOST_CONTRACT_EXT_PP_IS_EMPTY \
-                    BOOST_PP_TUPLE_ELEM(2, 1, decl_type)) \
+            BOOST_CONTRACT_EXT_PP_IS_EMPTY( \
+                    BOOST_PP_TUPLE_ELEM(2, 1, decl_type)()) \
         ) \
     ) , \
         BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_BOOL_PARSE_3_ \
@@ -613,7 +613,7 @@
 #define BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_BOOL_PARSE_4_(d, l, decl) \
     BOOST_CONTRACT_EXT_PP_BOOL_ASSERTION_TRAITS_PARSE(decl)
 
-// This more complex because it has to eventually use IS_RETURN_BACK which does
+// This is needed because it has to eventually use IS_RETURN_BACK which does
 // not allow decl to end with parenthesis `... (...)` (so type is first parsed
 // to make sure this is a valid return assertion with a type (possibly auto),
 // a not-nil assignment, etc.). Only after that, IS_RETURN_BACK is safely used.
@@ -632,8 +632,8 @@
                 BOOST_PP_TUPLE_ELEM(2, 1, decl_type)), \
             0 \
         , \
-            BOOST_PP_EXPAND(BOOST_CONTRACT_EXT_PP_IS_EMPTY \
-                    BOOST_PP_TUPLE_ELEM(2, 1, decl_type)) \
+            BOOST_CONTRACT_EXT_PP_IS_EMPTY( \
+                    BOOST_PP_TUPLE_ELEM(2, 1, decl_type)()) \
         ) \
     ) , \
         BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_BOOL_PARSE_4_ \
@@ -762,7 +762,7 @@
 #define BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_BOOL_PARSE_5_(d, l, decl) \
     BOOST_CONTRACT_EXT_PP_BOOL_ASSERTION_TRAITS_PARSE(decl)
 
-// This more complex because it has to eventually use IS_RETURN_BACK which does
+// This is needed because it has to eventually use IS_RETURN_BACK which does
 // not allow decl to end with parenthesis `... (...)` (so type is first parsed
 // to make sure this is a valid return assertion with a type (possibly auto),
 // a not-nil assignment, etc.). Only after that, IS_RETURN_BACK is safely used.
@@ -781,8 +781,8 @@
                 BOOST_PP_TUPLE_ELEM(2, 1, decl_type)), \
             0 \
         , \
-            BOOST_PP_EXPAND(BOOST_CONTRACT_EXT_PP_IS_EMPTY \
-                    BOOST_PP_TUPLE_ELEM(2, 1, decl_type)) \
+            BOOST_CONTRACT_EXT_PP_IS_EMPTY( \
+                    BOOST_PP_TUPLE_ELEM(2, 1, decl_type)()) \
         ) \
     ) , \
         BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_BOOL_PARSE_5_ \
@@ -911,7 +911,7 @@
 #define BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_BOOL_PARSE_6_(d, l, decl) \
     BOOST_CONTRACT_EXT_PP_BOOL_ASSERTION_TRAITS_PARSE(decl)
 
-// This more complex because it has to eventually use IS_RETURN_BACK which does
+// This is needed because it has to eventually use IS_RETURN_BACK which does
 // not allow decl to end with parenthesis `... (...)` (so type is first parsed
 // to make sure this is a valid return assertion with a type (possibly auto),
 // a not-nil assignment, etc.). Only after that, IS_RETURN_BACK is safely used.
@@ -930,8 +930,8 @@
                 BOOST_PP_TUPLE_ELEM(2, 1, decl_type)), \
             0 \
         , \
-            BOOST_PP_EXPAND(BOOST_CONTRACT_EXT_PP_IS_EMPTY \
-                    BOOST_PP_TUPLE_ELEM(2, 1, decl_type)) \
+            BOOST_CONTRACT_EXT_PP_IS_EMPTY( \
+                    BOOST_PP_TUPLE_ELEM(2, 1, decl_type)()) \
         ) \
     ) , \
         BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_BOOL_PARSE_6_ \
@@ -1060,7 +1060,7 @@
 #define BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_BOOL_PARSE_7_(d, l, decl) \
     BOOST_CONTRACT_EXT_PP_BOOL_ASSERTION_TRAITS_PARSE(decl)
 
-// This more complex because it has to eventually use IS_RETURN_BACK which does
+// This is needed because it has to eventually use IS_RETURN_BACK which does
 // not allow decl to end with parenthesis `... (...)` (so type is first parsed
 // to make sure this is a valid return assertion with a type (possibly auto),
 // a not-nil assignment, etc.). Only after that, IS_RETURN_BACK is safely used.
@@ -1079,8 +1079,8 @@
                 BOOST_PP_TUPLE_ELEM(2, 1, decl_type)), \
             0 \
         , \
-            BOOST_PP_EXPAND(BOOST_CONTRACT_EXT_PP_IS_EMPTY \
-                    BOOST_PP_TUPLE_ELEM(2, 1, decl_type)) \
+            BOOST_CONTRACT_EXT_PP_IS_EMPTY( \
+                    BOOST_PP_TUPLE_ELEM(2, 1, decl_type)()) \
         ) \
     ) , \
         BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_BOOL_PARSE_7_ \
@@ -1209,7 +1209,7 @@
 #define BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_BOOL_PARSE_8_(d, l, decl) \
     BOOST_CONTRACT_EXT_PP_BOOL_ASSERTION_TRAITS_PARSE(decl)
 
-// This more complex because it has to eventually use IS_RETURN_BACK which does
+// This is needed because it has to eventually use IS_RETURN_BACK which does
 // not allow decl to end with parenthesis `... (...)` (so type is first parsed
 // to make sure this is a valid return assertion with a type (possibly auto),
 // a not-nil assignment, etc.). Only after that, IS_RETURN_BACK is safely used.
@@ -1228,8 +1228,8 @@
                 BOOST_PP_TUPLE_ELEM(2, 1, decl_type)), \
             0 \
         , \
-            BOOST_PP_EXPAND(BOOST_CONTRACT_EXT_PP_IS_EMPTY \
-                    BOOST_PP_TUPLE_ELEM(2, 1, decl_type)) \
+            BOOST_CONTRACT_EXT_PP_IS_EMPTY( \
+                    BOOST_PP_TUPLE_ELEM(2, 1, decl_type)()) \
         ) \
     ) , \
         BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_BOOL_PARSE_8_ \
@@ -1358,7 +1358,7 @@
 #define BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_BOOL_PARSE_9_(d, l, decl) \
     BOOST_CONTRACT_EXT_PP_BOOL_ASSERTION_TRAITS_PARSE(decl)
 
-// This more complex because it has to eventually use IS_RETURN_BACK which does
+// This is needed because it has to eventually use IS_RETURN_BACK which does
 // not allow decl to end with parenthesis `... (...)` (so type is first parsed
 // to make sure this is a valid return assertion with a type (possibly auto),
 // a not-nil assignment, etc.). Only after that, IS_RETURN_BACK is safely used.
@@ -1377,8 +1377,8 @@
                 BOOST_PP_TUPLE_ELEM(2, 1, decl_type)), \
             0 \
         , \
-            BOOST_PP_EXPAND(BOOST_CONTRACT_EXT_PP_IS_EMPTY \
-                    BOOST_PP_TUPLE_ELEM(2, 1, decl_type)) \
+            BOOST_CONTRACT_EXT_PP_IS_EMPTY( \
+                    BOOST_PP_TUPLE_ELEM(2, 1, decl_type)()) \
         ) \
     ) , \
         BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_BOOL_PARSE_9_ \
@@ -1507,7 +1507,7 @@
 #define BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_BOOL_PARSE_10_(d, l, decl) \
     BOOST_CONTRACT_EXT_PP_BOOL_ASSERTION_TRAITS_PARSE(decl)
 
-// This more complex because it has to eventually use IS_RETURN_BACK which does
+// This is needed because it has to eventually use IS_RETURN_BACK which does
 // not allow decl to end with parenthesis `... (...)` (so type is first parsed
 // to make sure this is a valid return assertion with a type (possibly auto),
 // a not-nil assignment, etc.). Only after that, IS_RETURN_BACK is safely used.
@@ -1526,8 +1526,8 @@
                 BOOST_PP_TUPLE_ELEM(2, 1, decl_type)), \
             0 \
         , \
-            BOOST_PP_EXPAND(BOOST_CONTRACT_EXT_PP_IS_EMPTY \
-                    BOOST_PP_TUPLE_ELEM(2, 1, decl_type)) \
+            BOOST_CONTRACT_EXT_PP_IS_EMPTY( \
+                    BOOST_PP_TUPLE_ELEM(2, 1, decl_type)()) \
         ) \
     ) , \
         BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_BOOL_PARSE_10_ \
@@ -1656,7 +1656,7 @@
 #define BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_BOOL_PARSE_11_(d, l, decl) \
     BOOST_CONTRACT_EXT_PP_BOOL_ASSERTION_TRAITS_PARSE(decl)
 
-// This more complex because it has to eventually use IS_RETURN_BACK which does
+// This is needed because it has to eventually use IS_RETURN_BACK which does
 // not allow decl to end with parenthesis `... (...)` (so type is first parsed
 // to make sure this is a valid return assertion with a type (possibly auto),
 // a not-nil assignment, etc.). Only after that, IS_RETURN_BACK is safely used.
@@ -1675,8 +1675,8 @@
                 BOOST_PP_TUPLE_ELEM(2, 1, decl_type)), \
             0 \
         , \
-            BOOST_PP_EXPAND(BOOST_CONTRACT_EXT_PP_IS_EMPTY \
-                    BOOST_PP_TUPLE_ELEM(2, 1, decl_type)) \
+            BOOST_CONTRACT_EXT_PP_IS_EMPTY( \
+                    BOOST_PP_TUPLE_ELEM(2, 1, decl_type)()) \
         ) \
     ) , \
         BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_BOOL_PARSE_11_ \
@@ -1805,7 +1805,7 @@
 #define BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_BOOL_PARSE_12_(d, l, decl) \
     BOOST_CONTRACT_EXT_PP_BOOL_ASSERTION_TRAITS_PARSE(decl)
 
-// This more complex because it has to eventually use IS_RETURN_BACK which does
+// This is needed because it has to eventually use IS_RETURN_BACK which does
 // not allow decl to end with parenthesis `... (...)` (so type is first parsed
 // to make sure this is a valid return assertion with a type (possibly auto),
 // a not-nil assignment, etc.). Only after that, IS_RETURN_BACK is safely used.
@@ -1824,8 +1824,8 @@
                 BOOST_PP_TUPLE_ELEM(2, 1, decl_type)), \
             0 \
         , \
-            BOOST_PP_EXPAND(BOOST_CONTRACT_EXT_PP_IS_EMPTY \
-                    BOOST_PP_TUPLE_ELEM(2, 1, decl_type)) \
+            BOOST_CONTRACT_EXT_PP_IS_EMPTY( \
+                    BOOST_PP_TUPLE_ELEM(2, 1, decl_type)()) \
         ) \
     ) , \
         BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_BOOL_PARSE_12_ \
@@ -1954,7 +1954,7 @@
 #define BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_BOOL_PARSE_13_(d, l, decl) \
     BOOST_CONTRACT_EXT_PP_BOOL_ASSERTION_TRAITS_PARSE(decl)
 
-// This more complex because it has to eventually use IS_RETURN_BACK which does
+// This is needed because it has to eventually use IS_RETURN_BACK which does
 // not allow decl to end with parenthesis `... (...)` (so type is first parsed
 // to make sure this is a valid return assertion with a type (possibly auto),
 // a not-nil assignment, etc.). Only after that, IS_RETURN_BACK is safely used.
@@ -1973,8 +1973,8 @@
                 BOOST_PP_TUPLE_ELEM(2, 1, decl_type)), \
             0 \
         , \
-            BOOST_PP_EXPAND(BOOST_CONTRACT_EXT_PP_IS_EMPTY \
-                    BOOST_PP_TUPLE_ELEM(2, 1, decl_type)) \
+            BOOST_CONTRACT_EXT_PP_IS_EMPTY( \
+                    BOOST_PP_TUPLE_ELEM(2, 1, decl_type)()) \
         ) \
     ) , \
         BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_BOOL_PARSE_13_ \
@@ -2103,7 +2103,7 @@
 #define BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_BOOL_PARSE_14_(d, l, decl) \
     BOOST_CONTRACT_EXT_PP_BOOL_ASSERTION_TRAITS_PARSE(decl)
 
-// This more complex because it has to eventually use IS_RETURN_BACK which does
+// This is needed because it has to eventually use IS_RETURN_BACK which does
 // not allow decl to end with parenthesis `... (...)` (so type is first parsed
 // to make sure this is a valid return assertion with a type (possibly auto),
 // a not-nil assignment, etc.). Only after that, IS_RETURN_BACK is safely used.
@@ -2122,8 +2122,8 @@
                 BOOST_PP_TUPLE_ELEM(2, 1, decl_type)), \
             0 \
         , \
-            BOOST_PP_EXPAND(BOOST_CONTRACT_EXT_PP_IS_EMPTY \
-                    BOOST_PP_TUPLE_ELEM(2, 1, decl_type)) \
+            BOOST_CONTRACT_EXT_PP_IS_EMPTY( \
+                    BOOST_PP_TUPLE_ELEM(2, 1, decl_type)()) \
         ) \
     ) , \
         BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_BOOL_PARSE_14_ \
@@ -2252,7 +2252,7 @@
 #define BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_BOOL_PARSE_15_(d, l, decl) \
     BOOST_CONTRACT_EXT_PP_BOOL_ASSERTION_TRAITS_PARSE(decl)
 
-// This more complex because it has to eventually use IS_RETURN_BACK which does
+// This is needed because it has to eventually use IS_RETURN_BACK which does
 // not allow decl to end with parenthesis `... (...)` (so type is first parsed
 // to make sure this is a valid return assertion with a type (possibly auto),
 // a not-nil assignment, etc.). Only after that, IS_RETURN_BACK is safely used.
@@ -2271,8 +2271,8 @@
                 BOOST_PP_TUPLE_ELEM(2, 1, decl_type)), \
             0 \
         , \
-            BOOST_PP_EXPAND(BOOST_CONTRACT_EXT_PP_IS_EMPTY \
-                    BOOST_PP_TUPLE_ELEM(2, 1, decl_type)) \
+            BOOST_CONTRACT_EXT_PP_IS_EMPTY( \
+                    BOOST_PP_TUPLE_ELEM(2, 1, decl_type)()) \
         ) \
     ) , \
         BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_BOOL_PARSE_15_ \
@@ -2401,7 +2401,7 @@
 #define BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_BOOL_PARSE_16_(d, l, decl) \
     BOOST_CONTRACT_EXT_PP_BOOL_ASSERTION_TRAITS_PARSE(decl)
 
-// This more complex because it has to eventually use IS_RETURN_BACK which does
+// This is needed because it has to eventually use IS_RETURN_BACK which does
 // not allow decl to end with parenthesis `... (...)` (so type is first parsed
 // to make sure this is a valid return assertion with a type (possibly auto),
 // a not-nil assignment, etc.). Only after that, IS_RETURN_BACK is safely used.
@@ -2420,8 +2420,8 @@
                 BOOST_PP_TUPLE_ELEM(2, 1, decl_type)), \
             0 \
         , \
-            BOOST_PP_EXPAND(BOOST_CONTRACT_EXT_PP_IS_EMPTY \
-                    BOOST_PP_TUPLE_ELEM(2, 1, decl_type)) \
+            BOOST_CONTRACT_EXT_PP_IS_EMPTY( \
+                    BOOST_PP_TUPLE_ELEM(2, 1, decl_type)()) \
         ) \
     ) , \
         BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_BOOL_PARSE_16_ \
@@ -2550,7 +2550,7 @@
 #define BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_BOOL_PARSE_17_(d, l, decl) \
     BOOST_CONTRACT_EXT_PP_BOOL_ASSERTION_TRAITS_PARSE(decl)
 
-// This more complex because it has to eventually use IS_RETURN_BACK which does
+// This is needed because it has to eventually use IS_RETURN_BACK which does
 // not allow decl to end with parenthesis `... (...)` (so type is first parsed
 // to make sure this is a valid return assertion with a type (possibly auto),
 // a not-nil assignment, etc.). Only after that, IS_RETURN_BACK is safely used.
@@ -2569,8 +2569,8 @@
                 BOOST_PP_TUPLE_ELEM(2, 1, decl_type)), \
             0 \
         , \
-            BOOST_PP_EXPAND(BOOST_CONTRACT_EXT_PP_IS_EMPTY \
-                    BOOST_PP_TUPLE_ELEM(2, 1, decl_type)) \
+            BOOST_CONTRACT_EXT_PP_IS_EMPTY( \
+                    BOOST_PP_TUPLE_ELEM(2, 1, decl_type)()) \
         ) \
     ) , \
         BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_BOOL_PARSE_17_ \
@@ -2699,7 +2699,7 @@
 #define BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_BOOL_PARSE_18_(d, l, decl) \
     BOOST_CONTRACT_EXT_PP_BOOL_ASSERTION_TRAITS_PARSE(decl)
 
-// This more complex because it has to eventually use IS_RETURN_BACK which does
+// This is needed because it has to eventually use IS_RETURN_BACK which does
 // not allow decl to end with parenthesis `... (...)` (so type is first parsed
 // to make sure this is a valid return assertion with a type (possibly auto),
 // a not-nil assignment, etc.). Only after that, IS_RETURN_BACK is safely used.
@@ -2718,8 +2718,8 @@
                 BOOST_PP_TUPLE_ELEM(2, 1, decl_type)), \
             0 \
         , \
-            BOOST_PP_EXPAND(BOOST_CONTRACT_EXT_PP_IS_EMPTY \
-                    BOOST_PP_TUPLE_ELEM(2, 1, decl_type)) \
+            BOOST_CONTRACT_EXT_PP_IS_EMPTY( \
+                    BOOST_PP_TUPLE_ELEM(2, 1, decl_type)()) \
         ) \
     ) , \
         BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_BOOL_PARSE_18_ \
@@ -2848,7 +2848,7 @@
 #define BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_BOOL_PARSE_19_(d, l, decl) \
     BOOST_CONTRACT_EXT_PP_BOOL_ASSERTION_TRAITS_PARSE(decl)
 
-// This more complex because it has to eventually use IS_RETURN_BACK which does
+// This is needed because it has to eventually use IS_RETURN_BACK which does
 // not allow decl to end with parenthesis `... (...)` (so type is first parsed
 // to make sure this is a valid return assertion with a type (possibly auto),
 // a not-nil assignment, etc.). Only after that, IS_RETURN_BACK is safely used.
@@ -2867,8 +2867,8 @@
                 BOOST_PP_TUPLE_ELEM(2, 1, decl_type)), \
             0 \
         , \
-            BOOST_PP_EXPAND(BOOST_CONTRACT_EXT_PP_IS_EMPTY \
-                    BOOST_PP_TUPLE_ELEM(2, 1, decl_type)) \
+            BOOST_CONTRACT_EXT_PP_IS_EMPTY( \
+                    BOOST_PP_TUPLE_ELEM(2, 1, decl_type)()) \
         ) \
     ) , \
         BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_BOOL_PARSE_19_ \
@@ -2997,7 +2997,7 @@
 #define BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_BOOL_PARSE_20_(d, l, decl) \
     BOOST_CONTRACT_EXT_PP_BOOL_ASSERTION_TRAITS_PARSE(decl)
 
-// This more complex because it has to eventually use IS_RETURN_BACK which does
+// This is needed because it has to eventually use IS_RETURN_BACK which does
 // not allow decl to end with parenthesis `... (...)` (so type is first parsed
 // to make sure this is a valid return assertion with a type (possibly auto),
 // a not-nil assignment, etc.). Only after that, IS_RETURN_BACK is safely used.
@@ -3016,8 +3016,8 @@
                 BOOST_PP_TUPLE_ELEM(2, 1, decl_type)), \
             0 \
         , \
-            BOOST_PP_EXPAND(BOOST_CONTRACT_EXT_PP_IS_EMPTY \
-                    BOOST_PP_TUPLE_ELEM(2, 1, decl_type)) \
+            BOOST_CONTRACT_EXT_PP_IS_EMPTY( \
+                    BOOST_PP_TUPLE_ELEM(2, 1, decl_type)()) \
         ) \
     ) , \
         BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_BOOL_PARSE_20_ \
@@ -3146,7 +3146,7 @@
 #define BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_BOOL_PARSE_21_(d, l, decl) \
     BOOST_CONTRACT_EXT_PP_BOOL_ASSERTION_TRAITS_PARSE(decl)
 
-// This more complex because it has to eventually use IS_RETURN_BACK which does
+// This is needed because it has to eventually use IS_RETURN_BACK which does
 // not allow decl to end with parenthesis `... (...)` (so type is first parsed
 // to make sure this is a valid return assertion with a type (possibly auto),
 // a not-nil assignment, etc.). Only after that, IS_RETURN_BACK is safely used.
@@ -3165,8 +3165,8 @@
                 BOOST_PP_TUPLE_ELEM(2, 1, decl_type)), \
             0 \
         , \
-            BOOST_PP_EXPAND(BOOST_CONTRACT_EXT_PP_IS_EMPTY \
-                    BOOST_PP_TUPLE_ELEM(2, 1, decl_type)) \
+            BOOST_CONTRACT_EXT_PP_IS_EMPTY( \
+                    BOOST_PP_TUPLE_ELEM(2, 1, decl_type)()) \
         ) \
     ) , \
         BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_BOOL_PARSE_21_ \
@@ -3295,7 +3295,7 @@
 #define BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_BOOL_PARSE_22_(d, l, decl) \
     BOOST_CONTRACT_EXT_PP_BOOL_ASSERTION_TRAITS_PARSE(decl)
 
-// This more complex because it has to eventually use IS_RETURN_BACK which does
+// This is needed because it has to eventually use IS_RETURN_BACK which does
 // not allow decl to end with parenthesis `... (...)` (so type is first parsed
 // to make sure this is a valid return assertion with a type (possibly auto),
 // a not-nil assignment, etc.). Only after that, IS_RETURN_BACK is safely used.
@@ -3314,8 +3314,8 @@
                 BOOST_PP_TUPLE_ELEM(2, 1, decl_type)), \
             0 \
         , \
-            BOOST_PP_EXPAND(BOOST_CONTRACT_EXT_PP_IS_EMPTY \
-                    BOOST_PP_TUPLE_ELEM(2, 1, decl_type)) \
+            BOOST_CONTRACT_EXT_PP_IS_EMPTY( \
+                    BOOST_PP_TUPLE_ELEM(2, 1, decl_type)()) \
         ) \
     ) , \
         BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_BOOL_PARSE_22_ \
@@ -3444,7 +3444,7 @@
 #define BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_BOOL_PARSE_23_(d, l, decl) \
     BOOST_CONTRACT_EXT_PP_BOOL_ASSERTION_TRAITS_PARSE(decl)
 
-// This more complex because it has to eventually use IS_RETURN_BACK which does
+// This is needed because it has to eventually use IS_RETURN_BACK which does
 // not allow decl to end with parenthesis `... (...)` (so type is first parsed
 // to make sure this is a valid return assertion with a type (possibly auto),
 // a not-nil assignment, etc.). Only after that, IS_RETURN_BACK is safely used.
@@ -3463,8 +3463,8 @@
                 BOOST_PP_TUPLE_ELEM(2, 1, decl_type)), \
             0 \
         , \
-            BOOST_PP_EXPAND(BOOST_CONTRACT_EXT_PP_IS_EMPTY \
-                    BOOST_PP_TUPLE_ELEM(2, 1, decl_type)) \
+            BOOST_CONTRACT_EXT_PP_IS_EMPTY( \
+                    BOOST_PP_TUPLE_ELEM(2, 1, decl_type)()) \
         ) \
     ) , \
         BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_BOOL_PARSE_23_ \
@@ -3593,7 +3593,7 @@
 #define BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_BOOL_PARSE_24_(d, l, decl) \
     BOOST_CONTRACT_EXT_PP_BOOL_ASSERTION_TRAITS_PARSE(decl)
 
-// This more complex because it has to eventually use IS_RETURN_BACK which does
+// This is needed because it has to eventually use IS_RETURN_BACK which does
 // not allow decl to end with parenthesis `... (...)` (so type is first parsed
 // to make sure this is a valid return assertion with a type (possibly auto),
 // a not-nil assignment, etc.). Only after that, IS_RETURN_BACK is safely used.
@@ -3612,8 +3612,8 @@
                 BOOST_PP_TUPLE_ELEM(2, 1, decl_type)), \
             0 \
         , \
-            BOOST_PP_EXPAND(BOOST_CONTRACT_EXT_PP_IS_EMPTY \
-                    BOOST_PP_TUPLE_ELEM(2, 1, decl_type)) \
+            BOOST_CONTRACT_EXT_PP_IS_EMPTY( \
+                    BOOST_PP_TUPLE_ELEM(2, 1, decl_type)()) \
         ) \
     ) , \
         BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_BOOL_PARSE_24_ \
@@ -3742,7 +3742,7 @@
 #define BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_BOOL_PARSE_25_(d, l, decl) \
     BOOST_CONTRACT_EXT_PP_BOOL_ASSERTION_TRAITS_PARSE(decl)
 
-// This more complex because it has to eventually use IS_RETURN_BACK which does
+// This is needed because it has to eventually use IS_RETURN_BACK which does
 // not allow decl to end with parenthesis `... (...)` (so type is first parsed
 // to make sure this is a valid return assertion with a type (possibly auto),
 // a not-nil assignment, etc.). Only after that, IS_RETURN_BACK is safely used.
@@ -3761,8 +3761,8 @@
                 BOOST_PP_TUPLE_ELEM(2, 1, decl_type)), \
             0 \
         , \
-            BOOST_PP_EXPAND(BOOST_CONTRACT_EXT_PP_IS_EMPTY \
-                    BOOST_PP_TUPLE_ELEM(2, 1, decl_type)) \
+            BOOST_CONTRACT_EXT_PP_IS_EMPTY( \
+                    BOOST_PP_TUPLE_ELEM(2, 1, decl_type)()) \
         ) \
     ) , \
         BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_BOOL_PARSE_25_ \
@@ -3891,7 +3891,7 @@
 #define BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_BOOL_PARSE_26_(d, l, decl) \
     BOOST_CONTRACT_EXT_PP_BOOL_ASSERTION_TRAITS_PARSE(decl)
 
-// This more complex because it has to eventually use IS_RETURN_BACK which does
+// This is needed because it has to eventually use IS_RETURN_BACK which does
 // not allow decl to end with parenthesis `... (...)` (so type is first parsed
 // to make sure this is a valid return assertion with a type (possibly auto),
 // a not-nil assignment, etc.). Only after that, IS_RETURN_BACK is safely used.
@@ -3910,8 +3910,8 @@
                 BOOST_PP_TUPLE_ELEM(2, 1, decl_type)), \
             0 \
         , \
-            BOOST_PP_EXPAND(BOOST_CONTRACT_EXT_PP_IS_EMPTY \
-                    BOOST_PP_TUPLE_ELEM(2, 1, decl_type)) \
+            BOOST_CONTRACT_EXT_PP_IS_EMPTY( \
+                    BOOST_PP_TUPLE_ELEM(2, 1, decl_type)()) \
         ) \
     ) , \
         BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_BOOL_PARSE_26_ \
@@ -4040,7 +4040,7 @@
 #define BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_BOOL_PARSE_27_(d, l, decl) \
     BOOST_CONTRACT_EXT_PP_BOOL_ASSERTION_TRAITS_PARSE(decl)
 
-// This more complex because it has to eventually use IS_RETURN_BACK which does
+// This is needed because it has to eventually use IS_RETURN_BACK which does
 // not allow decl to end with parenthesis `... (...)` (so type is first parsed
 // to make sure this is a valid return assertion with a type (possibly auto),
 // a not-nil assignment, etc.). Only after that, IS_RETURN_BACK is safely used.
@@ -4059,8 +4059,8 @@
                 BOOST_PP_TUPLE_ELEM(2, 1, decl_type)), \
             0 \
         , \
-            BOOST_PP_EXPAND(BOOST_CONTRACT_EXT_PP_IS_EMPTY \
-                    BOOST_PP_TUPLE_ELEM(2, 1, decl_type)) \
+            BOOST_CONTRACT_EXT_PP_IS_EMPTY( \
+                    BOOST_PP_TUPLE_ELEM(2, 1, decl_type)()) \
         ) \
     ) , \
         BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_BOOL_PARSE_27_ \
@@ -4189,7 +4189,7 @@
 #define BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_BOOL_PARSE_28_(d, l, decl) \
     BOOST_CONTRACT_EXT_PP_BOOL_ASSERTION_TRAITS_PARSE(decl)
 
-// This more complex because it has to eventually use IS_RETURN_BACK which does
+// This is needed because it has to eventually use IS_RETURN_BACK which does
 // not allow decl to end with parenthesis `... (...)` (so type is first parsed
 // to make sure this is a valid return assertion with a type (possibly auto),
 // a not-nil assignment, etc.). Only after that, IS_RETURN_BACK is safely used.
@@ -4208,8 +4208,8 @@
                 BOOST_PP_TUPLE_ELEM(2, 1, decl_type)), \
             0 \
         , \
-            BOOST_PP_EXPAND(BOOST_CONTRACT_EXT_PP_IS_EMPTY \
-                    BOOST_PP_TUPLE_ELEM(2, 1, decl_type)) \
+            BOOST_CONTRACT_EXT_PP_IS_EMPTY( \
+                    BOOST_PP_TUPLE_ELEM(2, 1, decl_type)()) \
         ) \
     ) , \
         BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_BOOL_PARSE_28_ \
@@ -4338,7 +4338,7 @@
 #define BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_BOOL_PARSE_29_(d, l, decl) \
     BOOST_CONTRACT_EXT_PP_BOOL_ASSERTION_TRAITS_PARSE(decl)
 
-// This more complex because it has to eventually use IS_RETURN_BACK which does
+// This is needed because it has to eventually use IS_RETURN_BACK which does
 // not allow decl to end with parenthesis `... (...)` (so type is first parsed
 // to make sure this is a valid return assertion with a type (possibly auto),
 // a not-nil assignment, etc.). Only after that, IS_RETURN_BACK is safely used.
@@ -4357,8 +4357,8 @@
                 BOOST_PP_TUPLE_ELEM(2, 1, decl_type)), \
             0 \
         , \
-            BOOST_PP_EXPAND(BOOST_CONTRACT_EXT_PP_IS_EMPTY \
-                    BOOST_PP_TUPLE_ELEM(2, 1, decl_type)) \
+            BOOST_CONTRACT_EXT_PP_IS_EMPTY( \
+                    BOOST_PP_TUPLE_ELEM(2, 1, decl_type)()) \
         ) \
     ) , \
         BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_BOOL_PARSE_29_ \
@@ -4487,7 +4487,7 @@
 #define BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_BOOL_PARSE_30_(d, l, decl) \
     BOOST_CONTRACT_EXT_PP_BOOL_ASSERTION_TRAITS_PARSE(decl)
 
-// This more complex because it has to eventually use IS_RETURN_BACK which does
+// This is needed because it has to eventually use IS_RETURN_BACK which does
 // not allow decl to end with parenthesis `... (...)` (so type is first parsed
 // to make sure this is a valid return assertion with a type (possibly auto),
 // a not-nil assignment, etc.). Only after that, IS_RETURN_BACK is safely used.
@@ -4506,8 +4506,8 @@
                 BOOST_PP_TUPLE_ELEM(2, 1, decl_type)), \
             0 \
         , \
-            BOOST_PP_EXPAND(BOOST_CONTRACT_EXT_PP_IS_EMPTY \
-                    BOOST_PP_TUPLE_ELEM(2, 1, decl_type)) \
+            BOOST_CONTRACT_EXT_PP_IS_EMPTY( \
+                    BOOST_PP_TUPLE_ELEM(2, 1, decl_type)()) \
         ) \
     ) , \
         BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_BOOL_PARSE_30_ \
@@ -4636,7 +4636,7 @@
 #define BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_BOOL_PARSE_31_(d, l, decl) \
     BOOST_CONTRACT_EXT_PP_BOOL_ASSERTION_TRAITS_PARSE(decl)
 
-// This more complex because it has to eventually use IS_RETURN_BACK which does
+// This is needed because it has to eventually use IS_RETURN_BACK which does
 // not allow decl to end with parenthesis `... (...)` (so type is first parsed
 // to make sure this is a valid return assertion with a type (possibly auto),
 // a not-nil assignment, etc.). Only after that, IS_RETURN_BACK is safely used.
@@ -4655,8 +4655,8 @@
                 BOOST_PP_TUPLE_ELEM(2, 1, decl_type)), \
             0 \
         , \
-            BOOST_PP_EXPAND(BOOST_CONTRACT_EXT_PP_IS_EMPTY \
-                    BOOST_PP_TUPLE_ELEM(2, 1, decl_type)) \
+            BOOST_CONTRACT_EXT_PP_IS_EMPTY( \
+                    BOOST_PP_TUPLE_ELEM(2, 1, decl_type)()) \
         ) \
     ) , \
         BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_BOOL_PARSE_31_ \
@@ -4785,7 +4785,7 @@
 #define BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_BOOL_PARSE_32_(d, l, decl) \
     BOOST_CONTRACT_EXT_PP_BOOL_ASSERTION_TRAITS_PARSE(decl)
 
-// This more complex because it has to eventually use IS_RETURN_BACK which does
+// This is needed because it has to eventually use IS_RETURN_BACK which does
 // not allow decl to end with parenthesis `... (...)` (so type is first parsed
 // to make sure this is a valid return assertion with a type (possibly auto),
 // a not-nil assignment, etc.). Only after that, IS_RETURN_BACK is safely used.
@@ -4804,8 +4804,8 @@
                 BOOST_PP_TUPLE_ELEM(2, 1, decl_type)), \
             0 \
         , \
-            BOOST_PP_EXPAND(BOOST_CONTRACT_EXT_PP_IS_EMPTY \
-                    BOOST_PP_TUPLE_ELEM(2, 1, decl_type)) \
+            BOOST_CONTRACT_EXT_PP_IS_EMPTY( \
+                    BOOST_PP_TUPLE_ELEM(2, 1, decl_type)()) \
         ) \
     ) , \
         BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_BOOL_PARSE_32_ \
@@ -4934,7 +4934,7 @@
 #define BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_BOOL_PARSE_33_(d, l, decl) \
     BOOST_CONTRACT_EXT_PP_BOOL_ASSERTION_TRAITS_PARSE(decl)
 
-// This more complex because it has to eventually use IS_RETURN_BACK which does
+// This is needed because it has to eventually use IS_RETURN_BACK which does
 // not allow decl to end with parenthesis `... (...)` (so type is first parsed
 // to make sure this is a valid return assertion with a type (possibly auto),
 // a not-nil assignment, etc.). Only after that, IS_RETURN_BACK is safely used.
@@ -4953,8 +4953,8 @@
                 BOOST_PP_TUPLE_ELEM(2, 1, decl_type)), \
             0 \
         , \
-            BOOST_PP_EXPAND(BOOST_CONTRACT_EXT_PP_IS_EMPTY \
-                    BOOST_PP_TUPLE_ELEM(2, 1, decl_type)) \
+            BOOST_CONTRACT_EXT_PP_IS_EMPTY( \
+                    BOOST_PP_TUPLE_ELEM(2, 1, decl_type)()) \
         ) \
     ) , \
         BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_BOOL_PARSE_33_ \
@@ -5083,7 +5083,7 @@
 #define BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_BOOL_PARSE_34_(d, l, decl) \
     BOOST_CONTRACT_EXT_PP_BOOL_ASSERTION_TRAITS_PARSE(decl)
 
-// This more complex because it has to eventually use IS_RETURN_BACK which does
+// This is needed because it has to eventually use IS_RETURN_BACK which does
 // not allow decl to end with parenthesis `... (...)` (so type is first parsed
 // to make sure this is a valid return assertion with a type (possibly auto),
 // a not-nil assignment, etc.). Only after that, IS_RETURN_BACK is safely used.
@@ -5102,8 +5102,8 @@
                 BOOST_PP_TUPLE_ELEM(2, 1, decl_type)), \
             0 \
         , \
-            BOOST_PP_EXPAND(BOOST_CONTRACT_EXT_PP_IS_EMPTY \
-                    BOOST_PP_TUPLE_ELEM(2, 1, decl_type)) \
+            BOOST_CONTRACT_EXT_PP_IS_EMPTY( \
+                    BOOST_PP_TUPLE_ELEM(2, 1, decl_type)()) \
         ) \
     ) , \
         BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_BOOL_PARSE_34_ \
@@ -5232,7 +5232,7 @@
 #define BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_BOOL_PARSE_35_(d, l, decl) \
     BOOST_CONTRACT_EXT_PP_BOOL_ASSERTION_TRAITS_PARSE(decl)
 
-// This more complex because it has to eventually use IS_RETURN_BACK which does
+// This is needed because it has to eventually use IS_RETURN_BACK which does
 // not allow decl to end with parenthesis `... (...)` (so type is first parsed
 // to make sure this is a valid return assertion with a type (possibly auto),
 // a not-nil assignment, etc.). Only after that, IS_RETURN_BACK is safely used.
@@ -5251,8 +5251,8 @@
                 BOOST_PP_TUPLE_ELEM(2, 1, decl_type)), \
             0 \
         , \
-            BOOST_PP_EXPAND(BOOST_CONTRACT_EXT_PP_IS_EMPTY \
-                    BOOST_PP_TUPLE_ELEM(2, 1, decl_type)) \
+            BOOST_CONTRACT_EXT_PP_IS_EMPTY( \
+                    BOOST_PP_TUPLE_ELEM(2, 1, decl_type)()) \
         ) \
     ) , \
         BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_BOOL_PARSE_35_ \
@@ -5381,7 +5381,7 @@
 #define BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_BOOL_PARSE_36_(d, l, decl) \
     BOOST_CONTRACT_EXT_PP_BOOL_ASSERTION_TRAITS_PARSE(decl)
 
-// This more complex because it has to eventually use IS_RETURN_BACK which does
+// This is needed because it has to eventually use IS_RETURN_BACK which does
 // not allow decl to end with parenthesis `... (...)` (so type is first parsed
 // to make sure this is a valid return assertion with a type (possibly auto),
 // a not-nil assignment, etc.). Only after that, IS_RETURN_BACK is safely used.
@@ -5400,8 +5400,8 @@
                 BOOST_PP_TUPLE_ELEM(2, 1, decl_type)), \
             0 \
         , \
-            BOOST_PP_EXPAND(BOOST_CONTRACT_EXT_PP_IS_EMPTY \
-                    BOOST_PP_TUPLE_ELEM(2, 1, decl_type)) \
+            BOOST_CONTRACT_EXT_PP_IS_EMPTY( \
+                    BOOST_PP_TUPLE_ELEM(2, 1, decl_type)()) \
         ) \
     ) , \
         BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_BOOL_PARSE_36_ \
@@ -5530,7 +5530,7 @@
 #define BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_BOOL_PARSE_37_(d, l, decl) \
     BOOST_CONTRACT_EXT_PP_BOOL_ASSERTION_TRAITS_PARSE(decl)
 
-// This more complex because it has to eventually use IS_RETURN_BACK which does
+// This is needed because it has to eventually use IS_RETURN_BACK which does
 // not allow decl to end with parenthesis `... (...)` (so type is first parsed
 // to make sure this is a valid return assertion with a type (possibly auto),
 // a not-nil assignment, etc.). Only after that, IS_RETURN_BACK is safely used.
@@ -5549,8 +5549,8 @@
                 BOOST_PP_TUPLE_ELEM(2, 1, decl_type)), \
             0 \
         , \
-            BOOST_PP_EXPAND(BOOST_CONTRACT_EXT_PP_IS_EMPTY \
-                    BOOST_PP_TUPLE_ELEM(2, 1, decl_type)) \
+            BOOST_CONTRACT_EXT_PP_IS_EMPTY( \
+                    BOOST_PP_TUPLE_ELEM(2, 1, decl_type)()) \
         ) \
     ) , \
         BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_BOOL_PARSE_37_ \
@@ -5679,7 +5679,7 @@
 #define BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_BOOL_PARSE_38_(d, l, decl) \
     BOOST_CONTRACT_EXT_PP_BOOL_ASSERTION_TRAITS_PARSE(decl)
 
-// This more complex because it has to eventually use IS_RETURN_BACK which does
+// This is needed because it has to eventually use IS_RETURN_BACK which does
 // not allow decl to end with parenthesis `... (...)` (so type is first parsed
 // to make sure this is a valid return assertion with a type (possibly auto),
 // a not-nil assignment, etc.). Only after that, IS_RETURN_BACK is safely used.
@@ -5698,8 +5698,8 @@
                 BOOST_PP_TUPLE_ELEM(2, 1, decl_type)), \
             0 \
         , \
-            BOOST_PP_EXPAND(BOOST_CONTRACT_EXT_PP_IS_EMPTY \
-                    BOOST_PP_TUPLE_ELEM(2, 1, decl_type)) \
+            BOOST_CONTRACT_EXT_PP_IS_EMPTY( \
+                    BOOST_PP_TUPLE_ELEM(2, 1, decl_type)()) \
         ) \
     ) , \
         BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_BOOL_PARSE_38_ \
@@ -5828,7 +5828,7 @@
 #define BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_BOOL_PARSE_39_(d, l, decl) \
     BOOST_CONTRACT_EXT_PP_BOOL_ASSERTION_TRAITS_PARSE(decl)
 
-// This more complex because it has to eventually use IS_RETURN_BACK which does
+// This is needed because it has to eventually use IS_RETURN_BACK which does
 // not allow decl to end with parenthesis `... (...)` (so type is first parsed
 // to make sure this is a valid return assertion with a type (possibly auto),
 // a not-nil assignment, etc.). Only after that, IS_RETURN_BACK is safely used.
@@ -5847,8 +5847,8 @@
                 BOOST_PP_TUPLE_ELEM(2, 1, decl_type)), \
             0 \
         , \
-            BOOST_PP_EXPAND(BOOST_CONTRACT_EXT_PP_IS_EMPTY \
-                    BOOST_PP_TUPLE_ELEM(2, 1, decl_type)) \
+            BOOST_CONTRACT_EXT_PP_IS_EMPTY( \
+                    BOOST_PP_TUPLE_ELEM(2, 1, decl_type)()) \
         ) \
     ) , \
         BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_BOOL_PARSE_39_ \
@@ -5977,7 +5977,7 @@
 #define BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_BOOL_PARSE_40_(d, l, decl) \
     BOOST_CONTRACT_EXT_PP_BOOL_ASSERTION_TRAITS_PARSE(decl)
 
-// This more complex because it has to eventually use IS_RETURN_BACK which does
+// This is needed because it has to eventually use IS_RETURN_BACK which does
 // not allow decl to end with parenthesis `... (...)` (so type is first parsed
 // to make sure this is a valid return assertion with a type (possibly auto),
 // a not-nil assignment, etc.). Only after that, IS_RETURN_BACK is safely used.
@@ -5996,8 +5996,8 @@
                 BOOST_PP_TUPLE_ELEM(2, 1, decl_type)), \
             0 \
         , \
-            BOOST_PP_EXPAND(BOOST_CONTRACT_EXT_PP_IS_EMPTY \
-                    BOOST_PP_TUPLE_ELEM(2, 1, decl_type)) \
+            BOOST_CONTRACT_EXT_PP_IS_EMPTY( \
+                    BOOST_PP_TUPLE_ELEM(2, 1, decl_type)()) \
         ) \
     ) , \
         BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_BOOL_PARSE_40_ \
@@ -6126,7 +6126,7 @@
 #define BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_BOOL_PARSE_41_(d, l, decl) \
     BOOST_CONTRACT_EXT_PP_BOOL_ASSERTION_TRAITS_PARSE(decl)
 
-// This more complex because it has to eventually use IS_RETURN_BACK which does
+// This is needed because it has to eventually use IS_RETURN_BACK which does
 // not allow decl to end with parenthesis `... (...)` (so type is first parsed
 // to make sure this is a valid return assertion with a type (possibly auto),
 // a not-nil assignment, etc.). Only after that, IS_RETURN_BACK is safely used.
@@ -6145,8 +6145,8 @@
                 BOOST_PP_TUPLE_ELEM(2, 1, decl_type)), \
             0 \
         , \
-            BOOST_PP_EXPAND(BOOST_CONTRACT_EXT_PP_IS_EMPTY \
-                    BOOST_PP_TUPLE_ELEM(2, 1, decl_type)) \
+            BOOST_CONTRACT_EXT_PP_IS_EMPTY( \
+                    BOOST_PP_TUPLE_ELEM(2, 1, decl_type)()) \
         ) \
     ) , \
         BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_BOOL_PARSE_41_ \
@@ -6275,7 +6275,7 @@
 #define BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_BOOL_PARSE_42_(d, l, decl) \
     BOOST_CONTRACT_EXT_PP_BOOL_ASSERTION_TRAITS_PARSE(decl)
 
-// This more complex because it has to eventually use IS_RETURN_BACK which does
+// This is needed because it has to eventually use IS_RETURN_BACK which does
 // not allow decl to end with parenthesis `... (...)` (so type is first parsed
 // to make sure this is a valid return assertion with a type (possibly auto),
 // a not-nil assignment, etc.). Only after that, IS_RETURN_BACK is safely used.
@@ -6294,8 +6294,8 @@
                 BOOST_PP_TUPLE_ELEM(2, 1, decl_type)), \
             0 \
         , \
-            BOOST_PP_EXPAND(BOOST_CONTRACT_EXT_PP_IS_EMPTY \
-                    BOOST_PP_TUPLE_ELEM(2, 1, decl_type)) \
+            BOOST_CONTRACT_EXT_PP_IS_EMPTY( \
+                    BOOST_PP_TUPLE_ELEM(2, 1, decl_type)()) \
         ) \
     ) , \
         BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_BOOL_PARSE_42_ \
@@ -6424,7 +6424,7 @@
 #define BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_BOOL_PARSE_43_(d, l, decl) \
     BOOST_CONTRACT_EXT_PP_BOOL_ASSERTION_TRAITS_PARSE(decl)
 
-// This more complex because it has to eventually use IS_RETURN_BACK which does
+// This is needed because it has to eventually use IS_RETURN_BACK which does
 // not allow decl to end with parenthesis `... (...)` (so type is first parsed
 // to make sure this is a valid return assertion with a type (possibly auto),
 // a not-nil assignment, etc.). Only after that, IS_RETURN_BACK is safely used.
@@ -6443,8 +6443,8 @@
                 BOOST_PP_TUPLE_ELEM(2, 1, decl_type)), \
             0 \
         , \
-            BOOST_PP_EXPAND(BOOST_CONTRACT_EXT_PP_IS_EMPTY \
-                    BOOST_PP_TUPLE_ELEM(2, 1, decl_type)) \
+            BOOST_CONTRACT_EXT_PP_IS_EMPTY( \
+                    BOOST_PP_TUPLE_ELEM(2, 1, decl_type)()) \
         ) \
     ) , \
         BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_BOOL_PARSE_43_ \
@@ -6573,7 +6573,7 @@
 #define BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_BOOL_PARSE_44_(d, l, decl) \
     BOOST_CONTRACT_EXT_PP_BOOL_ASSERTION_TRAITS_PARSE(decl)
 
-// This more complex because it has to eventually use IS_RETURN_BACK which does
+// This is needed because it has to eventually use IS_RETURN_BACK which does
 // not allow decl to end with parenthesis `... (...)` (so type is first parsed
 // to make sure this is a valid return assertion with a type (possibly auto),
 // a not-nil assignment, etc.). Only after that, IS_RETURN_BACK is safely used.
@@ -6592,8 +6592,8 @@
                 BOOST_PP_TUPLE_ELEM(2, 1, decl_type)), \
             0 \
         , \
-            BOOST_PP_EXPAND(BOOST_CONTRACT_EXT_PP_IS_EMPTY \
-                    BOOST_PP_TUPLE_ELEM(2, 1, decl_type)) \
+            BOOST_CONTRACT_EXT_PP_IS_EMPTY( \
+                    BOOST_PP_TUPLE_ELEM(2, 1, decl_type)()) \
         ) \
     ) , \
         BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_BOOL_PARSE_44_ \
@@ -6722,7 +6722,7 @@
 #define BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_BOOL_PARSE_45_(d, l, decl) \
     BOOST_CONTRACT_EXT_PP_BOOL_ASSERTION_TRAITS_PARSE(decl)
 
-// This more complex because it has to eventually use IS_RETURN_BACK which does
+// This is needed because it has to eventually use IS_RETURN_BACK which does
 // not allow decl to end with parenthesis `... (...)` (so type is first parsed
 // to make sure this is a valid return assertion with a type (possibly auto),
 // a not-nil assignment, etc.). Only after that, IS_RETURN_BACK is safely used.
@@ -6741,8 +6741,8 @@
                 BOOST_PP_TUPLE_ELEM(2, 1, decl_type)), \
             0 \
         , \
-            BOOST_PP_EXPAND(BOOST_CONTRACT_EXT_PP_IS_EMPTY \
-                    BOOST_PP_TUPLE_ELEM(2, 1, decl_type)) \
+            BOOST_CONTRACT_EXT_PP_IS_EMPTY( \
+                    BOOST_PP_TUPLE_ELEM(2, 1, decl_type)()) \
         ) \
     ) , \
         BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_BOOL_PARSE_45_ \
@@ -6871,7 +6871,7 @@
 #define BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_BOOL_PARSE_46_(d, l, decl) \
     BOOST_CONTRACT_EXT_PP_BOOL_ASSERTION_TRAITS_PARSE(decl)
 
-// This more complex because it has to eventually use IS_RETURN_BACK which does
+// This is needed because it has to eventually use IS_RETURN_BACK which does
 // not allow decl to end with parenthesis `... (...)` (so type is first parsed
 // to make sure this is a valid return assertion with a type (possibly auto),
 // a not-nil assignment, etc.). Only after that, IS_RETURN_BACK is safely used.
@@ -6890,8 +6890,8 @@
                 BOOST_PP_TUPLE_ELEM(2, 1, decl_type)), \
             0 \
         , \
-            BOOST_PP_EXPAND(BOOST_CONTRACT_EXT_PP_IS_EMPTY \
-                    BOOST_PP_TUPLE_ELEM(2, 1, decl_type)) \
+            BOOST_CONTRACT_EXT_PP_IS_EMPTY( \
+                    BOOST_PP_TUPLE_ELEM(2, 1, decl_type)()) \
         ) \
     ) , \
         BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_BOOL_PARSE_46_ \
@@ -7020,7 +7020,7 @@
 #define BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_BOOL_PARSE_47_(d, l, decl) \
     BOOST_CONTRACT_EXT_PP_BOOL_ASSERTION_TRAITS_PARSE(decl)
 
-// This more complex because it has to eventually use IS_RETURN_BACK which does
+// This is needed because it has to eventually use IS_RETURN_BACK which does
 // not allow decl to end with parenthesis `... (...)` (so type is first parsed
 // to make sure this is a valid return assertion with a type (possibly auto),
 // a not-nil assignment, etc.). Only after that, IS_RETURN_BACK is safely used.
@@ -7039,8 +7039,8 @@
                 BOOST_PP_TUPLE_ELEM(2, 1, decl_type)), \
             0 \
         , \
-            BOOST_PP_EXPAND(BOOST_CONTRACT_EXT_PP_IS_EMPTY \
-                    BOOST_PP_TUPLE_ELEM(2, 1, decl_type)) \
+            BOOST_CONTRACT_EXT_PP_IS_EMPTY( \
+                    BOOST_PP_TUPLE_ELEM(2, 1, decl_type)()) \
         ) \
     ) , \
         BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_BOOL_PARSE_47_ \
@@ -7169,7 +7169,7 @@
 #define BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_BOOL_PARSE_48_(d, l, decl) \
     BOOST_CONTRACT_EXT_PP_BOOL_ASSERTION_TRAITS_PARSE(decl)
 
-// This more complex because it has to eventually use IS_RETURN_BACK which does
+// This is needed because it has to eventually use IS_RETURN_BACK which does
 // not allow decl to end with parenthesis `... (...)` (so type is first parsed
 // to make sure this is a valid return assertion with a type (possibly auto),
 // a not-nil assignment, etc.). Only after that, IS_RETURN_BACK is safely used.
@@ -7188,8 +7188,8 @@
                 BOOST_PP_TUPLE_ELEM(2, 1, decl_type)), \
             0 \
         , \
-            BOOST_PP_EXPAND(BOOST_CONTRACT_EXT_PP_IS_EMPTY \
-                    BOOST_PP_TUPLE_ELEM(2, 1, decl_type)) \
+            BOOST_CONTRACT_EXT_PP_IS_EMPTY( \
+                    BOOST_PP_TUPLE_ELEM(2, 1, decl_type)()) \
         ) \
     ) , \
         BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_BOOL_PARSE_48_ \
@@ -7318,7 +7318,7 @@
 #define BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_BOOL_PARSE_49_(d, l, decl) \
     BOOST_CONTRACT_EXT_PP_BOOL_ASSERTION_TRAITS_PARSE(decl)
 
-// This more complex because it has to eventually use IS_RETURN_BACK which does
+// This is needed because it has to eventually use IS_RETURN_BACK which does
 // not allow decl to end with parenthesis `... (...)` (so type is first parsed
 // to make sure this is a valid return assertion with a type (possibly auto),
 // a not-nil assignment, etc.). Only after that, IS_RETURN_BACK is safely used.
@@ -7337,8 +7337,8 @@
                 BOOST_PP_TUPLE_ELEM(2, 1, decl_type)), \
             0 \
         , \
-            BOOST_PP_EXPAND(BOOST_CONTRACT_EXT_PP_IS_EMPTY \
-                    BOOST_PP_TUPLE_ELEM(2, 1, decl_type)) \
+            BOOST_CONTRACT_EXT_PP_IS_EMPTY( \
+                    BOOST_PP_TUPLE_ELEM(2, 1, decl_type)()) \
         ) \
     ) , \
         BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_BOOL_PARSE_49_ \
@@ -7467,7 +7467,7 @@
 #define BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_BOOL_PARSE_50_(d, l, decl) \
     BOOST_CONTRACT_EXT_PP_BOOL_ASSERTION_TRAITS_PARSE(decl)
 
-// This more complex because it has to eventually use IS_RETURN_BACK which does
+// This is needed because it has to eventually use IS_RETURN_BACK which does
 // not allow decl to end with parenthesis `... (...)` (so type is first parsed
 // to make sure this is a valid return assertion with a type (possibly auto),
 // a not-nil assignment, etc.). Only after that, IS_RETURN_BACK is safely used.
@@ -7486,8 +7486,8 @@
                 BOOST_PP_TUPLE_ELEM(2, 1, decl_type)), \
             0 \
         , \
-            BOOST_PP_EXPAND(BOOST_CONTRACT_EXT_PP_IS_EMPTY \
-                    BOOST_PP_TUPLE_ELEM(2, 1, decl_type)) \
+            BOOST_CONTRACT_EXT_PP_IS_EMPTY( \
+                    BOOST_PP_TUPLE_ELEM(2, 1, decl_type)()) \
         ) \
     ) , \
         BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_BOOL_PARSE_50_ \
@@ -7616,7 +7616,7 @@
 #define BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_BOOL_PARSE_51_(d, l, decl) \
     BOOST_CONTRACT_EXT_PP_BOOL_ASSERTION_TRAITS_PARSE(decl)
 
-// This more complex because it has to eventually use IS_RETURN_BACK which does
+// This is needed because it has to eventually use IS_RETURN_BACK which does
 // not allow decl to end with parenthesis `... (...)` (so type is first parsed
 // to make sure this is a valid return assertion with a type (possibly auto),
 // a not-nil assignment, etc.). Only after that, IS_RETURN_BACK is safely used.
@@ -7635,8 +7635,8 @@
                 BOOST_PP_TUPLE_ELEM(2, 1, decl_type)), \
             0 \
         , \
-            BOOST_PP_EXPAND(BOOST_CONTRACT_EXT_PP_IS_EMPTY \
-                    BOOST_PP_TUPLE_ELEM(2, 1, decl_type)) \
+            BOOST_CONTRACT_EXT_PP_IS_EMPTY( \
+                    BOOST_PP_TUPLE_ELEM(2, 1, decl_type)()) \
         ) \
     ) , \
         BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_BOOL_PARSE_51_ \
@@ -7765,7 +7765,7 @@
 #define BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_BOOL_PARSE_52_(d, l, decl) \
     BOOST_CONTRACT_EXT_PP_BOOL_ASSERTION_TRAITS_PARSE(decl)
 
-// This more complex because it has to eventually use IS_RETURN_BACK which does
+// This is needed because it has to eventually use IS_RETURN_BACK which does
 // not allow decl to end with parenthesis `... (...)` (so type is first parsed
 // to make sure this is a valid return assertion with a type (possibly auto),
 // a not-nil assignment, etc.). Only after that, IS_RETURN_BACK is safely used.
@@ -7784,8 +7784,8 @@
                 BOOST_PP_TUPLE_ELEM(2, 1, decl_type)), \
             0 \
         , \
-            BOOST_PP_EXPAND(BOOST_CONTRACT_EXT_PP_IS_EMPTY \
-                    BOOST_PP_TUPLE_ELEM(2, 1, decl_type)) \
+            BOOST_CONTRACT_EXT_PP_IS_EMPTY( \
+                    BOOST_PP_TUPLE_ELEM(2, 1, decl_type)()) \
         ) \
     ) , \
         BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_BOOL_PARSE_52_ \
@@ -7914,7 +7914,7 @@
 #define BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_BOOL_PARSE_53_(d, l, decl) \
     BOOST_CONTRACT_EXT_PP_BOOL_ASSERTION_TRAITS_PARSE(decl)
 
-// This more complex because it has to eventually use IS_RETURN_BACK which does
+// This is needed because it has to eventually use IS_RETURN_BACK which does
 // not allow decl to end with parenthesis `... (...)` (so type is first parsed
 // to make sure this is a valid return assertion with a type (possibly auto),
 // a not-nil assignment, etc.). Only after that, IS_RETURN_BACK is safely used.
@@ -7933,8 +7933,8 @@
                 BOOST_PP_TUPLE_ELEM(2, 1, decl_type)), \
             0 \
         , \
-            BOOST_PP_EXPAND(BOOST_CONTRACT_EXT_PP_IS_EMPTY \
-                    BOOST_PP_TUPLE_ELEM(2, 1, decl_type)) \
+            BOOST_CONTRACT_EXT_PP_IS_EMPTY( \
+                    BOOST_PP_TUPLE_ELEM(2, 1, decl_type)()) \
         ) \
     ) , \
         BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_BOOL_PARSE_53_ \
@@ -8063,7 +8063,7 @@
 #define BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_BOOL_PARSE_54_(d, l, decl) \
     BOOST_CONTRACT_EXT_PP_BOOL_ASSERTION_TRAITS_PARSE(decl)
 
-// This more complex because it has to eventually use IS_RETURN_BACK which does
+// This is needed because it has to eventually use IS_RETURN_BACK which does
 // not allow decl to end with parenthesis `... (...)` (so type is first parsed
 // to make sure this is a valid return assertion with a type (possibly auto),
 // a not-nil assignment, etc.). Only after that, IS_RETURN_BACK is safely used.
@@ -8082,8 +8082,8 @@
                 BOOST_PP_TUPLE_ELEM(2, 1, decl_type)), \
             0 \
         , \
-            BOOST_PP_EXPAND(BOOST_CONTRACT_EXT_PP_IS_EMPTY \
-                    BOOST_PP_TUPLE_ELEM(2, 1, decl_type)) \
+            BOOST_CONTRACT_EXT_PP_IS_EMPTY( \
+                    BOOST_PP_TUPLE_ELEM(2, 1, decl_type)()) \
         ) \
     ) , \
         BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_BOOL_PARSE_54_ \
@@ -8212,7 +8212,7 @@
 #define BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_BOOL_PARSE_55_(d, l, decl) \
     BOOST_CONTRACT_EXT_PP_BOOL_ASSERTION_TRAITS_PARSE(decl)
 
-// This more complex because it has to eventually use IS_RETURN_BACK which does
+// This is needed because it has to eventually use IS_RETURN_BACK which does
 // not allow decl to end with parenthesis `... (...)` (so type is first parsed
 // to make sure this is a valid return assertion with a type (possibly auto),
 // a not-nil assignment, etc.). Only after that, IS_RETURN_BACK is safely used.
@@ -8231,8 +8231,8 @@
                 BOOST_PP_TUPLE_ELEM(2, 1, decl_type)), \
             0 \
         , \
-            BOOST_PP_EXPAND(BOOST_CONTRACT_EXT_PP_IS_EMPTY \
-                    BOOST_PP_TUPLE_ELEM(2, 1, decl_type)) \
+            BOOST_CONTRACT_EXT_PP_IS_EMPTY( \
+                    BOOST_PP_TUPLE_ELEM(2, 1, decl_type)()) \
         ) \
     ) , \
         BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_BOOL_PARSE_55_ \
@@ -8361,7 +8361,7 @@
 #define BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_BOOL_PARSE_56_(d, l, decl) \
     BOOST_CONTRACT_EXT_PP_BOOL_ASSERTION_TRAITS_PARSE(decl)
 
-// This more complex because it has to eventually use IS_RETURN_BACK which does
+// This is needed because it has to eventually use IS_RETURN_BACK which does
 // not allow decl to end with parenthesis `... (...)` (so type is first parsed
 // to make sure this is a valid return assertion with a type (possibly auto),
 // a not-nil assignment, etc.). Only after that, IS_RETURN_BACK is safely used.
@@ -8380,8 +8380,8 @@
                 BOOST_PP_TUPLE_ELEM(2, 1, decl_type)), \
             0 \
         , \
-            BOOST_PP_EXPAND(BOOST_CONTRACT_EXT_PP_IS_EMPTY \
-                    BOOST_PP_TUPLE_ELEM(2, 1, decl_type)) \
+            BOOST_CONTRACT_EXT_PP_IS_EMPTY( \
+                    BOOST_PP_TUPLE_ELEM(2, 1, decl_type)()) \
         ) \
     ) , \
         BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_BOOL_PARSE_56_ \
@@ -8510,7 +8510,7 @@
 #define BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_BOOL_PARSE_57_(d, l, decl) \
     BOOST_CONTRACT_EXT_PP_BOOL_ASSERTION_TRAITS_PARSE(decl)
 
-// This more complex because it has to eventually use IS_RETURN_BACK which does
+// This is needed because it has to eventually use IS_RETURN_BACK which does
 // not allow decl to end with parenthesis `... (...)` (so type is first parsed
 // to make sure this is a valid return assertion with a type (possibly auto),
 // a not-nil assignment, etc.). Only after that, IS_RETURN_BACK is safely used.
@@ -8529,8 +8529,8 @@
                 BOOST_PP_TUPLE_ELEM(2, 1, decl_type)), \
             0 \
         , \
-            BOOST_PP_EXPAND(BOOST_CONTRACT_EXT_PP_IS_EMPTY \
-                    BOOST_PP_TUPLE_ELEM(2, 1, decl_type)) \
+            BOOST_CONTRACT_EXT_PP_IS_EMPTY( \
+                    BOOST_PP_TUPLE_ELEM(2, 1, decl_type)()) \
         ) \
     ) , \
         BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_BOOL_PARSE_57_ \
@@ -8659,7 +8659,7 @@
 #define BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_BOOL_PARSE_58_(d, l, decl) \
     BOOST_CONTRACT_EXT_PP_BOOL_ASSERTION_TRAITS_PARSE(decl)
 
-// This more complex because it has to eventually use IS_RETURN_BACK which does
+// This is needed because it has to eventually use IS_RETURN_BACK which does
 // not allow decl to end with parenthesis `... (...)` (so type is first parsed
 // to make sure this is a valid return assertion with a type (possibly auto),
 // a not-nil assignment, etc.). Only after that, IS_RETURN_BACK is safely used.
@@ -8678,8 +8678,8 @@
                 BOOST_PP_TUPLE_ELEM(2, 1, decl_type)), \
             0 \
         , \
-            BOOST_PP_EXPAND(BOOST_CONTRACT_EXT_PP_IS_EMPTY \
-                    BOOST_PP_TUPLE_ELEM(2, 1, decl_type)) \
+            BOOST_CONTRACT_EXT_PP_IS_EMPTY( \
+                    BOOST_PP_TUPLE_ELEM(2, 1, decl_type)()) \
         ) \
     ) , \
         BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_BOOL_PARSE_58_ \
@@ -8808,7 +8808,7 @@
 #define BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_BOOL_PARSE_59_(d, l, decl) \
     BOOST_CONTRACT_EXT_PP_BOOL_ASSERTION_TRAITS_PARSE(decl)
 
-// This more complex because it has to eventually use IS_RETURN_BACK which does
+// This is needed because it has to eventually use IS_RETURN_BACK which does
 // not allow decl to end with parenthesis `... (...)` (so type is first parsed
 // to make sure this is a valid return assertion with a type (possibly auto),
 // a not-nil assignment, etc.). Only after that, IS_RETURN_BACK is safely used.
@@ -8827,8 +8827,8 @@
                 BOOST_PP_TUPLE_ELEM(2, 1, decl_type)), \
             0 \
         , \
-            BOOST_PP_EXPAND(BOOST_CONTRACT_EXT_PP_IS_EMPTY \
-                    BOOST_PP_TUPLE_ELEM(2, 1, decl_type)) \
+            BOOST_CONTRACT_EXT_PP_IS_EMPTY( \
+                    BOOST_PP_TUPLE_ELEM(2, 1, decl_type)()) \
         ) \
     ) , \
         BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_BOOL_PARSE_59_ \
@@ -8957,7 +8957,7 @@
 #define BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_BOOL_PARSE_60_(d, l, decl) \
     BOOST_CONTRACT_EXT_PP_BOOL_ASSERTION_TRAITS_PARSE(decl)
 
-// This more complex because it has to eventually use IS_RETURN_BACK which does
+// This is needed because it has to eventually use IS_RETURN_BACK which does
 // not allow decl to end with parenthesis `... (...)` (so type is first parsed
 // to make sure this is a valid return assertion with a type (possibly auto),
 // a not-nil assignment, etc.). Only after that, IS_RETURN_BACK is safely used.
@@ -8976,8 +8976,8 @@
                 BOOST_PP_TUPLE_ELEM(2, 1, decl_type)), \
             0 \
         , \
-            BOOST_PP_EXPAND(BOOST_CONTRACT_EXT_PP_IS_EMPTY \
-                    BOOST_PP_TUPLE_ELEM(2, 1, decl_type)) \
+            BOOST_CONTRACT_EXT_PP_IS_EMPTY( \
+                    BOOST_PP_TUPLE_ELEM(2, 1, decl_type)()) \
         ) \
     ) , \
         BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_BOOL_PARSE_60_ \
@@ -9106,7 +9106,7 @@
 #define BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_BOOL_PARSE_61_(d, l, decl) \
     BOOST_CONTRACT_EXT_PP_BOOL_ASSERTION_TRAITS_PARSE(decl)
 
-// This more complex because it has to eventually use IS_RETURN_BACK which does
+// This is needed because it has to eventually use IS_RETURN_BACK which does
 // not allow decl to end with parenthesis `... (...)` (so type is first parsed
 // to make sure this is a valid return assertion with a type (possibly auto),
 // a not-nil assignment, etc.). Only after that, IS_RETURN_BACK is safely used.
@@ -9125,8 +9125,8 @@
                 BOOST_PP_TUPLE_ELEM(2, 1, decl_type)), \
             0 \
         , \
-            BOOST_PP_EXPAND(BOOST_CONTRACT_EXT_PP_IS_EMPTY \
-                    BOOST_PP_TUPLE_ELEM(2, 1, decl_type)) \
+            BOOST_CONTRACT_EXT_PP_IS_EMPTY( \
+                    BOOST_PP_TUPLE_ELEM(2, 1, decl_type)()) \
         ) \
     ) , \
         BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_BOOL_PARSE_61_ \
@@ -9255,7 +9255,7 @@
 #define BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_BOOL_PARSE_62_(d, l, decl) \
     BOOST_CONTRACT_EXT_PP_BOOL_ASSERTION_TRAITS_PARSE(decl)
 
-// This more complex because it has to eventually use IS_RETURN_BACK which does
+// This is needed because it has to eventually use IS_RETURN_BACK which does
 // not allow decl to end with parenthesis `... (...)` (so type is first parsed
 // to make sure this is a valid return assertion with a type (possibly auto),
 // a not-nil assignment, etc.). Only after that, IS_RETURN_BACK is safely used.
@@ -9274,8 +9274,8 @@
                 BOOST_PP_TUPLE_ELEM(2, 1, decl_type)), \
             0 \
         , \
-            BOOST_PP_EXPAND(BOOST_CONTRACT_EXT_PP_IS_EMPTY \
-                    BOOST_PP_TUPLE_ELEM(2, 1, decl_type)) \
+            BOOST_CONTRACT_EXT_PP_IS_EMPTY( \
+                    BOOST_PP_TUPLE_ELEM(2, 1, decl_type)()) \
         ) \
     ) , \
         BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_BOOL_PARSE_62_ \
@@ -9404,7 +9404,7 @@
 #define BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_BOOL_PARSE_63_(d, l, decl) \
     BOOST_CONTRACT_EXT_PP_BOOL_ASSERTION_TRAITS_PARSE(decl)
 
-// This more complex because it has to eventually use IS_RETURN_BACK which does
+// This is needed because it has to eventually use IS_RETURN_BACK which does
 // not allow decl to end with parenthesis `... (...)` (so type is first parsed
 // to make sure this is a valid return assertion with a type (possibly auto),
 // a not-nil assignment, etc.). Only after that, IS_RETURN_BACK is safely used.
@@ -9423,8 +9423,8 @@
                 BOOST_PP_TUPLE_ELEM(2, 1, decl_type)), \
             0 \
         , \
-            BOOST_PP_EXPAND(BOOST_CONTRACT_EXT_PP_IS_EMPTY \
-                    BOOST_PP_TUPLE_ELEM(2, 1, decl_type)) \
+            BOOST_CONTRACT_EXT_PP_IS_EMPTY( \
+                    BOOST_PP_TUPLE_ELEM(2, 1, decl_type)()) \
         ) \
     ) , \
         BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_BOOL_PARSE_63_ \
@@ -9553,7 +9553,7 @@
 #define BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_BOOL_PARSE_64_(d, l, decl) \
     BOOST_CONTRACT_EXT_PP_BOOL_ASSERTION_TRAITS_PARSE(decl)
 
-// This more complex because it has to eventually use IS_RETURN_BACK which does
+// This is needed because it has to eventually use IS_RETURN_BACK which does
 // not allow decl to end with parenthesis `... (...)` (so type is first parsed
 // to make sure this is a valid return assertion with a type (possibly auto),
 // a not-nil assignment, etc.). Only after that, IS_RETURN_BACK is safely used.
@@ -9572,8 +9572,8 @@
                 BOOST_PP_TUPLE_ELEM(2, 1, decl_type)), \
             0 \
         , \
-            BOOST_PP_EXPAND(BOOST_CONTRACT_EXT_PP_IS_EMPTY \
-                    BOOST_PP_TUPLE_ELEM(2, 1, decl_type)) \
+            BOOST_CONTRACT_EXT_PP_IS_EMPTY( \
+                    BOOST_PP_TUPLE_ELEM(2, 1, decl_type)()) \
         ) \
     ) , \
         BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_BOOL_PARSE_64_ \

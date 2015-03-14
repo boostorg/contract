@@ -24,7 +24,7 @@
         BOOST_CONTRACT_EXT_PP_TRAITS_AUX_TYPE_PARSE_D(d, \
             BOOST_CONTRACT_EXT_PP_KEYWORD_TYPEDEF_REMOVE_FRONT( \
                     BOOST_PP_TUPLE_ELEM(2, 0, decl_traits)) \
-        ), \
+        )(), \
         BOOST_PP_TUPLE_ELEM(2, 1, decl_traits) \
     )
     

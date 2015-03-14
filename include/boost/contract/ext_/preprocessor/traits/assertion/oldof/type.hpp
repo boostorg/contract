@@ -9,10 +9,12 @@
 
 /* PUBLIC */
 
-// Expand to `auto | (type,,,)`.
+// Expand to `auto | (type,,,)` (this should never be empty).
 #define BOOST_CONTRACT_EXT_PP_OLDOF_ASSERTION_TRAITS_TYPE(traits) \
     BOOST_CONTRACT_EXT_PP_TRAITS_AUX_ELEM( \
-            BOOST_CONTRACT_EXT_PP_TRAITS_AUX_INDEX_OLDOF_ASSERTION_TYPE, traits)
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_INDEX_OLDOF_ASSERTION_TYPE, \
+        traits \
+    )()
 
 // Precondition: decl = `{auto | wrapped-type} ...`.
 #define BOOST_CONTRACT_EXT_PP_OLDOF_ASSERTION_TRAITS_TYPE_PARSE_D(d, \
