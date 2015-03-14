@@ -3,10 +3,10 @@
 #define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_PARAMS_HPP_
 
 #include <boost/contract/ext_/preprocessor/traits/param.hpp>
-#include <boost/contract/ext_/preprocessor/traits/aux_/func_index.hpp>
+#include <boost/contract/ext_/preprocessor/traits/aux_/index/func.hpp>
 #include <boost/contract/ext_/preprocessor/traits/aux_/keyword_list.hpp>
 #include <boost/contract/ext_/preprocessor/traits/aux_/list.hpp>
-#include <boost/contract/ext_/preprocessor/traits/utility/traits.hpp>
+#include <boost/contract/ext_/preprocessor/traits/aux_/adt.hpp>
 #include <boost/preprocessor/tuple/elem.hpp>
 #include <boost/preprocessor/facilities/empty.hpp>
 
@@ -15,8 +15,8 @@
 // Expand to EMPTY() if no function formal parameters, otherwise expand to
 // pp-seq of param. traits (each pp-seq elem. to be inspected via PARAM_TRAITS).
 #define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_PARAMS(traits) \
-    BOOST_CONTRACT_EXT_PP_TRAITS_ELEM( \
-            BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_AUX_PARAMS_INDEX, traits)()
+    BOOST_CONTRACT_EXT_PP_TRAITS_AUX_ELEM( \
+            BOOST_CONTRACT_EXT_PP_TRAITS_AUX_INDEX_FUNC_PARAMS, traits)()
 
 #define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_PARAMS_PARSE_D(d, decl_traits) \
     BOOST_CONTRACT_EXT_PP_TRAITS_AUX_KEYWORD_LIST_PUSH_BACK_PARSE_D(d, \

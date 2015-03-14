@@ -2,9 +2,9 @@
 #ifndef BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_RETURN_HPP_
 #define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_RETURN_HPP_
 
-#include <boost/contract/ext_/preprocessor/traits/aux_/func_index.hpp>
+#include <boost/contract/ext_/preprocessor/traits/aux_/index/func.hpp>
 #include <boost/contract/ext_/preprocessor/traits/aux_/type.hpp>
-#include <boost/contract/ext_/preprocessor/traits/utility/traits.hpp>
+#include <boost/contract/ext_/preprocessor/traits/aux_/adt.hpp>
 #include <boost/contract/ext_/preprocessor/keyword/return.hpp>
 #include <boost/contract/ext_/preprocessor/keyword/operator.hpp>
 #include <boost/contract/ext_/preprocessor/paren/has.hpp>
@@ -17,14 +17,13 @@
 // Expand to `result_type | void | auto | EMPTY()` (`auto` for alternative
 // function syntax, see also `..._TRAILING_RETURN`).
 #define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_RETURN(traits) \
-    BOOST_CONTRACT_EXT_PP_TRAITS_ELEM( \
-            BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_AUX_RETURN_INDEX, traits)()
+    BOOST_CONTRACT_EXT_PP_TRAITS_AUX_ELEM( \
+            BOOST_CONTRACT_EXT_PP_TRAITS_AUX_INDEX_FUNC_RETURN, traits)()
 
 // Expand to `result_type | void | EMPTY()`.
 #define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_TRAILING_RETURN(traits) \
-    BOOST_CONTRACT_EXT_PP_TRAITS_ELEM( \
-        BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_AUX_TRAILING_RETURN_INDEX, \
-        traits \
+    BOOST_CONTRACT_EXT_PP_TRAITS_AUX_ELEM( \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_INDEX_FUNC_TRAILING_RETURN, traits \
     )()
 
 #define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_RETURN_PARSE_D(d, decl_traits) \
@@ -73,7 +72,7 @@
             BOOST_CONTRACT_EXT_PP_TRAITS_AUX_AUTO_TYPE_PARSE_D(d, decl), traits)
 
 #define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_RETURN_(decl_return, traits) \
-    BOOST_CONTRACT_EXT_PP_DECL_TRAITS_PUSH_BACK( \
+    BOOST_CONTRACT_EXT_PP_DECL_TRAITS_AUX_PUSH_BACK( \
         ( \
             BOOST_PP_TUPLE_ELEM(2, 0, decl_return), \
             BOOST_PP_TUPLE_ELEM(2, 1, decl_return) BOOST_PP_EMPTY \
@@ -84,7 +83,7 @@
 #define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_RETURN_NO_(d, decl, traits) \
     ( \
         decl, \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK(traits, BOOST_PP_EMPTY) \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_PUSH_BACK(traits, BOOST_PP_EMPTY) \
     )
 
 // Constructors, destructors, type conversion operators, etc. do no have a

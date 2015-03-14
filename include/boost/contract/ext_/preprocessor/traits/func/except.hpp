@@ -2,9 +2,9 @@
 #ifndef BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_EXCEPT_HPP_
 #define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_EXCEPT_HPP_
 
-#include <boost/contract/ext_/preprocessor/traits/aux_/func_index.hpp>
+#include <boost/contract/ext_/preprocessor/traits/aux_/index/func.hpp>
 #include <boost/contract/ext_/preprocessor/traits/aux_/keyword_paren.hpp>
-#include <boost/contract/ext_/preprocessor/traits/utility/traits.hpp>
+#include <boost/contract/ext_/preprocessor/traits/aux_/adt.hpp>
 #include <boost/contract/ext_/preprocessor/keyword/noexcept.hpp>
 #include <boost/contract/ext_/preprocessor/keyword/throw.hpp>
 #include <boost/preprocessor/control/iif.hpp>
@@ -15,8 +15,8 @@
 
 // Expand to `noexcept | noexcept(,,,) | throw(,,,) | EMPTY()`.
 #define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_EXCEPT(traits) \
-    BOOST_CONTRACT_EXT_PP_TRAITS_ELEM( \
-            BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_AUX_EXCEPT_INDEX, traits)()
+    BOOST_CONTRACT_EXT_PP_TRAITS_AUX_ELEM( \
+            BOOST_CONTRACT_EXT_PP_TRAITS_AUX_INDEX_FUNC_EXCEPT, traits)()
 
 #define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_EXCEPT_PARSE(decl_traits) \
     BOOST_PP_EXPAND(BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_EXCEPT_PARSE_ARGS_ \
@@ -57,14 +57,14 @@
     )
 
 #define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_EXCEPT_NONE_(decl, traits) \
-    (decl, BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK(traits, BOOST_PP_EMPTY))
+    (decl, BOOST_CONTRACT_EXT_PP_TRAITS_AUX_PUSH_BACK(traits, BOOST_PP_EMPTY))
 
 // Precondition: except = `[(,,,)] EMPTY` (so trailing EMPTY already there).
 #define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_EXCEPT_( \
         decl_except, keyword, traits) \
     ( \
         BOOST_PP_TUPLE_ELEM(2, 0, decl_except), \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK(traits, \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_PUSH_BACK(traits, \
                 keyword BOOST_PP_TUPLE_ELEM(2, 1, decl_except)) \
     )
 

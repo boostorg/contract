@@ -2,8 +2,8 @@
 #ifndef BOOST_CONTRACT_EXT_PP_USING_ASSERTION_TRAITS_TEMPLATE_PARAMS_HPP_
 #define BOOST_CONTRACT_EXT_PP_USING_ASSERTION_TRAITS_TEMPLATE_PARAMS_HPP_
 
-#include <boost/contract/ext_/preprocessor/traits/aux_/assertion_index.hpp>
-#include <boost/contract/ext_/preprocessor/traits/utility/traits.hpp>
+#include <boost/contract/ext_/preprocessor/traits/aux_/index/assertion.hpp>
+#include <boost/contract/ext_/preprocessor/traits/aux_/adt.hpp>
 #include <boost/contract/ext_/preprocessor/keyword/template.hpp>
 #include <boost/contract/ext_/preprocessor/keyword/using.hpp>
 #include <boost/contract/ext_/preprocessor/paren/front.hpp>
@@ -14,8 +14,8 @@
 
 // Expand to `(c++-template-parameters,,,) | EMPTY()`.
 #define BOOST_CONTRACT_EXT_PP_USING_ASSERTION_TRAITS_TEMPLATE_PARAMS(traits) \
-    BOOST_CONTRACT_EXT_PP_TRAITS_ELEM( \
-        BOOST_CONTRACT_EXT_PP_USING_ASSERTION_TRAITS_AUX_TEMPLATE_PARAMS_INDEX,\
+    BOOST_CONTRACT_EXT_PP_TRAITS_AUX_ELEM( \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_INDEX_USING_ASSERTION_TEMPLATE_PARAMS,\
         traits \
     )()
 
@@ -48,7 +48,7 @@
         decl, traits) \
     ( \
         BOOST_CONTRACT_EXT_PP_KEYWORD_USING_REMOVE_FRONT(decl), \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK(traits, BOOST_PP_EMPTY) \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_PUSH_BACK(traits, BOOST_PP_EMPTY) \
     )
 
 // Precondition: decl = `( c++-template-parameter, ... ) using ...`.
@@ -57,7 +57,7 @@
     ( \
         BOOST_CONTRACT_EXT_PP_KEYWORD_USING_REMOVE_FRONT( \
                 BOOST_PP_TUPLE_EAT(0) decl), \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK(traits, \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_PUSH_BACK(traits, \
                 BOOST_CONTRACT_EXT_PP_PAREN_FRONT(decl) BOOST_PP_EMPTY) \
     )
 

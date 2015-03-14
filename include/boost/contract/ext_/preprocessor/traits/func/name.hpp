@@ -2,9 +2,9 @@
 #ifndef BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_NAME_HPP_
 #define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_NAME_HPP_
 
-#include <boost/contract/ext_/preprocessor/traits/aux_/func_index.hpp>
+#include <boost/contract/ext_/preprocessor/traits/aux_/index/func.hpp>
 #include <boost/contract/ext_/preprocessor/traits/aux_/type.hpp>
-#include <boost/contract/ext_/preprocessor/traits/utility/traits.hpp>
+#include <boost/contract/ext_/preprocessor/traits/aux_/adt.hpp>
 #include <boost/contract/ext_/preprocessor/keyword/operator.hpp>
 #include <boost/contract/ext_/preprocessor/keyword/new.hpp>
 #include <boost/contract/ext_/preprocessor/keyword/delete.hpp>
@@ -26,15 +26,15 @@
 // Wrapped within parenthesis to handle comma operator `(,)`, conversion
 // operators for types with commas `(std::map<int, char>)`, etc.
 #define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_OPERATOR_NAME(traits) \
-    BOOST_CONTRACT_EXT_PP_TRAITS_ELEM( \
-            BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_AUX_OPERATOR_NAME_INDEX, traits)()
+    BOOST_CONTRACT_EXT_PP_TRAITS_AUX_ELEM( \
+            BOOST_CONTRACT_EXT_PP_TRAITS_AUX_INDEX_FUNC_OPERATOR_NAME, traits)()
 
 // Expand to `func_name`.
 // This is always an alphanumeric name (also for operators like `plus`, etc.),
 // but for destructors where name has the leading symbol `~`.
 #define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_NAME(traits) \
-    BOOST_CONTRACT_EXT_PP_TRAITS_ELEM( \
-            BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_AUX_NAME_INDEX, traits)
+    BOOST_CONTRACT_EXT_PP_TRAITS_AUX_ELEM( \
+            BOOST_CONTRACT_EXT_PP_TRAITS_AUX_INDEX_FUNC_NAME, traits)
 
 #define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_NAME_PARSE_D(d, decl_traits) \
     BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_NAME_ARGS_(d, \
@@ -123,7 +123,7 @@
         unused, decl, traits) \
     BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_NAME_( \
         BOOST_PP_TUPLE_EAT(0) decl, \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK(traits, \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_PUSH_BACK(traits, \
                 BOOST_CONTRACT_EXT_PP_PAREN_FRONT(decl) BOOST_PP_EMPTY) \
     )
 
@@ -131,13 +131,13 @@
 #define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_NAME_OPERATOR_NO_( \
         unused, decl, traits) \
     BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_NAME_(decl, \
-            BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK(traits, BOOST_PP_EMPTY))
+            BOOST_CONTRACT_EXT_PP_TRAITS_AUX_PUSH_BACK(traits, BOOST_PP_EMPTY))
 
 // Precondition: decl = `(func_name) ...`.
 #define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_NAME_(decl, traits) \
     ( \
         BOOST_PP_TUPLE_EAT(1) decl, \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK( \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_PUSH_BACK( \
             traits, \
             BOOST_PP_TUPLE_REM_CTOR(1, \
                     BOOST_CONTRACT_EXT_PP_PAREN_FRONT(decl)) \

@@ -2,7 +2,7 @@
 #ifndef BOOST_CONTRACT_EXT_PP_TRAITS_AUX_KEYWORD_LIST_HPP_
 #define BOOST_CONTRACT_EXT_PP_TRAITS_AUX_KEYWORD_LIST_HPP_
 
-#include <boost/contract/ext_/preprocessor/traits/utility/traits.hpp>
+#include <boost/contract/ext_/preprocessor/traits/aux_/adt.hpp>
 #include <boost/contract/ext_/preprocessor/paren/front.hpp>
 #include <boost/preprocessor/tuple/eat.hpp>
 #include <boost/preprocessor/control/iif.hpp>
@@ -30,11 +30,11 @@
         d, decl, traits, keyword, list_parse_macro) \
     ( \
         BOOST_PP_TUPLE_EAT(0) decl, \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK( \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_PUSH_BACK( \
             BOOST_PP_IIF(BOOST_CONTRACT_EXT_PP_IS_EMPTY(keyword), \
                 traits BOOST_PP_TUPLE_EAT(2) \
             , \
-                BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK \
+                BOOST_CONTRACT_EXT_PP_TRAITS_AUX_PUSH_BACK \
             )(traits, keyword BOOST_PP_EMPTY), \
             BOOST_CONTRACT_EXT_PP_TRAITS_AUX_KEYWORD_LIST_EXPAND_TRAITS_( \
                 list_parse_macro(d, BOOST_CONTRACT_EXT_PP_PAREN_FRONT(decl)) \
@@ -58,11 +58,11 @@
         d, decl, traits, keyword, remove_keyword_macro, list_parse_macro) \
     ( \
         decl, \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK( \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_PUSH_BACK( \
             BOOST_PP_IIF(BOOST_CONTRACT_EXT_PP_IS_EMPTY(keyword), \
                 traits BOOST_PP_TUPLE_EAT(2) \
             , \
-                BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK \
+                BOOST_CONTRACT_EXT_PP_TRAITS_AUX_PUSH_BACK \
             )(traits, BOOST_PP_EMPTY), \
             BOOST_PP_EMPTY \
         ) \

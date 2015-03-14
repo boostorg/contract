@@ -4,7 +4,7 @@
 
 #include <boost/contract/ext_/preprocessor/traits/assertion/bool/expr.hpp>
 #include <boost/contract/ext_/preprocessor/traits/assertion/key.hpp>
-#include <boost/contract/ext_/preprocessor/traits/utility/traits.hpp>
+#include <boost/contract/ext_/preprocessor/traits/aux_/adt.hpp>
 
 /* PUBLIC */
 
@@ -12,10 +12,10 @@
 
 // Precondition: decl = `...` (includes `(,,,)`, `bool(,,,)`, etc.).
 #define BOOST_CONTRACT_EXT_PP_BOOL_ASSERTION_TRAITS_PARSE(decl) \
-    BOOST_CONTRACT_EXT_PP_DECL_TRAITS_DONE( \
+    BOOST_CONTRACT_EXT_PP_DECL_TRAITS_AUX_DONE( \
     BOOST_CONTRACT_EXT_PP_BOOL_ASSERTION_TRAITS_EXPR_PARSE( \
     BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_SET_KEY_PARSE(bool, \
-    BOOST_CONTRACT_EXT_PP_DECL_TRAITS_INIT( \
+    BOOST_CONTRACT_EXT_PP_DECL_TRAITS_AUX_INIT( \
         decl BOOST_PP_NIL \
     ))))
 

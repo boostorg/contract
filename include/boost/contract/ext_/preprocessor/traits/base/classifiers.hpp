@@ -2,9 +2,9 @@
 #ifndef BOOST_CONTRACT_EXT_PP_BASE_TRAITS_CLASSIFIERS_HPP_
 #define BOOST_CONTRACT_EXT_PP_BASE_TRAITS_CLASSIFIERS_HPP_
 
-#include <boost/contract/ext_/preprocessor/traits/aux_/base_index.hpp>
+#include <boost/contract/ext_/preprocessor/traits/aux_/index/base.hpp>
 #include <boost/contract/ext_/preprocessor/traits/aux_/keyword.hpp>
-#include <boost/contract/ext_/preprocessor/traits/utility/traits.hpp>
+#include <boost/contract/ext_/preprocessor/traits/aux_/adt.hpp>
 #include <boost/contract/ext_/preprocessor/keyword/virtual.hpp>
 #include <boost/contract/ext_/preprocessor/keyword/private.hpp>
 #include <boost/contract/ext_/preprocessor/keyword/protected.hpp>
@@ -17,13 +17,13 @@
 
 // Expand to `public | protected | private | EMPTY()`.
 #define BOOST_CONTRACT_EXT_PP_BASE_TRAITS_ACCESS(traits) \
-    BOOST_CONTRACT_EXT_PP_TRAITS_ELEM( \
-            BOOST_CONTRACT_EXT_PP_BASE_TRAITS_AUX_ACCESS_INDEX, traits)()
+    BOOST_CONTRACT_EXT_PP_TRAITS_AUX_ELEM( \
+            BOOST_CONTRACT_EXT_PP_TRAITS_AUX_INDEX_BASE_ACCESS, traits)()
 
 // Expand to `virtual | EMPTY()`.
 #define BOOST_CONTRACT_EXT_PP_BASE_TRAITS_VIRTUAL(traits) \
-    BOOST_CONTRACT_EXT_PP_TRAITS_ELEM( \
-            BOOST_CONTRACT_EXT_PP_BASE_TRAITS_AUX_VIRTUAL_INDEX, traits)()
+    BOOST_CONTRACT_EXT_PP_TRAITS_AUX_ELEM( \
+            BOOST_CONTRACT_EXT_PP_TRAITS_AUX_INDEX_BASE_VIRTUAL, traits)()
 
 // Implementation: Do NOT use EXPAND for proper expansion (on MSVC).
 #define BOOST_CONTRACT_EXT_PP_BASE_TRAITS_CLASSIFIERS_PARSE(decl_traits) \
@@ -49,7 +49,7 @@
     )
 
 #define BOOST_CONTRACT_EXT_PP_BASE_TRAITS_VIRTUAL_1ST_PUSH_BACK_(decl, traits) \
-    (decl, BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK(traits, \
+    (decl, BOOST_CONTRACT_EXT_PP_TRAITS_AUX_PUSH_BACK(traits, \
             virtual BOOST_PP_EMPTY))
 
 #define BOOST_CONTRACT_EXT_PP_BASE_TRAITS_VIRTUAL_1ST_NO_(decl, traits) \
@@ -67,14 +67,15 @@
 #define BOOST_CONTRACT_EXT_PP_BASE_TRAITS_VIRTUAL_2ND_YES_(decl, traits) \
     ( \
         BOOST_CONTRACT_EXT_PP_KEYWORD_VIRTUAL_REMOVE_FRONT(decl), \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK(traits, virtual BOOST_PP_EMPTY) \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_PUSH_BACK(traits, \
+                virtual BOOST_PP_EMPTY) \
     )
 
 #define BOOST_CONTRACT_EXT_PP_BASE_TRAITS_VIRTUAL_2ND_NO_(decl, traits) \
-    (decl, BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK(traits, BOOST_PP_EMPTY))
+    (decl, BOOST_CONTRACT_EXT_PP_TRAITS_AUX_PUSH_BACK(traits, BOOST_PP_EMPTY))
 
 #define BOOST_CONTRACT_EXT_PP_BASE_TRAITS_ACCESS_(decl, traits) \
-    BOOST_CONTRACT_EXT_PP_DECL_TRAITS_PUSH_BACK( \
+    BOOST_CONTRACT_EXT_PP_DECL_TRAITS_AUX_PUSH_BACK( \
         BOOST_CONTRACT_EXT_PP_TRAITS_AUX_KEYWORD3_PARSE( \
             decl, \
             public, \

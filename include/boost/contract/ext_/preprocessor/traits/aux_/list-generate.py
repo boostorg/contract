@@ -80,7 +80,7 @@ def code():
             BOOST_CONTRACT_EXT_PP_TRAITS_AUX_LIST_OP_{0}_, \\
             ( \\
                 decl_seq (BOOST_PP_NIL), \\
-                BOOST_CONTRACT_EXT_PP_TRAITS_INIT, \\
+                BOOST_CONTRACT_EXT_PP_TRAITS_AUX_INIT, \\
                 parse_elem_macro, \\
                 is_replacement_macro, \\
                 replace_elem_macro \\
@@ -92,7 +92,7 @@ def code():
         decl_traits_parse_is_replace) \\
     ( \\
         BOOST_PP_TUPLE_ELEM(5, 0, decl_traits_parse_is_replace), \\
-        BOOST_CONTRACT_EXT_PP_TRAITS_DONE(BOOST_PP_TUPLE_ELEM(5, 1, \\
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_DONE(BOOST_PP_TUPLE_ELEM(5, 1, \\
                 decl_traits_parse_is_replace)) BOOST_PP_EMPTY \\
     )
 
@@ -135,9 +135,9 @@ def code():
         traits, parse_elem_macro, is_replacement_macro, replace_elem_macro) \\
     BOOST_CONTRACT_EXT_PP_TRAITS_AUX_LIST_PUSH_BACK_{0}_(d, \\
         BOOST_PP_SEQ_TAIL(decl_seq), \\
-        BOOST_CONTRACT_EXT_PP_TRAITS_POP_BACK(traits), \\
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_POP_BACK(traits), \\
         replace_elem_macro(d, {1}, (BOOST_PP_SEQ_HEAD(decl_seq), \\
-                BOOST_CONTRACT_EXT_PP_TRAITS_BACK(traits))), \\
+                BOOST_CONTRACT_EXT_PP_TRAITS_AUX_BACK(traits))), \\
         parse_elem_macro, \\
         is_replacement_macro, \\
         replace_elem_macro \\
@@ -155,7 +155,7 @@ def code():
             BOOST_PP_SEQ_PUSH_FRONT \\
         )(decl_seq, BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK( \\
                 BOOST_PP_TUPLE_ELEM(2, 0, elemdecl_elemtraits))), \\
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK(traits, \\
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_PUSH_BACK(traits, \\
                 BOOST_PP_TUPLE_ELEM(2, 1, elemdecl_elemtraits)), \\
         parse_elem_macro, \\
         is_replacement_macro, \\
@@ -174,8 +174,7 @@ file.write('''
 // WARNING: FILE AUTOMATICALLY GENERATED, DO NOT MODIFY IT!
 // Instead, modify and run related generation script "{0}".
 
-#include <boost/contract/ext_/preprocessor/traits/param.hpp>
-#include <boost/contract/ext_/preprocessor/traits/utility/traits.hpp>
+#include <boost/contract/ext_/preprocessor/traits/aux_/adt.hpp>
 #include <boost/contract/ext_/preprocessor/keyword/void.hpp>
 #include <boost/contract/ext_/preprocessor/utility/empty.hpp>
 #include <boost/contract/ext_/preprocessor/variadic/to_seq.hpp>

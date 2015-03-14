@@ -2,8 +2,8 @@
 #ifndef BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_REF_HPP_
 #define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_REF_HPP_
 
-#include <boost/contract/ext_/preprocessor/traits/aux_/func_index.hpp>
-#include <boost/contract/ext_/preprocessor/traits/utility/traits.hpp>
+#include <boost/contract/ext_/preprocessor/traits/aux_/index/func.hpp>
+#include <boost/contract/ext_/preprocessor/traits/aux_/adt.hpp>
 #include <boost/contract/ext_/preprocessor/keyword/contract/ref.hpp>
 #include <boost/preprocessor/facilities/empty.hpp>
 #include <boost/preprocessor/facilities/expand.hpp>
@@ -12,8 +12,8 @@
 
 // Expand to `ref | ref ref | EMPTY()` (ref for lvalue&, ref ref for rvalue&&).
 #define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_REF(traits) \
-    BOOST_CONTRACT_EXT_PP_TRAITS_ELEM( \
-            BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_AUX_REF_INDEX, traits)()
+    BOOST_CONTRACT_EXT_PP_TRAITS_AUX_ELEM( \
+            BOOST_CONTRACT_EXT_PP_TRAITS_AUX_INDEX_FUNC_REF, traits)()
 
 // Implementation: EXPAND needed for proper expansion (on MSVC).
 #define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_REF_PARSE(decl_traits) \
@@ -44,16 +44,18 @@
     )(decl, traits)
         
 #define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_REF_NO_(decl, traits) \
-    (decl, BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK(traits, BOOST_PP_EMPTY))
+    (decl, BOOST_CONTRACT_EXT_PP_TRAITS_AUX_PUSH_BACK(traits, BOOST_PP_EMPTY))
 
 #define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_REF_REF_NO_(decl, traits) \
-    (decl, BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK(traits, ref BOOST_PP_EMPTY))
+    (decl, BOOST_CONTRACT_EXT_PP_TRAITS_AUX_PUSH_BACK(traits, \
+            ref BOOST_PP_EMPTY))
 
 // Precondition: decl = `ref ...`.
 #define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_REF_REF_YES_(decl, traits) \
     ( \
         BOOST_CONTRACT_EXT_PP_KEYWORD_REF_REMOVE_FRONT(decl), \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK(traits, ref ref BOOST_PP_EMPTY) \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_PUSH_BACK(traits, \
+                ref ref BOOST_PP_EMPTY) \
     )
 
 #endif // #include guard

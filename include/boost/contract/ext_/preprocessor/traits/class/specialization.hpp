@@ -2,8 +2,8 @@
 #ifndef BOOST_CONTRACT_EXT_PP_CLASS_TRAITS_SPECIALIZATION_HPP_
 #define BOOST_CONTRACT_EXT_PP_CLASS_TRAITS_SPECIALIZATION_HPP_
 
-#include <boost/contract/ext_/preprocessor/traits/aux_/class_index.hpp>
-#include <boost/contract/ext_/preprocessor/traits/utility/traits.hpp>
+#include <boost/contract/ext_/preprocessor/traits/aux_/index/class.hpp>
+#include <boost/contract/ext_/preprocessor/traits/aux_/adt.hpp>
 #include <boost/contract/ext_/preprocessor/paren/front.hpp>
 #include <boost/preprocessor/tuple/eat.hpp>
 #include <boost/preprocessor/control/iif.hpp>
@@ -14,8 +14,8 @@
 
 // Expand to `(,,,) | EMPTY()`.
 #define BOOST_CONTRACT_EXT_PP_CLASS_TRAITS_SPECIALIZATION(traits) \
-    BOOST_CONTRACT_EXT_PP_TRAITS_ELEM( \
-        BOOST_CONTRACT_EXT_PP_CLASS_TRAITS_AUX_SPECIALIZATION_INDEX, \
+    BOOST_CONTRACT_EXT_PP_TRAITS_AUX_ELEM( \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_INDEX_CLASS_SPECIALIZATION, \
         traits \
     )()
 
@@ -36,12 +36,12 @@
     )(decl, traits)
 
 #define BOOST_CONTRACT_EXT_PP_CLASS_TRAITS_SPECIALIZATION_NO_(decl, traits) \
-    (decl, BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK(traits, BOOST_PP_EMPTY))
+    (decl, BOOST_CONTRACT_EXT_PP_TRAITS_AUX_PUSH_BACK(traits, BOOST_PP_EMPTY))
 
 #define BOOST_CONTRACT_EXT_PP_CLASS_TRAITS_SPECIALIZATION_YES_(decl, traits) \
     ( \
         BOOST_PP_TUPLE_EAT(0) decl, \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK(traits, \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_PUSH_BACK(traits, \
                 BOOST_CONTRACT_EXT_PP_PAREN_FRONT(decl) BOOST_PP_EMPTY) \
     )
 

@@ -11,8 +11,8 @@
 #include <boost/contract/ext_/preprocessor/traits/class/friend.hpp>
 #include <boost/contract/ext_/preprocessor/traits/class/template.hpp>
 #include <boost/contract/ext_/preprocessor/traits/class/export.hpp>
-#include <boost/contract/ext_/preprocessor/traits/aux_/class_index.hpp>
-#include <boost/contract/ext_/preprocessor/traits/utility/traits.hpp>
+#include <boost/contract/ext_/preprocessor/traits/aux_/index/class.hpp>
+#include <boost/contract/ext_/preprocessor/traits/aux_/adt.hpp>
 
 /* PUBLIC */
 
@@ -30,35 +30,29 @@
     BOOST_CONTRACT_EXT_PP_TRAITS_CLASS_FRIEND_PARSE_( \
     BOOST_CONTRACT_EXT_PP_TRAITS_CLASS_TEMPLATE_PARSE_(d, \
     BOOST_CONTRACT_EXT_PP_TRAITS_CLASS_EXPORT_PARSE_( \
-    BOOST_CONTRACT_EXT_PP_DECL_TRAITS_INIT( \
+    BOOST_CONTRACT_EXT_PP_DECL_TRAITS_AUX_INIT( \
         decl BOOST_PP_NIL \
     )))))))))))
 
 /* PRIVATE */
 
-// To debug or test the pp parsing code, you can #define this internal macro to
-// stop parsing at a given trait index as #defined in class_index.hpp (this is
-// what some of this library tests do).
-// #define BOOST_CONTRACT_EXT_PP_CLASS_TRAITS_AUX_INDEX_TEST ..._INDEX
-
-// TODO: If I rename AUX macros in each class/* file then I can use CLASS_TRAITS
-// names here (same for func.hpp).
-// NOTE: These macros #definitions read TRAITS_CLASS instead of CLASS_TRAITS to
-// avoid name clashes with macro #define in class/*.
+// To debug or test the pp parsing code, #define this internal macro to stop
+// parsing at a given trait index as #defined in aux_/index/class.hpp:
+// #define BOOST_CONTRACT_EXT_PP_CLASS_TRAITS_AUX_INDEX_TEST ...
 
 #if defined(BOOST_CONTRACT_EXT_PP_CLASS_TRAITS_AUX_INDEX_TEST) && \
         BOOST_CONTRACT_EXT_PP_CLASS_TRAITS_AUX_INDEX_TEST < \
-        BOOST_CONTRACT_EXT_PP_CLASS_TRAITS_AUX_MAX_INDEX
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_INDEX_CLASS_MAX
 #   define BOOST_CONTRACT_EXT_PP_TRAITS_CLASS_DONE_(decl_traits) \
         decl_traits
 #else
 #   define BOOST_CONTRACT_EXT_PP_TRAITS_CLASS_DONE_ \
-        BOOST_CONTRACT_EXT_PP_DECL_TRAITS_DONE
+        BOOST_CONTRACT_EXT_PP_DECL_TRAITS_AUX_DONE
 #endif
 
 #if defined(BOOST_CONTRACT_EXT_PP_CLASS_TRAITS_AUX_INDEX_TEST) && \
         BOOST_CONTRACT_EXT_PP_CLASS_TRAITS_AUX_INDEX_TEST < \
-        BOOST_CONTRACT_EXT_PP_CLASS_TRAITS_AUX_EXPORT_INDEX
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_INDEX_CLASS_EXPORT
 #   define BOOST_CONTRACT_EXT_PP_TRAITS_CLASS_EXPORT_PARSE_(decl_traits) \
         decl_traits
 #else
@@ -68,7 +62,7 @@
 
 #if defined(BOOST_CONTRACT_EXT_PP_CLASS_TRAITS_AUX_INDEX_TEST) && \
         BOOST_CONTRACT_EXT_PP_CLASS_TRAITS_AUX_INDEX_TEST < \
-        BOOST_CONTRACT_EXT_PP_CLASS_TRAITS_AUX_TEMPLATE_INDEX
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_INDEX_CLASS_TEMPLATE
 #   define BOOST_CONTRACT_EXT_PP_TRAITS_CLASS_TEMPLATE_PARSE_(d, decl_traits) \
         decl_traits
 #else
@@ -78,7 +72,7 @@
 
 #if defined(BOOST_CONTRACT_EXT_PP_CLASS_TRAITS_AUX_INDEX_TEST) && \
         BOOST_CONTRACT_EXT_PP_CLASS_TRAITS_AUX_INDEX_TEST < \
-        BOOST_CONTRACT_EXT_PP_CLASS_TRAITS_AUX_FRIEND_INDEX
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_INDEX_CLASS_FRIEND
 #   define BOOST_CONTRACT_EXT_PP_TRAITS_CLASS_FRIEND_PARSE_(decl_traits) \
         decl_traits
 #else
@@ -88,7 +82,7 @@
 
 #if defined(BOOST_CONTRACT_EXT_PP_CLASS_TRAITS_AUX_INDEX_TEST) && \
         BOOST_CONTRACT_EXT_PP_CLASS_TRAITS_AUX_INDEX_TEST < \
-        BOOST_CONTRACT_EXT_PP_CLASS_TRAITS_AUX_KEY_INDEX
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_INDEX_CLASS_KEY
 #   define BOOST_CONTRACT_EXT_PP_TRAITS_CLASS_KEY_PARSE_(decl_traits) \
         decl_traits
 #else
@@ -98,7 +92,7 @@
 
 #if defined(BOOST_CONTRACT_EXT_PP_CLASS_TRAITS_AUX_INDEX_TEST) && \
         BOOST_CONTRACT_EXT_PP_CLASS_TRAITS_AUX_INDEX_TEST < \
-        BOOST_CONTRACT_EXT_PP_CLASS_TRAITS_AUX_VERBATIM_INDEX
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_INDEX_CLASS_VERBATIM
 #   define BOOST_CONTRACT_EXT_PP_TRAITS_CLASS_VERBATIM_PARSE_(decl_traits) \
         decl_traits
 #else
@@ -108,7 +102,7 @@
 
 #if defined(BOOST_CONTRACT_EXT_PP_CLASS_TRAITS_AUX_INDEX_TEST) && \
         BOOST_CONTRACT_EXT_PP_CLASS_TRAITS_AUX_INDEX_TEST < \
-        BOOST_CONTRACT_EXT_PP_CLASS_TRAITS_AUX_NAME_INDEX
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_INDEX_CLASS_NAME
 #   define BOOST_CONTRACT_EXT_PP_TRAITS_CLASS_NAME_PARSE_(decl_traits) \
         decl_traits
 #else
@@ -118,7 +112,7 @@
 
 #if defined(BOOST_CONTRACT_EXT_PP_CLASS_TRAITS_AUX_INDEX_TEST) && \
         BOOST_CONTRACT_EXT_PP_CLASS_TRAITS_AUX_INDEX_TEST < \
-        BOOST_CONTRACT_EXT_PP_CLASS_TRAITS_AUX_SPECIALIZATION_INDEX
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_INDEX_CLASS_SPECIALIZATION
 #   define BOOST_CONTRACT_EXT_PP_TRAITS_CLASS_SPECIALIZATION_PARSE_( \
             decl_traits) \
         decl_traits
@@ -129,7 +123,7 @@
 
 #if defined(BOOST_CONTRACT_EXT_PP_CLASS_TRAITS_AUX_INDEX_TEST) && \
         BOOST_CONTRACT_EXT_PP_CLASS_TRAITS_AUX_INDEX_TEST < \
-        BOOST_CONTRACT_EXT_PP_CLASS_TRAITS_AUX_VIRT_INDEX
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_INDEX_CLASS_VIRT
 #   define BOOST_CONTRACT_EXT_PP_TRAITS_CLASS_VIRT_PARSE_(decl_traits) \
         decl_traits
 #else
@@ -139,7 +133,7 @@
 
 #if defined(BOOST_CONTRACT_EXT_PP_CLASS_TRAITS_AUX_INDEX_TEST) && \
         BOOST_CONTRACT_EXT_PP_CLASS_TRAITS_AUX_INDEX_TEST < \
-        BOOST_CONTRACT_EXT_PP_CLASS_TRAITS_AUX_BASES_INDEX
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_INDEX_CLASS_BASES
 #   define BOOST_CONTRACT_EXT_PP_TRAITS_CLASS_BASES_PARSE_(d, decl_traits) \
         decl_traits
 #else

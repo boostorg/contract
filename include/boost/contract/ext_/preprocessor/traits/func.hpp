@@ -16,8 +16,8 @@
 #include <boost/contract/ext_/preprocessor/traits/func/export.hpp>
 #include <boost/contract/ext_/preprocessor/traits/func/verbatim.hpp>
 #include <boost/contract/ext_/preprocessor/traits/func/access.hpp>
-#include <boost/contract/ext_/preprocessor/traits/aux_/func_index.hpp>
-#include <boost/contract/ext_/preprocessor/traits/utility/traits.hpp>
+#include <boost/contract/ext_/preprocessor/traits/aux_/index/func.hpp>
+#include <boost/contract/ext_/preprocessor/traits/aux_/adt.hpp>
 
 /* PUBLIC */
 
@@ -41,33 +41,32 @@
     BOOST_CONTRACT_EXT_PP_TRAITS_FUNC_EXPORT_PARSE_( \
     BOOST_CONTRACT_EXT_PP_TRAITS_FUNC_VERBATIM_PARSE_( \
     BOOST_CONTRACT_EXT_PP_TRAITS_FUNC_ACCESS_PARSE_( \
-    BOOST_CONTRACT_EXT_PP_DECL_TRAITS_INIT( \
+    BOOST_CONTRACT_EXT_PP_DECL_TRAITS_AUX_INIT( \
         decl BOOST_PP_NIL \
     )))))))))))))))))
 
 /* PRIVATE */
 
-// To debug or test the pp parsing code, you can #define this internal macro to
-// stop parsing at a given trait index as #defined in func_index.hpp (this is
-// what some of this library tests do).
-// #define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_AUX_INDEX_TEST ..._INDEX
+// To debug or test the pp parsing code, #define this internal macro to stop
+// parsing at a given trait index as #defined in aux_/index/func.hpp:
+// #define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_AUX_INDEX_TEST ...
 
 // NOTE: These macros #definitions read TRAITS_FUNC instead of FUNC_TRAITS to
 // avoid name clashes with macro #define in func/*.
 
 #if defined(BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_AUX_INDEX_TEST) && \
         BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_AUX_INDEX_TEST < \
-        BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_AUX_MAX_INDEX
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_INDEX_FUNC_MAX
 #   define BOOST_CONTRACT_EXT_PP_TRAITS_FUNC_DONE_(decl_traits) \
         decl_traits
 #else
 #   define BOOST_CONTRACT_EXT_PP_TRAITS_FUNC_DONE_ \
-        BOOST_CONTRACT_EXT_PP_DECL_TRAITS_DONE
+        BOOST_CONTRACT_EXT_PP_DECL_TRAITS_AUX_DONE
 #endif
 
 #if defined(BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_AUX_INDEX_TEST) && \
         BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_AUX_INDEX_TEST < \
-        BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_AUX_ACCESS_INDEX
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_INDEX_FUNC_ACCESS
 #   define BOOST_CONTRACT_EXT_PP_TRAITS_FUNC_ACCESS_PARSE_(decl_traits) \
         decl_traits
 #else
@@ -77,7 +76,7 @@
 
 #if defined(BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_AUX_INDEX_TEST) && \
         BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_AUX_INDEX_TEST < \
-        BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_AUX_VERBATIM_INDEX
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_INDEX_FUNC_VERBATIM
 #   define BOOST_CONTRACT_EXT_PP_TRAITS_FUNC_VERBATIM_PARSE_(decl_traits) \
         decl_traits
 #else
@@ -87,7 +86,7 @@
 
 #if defined(BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_AUX_INDEX_TEST) && \
         BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_AUX_INDEX_TEST < \
-        BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_AUX_EXPORT_INDEX
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_INDEX_FUNC_EXPORT
 #   define BOOST_CONTRACT_EXT_PP_TRAITS_FUNC_EXPORT_PARSE_(decl_traits) \
         decl_traits
 #else
@@ -97,7 +96,7 @@
 
 #if defined(BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_AUX_INDEX_TEST) && \
         BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_AUX_INDEX_TEST < \
-        BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_AUX_TEMPLATE_INDEX
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_INDEX_FUNC_TEMPLATE
 #   define BOOST_CONTRACT_EXT_PP_TRAITS_FUNC_TEMPLATE_PARSE_(d, decl_traits) \
         decl_traits
 #else
@@ -107,7 +106,7 @@
 
 #if defined(BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_AUX_INDEX_TEST) && \
         BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_AUX_INDEX_TEST < \
-        BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_AUX_CLASSIFIERS_INDEX
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_INDEX_FUNC_CLASSIFIERS
 #   define BOOST_CONTRACT_EXT_PP_TRAITS_FUNC_CLASSIFIERS_PARSE_( \
             d, decl_traits) \
         decl_traits
@@ -118,7 +117,7 @@
         
 #if defined(BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_AUX_INDEX_TEST) && \
         BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_AUX_INDEX_TEST < \
-        BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_AUX_RETURN_INDEX
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_INDEX_FUNC_RETURN
 #   define BOOST_CONTRACT_EXT_PP_TRAITS_FUNC_RETURN_PARSE_(d, decl_traits) \
         decl_traits
 #else
@@ -128,7 +127,7 @@
 
 #if defined(BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_AUX_INDEX_TEST) && \
         BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_AUX_INDEX_TEST < \
-        BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_AUX_NAME_INDEX
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_INDEX_FUNC_NAME
 #   define BOOST_CONTRACT_EXT_PP_TRAITS_FUNC_NAME_PARSE_(d, decl_traits) \
         decl_traits
 #else
@@ -138,7 +137,7 @@
 
 #if defined(BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_AUX_INDEX_TEST) && \
         BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_AUX_INDEX_TEST < \
-        BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_AUX_PARAMS_INDEX
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_INDEX_FUNC_PARAMS
 #   define BOOST_CONTRACT_EXT_PP_TRAITS_FUNC_PARAMS_PARSE_(d, decl_traits) \
         decl_traits
 #else
@@ -148,7 +147,7 @@
 
 #if defined(BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_AUX_INDEX_TEST) && \
         BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_AUX_INDEX_TEST < \
-        BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_AUX_CV_INDEX
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_INDEX_FUNC_CV
 #   define BOOST_CONTRACT_EXT_PP_TRAITS_FUNC_CV_PARSE_(decl_traits) \
         decl_traits
 #else
@@ -158,7 +157,7 @@
 
 #if defined(BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_AUX_INDEX_TEST) && \
         BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_AUX_INDEX_TEST < \
-        BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_AUX_REF_INDEX
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_INDEX_FUNC_REF
 #   define BOOST_CONTRACT_EXT_PP_TRAITS_FUNC_REF_PARSE_(decl_traits) \
         decl_traits
 #else
@@ -168,7 +167,7 @@
 
 #if defined(BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_AUX_INDEX_TEST) && \
         BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_AUX_INDEX_TEST < \
-        BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_AUX_EXCEPT_INDEX
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_INDEX_FUNC_EXCEPT
 #   define BOOST_CONTRACT_EXT_PP_TRAITS_FUNC_EXCEPT_PARSE_(decl_traits) \
         decl_traits
 #else
@@ -178,7 +177,7 @@
 
 #if defined(BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_AUX_INDEX_TEST) && \
         BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_AUX_INDEX_TEST < \
-        BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_AUX_TRAILING_RETURN_INDEX
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_INDEX_FUNC_TRAILING_RETURN
 #   define BOOST_CONTRACT_EXT_PP_TRAITS_FUNC_TRAILING_RETURN_PARSE_( \
             d, decl_traits) \
         decl_traits
@@ -189,7 +188,7 @@
 
 #if defined(BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_AUX_INDEX_TEST) && \
         BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_AUX_INDEX_TEST < \
-        BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_AUX_VIRT_INDEX
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_INDEX_FUNC_VIRT
 #   define BOOST_CONTRACT_EXT_PP_TRAITS_FUNC_VIRT_PARSE_(decl_traits) \
         decl_traits
 #else
@@ -199,7 +198,7 @@
 
 #if defined(BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_AUX_INDEX_TEST) && \
         BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_AUX_INDEX_TEST < \
-        BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_AUX_PRECONDITIONS_INDEX
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_INDEX_FUNC_PRECONDITIONS
 #   define BOOST_CONTRACT_EXT_PP_TRAITS_FUNC_PRECONDITIONS_PARSE_( \
             d, decl_traits) \
         decl_traits
@@ -210,7 +209,7 @@
 
 #if defined(BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_AUX_INDEX_TEST) && \
         BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_AUX_INDEX_TEST < \
-        BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_AUX_POSTCONDITIONS_INDEX
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_INDEX_FUNC_POSTCONDITIONS
 #   define BOOST_CONTRACT_EXT_PP_TRAITS_FUNC_POSTCONDITIONS_PARSE_( \
             d, decl_traits) \
         decl_traits

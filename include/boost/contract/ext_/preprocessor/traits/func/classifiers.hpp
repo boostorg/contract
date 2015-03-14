@@ -2,8 +2,8 @@
 #ifndef BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_CLASSIFIERS_HPP_
 #define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_CLASSIFIERS_HPP_
 
-#include <boost/contract/ext_/preprocessor/traits/aux_/func_index.hpp>
-#include <boost/contract/ext_/preprocessor/traits/utility/traits.hpp>
+#include <boost/contract/ext_/preprocessor/traits/aux_/index/func.hpp>
+#include <boost/contract/ext_/preprocessor/traits/aux_/adt.hpp>
 #include <boost/contract/ext_/preprocessor/keyword/inline.hpp>
 #include <boost/contract/ext_/preprocessor/keyword/static.hpp>
 #include <boost/contract/ext_/preprocessor/keyword/extern.hpp>
@@ -25,39 +25,38 @@
 
 // Expand to `inline | EMPTY()`.
 #define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_INLINE(traits) \
-    BOOST_CONTRACT_EXT_PP_TRAITS_ELEM( \
-            BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_AUX_INLINE_INDEX, traits)()
+    BOOST_CONTRACT_EXT_PP_TRAITS_AUX_ELEM( \
+            BOOST_CONTRACT_EXT_PP_TRAITS_AUX_INDEX_FUNC_INLINE, traits)()
 
 // Expand to `static | EMPTY()`.
 #define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_STATIC(traits) \
-    BOOST_CONTRACT_EXT_PP_TRAITS_ELEM( \
-            BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_AUX_STATIC_INDEX, traits)()
+    BOOST_CONTRACT_EXT_PP_TRAITS_AUX_ELEM( \
+            BOOST_CONTRACT_EXT_PP_TRAITS_AUX_INDEX_FUNC_STATIC, traits)()
 
 // Expand to `extern | EMPTY()`.
 #define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_EXTERN(traits) \
-    BOOST_CONTRACT_EXT_PP_TRAITS_ELEM( \
-            BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_AUX_EXTERN_INDEX, traits)()
+    BOOST_CONTRACT_EXT_PP_TRAITS_AUX_ELEM( \
+            BOOST_CONTRACT_EXT_PP_TRAITS_AUX_INDEX_FUNC_EXTERN, traits)()
 
 // Expand to `explicit | EMPTY()`.
 #define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_EXPLICIT(traits) \
-    BOOST_CONTRACT_EXT_PP_TRAITS_ELEM( \
-            BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_AUX_EXPLICIT_INDEX, traits)()
+    BOOST_CONTRACT_EXT_PP_TRAITS_AUX_ELEM( \
+            BOOST_CONTRACT_EXT_PP_TRAITS_AUX_INDEX_FUNC_EXPLICIT, traits)()
 
 // Expand to `virtual | EMPTY()`.
 #define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_VIRTUAL(traits) \
-    BOOST_CONTRACT_EXT_PP_TRAITS_ELEM( \
-            BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_AUX_VIRTUAL_INDEX, traits)()
+    BOOST_CONTRACT_EXT_PP_TRAITS_AUX_ELEM( \
+            BOOST_CONTRACT_EXT_PP_TRAITS_AUX_INDEX_FUNC_VIRTUAL, traits)()
 
 // Expand to `friend | EMPTY()`.
 #define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_FRIEND(traits) \
-    BOOST_CONTRACT_EXT_PP_TRAITS_ELEM( \
-            BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_AUX_FRIEND_INDEX, traits)()
+    BOOST_CONTRACT_EXT_PP_TRAITS_AUX_ELEM( \
+            BOOST_CONTRACT_EXT_PP_TRAITS_AUX_INDEX_FUNC_FRIEND, traits)()
 
 // NOTE: In general, function classifiers `inline static extern explicit virtual
 // friend` can appear in most any order (so they are parsed all together here).
 #define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_CLASSIFIERS_PARSE_D(d, decl_traits) \
-    BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_CLASSIFIERS_PRASE_ARGS_( \
-        d, \
+    BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_CLASSIFIERS_PRASE_ARGS_(d, \
         BOOST_PP_TUPLE_ELEM(2, 0, decl_traits), \
         BOOST_PP_TUPLE_ELEM(2, 1, decl_traits) \
     )
@@ -99,12 +98,12 @@
         decl, traits, inline_, static_, extern_, explicit_, virtual_, friend_) \
     ( \
         decl, \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK( \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK( \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK( \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK( \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK( \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK( \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_PUSH_BACK( \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_PUSH_BACK( \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_PUSH_BACK( \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_PUSH_BACK( \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_PUSH_BACK( \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_PUSH_BACK( \
             traits, \
             BOOST_PP_EXPR_IIF(inline_, inline) BOOST_PP_EMPTY), \
             BOOST_PP_EXPR_IIF(static_, static) BOOST_PP_EMPTY), \

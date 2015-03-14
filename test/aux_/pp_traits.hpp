@@ -2,7 +2,7 @@
 #ifndef BOOST_CONTRACT_TEST_AUX_PP_TRAITS_HPP_
 #define BOOST_CONTRACT_TEST_AUX_PP_TRAITS_HPP_
 
-#include <boost/contract/ext_/preprocessor/traits/utility/traits.hpp>
+#include <boost/contract/ext_/preprocessor/traits/aux_/adt.hpp>
 #include <boost/contract/ext_/preprocessor/utility/nil.hpp>
 #include <boost/contract/ext_/preprocessor/stringize.hpp>
 #include <boost/preprocessor/stringize.hpp>
@@ -25,7 +25,7 @@
         parsed_trait \
     ) \
         BOOST_CONTRACT_TEST_AUX_PP_TRAITS_( \
-            BOOST_CONTRACT_EXT_PP_DECL_TRAITS_DONE(traits_parse_macro(1, \
+            BOOST_CONTRACT_EXT_PP_DECL_TRAITS_AUX_DONE(traits_parse_macro(1, \
                     decl_before_trait decl_at_trait decl_after_trait)), \
             traits_elem_macro, \
             parsed_trait, \

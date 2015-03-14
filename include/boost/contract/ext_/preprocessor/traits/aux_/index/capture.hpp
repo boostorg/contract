@@ -1,0 +1,11 @@
+
+#ifndef BOOST_CONTRACT_EXT_PP_TRAITS_AUX_INDEX_CAPTURE_HPP_
+#define BOOST_CONTRACT_EXT_PP_TRAITS_AUX_INDEX_CAPTURE_HPP_
+
+// WARNING: These index values must match parsing oder (see capture.hpp).
+
+#define BOOST_CONTRACT_EXT_PP_TRAITS_AUX_INDEX_CAPTURE_TYPE 0
+#define BOOST_CONTRACT_EXT_PP_TRAITS_AUX_INDEX_CAPTURE_NAME 1
+
+#endif // #include guard
+

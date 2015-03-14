@@ -3,10 +3,10 @@
 #define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_POSTCONDITIONS_HPP_
 
 #include <boost/contract/ext_/preprocessor/traits/assertion.hpp>
-#include <boost/contract/ext_/preprocessor/traits/aux_/func_index.hpp>
+#include <boost/contract/ext_/preprocessor/traits/aux_/index/func.hpp>
 #include <boost/contract/ext_/preprocessor/traits/aux_/keyword_list.hpp>
 #include <boost/contract/ext_/preprocessor/traits/aux_/list.hpp>
-#include <boost/contract/ext_/preprocessor/traits/utility/traits.hpp>
+#include <boost/contract/ext_/preprocessor/traits/aux_/adt.hpp>
 #include <boost/contract/ext_/preprocessor/keyword/contract/postcondition.hpp>
 #include <boost/preprocessor/facilities/empty.hpp>
 
@@ -15,8 +15,8 @@
 // Expand to pp-seq of postcondition assertion traits to be inspected via
 // ASSERTION_TRAITS macro, or to EMPTY() if no postconditions.
 #define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_POSTCONDITIONS(traits) \
-    BOOST_CONTRACT_EXT_PP_TRAITS_ELEM( \
-        BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_AUX_POSTCONDITIONS_INDEX, traits \
+    BOOST_CONTRACT_EXT_PP_TRAITS_AUX_ELEM( \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_INDEX_FUNC_POSTCONDITIONS, traits \
     )()
 
 #define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_POSTCONDITIONS_PARSE_D( \

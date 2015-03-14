@@ -7,7 +7,7 @@
 #include <boost/contract/ext_/preprocessor/traits/assertion/oldof/expr.hpp>
 #include <boost/contract/ext_/preprocessor/traits/assertion/bool/expr.hpp>
 #include <boost/contract/ext_/preprocessor/traits/assertion/key.hpp>
-#include <boost/contract/ext_/preprocessor/traits/utility/traits.hpp>
+#include <boost/contract/ext_/preprocessor/traits/aux_/adt.hpp>
 #include <boost/contract/ext_/preprocessor/keyword/utility/is.hpp>
 #include <boost/contract/ext_/preprocessor/keyword/utility/remove.hpp>
 
@@ -51,13 +51,13 @@
 // to the parsalbe decl = `(OLDOF expr) auto-wrapped-type assign =`).
 #define BOOST_CONTRACT_EXT_PP_OLDOF_ASSERTION_TRAITS_REPLACE_PARSE_D( \
         d, oldofdecl_booltraits) \
-    BOOST_CONTRACT_EXT_PP_DECL_TRAITS_DONE( \
+    BOOST_CONTRACT_EXT_PP_DECL_TRAITS_AUX_DONE( \
     BOOST_CONTRACT_EXT_PP_OLDOF_ASSERTION_TRAITS_ASSIGN_PARSE( \
     BOOST_CONTRACT_EXT_PP_OLDOF_ASSERTION_TRAITS_TYPE_PARSE_D(d, \
     BOOST_CONTRACT_EXT_PP_OLDOF_ASSERTION_TRAITS_EXPR_PARSE( \
     BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_SET_KEY_PARSE( \
             BOOST_CONTRACT_EXT_PP_OLDOF_ASSERTION_TRAITS_OPERATOR_, \
-    BOOST_CONTRACT_EXT_PP_DECL_TRAITS_INIT( \
+    BOOST_CONTRACT_EXT_PP_DECL_TRAITS_AUX_INIT( \
         (BOOST_PP_TUPLE_ELEM(2, 0, oldofdecl_booltraits)) \
         BOOST_CONTRACT_EXT_PP_BOOL_ASSERTION_TRAITS_EXPR( \
                 BOOST_PP_TUPLE_ELEM(2, 1, oldofdecl_booltraits)) \

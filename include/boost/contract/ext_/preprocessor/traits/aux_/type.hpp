@@ -2,7 +2,6 @@
 #ifndef BOOST_CONTRACT_EXT_PP_TRAITS_AUX_TYPE_HPP_
 #define BOOST_CONTRACT_EXT_PP_TRAITS_AUX_TYPE_HPP_
 
-#include <boost/contract/ext_/preprocessor/traits/utility/traits.hpp>
 #include <boost/contract/ext_/preprocessor/keyword/auto.hpp>
 #include <boost/contract/ext_/preprocessor/keyword/register.hpp>
 #include <boost/contract/ext_/preprocessor/keyword/const.hpp>
@@ -23,7 +22,6 @@
 #include <boost/contract/ext_/preprocessor/keyword/decltype.hpp>
 #include <boost/contract/ext_/preprocessor/paren/has.hpp>
 #include <boost/contract/ext_/preprocessor/paren/front.hpp>
-#include <boost/contract/ext_/preprocessor/utility/nil.hpp>
 #include <boost/contract/ext_/preprocessor/utility/nil.hpp>
 #include <boost/preprocessor/control/iif.hpp>
 #include <boost/preprocessor/control/while.hpp>

@@ -5,7 +5,7 @@
 #include <boost/contract/ext_/preprocessor/traits/assertion/return/assign.hpp>
 #include <boost/contract/ext_/preprocessor/traits/assertion/return/type.hpp>
 #include <boost/contract/ext_/preprocessor/traits/assertion/key.hpp>
-#include <boost/contract/ext_/preprocessor/traits/utility/traits.hpp>
+#include <boost/contract/ext_/preprocessor/traits/aux_/adt.hpp>
 
 /* PUBLIC */
 
@@ -13,11 +13,11 @@
 
 // Precondition: decl = `typedef wrapped-type new-name`.
 #define BOOST_CONTRACT_EXT_PP_RETURN_ASSERTION_TRAITS_PARSE_D(d, decl) \
-    BOOST_CONTRACT_EXT_PP_DECL_TRAITS_DONE( \
+    BOOST_CONTRACT_EXT_PP_DECL_TRAITS_AUX_DONE( \
     BOOST_CONTRACT_EXT_PP_RETURN_ASSERTION_TRAITS_ASSIGN_PARSE( \
     BOOST_CONTRACT_EXT_PP_RETURN_ASSERTION_TRAITS_TYPE_PARSE_D(d, \
     BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_SET_KEY_PARSE(return, \
-    BOOST_CONTRACT_EXT_PP_DECL_TRAITS_INIT( \
+    BOOST_CONTRACT_EXT_PP_DECL_TRAITS_AUX_INIT( \
         decl BOOST_PP_NIL \
     )))))
 

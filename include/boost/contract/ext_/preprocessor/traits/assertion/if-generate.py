@@ -71,7 +71,7 @@ BOOST_CONTRACT_EXT_PP_POST_IF_ASSERTION_TRAITS_REPLACE_ELSES_PARSE_D_L_{0}( \\
 
 #define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_PARSE_D_L_{0}_( \\
         d, l, is_post, is_static, decl) \\
-    BOOST_CONTRACT_EXT_PP_DECL_TRAITS_DONE( \\
+    BOOST_CONTRACT_EXT_PP_DECL_TRAITS_AUX_DONE( \\
     BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ELSES_PARSE_D_L_{0}( \\
             d, l, is_post, \\
     BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_THENS_PARSE_D_L_{0}( \\
@@ -80,7 +80,7 @@ BOOST_CONTRACT_EXT_PP_POST_IF_ASSERTION_TRAITS_REPLACE_ELSES_PARSE_D_L_{0}( \\
             d, l, is_static, \\
     BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_SET_KEY_PARSE( \\
             BOOST_PP_EXPR_IIF(is_static, static) if, \\
-    BOOST_CONTRACT_EXT_PP_DECL_TRAITS_INIT( \\
+    BOOST_CONTRACT_EXT_PP_DECL_TRAITS_AUX_INIT( \\
         decl BOOST_PP_NIL \\
     ))))))
 
@@ -104,7 +104,7 @@ BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_REPLACE_ELSES_PARSE_YES_{0}_( \\
         d, l, is_post, decl_traits) \\
     BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ELSES_ARGS_{0}_(d, l, is_post, \\
         BOOST_PP_TUPLE_ELEM(2, 0, decl_traits) BOOST_PP_NIL, \\
-        BOOST_CONTRACT_EXT_PP_TRAITS_POP_BACK( \\
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_POP_BACK( \\
                 BOOST_PP_TUPLE_ELEM(2, 1, decl_traits)) \\
     )
 
@@ -120,7 +120,7 @@ BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_REPLACE_ELSES_PARSE_YES_{0}_( \\
         d, l, is_static, decl, traits) \\
     ( \\
         BOOST_PP_TUPLE_EAT(0) decl, \\
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK( \\
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_PUSH_BACK( \\
             traits, \\
             BOOST_PP_TUPLE_ELEM(2, 1, \\
                 BOOST_PP_IIF(is_static, \\
@@ -182,7 +182,7 @@ BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_REPLACE_ELSES_PARSE_YES_{0}_( \\
 
 #define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTIONS_NO_{0}_( \\
         d, l, is_post, decl, traits) \\
-    (decl, BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK(traits, BOOST_PP_EMPTY))
+    (decl, BOOST_CONTRACT_EXT_PP_TRAITS_AUX_PUSH_BACK(traits, BOOST_PP_EMPTY))
      
 // Precondition: decl = `assertion BOOST_PP_NIL` (single assertion).
 #define BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_ASSERTION_YES_{0}_( \\
@@ -200,7 +200,7 @@ BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_REPLACE_ELSES_PARSE_YES_{0}_( \\
         d, l, decl_assertion, traits) \\
     ( \\
         BOOST_PP_TUPLE_ELEM(2, 0, decl_assertion), \\
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK(traits, \\
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_PUSH_BACK(traits, \\
                 ( BOOST_PP_TUPLE_ELEM(2, 1, decl_assertion) ) BOOST_PP_EMPTY) \\
     )
 
@@ -217,7 +217,7 @@ BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_REPLACE_ELSES_PARSE_YES_{0}_( \\
         d, l, decl, traits) \\
     ( \\
         BOOST_PP_TUPLE_EAT(0) decl, \\
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK( \\
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_PUSH_BACK( \\
             traits, \\
             BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_EXPAND_TRAITS_{0}_( \\
                 BOOST_CONTRACT_EXT_PP_TRAITS_AUX_ENUM_LIST_PARSE_D_ ## l(d, \\
@@ -234,7 +234,7 @@ BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_REPLACE_ELSES_PARSE_YES_{0}_( \\
         d, l, decl, traits) \\
     ( \\
         BOOST_PP_TUPLE_EAT(0) decl, \\
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK( \\
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_PUSH_BACK( \\
             traits, \\
             BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_EXPAND_TRAITS_{0}_( \\
                 BOOST_CONTRACT_EXT_PP_TRAITS_AUX_ENUM_LIST_PARSE_D_ ## l(d, \\
@@ -269,7 +269,7 @@ file.write('''
 #include <boost/contract/ext_/preprocessor/traits/assertion/if/thens.hpp>
 #include <boost/contract/ext_/preprocessor/traits/assertion/if/elses.hpp>
 #include <boost/contract/ext_/preprocessor/traits/aux_/list.hpp>
-#include <boost/contract/ext_/preprocessor/traits/utility/traits.hpp>
+#include <boost/contract/ext_/preprocessor/traits/aux_/adt.hpp>
 #include <boost/contract/ext_/preprocessor/keyword/if.hpp>
 #include <boost/contract/ext_/preprocessor/keyword/else.hpp>
 #include <boost/contract/ext_/preprocessor/keyword/static.hpp>

@@ -4,16 +4,17 @@
 
 #include <boost/contract/ext_/preprocessor/traits/capture/name.hpp>
 #include <boost/contract/ext_/preprocessor/traits/capture/type.hpp>
-#include <boost/contract/ext_/preprocessor/traits/utility/traits.hpp>
+#include <boost/contract/ext_/preprocessor/traits/aux_/adt.hpp>
+#include <boost/contract/ext_/preprocessor/traits/aux_/adt.hpp>
 
 /* PUBLIC */
 
 // Precondition: decl = `[wrapped-type] name`.
 #define BOOST_CONTRACT_EXT_PP_CAPTURE_TRAITS_PARSE_D_L(d, l, decl) \
-    BOOST_CONTRACT_EXT_PP_DECL_TRAITS_DONE( \
+    BOOST_CONTRACT_EXT_PP_DECL_TRAITS_AUX_DONE( \
     BOOST_CONTRACT_EXT_PP_CAPTURE_TRAITS_NAME_PARSE( \
     BOOST_CONTRACT_EXT_PP_CAPTURE_TRAITS_TYPE_PARSE_D(d, \
-    BOOST_CONTRACT_EXT_PP_DECL_TRAITS_INIT( \
+    BOOST_CONTRACT_EXT_PP_DECL_TRAITS_AUX_INIT( \
         decl BOOST_PP_NIL \
     ))))
 

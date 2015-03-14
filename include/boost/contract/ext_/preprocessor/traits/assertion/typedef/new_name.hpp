@@ -2,8 +2,8 @@
 #ifndef BOOST_CONTRACT_EXT_PP_TYPEDEF_ASSERTION_TRAITS_NEW_NAME_HPP_
 #define BOOST_CONTRACT_EXT_PP_TYPEDEF_ASSERTION_TRAITS_NEW_NAME_HPP_
 
-#include <boost/contract/ext_/preprocessor/traits/utility/traits.hpp>
-#include <boost/contract/ext_/preprocessor/traits/aux_/assertion_index.hpp>
+#include <boost/contract/ext_/preprocessor/traits/aux_/index/assertion.hpp>
+#include <boost/contract/ext_/preprocessor/traits/aux_/adt.hpp>
 #include <boost/contract/ext_/preprocessor/utility/nil.hpp>
 #include <boost/preprocessor/facilities/expand.hpp>
 
@@ -11,8 +11,8 @@
 
 // Expand to `new-name`.
 #define BOOST_CONTRACT_EXT_PP_TYPEDEF_ASSERTION_TRAITS_NEW_NAME(traits) \
-    BOOST_CONTRACT_EXT_PP_TRAITS_ELEM( \
-        BOOST_CONTRACT_EXT_PP_TYPEDEF_ASSERTION_TRAITS_AUX_NEW_NAME_INDEX, \
+    BOOST_CONTRACT_EXT_PP_TRAITS_AUX_ELEM( \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_INDEX_TYPEDEF_ASSERTION_NEW_NAME, \
         traits \
     )
 
@@ -30,7 +30,7 @@
         decl, traits) \
     ( \
         BOOST_PP_NIL, \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK(traits, \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_PUSH_BACK(traits, \
                 BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK(decl)) \
     )
 

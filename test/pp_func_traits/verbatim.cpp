@@ -4,8 +4,10 @@
 #   error "this compiler does not support variadic macros"
 #else
 
+#include <boost/contract/ext_/preprocessor/traits/aux_/index/func.hpp>
 #define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_AUX_INDEX_TEST \
-    BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_AUX_VERBATIM_INDEX
+    BOOST_CONTRACT_EXT_PP_TRAITS_AUX_INDEX_FUNC_VERBATIM
+
 #include "../aux_/pp_traits.hpp"
 #include <boost/contract/ext_/preprocessor/traits/func.hpp>
 #include <boost/contract/ext_/preprocessor/keyword/contract/verbatim.hpp>

@@ -3,10 +3,10 @@
 #define BOOST_CONTRACT_EXT_PP_CLASS_TRAITS_TEMPLATE_HPP_
 
 #include <boost/contract/ext_/preprocessor/traits/param.hpp>
-#include <boost/contract/ext_/preprocessor/traits/aux_/class_index.hpp>
+#include <boost/contract/ext_/preprocessor/traits/aux_/index/class.hpp>
 #include <boost/contract/ext_/preprocessor/traits/aux_/keyword_list.hpp>
 #include <boost/contract/ext_/preprocessor/traits/aux_/list.hpp>
-#include <boost/contract/ext_/preprocessor/traits/utility/traits.hpp>
+#include <boost/contract/ext_/preprocessor/traits/aux_/adt.hpp>
 #include <boost/contract/ext_/preprocessor/keyword/template.hpp>
 #include <boost/contract/ext_/preprocessor/keyword/default.hpp>
 
@@ -14,14 +14,14 @@
 
 // Expand to `template | EMPTY()`.
 #define BOOST_CONTRACT_EXT_PP_CLASS_TRAITS_TEMPLATE(traits) \
-    BOOST_CONTRACT_EXT_PP_TRAITS_ELEM( \
-            BOOST_CONTRACT_EXT_PP_CLASS_TRAITS_AUX_TEMPLATE_INDEX, traits)()
+    BOOST_CONTRACT_EXT_PP_TRAITS_AUX_ELEM( \
+            BOOST_CONTRACT_EXT_PP_TRAITS_AUX_INDEX_CLASS_TEMPLATE, traits)()
 
 // Expand to EMPTY() if no class template parameters, otherwise expand to
 // pp-seq of param. traits (each pp-seq elem. to be inspected via PARAM_TRAITS).
 #define BOOST_CONTRACT_EXT_PP_CLASS_TRAITS_TEMPLATE_PARAMS(traits) \
-    BOOST_CONTRACT_EXT_PP_TRAITS_ELEM( \
-        BOOST_CONTRACT_EXT_PP_CLASS_TRAITS_AUX_TEMPLATE_PARAMS_INDEX, \
+    BOOST_CONTRACT_EXT_PP_TRAITS_AUX_ELEM( \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_INDEX_CLASS_TEMPLATE_PARAMS, \
         traits \
     )()
 

@@ -5,8 +5,7 @@
 // WARNING: FILE AUTOMATICALLY GENERATED, DO NOT MODIFY IT!
 // Instead, modify and run related generation script "list-generate.py".
 
-#include <boost/contract/ext_/preprocessor/traits/param.hpp>
-#include <boost/contract/ext_/preprocessor/traits/utility/traits.hpp>
+#include <boost/contract/ext_/preprocessor/traits/aux_/adt.hpp>
 #include <boost/contract/ext_/preprocessor/keyword/void.hpp>
 #include <boost/contract/ext_/preprocessor/utility/empty.hpp>
 #include <boost/contract/ext_/preprocessor/variadic/to_seq.hpp>
@@ -142,7 +141,7 @@
             BOOST_CONTRACT_EXT_PP_TRAITS_AUX_LIST_OP_1_, \
             ( \
                 decl_seq (BOOST_PP_NIL), \
-                BOOST_CONTRACT_EXT_PP_TRAITS_INIT, \
+                BOOST_CONTRACT_EXT_PP_TRAITS_AUX_INIT, \
                 parse_elem_macro, \
                 is_replacement_macro, \
                 replace_elem_macro \
@@ -154,7 +153,7 @@
         decl_traits_parse_is_replace) \
     ( \
         BOOST_PP_TUPLE_ELEM(5, 0, decl_traits_parse_is_replace), \
-        BOOST_CONTRACT_EXT_PP_TRAITS_DONE(BOOST_PP_TUPLE_ELEM(5, 1, \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_DONE(BOOST_PP_TUPLE_ELEM(5, 1, \
                 decl_traits_parse_is_replace)) BOOST_PP_EMPTY \
     )
 
@@ -197,9 +196,9 @@
         traits, parse_elem_macro, is_replacement_macro, replace_elem_macro) \
     BOOST_CONTRACT_EXT_PP_TRAITS_AUX_LIST_PUSH_BACK_1_(d, \
         BOOST_PP_SEQ_TAIL(decl_seq), \
-        BOOST_CONTRACT_EXT_PP_TRAITS_POP_BACK(traits), \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_POP_BACK(traits), \
         replace_elem_macro(d, 2, (BOOST_PP_SEQ_HEAD(decl_seq), \
-                BOOST_CONTRACT_EXT_PP_TRAITS_BACK(traits))), \
+                BOOST_CONTRACT_EXT_PP_TRAITS_AUX_BACK(traits))), \
         parse_elem_macro, \
         is_replacement_macro, \
         replace_elem_macro \
@@ -217,7 +216,7 @@
             BOOST_PP_SEQ_PUSH_FRONT \
         )(decl_seq, BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK( \
                 BOOST_PP_TUPLE_ELEM(2, 0, elemdecl_elemtraits))), \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK(traits, \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_PUSH_BACK(traits, \
                 BOOST_PP_TUPLE_ELEM(2, 1, elemdecl_elemtraits)), \
         parse_elem_macro, \
         is_replacement_macro, \
@@ -296,7 +295,7 @@
             BOOST_CONTRACT_EXT_PP_TRAITS_AUX_LIST_OP_2_, \
             ( \
                 decl_seq (BOOST_PP_NIL), \
-                BOOST_CONTRACT_EXT_PP_TRAITS_INIT, \
+                BOOST_CONTRACT_EXT_PP_TRAITS_AUX_INIT, \
                 parse_elem_macro, \
                 is_replacement_macro, \
                 replace_elem_macro \
@@ -308,7 +307,7 @@
         decl_traits_parse_is_replace) \
     ( \
         BOOST_PP_TUPLE_ELEM(5, 0, decl_traits_parse_is_replace), \
-        BOOST_CONTRACT_EXT_PP_TRAITS_DONE(BOOST_PP_TUPLE_ELEM(5, 1, \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_DONE(BOOST_PP_TUPLE_ELEM(5, 1, \
                 decl_traits_parse_is_replace)) BOOST_PP_EMPTY \
     )
 
@@ -351,9 +350,9 @@
         traits, parse_elem_macro, is_replacement_macro, replace_elem_macro) \
     BOOST_CONTRACT_EXT_PP_TRAITS_AUX_LIST_PUSH_BACK_2_(d, \
         BOOST_PP_SEQ_TAIL(decl_seq), \
-        BOOST_CONTRACT_EXT_PP_TRAITS_POP_BACK(traits), \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_POP_BACK(traits), \
         replace_elem_macro(d, 3, (BOOST_PP_SEQ_HEAD(decl_seq), \
-                BOOST_CONTRACT_EXT_PP_TRAITS_BACK(traits))), \
+                BOOST_CONTRACT_EXT_PP_TRAITS_AUX_BACK(traits))), \
         parse_elem_macro, \
         is_replacement_macro, \
         replace_elem_macro \
@@ -371,7 +370,7 @@
             BOOST_PP_SEQ_PUSH_FRONT \
         )(decl_seq, BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK( \
                 BOOST_PP_TUPLE_ELEM(2, 0, elemdecl_elemtraits))), \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK(traits, \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_PUSH_BACK(traits, \
                 BOOST_PP_TUPLE_ELEM(2, 1, elemdecl_elemtraits)), \
         parse_elem_macro, \
         is_replacement_macro, \
@@ -450,7 +449,7 @@
             BOOST_CONTRACT_EXT_PP_TRAITS_AUX_LIST_OP_3_, \
             ( \
                 decl_seq (BOOST_PP_NIL), \
-                BOOST_CONTRACT_EXT_PP_TRAITS_INIT, \
+                BOOST_CONTRACT_EXT_PP_TRAITS_AUX_INIT, \
                 parse_elem_macro, \
                 is_replacement_macro, \
                 replace_elem_macro \
@@ -462,7 +461,7 @@
         decl_traits_parse_is_replace) \
     ( \
         BOOST_PP_TUPLE_ELEM(5, 0, decl_traits_parse_is_replace), \
-        BOOST_CONTRACT_EXT_PP_TRAITS_DONE(BOOST_PP_TUPLE_ELEM(5, 1, \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_DONE(BOOST_PP_TUPLE_ELEM(5, 1, \
                 decl_traits_parse_is_replace)) BOOST_PP_EMPTY \
     )
 
@@ -505,9 +504,9 @@
         traits, parse_elem_macro, is_replacement_macro, replace_elem_macro) \
     BOOST_CONTRACT_EXT_PP_TRAITS_AUX_LIST_PUSH_BACK_3_(d, \
         BOOST_PP_SEQ_TAIL(decl_seq), \
-        BOOST_CONTRACT_EXT_PP_TRAITS_POP_BACK(traits), \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_POP_BACK(traits), \
         replace_elem_macro(d, 4, (BOOST_PP_SEQ_HEAD(decl_seq), \
-                BOOST_CONTRACT_EXT_PP_TRAITS_BACK(traits))), \
+                BOOST_CONTRACT_EXT_PP_TRAITS_AUX_BACK(traits))), \
         parse_elem_macro, \
         is_replacement_macro, \
         replace_elem_macro \
@@ -525,7 +524,7 @@
             BOOST_PP_SEQ_PUSH_FRONT \
         )(decl_seq, BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK( \
                 BOOST_PP_TUPLE_ELEM(2, 0, elemdecl_elemtraits))), \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK(traits, \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_PUSH_BACK(traits, \
                 BOOST_PP_TUPLE_ELEM(2, 1, elemdecl_elemtraits)), \
         parse_elem_macro, \
         is_replacement_macro, \
@@ -604,7 +603,7 @@
             BOOST_CONTRACT_EXT_PP_TRAITS_AUX_LIST_OP_4_, \
             ( \
                 decl_seq (BOOST_PP_NIL), \
-                BOOST_CONTRACT_EXT_PP_TRAITS_INIT, \
+                BOOST_CONTRACT_EXT_PP_TRAITS_AUX_INIT, \
                 parse_elem_macro, \
                 is_replacement_macro, \
                 replace_elem_macro \
@@ -616,7 +615,7 @@
         decl_traits_parse_is_replace) \
     ( \
         BOOST_PP_TUPLE_ELEM(5, 0, decl_traits_parse_is_replace), \
-        BOOST_CONTRACT_EXT_PP_TRAITS_DONE(BOOST_PP_TUPLE_ELEM(5, 1, \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_DONE(BOOST_PP_TUPLE_ELEM(5, 1, \
                 decl_traits_parse_is_replace)) BOOST_PP_EMPTY \
     )
 
@@ -659,9 +658,9 @@
         traits, parse_elem_macro, is_replacement_macro, replace_elem_macro) \
     BOOST_CONTRACT_EXT_PP_TRAITS_AUX_LIST_PUSH_BACK_4_(d, \
         BOOST_PP_SEQ_TAIL(decl_seq), \
-        BOOST_CONTRACT_EXT_PP_TRAITS_POP_BACK(traits), \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_POP_BACK(traits), \
         replace_elem_macro(d, 5, (BOOST_PP_SEQ_HEAD(decl_seq), \
-                BOOST_CONTRACT_EXT_PP_TRAITS_BACK(traits))), \
+                BOOST_CONTRACT_EXT_PP_TRAITS_AUX_BACK(traits))), \
         parse_elem_macro, \
         is_replacement_macro, \
         replace_elem_macro \
@@ -679,7 +678,7 @@
             BOOST_PP_SEQ_PUSH_FRONT \
         )(decl_seq, BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK( \
                 BOOST_PP_TUPLE_ELEM(2, 0, elemdecl_elemtraits))), \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK(traits, \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_PUSH_BACK(traits, \
                 BOOST_PP_TUPLE_ELEM(2, 1, elemdecl_elemtraits)), \
         parse_elem_macro, \
         is_replacement_macro, \
@@ -758,7 +757,7 @@
             BOOST_CONTRACT_EXT_PP_TRAITS_AUX_LIST_OP_5_, \
             ( \
                 decl_seq (BOOST_PP_NIL), \
-                BOOST_CONTRACT_EXT_PP_TRAITS_INIT, \
+                BOOST_CONTRACT_EXT_PP_TRAITS_AUX_INIT, \
                 parse_elem_macro, \
                 is_replacement_macro, \
                 replace_elem_macro \
@@ -770,7 +769,7 @@
         decl_traits_parse_is_replace) \
     ( \
         BOOST_PP_TUPLE_ELEM(5, 0, decl_traits_parse_is_replace), \
-        BOOST_CONTRACT_EXT_PP_TRAITS_DONE(BOOST_PP_TUPLE_ELEM(5, 1, \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_DONE(BOOST_PP_TUPLE_ELEM(5, 1, \
                 decl_traits_parse_is_replace)) BOOST_PP_EMPTY \
     )
 
@@ -813,9 +812,9 @@
         traits, parse_elem_macro, is_replacement_macro, replace_elem_macro) \
     BOOST_CONTRACT_EXT_PP_TRAITS_AUX_LIST_PUSH_BACK_5_(d, \
         BOOST_PP_SEQ_TAIL(decl_seq), \
-        BOOST_CONTRACT_EXT_PP_TRAITS_POP_BACK(traits), \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_POP_BACK(traits), \
         replace_elem_macro(d, 6, (BOOST_PP_SEQ_HEAD(decl_seq), \
-                BOOST_CONTRACT_EXT_PP_TRAITS_BACK(traits))), \
+                BOOST_CONTRACT_EXT_PP_TRAITS_AUX_BACK(traits))), \
         parse_elem_macro, \
         is_replacement_macro, \
         replace_elem_macro \
@@ -833,7 +832,7 @@
             BOOST_PP_SEQ_PUSH_FRONT \
         )(decl_seq, BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK( \
                 BOOST_PP_TUPLE_ELEM(2, 0, elemdecl_elemtraits))), \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK(traits, \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_PUSH_BACK(traits, \
                 BOOST_PP_TUPLE_ELEM(2, 1, elemdecl_elemtraits)), \
         parse_elem_macro, \
         is_replacement_macro, \
@@ -912,7 +911,7 @@
             BOOST_CONTRACT_EXT_PP_TRAITS_AUX_LIST_OP_6_, \
             ( \
                 decl_seq (BOOST_PP_NIL), \
-                BOOST_CONTRACT_EXT_PP_TRAITS_INIT, \
+                BOOST_CONTRACT_EXT_PP_TRAITS_AUX_INIT, \
                 parse_elem_macro, \
                 is_replacement_macro, \
                 replace_elem_macro \
@@ -924,7 +923,7 @@
         decl_traits_parse_is_replace) \
     ( \
         BOOST_PP_TUPLE_ELEM(5, 0, decl_traits_parse_is_replace), \
-        BOOST_CONTRACT_EXT_PP_TRAITS_DONE(BOOST_PP_TUPLE_ELEM(5, 1, \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_DONE(BOOST_PP_TUPLE_ELEM(5, 1, \
                 decl_traits_parse_is_replace)) BOOST_PP_EMPTY \
     )
 
@@ -967,9 +966,9 @@
         traits, parse_elem_macro, is_replacement_macro, replace_elem_macro) \
     BOOST_CONTRACT_EXT_PP_TRAITS_AUX_LIST_PUSH_BACK_6_(d, \
         BOOST_PP_SEQ_TAIL(decl_seq), \
-        BOOST_CONTRACT_EXT_PP_TRAITS_POP_BACK(traits), \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_POP_BACK(traits), \
         replace_elem_macro(d, 7, (BOOST_PP_SEQ_HEAD(decl_seq), \
-                BOOST_CONTRACT_EXT_PP_TRAITS_BACK(traits))), \
+                BOOST_CONTRACT_EXT_PP_TRAITS_AUX_BACK(traits))), \
         parse_elem_macro, \
         is_replacement_macro, \
         replace_elem_macro \
@@ -987,7 +986,7 @@
             BOOST_PP_SEQ_PUSH_FRONT \
         )(decl_seq, BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK( \
                 BOOST_PP_TUPLE_ELEM(2, 0, elemdecl_elemtraits))), \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK(traits, \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_PUSH_BACK(traits, \
                 BOOST_PP_TUPLE_ELEM(2, 1, elemdecl_elemtraits)), \
         parse_elem_macro, \
         is_replacement_macro, \
@@ -1066,7 +1065,7 @@
             BOOST_CONTRACT_EXT_PP_TRAITS_AUX_LIST_OP_7_, \
             ( \
                 decl_seq (BOOST_PP_NIL), \
-                BOOST_CONTRACT_EXT_PP_TRAITS_INIT, \
+                BOOST_CONTRACT_EXT_PP_TRAITS_AUX_INIT, \
                 parse_elem_macro, \
                 is_replacement_macro, \
                 replace_elem_macro \
@@ -1078,7 +1077,7 @@
         decl_traits_parse_is_replace) \
     ( \
         BOOST_PP_TUPLE_ELEM(5, 0, decl_traits_parse_is_replace), \
-        BOOST_CONTRACT_EXT_PP_TRAITS_DONE(BOOST_PP_TUPLE_ELEM(5, 1, \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_DONE(BOOST_PP_TUPLE_ELEM(5, 1, \
                 decl_traits_parse_is_replace)) BOOST_PP_EMPTY \
     )
 
@@ -1121,9 +1120,9 @@
         traits, parse_elem_macro, is_replacement_macro, replace_elem_macro) \
     BOOST_CONTRACT_EXT_PP_TRAITS_AUX_LIST_PUSH_BACK_7_(d, \
         BOOST_PP_SEQ_TAIL(decl_seq), \
-        BOOST_CONTRACT_EXT_PP_TRAITS_POP_BACK(traits), \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_POP_BACK(traits), \
         replace_elem_macro(d, 8, (BOOST_PP_SEQ_HEAD(decl_seq), \
-                BOOST_CONTRACT_EXT_PP_TRAITS_BACK(traits))), \
+                BOOST_CONTRACT_EXT_PP_TRAITS_AUX_BACK(traits))), \
         parse_elem_macro, \
         is_replacement_macro, \
         replace_elem_macro \
@@ -1141,7 +1140,7 @@
             BOOST_PP_SEQ_PUSH_FRONT \
         )(decl_seq, BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK( \
                 BOOST_PP_TUPLE_ELEM(2, 0, elemdecl_elemtraits))), \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK(traits, \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_PUSH_BACK(traits, \
                 BOOST_PP_TUPLE_ELEM(2, 1, elemdecl_elemtraits)), \
         parse_elem_macro, \
         is_replacement_macro, \
@@ -1220,7 +1219,7 @@
             BOOST_CONTRACT_EXT_PP_TRAITS_AUX_LIST_OP_8_, \
             ( \
                 decl_seq (BOOST_PP_NIL), \
-                BOOST_CONTRACT_EXT_PP_TRAITS_INIT, \
+                BOOST_CONTRACT_EXT_PP_TRAITS_AUX_INIT, \
                 parse_elem_macro, \
                 is_replacement_macro, \
                 replace_elem_macro \
@@ -1232,7 +1231,7 @@
         decl_traits_parse_is_replace) \
     ( \
         BOOST_PP_TUPLE_ELEM(5, 0, decl_traits_parse_is_replace), \
-        BOOST_CONTRACT_EXT_PP_TRAITS_DONE(BOOST_PP_TUPLE_ELEM(5, 1, \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_DONE(BOOST_PP_TUPLE_ELEM(5, 1, \
                 decl_traits_parse_is_replace)) BOOST_PP_EMPTY \
     )
 
@@ -1275,9 +1274,9 @@
         traits, parse_elem_macro, is_replacement_macro, replace_elem_macro) \
     BOOST_CONTRACT_EXT_PP_TRAITS_AUX_LIST_PUSH_BACK_8_(d, \
         BOOST_PP_SEQ_TAIL(decl_seq), \
-        BOOST_CONTRACT_EXT_PP_TRAITS_POP_BACK(traits), \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_POP_BACK(traits), \
         replace_elem_macro(d, 9, (BOOST_PP_SEQ_HEAD(decl_seq), \
-                BOOST_CONTRACT_EXT_PP_TRAITS_BACK(traits))), \
+                BOOST_CONTRACT_EXT_PP_TRAITS_AUX_BACK(traits))), \
         parse_elem_macro, \
         is_replacement_macro, \
         replace_elem_macro \
@@ -1295,7 +1294,7 @@
             BOOST_PP_SEQ_PUSH_FRONT \
         )(decl_seq, BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK( \
                 BOOST_PP_TUPLE_ELEM(2, 0, elemdecl_elemtraits))), \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK(traits, \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_PUSH_BACK(traits, \
                 BOOST_PP_TUPLE_ELEM(2, 1, elemdecl_elemtraits)), \
         parse_elem_macro, \
         is_replacement_macro, \
@@ -1374,7 +1373,7 @@
             BOOST_CONTRACT_EXT_PP_TRAITS_AUX_LIST_OP_9_, \
             ( \
                 decl_seq (BOOST_PP_NIL), \
-                BOOST_CONTRACT_EXT_PP_TRAITS_INIT, \
+                BOOST_CONTRACT_EXT_PP_TRAITS_AUX_INIT, \
                 parse_elem_macro, \
                 is_replacement_macro, \
                 replace_elem_macro \
@@ -1386,7 +1385,7 @@
         decl_traits_parse_is_replace) \
     ( \
         BOOST_PP_TUPLE_ELEM(5, 0, decl_traits_parse_is_replace), \
-        BOOST_CONTRACT_EXT_PP_TRAITS_DONE(BOOST_PP_TUPLE_ELEM(5, 1, \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_DONE(BOOST_PP_TUPLE_ELEM(5, 1, \
                 decl_traits_parse_is_replace)) BOOST_PP_EMPTY \
     )
 
@@ -1429,9 +1428,9 @@
         traits, parse_elem_macro, is_replacement_macro, replace_elem_macro) \
     BOOST_CONTRACT_EXT_PP_TRAITS_AUX_LIST_PUSH_BACK_9_(d, \
         BOOST_PP_SEQ_TAIL(decl_seq), \
-        BOOST_CONTRACT_EXT_PP_TRAITS_POP_BACK(traits), \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_POP_BACK(traits), \
         replace_elem_macro(d, 10, (BOOST_PP_SEQ_HEAD(decl_seq), \
-                BOOST_CONTRACT_EXT_PP_TRAITS_BACK(traits))), \
+                BOOST_CONTRACT_EXT_PP_TRAITS_AUX_BACK(traits))), \
         parse_elem_macro, \
         is_replacement_macro, \
         replace_elem_macro \
@@ -1449,7 +1448,7 @@
             BOOST_PP_SEQ_PUSH_FRONT \
         )(decl_seq, BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK( \
                 BOOST_PP_TUPLE_ELEM(2, 0, elemdecl_elemtraits))), \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK(traits, \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_PUSH_BACK(traits, \
                 BOOST_PP_TUPLE_ELEM(2, 1, elemdecl_elemtraits)), \
         parse_elem_macro, \
         is_replacement_macro, \
@@ -1528,7 +1527,7 @@
             BOOST_CONTRACT_EXT_PP_TRAITS_AUX_LIST_OP_10_, \
             ( \
                 decl_seq (BOOST_PP_NIL), \
-                BOOST_CONTRACT_EXT_PP_TRAITS_INIT, \
+                BOOST_CONTRACT_EXT_PP_TRAITS_AUX_INIT, \
                 parse_elem_macro, \
                 is_replacement_macro, \
                 replace_elem_macro \
@@ -1540,7 +1539,7 @@
         decl_traits_parse_is_replace) \
     ( \
         BOOST_PP_TUPLE_ELEM(5, 0, decl_traits_parse_is_replace), \
-        BOOST_CONTRACT_EXT_PP_TRAITS_DONE(BOOST_PP_TUPLE_ELEM(5, 1, \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_DONE(BOOST_PP_TUPLE_ELEM(5, 1, \
                 decl_traits_parse_is_replace)) BOOST_PP_EMPTY \
     )
 
@@ -1583,9 +1582,9 @@
         traits, parse_elem_macro, is_replacement_macro, replace_elem_macro) \
     BOOST_CONTRACT_EXT_PP_TRAITS_AUX_LIST_PUSH_BACK_10_(d, \
         BOOST_PP_SEQ_TAIL(decl_seq), \
-        BOOST_CONTRACT_EXT_PP_TRAITS_POP_BACK(traits), \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_POP_BACK(traits), \
         replace_elem_macro(d, 11, (BOOST_PP_SEQ_HEAD(decl_seq), \
-                BOOST_CONTRACT_EXT_PP_TRAITS_BACK(traits))), \
+                BOOST_CONTRACT_EXT_PP_TRAITS_AUX_BACK(traits))), \
         parse_elem_macro, \
         is_replacement_macro, \
         replace_elem_macro \
@@ -1603,7 +1602,7 @@
             BOOST_PP_SEQ_PUSH_FRONT \
         )(decl_seq, BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK( \
                 BOOST_PP_TUPLE_ELEM(2, 0, elemdecl_elemtraits))), \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK(traits, \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_PUSH_BACK(traits, \
                 BOOST_PP_TUPLE_ELEM(2, 1, elemdecl_elemtraits)), \
         parse_elem_macro, \
         is_replacement_macro, \
@@ -1682,7 +1681,7 @@
             BOOST_CONTRACT_EXT_PP_TRAITS_AUX_LIST_OP_11_, \
             ( \
                 decl_seq (BOOST_PP_NIL), \
-                BOOST_CONTRACT_EXT_PP_TRAITS_INIT, \
+                BOOST_CONTRACT_EXT_PP_TRAITS_AUX_INIT, \
                 parse_elem_macro, \
                 is_replacement_macro, \
                 replace_elem_macro \
@@ -1694,7 +1693,7 @@
         decl_traits_parse_is_replace) \
     ( \
         BOOST_PP_TUPLE_ELEM(5, 0, decl_traits_parse_is_replace), \
-        BOOST_CONTRACT_EXT_PP_TRAITS_DONE(BOOST_PP_TUPLE_ELEM(5, 1, \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_DONE(BOOST_PP_TUPLE_ELEM(5, 1, \
                 decl_traits_parse_is_replace)) BOOST_PP_EMPTY \
     )
 
@@ -1737,9 +1736,9 @@
         traits, parse_elem_macro, is_replacement_macro, replace_elem_macro) \
     BOOST_CONTRACT_EXT_PP_TRAITS_AUX_LIST_PUSH_BACK_11_(d, \
         BOOST_PP_SEQ_TAIL(decl_seq), \
-        BOOST_CONTRACT_EXT_PP_TRAITS_POP_BACK(traits), \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_POP_BACK(traits), \
         replace_elem_macro(d, 12, (BOOST_PP_SEQ_HEAD(decl_seq), \
-                BOOST_CONTRACT_EXT_PP_TRAITS_BACK(traits))), \
+                BOOST_CONTRACT_EXT_PP_TRAITS_AUX_BACK(traits))), \
         parse_elem_macro, \
         is_replacement_macro, \
         replace_elem_macro \
@@ -1757,7 +1756,7 @@
             BOOST_PP_SEQ_PUSH_FRONT \
         )(decl_seq, BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK( \
                 BOOST_PP_TUPLE_ELEM(2, 0, elemdecl_elemtraits))), \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK(traits, \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_PUSH_BACK(traits, \
                 BOOST_PP_TUPLE_ELEM(2, 1, elemdecl_elemtraits)), \
         parse_elem_macro, \
         is_replacement_macro, \
@@ -1836,7 +1835,7 @@
             BOOST_CONTRACT_EXT_PP_TRAITS_AUX_LIST_OP_12_, \
             ( \
                 decl_seq (BOOST_PP_NIL), \
-                BOOST_CONTRACT_EXT_PP_TRAITS_INIT, \
+                BOOST_CONTRACT_EXT_PP_TRAITS_AUX_INIT, \
                 parse_elem_macro, \
                 is_replacement_macro, \
                 replace_elem_macro \
@@ -1848,7 +1847,7 @@
         decl_traits_parse_is_replace) \
     ( \
         BOOST_PP_TUPLE_ELEM(5, 0, decl_traits_parse_is_replace), \
-        BOOST_CONTRACT_EXT_PP_TRAITS_DONE(BOOST_PP_TUPLE_ELEM(5, 1, \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_DONE(BOOST_PP_TUPLE_ELEM(5, 1, \
                 decl_traits_parse_is_replace)) BOOST_PP_EMPTY \
     )
 
@@ -1891,9 +1890,9 @@
         traits, parse_elem_macro, is_replacement_macro, replace_elem_macro) \
     BOOST_CONTRACT_EXT_PP_TRAITS_AUX_LIST_PUSH_BACK_12_(d, \
         BOOST_PP_SEQ_TAIL(decl_seq), \
-        BOOST_CONTRACT_EXT_PP_TRAITS_POP_BACK(traits), \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_POP_BACK(traits), \
         replace_elem_macro(d, 13, (BOOST_PP_SEQ_HEAD(decl_seq), \
-                BOOST_CONTRACT_EXT_PP_TRAITS_BACK(traits))), \
+                BOOST_CONTRACT_EXT_PP_TRAITS_AUX_BACK(traits))), \
         parse_elem_macro, \
         is_replacement_macro, \
         replace_elem_macro \
@@ -1911,7 +1910,7 @@
             BOOST_PP_SEQ_PUSH_FRONT \
         )(decl_seq, BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK( \
                 BOOST_PP_TUPLE_ELEM(2, 0, elemdecl_elemtraits))), \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK(traits, \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_PUSH_BACK(traits, \
                 BOOST_PP_TUPLE_ELEM(2, 1, elemdecl_elemtraits)), \
         parse_elem_macro, \
         is_replacement_macro, \
@@ -1990,7 +1989,7 @@
             BOOST_CONTRACT_EXT_PP_TRAITS_AUX_LIST_OP_13_, \
             ( \
                 decl_seq (BOOST_PP_NIL), \
-                BOOST_CONTRACT_EXT_PP_TRAITS_INIT, \
+                BOOST_CONTRACT_EXT_PP_TRAITS_AUX_INIT, \
                 parse_elem_macro, \
                 is_replacement_macro, \
                 replace_elem_macro \
@@ -2002,7 +2001,7 @@
         decl_traits_parse_is_replace) \
     ( \
         BOOST_PP_TUPLE_ELEM(5, 0, decl_traits_parse_is_replace), \
-        BOOST_CONTRACT_EXT_PP_TRAITS_DONE(BOOST_PP_TUPLE_ELEM(5, 1, \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_DONE(BOOST_PP_TUPLE_ELEM(5, 1, \
                 decl_traits_parse_is_replace)) BOOST_PP_EMPTY \
     )
 
@@ -2045,9 +2044,9 @@
         traits, parse_elem_macro, is_replacement_macro, replace_elem_macro) \
     BOOST_CONTRACT_EXT_PP_TRAITS_AUX_LIST_PUSH_BACK_13_(d, \
         BOOST_PP_SEQ_TAIL(decl_seq), \
-        BOOST_CONTRACT_EXT_PP_TRAITS_POP_BACK(traits), \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_POP_BACK(traits), \
         replace_elem_macro(d, 14, (BOOST_PP_SEQ_HEAD(decl_seq), \
-                BOOST_CONTRACT_EXT_PP_TRAITS_BACK(traits))), \
+                BOOST_CONTRACT_EXT_PP_TRAITS_AUX_BACK(traits))), \
         parse_elem_macro, \
         is_replacement_macro, \
         replace_elem_macro \
@@ -2065,7 +2064,7 @@
             BOOST_PP_SEQ_PUSH_FRONT \
         )(decl_seq, BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK( \
                 BOOST_PP_TUPLE_ELEM(2, 0, elemdecl_elemtraits))), \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK(traits, \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_PUSH_BACK(traits, \
                 BOOST_PP_TUPLE_ELEM(2, 1, elemdecl_elemtraits)), \
         parse_elem_macro, \
         is_replacement_macro, \
@@ -2144,7 +2143,7 @@
             BOOST_CONTRACT_EXT_PP_TRAITS_AUX_LIST_OP_14_, \
             ( \
                 decl_seq (BOOST_PP_NIL), \
-                BOOST_CONTRACT_EXT_PP_TRAITS_INIT, \
+                BOOST_CONTRACT_EXT_PP_TRAITS_AUX_INIT, \
                 parse_elem_macro, \
                 is_replacement_macro, \
                 replace_elem_macro \
@@ -2156,7 +2155,7 @@
         decl_traits_parse_is_replace) \
     ( \
         BOOST_PP_TUPLE_ELEM(5, 0, decl_traits_parse_is_replace), \
-        BOOST_CONTRACT_EXT_PP_TRAITS_DONE(BOOST_PP_TUPLE_ELEM(5, 1, \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_DONE(BOOST_PP_TUPLE_ELEM(5, 1, \
                 decl_traits_parse_is_replace)) BOOST_PP_EMPTY \
     )
 
@@ -2199,9 +2198,9 @@
         traits, parse_elem_macro, is_replacement_macro, replace_elem_macro) \
     BOOST_CONTRACT_EXT_PP_TRAITS_AUX_LIST_PUSH_BACK_14_(d, \
         BOOST_PP_SEQ_TAIL(decl_seq), \
-        BOOST_CONTRACT_EXT_PP_TRAITS_POP_BACK(traits), \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_POP_BACK(traits), \
         replace_elem_macro(d, 15, (BOOST_PP_SEQ_HEAD(decl_seq), \
-                BOOST_CONTRACT_EXT_PP_TRAITS_BACK(traits))), \
+                BOOST_CONTRACT_EXT_PP_TRAITS_AUX_BACK(traits))), \
         parse_elem_macro, \
         is_replacement_macro, \
         replace_elem_macro \
@@ -2219,7 +2218,7 @@
             BOOST_PP_SEQ_PUSH_FRONT \
         )(decl_seq, BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK( \
                 BOOST_PP_TUPLE_ELEM(2, 0, elemdecl_elemtraits))), \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK(traits, \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_PUSH_BACK(traits, \
                 BOOST_PP_TUPLE_ELEM(2, 1, elemdecl_elemtraits)), \
         parse_elem_macro, \
         is_replacement_macro, \
@@ -2298,7 +2297,7 @@
             BOOST_CONTRACT_EXT_PP_TRAITS_AUX_LIST_OP_15_, \
             ( \
                 decl_seq (BOOST_PP_NIL), \
-                BOOST_CONTRACT_EXT_PP_TRAITS_INIT, \
+                BOOST_CONTRACT_EXT_PP_TRAITS_AUX_INIT, \
                 parse_elem_macro, \
                 is_replacement_macro, \
                 replace_elem_macro \
@@ -2310,7 +2309,7 @@
         decl_traits_parse_is_replace) \
     ( \
         BOOST_PP_TUPLE_ELEM(5, 0, decl_traits_parse_is_replace), \
-        BOOST_CONTRACT_EXT_PP_TRAITS_DONE(BOOST_PP_TUPLE_ELEM(5, 1, \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_DONE(BOOST_PP_TUPLE_ELEM(5, 1, \
                 decl_traits_parse_is_replace)) BOOST_PP_EMPTY \
     )
 
@@ -2353,9 +2352,9 @@
         traits, parse_elem_macro, is_replacement_macro, replace_elem_macro) \
     BOOST_CONTRACT_EXT_PP_TRAITS_AUX_LIST_PUSH_BACK_15_(d, \
         BOOST_PP_SEQ_TAIL(decl_seq), \
-        BOOST_CONTRACT_EXT_PP_TRAITS_POP_BACK(traits), \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_POP_BACK(traits), \
         replace_elem_macro(d, 16, (BOOST_PP_SEQ_HEAD(decl_seq), \
-                BOOST_CONTRACT_EXT_PP_TRAITS_BACK(traits))), \
+                BOOST_CONTRACT_EXT_PP_TRAITS_AUX_BACK(traits))), \
         parse_elem_macro, \
         is_replacement_macro, \
         replace_elem_macro \
@@ -2373,7 +2372,7 @@
             BOOST_PP_SEQ_PUSH_FRONT \
         )(decl_seq, BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK( \
                 BOOST_PP_TUPLE_ELEM(2, 0, elemdecl_elemtraits))), \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK(traits, \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_PUSH_BACK(traits, \
                 BOOST_PP_TUPLE_ELEM(2, 1, elemdecl_elemtraits)), \
         parse_elem_macro, \
         is_replacement_macro, \
@@ -2452,7 +2451,7 @@
             BOOST_CONTRACT_EXT_PP_TRAITS_AUX_LIST_OP_16_, \
             ( \
                 decl_seq (BOOST_PP_NIL), \
-                BOOST_CONTRACT_EXT_PP_TRAITS_INIT, \
+                BOOST_CONTRACT_EXT_PP_TRAITS_AUX_INIT, \
                 parse_elem_macro, \
                 is_replacement_macro, \
                 replace_elem_macro \
@@ -2464,7 +2463,7 @@
         decl_traits_parse_is_replace) \
     ( \
         BOOST_PP_TUPLE_ELEM(5, 0, decl_traits_parse_is_replace), \
-        BOOST_CONTRACT_EXT_PP_TRAITS_DONE(BOOST_PP_TUPLE_ELEM(5, 1, \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_DONE(BOOST_PP_TUPLE_ELEM(5, 1, \
                 decl_traits_parse_is_replace)) BOOST_PP_EMPTY \
     )
 
@@ -2507,9 +2506,9 @@
         traits, parse_elem_macro, is_replacement_macro, replace_elem_macro) \
     BOOST_CONTRACT_EXT_PP_TRAITS_AUX_LIST_PUSH_BACK_16_(d, \
         BOOST_PP_SEQ_TAIL(decl_seq), \
-        BOOST_CONTRACT_EXT_PP_TRAITS_POP_BACK(traits), \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_POP_BACK(traits), \
         replace_elem_macro(d, 17, (BOOST_PP_SEQ_HEAD(decl_seq), \
-                BOOST_CONTRACT_EXT_PP_TRAITS_BACK(traits))), \
+                BOOST_CONTRACT_EXT_PP_TRAITS_AUX_BACK(traits))), \
         parse_elem_macro, \
         is_replacement_macro, \
         replace_elem_macro \
@@ -2527,7 +2526,7 @@
             BOOST_PP_SEQ_PUSH_FRONT \
         )(decl_seq, BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK( \
                 BOOST_PP_TUPLE_ELEM(2, 0, elemdecl_elemtraits))), \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK(traits, \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_PUSH_BACK(traits, \
                 BOOST_PP_TUPLE_ELEM(2, 1, elemdecl_elemtraits)), \
         parse_elem_macro, \
         is_replacement_macro, \
@@ -2606,7 +2605,7 @@
             BOOST_CONTRACT_EXT_PP_TRAITS_AUX_LIST_OP_17_, \
             ( \
                 decl_seq (BOOST_PP_NIL), \
-                BOOST_CONTRACT_EXT_PP_TRAITS_INIT, \
+                BOOST_CONTRACT_EXT_PP_TRAITS_AUX_INIT, \
                 parse_elem_macro, \
                 is_replacement_macro, \
                 replace_elem_macro \
@@ -2618,7 +2617,7 @@
         decl_traits_parse_is_replace) \
     ( \
         BOOST_PP_TUPLE_ELEM(5, 0, decl_traits_parse_is_replace), \
-        BOOST_CONTRACT_EXT_PP_TRAITS_DONE(BOOST_PP_TUPLE_ELEM(5, 1, \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_DONE(BOOST_PP_TUPLE_ELEM(5, 1, \
                 decl_traits_parse_is_replace)) BOOST_PP_EMPTY \
     )
 
@@ -2661,9 +2660,9 @@
         traits, parse_elem_macro, is_replacement_macro, replace_elem_macro) \
     BOOST_CONTRACT_EXT_PP_TRAITS_AUX_LIST_PUSH_BACK_17_(d, \
         BOOST_PP_SEQ_TAIL(decl_seq), \
-        BOOST_CONTRACT_EXT_PP_TRAITS_POP_BACK(traits), \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_POP_BACK(traits), \
         replace_elem_macro(d, 18, (BOOST_PP_SEQ_HEAD(decl_seq), \
-                BOOST_CONTRACT_EXT_PP_TRAITS_BACK(traits))), \
+                BOOST_CONTRACT_EXT_PP_TRAITS_AUX_BACK(traits))), \
         parse_elem_macro, \
         is_replacement_macro, \
         replace_elem_macro \
@@ -2681,7 +2680,7 @@
             BOOST_PP_SEQ_PUSH_FRONT \
         )(decl_seq, BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK( \
                 BOOST_PP_TUPLE_ELEM(2, 0, elemdecl_elemtraits))), \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK(traits, \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_PUSH_BACK(traits, \
                 BOOST_PP_TUPLE_ELEM(2, 1, elemdecl_elemtraits)), \
         parse_elem_macro, \
         is_replacement_macro, \
@@ -2760,7 +2759,7 @@
             BOOST_CONTRACT_EXT_PP_TRAITS_AUX_LIST_OP_18_, \
             ( \
                 decl_seq (BOOST_PP_NIL), \
-                BOOST_CONTRACT_EXT_PP_TRAITS_INIT, \
+                BOOST_CONTRACT_EXT_PP_TRAITS_AUX_INIT, \
                 parse_elem_macro, \
                 is_replacement_macro, \
                 replace_elem_macro \
@@ -2772,7 +2771,7 @@
         decl_traits_parse_is_replace) \
     ( \
         BOOST_PP_TUPLE_ELEM(5, 0, decl_traits_parse_is_replace), \
-        BOOST_CONTRACT_EXT_PP_TRAITS_DONE(BOOST_PP_TUPLE_ELEM(5, 1, \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_DONE(BOOST_PP_TUPLE_ELEM(5, 1, \
                 decl_traits_parse_is_replace)) BOOST_PP_EMPTY \
     )
 
@@ -2815,9 +2814,9 @@
         traits, parse_elem_macro, is_replacement_macro, replace_elem_macro) \
     BOOST_CONTRACT_EXT_PP_TRAITS_AUX_LIST_PUSH_BACK_18_(d, \
         BOOST_PP_SEQ_TAIL(decl_seq), \
-        BOOST_CONTRACT_EXT_PP_TRAITS_POP_BACK(traits), \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_POP_BACK(traits), \
         replace_elem_macro(d, 19, (BOOST_PP_SEQ_HEAD(decl_seq), \
-                BOOST_CONTRACT_EXT_PP_TRAITS_BACK(traits))), \
+                BOOST_CONTRACT_EXT_PP_TRAITS_AUX_BACK(traits))), \
         parse_elem_macro, \
         is_replacement_macro, \
         replace_elem_macro \
@@ -2835,7 +2834,7 @@
             BOOST_PP_SEQ_PUSH_FRONT \
         )(decl_seq, BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK( \
                 BOOST_PP_TUPLE_ELEM(2, 0, elemdecl_elemtraits))), \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK(traits, \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_PUSH_BACK(traits, \
                 BOOST_PP_TUPLE_ELEM(2, 1, elemdecl_elemtraits)), \
         parse_elem_macro, \
         is_replacement_macro, \
@@ -2914,7 +2913,7 @@
             BOOST_CONTRACT_EXT_PP_TRAITS_AUX_LIST_OP_19_, \
             ( \
                 decl_seq (BOOST_PP_NIL), \
-                BOOST_CONTRACT_EXT_PP_TRAITS_INIT, \
+                BOOST_CONTRACT_EXT_PP_TRAITS_AUX_INIT, \
                 parse_elem_macro, \
                 is_replacement_macro, \
                 replace_elem_macro \
@@ -2926,7 +2925,7 @@
         decl_traits_parse_is_replace) \
     ( \
         BOOST_PP_TUPLE_ELEM(5, 0, decl_traits_parse_is_replace), \
-        BOOST_CONTRACT_EXT_PP_TRAITS_DONE(BOOST_PP_TUPLE_ELEM(5, 1, \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_DONE(BOOST_PP_TUPLE_ELEM(5, 1, \
                 decl_traits_parse_is_replace)) BOOST_PP_EMPTY \
     )
 
@@ -2969,9 +2968,9 @@
         traits, parse_elem_macro, is_replacement_macro, replace_elem_macro) \
     BOOST_CONTRACT_EXT_PP_TRAITS_AUX_LIST_PUSH_BACK_19_(d, \
         BOOST_PP_SEQ_TAIL(decl_seq), \
-        BOOST_CONTRACT_EXT_PP_TRAITS_POP_BACK(traits), \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_POP_BACK(traits), \
         replace_elem_macro(d, 20, (BOOST_PP_SEQ_HEAD(decl_seq), \
-                BOOST_CONTRACT_EXT_PP_TRAITS_BACK(traits))), \
+                BOOST_CONTRACT_EXT_PP_TRAITS_AUX_BACK(traits))), \
         parse_elem_macro, \
         is_replacement_macro, \
         replace_elem_macro \
@@ -2989,7 +2988,7 @@
             BOOST_PP_SEQ_PUSH_FRONT \
         )(decl_seq, BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK( \
                 BOOST_PP_TUPLE_ELEM(2, 0, elemdecl_elemtraits))), \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK(traits, \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_PUSH_BACK(traits, \
                 BOOST_PP_TUPLE_ELEM(2, 1, elemdecl_elemtraits)), \
         parse_elem_macro, \
         is_replacement_macro, \
@@ -3068,7 +3067,7 @@
             BOOST_CONTRACT_EXT_PP_TRAITS_AUX_LIST_OP_20_, \
             ( \
                 decl_seq (BOOST_PP_NIL), \
-                BOOST_CONTRACT_EXT_PP_TRAITS_INIT, \
+                BOOST_CONTRACT_EXT_PP_TRAITS_AUX_INIT, \
                 parse_elem_macro, \
                 is_replacement_macro, \
                 replace_elem_macro \
@@ -3080,7 +3079,7 @@
         decl_traits_parse_is_replace) \
     ( \
         BOOST_PP_TUPLE_ELEM(5, 0, decl_traits_parse_is_replace), \
-        BOOST_CONTRACT_EXT_PP_TRAITS_DONE(BOOST_PP_TUPLE_ELEM(5, 1, \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_DONE(BOOST_PP_TUPLE_ELEM(5, 1, \
                 decl_traits_parse_is_replace)) BOOST_PP_EMPTY \
     )
 
@@ -3123,9 +3122,9 @@
         traits, parse_elem_macro, is_replacement_macro, replace_elem_macro) \
     BOOST_CONTRACT_EXT_PP_TRAITS_AUX_LIST_PUSH_BACK_20_(d, \
         BOOST_PP_SEQ_TAIL(decl_seq), \
-        BOOST_CONTRACT_EXT_PP_TRAITS_POP_BACK(traits), \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_POP_BACK(traits), \
         replace_elem_macro(d, 21, (BOOST_PP_SEQ_HEAD(decl_seq), \
-                BOOST_CONTRACT_EXT_PP_TRAITS_BACK(traits))), \
+                BOOST_CONTRACT_EXT_PP_TRAITS_AUX_BACK(traits))), \
         parse_elem_macro, \
         is_replacement_macro, \
         replace_elem_macro \
@@ -3143,7 +3142,7 @@
             BOOST_PP_SEQ_PUSH_FRONT \
         )(decl_seq, BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK( \
                 BOOST_PP_TUPLE_ELEM(2, 0, elemdecl_elemtraits))), \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK(traits, \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_PUSH_BACK(traits, \
                 BOOST_PP_TUPLE_ELEM(2, 1, elemdecl_elemtraits)), \
         parse_elem_macro, \
         is_replacement_macro, \
@@ -3222,7 +3221,7 @@
             BOOST_CONTRACT_EXT_PP_TRAITS_AUX_LIST_OP_21_, \
             ( \
                 decl_seq (BOOST_PP_NIL), \
-                BOOST_CONTRACT_EXT_PP_TRAITS_INIT, \
+                BOOST_CONTRACT_EXT_PP_TRAITS_AUX_INIT, \
                 parse_elem_macro, \
                 is_replacement_macro, \
                 replace_elem_macro \
@@ -3234,7 +3233,7 @@
         decl_traits_parse_is_replace) \
     ( \
         BOOST_PP_TUPLE_ELEM(5, 0, decl_traits_parse_is_replace), \
-        BOOST_CONTRACT_EXT_PP_TRAITS_DONE(BOOST_PP_TUPLE_ELEM(5, 1, \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_DONE(BOOST_PP_TUPLE_ELEM(5, 1, \
                 decl_traits_parse_is_replace)) BOOST_PP_EMPTY \
     )
 
@@ -3277,9 +3276,9 @@
         traits, parse_elem_macro, is_replacement_macro, replace_elem_macro) \
     BOOST_CONTRACT_EXT_PP_TRAITS_AUX_LIST_PUSH_BACK_21_(d, \
         BOOST_PP_SEQ_TAIL(decl_seq), \
-        BOOST_CONTRACT_EXT_PP_TRAITS_POP_BACK(traits), \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_POP_BACK(traits), \
         replace_elem_macro(d, 22, (BOOST_PP_SEQ_HEAD(decl_seq), \
-                BOOST_CONTRACT_EXT_PP_TRAITS_BACK(traits))), \
+                BOOST_CONTRACT_EXT_PP_TRAITS_AUX_BACK(traits))), \
         parse_elem_macro, \
         is_replacement_macro, \
         replace_elem_macro \
@@ -3297,7 +3296,7 @@
             BOOST_PP_SEQ_PUSH_FRONT \
         )(decl_seq, BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK( \
                 BOOST_PP_TUPLE_ELEM(2, 0, elemdecl_elemtraits))), \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK(traits, \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_PUSH_BACK(traits, \
                 BOOST_PP_TUPLE_ELEM(2, 1, elemdecl_elemtraits)), \
         parse_elem_macro, \
         is_replacement_macro, \
@@ -3376,7 +3375,7 @@
             BOOST_CONTRACT_EXT_PP_TRAITS_AUX_LIST_OP_22_, \
             ( \
                 decl_seq (BOOST_PP_NIL), \
-                BOOST_CONTRACT_EXT_PP_TRAITS_INIT, \
+                BOOST_CONTRACT_EXT_PP_TRAITS_AUX_INIT, \
                 parse_elem_macro, \
                 is_replacement_macro, \
                 replace_elem_macro \
@@ -3388,7 +3387,7 @@
         decl_traits_parse_is_replace) \
     ( \
         BOOST_PP_TUPLE_ELEM(5, 0, decl_traits_parse_is_replace), \
-        BOOST_CONTRACT_EXT_PP_TRAITS_DONE(BOOST_PP_TUPLE_ELEM(5, 1, \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_DONE(BOOST_PP_TUPLE_ELEM(5, 1, \
                 decl_traits_parse_is_replace)) BOOST_PP_EMPTY \
     )
 
@@ -3431,9 +3430,9 @@
         traits, parse_elem_macro, is_replacement_macro, replace_elem_macro) \
     BOOST_CONTRACT_EXT_PP_TRAITS_AUX_LIST_PUSH_BACK_22_(d, \
         BOOST_PP_SEQ_TAIL(decl_seq), \
-        BOOST_CONTRACT_EXT_PP_TRAITS_POP_BACK(traits), \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_POP_BACK(traits), \
         replace_elem_macro(d, 23, (BOOST_PP_SEQ_HEAD(decl_seq), \
-                BOOST_CONTRACT_EXT_PP_TRAITS_BACK(traits))), \
+                BOOST_CONTRACT_EXT_PP_TRAITS_AUX_BACK(traits))), \
         parse_elem_macro, \
         is_replacement_macro, \
         replace_elem_macro \
@@ -3451,7 +3450,7 @@
             BOOST_PP_SEQ_PUSH_FRONT \
         )(decl_seq, BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK( \
                 BOOST_PP_TUPLE_ELEM(2, 0, elemdecl_elemtraits))), \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK(traits, \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_PUSH_BACK(traits, \
                 BOOST_PP_TUPLE_ELEM(2, 1, elemdecl_elemtraits)), \
         parse_elem_macro, \
         is_replacement_macro, \
@@ -3530,7 +3529,7 @@
             BOOST_CONTRACT_EXT_PP_TRAITS_AUX_LIST_OP_23_, \
             ( \
                 decl_seq (BOOST_PP_NIL), \
-                BOOST_CONTRACT_EXT_PP_TRAITS_INIT, \
+                BOOST_CONTRACT_EXT_PP_TRAITS_AUX_INIT, \
                 parse_elem_macro, \
                 is_replacement_macro, \
                 replace_elem_macro \
@@ -3542,7 +3541,7 @@
         decl_traits_parse_is_replace) \
     ( \
         BOOST_PP_TUPLE_ELEM(5, 0, decl_traits_parse_is_replace), \
-        BOOST_CONTRACT_EXT_PP_TRAITS_DONE(BOOST_PP_TUPLE_ELEM(5, 1, \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_DONE(BOOST_PP_TUPLE_ELEM(5, 1, \
                 decl_traits_parse_is_replace)) BOOST_PP_EMPTY \
     )
 
@@ -3585,9 +3584,9 @@
         traits, parse_elem_macro, is_replacement_macro, replace_elem_macro) \
     BOOST_CONTRACT_EXT_PP_TRAITS_AUX_LIST_PUSH_BACK_23_(d, \
         BOOST_PP_SEQ_TAIL(decl_seq), \
-        BOOST_CONTRACT_EXT_PP_TRAITS_POP_BACK(traits), \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_POP_BACK(traits), \
         replace_elem_macro(d, 24, (BOOST_PP_SEQ_HEAD(decl_seq), \
-                BOOST_CONTRACT_EXT_PP_TRAITS_BACK(traits))), \
+                BOOST_CONTRACT_EXT_PP_TRAITS_AUX_BACK(traits))), \
         parse_elem_macro, \
         is_replacement_macro, \
         replace_elem_macro \
@@ -3605,7 +3604,7 @@
             BOOST_PP_SEQ_PUSH_FRONT \
         )(decl_seq, BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK( \
                 BOOST_PP_TUPLE_ELEM(2, 0, elemdecl_elemtraits))), \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK(traits, \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_PUSH_BACK(traits, \
                 BOOST_PP_TUPLE_ELEM(2, 1, elemdecl_elemtraits)), \
         parse_elem_macro, \
         is_replacement_macro, \
@@ -3684,7 +3683,7 @@
             BOOST_CONTRACT_EXT_PP_TRAITS_AUX_LIST_OP_24_, \
             ( \
                 decl_seq (BOOST_PP_NIL), \
-                BOOST_CONTRACT_EXT_PP_TRAITS_INIT, \
+                BOOST_CONTRACT_EXT_PP_TRAITS_AUX_INIT, \
                 parse_elem_macro, \
                 is_replacement_macro, \
                 replace_elem_macro \
@@ -3696,7 +3695,7 @@
         decl_traits_parse_is_replace) \
     ( \
         BOOST_PP_TUPLE_ELEM(5, 0, decl_traits_parse_is_replace), \
-        BOOST_CONTRACT_EXT_PP_TRAITS_DONE(BOOST_PP_TUPLE_ELEM(5, 1, \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_DONE(BOOST_PP_TUPLE_ELEM(5, 1, \
                 decl_traits_parse_is_replace)) BOOST_PP_EMPTY \
     )
 
@@ -3739,9 +3738,9 @@
         traits, parse_elem_macro, is_replacement_macro, replace_elem_macro) \
     BOOST_CONTRACT_EXT_PP_TRAITS_AUX_LIST_PUSH_BACK_24_(d, \
         BOOST_PP_SEQ_TAIL(decl_seq), \
-        BOOST_CONTRACT_EXT_PP_TRAITS_POP_BACK(traits), \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_POP_BACK(traits), \
         replace_elem_macro(d, 25, (BOOST_PP_SEQ_HEAD(decl_seq), \
-                BOOST_CONTRACT_EXT_PP_TRAITS_BACK(traits))), \
+                BOOST_CONTRACT_EXT_PP_TRAITS_AUX_BACK(traits))), \
         parse_elem_macro, \
         is_replacement_macro, \
         replace_elem_macro \
@@ -3759,7 +3758,7 @@
             BOOST_PP_SEQ_PUSH_FRONT \
         )(decl_seq, BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK( \
                 BOOST_PP_TUPLE_ELEM(2, 0, elemdecl_elemtraits))), \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK(traits, \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_PUSH_BACK(traits, \
                 BOOST_PP_TUPLE_ELEM(2, 1, elemdecl_elemtraits)), \
         parse_elem_macro, \
         is_replacement_macro, \
@@ -3838,7 +3837,7 @@
             BOOST_CONTRACT_EXT_PP_TRAITS_AUX_LIST_OP_25_, \
             ( \
                 decl_seq (BOOST_PP_NIL), \
-                BOOST_CONTRACT_EXT_PP_TRAITS_INIT, \
+                BOOST_CONTRACT_EXT_PP_TRAITS_AUX_INIT, \
                 parse_elem_macro, \
                 is_replacement_macro, \
                 replace_elem_macro \
@@ -3850,7 +3849,7 @@
         decl_traits_parse_is_replace) \
     ( \
         BOOST_PP_TUPLE_ELEM(5, 0, decl_traits_parse_is_replace), \
-        BOOST_CONTRACT_EXT_PP_TRAITS_DONE(BOOST_PP_TUPLE_ELEM(5, 1, \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_DONE(BOOST_PP_TUPLE_ELEM(5, 1, \
                 decl_traits_parse_is_replace)) BOOST_PP_EMPTY \
     )
 
@@ -3893,9 +3892,9 @@
         traits, parse_elem_macro, is_replacement_macro, replace_elem_macro) \
     BOOST_CONTRACT_EXT_PP_TRAITS_AUX_LIST_PUSH_BACK_25_(d, \
         BOOST_PP_SEQ_TAIL(decl_seq), \
-        BOOST_CONTRACT_EXT_PP_TRAITS_POP_BACK(traits), \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_POP_BACK(traits), \
         replace_elem_macro(d, 26, (BOOST_PP_SEQ_HEAD(decl_seq), \
-                BOOST_CONTRACT_EXT_PP_TRAITS_BACK(traits))), \
+                BOOST_CONTRACT_EXT_PP_TRAITS_AUX_BACK(traits))), \
         parse_elem_macro, \
         is_replacement_macro, \
         replace_elem_macro \
@@ -3913,7 +3912,7 @@
             BOOST_PP_SEQ_PUSH_FRONT \
         )(decl_seq, BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK( \
                 BOOST_PP_TUPLE_ELEM(2, 0, elemdecl_elemtraits))), \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK(traits, \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_PUSH_BACK(traits, \
                 BOOST_PP_TUPLE_ELEM(2, 1, elemdecl_elemtraits)), \
         parse_elem_macro, \
         is_replacement_macro, \
@@ -3992,7 +3991,7 @@
             BOOST_CONTRACT_EXT_PP_TRAITS_AUX_LIST_OP_26_, \
             ( \
                 decl_seq (BOOST_PP_NIL), \
-                BOOST_CONTRACT_EXT_PP_TRAITS_INIT, \
+                BOOST_CONTRACT_EXT_PP_TRAITS_AUX_INIT, \
                 parse_elem_macro, \
                 is_replacement_macro, \
                 replace_elem_macro \
@@ -4004,7 +4003,7 @@
         decl_traits_parse_is_replace) \
     ( \
         BOOST_PP_TUPLE_ELEM(5, 0, decl_traits_parse_is_replace), \
-        BOOST_CONTRACT_EXT_PP_TRAITS_DONE(BOOST_PP_TUPLE_ELEM(5, 1, \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_DONE(BOOST_PP_TUPLE_ELEM(5, 1, \
                 decl_traits_parse_is_replace)) BOOST_PP_EMPTY \
     )
 
@@ -4047,9 +4046,9 @@
         traits, parse_elem_macro, is_replacement_macro, replace_elem_macro) \
     BOOST_CONTRACT_EXT_PP_TRAITS_AUX_LIST_PUSH_BACK_26_(d, \
         BOOST_PP_SEQ_TAIL(decl_seq), \
-        BOOST_CONTRACT_EXT_PP_TRAITS_POP_BACK(traits), \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_POP_BACK(traits), \
         replace_elem_macro(d, 27, (BOOST_PP_SEQ_HEAD(decl_seq), \
-                BOOST_CONTRACT_EXT_PP_TRAITS_BACK(traits))), \
+                BOOST_CONTRACT_EXT_PP_TRAITS_AUX_BACK(traits))), \
         parse_elem_macro, \
         is_replacement_macro, \
         replace_elem_macro \
@@ -4067,7 +4066,7 @@
             BOOST_PP_SEQ_PUSH_FRONT \
         )(decl_seq, BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK( \
                 BOOST_PP_TUPLE_ELEM(2, 0, elemdecl_elemtraits))), \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK(traits, \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_PUSH_BACK(traits, \
                 BOOST_PP_TUPLE_ELEM(2, 1, elemdecl_elemtraits)), \
         parse_elem_macro, \
         is_replacement_macro, \
@@ -4146,7 +4145,7 @@
             BOOST_CONTRACT_EXT_PP_TRAITS_AUX_LIST_OP_27_, \
             ( \
                 decl_seq (BOOST_PP_NIL), \
-                BOOST_CONTRACT_EXT_PP_TRAITS_INIT, \
+                BOOST_CONTRACT_EXT_PP_TRAITS_AUX_INIT, \
                 parse_elem_macro, \
                 is_replacement_macro, \
                 replace_elem_macro \
@@ -4158,7 +4157,7 @@
         decl_traits_parse_is_replace) \
     ( \
         BOOST_PP_TUPLE_ELEM(5, 0, decl_traits_parse_is_replace), \
-        BOOST_CONTRACT_EXT_PP_TRAITS_DONE(BOOST_PP_TUPLE_ELEM(5, 1, \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_DONE(BOOST_PP_TUPLE_ELEM(5, 1, \
                 decl_traits_parse_is_replace)) BOOST_PP_EMPTY \
     )
 
@@ -4201,9 +4200,9 @@
         traits, parse_elem_macro, is_replacement_macro, replace_elem_macro) \
     BOOST_CONTRACT_EXT_PP_TRAITS_AUX_LIST_PUSH_BACK_27_(d, \
         BOOST_PP_SEQ_TAIL(decl_seq), \
-        BOOST_CONTRACT_EXT_PP_TRAITS_POP_BACK(traits), \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_POP_BACK(traits), \
         replace_elem_macro(d, 28, (BOOST_PP_SEQ_HEAD(decl_seq), \
-                BOOST_CONTRACT_EXT_PP_TRAITS_BACK(traits))), \
+                BOOST_CONTRACT_EXT_PP_TRAITS_AUX_BACK(traits))), \
         parse_elem_macro, \
         is_replacement_macro, \
         replace_elem_macro \
@@ -4221,7 +4220,7 @@
             BOOST_PP_SEQ_PUSH_FRONT \
         )(decl_seq, BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK( \
                 BOOST_PP_TUPLE_ELEM(2, 0, elemdecl_elemtraits))), \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK(traits, \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_PUSH_BACK(traits, \
                 BOOST_PP_TUPLE_ELEM(2, 1, elemdecl_elemtraits)), \
         parse_elem_macro, \
         is_replacement_macro, \
@@ -4300,7 +4299,7 @@
             BOOST_CONTRACT_EXT_PP_TRAITS_AUX_LIST_OP_28_, \
             ( \
                 decl_seq (BOOST_PP_NIL), \
-                BOOST_CONTRACT_EXT_PP_TRAITS_INIT, \
+                BOOST_CONTRACT_EXT_PP_TRAITS_AUX_INIT, \
                 parse_elem_macro, \
                 is_replacement_macro, \
                 replace_elem_macro \
@@ -4312,7 +4311,7 @@
         decl_traits_parse_is_replace) \
     ( \
         BOOST_PP_TUPLE_ELEM(5, 0, decl_traits_parse_is_replace), \
-        BOOST_CONTRACT_EXT_PP_TRAITS_DONE(BOOST_PP_TUPLE_ELEM(5, 1, \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_DONE(BOOST_PP_TUPLE_ELEM(5, 1, \
                 decl_traits_parse_is_replace)) BOOST_PP_EMPTY \
     )
 
@@ -4355,9 +4354,9 @@
         traits, parse_elem_macro, is_replacement_macro, replace_elem_macro) \
     BOOST_CONTRACT_EXT_PP_TRAITS_AUX_LIST_PUSH_BACK_28_(d, \
         BOOST_PP_SEQ_TAIL(decl_seq), \
-        BOOST_CONTRACT_EXT_PP_TRAITS_POP_BACK(traits), \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_POP_BACK(traits), \
         replace_elem_macro(d, 29, (BOOST_PP_SEQ_HEAD(decl_seq), \
-                BOOST_CONTRACT_EXT_PP_TRAITS_BACK(traits))), \
+                BOOST_CONTRACT_EXT_PP_TRAITS_AUX_BACK(traits))), \
         parse_elem_macro, \
         is_replacement_macro, \
         replace_elem_macro \
@@ -4375,7 +4374,7 @@
             BOOST_PP_SEQ_PUSH_FRONT \
         )(decl_seq, BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK( \
                 BOOST_PP_TUPLE_ELEM(2, 0, elemdecl_elemtraits))), \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK(traits, \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_PUSH_BACK(traits, \
                 BOOST_PP_TUPLE_ELEM(2, 1, elemdecl_elemtraits)), \
         parse_elem_macro, \
         is_replacement_macro, \
@@ -4454,7 +4453,7 @@
             BOOST_CONTRACT_EXT_PP_TRAITS_AUX_LIST_OP_29_, \
             ( \
                 decl_seq (BOOST_PP_NIL), \
-                BOOST_CONTRACT_EXT_PP_TRAITS_INIT, \
+                BOOST_CONTRACT_EXT_PP_TRAITS_AUX_INIT, \
                 parse_elem_macro, \
                 is_replacement_macro, \
                 replace_elem_macro \
@@ -4466,7 +4465,7 @@
         decl_traits_parse_is_replace) \
     ( \
         BOOST_PP_TUPLE_ELEM(5, 0, decl_traits_parse_is_replace), \
-        BOOST_CONTRACT_EXT_PP_TRAITS_DONE(BOOST_PP_TUPLE_ELEM(5, 1, \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_DONE(BOOST_PP_TUPLE_ELEM(5, 1, \
                 decl_traits_parse_is_replace)) BOOST_PP_EMPTY \
     )
 
@@ -4509,9 +4508,9 @@
         traits, parse_elem_macro, is_replacement_macro, replace_elem_macro) \
     BOOST_CONTRACT_EXT_PP_TRAITS_AUX_LIST_PUSH_BACK_29_(d, \
         BOOST_PP_SEQ_TAIL(decl_seq), \
-        BOOST_CONTRACT_EXT_PP_TRAITS_POP_BACK(traits), \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_POP_BACK(traits), \
         replace_elem_macro(d, 30, (BOOST_PP_SEQ_HEAD(decl_seq), \
-                BOOST_CONTRACT_EXT_PP_TRAITS_BACK(traits))), \
+                BOOST_CONTRACT_EXT_PP_TRAITS_AUX_BACK(traits))), \
         parse_elem_macro, \
         is_replacement_macro, \
         replace_elem_macro \
@@ -4529,7 +4528,7 @@
             BOOST_PP_SEQ_PUSH_FRONT \
         )(decl_seq, BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK( \
                 BOOST_PP_TUPLE_ELEM(2, 0, elemdecl_elemtraits))), \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK(traits, \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_PUSH_BACK(traits, \
                 BOOST_PP_TUPLE_ELEM(2, 1, elemdecl_elemtraits)), \
         parse_elem_macro, \
         is_replacement_macro, \
@@ -4608,7 +4607,7 @@
             BOOST_CONTRACT_EXT_PP_TRAITS_AUX_LIST_OP_30_, \
             ( \
                 decl_seq (BOOST_PP_NIL), \
-                BOOST_CONTRACT_EXT_PP_TRAITS_INIT, \
+                BOOST_CONTRACT_EXT_PP_TRAITS_AUX_INIT, \
                 parse_elem_macro, \
                 is_replacement_macro, \
                 replace_elem_macro \
@@ -4620,7 +4619,7 @@
         decl_traits_parse_is_replace) \
     ( \
         BOOST_PP_TUPLE_ELEM(5, 0, decl_traits_parse_is_replace), \
-        BOOST_CONTRACT_EXT_PP_TRAITS_DONE(BOOST_PP_TUPLE_ELEM(5, 1, \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_DONE(BOOST_PP_TUPLE_ELEM(5, 1, \
                 decl_traits_parse_is_replace)) BOOST_PP_EMPTY \
     )
 
@@ -4663,9 +4662,9 @@
         traits, parse_elem_macro, is_replacement_macro, replace_elem_macro) \
     BOOST_CONTRACT_EXT_PP_TRAITS_AUX_LIST_PUSH_BACK_30_(d, \
         BOOST_PP_SEQ_TAIL(decl_seq), \
-        BOOST_CONTRACT_EXT_PP_TRAITS_POP_BACK(traits), \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_POP_BACK(traits), \
         replace_elem_macro(d, 31, (BOOST_PP_SEQ_HEAD(decl_seq), \
-                BOOST_CONTRACT_EXT_PP_TRAITS_BACK(traits))), \
+                BOOST_CONTRACT_EXT_PP_TRAITS_AUX_BACK(traits))), \
         parse_elem_macro, \
         is_replacement_macro, \
         replace_elem_macro \
@@ -4683,7 +4682,7 @@
             BOOST_PP_SEQ_PUSH_FRONT \
         )(decl_seq, BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK( \
                 BOOST_PP_TUPLE_ELEM(2, 0, elemdecl_elemtraits))), \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK(traits, \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_PUSH_BACK(traits, \
                 BOOST_PP_TUPLE_ELEM(2, 1, elemdecl_elemtraits)), \
         parse_elem_macro, \
         is_replacement_macro, \
@@ -4762,7 +4761,7 @@
             BOOST_CONTRACT_EXT_PP_TRAITS_AUX_LIST_OP_31_, \
             ( \
                 decl_seq (BOOST_PP_NIL), \
-                BOOST_CONTRACT_EXT_PP_TRAITS_INIT, \
+                BOOST_CONTRACT_EXT_PP_TRAITS_AUX_INIT, \
                 parse_elem_macro, \
                 is_replacement_macro, \
                 replace_elem_macro \
@@ -4774,7 +4773,7 @@
         decl_traits_parse_is_replace) \
     ( \
         BOOST_PP_TUPLE_ELEM(5, 0, decl_traits_parse_is_replace), \
-        BOOST_CONTRACT_EXT_PP_TRAITS_DONE(BOOST_PP_TUPLE_ELEM(5, 1, \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_DONE(BOOST_PP_TUPLE_ELEM(5, 1, \
                 decl_traits_parse_is_replace)) BOOST_PP_EMPTY \
     )
 
@@ -4817,9 +4816,9 @@
         traits, parse_elem_macro, is_replacement_macro, replace_elem_macro) \
     BOOST_CONTRACT_EXT_PP_TRAITS_AUX_LIST_PUSH_BACK_31_(d, \
         BOOST_PP_SEQ_TAIL(decl_seq), \
-        BOOST_CONTRACT_EXT_PP_TRAITS_POP_BACK(traits), \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_POP_BACK(traits), \
         replace_elem_macro(d, 32, (BOOST_PP_SEQ_HEAD(decl_seq), \
-                BOOST_CONTRACT_EXT_PP_TRAITS_BACK(traits))), \
+                BOOST_CONTRACT_EXT_PP_TRAITS_AUX_BACK(traits))), \
         parse_elem_macro, \
         is_replacement_macro, \
         replace_elem_macro \
@@ -4837,7 +4836,7 @@
             BOOST_PP_SEQ_PUSH_FRONT \
         )(decl_seq, BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK( \
                 BOOST_PP_TUPLE_ELEM(2, 0, elemdecl_elemtraits))), \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK(traits, \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_PUSH_BACK(traits, \
                 BOOST_PP_TUPLE_ELEM(2, 1, elemdecl_elemtraits)), \
         parse_elem_macro, \
         is_replacement_macro, \
@@ -4916,7 +4915,7 @@
             BOOST_CONTRACT_EXT_PP_TRAITS_AUX_LIST_OP_32_, \
             ( \
                 decl_seq (BOOST_PP_NIL), \
-                BOOST_CONTRACT_EXT_PP_TRAITS_INIT, \
+                BOOST_CONTRACT_EXT_PP_TRAITS_AUX_INIT, \
                 parse_elem_macro, \
                 is_replacement_macro, \
                 replace_elem_macro \
@@ -4928,7 +4927,7 @@
         decl_traits_parse_is_replace) \
     ( \
         BOOST_PP_TUPLE_ELEM(5, 0, decl_traits_parse_is_replace), \
-        BOOST_CONTRACT_EXT_PP_TRAITS_DONE(BOOST_PP_TUPLE_ELEM(5, 1, \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_DONE(BOOST_PP_TUPLE_ELEM(5, 1, \
                 decl_traits_parse_is_replace)) BOOST_PP_EMPTY \
     )
 
@@ -4971,9 +4970,9 @@
         traits, parse_elem_macro, is_replacement_macro, replace_elem_macro) \
     BOOST_CONTRACT_EXT_PP_TRAITS_AUX_LIST_PUSH_BACK_32_(d, \
         BOOST_PP_SEQ_TAIL(decl_seq), \
-        BOOST_CONTRACT_EXT_PP_TRAITS_POP_BACK(traits), \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_POP_BACK(traits), \
         replace_elem_macro(d, 33, (BOOST_PP_SEQ_HEAD(decl_seq), \
-                BOOST_CONTRACT_EXT_PP_TRAITS_BACK(traits))), \
+                BOOST_CONTRACT_EXT_PP_TRAITS_AUX_BACK(traits))), \
         parse_elem_macro, \
         is_replacement_macro, \
         replace_elem_macro \
@@ -4991,7 +4990,7 @@
             BOOST_PP_SEQ_PUSH_FRONT \
         )(decl_seq, BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK( \
                 BOOST_PP_TUPLE_ELEM(2, 0, elemdecl_elemtraits))), \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK(traits, \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_PUSH_BACK(traits, \
                 BOOST_PP_TUPLE_ELEM(2, 1, elemdecl_elemtraits)), \
         parse_elem_macro, \
         is_replacement_macro, \
@@ -5070,7 +5069,7 @@
             BOOST_CONTRACT_EXT_PP_TRAITS_AUX_LIST_OP_33_, \
             ( \
                 decl_seq (BOOST_PP_NIL), \
-                BOOST_CONTRACT_EXT_PP_TRAITS_INIT, \
+                BOOST_CONTRACT_EXT_PP_TRAITS_AUX_INIT, \
                 parse_elem_macro, \
                 is_replacement_macro, \
                 replace_elem_macro \
@@ -5082,7 +5081,7 @@
         decl_traits_parse_is_replace) \
     ( \
         BOOST_PP_TUPLE_ELEM(5, 0, decl_traits_parse_is_replace), \
-        BOOST_CONTRACT_EXT_PP_TRAITS_DONE(BOOST_PP_TUPLE_ELEM(5, 1, \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_DONE(BOOST_PP_TUPLE_ELEM(5, 1, \
                 decl_traits_parse_is_replace)) BOOST_PP_EMPTY \
     )
 
@@ -5125,9 +5124,9 @@
         traits, parse_elem_macro, is_replacement_macro, replace_elem_macro) \
     BOOST_CONTRACT_EXT_PP_TRAITS_AUX_LIST_PUSH_BACK_33_(d, \
         BOOST_PP_SEQ_TAIL(decl_seq), \
-        BOOST_CONTRACT_EXT_PP_TRAITS_POP_BACK(traits), \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_POP_BACK(traits), \
         replace_elem_macro(d, 34, (BOOST_PP_SEQ_HEAD(decl_seq), \
-                BOOST_CONTRACT_EXT_PP_TRAITS_BACK(traits))), \
+                BOOST_CONTRACT_EXT_PP_TRAITS_AUX_BACK(traits))), \
         parse_elem_macro, \
         is_replacement_macro, \
         replace_elem_macro \
@@ -5145,7 +5144,7 @@
             BOOST_PP_SEQ_PUSH_FRONT \
         )(decl_seq, BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK( \
                 BOOST_PP_TUPLE_ELEM(2, 0, elemdecl_elemtraits))), \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK(traits, \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_PUSH_BACK(traits, \
                 BOOST_PP_TUPLE_ELEM(2, 1, elemdecl_elemtraits)), \
         parse_elem_macro, \
         is_replacement_macro, \
@@ -5224,7 +5223,7 @@
             BOOST_CONTRACT_EXT_PP_TRAITS_AUX_LIST_OP_34_, \
             ( \
                 decl_seq (BOOST_PP_NIL), \
-                BOOST_CONTRACT_EXT_PP_TRAITS_INIT, \
+                BOOST_CONTRACT_EXT_PP_TRAITS_AUX_INIT, \
                 parse_elem_macro, \
                 is_replacement_macro, \
                 replace_elem_macro \
@@ -5236,7 +5235,7 @@
         decl_traits_parse_is_replace) \
     ( \
         BOOST_PP_TUPLE_ELEM(5, 0, decl_traits_parse_is_replace), \
-        BOOST_CONTRACT_EXT_PP_TRAITS_DONE(BOOST_PP_TUPLE_ELEM(5, 1, \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_DONE(BOOST_PP_TUPLE_ELEM(5, 1, \
                 decl_traits_parse_is_replace)) BOOST_PP_EMPTY \
     )
 
@@ -5279,9 +5278,9 @@
         traits, parse_elem_macro, is_replacement_macro, replace_elem_macro) \
     BOOST_CONTRACT_EXT_PP_TRAITS_AUX_LIST_PUSH_BACK_34_(d, \
         BOOST_PP_SEQ_TAIL(decl_seq), \
-        BOOST_CONTRACT_EXT_PP_TRAITS_POP_BACK(traits), \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_POP_BACK(traits), \
         replace_elem_macro(d, 35, (BOOST_PP_SEQ_HEAD(decl_seq), \
-                BOOST_CONTRACT_EXT_PP_TRAITS_BACK(traits))), \
+                BOOST_CONTRACT_EXT_PP_TRAITS_AUX_BACK(traits))), \
         parse_elem_macro, \
         is_replacement_macro, \
         replace_elem_macro \
@@ -5299,7 +5298,7 @@
             BOOST_PP_SEQ_PUSH_FRONT \
         )(decl_seq, BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK( \
                 BOOST_PP_TUPLE_ELEM(2, 0, elemdecl_elemtraits))), \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK(traits, \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_PUSH_BACK(traits, \
                 BOOST_PP_TUPLE_ELEM(2, 1, elemdecl_elemtraits)), \
         parse_elem_macro, \
         is_replacement_macro, \
@@ -5378,7 +5377,7 @@
             BOOST_CONTRACT_EXT_PP_TRAITS_AUX_LIST_OP_35_, \
             ( \
                 decl_seq (BOOST_PP_NIL), \
-                BOOST_CONTRACT_EXT_PP_TRAITS_INIT, \
+                BOOST_CONTRACT_EXT_PP_TRAITS_AUX_INIT, \
                 parse_elem_macro, \
                 is_replacement_macro, \
                 replace_elem_macro \
@@ -5390,7 +5389,7 @@
         decl_traits_parse_is_replace) \
     ( \
         BOOST_PP_TUPLE_ELEM(5, 0, decl_traits_parse_is_replace), \
-        BOOST_CONTRACT_EXT_PP_TRAITS_DONE(BOOST_PP_TUPLE_ELEM(5, 1, \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_DONE(BOOST_PP_TUPLE_ELEM(5, 1, \
                 decl_traits_parse_is_replace)) BOOST_PP_EMPTY \
     )
 
@@ -5433,9 +5432,9 @@
         traits, parse_elem_macro, is_replacement_macro, replace_elem_macro) \
     BOOST_CONTRACT_EXT_PP_TRAITS_AUX_LIST_PUSH_BACK_35_(d, \
         BOOST_PP_SEQ_TAIL(decl_seq), \
-        BOOST_CONTRACT_EXT_PP_TRAITS_POP_BACK(traits), \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_POP_BACK(traits), \
         replace_elem_macro(d, 36, (BOOST_PP_SEQ_HEAD(decl_seq), \
-                BOOST_CONTRACT_EXT_PP_TRAITS_BACK(traits))), \
+                BOOST_CONTRACT_EXT_PP_TRAITS_AUX_BACK(traits))), \
         parse_elem_macro, \
         is_replacement_macro, \
         replace_elem_macro \
@@ -5453,7 +5452,7 @@
             BOOST_PP_SEQ_PUSH_FRONT \
         )(decl_seq, BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK( \
                 BOOST_PP_TUPLE_ELEM(2, 0, elemdecl_elemtraits))), \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK(traits, \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_PUSH_BACK(traits, \
                 BOOST_PP_TUPLE_ELEM(2, 1, elemdecl_elemtraits)), \
         parse_elem_macro, \
         is_replacement_macro, \
@@ -5532,7 +5531,7 @@
             BOOST_CONTRACT_EXT_PP_TRAITS_AUX_LIST_OP_36_, \
             ( \
                 decl_seq (BOOST_PP_NIL), \
-                BOOST_CONTRACT_EXT_PP_TRAITS_INIT, \
+                BOOST_CONTRACT_EXT_PP_TRAITS_AUX_INIT, \
                 parse_elem_macro, \
                 is_replacement_macro, \
                 replace_elem_macro \
@@ -5544,7 +5543,7 @@
         decl_traits_parse_is_replace) \
     ( \
         BOOST_PP_TUPLE_ELEM(5, 0, decl_traits_parse_is_replace), \
-        BOOST_CONTRACT_EXT_PP_TRAITS_DONE(BOOST_PP_TUPLE_ELEM(5, 1, \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_DONE(BOOST_PP_TUPLE_ELEM(5, 1, \
                 decl_traits_parse_is_replace)) BOOST_PP_EMPTY \
     )
 
@@ -5587,9 +5586,9 @@
         traits, parse_elem_macro, is_replacement_macro, replace_elem_macro) \
     BOOST_CONTRACT_EXT_PP_TRAITS_AUX_LIST_PUSH_BACK_36_(d, \
         BOOST_PP_SEQ_TAIL(decl_seq), \
-        BOOST_CONTRACT_EXT_PP_TRAITS_POP_BACK(traits), \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_POP_BACK(traits), \
         replace_elem_macro(d, 37, (BOOST_PP_SEQ_HEAD(decl_seq), \
-                BOOST_CONTRACT_EXT_PP_TRAITS_BACK(traits))), \
+                BOOST_CONTRACT_EXT_PP_TRAITS_AUX_BACK(traits))), \
         parse_elem_macro, \
         is_replacement_macro, \
         replace_elem_macro \
@@ -5607,7 +5606,7 @@
             BOOST_PP_SEQ_PUSH_FRONT \
         )(decl_seq, BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK( \
                 BOOST_PP_TUPLE_ELEM(2, 0, elemdecl_elemtraits))), \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK(traits, \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_PUSH_BACK(traits, \
                 BOOST_PP_TUPLE_ELEM(2, 1, elemdecl_elemtraits)), \
         parse_elem_macro, \
         is_replacement_macro, \
@@ -5686,7 +5685,7 @@
             BOOST_CONTRACT_EXT_PP_TRAITS_AUX_LIST_OP_37_, \
             ( \
                 decl_seq (BOOST_PP_NIL), \
-                BOOST_CONTRACT_EXT_PP_TRAITS_INIT, \
+                BOOST_CONTRACT_EXT_PP_TRAITS_AUX_INIT, \
                 parse_elem_macro, \
                 is_replacement_macro, \
                 replace_elem_macro \
@@ -5698,7 +5697,7 @@
         decl_traits_parse_is_replace) \
     ( \
         BOOST_PP_TUPLE_ELEM(5, 0, decl_traits_parse_is_replace), \
-        BOOST_CONTRACT_EXT_PP_TRAITS_DONE(BOOST_PP_TUPLE_ELEM(5, 1, \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_DONE(BOOST_PP_TUPLE_ELEM(5, 1, \
                 decl_traits_parse_is_replace)) BOOST_PP_EMPTY \
     )
 
@@ -5741,9 +5740,9 @@
         traits, parse_elem_macro, is_replacement_macro, replace_elem_macro) \
     BOOST_CONTRACT_EXT_PP_TRAITS_AUX_LIST_PUSH_BACK_37_(d, \
         BOOST_PP_SEQ_TAIL(decl_seq), \
-        BOOST_CONTRACT_EXT_PP_TRAITS_POP_BACK(traits), \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_POP_BACK(traits), \
         replace_elem_macro(d, 38, (BOOST_PP_SEQ_HEAD(decl_seq), \
-                BOOST_CONTRACT_EXT_PP_TRAITS_BACK(traits))), \
+                BOOST_CONTRACT_EXT_PP_TRAITS_AUX_BACK(traits))), \
         parse_elem_macro, \
         is_replacement_macro, \
         replace_elem_macro \
@@ -5761,7 +5760,7 @@
             BOOST_PP_SEQ_PUSH_FRONT \
         )(decl_seq, BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK( \
                 BOOST_PP_TUPLE_ELEM(2, 0, elemdecl_elemtraits))), \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK(traits, \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_PUSH_BACK(traits, \
                 BOOST_PP_TUPLE_ELEM(2, 1, elemdecl_elemtraits)), \
         parse_elem_macro, \
         is_replacement_macro, \
@@ -5840,7 +5839,7 @@
             BOOST_CONTRACT_EXT_PP_TRAITS_AUX_LIST_OP_38_, \
             ( \
                 decl_seq (BOOST_PP_NIL), \
-                BOOST_CONTRACT_EXT_PP_TRAITS_INIT, \
+                BOOST_CONTRACT_EXT_PP_TRAITS_AUX_INIT, \
                 parse_elem_macro, \
                 is_replacement_macro, \
                 replace_elem_macro \
@@ -5852,7 +5851,7 @@
         decl_traits_parse_is_replace) \
     ( \
         BOOST_PP_TUPLE_ELEM(5, 0, decl_traits_parse_is_replace), \
-        BOOST_CONTRACT_EXT_PP_TRAITS_DONE(BOOST_PP_TUPLE_ELEM(5, 1, \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_DONE(BOOST_PP_TUPLE_ELEM(5, 1, \
                 decl_traits_parse_is_replace)) BOOST_PP_EMPTY \
     )
 
@@ -5895,9 +5894,9 @@
         traits, parse_elem_macro, is_replacement_macro, replace_elem_macro) \
     BOOST_CONTRACT_EXT_PP_TRAITS_AUX_LIST_PUSH_BACK_38_(d, \
         BOOST_PP_SEQ_TAIL(decl_seq), \
-        BOOST_CONTRACT_EXT_PP_TRAITS_POP_BACK(traits), \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_POP_BACK(traits), \
         replace_elem_macro(d, 39, (BOOST_PP_SEQ_HEAD(decl_seq), \
-                BOOST_CONTRACT_EXT_PP_TRAITS_BACK(traits))), \
+                BOOST_CONTRACT_EXT_PP_TRAITS_AUX_BACK(traits))), \
         parse_elem_macro, \
         is_replacement_macro, \
         replace_elem_macro \
@@ -5915,7 +5914,7 @@
             BOOST_PP_SEQ_PUSH_FRONT \
         )(decl_seq, BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK( \
                 BOOST_PP_TUPLE_ELEM(2, 0, elemdecl_elemtraits))), \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK(traits, \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_PUSH_BACK(traits, \
                 BOOST_PP_TUPLE_ELEM(2, 1, elemdecl_elemtraits)), \
         parse_elem_macro, \
         is_replacement_macro, \
@@ -5994,7 +5993,7 @@
             BOOST_CONTRACT_EXT_PP_TRAITS_AUX_LIST_OP_39_, \
             ( \
                 decl_seq (BOOST_PP_NIL), \
-                BOOST_CONTRACT_EXT_PP_TRAITS_INIT, \
+                BOOST_CONTRACT_EXT_PP_TRAITS_AUX_INIT, \
                 parse_elem_macro, \
                 is_replacement_macro, \
                 replace_elem_macro \
@@ -6006,7 +6005,7 @@
         decl_traits_parse_is_replace) \
     ( \
         BOOST_PP_TUPLE_ELEM(5, 0, decl_traits_parse_is_replace), \
-        BOOST_CONTRACT_EXT_PP_TRAITS_DONE(BOOST_PP_TUPLE_ELEM(5, 1, \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_DONE(BOOST_PP_TUPLE_ELEM(5, 1, \
                 decl_traits_parse_is_replace)) BOOST_PP_EMPTY \
     )
 
@@ -6049,9 +6048,9 @@
         traits, parse_elem_macro, is_replacement_macro, replace_elem_macro) \
     BOOST_CONTRACT_EXT_PP_TRAITS_AUX_LIST_PUSH_BACK_39_(d, \
         BOOST_PP_SEQ_TAIL(decl_seq), \
-        BOOST_CONTRACT_EXT_PP_TRAITS_POP_BACK(traits), \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_POP_BACK(traits), \
         replace_elem_macro(d, 40, (BOOST_PP_SEQ_HEAD(decl_seq), \
-                BOOST_CONTRACT_EXT_PP_TRAITS_BACK(traits))), \
+                BOOST_CONTRACT_EXT_PP_TRAITS_AUX_BACK(traits))), \
         parse_elem_macro, \
         is_replacement_macro, \
         replace_elem_macro \
@@ -6069,7 +6068,7 @@
             BOOST_PP_SEQ_PUSH_FRONT \
         )(decl_seq, BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK( \
                 BOOST_PP_TUPLE_ELEM(2, 0, elemdecl_elemtraits))), \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK(traits, \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_PUSH_BACK(traits, \
                 BOOST_PP_TUPLE_ELEM(2, 1, elemdecl_elemtraits)), \
         parse_elem_macro, \
         is_replacement_macro, \
@@ -6148,7 +6147,7 @@
             BOOST_CONTRACT_EXT_PP_TRAITS_AUX_LIST_OP_40_, \
             ( \
                 decl_seq (BOOST_PP_NIL), \
-                BOOST_CONTRACT_EXT_PP_TRAITS_INIT, \
+                BOOST_CONTRACT_EXT_PP_TRAITS_AUX_INIT, \
                 parse_elem_macro, \
                 is_replacement_macro, \
                 replace_elem_macro \
@@ -6160,7 +6159,7 @@
         decl_traits_parse_is_replace) \
     ( \
         BOOST_PP_TUPLE_ELEM(5, 0, decl_traits_parse_is_replace), \
-        BOOST_CONTRACT_EXT_PP_TRAITS_DONE(BOOST_PP_TUPLE_ELEM(5, 1, \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_DONE(BOOST_PP_TUPLE_ELEM(5, 1, \
                 decl_traits_parse_is_replace)) BOOST_PP_EMPTY \
     )
 
@@ -6203,9 +6202,9 @@
         traits, parse_elem_macro, is_replacement_macro, replace_elem_macro) \
     BOOST_CONTRACT_EXT_PP_TRAITS_AUX_LIST_PUSH_BACK_40_(d, \
         BOOST_PP_SEQ_TAIL(decl_seq), \
-        BOOST_CONTRACT_EXT_PP_TRAITS_POP_BACK(traits), \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_POP_BACK(traits), \
         replace_elem_macro(d, 41, (BOOST_PP_SEQ_HEAD(decl_seq), \
-                BOOST_CONTRACT_EXT_PP_TRAITS_BACK(traits))), \
+                BOOST_CONTRACT_EXT_PP_TRAITS_AUX_BACK(traits))), \
         parse_elem_macro, \
         is_replacement_macro, \
         replace_elem_macro \
@@ -6223,7 +6222,7 @@
             BOOST_PP_SEQ_PUSH_FRONT \
         )(decl_seq, BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK( \
                 BOOST_PP_TUPLE_ELEM(2, 0, elemdecl_elemtraits))), \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK(traits, \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_PUSH_BACK(traits, \
                 BOOST_PP_TUPLE_ELEM(2, 1, elemdecl_elemtraits)), \
         parse_elem_macro, \
         is_replacement_macro, \
@@ -6302,7 +6301,7 @@
             BOOST_CONTRACT_EXT_PP_TRAITS_AUX_LIST_OP_41_, \
             ( \
                 decl_seq (BOOST_PP_NIL), \
-                BOOST_CONTRACT_EXT_PP_TRAITS_INIT, \
+                BOOST_CONTRACT_EXT_PP_TRAITS_AUX_INIT, \
                 parse_elem_macro, \
                 is_replacement_macro, \
                 replace_elem_macro \
@@ -6314,7 +6313,7 @@
         decl_traits_parse_is_replace) \
     ( \
         BOOST_PP_TUPLE_ELEM(5, 0, decl_traits_parse_is_replace), \
-        BOOST_CONTRACT_EXT_PP_TRAITS_DONE(BOOST_PP_TUPLE_ELEM(5, 1, \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_DONE(BOOST_PP_TUPLE_ELEM(5, 1, \
                 decl_traits_parse_is_replace)) BOOST_PP_EMPTY \
     )
 
@@ -6357,9 +6356,9 @@
         traits, parse_elem_macro, is_replacement_macro, replace_elem_macro) \
     BOOST_CONTRACT_EXT_PP_TRAITS_AUX_LIST_PUSH_BACK_41_(d, \
         BOOST_PP_SEQ_TAIL(decl_seq), \
-        BOOST_CONTRACT_EXT_PP_TRAITS_POP_BACK(traits), \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_POP_BACK(traits), \
         replace_elem_macro(d, 42, (BOOST_PP_SEQ_HEAD(decl_seq), \
-                BOOST_CONTRACT_EXT_PP_TRAITS_BACK(traits))), \
+                BOOST_CONTRACT_EXT_PP_TRAITS_AUX_BACK(traits))), \
         parse_elem_macro, \
         is_replacement_macro, \
         replace_elem_macro \
@@ -6377,7 +6376,7 @@
             BOOST_PP_SEQ_PUSH_FRONT \
         )(decl_seq, BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK( \
                 BOOST_PP_TUPLE_ELEM(2, 0, elemdecl_elemtraits))), \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK(traits, \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_PUSH_BACK(traits, \
                 BOOST_PP_TUPLE_ELEM(2, 1, elemdecl_elemtraits)), \
         parse_elem_macro, \
         is_replacement_macro, \
@@ -6456,7 +6455,7 @@
             BOOST_CONTRACT_EXT_PP_TRAITS_AUX_LIST_OP_42_, \
             ( \
                 decl_seq (BOOST_PP_NIL), \
-                BOOST_CONTRACT_EXT_PP_TRAITS_INIT, \
+                BOOST_CONTRACT_EXT_PP_TRAITS_AUX_INIT, \
                 parse_elem_macro, \
                 is_replacement_macro, \
                 replace_elem_macro \
@@ -6468,7 +6467,7 @@
         decl_traits_parse_is_replace) \
     ( \
         BOOST_PP_TUPLE_ELEM(5, 0, decl_traits_parse_is_replace), \
-        BOOST_CONTRACT_EXT_PP_TRAITS_DONE(BOOST_PP_TUPLE_ELEM(5, 1, \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_DONE(BOOST_PP_TUPLE_ELEM(5, 1, \
                 decl_traits_parse_is_replace)) BOOST_PP_EMPTY \
     )
 
@@ -6511,9 +6510,9 @@
         traits, parse_elem_macro, is_replacement_macro, replace_elem_macro) \
     BOOST_CONTRACT_EXT_PP_TRAITS_AUX_LIST_PUSH_BACK_42_(d, \
         BOOST_PP_SEQ_TAIL(decl_seq), \
-        BOOST_CONTRACT_EXT_PP_TRAITS_POP_BACK(traits), \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_POP_BACK(traits), \
         replace_elem_macro(d, 43, (BOOST_PP_SEQ_HEAD(decl_seq), \
-                BOOST_CONTRACT_EXT_PP_TRAITS_BACK(traits))), \
+                BOOST_CONTRACT_EXT_PP_TRAITS_AUX_BACK(traits))), \
         parse_elem_macro, \
         is_replacement_macro, \
         replace_elem_macro \
@@ -6531,7 +6530,7 @@
             BOOST_PP_SEQ_PUSH_FRONT \
         )(decl_seq, BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK( \
                 BOOST_PP_TUPLE_ELEM(2, 0, elemdecl_elemtraits))), \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK(traits, \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_PUSH_BACK(traits, \
                 BOOST_PP_TUPLE_ELEM(2, 1, elemdecl_elemtraits)), \
         parse_elem_macro, \
         is_replacement_macro, \
@@ -6610,7 +6609,7 @@
             BOOST_CONTRACT_EXT_PP_TRAITS_AUX_LIST_OP_43_, \
             ( \
                 decl_seq (BOOST_PP_NIL), \
-                BOOST_CONTRACT_EXT_PP_TRAITS_INIT, \
+                BOOST_CONTRACT_EXT_PP_TRAITS_AUX_INIT, \
                 parse_elem_macro, \
                 is_replacement_macro, \
                 replace_elem_macro \
@@ -6622,7 +6621,7 @@
         decl_traits_parse_is_replace) \
     ( \
         BOOST_PP_TUPLE_ELEM(5, 0, decl_traits_parse_is_replace), \
-        BOOST_CONTRACT_EXT_PP_TRAITS_DONE(BOOST_PP_TUPLE_ELEM(5, 1, \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_DONE(BOOST_PP_TUPLE_ELEM(5, 1, \
                 decl_traits_parse_is_replace)) BOOST_PP_EMPTY \
     )
 
@@ -6665,9 +6664,9 @@
         traits, parse_elem_macro, is_replacement_macro, replace_elem_macro) \
     BOOST_CONTRACT_EXT_PP_TRAITS_AUX_LIST_PUSH_BACK_43_(d, \
         BOOST_PP_SEQ_TAIL(decl_seq), \
-        BOOST_CONTRACT_EXT_PP_TRAITS_POP_BACK(traits), \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_POP_BACK(traits), \
         replace_elem_macro(d, 44, (BOOST_PP_SEQ_HEAD(decl_seq), \
-                BOOST_CONTRACT_EXT_PP_TRAITS_BACK(traits))), \
+                BOOST_CONTRACT_EXT_PP_TRAITS_AUX_BACK(traits))), \
         parse_elem_macro, \
         is_replacement_macro, \
         replace_elem_macro \
@@ -6685,7 +6684,7 @@
             BOOST_PP_SEQ_PUSH_FRONT \
         )(decl_seq, BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK( \
                 BOOST_PP_TUPLE_ELEM(2, 0, elemdecl_elemtraits))), \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK(traits, \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_PUSH_BACK(traits, \
                 BOOST_PP_TUPLE_ELEM(2, 1, elemdecl_elemtraits)), \
         parse_elem_macro, \
         is_replacement_macro, \
@@ -6764,7 +6763,7 @@
             BOOST_CONTRACT_EXT_PP_TRAITS_AUX_LIST_OP_44_, \
             ( \
                 decl_seq (BOOST_PP_NIL), \
-                BOOST_CONTRACT_EXT_PP_TRAITS_INIT, \
+                BOOST_CONTRACT_EXT_PP_TRAITS_AUX_INIT, \
                 parse_elem_macro, \
                 is_replacement_macro, \
                 replace_elem_macro \
@@ -6776,7 +6775,7 @@
         decl_traits_parse_is_replace) \
     ( \
         BOOST_PP_TUPLE_ELEM(5, 0, decl_traits_parse_is_replace), \
-        BOOST_CONTRACT_EXT_PP_TRAITS_DONE(BOOST_PP_TUPLE_ELEM(5, 1, \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_DONE(BOOST_PP_TUPLE_ELEM(5, 1, \
                 decl_traits_parse_is_replace)) BOOST_PP_EMPTY \
     )
 
@@ -6819,9 +6818,9 @@
         traits, parse_elem_macro, is_replacement_macro, replace_elem_macro) \
     BOOST_CONTRACT_EXT_PP_TRAITS_AUX_LIST_PUSH_BACK_44_(d, \
         BOOST_PP_SEQ_TAIL(decl_seq), \
-        BOOST_CONTRACT_EXT_PP_TRAITS_POP_BACK(traits), \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_POP_BACK(traits), \
         replace_elem_macro(d, 45, (BOOST_PP_SEQ_HEAD(decl_seq), \
-                BOOST_CONTRACT_EXT_PP_TRAITS_BACK(traits))), \
+                BOOST_CONTRACT_EXT_PP_TRAITS_AUX_BACK(traits))), \
         parse_elem_macro, \
         is_replacement_macro, \
         replace_elem_macro \
@@ -6839,7 +6838,7 @@
             BOOST_PP_SEQ_PUSH_FRONT \
         )(decl_seq, BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK( \
                 BOOST_PP_TUPLE_ELEM(2, 0, elemdecl_elemtraits))), \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK(traits, \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_PUSH_BACK(traits, \
                 BOOST_PP_TUPLE_ELEM(2, 1, elemdecl_elemtraits)), \
         parse_elem_macro, \
         is_replacement_macro, \
@@ -6918,7 +6917,7 @@
             BOOST_CONTRACT_EXT_PP_TRAITS_AUX_LIST_OP_45_, \
             ( \
                 decl_seq (BOOST_PP_NIL), \
-                BOOST_CONTRACT_EXT_PP_TRAITS_INIT, \
+                BOOST_CONTRACT_EXT_PP_TRAITS_AUX_INIT, \
                 parse_elem_macro, \
                 is_replacement_macro, \
                 replace_elem_macro \
@@ -6930,7 +6929,7 @@
         decl_traits_parse_is_replace) \
     ( \
         BOOST_PP_TUPLE_ELEM(5, 0, decl_traits_parse_is_replace), \
-        BOOST_CONTRACT_EXT_PP_TRAITS_DONE(BOOST_PP_TUPLE_ELEM(5, 1, \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_DONE(BOOST_PP_TUPLE_ELEM(5, 1, \
                 decl_traits_parse_is_replace)) BOOST_PP_EMPTY \
     )
 
@@ -6973,9 +6972,9 @@
         traits, parse_elem_macro, is_replacement_macro, replace_elem_macro) \
     BOOST_CONTRACT_EXT_PP_TRAITS_AUX_LIST_PUSH_BACK_45_(d, \
         BOOST_PP_SEQ_TAIL(decl_seq), \
-        BOOST_CONTRACT_EXT_PP_TRAITS_POP_BACK(traits), \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_POP_BACK(traits), \
         replace_elem_macro(d, 46, (BOOST_PP_SEQ_HEAD(decl_seq), \
-                BOOST_CONTRACT_EXT_PP_TRAITS_BACK(traits))), \
+                BOOST_CONTRACT_EXT_PP_TRAITS_AUX_BACK(traits))), \
         parse_elem_macro, \
         is_replacement_macro, \
         replace_elem_macro \
@@ -6993,7 +6992,7 @@
             BOOST_PP_SEQ_PUSH_FRONT \
         )(decl_seq, BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK( \
                 BOOST_PP_TUPLE_ELEM(2, 0, elemdecl_elemtraits))), \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK(traits, \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_PUSH_BACK(traits, \
                 BOOST_PP_TUPLE_ELEM(2, 1, elemdecl_elemtraits)), \
         parse_elem_macro, \
         is_replacement_macro, \
@@ -7072,7 +7071,7 @@
             BOOST_CONTRACT_EXT_PP_TRAITS_AUX_LIST_OP_46_, \
             ( \
                 decl_seq (BOOST_PP_NIL), \
-                BOOST_CONTRACT_EXT_PP_TRAITS_INIT, \
+                BOOST_CONTRACT_EXT_PP_TRAITS_AUX_INIT, \
                 parse_elem_macro, \
                 is_replacement_macro, \
                 replace_elem_macro \
@@ -7084,7 +7083,7 @@
         decl_traits_parse_is_replace) \
     ( \
         BOOST_PP_TUPLE_ELEM(5, 0, decl_traits_parse_is_replace), \
-        BOOST_CONTRACT_EXT_PP_TRAITS_DONE(BOOST_PP_TUPLE_ELEM(5, 1, \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_DONE(BOOST_PP_TUPLE_ELEM(5, 1, \
                 decl_traits_parse_is_replace)) BOOST_PP_EMPTY \
     )
 
@@ -7127,9 +7126,9 @@
         traits, parse_elem_macro, is_replacement_macro, replace_elem_macro) \
     BOOST_CONTRACT_EXT_PP_TRAITS_AUX_LIST_PUSH_BACK_46_(d, \
         BOOST_PP_SEQ_TAIL(decl_seq), \
-        BOOST_CONTRACT_EXT_PP_TRAITS_POP_BACK(traits), \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_POP_BACK(traits), \
         replace_elem_macro(d, 47, (BOOST_PP_SEQ_HEAD(decl_seq), \
-                BOOST_CONTRACT_EXT_PP_TRAITS_BACK(traits))), \
+                BOOST_CONTRACT_EXT_PP_TRAITS_AUX_BACK(traits))), \
         parse_elem_macro, \
         is_replacement_macro, \
         replace_elem_macro \
@@ -7147,7 +7146,7 @@
             BOOST_PP_SEQ_PUSH_FRONT \
         )(decl_seq, BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK( \
                 BOOST_PP_TUPLE_ELEM(2, 0, elemdecl_elemtraits))), \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK(traits, \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_PUSH_BACK(traits, \
                 BOOST_PP_TUPLE_ELEM(2, 1, elemdecl_elemtraits)), \
         parse_elem_macro, \
         is_replacement_macro, \
@@ -7226,7 +7225,7 @@
             BOOST_CONTRACT_EXT_PP_TRAITS_AUX_LIST_OP_47_, \
             ( \
                 decl_seq (BOOST_PP_NIL), \
-                BOOST_CONTRACT_EXT_PP_TRAITS_INIT, \
+                BOOST_CONTRACT_EXT_PP_TRAITS_AUX_INIT, \
                 parse_elem_macro, \
                 is_replacement_macro, \
                 replace_elem_macro \
@@ -7238,7 +7237,7 @@
         decl_traits_parse_is_replace) \
     ( \
         BOOST_PP_TUPLE_ELEM(5, 0, decl_traits_parse_is_replace), \
-        BOOST_CONTRACT_EXT_PP_TRAITS_DONE(BOOST_PP_TUPLE_ELEM(5, 1, \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_DONE(BOOST_PP_TUPLE_ELEM(5, 1, \
                 decl_traits_parse_is_replace)) BOOST_PP_EMPTY \
     )
 
@@ -7281,9 +7280,9 @@
         traits, parse_elem_macro, is_replacement_macro, replace_elem_macro) \
     BOOST_CONTRACT_EXT_PP_TRAITS_AUX_LIST_PUSH_BACK_47_(d, \
         BOOST_PP_SEQ_TAIL(decl_seq), \
-        BOOST_CONTRACT_EXT_PP_TRAITS_POP_BACK(traits), \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_POP_BACK(traits), \
         replace_elem_macro(d, 48, (BOOST_PP_SEQ_HEAD(decl_seq), \
-                BOOST_CONTRACT_EXT_PP_TRAITS_BACK(traits))), \
+                BOOST_CONTRACT_EXT_PP_TRAITS_AUX_BACK(traits))), \
         parse_elem_macro, \
         is_replacement_macro, \
         replace_elem_macro \
@@ -7301,7 +7300,7 @@
             BOOST_PP_SEQ_PUSH_FRONT \
         )(decl_seq, BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK( \
                 BOOST_PP_TUPLE_ELEM(2, 0, elemdecl_elemtraits))), \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK(traits, \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_PUSH_BACK(traits, \
                 BOOST_PP_TUPLE_ELEM(2, 1, elemdecl_elemtraits)), \
         parse_elem_macro, \
         is_replacement_macro, \
@@ -7380,7 +7379,7 @@
             BOOST_CONTRACT_EXT_PP_TRAITS_AUX_LIST_OP_48_, \
             ( \
                 decl_seq (BOOST_PP_NIL), \
-                BOOST_CONTRACT_EXT_PP_TRAITS_INIT, \
+                BOOST_CONTRACT_EXT_PP_TRAITS_AUX_INIT, \
                 parse_elem_macro, \
                 is_replacement_macro, \
                 replace_elem_macro \
@@ -7392,7 +7391,7 @@
         decl_traits_parse_is_replace) \
     ( \
         BOOST_PP_TUPLE_ELEM(5, 0, decl_traits_parse_is_replace), \
-        BOOST_CONTRACT_EXT_PP_TRAITS_DONE(BOOST_PP_TUPLE_ELEM(5, 1, \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_DONE(BOOST_PP_TUPLE_ELEM(5, 1, \
                 decl_traits_parse_is_replace)) BOOST_PP_EMPTY \
     )
 
@@ -7435,9 +7434,9 @@
         traits, parse_elem_macro, is_replacement_macro, replace_elem_macro) \
     BOOST_CONTRACT_EXT_PP_TRAITS_AUX_LIST_PUSH_BACK_48_(d, \
         BOOST_PP_SEQ_TAIL(decl_seq), \
-        BOOST_CONTRACT_EXT_PP_TRAITS_POP_BACK(traits), \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_POP_BACK(traits), \
         replace_elem_macro(d, 49, (BOOST_PP_SEQ_HEAD(decl_seq), \
-                BOOST_CONTRACT_EXT_PP_TRAITS_BACK(traits))), \
+                BOOST_CONTRACT_EXT_PP_TRAITS_AUX_BACK(traits))), \
         parse_elem_macro, \
         is_replacement_macro, \
         replace_elem_macro \
@@ -7455,7 +7454,7 @@
             BOOST_PP_SEQ_PUSH_FRONT \
         )(decl_seq, BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK( \
                 BOOST_PP_TUPLE_ELEM(2, 0, elemdecl_elemtraits))), \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK(traits, \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_PUSH_BACK(traits, \
                 BOOST_PP_TUPLE_ELEM(2, 1, elemdecl_elemtraits)), \
         parse_elem_macro, \
         is_replacement_macro, \
@@ -7534,7 +7533,7 @@
             BOOST_CONTRACT_EXT_PP_TRAITS_AUX_LIST_OP_49_, \
             ( \
                 decl_seq (BOOST_PP_NIL), \
-                BOOST_CONTRACT_EXT_PP_TRAITS_INIT, \
+                BOOST_CONTRACT_EXT_PP_TRAITS_AUX_INIT, \
                 parse_elem_macro, \
                 is_replacement_macro, \
                 replace_elem_macro \
@@ -7546,7 +7545,7 @@
         decl_traits_parse_is_replace) \
     ( \
         BOOST_PP_TUPLE_ELEM(5, 0, decl_traits_parse_is_replace), \
-        BOOST_CONTRACT_EXT_PP_TRAITS_DONE(BOOST_PP_TUPLE_ELEM(5, 1, \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_DONE(BOOST_PP_TUPLE_ELEM(5, 1, \
                 decl_traits_parse_is_replace)) BOOST_PP_EMPTY \
     )
 
@@ -7589,9 +7588,9 @@
         traits, parse_elem_macro, is_replacement_macro, replace_elem_macro) \
     BOOST_CONTRACT_EXT_PP_TRAITS_AUX_LIST_PUSH_BACK_49_(d, \
         BOOST_PP_SEQ_TAIL(decl_seq), \
-        BOOST_CONTRACT_EXT_PP_TRAITS_POP_BACK(traits), \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_POP_BACK(traits), \
         replace_elem_macro(d, 50, (BOOST_PP_SEQ_HEAD(decl_seq), \
-                BOOST_CONTRACT_EXT_PP_TRAITS_BACK(traits))), \
+                BOOST_CONTRACT_EXT_PP_TRAITS_AUX_BACK(traits))), \
         parse_elem_macro, \
         is_replacement_macro, \
         replace_elem_macro \
@@ -7609,7 +7608,7 @@
             BOOST_PP_SEQ_PUSH_FRONT \
         )(decl_seq, BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK( \
                 BOOST_PP_TUPLE_ELEM(2, 0, elemdecl_elemtraits))), \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK(traits, \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_PUSH_BACK(traits, \
                 BOOST_PP_TUPLE_ELEM(2, 1, elemdecl_elemtraits)), \
         parse_elem_macro, \
         is_replacement_macro, \
@@ -7688,7 +7687,7 @@
             BOOST_CONTRACT_EXT_PP_TRAITS_AUX_LIST_OP_50_, \
             ( \
                 decl_seq (BOOST_PP_NIL), \
-                BOOST_CONTRACT_EXT_PP_TRAITS_INIT, \
+                BOOST_CONTRACT_EXT_PP_TRAITS_AUX_INIT, \
                 parse_elem_macro, \
                 is_replacement_macro, \
                 replace_elem_macro \
@@ -7700,7 +7699,7 @@
         decl_traits_parse_is_replace) \
     ( \
         BOOST_PP_TUPLE_ELEM(5, 0, decl_traits_parse_is_replace), \
-        BOOST_CONTRACT_EXT_PP_TRAITS_DONE(BOOST_PP_TUPLE_ELEM(5, 1, \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_DONE(BOOST_PP_TUPLE_ELEM(5, 1, \
                 decl_traits_parse_is_replace)) BOOST_PP_EMPTY \
     )
 
@@ -7743,9 +7742,9 @@
         traits, parse_elem_macro, is_replacement_macro, replace_elem_macro) \
     BOOST_CONTRACT_EXT_PP_TRAITS_AUX_LIST_PUSH_BACK_50_(d, \
         BOOST_PP_SEQ_TAIL(decl_seq), \
-        BOOST_CONTRACT_EXT_PP_TRAITS_POP_BACK(traits), \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_POP_BACK(traits), \
         replace_elem_macro(d, 51, (BOOST_PP_SEQ_HEAD(decl_seq), \
-                BOOST_CONTRACT_EXT_PP_TRAITS_BACK(traits))), \
+                BOOST_CONTRACT_EXT_PP_TRAITS_AUX_BACK(traits))), \
         parse_elem_macro, \
         is_replacement_macro, \
         replace_elem_macro \
@@ -7763,7 +7762,7 @@
             BOOST_PP_SEQ_PUSH_FRONT \
         )(decl_seq, BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK( \
                 BOOST_PP_TUPLE_ELEM(2, 0, elemdecl_elemtraits))), \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK(traits, \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_PUSH_BACK(traits, \
                 BOOST_PP_TUPLE_ELEM(2, 1, elemdecl_elemtraits)), \
         parse_elem_macro, \
         is_replacement_macro, \
@@ -7842,7 +7841,7 @@
             BOOST_CONTRACT_EXT_PP_TRAITS_AUX_LIST_OP_51_, \
             ( \
                 decl_seq (BOOST_PP_NIL), \
-                BOOST_CONTRACT_EXT_PP_TRAITS_INIT, \
+                BOOST_CONTRACT_EXT_PP_TRAITS_AUX_INIT, \
                 parse_elem_macro, \
                 is_replacement_macro, \
                 replace_elem_macro \
@@ -7854,7 +7853,7 @@
         decl_traits_parse_is_replace) \
     ( \
         BOOST_PP_TUPLE_ELEM(5, 0, decl_traits_parse_is_replace), \
-        BOOST_CONTRACT_EXT_PP_TRAITS_DONE(BOOST_PP_TUPLE_ELEM(5, 1, \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_DONE(BOOST_PP_TUPLE_ELEM(5, 1, \
                 decl_traits_parse_is_replace)) BOOST_PP_EMPTY \
     )
 
@@ -7897,9 +7896,9 @@
         traits, parse_elem_macro, is_replacement_macro, replace_elem_macro) \
     BOOST_CONTRACT_EXT_PP_TRAITS_AUX_LIST_PUSH_BACK_51_(d, \
         BOOST_PP_SEQ_TAIL(decl_seq), \
-        BOOST_CONTRACT_EXT_PP_TRAITS_POP_BACK(traits), \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_POP_BACK(traits), \
         replace_elem_macro(d, 52, (BOOST_PP_SEQ_HEAD(decl_seq), \
-                BOOST_CONTRACT_EXT_PP_TRAITS_BACK(traits))), \
+                BOOST_CONTRACT_EXT_PP_TRAITS_AUX_BACK(traits))), \
         parse_elem_macro, \
         is_replacement_macro, \
         replace_elem_macro \
@@ -7917,7 +7916,7 @@
             BOOST_PP_SEQ_PUSH_FRONT \
         )(decl_seq, BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK( \
                 BOOST_PP_TUPLE_ELEM(2, 0, elemdecl_elemtraits))), \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK(traits, \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_PUSH_BACK(traits, \
                 BOOST_PP_TUPLE_ELEM(2, 1, elemdecl_elemtraits)), \
         parse_elem_macro, \
         is_replacement_macro, \
@@ -7996,7 +7995,7 @@
             BOOST_CONTRACT_EXT_PP_TRAITS_AUX_LIST_OP_52_, \
             ( \
                 decl_seq (BOOST_PP_NIL), \
-                BOOST_CONTRACT_EXT_PP_TRAITS_INIT, \
+                BOOST_CONTRACT_EXT_PP_TRAITS_AUX_INIT, \
                 parse_elem_macro, \
                 is_replacement_macro, \
                 replace_elem_macro \
@@ -8008,7 +8007,7 @@
         decl_traits_parse_is_replace) \
     ( \
         BOOST_PP_TUPLE_ELEM(5, 0, decl_traits_parse_is_replace), \
-        BOOST_CONTRACT_EXT_PP_TRAITS_DONE(BOOST_PP_TUPLE_ELEM(5, 1, \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_DONE(BOOST_PP_TUPLE_ELEM(5, 1, \
                 decl_traits_parse_is_replace)) BOOST_PP_EMPTY \
     )
 
@@ -8051,9 +8050,9 @@
         traits, parse_elem_macro, is_replacement_macro, replace_elem_macro) \
     BOOST_CONTRACT_EXT_PP_TRAITS_AUX_LIST_PUSH_BACK_52_(d, \
         BOOST_PP_SEQ_TAIL(decl_seq), \
-        BOOST_CONTRACT_EXT_PP_TRAITS_POP_BACK(traits), \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_POP_BACK(traits), \
         replace_elem_macro(d, 53, (BOOST_PP_SEQ_HEAD(decl_seq), \
-                BOOST_CONTRACT_EXT_PP_TRAITS_BACK(traits))), \
+                BOOST_CONTRACT_EXT_PP_TRAITS_AUX_BACK(traits))), \
         parse_elem_macro, \
         is_replacement_macro, \
         replace_elem_macro \
@@ -8071,7 +8070,7 @@
             BOOST_PP_SEQ_PUSH_FRONT \
         )(decl_seq, BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK( \
                 BOOST_PP_TUPLE_ELEM(2, 0, elemdecl_elemtraits))), \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK(traits, \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_PUSH_BACK(traits, \
                 BOOST_PP_TUPLE_ELEM(2, 1, elemdecl_elemtraits)), \
         parse_elem_macro, \
         is_replacement_macro, \
@@ -8150,7 +8149,7 @@
             BOOST_CONTRACT_EXT_PP_TRAITS_AUX_LIST_OP_53_, \
             ( \
                 decl_seq (BOOST_PP_NIL), \
-                BOOST_CONTRACT_EXT_PP_TRAITS_INIT, \
+                BOOST_CONTRACT_EXT_PP_TRAITS_AUX_INIT, \
                 parse_elem_macro, \
                 is_replacement_macro, \
                 replace_elem_macro \
@@ -8162,7 +8161,7 @@
         decl_traits_parse_is_replace) \
     ( \
         BOOST_PP_TUPLE_ELEM(5, 0, decl_traits_parse_is_replace), \
-        BOOST_CONTRACT_EXT_PP_TRAITS_DONE(BOOST_PP_TUPLE_ELEM(5, 1, \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_DONE(BOOST_PP_TUPLE_ELEM(5, 1, \
                 decl_traits_parse_is_replace)) BOOST_PP_EMPTY \
     )
 
@@ -8205,9 +8204,9 @@
         traits, parse_elem_macro, is_replacement_macro, replace_elem_macro) \
     BOOST_CONTRACT_EXT_PP_TRAITS_AUX_LIST_PUSH_BACK_53_(d, \
         BOOST_PP_SEQ_TAIL(decl_seq), \
-        BOOST_CONTRACT_EXT_PP_TRAITS_POP_BACK(traits), \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_POP_BACK(traits), \
         replace_elem_macro(d, 54, (BOOST_PP_SEQ_HEAD(decl_seq), \
-                BOOST_CONTRACT_EXT_PP_TRAITS_BACK(traits))), \
+                BOOST_CONTRACT_EXT_PP_TRAITS_AUX_BACK(traits))), \
         parse_elem_macro, \
         is_replacement_macro, \
         replace_elem_macro \
@@ -8225,7 +8224,7 @@
             BOOST_PP_SEQ_PUSH_FRONT \
         )(decl_seq, BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK( \
                 BOOST_PP_TUPLE_ELEM(2, 0, elemdecl_elemtraits))), \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK(traits, \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_PUSH_BACK(traits, \
                 BOOST_PP_TUPLE_ELEM(2, 1, elemdecl_elemtraits)), \
         parse_elem_macro, \
         is_replacement_macro, \
@@ -8304,7 +8303,7 @@
             BOOST_CONTRACT_EXT_PP_TRAITS_AUX_LIST_OP_54_, \
             ( \
                 decl_seq (BOOST_PP_NIL), \
-                BOOST_CONTRACT_EXT_PP_TRAITS_INIT, \
+                BOOST_CONTRACT_EXT_PP_TRAITS_AUX_INIT, \
                 parse_elem_macro, \
                 is_replacement_macro, \
                 replace_elem_macro \
@@ -8316,7 +8315,7 @@
         decl_traits_parse_is_replace) \
     ( \
         BOOST_PP_TUPLE_ELEM(5, 0, decl_traits_parse_is_replace), \
-        BOOST_CONTRACT_EXT_PP_TRAITS_DONE(BOOST_PP_TUPLE_ELEM(5, 1, \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_DONE(BOOST_PP_TUPLE_ELEM(5, 1, \
                 decl_traits_parse_is_replace)) BOOST_PP_EMPTY \
     )
 
@@ -8359,9 +8358,9 @@
         traits, parse_elem_macro, is_replacement_macro, replace_elem_macro) \
     BOOST_CONTRACT_EXT_PP_TRAITS_AUX_LIST_PUSH_BACK_54_(d, \
         BOOST_PP_SEQ_TAIL(decl_seq), \
-        BOOST_CONTRACT_EXT_PP_TRAITS_POP_BACK(traits), \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_POP_BACK(traits), \
         replace_elem_macro(d, 55, (BOOST_PP_SEQ_HEAD(decl_seq), \
-                BOOST_CONTRACT_EXT_PP_TRAITS_BACK(traits))), \
+                BOOST_CONTRACT_EXT_PP_TRAITS_AUX_BACK(traits))), \
         parse_elem_macro, \
         is_replacement_macro, \
         replace_elem_macro \
@@ -8379,7 +8378,7 @@
             BOOST_PP_SEQ_PUSH_FRONT \
         )(decl_seq, BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK( \
                 BOOST_PP_TUPLE_ELEM(2, 0, elemdecl_elemtraits))), \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK(traits, \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_PUSH_BACK(traits, \
                 BOOST_PP_TUPLE_ELEM(2, 1, elemdecl_elemtraits)), \
         parse_elem_macro, \
         is_replacement_macro, \
@@ -8458,7 +8457,7 @@
             BOOST_CONTRACT_EXT_PP_TRAITS_AUX_LIST_OP_55_, \
             ( \
                 decl_seq (BOOST_PP_NIL), \
-                BOOST_CONTRACT_EXT_PP_TRAITS_INIT, \
+                BOOST_CONTRACT_EXT_PP_TRAITS_AUX_INIT, \
                 parse_elem_macro, \
                 is_replacement_macro, \
                 replace_elem_macro \
@@ -8470,7 +8469,7 @@
         decl_traits_parse_is_replace) \
     ( \
         BOOST_PP_TUPLE_ELEM(5, 0, decl_traits_parse_is_replace), \
-        BOOST_CONTRACT_EXT_PP_TRAITS_DONE(BOOST_PP_TUPLE_ELEM(5, 1, \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_DONE(BOOST_PP_TUPLE_ELEM(5, 1, \
                 decl_traits_parse_is_replace)) BOOST_PP_EMPTY \
     )
 
@@ -8513,9 +8512,9 @@
         traits, parse_elem_macro, is_replacement_macro, replace_elem_macro) \
     BOOST_CONTRACT_EXT_PP_TRAITS_AUX_LIST_PUSH_BACK_55_(d, \
         BOOST_PP_SEQ_TAIL(decl_seq), \
-        BOOST_CONTRACT_EXT_PP_TRAITS_POP_BACK(traits), \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_POP_BACK(traits), \
         replace_elem_macro(d, 56, (BOOST_PP_SEQ_HEAD(decl_seq), \
-                BOOST_CONTRACT_EXT_PP_TRAITS_BACK(traits))), \
+                BOOST_CONTRACT_EXT_PP_TRAITS_AUX_BACK(traits))), \
         parse_elem_macro, \
         is_replacement_macro, \
         replace_elem_macro \
@@ -8533,7 +8532,7 @@
             BOOST_PP_SEQ_PUSH_FRONT \
         )(decl_seq, BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK( \
                 BOOST_PP_TUPLE_ELEM(2, 0, elemdecl_elemtraits))), \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK(traits, \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_PUSH_BACK(traits, \
                 BOOST_PP_TUPLE_ELEM(2, 1, elemdecl_elemtraits)), \
         parse_elem_macro, \
         is_replacement_macro, \
@@ -8612,7 +8611,7 @@
             BOOST_CONTRACT_EXT_PP_TRAITS_AUX_LIST_OP_56_, \
             ( \
                 decl_seq (BOOST_PP_NIL), \
-                BOOST_CONTRACT_EXT_PP_TRAITS_INIT, \
+                BOOST_CONTRACT_EXT_PP_TRAITS_AUX_INIT, \
                 parse_elem_macro, \
                 is_replacement_macro, \
                 replace_elem_macro \
@@ -8624,7 +8623,7 @@
         decl_traits_parse_is_replace) \
     ( \
         BOOST_PP_TUPLE_ELEM(5, 0, decl_traits_parse_is_replace), \
-        BOOST_CONTRACT_EXT_PP_TRAITS_DONE(BOOST_PP_TUPLE_ELEM(5, 1, \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_DONE(BOOST_PP_TUPLE_ELEM(5, 1, \
                 decl_traits_parse_is_replace)) BOOST_PP_EMPTY \
     )
 
@@ -8667,9 +8666,9 @@
         traits, parse_elem_macro, is_replacement_macro, replace_elem_macro) \
     BOOST_CONTRACT_EXT_PP_TRAITS_AUX_LIST_PUSH_BACK_56_(d, \
         BOOST_PP_SEQ_TAIL(decl_seq), \
-        BOOST_CONTRACT_EXT_PP_TRAITS_POP_BACK(traits), \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_POP_BACK(traits), \
         replace_elem_macro(d, 57, (BOOST_PP_SEQ_HEAD(decl_seq), \
-                BOOST_CONTRACT_EXT_PP_TRAITS_BACK(traits))), \
+                BOOST_CONTRACT_EXT_PP_TRAITS_AUX_BACK(traits))), \
         parse_elem_macro, \
         is_replacement_macro, \
         replace_elem_macro \
@@ -8687,7 +8686,7 @@
             BOOST_PP_SEQ_PUSH_FRONT \
         )(decl_seq, BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK( \
                 BOOST_PP_TUPLE_ELEM(2, 0, elemdecl_elemtraits))), \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK(traits, \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_PUSH_BACK(traits, \
                 BOOST_PP_TUPLE_ELEM(2, 1, elemdecl_elemtraits)), \
         parse_elem_macro, \
         is_replacement_macro, \
@@ -8766,7 +8765,7 @@
             BOOST_CONTRACT_EXT_PP_TRAITS_AUX_LIST_OP_57_, \
             ( \
                 decl_seq (BOOST_PP_NIL), \
-                BOOST_CONTRACT_EXT_PP_TRAITS_INIT, \
+                BOOST_CONTRACT_EXT_PP_TRAITS_AUX_INIT, \
                 parse_elem_macro, \
                 is_replacement_macro, \
                 replace_elem_macro \
@@ -8778,7 +8777,7 @@
         decl_traits_parse_is_replace) \
     ( \
         BOOST_PP_TUPLE_ELEM(5, 0, decl_traits_parse_is_replace), \
-        BOOST_CONTRACT_EXT_PP_TRAITS_DONE(BOOST_PP_TUPLE_ELEM(5, 1, \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_DONE(BOOST_PP_TUPLE_ELEM(5, 1, \
                 decl_traits_parse_is_replace)) BOOST_PP_EMPTY \
     )
 
@@ -8821,9 +8820,9 @@
         traits, parse_elem_macro, is_replacement_macro, replace_elem_macro) \
     BOOST_CONTRACT_EXT_PP_TRAITS_AUX_LIST_PUSH_BACK_57_(d, \
         BOOST_PP_SEQ_TAIL(decl_seq), \
-        BOOST_CONTRACT_EXT_PP_TRAITS_POP_BACK(traits), \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_POP_BACK(traits), \
         replace_elem_macro(d, 58, (BOOST_PP_SEQ_HEAD(decl_seq), \
-                BOOST_CONTRACT_EXT_PP_TRAITS_BACK(traits))), \
+                BOOST_CONTRACT_EXT_PP_TRAITS_AUX_BACK(traits))), \
         parse_elem_macro, \
         is_replacement_macro, \
         replace_elem_macro \
@@ -8841,7 +8840,7 @@
             BOOST_PP_SEQ_PUSH_FRONT \
         )(decl_seq, BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK( \
                 BOOST_PP_TUPLE_ELEM(2, 0, elemdecl_elemtraits))), \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK(traits, \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_PUSH_BACK(traits, \
                 BOOST_PP_TUPLE_ELEM(2, 1, elemdecl_elemtraits)), \
         parse_elem_macro, \
         is_replacement_macro, \
@@ -8920,7 +8919,7 @@
             BOOST_CONTRACT_EXT_PP_TRAITS_AUX_LIST_OP_58_, \
             ( \
                 decl_seq (BOOST_PP_NIL), \
-                BOOST_CONTRACT_EXT_PP_TRAITS_INIT, \
+                BOOST_CONTRACT_EXT_PP_TRAITS_AUX_INIT, \
                 parse_elem_macro, \
                 is_replacement_macro, \
                 replace_elem_macro \
@@ -8932,7 +8931,7 @@
         decl_traits_parse_is_replace) \
     ( \
         BOOST_PP_TUPLE_ELEM(5, 0, decl_traits_parse_is_replace), \
-        BOOST_CONTRACT_EXT_PP_TRAITS_DONE(BOOST_PP_TUPLE_ELEM(5, 1, \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_DONE(BOOST_PP_TUPLE_ELEM(5, 1, \
                 decl_traits_parse_is_replace)) BOOST_PP_EMPTY \
     )
 
@@ -8975,9 +8974,9 @@
         traits, parse_elem_macro, is_replacement_macro, replace_elem_macro) \
     BOOST_CONTRACT_EXT_PP_TRAITS_AUX_LIST_PUSH_BACK_58_(d, \
         BOOST_PP_SEQ_TAIL(decl_seq), \
-        BOOST_CONTRACT_EXT_PP_TRAITS_POP_BACK(traits), \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_POP_BACK(traits), \
         replace_elem_macro(d, 59, (BOOST_PP_SEQ_HEAD(decl_seq), \
-                BOOST_CONTRACT_EXT_PP_TRAITS_BACK(traits))), \
+                BOOST_CONTRACT_EXT_PP_TRAITS_AUX_BACK(traits))), \
         parse_elem_macro, \
         is_replacement_macro, \
         replace_elem_macro \
@@ -8995,7 +8994,7 @@
             BOOST_PP_SEQ_PUSH_FRONT \
         )(decl_seq, BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK( \
                 BOOST_PP_TUPLE_ELEM(2, 0, elemdecl_elemtraits))), \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK(traits, \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_PUSH_BACK(traits, \
                 BOOST_PP_TUPLE_ELEM(2, 1, elemdecl_elemtraits)), \
         parse_elem_macro, \
         is_replacement_macro, \
@@ -9074,7 +9073,7 @@
             BOOST_CONTRACT_EXT_PP_TRAITS_AUX_LIST_OP_59_, \
             ( \
                 decl_seq (BOOST_PP_NIL), \
-                BOOST_CONTRACT_EXT_PP_TRAITS_INIT, \
+                BOOST_CONTRACT_EXT_PP_TRAITS_AUX_INIT, \
                 parse_elem_macro, \
                 is_replacement_macro, \
                 replace_elem_macro \
@@ -9086,7 +9085,7 @@
         decl_traits_parse_is_replace) \
     ( \
         BOOST_PP_TUPLE_ELEM(5, 0, decl_traits_parse_is_replace), \
-        BOOST_CONTRACT_EXT_PP_TRAITS_DONE(BOOST_PP_TUPLE_ELEM(5, 1, \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_DONE(BOOST_PP_TUPLE_ELEM(5, 1, \
                 decl_traits_parse_is_replace)) BOOST_PP_EMPTY \
     )
 
@@ -9129,9 +9128,9 @@
         traits, parse_elem_macro, is_replacement_macro, replace_elem_macro) \
     BOOST_CONTRACT_EXT_PP_TRAITS_AUX_LIST_PUSH_BACK_59_(d, \
         BOOST_PP_SEQ_TAIL(decl_seq), \
-        BOOST_CONTRACT_EXT_PP_TRAITS_POP_BACK(traits), \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_POP_BACK(traits), \
         replace_elem_macro(d, 60, (BOOST_PP_SEQ_HEAD(decl_seq), \
-                BOOST_CONTRACT_EXT_PP_TRAITS_BACK(traits))), \
+                BOOST_CONTRACT_EXT_PP_TRAITS_AUX_BACK(traits))), \
         parse_elem_macro, \
         is_replacement_macro, \
         replace_elem_macro \
@@ -9149,7 +9148,7 @@
             BOOST_PP_SEQ_PUSH_FRONT \
         )(decl_seq, BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK( \
                 BOOST_PP_TUPLE_ELEM(2, 0, elemdecl_elemtraits))), \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK(traits, \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_PUSH_BACK(traits, \
                 BOOST_PP_TUPLE_ELEM(2, 1, elemdecl_elemtraits)), \
         parse_elem_macro, \
         is_replacement_macro, \
@@ -9228,7 +9227,7 @@
             BOOST_CONTRACT_EXT_PP_TRAITS_AUX_LIST_OP_60_, \
             ( \
                 decl_seq (BOOST_PP_NIL), \
-                BOOST_CONTRACT_EXT_PP_TRAITS_INIT, \
+                BOOST_CONTRACT_EXT_PP_TRAITS_AUX_INIT, \
                 parse_elem_macro, \
                 is_replacement_macro, \
                 replace_elem_macro \
@@ -9240,7 +9239,7 @@
         decl_traits_parse_is_replace) \
     ( \
         BOOST_PP_TUPLE_ELEM(5, 0, decl_traits_parse_is_replace), \
-        BOOST_CONTRACT_EXT_PP_TRAITS_DONE(BOOST_PP_TUPLE_ELEM(5, 1, \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_DONE(BOOST_PP_TUPLE_ELEM(5, 1, \
                 decl_traits_parse_is_replace)) BOOST_PP_EMPTY \
     )
 
@@ -9283,9 +9282,9 @@
         traits, parse_elem_macro, is_replacement_macro, replace_elem_macro) \
     BOOST_CONTRACT_EXT_PP_TRAITS_AUX_LIST_PUSH_BACK_60_(d, \
         BOOST_PP_SEQ_TAIL(decl_seq), \
-        BOOST_CONTRACT_EXT_PP_TRAITS_POP_BACK(traits), \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_POP_BACK(traits), \
         replace_elem_macro(d, 61, (BOOST_PP_SEQ_HEAD(decl_seq), \
-                BOOST_CONTRACT_EXT_PP_TRAITS_BACK(traits))), \
+                BOOST_CONTRACT_EXT_PP_TRAITS_AUX_BACK(traits))), \
         parse_elem_macro, \
         is_replacement_macro, \
         replace_elem_macro \
@@ -9303,7 +9302,7 @@
             BOOST_PP_SEQ_PUSH_FRONT \
         )(decl_seq, BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK( \
                 BOOST_PP_TUPLE_ELEM(2, 0, elemdecl_elemtraits))), \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK(traits, \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_PUSH_BACK(traits, \
                 BOOST_PP_TUPLE_ELEM(2, 1, elemdecl_elemtraits)), \
         parse_elem_macro, \
         is_replacement_macro, \
@@ -9382,7 +9381,7 @@
             BOOST_CONTRACT_EXT_PP_TRAITS_AUX_LIST_OP_61_, \
             ( \
                 decl_seq (BOOST_PP_NIL), \
-                BOOST_CONTRACT_EXT_PP_TRAITS_INIT, \
+                BOOST_CONTRACT_EXT_PP_TRAITS_AUX_INIT, \
                 parse_elem_macro, \
                 is_replacement_macro, \
                 replace_elem_macro \
@@ -9394,7 +9393,7 @@
         decl_traits_parse_is_replace) \
     ( \
         BOOST_PP_TUPLE_ELEM(5, 0, decl_traits_parse_is_replace), \
-        BOOST_CONTRACT_EXT_PP_TRAITS_DONE(BOOST_PP_TUPLE_ELEM(5, 1, \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_DONE(BOOST_PP_TUPLE_ELEM(5, 1, \
                 decl_traits_parse_is_replace)) BOOST_PP_EMPTY \
     )
 
@@ -9437,9 +9436,9 @@
         traits, parse_elem_macro, is_replacement_macro, replace_elem_macro) \
     BOOST_CONTRACT_EXT_PP_TRAITS_AUX_LIST_PUSH_BACK_61_(d, \
         BOOST_PP_SEQ_TAIL(decl_seq), \
-        BOOST_CONTRACT_EXT_PP_TRAITS_POP_BACK(traits), \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_POP_BACK(traits), \
         replace_elem_macro(d, 62, (BOOST_PP_SEQ_HEAD(decl_seq), \
-                BOOST_CONTRACT_EXT_PP_TRAITS_BACK(traits))), \
+                BOOST_CONTRACT_EXT_PP_TRAITS_AUX_BACK(traits))), \
         parse_elem_macro, \
         is_replacement_macro, \
         replace_elem_macro \
@@ -9457,7 +9456,7 @@
             BOOST_PP_SEQ_PUSH_FRONT \
         )(decl_seq, BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK( \
                 BOOST_PP_TUPLE_ELEM(2, 0, elemdecl_elemtraits))), \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK(traits, \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_PUSH_BACK(traits, \
                 BOOST_PP_TUPLE_ELEM(2, 1, elemdecl_elemtraits)), \
         parse_elem_macro, \
         is_replacement_macro, \
@@ -9536,7 +9535,7 @@
             BOOST_CONTRACT_EXT_PP_TRAITS_AUX_LIST_OP_62_, \
             ( \
                 decl_seq (BOOST_PP_NIL), \
-                BOOST_CONTRACT_EXT_PP_TRAITS_INIT, \
+                BOOST_CONTRACT_EXT_PP_TRAITS_AUX_INIT, \
                 parse_elem_macro, \
                 is_replacement_macro, \
                 replace_elem_macro \
@@ -9548,7 +9547,7 @@
         decl_traits_parse_is_replace) \
     ( \
         BOOST_PP_TUPLE_ELEM(5, 0, decl_traits_parse_is_replace), \
-        BOOST_CONTRACT_EXT_PP_TRAITS_DONE(BOOST_PP_TUPLE_ELEM(5, 1, \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_DONE(BOOST_PP_TUPLE_ELEM(5, 1, \
                 decl_traits_parse_is_replace)) BOOST_PP_EMPTY \
     )
 
@@ -9591,9 +9590,9 @@
         traits, parse_elem_macro, is_replacement_macro, replace_elem_macro) \
     BOOST_CONTRACT_EXT_PP_TRAITS_AUX_LIST_PUSH_BACK_62_(d, \
         BOOST_PP_SEQ_TAIL(decl_seq), \
-        BOOST_CONTRACT_EXT_PP_TRAITS_POP_BACK(traits), \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_POP_BACK(traits), \
         replace_elem_macro(d, 63, (BOOST_PP_SEQ_HEAD(decl_seq), \
-                BOOST_CONTRACT_EXT_PP_TRAITS_BACK(traits))), \
+                BOOST_CONTRACT_EXT_PP_TRAITS_AUX_BACK(traits))), \
         parse_elem_macro, \
         is_replacement_macro, \
         replace_elem_macro \
@@ -9611,7 +9610,7 @@
             BOOST_PP_SEQ_PUSH_FRONT \
         )(decl_seq, BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK( \
                 BOOST_PP_TUPLE_ELEM(2, 0, elemdecl_elemtraits))), \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK(traits, \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_PUSH_BACK(traits, \
                 BOOST_PP_TUPLE_ELEM(2, 1, elemdecl_elemtraits)), \
         parse_elem_macro, \
         is_replacement_macro, \
@@ -9690,7 +9689,7 @@
             BOOST_CONTRACT_EXT_PP_TRAITS_AUX_LIST_OP_63_, \
             ( \
                 decl_seq (BOOST_PP_NIL), \
-                BOOST_CONTRACT_EXT_PP_TRAITS_INIT, \
+                BOOST_CONTRACT_EXT_PP_TRAITS_AUX_INIT, \
                 parse_elem_macro, \
                 is_replacement_macro, \
                 replace_elem_macro \
@@ -9702,7 +9701,7 @@
         decl_traits_parse_is_replace) \
     ( \
         BOOST_PP_TUPLE_ELEM(5, 0, decl_traits_parse_is_replace), \
-        BOOST_CONTRACT_EXT_PP_TRAITS_DONE(BOOST_PP_TUPLE_ELEM(5, 1, \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_DONE(BOOST_PP_TUPLE_ELEM(5, 1, \
                 decl_traits_parse_is_replace)) BOOST_PP_EMPTY \
     )
 
@@ -9745,9 +9744,9 @@
         traits, parse_elem_macro, is_replacement_macro, replace_elem_macro) \
     BOOST_CONTRACT_EXT_PP_TRAITS_AUX_LIST_PUSH_BACK_63_(d, \
         BOOST_PP_SEQ_TAIL(decl_seq), \
-        BOOST_CONTRACT_EXT_PP_TRAITS_POP_BACK(traits), \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_POP_BACK(traits), \
         replace_elem_macro(d, 64, (BOOST_PP_SEQ_HEAD(decl_seq), \
-                BOOST_CONTRACT_EXT_PP_TRAITS_BACK(traits))), \
+                BOOST_CONTRACT_EXT_PP_TRAITS_AUX_BACK(traits))), \
         parse_elem_macro, \
         is_replacement_macro, \
         replace_elem_macro \
@@ -9765,7 +9764,7 @@
             BOOST_PP_SEQ_PUSH_FRONT \
         )(decl_seq, BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK( \
                 BOOST_PP_TUPLE_ELEM(2, 0, elemdecl_elemtraits))), \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK(traits, \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_PUSH_BACK(traits, \
                 BOOST_PP_TUPLE_ELEM(2, 1, elemdecl_elemtraits)), \
         parse_elem_macro, \
         is_replacement_macro, \
@@ -9844,7 +9843,7 @@
             BOOST_CONTRACT_EXT_PP_TRAITS_AUX_LIST_OP_64_, \
             ( \
                 decl_seq (BOOST_PP_NIL), \
-                BOOST_CONTRACT_EXT_PP_TRAITS_INIT, \
+                BOOST_CONTRACT_EXT_PP_TRAITS_AUX_INIT, \
                 parse_elem_macro, \
                 is_replacement_macro, \
                 replace_elem_macro \
@@ -9856,7 +9855,7 @@
         decl_traits_parse_is_replace) \
     ( \
         BOOST_PP_TUPLE_ELEM(5, 0, decl_traits_parse_is_replace), \
-        BOOST_CONTRACT_EXT_PP_TRAITS_DONE(BOOST_PP_TUPLE_ELEM(5, 1, \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_DONE(BOOST_PP_TUPLE_ELEM(5, 1, \
                 decl_traits_parse_is_replace)) BOOST_PP_EMPTY \
     )
 
@@ -9899,9 +9898,9 @@
         traits, parse_elem_macro, is_replacement_macro, replace_elem_macro) \
     BOOST_CONTRACT_EXT_PP_TRAITS_AUX_LIST_PUSH_BACK_64_(d, \
         BOOST_PP_SEQ_TAIL(decl_seq), \
-        BOOST_CONTRACT_EXT_PP_TRAITS_POP_BACK(traits), \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_POP_BACK(traits), \
         replace_elem_macro(d, 65, (BOOST_PP_SEQ_HEAD(decl_seq), \
-                BOOST_CONTRACT_EXT_PP_TRAITS_BACK(traits))), \
+                BOOST_CONTRACT_EXT_PP_TRAITS_AUX_BACK(traits))), \
         parse_elem_macro, \
         is_replacement_macro, \
         replace_elem_macro \
@@ -9919,7 +9918,7 @@
             BOOST_PP_SEQ_PUSH_FRONT \
         )(decl_seq, BOOST_CONTRACT_EXT_PP_NIL_REMOVE_BACK( \
                 BOOST_PP_TUPLE_ELEM(2, 0, elemdecl_elemtraits))), \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK(traits, \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_PUSH_BACK(traits, \
                 BOOST_PP_TUPLE_ELEM(2, 1, elemdecl_elemtraits)), \
         parse_elem_macro, \
         is_replacement_macro, \
