@@ -3,7 +3,6 @@
 #define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_REF_HPP_
 
 #include <boost/contract/ext_/preprocessor/traits/aux_/func_index.hpp>
-#include <boost/contract/ext_/preprocessor/traits/utility/keyword.hpp>
 #include <boost/contract/ext_/preprocessor/traits/utility/traits.hpp>
 #include <boost/contract/ext_/preprocessor/keyword/contract/ref.hpp>
 #include <boost/preprocessor/facilities/empty.hpp>
@@ -45,16 +44,10 @@
     )(decl, traits)
         
 #define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_REF_NO_(decl, traits) \
-    ( \
-        decl, \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK(traits, BOOST_PP_EMPTY) \
-    )
+    (decl, BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK(traits, BOOST_PP_EMPTY))
 
 #define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_REF_REF_NO_(decl, traits) \
-    ( \
-        decl, \
-        BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK(traits, ref BOOST_PP_EMPTY) \
-    )
+    (decl, BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK(traits, ref BOOST_PP_EMPTY))
 
 // Precondition: decl = `ref ...`.
 #define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_REF_REF_YES_(decl, traits) \

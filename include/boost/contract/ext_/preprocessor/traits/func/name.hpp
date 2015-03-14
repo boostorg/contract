@@ -3,7 +3,7 @@
 #define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_NAME_HPP_
 
 #include <boost/contract/ext_/preprocessor/traits/aux_/func_index.hpp>
-#include <boost/contract/ext_/preprocessor/traits/utility/type.hpp>
+#include <boost/contract/ext_/preprocessor/traits/aux_/type.hpp>
 #include <boost/contract/ext_/preprocessor/traits/utility/traits.hpp>
 #include <boost/contract/ext_/preprocessor/keyword/operator.hpp>
 #include <boost/contract/ext_/preprocessor/keyword/new.hpp>
@@ -69,7 +69,7 @@
 // Precondition: decl = `parenthesized-type ...`.
 #define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_NAME_OPERATOR_TYPE_(d, decl, traits) \
     BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_NAME_OPERATOR_TYPE_SEQ_( \
-            BOOST_CONTRACT_EXT_PP_TYPE_TRAITS_SEQ_PARSE_D(d, decl), traits)
+            BOOST_CONTRACT_EXT_PP_TRAITS_AUX_TYPE_SEQ_PARSE_D(d, decl), traits)
 
 // Precondition: SECOND(decl_type) is a double parenthesized sequence of type
 // traits (e.g., `((int)) ((const))`).

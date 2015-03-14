@@ -13,6 +13,7 @@
 #include <boost/contract/ext_/preprocessor/traits/assertion/typedef.hpp>
 #include <boost/contract/ext_/preprocessor/traits/assertion/using.hpp>
 #include <boost/contract/ext_/preprocessor/traits/assertion/namespace.hpp>
+#include <boost/contract/ext_/preprocessor/traits/aux_/type.hpp>
 #include <boost/contract/ext_/preprocessor/keyword/namespace.hpp>
 #include <boost/contract/ext_/preprocessor/keyword/using.hpp>
 #include <boost/contract/ext_/preprocessor/keyword/template.hpp>
@@ -172,7 +173,8 @@
 #define BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_HANDLE_RETURN_1_(d, l, decl) \
     BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_HANDLE_RETURN_CHECK_1_(d, l, \
         decl, \
-        BOOST_CONTRACT_EXT_PP_TRAITS_AUTO_TYPE_PARSE_D(d, decl BOOST_PP_NIL) \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_AUTO_TYPE_PARSE_D( \
+                d, decl BOOST_PP_NIL) \
     )
 
 // decl = `auto-type something-but-not-paren ...` is passed to RETURN_MAYBE.
@@ -320,7 +322,8 @@
 #define BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_HANDLE_RETURN_2_(d, l, decl) \
     BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_HANDLE_RETURN_CHECK_2_(d, l, \
         decl, \
-        BOOST_CONTRACT_EXT_PP_TRAITS_AUTO_TYPE_PARSE_D(d, decl BOOST_PP_NIL) \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_AUTO_TYPE_PARSE_D( \
+                d, decl BOOST_PP_NIL) \
     )
 
 // decl = `auto-type something-but-not-paren ...` is passed to RETURN_MAYBE.
@@ -468,7 +471,8 @@
 #define BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_HANDLE_RETURN_3_(d, l, decl) \
     BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_HANDLE_RETURN_CHECK_3_(d, l, \
         decl, \
-        BOOST_CONTRACT_EXT_PP_TRAITS_AUTO_TYPE_PARSE_D(d, decl BOOST_PP_NIL) \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_AUTO_TYPE_PARSE_D( \
+                d, decl BOOST_PP_NIL) \
     )
 
 // decl = `auto-type something-but-not-paren ...` is passed to RETURN_MAYBE.
@@ -616,7 +620,8 @@
 #define BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_HANDLE_RETURN_4_(d, l, decl) \
     BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_HANDLE_RETURN_CHECK_4_(d, l, \
         decl, \
-        BOOST_CONTRACT_EXT_PP_TRAITS_AUTO_TYPE_PARSE_D(d, decl BOOST_PP_NIL) \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_AUTO_TYPE_PARSE_D( \
+                d, decl BOOST_PP_NIL) \
     )
 
 // decl = `auto-type something-but-not-paren ...` is passed to RETURN_MAYBE.
@@ -764,7 +769,8 @@
 #define BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_HANDLE_RETURN_5_(d, l, decl) \
     BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_HANDLE_RETURN_CHECK_5_(d, l, \
         decl, \
-        BOOST_CONTRACT_EXT_PP_TRAITS_AUTO_TYPE_PARSE_D(d, decl BOOST_PP_NIL) \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_AUTO_TYPE_PARSE_D( \
+                d, decl BOOST_PP_NIL) \
     )
 
 // decl = `auto-type something-but-not-paren ...` is passed to RETURN_MAYBE.
@@ -912,7 +918,8 @@
 #define BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_HANDLE_RETURN_6_(d, l, decl) \
     BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_HANDLE_RETURN_CHECK_6_(d, l, \
         decl, \
-        BOOST_CONTRACT_EXT_PP_TRAITS_AUTO_TYPE_PARSE_D(d, decl BOOST_PP_NIL) \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_AUTO_TYPE_PARSE_D( \
+                d, decl BOOST_PP_NIL) \
     )
 
 // decl = `auto-type something-but-not-paren ...` is passed to RETURN_MAYBE.
@@ -1060,7 +1067,8 @@
 #define BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_HANDLE_RETURN_7_(d, l, decl) \
     BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_HANDLE_RETURN_CHECK_7_(d, l, \
         decl, \
-        BOOST_CONTRACT_EXT_PP_TRAITS_AUTO_TYPE_PARSE_D(d, decl BOOST_PP_NIL) \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_AUTO_TYPE_PARSE_D( \
+                d, decl BOOST_PP_NIL) \
     )
 
 // decl = `auto-type something-but-not-paren ...` is passed to RETURN_MAYBE.
@@ -1208,7 +1216,8 @@
 #define BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_HANDLE_RETURN_8_(d, l, decl) \
     BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_HANDLE_RETURN_CHECK_8_(d, l, \
         decl, \
-        BOOST_CONTRACT_EXT_PP_TRAITS_AUTO_TYPE_PARSE_D(d, decl BOOST_PP_NIL) \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_AUTO_TYPE_PARSE_D( \
+                d, decl BOOST_PP_NIL) \
     )
 
 // decl = `auto-type something-but-not-paren ...` is passed to RETURN_MAYBE.
@@ -1356,7 +1365,8 @@
 #define BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_HANDLE_RETURN_9_(d, l, decl) \
     BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_HANDLE_RETURN_CHECK_9_(d, l, \
         decl, \
-        BOOST_CONTRACT_EXT_PP_TRAITS_AUTO_TYPE_PARSE_D(d, decl BOOST_PP_NIL) \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_AUTO_TYPE_PARSE_D( \
+                d, decl BOOST_PP_NIL) \
     )
 
 // decl = `auto-type something-but-not-paren ...` is passed to RETURN_MAYBE.
@@ -1504,7 +1514,8 @@
 #define BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_HANDLE_RETURN_10_(d, l, decl) \
     BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_HANDLE_RETURN_CHECK_10_(d, l, \
         decl, \
-        BOOST_CONTRACT_EXT_PP_TRAITS_AUTO_TYPE_PARSE_D(d, decl BOOST_PP_NIL) \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_AUTO_TYPE_PARSE_D( \
+                d, decl BOOST_PP_NIL) \
     )
 
 // decl = `auto-type something-but-not-paren ...` is passed to RETURN_MAYBE.
@@ -1652,7 +1663,8 @@
 #define BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_HANDLE_RETURN_11_(d, l, decl) \
     BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_HANDLE_RETURN_CHECK_11_(d, l, \
         decl, \
-        BOOST_CONTRACT_EXT_PP_TRAITS_AUTO_TYPE_PARSE_D(d, decl BOOST_PP_NIL) \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_AUTO_TYPE_PARSE_D( \
+                d, decl BOOST_PP_NIL) \
     )
 
 // decl = `auto-type something-but-not-paren ...` is passed to RETURN_MAYBE.
@@ -1800,7 +1812,8 @@
 #define BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_HANDLE_RETURN_12_(d, l, decl) \
     BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_HANDLE_RETURN_CHECK_12_(d, l, \
         decl, \
-        BOOST_CONTRACT_EXT_PP_TRAITS_AUTO_TYPE_PARSE_D(d, decl BOOST_PP_NIL) \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_AUTO_TYPE_PARSE_D( \
+                d, decl BOOST_PP_NIL) \
     )
 
 // decl = `auto-type something-but-not-paren ...` is passed to RETURN_MAYBE.
@@ -1948,7 +1961,8 @@
 #define BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_HANDLE_RETURN_13_(d, l, decl) \
     BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_HANDLE_RETURN_CHECK_13_(d, l, \
         decl, \
-        BOOST_CONTRACT_EXT_PP_TRAITS_AUTO_TYPE_PARSE_D(d, decl BOOST_PP_NIL) \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_AUTO_TYPE_PARSE_D( \
+                d, decl BOOST_PP_NIL) \
     )
 
 // decl = `auto-type something-but-not-paren ...` is passed to RETURN_MAYBE.
@@ -2096,7 +2110,8 @@
 #define BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_HANDLE_RETURN_14_(d, l, decl) \
     BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_HANDLE_RETURN_CHECK_14_(d, l, \
         decl, \
-        BOOST_CONTRACT_EXT_PP_TRAITS_AUTO_TYPE_PARSE_D(d, decl BOOST_PP_NIL) \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_AUTO_TYPE_PARSE_D( \
+                d, decl BOOST_PP_NIL) \
     )
 
 // decl = `auto-type something-but-not-paren ...` is passed to RETURN_MAYBE.
@@ -2244,7 +2259,8 @@
 #define BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_HANDLE_RETURN_15_(d, l, decl) \
     BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_HANDLE_RETURN_CHECK_15_(d, l, \
         decl, \
-        BOOST_CONTRACT_EXT_PP_TRAITS_AUTO_TYPE_PARSE_D(d, decl BOOST_PP_NIL) \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_AUTO_TYPE_PARSE_D( \
+                d, decl BOOST_PP_NIL) \
     )
 
 // decl = `auto-type something-but-not-paren ...` is passed to RETURN_MAYBE.
@@ -2392,7 +2408,8 @@
 #define BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_HANDLE_RETURN_16_(d, l, decl) \
     BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_HANDLE_RETURN_CHECK_16_(d, l, \
         decl, \
-        BOOST_CONTRACT_EXT_PP_TRAITS_AUTO_TYPE_PARSE_D(d, decl BOOST_PP_NIL) \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_AUTO_TYPE_PARSE_D( \
+                d, decl BOOST_PP_NIL) \
     )
 
 // decl = `auto-type something-but-not-paren ...` is passed to RETURN_MAYBE.
@@ -2540,7 +2557,8 @@
 #define BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_HANDLE_RETURN_17_(d, l, decl) \
     BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_HANDLE_RETURN_CHECK_17_(d, l, \
         decl, \
-        BOOST_CONTRACT_EXT_PP_TRAITS_AUTO_TYPE_PARSE_D(d, decl BOOST_PP_NIL) \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_AUTO_TYPE_PARSE_D( \
+                d, decl BOOST_PP_NIL) \
     )
 
 // decl = `auto-type something-but-not-paren ...` is passed to RETURN_MAYBE.
@@ -2688,7 +2706,8 @@
 #define BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_HANDLE_RETURN_18_(d, l, decl) \
     BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_HANDLE_RETURN_CHECK_18_(d, l, \
         decl, \
-        BOOST_CONTRACT_EXT_PP_TRAITS_AUTO_TYPE_PARSE_D(d, decl BOOST_PP_NIL) \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_AUTO_TYPE_PARSE_D( \
+                d, decl BOOST_PP_NIL) \
     )
 
 // decl = `auto-type something-but-not-paren ...` is passed to RETURN_MAYBE.
@@ -2836,7 +2855,8 @@
 #define BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_HANDLE_RETURN_19_(d, l, decl) \
     BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_HANDLE_RETURN_CHECK_19_(d, l, \
         decl, \
-        BOOST_CONTRACT_EXT_PP_TRAITS_AUTO_TYPE_PARSE_D(d, decl BOOST_PP_NIL) \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_AUTO_TYPE_PARSE_D( \
+                d, decl BOOST_PP_NIL) \
     )
 
 // decl = `auto-type something-but-not-paren ...` is passed to RETURN_MAYBE.
@@ -2984,7 +3004,8 @@
 #define BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_HANDLE_RETURN_20_(d, l, decl) \
     BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_HANDLE_RETURN_CHECK_20_(d, l, \
         decl, \
-        BOOST_CONTRACT_EXT_PP_TRAITS_AUTO_TYPE_PARSE_D(d, decl BOOST_PP_NIL) \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_AUTO_TYPE_PARSE_D( \
+                d, decl BOOST_PP_NIL) \
     )
 
 // decl = `auto-type something-but-not-paren ...` is passed to RETURN_MAYBE.
@@ -3132,7 +3153,8 @@
 #define BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_HANDLE_RETURN_21_(d, l, decl) \
     BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_HANDLE_RETURN_CHECK_21_(d, l, \
         decl, \
-        BOOST_CONTRACT_EXT_PP_TRAITS_AUTO_TYPE_PARSE_D(d, decl BOOST_PP_NIL) \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_AUTO_TYPE_PARSE_D( \
+                d, decl BOOST_PP_NIL) \
     )
 
 // decl = `auto-type something-but-not-paren ...` is passed to RETURN_MAYBE.
@@ -3280,7 +3302,8 @@
 #define BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_HANDLE_RETURN_22_(d, l, decl) \
     BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_HANDLE_RETURN_CHECK_22_(d, l, \
         decl, \
-        BOOST_CONTRACT_EXT_PP_TRAITS_AUTO_TYPE_PARSE_D(d, decl BOOST_PP_NIL) \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_AUTO_TYPE_PARSE_D( \
+                d, decl BOOST_PP_NIL) \
     )
 
 // decl = `auto-type something-but-not-paren ...` is passed to RETURN_MAYBE.
@@ -3428,7 +3451,8 @@
 #define BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_HANDLE_RETURN_23_(d, l, decl) \
     BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_HANDLE_RETURN_CHECK_23_(d, l, \
         decl, \
-        BOOST_CONTRACT_EXT_PP_TRAITS_AUTO_TYPE_PARSE_D(d, decl BOOST_PP_NIL) \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_AUTO_TYPE_PARSE_D( \
+                d, decl BOOST_PP_NIL) \
     )
 
 // decl = `auto-type something-but-not-paren ...` is passed to RETURN_MAYBE.
@@ -3576,7 +3600,8 @@
 #define BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_HANDLE_RETURN_24_(d, l, decl) \
     BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_HANDLE_RETURN_CHECK_24_(d, l, \
         decl, \
-        BOOST_CONTRACT_EXT_PP_TRAITS_AUTO_TYPE_PARSE_D(d, decl BOOST_PP_NIL) \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_AUTO_TYPE_PARSE_D( \
+                d, decl BOOST_PP_NIL) \
     )
 
 // decl = `auto-type something-but-not-paren ...` is passed to RETURN_MAYBE.
@@ -3724,7 +3749,8 @@
 #define BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_HANDLE_RETURN_25_(d, l, decl) \
     BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_HANDLE_RETURN_CHECK_25_(d, l, \
         decl, \
-        BOOST_CONTRACT_EXT_PP_TRAITS_AUTO_TYPE_PARSE_D(d, decl BOOST_PP_NIL) \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_AUTO_TYPE_PARSE_D( \
+                d, decl BOOST_PP_NIL) \
     )
 
 // decl = `auto-type something-but-not-paren ...` is passed to RETURN_MAYBE.
@@ -3872,7 +3898,8 @@
 #define BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_HANDLE_RETURN_26_(d, l, decl) \
     BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_HANDLE_RETURN_CHECK_26_(d, l, \
         decl, \
-        BOOST_CONTRACT_EXT_PP_TRAITS_AUTO_TYPE_PARSE_D(d, decl BOOST_PP_NIL) \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_AUTO_TYPE_PARSE_D( \
+                d, decl BOOST_PP_NIL) \
     )
 
 // decl = `auto-type something-but-not-paren ...` is passed to RETURN_MAYBE.
@@ -4020,7 +4047,8 @@
 #define BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_HANDLE_RETURN_27_(d, l, decl) \
     BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_HANDLE_RETURN_CHECK_27_(d, l, \
         decl, \
-        BOOST_CONTRACT_EXT_PP_TRAITS_AUTO_TYPE_PARSE_D(d, decl BOOST_PP_NIL) \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_AUTO_TYPE_PARSE_D( \
+                d, decl BOOST_PP_NIL) \
     )
 
 // decl = `auto-type something-but-not-paren ...` is passed to RETURN_MAYBE.
@@ -4168,7 +4196,8 @@
 #define BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_HANDLE_RETURN_28_(d, l, decl) \
     BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_HANDLE_RETURN_CHECK_28_(d, l, \
         decl, \
-        BOOST_CONTRACT_EXT_PP_TRAITS_AUTO_TYPE_PARSE_D(d, decl BOOST_PP_NIL) \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_AUTO_TYPE_PARSE_D( \
+                d, decl BOOST_PP_NIL) \
     )
 
 // decl = `auto-type something-but-not-paren ...` is passed to RETURN_MAYBE.
@@ -4316,7 +4345,8 @@
 #define BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_HANDLE_RETURN_29_(d, l, decl) \
     BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_HANDLE_RETURN_CHECK_29_(d, l, \
         decl, \
-        BOOST_CONTRACT_EXT_PP_TRAITS_AUTO_TYPE_PARSE_D(d, decl BOOST_PP_NIL) \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_AUTO_TYPE_PARSE_D( \
+                d, decl BOOST_PP_NIL) \
     )
 
 // decl = `auto-type something-but-not-paren ...` is passed to RETURN_MAYBE.
@@ -4464,7 +4494,8 @@
 #define BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_HANDLE_RETURN_30_(d, l, decl) \
     BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_HANDLE_RETURN_CHECK_30_(d, l, \
         decl, \
-        BOOST_CONTRACT_EXT_PP_TRAITS_AUTO_TYPE_PARSE_D(d, decl BOOST_PP_NIL) \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_AUTO_TYPE_PARSE_D( \
+                d, decl BOOST_PP_NIL) \
     )
 
 // decl = `auto-type something-but-not-paren ...` is passed to RETURN_MAYBE.
@@ -4612,7 +4643,8 @@
 #define BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_HANDLE_RETURN_31_(d, l, decl) \
     BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_HANDLE_RETURN_CHECK_31_(d, l, \
         decl, \
-        BOOST_CONTRACT_EXT_PP_TRAITS_AUTO_TYPE_PARSE_D(d, decl BOOST_PP_NIL) \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_AUTO_TYPE_PARSE_D( \
+                d, decl BOOST_PP_NIL) \
     )
 
 // decl = `auto-type something-but-not-paren ...` is passed to RETURN_MAYBE.
@@ -4760,7 +4792,8 @@
 #define BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_HANDLE_RETURN_32_(d, l, decl) \
     BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_HANDLE_RETURN_CHECK_32_(d, l, \
         decl, \
-        BOOST_CONTRACT_EXT_PP_TRAITS_AUTO_TYPE_PARSE_D(d, decl BOOST_PP_NIL) \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_AUTO_TYPE_PARSE_D( \
+                d, decl BOOST_PP_NIL) \
     )
 
 // decl = `auto-type something-but-not-paren ...` is passed to RETURN_MAYBE.
@@ -4908,7 +4941,8 @@
 #define BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_HANDLE_RETURN_33_(d, l, decl) \
     BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_HANDLE_RETURN_CHECK_33_(d, l, \
         decl, \
-        BOOST_CONTRACT_EXT_PP_TRAITS_AUTO_TYPE_PARSE_D(d, decl BOOST_PP_NIL) \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_AUTO_TYPE_PARSE_D( \
+                d, decl BOOST_PP_NIL) \
     )
 
 // decl = `auto-type something-but-not-paren ...` is passed to RETURN_MAYBE.
@@ -5056,7 +5090,8 @@
 #define BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_HANDLE_RETURN_34_(d, l, decl) \
     BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_HANDLE_RETURN_CHECK_34_(d, l, \
         decl, \
-        BOOST_CONTRACT_EXT_PP_TRAITS_AUTO_TYPE_PARSE_D(d, decl BOOST_PP_NIL) \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_AUTO_TYPE_PARSE_D( \
+                d, decl BOOST_PP_NIL) \
     )
 
 // decl = `auto-type something-but-not-paren ...` is passed to RETURN_MAYBE.
@@ -5204,7 +5239,8 @@
 #define BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_HANDLE_RETURN_35_(d, l, decl) \
     BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_HANDLE_RETURN_CHECK_35_(d, l, \
         decl, \
-        BOOST_CONTRACT_EXT_PP_TRAITS_AUTO_TYPE_PARSE_D(d, decl BOOST_PP_NIL) \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_AUTO_TYPE_PARSE_D( \
+                d, decl BOOST_PP_NIL) \
     )
 
 // decl = `auto-type something-but-not-paren ...` is passed to RETURN_MAYBE.
@@ -5352,7 +5388,8 @@
 #define BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_HANDLE_RETURN_36_(d, l, decl) \
     BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_HANDLE_RETURN_CHECK_36_(d, l, \
         decl, \
-        BOOST_CONTRACT_EXT_PP_TRAITS_AUTO_TYPE_PARSE_D(d, decl BOOST_PP_NIL) \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_AUTO_TYPE_PARSE_D( \
+                d, decl BOOST_PP_NIL) \
     )
 
 // decl = `auto-type something-but-not-paren ...` is passed to RETURN_MAYBE.
@@ -5500,7 +5537,8 @@
 #define BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_HANDLE_RETURN_37_(d, l, decl) \
     BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_HANDLE_RETURN_CHECK_37_(d, l, \
         decl, \
-        BOOST_CONTRACT_EXT_PP_TRAITS_AUTO_TYPE_PARSE_D(d, decl BOOST_PP_NIL) \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_AUTO_TYPE_PARSE_D( \
+                d, decl BOOST_PP_NIL) \
     )
 
 // decl = `auto-type something-but-not-paren ...` is passed to RETURN_MAYBE.
@@ -5648,7 +5686,8 @@
 #define BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_HANDLE_RETURN_38_(d, l, decl) \
     BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_HANDLE_RETURN_CHECK_38_(d, l, \
         decl, \
-        BOOST_CONTRACT_EXT_PP_TRAITS_AUTO_TYPE_PARSE_D(d, decl BOOST_PP_NIL) \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_AUTO_TYPE_PARSE_D( \
+                d, decl BOOST_PP_NIL) \
     )
 
 // decl = `auto-type something-but-not-paren ...` is passed to RETURN_MAYBE.
@@ -5796,7 +5835,8 @@
 #define BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_HANDLE_RETURN_39_(d, l, decl) \
     BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_HANDLE_RETURN_CHECK_39_(d, l, \
         decl, \
-        BOOST_CONTRACT_EXT_PP_TRAITS_AUTO_TYPE_PARSE_D(d, decl BOOST_PP_NIL) \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_AUTO_TYPE_PARSE_D( \
+                d, decl BOOST_PP_NIL) \
     )
 
 // decl = `auto-type something-but-not-paren ...` is passed to RETURN_MAYBE.
@@ -5944,7 +5984,8 @@
 #define BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_HANDLE_RETURN_40_(d, l, decl) \
     BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_HANDLE_RETURN_CHECK_40_(d, l, \
         decl, \
-        BOOST_CONTRACT_EXT_PP_TRAITS_AUTO_TYPE_PARSE_D(d, decl BOOST_PP_NIL) \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_AUTO_TYPE_PARSE_D( \
+                d, decl BOOST_PP_NIL) \
     )
 
 // decl = `auto-type something-but-not-paren ...` is passed to RETURN_MAYBE.
@@ -6092,7 +6133,8 @@
 #define BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_HANDLE_RETURN_41_(d, l, decl) \
     BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_HANDLE_RETURN_CHECK_41_(d, l, \
         decl, \
-        BOOST_CONTRACT_EXT_PP_TRAITS_AUTO_TYPE_PARSE_D(d, decl BOOST_PP_NIL) \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_AUTO_TYPE_PARSE_D( \
+                d, decl BOOST_PP_NIL) \
     )
 
 // decl = `auto-type something-but-not-paren ...` is passed to RETURN_MAYBE.
@@ -6240,7 +6282,8 @@
 #define BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_HANDLE_RETURN_42_(d, l, decl) \
     BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_HANDLE_RETURN_CHECK_42_(d, l, \
         decl, \
-        BOOST_CONTRACT_EXT_PP_TRAITS_AUTO_TYPE_PARSE_D(d, decl BOOST_PP_NIL) \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_AUTO_TYPE_PARSE_D( \
+                d, decl BOOST_PP_NIL) \
     )
 
 // decl = `auto-type something-but-not-paren ...` is passed to RETURN_MAYBE.
@@ -6388,7 +6431,8 @@
 #define BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_HANDLE_RETURN_43_(d, l, decl) \
     BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_HANDLE_RETURN_CHECK_43_(d, l, \
         decl, \
-        BOOST_CONTRACT_EXT_PP_TRAITS_AUTO_TYPE_PARSE_D(d, decl BOOST_PP_NIL) \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_AUTO_TYPE_PARSE_D( \
+                d, decl BOOST_PP_NIL) \
     )
 
 // decl = `auto-type something-but-not-paren ...` is passed to RETURN_MAYBE.
@@ -6536,7 +6580,8 @@
 #define BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_HANDLE_RETURN_44_(d, l, decl) \
     BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_HANDLE_RETURN_CHECK_44_(d, l, \
         decl, \
-        BOOST_CONTRACT_EXT_PP_TRAITS_AUTO_TYPE_PARSE_D(d, decl BOOST_PP_NIL) \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_AUTO_TYPE_PARSE_D( \
+                d, decl BOOST_PP_NIL) \
     )
 
 // decl = `auto-type something-but-not-paren ...` is passed to RETURN_MAYBE.
@@ -6684,7 +6729,8 @@
 #define BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_HANDLE_RETURN_45_(d, l, decl) \
     BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_HANDLE_RETURN_CHECK_45_(d, l, \
         decl, \
-        BOOST_CONTRACT_EXT_PP_TRAITS_AUTO_TYPE_PARSE_D(d, decl BOOST_PP_NIL) \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_AUTO_TYPE_PARSE_D( \
+                d, decl BOOST_PP_NIL) \
     )
 
 // decl = `auto-type something-but-not-paren ...` is passed to RETURN_MAYBE.
@@ -6832,7 +6878,8 @@
 #define BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_HANDLE_RETURN_46_(d, l, decl) \
     BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_HANDLE_RETURN_CHECK_46_(d, l, \
         decl, \
-        BOOST_CONTRACT_EXT_PP_TRAITS_AUTO_TYPE_PARSE_D(d, decl BOOST_PP_NIL) \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_AUTO_TYPE_PARSE_D( \
+                d, decl BOOST_PP_NIL) \
     )
 
 // decl = `auto-type something-but-not-paren ...` is passed to RETURN_MAYBE.
@@ -6980,7 +7027,8 @@
 #define BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_HANDLE_RETURN_47_(d, l, decl) \
     BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_HANDLE_RETURN_CHECK_47_(d, l, \
         decl, \
-        BOOST_CONTRACT_EXT_PP_TRAITS_AUTO_TYPE_PARSE_D(d, decl BOOST_PP_NIL) \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_AUTO_TYPE_PARSE_D( \
+                d, decl BOOST_PP_NIL) \
     )
 
 // decl = `auto-type something-but-not-paren ...` is passed to RETURN_MAYBE.
@@ -7128,7 +7176,8 @@
 #define BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_HANDLE_RETURN_48_(d, l, decl) \
     BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_HANDLE_RETURN_CHECK_48_(d, l, \
         decl, \
-        BOOST_CONTRACT_EXT_PP_TRAITS_AUTO_TYPE_PARSE_D(d, decl BOOST_PP_NIL) \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_AUTO_TYPE_PARSE_D( \
+                d, decl BOOST_PP_NIL) \
     )
 
 // decl = `auto-type something-but-not-paren ...` is passed to RETURN_MAYBE.
@@ -7276,7 +7325,8 @@
 #define BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_HANDLE_RETURN_49_(d, l, decl) \
     BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_HANDLE_RETURN_CHECK_49_(d, l, \
         decl, \
-        BOOST_CONTRACT_EXT_PP_TRAITS_AUTO_TYPE_PARSE_D(d, decl BOOST_PP_NIL) \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_AUTO_TYPE_PARSE_D( \
+                d, decl BOOST_PP_NIL) \
     )
 
 // decl = `auto-type something-but-not-paren ...` is passed to RETURN_MAYBE.
@@ -7424,7 +7474,8 @@
 #define BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_HANDLE_RETURN_50_(d, l, decl) \
     BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_HANDLE_RETURN_CHECK_50_(d, l, \
         decl, \
-        BOOST_CONTRACT_EXT_PP_TRAITS_AUTO_TYPE_PARSE_D(d, decl BOOST_PP_NIL) \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_AUTO_TYPE_PARSE_D( \
+                d, decl BOOST_PP_NIL) \
     )
 
 // decl = `auto-type something-but-not-paren ...` is passed to RETURN_MAYBE.
@@ -7572,7 +7623,8 @@
 #define BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_HANDLE_RETURN_51_(d, l, decl) \
     BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_HANDLE_RETURN_CHECK_51_(d, l, \
         decl, \
-        BOOST_CONTRACT_EXT_PP_TRAITS_AUTO_TYPE_PARSE_D(d, decl BOOST_PP_NIL) \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_AUTO_TYPE_PARSE_D( \
+                d, decl BOOST_PP_NIL) \
     )
 
 // decl = `auto-type something-but-not-paren ...` is passed to RETURN_MAYBE.
@@ -7720,7 +7772,8 @@
 #define BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_HANDLE_RETURN_52_(d, l, decl) \
     BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_HANDLE_RETURN_CHECK_52_(d, l, \
         decl, \
-        BOOST_CONTRACT_EXT_PP_TRAITS_AUTO_TYPE_PARSE_D(d, decl BOOST_PP_NIL) \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_AUTO_TYPE_PARSE_D( \
+                d, decl BOOST_PP_NIL) \
     )
 
 // decl = `auto-type something-but-not-paren ...` is passed to RETURN_MAYBE.
@@ -7868,7 +7921,8 @@
 #define BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_HANDLE_RETURN_53_(d, l, decl) \
     BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_HANDLE_RETURN_CHECK_53_(d, l, \
         decl, \
-        BOOST_CONTRACT_EXT_PP_TRAITS_AUTO_TYPE_PARSE_D(d, decl BOOST_PP_NIL) \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_AUTO_TYPE_PARSE_D( \
+                d, decl BOOST_PP_NIL) \
     )
 
 // decl = `auto-type something-but-not-paren ...` is passed to RETURN_MAYBE.
@@ -8016,7 +8070,8 @@
 #define BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_HANDLE_RETURN_54_(d, l, decl) \
     BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_HANDLE_RETURN_CHECK_54_(d, l, \
         decl, \
-        BOOST_CONTRACT_EXT_PP_TRAITS_AUTO_TYPE_PARSE_D(d, decl BOOST_PP_NIL) \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_AUTO_TYPE_PARSE_D( \
+                d, decl BOOST_PP_NIL) \
     )
 
 // decl = `auto-type something-but-not-paren ...` is passed to RETURN_MAYBE.
@@ -8164,7 +8219,8 @@
 #define BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_HANDLE_RETURN_55_(d, l, decl) \
     BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_HANDLE_RETURN_CHECK_55_(d, l, \
         decl, \
-        BOOST_CONTRACT_EXT_PP_TRAITS_AUTO_TYPE_PARSE_D(d, decl BOOST_PP_NIL) \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_AUTO_TYPE_PARSE_D( \
+                d, decl BOOST_PP_NIL) \
     )
 
 // decl = `auto-type something-but-not-paren ...` is passed to RETURN_MAYBE.
@@ -8312,7 +8368,8 @@
 #define BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_HANDLE_RETURN_56_(d, l, decl) \
     BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_HANDLE_RETURN_CHECK_56_(d, l, \
         decl, \
-        BOOST_CONTRACT_EXT_PP_TRAITS_AUTO_TYPE_PARSE_D(d, decl BOOST_PP_NIL) \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_AUTO_TYPE_PARSE_D( \
+                d, decl BOOST_PP_NIL) \
     )
 
 // decl = `auto-type something-but-not-paren ...` is passed to RETURN_MAYBE.
@@ -8460,7 +8517,8 @@
 #define BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_HANDLE_RETURN_57_(d, l, decl) \
     BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_HANDLE_RETURN_CHECK_57_(d, l, \
         decl, \
-        BOOST_CONTRACT_EXT_PP_TRAITS_AUTO_TYPE_PARSE_D(d, decl BOOST_PP_NIL) \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_AUTO_TYPE_PARSE_D( \
+                d, decl BOOST_PP_NIL) \
     )
 
 // decl = `auto-type something-but-not-paren ...` is passed to RETURN_MAYBE.
@@ -8608,7 +8666,8 @@
 #define BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_HANDLE_RETURN_58_(d, l, decl) \
     BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_HANDLE_RETURN_CHECK_58_(d, l, \
         decl, \
-        BOOST_CONTRACT_EXT_PP_TRAITS_AUTO_TYPE_PARSE_D(d, decl BOOST_PP_NIL) \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_AUTO_TYPE_PARSE_D( \
+                d, decl BOOST_PP_NIL) \
     )
 
 // decl = `auto-type something-but-not-paren ...` is passed to RETURN_MAYBE.
@@ -8756,7 +8815,8 @@
 #define BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_HANDLE_RETURN_59_(d, l, decl) \
     BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_HANDLE_RETURN_CHECK_59_(d, l, \
         decl, \
-        BOOST_CONTRACT_EXT_PP_TRAITS_AUTO_TYPE_PARSE_D(d, decl BOOST_PP_NIL) \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_AUTO_TYPE_PARSE_D( \
+                d, decl BOOST_PP_NIL) \
     )
 
 // decl = `auto-type something-but-not-paren ...` is passed to RETURN_MAYBE.
@@ -8904,7 +8964,8 @@
 #define BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_HANDLE_RETURN_60_(d, l, decl) \
     BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_HANDLE_RETURN_CHECK_60_(d, l, \
         decl, \
-        BOOST_CONTRACT_EXT_PP_TRAITS_AUTO_TYPE_PARSE_D(d, decl BOOST_PP_NIL) \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_AUTO_TYPE_PARSE_D( \
+                d, decl BOOST_PP_NIL) \
     )
 
 // decl = `auto-type something-but-not-paren ...` is passed to RETURN_MAYBE.
@@ -9052,7 +9113,8 @@
 #define BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_HANDLE_RETURN_61_(d, l, decl) \
     BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_HANDLE_RETURN_CHECK_61_(d, l, \
         decl, \
-        BOOST_CONTRACT_EXT_PP_TRAITS_AUTO_TYPE_PARSE_D(d, decl BOOST_PP_NIL) \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_AUTO_TYPE_PARSE_D( \
+                d, decl BOOST_PP_NIL) \
     )
 
 // decl = `auto-type something-but-not-paren ...` is passed to RETURN_MAYBE.
@@ -9200,7 +9262,8 @@
 #define BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_HANDLE_RETURN_62_(d, l, decl) \
     BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_HANDLE_RETURN_CHECK_62_(d, l, \
         decl, \
-        BOOST_CONTRACT_EXT_PP_TRAITS_AUTO_TYPE_PARSE_D(d, decl BOOST_PP_NIL) \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_AUTO_TYPE_PARSE_D( \
+                d, decl BOOST_PP_NIL) \
     )
 
 // decl = `auto-type something-but-not-paren ...` is passed to RETURN_MAYBE.
@@ -9348,7 +9411,8 @@
 #define BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_HANDLE_RETURN_63_(d, l, decl) \
     BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_HANDLE_RETURN_CHECK_63_(d, l, \
         decl, \
-        BOOST_CONTRACT_EXT_PP_TRAITS_AUTO_TYPE_PARSE_D(d, decl BOOST_PP_NIL) \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_AUTO_TYPE_PARSE_D( \
+                d, decl BOOST_PP_NIL) \
     )
 
 // decl = `auto-type something-but-not-paren ...` is passed to RETURN_MAYBE.
@@ -9496,7 +9560,8 @@
 #define BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_HANDLE_RETURN_64_(d, l, decl) \
     BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_HANDLE_RETURN_CHECK_64_(d, l, \
         decl, \
-        BOOST_CONTRACT_EXT_PP_TRAITS_AUTO_TYPE_PARSE_D(d, decl BOOST_PP_NIL) \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_AUTO_TYPE_PARSE_D( \
+                d, decl BOOST_PP_NIL) \
     )
 
 // decl = `auto-type something-but-not-paren ...` is passed to RETURN_MAYBE.

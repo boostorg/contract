@@ -1,6 +1,6 @@
 
-#ifndef BOOST_CONTRACT_EXT_PP_TRAITS_TRAITS_HPP_
-#define BOOST_CONTRACT_EXT_PP_TRAITS_TRAITS_HPP_
+#ifndef BOOST_CONTRACT_EXT_PP_TRAITS_AUX_ADT_HPP_
+#define BOOST_CONTRACT_EXT_PP_TRAITS_AUX_ADT_HPP_
 
 #include <boost/preprocessor/seq/pop_front.hpp>
 #include <boost/preprocessor/seq/elem.hpp>
@@ -8,21 +8,12 @@
 #include <boost/preprocessor/seq/size.hpp>
 #include <boost/preprocessor/arithmetic/dec.hpp>
 
-// TODO: I've been going back and forth about this... but at the end, once all
-// traits parsing have been implemented, consider moving utility/ into aux_/
-// and also consider making all _PARSE macros AUX_PARSE (even if they remained
-// defined in that trait header file not under the aux_/ dir). That way the
-// public API might be more clear (and for now no one will every use the
-// utility/ etc macro to implement they own parsing, that's an all different
-// story which might require redesign of this lib API so it's even better to
-// not give the impression that can be done by providing public PARSE macros).
-
-// TODO: Rename this header back to adt.hpp when it's moved into aux_/.
-
-/* PUBLIC */
-
-// These macros are not usually used by the users (unless they re-implement
-// their own parsing macros).
+// Abstract Data Type (ADT) used to internally represent pp-traits.
+// In theory, it is possible to change traits representation just changing
+// these macros however Boost.Preprocessor docs say that pp-seq are the
+// fastest (always close to random access performance because they use
+// iteration instead of recursion) and largest (up to 256 elements) data
+// structure so there should be no reason to change representation from pp-seq.
 
 // WARNING: PP_TUPLE_ELEM does not handle EMPTY() elements. Therefore, it is
 // necessary to always postfix decl with NIL, (NIL), etc. (for declaration
@@ -34,15 +25,11 @@
 // * PARSE(decl) starts parsing declaration tokens (init. decl_traits).
 // * PARSE(decl_seq) start parsing pp-seq of declarations (init. decl_traits).
 // * PARSE(decl_traits) interim parsing of declarations (no init. decl_traits).
-// Some PARSE macros (the ones in utility/) do no parse multiple traits but only
+// Some PARSE macros (the ones in aux_/) do no parse multiple traits but only
 // a single trait so they do not use the PP_TRAITS macros below but just report
 // trait as tokens (this is documented by these macros).
 
-// IMPLEMENTATION: In theory, it is possible to change traits representation
-// just changing these macros however Boost.Preprocessor docs say that pp-seq
-// are the fastest (always close to random access performance because they use
-// iteration instead of recursion) and largest (up to 256 elements) data
-// structure so there should be no reason to change representation from pp-seq.
+/* PUBLIC */
 
 #define BOOST_CONTRACT_EXT_PP_TRAITS_INIT (BOOST_PP_NIL)
         

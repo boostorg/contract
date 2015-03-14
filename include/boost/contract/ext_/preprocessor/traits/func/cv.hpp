@@ -3,7 +3,7 @@
 #define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_CV_HPP_
 
 #include <boost/contract/ext_/preprocessor/traits/aux_/func_index.hpp>
-#include <boost/contract/ext_/preprocessor/traits/utility/keyword_comb.hpp>
+#include <boost/contract/ext_/preprocessor/traits/aux_/keyword_comb.hpp>
 #include <boost/contract/ext_/preprocessor/traits/utility/traits.hpp>
 #include <boost/contract/ext_/preprocessor/keyword/const.hpp>
 #include <boost/contract/ext_/preprocessor/keyword/volatile.hpp>
@@ -25,7 +25,7 @@
 
 #define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_CV_PARSE(decl_traits) \
     BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_CV_( \
-        BOOST_CONTRACT_EXT_PP_KEYWORD2_COMB_TRAITS_PARSE( \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_KEYWORD2_COMB_PARSE( \
             BOOST_PP_TUPLE_ELEM(2, 0, decl_traits), \
             BOOST_CONTRACT_EXT_PP_KEYWORD_IS_CONST_FRONT, \
             BOOST_CONTRACT_EXT_PP_KEYWORD_CONST_REMOVE_FRONT, \

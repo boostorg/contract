@@ -4,8 +4,8 @@
 
 #include <boost/contract/ext_/preprocessor/traits/param.hpp>
 #include <boost/contract/ext_/preprocessor/traits/aux_/func_index.hpp>
-#include <boost/contract/ext_/preprocessor/traits/utility/keyword_list.hpp>
-#include <boost/contract/ext_/preprocessor/traits/utility/list.hpp>
+#include <boost/contract/ext_/preprocessor/traits/aux_/keyword_list.hpp>
+#include <boost/contract/ext_/preprocessor/traits/aux_/list.hpp>
 #include <boost/contract/ext_/preprocessor/traits/utility/traits.hpp>
 #include <boost/preprocessor/tuple/elem.hpp>
 #include <boost/preprocessor/facilities/empty.hpp>
@@ -19,7 +19,7 @@
             BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_AUX_PARAMS_INDEX, traits)()
 
 #define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_PARAMS_PARSE_D(d, decl_traits) \
-    BOOST_CONTRACT_EXT_PP_KEYWORD_LIST_TRAITS_PUSH_BACK_PARSE_D(d, \
+    BOOST_CONTRACT_EXT_PP_TRAITS_AUX_KEYWORD_LIST_PUSH_BACK_PARSE_D(d, \
         BOOST_PP_TUPLE_ELEM(2, 0, decl_traits), \
         BOOST_PP_TUPLE_ELEM(2, 1, decl_traits), \
         BOOST_PP_EMPTY(), \
@@ -30,7 +30,7 @@
             
 // Precondition: decl = `(,,,) ...`.
 #define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_PARAMS_(d, decl) \
-    BOOST_CONTRACT_EXT_PP_VOID_LIST_TRAITS_PARSE_D_1(d, \
+    BOOST_CONTRACT_EXT_PP_TRAITS_AUX_VOID_LIST_PARSE_D_1(d, \
         decl, \
         BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_PARAMS_PARAM_PARSE_, \
         BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_PARAMS_IS_DEFAULT_, \

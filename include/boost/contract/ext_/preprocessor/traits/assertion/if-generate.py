@@ -220,7 +220,7 @@ BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_REPLACE_ELSES_PARSE_YES_{0}_( \\
         BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK( \\
             traits, \\
             BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_EXPAND_TRAITS_{0}_( \\
-                BOOST_CONTRACT_EXT_PP_ENUM_LIST_TRAITS_PARSE_D_ ## l(d, \\
+                BOOST_CONTRACT_EXT_PP_TRAITS_AUX_ENUM_LIST_PARSE_D_ ## l(d, \\
                     BOOST_CONTRACT_EXT_PP_PAREN_FRONT(decl), \\
   BOOST_CONTRACT_EXT_PP_POST_ASSERTION_TRAITS_PARSE_D_L_{1}, \\
   BOOST_CONTRACT_EXT_PP_POST_ASSERTION_TRAITS_IS_REPLACEMENT_D_L_{1}, \\
@@ -237,7 +237,7 @@ BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_REPLACE_ELSES_PARSE_YES_{0}_( \\
         BOOST_CONTRACT_EXT_PP_TRAITS_PUSH_BACK( \\
             traits, \\
             BOOST_CONTRACT_EXT_PP_IF_ASSERTION_TRAITS_EXPAND_TRAITS_{0}_( \\
-                BOOST_CONTRACT_EXT_PP_ENUM_LIST_TRAITS_PARSE_D_ ## l(d, \\
+                BOOST_CONTRACT_EXT_PP_TRAITS_AUX_ENUM_LIST_PARSE_D_ ## l(d, \\
                     BOOST_CONTRACT_EXT_PP_PAREN_FRONT(decl), \\
   BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_PARSE_D_L_{1}, \\
   BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_IS_REPLACEMENT_D_L_{1}, \\
@@ -268,8 +268,19 @@ file.write('''
 #include <boost/contract/ext_/preprocessor/traits/assertion/if/cond.hpp>
 #include <boost/contract/ext_/preprocessor/traits/assertion/if/thens.hpp>
 #include <boost/contract/ext_/preprocessor/traits/assertion/if/elses.hpp>
+#include <boost/contract/ext_/preprocessor/traits/aux_/list.hpp>
+#include <boost/contract/ext_/preprocessor/traits/utility/traits.hpp>
+#include <boost/contract/ext_/preprocessor/keyword/if.hpp>
 #include <boost/contract/ext_/preprocessor/keyword/else.hpp>
 #include <boost/contract/ext_/preprocessor/keyword/static.hpp>
+#include <boost/contract/ext_/preprocessor/paren/front.hpp>
+#include <boost/contract/ext_/preprocessor/utility/empty.hpp>
+#include <boost/contract/ext_/preprocessor/utility/nil.hpp>
+#include <boost/preprocessor/tuple/eat.hpp>
+#include <boost/preprocessor/tuple/rem.hpp>
+#include <boost/preprocessor/tuple/elem.hpp>
+#include <boost/preprocessor/control/expr_iif.hpp>
+#include <boost/preprocessor/control/iif.hpp>
 
 /* PUBLIC */
 

@@ -3,7 +3,7 @@
 #define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_ACCESS_HPP_
 
 #include <boost/contract/ext_/preprocessor/traits/aux_/func_index.hpp>
-#include <boost/contract/ext_/preprocessor/traits/utility/keyword.hpp>
+#include <boost/contract/ext_/preprocessor/traits/aux_/keyword.hpp>
 #include <boost/contract/ext_/preprocessor/traits/utility/traits.hpp>
 #include <boost/contract/ext_/preprocessor/keyword/public.hpp>
 #include <boost/contract/ext_/preprocessor/keyword/protected.hpp>
@@ -20,7 +20,7 @@
 // Implementation: Trailing EMPTY already put by KEYWORD3.
 #define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_ACCESS_PARSE(decl_traits) \
     BOOST_CONTRACT_EXT_PP_DECL_TRAITS_PUSH_BACK( \
-        BOOST_CONTRACT_EXT_PP_KEYWORD3_TRAITS_PARSE( \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_KEYWORD3_PARSE( \
             BOOST_PP_TUPLE_ELEM(2, 0, decl_traits), \
             public, \
             BOOST_CONTRACT_EXT_PP_KEYWORD_IS_PUBLIC_FRONT, \

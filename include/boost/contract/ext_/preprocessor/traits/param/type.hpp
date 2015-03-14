@@ -3,7 +3,7 @@
 #define BOOST_CONTRACT_EXT_PP_PARAM_TRAITS_TYPE_HPP_
 
 #include <boost/contract/ext_/preprocessor/traits/aux_/param_index.hpp>
-#include <boost/contract/ext_/preprocessor/traits/utility/type.hpp>
+#include <boost/contract/ext_/preprocessor/traits/aux_/type.hpp>
 #include <boost/contract/ext_/preprocessor/traits/utility/traits.hpp>
 #include <boost/contract/ext_/preprocessor/keyword/typename.hpp>
 #include <boost/contract/ext_/preprocessor/keyword/class.hpp>
@@ -73,7 +73,7 @@
 // Precondition: decl = `wrapped-type ... | type`.
 #define BOOST_CONTRACT_EXT_PP_PARAM_TRAITS_TYPE_PARSE_ARGS_(d, decl, traits) \
     BOOST_CONTRACT_EXT_PP_PARAM_TRAITS_TYPE_( \
-            BOOST_CONTRACT_EXT_PP_TYPE_TRAITS_PARSE_D(d, decl), traits)
+            BOOST_CONTRACT_EXT_PP_TRAITS_AUX_TYPE_PARSE_D(d, decl), traits)
 
 #define BOOST_CONTRACT_EXT_PP_PARAM_TRAITS_TYPE_(decl_type, traits) \
     BOOST_PP_IIF(BOOST_PP_EXPAND(BOOST_CONTRACT_EXT_PP_IS_EMPTY \

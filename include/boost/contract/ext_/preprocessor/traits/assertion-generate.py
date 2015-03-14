@@ -121,7 +121,8 @@ def code():
 #define BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_HANDLE_RETURN_{0}_(d, l, decl) \\
     BOOST_CONTRACT_EXT_PP_ASSERTION_TRAITS_HANDLE_RETURN_CHECK_{0}_(d, l, \\
         decl, \\
-        BOOST_CONTRACT_EXT_PP_TRAITS_AUTO_TYPE_PARSE_D(d, decl BOOST_PP_NIL) \\
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_AUTO_TYPE_PARSE_D( \\
+                d, decl BOOST_PP_NIL) \\
     )
 
 // decl = `auto-type something-but-not-paren ...` is passed to RETURN_MAYBE.
@@ -177,6 +178,7 @@ file.write('''
 #include <boost/contract/ext_/preprocessor/traits/assertion/typedef.hpp>
 #include <boost/contract/ext_/preprocessor/traits/assertion/using.hpp>
 #include <boost/contract/ext_/preprocessor/traits/assertion/namespace.hpp>
+#include <boost/contract/ext_/preprocessor/traits/aux_/type.hpp>
 #include <boost/contract/ext_/preprocessor/keyword/namespace.hpp>
 #include <boost/contract/ext_/preprocessor/keyword/using.hpp>
 #include <boost/contract/ext_/preprocessor/keyword/template.hpp>

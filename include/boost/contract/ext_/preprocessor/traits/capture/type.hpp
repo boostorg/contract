@@ -3,8 +3,8 @@
 #define BOOST_CONTRACT_EXT_PP_CAPTURE_TRAITS_TYPE_HPP_
 
 #include <boost/contract/ext_/preprocessor/traits/aux_/capture_index.hpp>
+#include <boost/contract/ext_/preprocessor/traits/aux_/type.hpp>
 #include <boost/contract/ext_/preprocessor/traits/utility/traits.hpp>
-#include <boost/contract/ext_/preprocessor/traits/utility/type.hpp>
 #include <boost/preprocessor/tuple/elem.hpp>
 #include <boost/preprocessor/control/iif.hpp>
 #include <boost/preprocessor/facilities/expand.hpp>
@@ -20,7 +20,7 @@
 // Precondition: decl = `[wrapped-type] ...`.
 #define BOOST_CONTRACT_EXT_PP_CAPTURE_TRAITS_TYPE_PARSE_D(d, decl_traits) \
     BOOST_CONTRACT_EXT_PP_CAPTURE_TRAITS_TYPE_( \
-        BOOST_CONTRACT_EXT_PP_TYPE_TRAITS_PARSE_D(d, \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_TYPE_PARSE_D(d, \
                 BOOST_PP_TUPLE_ELEM(2, 0, decl_traits)), \
         BOOST_PP_TUPLE_ELEM(2, 1, decl_traits) \
     )

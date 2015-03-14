@@ -3,7 +3,7 @@
 #define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_RETURN_HPP_
 
 #include <boost/contract/ext_/preprocessor/traits/aux_/func_index.hpp>
-#include <boost/contract/ext_/preprocessor/traits/utility/type.hpp>
+#include <boost/contract/ext_/preprocessor/traits/aux_/type.hpp>
 #include <boost/contract/ext_/preprocessor/traits/utility/traits.hpp>
 #include <boost/contract/ext_/preprocessor/keyword/return.hpp>
 #include <boost/contract/ext_/preprocessor/keyword/operator.hpp>
@@ -54,7 +54,7 @@
 // Precondition: decl = `return ...`.
 #define BOST_CONTRACT_EXT_PP_FUNC_TRAITS_TRAILING_RETURN_YES_(d, decl, traits) \
     BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_RETURN_( \
-        BOOST_CONTRACT_EXT_PP_TYPE_TRAITS_PARSE_D(d, \
+        BOOST_CONTRACT_EXT_PP_TRAITS_AUX_TYPE_PARSE_D(d, \
             BOOST_CONTRACT_EXT_PP_KEYWORD_RETURN_REMOVE_FRONT(decl) \
         ), \
         traits \
@@ -70,7 +70,7 @@
 
 #define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_RETURN_YES_(d, decl, traits) \
     BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_RETURN_( \
-            BOOST_CONTRACT_EXT_PP_TRAITS_AUTO_TYPE_PARSE_D(d, decl), traits)
+            BOOST_CONTRACT_EXT_PP_TRAITS_AUX_AUTO_TYPE_PARSE_D(d, decl), traits)
 
 #define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_RETURN_(decl_return, traits) \
     BOOST_CONTRACT_EXT_PP_DECL_TRAITS_PUSH_BACK( \
