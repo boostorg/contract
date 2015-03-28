@@ -59,3 +59,5 @@ test-pp pp_class_traits specialization ;
 test-pp pp_class_traits virt ;
 test-pp pp_class_traits bases ;
 
+test-pp code class ;
+

@@ -14,13 +14,13 @@
 
 /* PUBLIC */
 
-// Expand to `result_type | void | auto | EMPTY()` (`auto` for alternative
-// function syntax, see also `..._TRAILING_RETURN`).
+// Expand to `(,,,) | auto | EMPTY()` (`auto` for alternative function syntax,
+// see also `..._TRAILING_RETURN`), for example: `(void)`, `(map<U, V>)`.
 #define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_RETURN(traits) \
     BOOST_CONTRACT_EXT_PP_TRAITS_AUX_ELEM( \
             BOOST_CONTRACT_EXT_PP_TRAITS_AUX_INDEX_FUNC_RETURN, traits)()
 
-// Expand to `result_type | void | EMPTY()`.
+// Expand to `(,,,) | EMPTY()`.
 #define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_TRAILING_RETURN(traits) \
     BOOST_CONTRACT_EXT_PP_TRAITS_AUX_ELEM( \
         BOOST_CONTRACT_EXT_PP_TRAITS_AUX_INDEX_FUNC_TRAILING_RETURN, traits \

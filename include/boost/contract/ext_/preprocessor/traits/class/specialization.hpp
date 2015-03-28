@@ -12,7 +12,7 @@
 
 /* PUBLIC */
 
-// Expand to `(,,,) | EMPTY()`.
+// Expand to `(,,,) | EMPTY()`, for example `(int, std::map<int, char>)`.
 #define BOOST_CONTRACT_EXT_PP_CLASS_TRAITS_SPECIALIZATION(traits) \
     BOOST_CONTRACT_EXT_PP_TRAITS_AUX_ELEM( \
         BOOST_CONTRACT_EXT_PP_TRAITS_AUX_INDEX_CLASS_SPECIALIZATION, \

@@ -11,7 +11,7 @@
 
 /* PUBLIC */
 
-// Expand to `(,,,)`.
+// Expand to `(,,,)`, for example: `(vector<T>)` or `(map<U, V>)`.
 #define BOOST_CONTRACT_EXT_PP_BASE_TRAITS_TYPE(traits) \
     BOOST_CONTRACT_EXT_PP_TRAITS_AUX_ELEM( \
             BOOST_CONTRACT_EXT_PP_TRAITS_AUX_INDEX_BASE_TYPE, traits)

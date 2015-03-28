@@ -21,7 +21,8 @@
 
 /* PUBLIC */
 
-// Adapted from BOOST_PP_IS_UNARY but for variadic macros.
+// NOTE: tokens can be EMPTY() (because of the variadic CHECK(...) above).
+// Implementation: Adapted from BOOST_PP_IS_UNARY but for variadic macros.
 #define BOOST_CONTRACT_EXT_PP_HAS_PAREN(tokens) \
     BOOST_PP_CHECK(tokens, BOOST_CONTRACT_EXT_PP_HAS_PAREN_CHECK)
 

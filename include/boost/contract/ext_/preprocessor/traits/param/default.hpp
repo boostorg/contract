@@ -11,7 +11,7 @@
 
 /* PUBLIC */
 
-// Expand to `(,,,) | EMPTY()`.
+// Expand to `(,,,) | EMPTY()`, for example: `(true)` or `(same<U, V>::value)`.
 #define BOOST_CONTRACT_EXT_PP_PARAM_TRAITS_DEFAULT(traits) \
     BOOST_CONTRACT_EXT_PP_TRAITS_AUX_ELEM( \
             BOOST_CONTRACT_EXT_PP_TRAITS_AUX_INDEX_PARAM_DEFAULT, traits)()

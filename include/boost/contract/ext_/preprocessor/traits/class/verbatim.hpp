@@ -10,7 +10,7 @@
 
 /* PUBLIC */
 
-// Expand to `(,,,) | EMPTY()`.
+// Expand to `(,,,) | EMPTY()`, for example: `(__declspec(dllexport))`.
 #define BOOST_CONTRACT_EXT_PP_CLASS_TRAITS_VERBATIM(traits) \
     BOOST_CONTRACT_EXT_PP_TRAITS_AUX_ELEM( \
             BOOST_CONTRACT_EXT_PP_TRAITS_AUX_INDEX_CLASS_VERBATIM, traits)()

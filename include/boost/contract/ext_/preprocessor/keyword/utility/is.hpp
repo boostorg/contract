@@ -25,10 +25,11 @@
 //               #defined to expand to `,`.
 // Precondition: tokens must start with a token concatenable to a macro name
 //               (e.g., a literal or integral token) or with parenthesis (i.e.,
-//               leading parenthesis are allowed).
+//               leading parenthesis are allowed). tokens can be EMPTY()
+//               (trailing handles that).
 #define BOOST_CONTRACT_EXT_PP_KEYWORD_UTILITY_IS_FRONT( \
         cat_to_comma_prefix, tokens) \
-    BOOST_PP_IIF(BOOST_CONTRACT_EXT_PP_HAS_PAREN(tokens), \
+    BOOST_PP_IIF(BOOST_CONTRACT_EXT_PP_HAS_PAREN(tokens BOOST_PP_NIL), \
         0 BOOST_PP_TUPLE_EAT(2) \
     , \
         BOOST_CONTRACT_EXT_PP_KEYWORD_UTILITY_IS_CHECK_ \

@@ -10,6 +10,14 @@
 
 /* PUBLIC */
 
+#define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_IS_REF_REF(tokens) \
+    BOOST_PP_IIF(BOOST_CONTRACT_EXT_PP_KEYWORD_IS_REF_FRONT( \
+            tokens), \
+        BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_IS_REF_REF_MAYBE_ \
+    , \
+        0 BOOST_PP_TUPLE_EAT(1) \
+    )(tokens)
+
 // Expand to `ref | ref ref | EMPTY()` (ref for lvalue&, ref ref for rvalue&&).
 #define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_REF(traits) \
     BOOST_CONTRACT_EXT_PP_TRAITS_AUX_ELEM( \
@@ -21,6 +29,11 @@
             decl_traits)
 
 /* PRIVATE */
+
+// Precondition: tokens = `ref ...`.
+#define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_IS_REF_REF_MAYBE_(tokens) \
+    BOOST_CONTRACT_EXT_PP_KEYWORD_IS_REF_FRONT( \
+            BOOST_CONTRACT_EXT_PP_KEYWORD_REF_REMOVE_FRONT(tokens))
 
 #define BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_REF_PARSE_ARGS_(decl, traits) \
     BOOST_PP_IIF( \
