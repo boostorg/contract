@@ -24,23 +24,23 @@
 #define BOOST_CONTRACT_AUX_PARAMS_WITH_DEFAULTS_D_R(d, r, id, tpl, \
         params_traits, extra_params) \
     BOOST_CONTRACT_AUX_PARAMS_(d, r, id, tpl, params_traits, extra_params, \
-            (0, 1, 1, 0, 1))
+            (1, 1, 0, 1))
 
-#define BOOST_CONTRACT_AUX_TEMPLATE_PARAMS_WITH_DEFAULTS_D_R(d, r, id, tpl, \
+// Names only (for invocations, etc.).
+#define BOOST_CONTRACT_AUX_PARAMS_NAMES_D_R(d, r, id, tpl, \
         params_traits, extra_params) \
     BOOST_CONTRACT_AUX_PARAMS_(d, r, id, tpl, params_traits, extra_params, \
-            (1, 1, 1, 0, 1))
-    
+            (0, 1, 0, 0))
+
 /* PRIVATE */
 
 #define BOOST_CONTRACT_AUX_PARAMS_(d, r, id, tpl, params_traits, extras, \
-        template_type_named_indexed_default) \
+        type_named_indexed_default) \
     BOOST_PP_IIF(BOOST_CONTRACT_EXT_PP_IS_EMPTY(params_traits), \
         BOOST_PP_TUPLE_EAT(3) \
     , \
         BOOST_PP_SEQ_FOR_EACH_I_R \
-    )(r, BOOST_CONTRACT_AUX_PARAM_, template_type_named_indexed_default, \
-            params_traits) \
+    )(r, BOOST_CONTRACT_AUX_PARAM_, type_named_indexed_default, params_traits) \
     BOOST_PP_IIF(BOOST_CONTRACT_EXT_PP_IS_EMPTY(extras), \
         BOOST_PP_TUPLE_EAT(1) \
     , \
@@ -50,26 +50,22 @@
 #define BOOST_CONTRACT_AUX_PARAMS_EXTRAS_(extras) \
     , BOOST_PP_TUPLE_REM_CTOR(extras)
 
-#define BOOST_CONTRACT_AUX_PARAM_(r, \
-        template_type_named_indexed_default, i, p) \
+#define BOOST_CONTRACT_AUX_PARAM_(r, type_named_indexed_default, i, p) \
     BOOST_CONTRACT_AUX_PARAM_ARGS_(r, i, p, \
-        BOOST_PP_TUPLE_ELEM(5, 0, template_type_named_indexed_default), \
-        BOOST_PP_TUPLE_ELEM(5, 1, template_type_named_indexed_default), \
-        BOOST_PP_TUPLE_ELEM(5, 2, template_type_named_indexed_default), \
-        BOOST_PP_TUPLE_ELEM(5, 3, template_type_named_indexed_default), \
-        BOOST_PP_TUPLE_ELEM(5, 4, template_type_named_indexed_default) \
+        BOOST_PP_TUPLE_ELEM(4, 0, type_named_indexed_default), \
+        BOOST_PP_TUPLE_ELEM(4, 1, type_named_indexed_default), \
+        BOOST_PP_TUPLE_ELEM(4, 2, type_named_indexed_default), \
+        BOOST_PP_TUPLE_ELEM(4, 3, type_named_indexed_default) \
     )
 
 #define BOOST_CONTRACT_AUX_PARAM_ARGS_(r, i, p, \
-        is_template, has_type, has_name, has_index, has_default) \
+        has_type, has_name, has_index, has_default) \
     BOOST_PP_COMMA_IF(i) \
-    BOOST_PP_IIF(BOOST_PP_COMPL(has_type), \
-        BOOST_PP_TUPLE_EAT(1) \
-    , BOOST_PP_IIF(is_template, \
-        BOOST_CONTRACT_AUX_TEMPLATE_PARAM_TYPE_ \
-    , \
+    BOOST_PP_IIF(has_type, \
         BOOST_CONTRACT_AUX_PARAM_TYPE_ \
-    ))(p) \
+    , \
+        BOOST_PP_TUPLE_EAT(1) \
+    )(p) \
     BOOST_PP_IIF(has_name, \
         BOOST_CONTRACT_AUX_PARAM_NAME_ \
     , BOOST_PP_IIF(has_index, \
@@ -84,9 +80,6 @@
     )(p)
 
 #define BOOST_CONTRACT_AUX_PARAM_TYPE_(p) \
-    BOOST_PP_TUPLE_REM_CTOR(BOOST_CONTRACT_EXT_PP_PARAM_TRAITS_TYPE(p))
-
-#define BOOST_CONTRACT_AUX_TEMPLATE_PARAM_TYPE_(p) \
     BOOST_PP_IIF(BOOST_CONTRACT_EXT_PP_KEYWORD_IS_TEMPLATE_FRONT( \
             BOOST_CONTRACT_EXT_PP_PARAM_TRAITS_TYPE(p)), \
         BOOST_CONTRACT_AUX_TEMPLATE_PARAM_TEMPLATE_ \

@@ -38,7 +38,7 @@
                 BOOST_CONTRACT_EXT_PP_CLASS_TRAITS_TEMPLATE(c))) \
     , \
         <, >, \
-        BOOST_CONTRACT_AUX_TEMPLATE_PARAMS_WITH_DEFAULTS_D_R(d, r, id, tpl, \
+        BOOST_CONTRACT_AUX_PARAMS_WITH_DEFAULTS_D_R(d, r, id, tpl, \
             BOOST_CONTRACT_EXT_PP_CLASS_TRAITS_TEMPLATE_PARAMS(c), \
             BOOST_PP_EMPTY() \
         ) \
