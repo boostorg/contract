@@ -2,43 +2,155 @@
 #ifndef BOOST_CONTRACT_FUNCTION_HPP_
 #define BOOST_CONTRACT_FUNCTION_HPP_
 
-#include <boost/contract/aux_/code/func.hpp>
-#include <boost/contract/aux_/code/invoke_or_error.hpp>
-#include <boost/contract/aux_/name.hpp>
-#include <boost/contract/ext_/preprocessor/traits/func.hpp> // f
+#include <boost/contract/control.hpp>
+#include <boost/contract/aux_/exception.hpp>
 #include <boost/function.hpp>
-#include <boost/bind.hpp>
-#include <boost/preprocessor/control/expr_iif.hpp>
-#include <boost/preprocessor/logical/compl.hpp>
+#include <boost/function_types/components.hpp>
+#include <boost/function_types/result_type.hpp>
+#include <boost/function_types/parameter_types.hpp>
+#include <boost/mpl/always.hpp>
+#include <boost/mpl/vector.hpp>
+#include <boost/mpl/pop_front.hpp>
+#include <boost/mpl/for_each.hpp>
+#include <boost/mpl/bool.hpp>
 
-/* PUBLIC */
+#include <boost/contract/ext_/function_types.hpp>
 
-#define BOOST_CONTRACT_FUNCTION_BODY(function_name) \
-    BOOST_CONTRACT_AUX_NAME2(function_name, body)
+#include <iostream>
+#include <typeinfo>
 
-#define BOOST_CONTRACT_FUNCTION(decl) \
-    BOOST_CONTRACT_FUNCTION_D_R(1, 1, __LINE__, 0, decl)
+namespace boost { namespace contract {
 
-#define BOOST_CONTRACT_FUNCTION_TPL(decl) \
-    BOOST_CONTRACT_FUNCTION_D_R(1, 1, __LINE__, 1, decl)
+template< class FuncTraits = void, class BasePtrs = boost::mpl::vector<> >
+struct function {
+    template<
+        typename FuncPtr,
+        class Class,
+        typename Arg0,
+        typename Pre,
+        typename Post
+    >
+    function (
+        FuncPtr const func,
+        Class* const obj,
+        Arg0 const& arg0,
+        boost::contract::control const ctrl,
+        Pre const& pre,
+        Post const& post
+    ) : ctrl_(ctrl), pre_(pre), post_(post) {
+        base_function<FuncPtr, Class, Arg0> base_function(obj, arg0);
 
-#define BOOST_CONTRACT_FUNCTION_D_R(d, r, id, tpl, decl) \
-    BOOST_CONTRACT_AUX_INVOKE_OR_ERROR(d, r, id, tpl, \
-        decl, \
-        BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_PARSE_D(d, decl), \
-        BOOST_CONTRACT_FUNCTION_ \
-    )
+        std::cout << std::endl;
+        std::cout << "-- inv --" << std::endl;
 
-/* PRIVATE */
+        boost::mpl::for_each<BasePtrs>(base_function.call(
+                boost::contract::control::check_inv_only));
+        obj->invariant();
+        
+        std::cout << std::endl;
+        std::cout << "-- pre --" << std::endl;
+        
+        boost::mpl::for_each<BasePtrs>(base_function.call(
+                boost::contract::control::check_pre_only));
+        pre_();
+        
+        std::cout << std::endl;
+        
+        //(obj->*func)(-123, 0);
+    }
 
-// Access is handled here (outside all code/ macros) so it is used only once.
-#define BOOST_CONTRACT_FUNCTION_(d, r, id, tpl, f) \
-    BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_ACCESS(f) \
-    BOOST_PP_EXPR_IIF(BOOST_PP_COMPL(BOOST_CONTRACT_EXT_PP_IS_EMPTY( \
-            BOOST_CONTRACT_EXT_PP_FUNC_TRAITS_ACCESS(f))), \
-        : \
-    ) \
-    BOOST_CONTRACT_AUX_FUNC_D_R(d, r, id, tpl, f)
+private:
+    template< typename FuncPtr, class Class, typename Arg0 >
+    struct base_function {
+        base_function ( Class* const obj, Arg0 const& arg0 )
+                : obj_(obj), arg0_(arg0) {}
+        
+    private:
+        typedef typename boost::function_types::result_type<FuncPtr>::type
+                result_type;
+        typedef typename boost::mpl::pop_front<typename boost::function_types::
+                parameter_types<FuncPtr>::type>::type param_types;
+
+        struct caller {
+            explicit caller (
+                base_function& outer, boost::contract::control const ctrl
+            ) : outer_(outer), ctrl_(ctrl) {}
+
+            template< class Base >
+            void operator() ( Base* ) {
+                call<Base>(
+                    boost::mpl::bool_<
+                        FuncTraits::has_member_function<
+                            Base, result_type, param_types
+                        >::value
+                    >()
+                );
+            }
+
+        private:
+            template< class Base >
+            void call ( boost::mpl::false_ const& has_func ) {}
+
+            template< class Base >
+            void call ( boost::mpl::true_ const& has_func ) {
+                typedef boost::function_types::components<FuncPtr,
+                        boost::mpl::always<Base> > base_func_traits;
+                typedef boost::function_types::member_function_pointer<
+                        base_func_traits>::type base_func_ptr;
+
+                base_func_ptr base_func = FuncTraits::member_function_ptr<
+                        Base, base_func_ptr>();
+                Base* const base = outer_.obj_;
+                
+                try {
+                    (base->*base_func)(outer_.arg0_, ctrl_);
+                } catch(boost::contract::aux::no_error const&) {
+                } catch(...) {
+                    throw;
+                }
+            }
+
+            base_function outer_;
+            boost::contract::control ctrl_;
+        };
+
+    public:
+        caller call ( boost::contract::control const ctrl ) {
+            return caller(*this, ctrl);
+        }
+
+    private:
+        Class* const obj_;
+        Arg0 const& arg0_;
+    };
+
+    boost::contract::control ctrl_;
+    boost::function<void ( )> pre_;
+    boost::function<void ( )> post_;
+};
+
+template< >
+struct function< void, boost::mpl::vector<> > {
+    template< class Class, typename Pre, typename Post >
+    function (
+        Class* const obj,
+        boost::contract::control const ctrl,
+        Pre const& pre, Post const& post
+    ) : ctrl_(ctrl), post_(post) {
+        if(ctrl_.action == boost::contract::control::check_inv_only) {
+            obj->invariant();
+            throw boost::contract::aux::no_error();
+        } else if(ctrl_.action == boost::contract::control::check_pre_only) {
+            pre();
+        }
+    }
+
+private:
+    boost::contract::control ctrl_;
+    boost::function<void ( )> post_;
+};
+
+} } // namespace
 
 #endif // #include guard
 
