@@ -4,7 +4,7 @@
 
 #include <cassert>
 
-#define BOOST_CONTRACT_ASSERT(cond) assert(cond)
+#define BOOST_CONTRACT_ASSERT(...) assert(__VA_ARGS__)
 
 #endif // #include guard
 
