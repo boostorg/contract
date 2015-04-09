@@ -8,7 +8,6 @@
 #include <boost/contract/aux_/invariant.hpp>
 #include <boost/contract/aux_/exception.hpp>
 #include <boost/contract/virtual_body.hpp>
-#include <boost/contract/list.hpp>
 #include <boost/contract/type.hpp>
 #include <boost/type_traits/add_pointer.hpp>
 #include <boost/type_traits/add_const.hpp>
@@ -16,21 +15,43 @@
 #include <boost/mpl/for_each.hpp>
 #include <boost/mpl/transform.hpp>
 #include <boost/mpl/placeholders.hpp>
+#include <boost/mpl/bool.hpp>
 #include <boost/mpl/identity.hpp>
 #include <boost/noncopyable.hpp>
 
 namespace boost { namespace contract { namespace aux {
 
 template<
-    class FuncTraits,
-    typename FuncPtr,
+    class Intro,
     class Class,
+    typename FuncPtr,
     typename Arg0
 > class function : public boost::contract::type, private boost::noncopyable {
 public:
+#if !BOOST_CONTRACT_CONFIG_PERMISSIVE
+    BOOST_STATIC_ASSERT_MSG(!boost::contract::aux::has_mutable_invariant<
+            Class>::value, "class invariant function must be const");
+    BOOST_STATIC_ASSERT_MSG(
+        (!boost::mpl::and_<
+            boost::contract::aux::has_bases<Class>,
+            boost::mpl::or_<
+                boost::is_same<Intro, boost::contract::aux::none>,
+                boost::is_same<FuncPtr, boost::contract::aux::none>
+            >
+        >::value),
+        "must specify introspection type, function type, and function "
+        "arguments for member contract of class with bases"
+    );
+    // TODO: static_assert(FuncPtr == none || class<FuncPtr>::type == Class)
+#endif
+
     function ( Class* const obj, Arg0 arg0 ) :
-        obj_(obj), virt_(boost::contract::virtual_body::user_call),
-        arg0_(arg0)
+        obj_(obj), virt_(boost::contract::virtual_body::user_call), arg0_(arg0)
+    { init(); }
+    
+    function ( Class* const obj, Arg0 arg0,
+            boost::contract::virtual_body const virt ) :
+        obj_(obj), virt_(virt), arg0_(arg0)
     { init(); }
     
     function ( Class* const obj, boost::contract::virtual_body const virt ) :
@@ -38,6 +59,8 @@ public:
     { init(); }
 
     ~function ( ) {
+        // TODO: Do not check post on throw... inv can be checked on throw, but
+        // not all the times... try to use use std::uncaught_exception for this.
         if(virt_.action == boost::contract::virtual_body::user_call) {
             check_inv();
             check_post();
@@ -46,8 +69,9 @@ public:
 
 private:
     friend class boost::contract::aux::base_function<
-            FuncTraits, FuncPtr, Class, Arg0>;
+            Intro, Class, FuncPtr, Arg0>;
     
+    // Base types as pointers because mpl::for_each will construct them.
     typedef typename boost::mpl::transform<
         typename boost::mpl::eval_if<boost::contract::aux::has_bases<Class>,
             boost::contract::aux::bases_of<Class>
@@ -58,10 +82,6 @@ private:
     >::type base_ptrs;
 
     void init ( ) {
-#if !BOOST_CONTRACT_CONFIG_PERMISSIVE
-        BOOST_STATIC_ASSERT_MSG(!boost::contract::aux::has_mutable_invariant<
-                Class>::value, "class invariant function must be const");
-#endif
         assert(obj_);
         base_func_.derived_function(this);
 
@@ -94,21 +114,24 @@ private:
     void check_inv ( ) {
         boost::mpl::for_each<base_ptrs>(base_func_.action(
                 boost::contract::virtual_body::check_inv_only));
-        check_inv( boost::mpl::bool_<
-                boost::contract::aux::has_invariant<Class>::value>() );
+        check_inv(boost::mpl::bool_<boost::contract::aux::has_invariant<Class>::
+                value>());
     }
 
-    void check_inv ( boost::mpl::false_ const& has_inv ) {}
-
-    void check_inv ( boost::mpl::true_ const& has_inv ) {
+    void check_inv ( boost::mpl::false_ const& ) {}
+    void check_inv ( boost::mpl::true_ const& ) {
         typename boost::add_const<Class>::type* const const_obj = obj_;
         const_obj->BOOST_CONTRACT_CONFIG_INVARIANT();
     }
             
     void check_pre ( ) {
-        boost::mpl::for_each<base_ptrs>(base_func_.action(
-                boost::contract::virtual_body::check_pre_only));
-        if(pre_) pre_();
+        try {
+            boost::mpl::for_each<base_ptrs>(base_func_.action(
+                    boost::contract::virtual_body::check_pre_only));
+            if(pre_) pre_(); // Pre logic-or: Last check, error if also throws.
+        } catch(boost::contract::aux::no_error const&) {
+            // Pre logic-or: Stop at 1st no_error (thrown by callee).
+        }
     }
     
     void check_post ( ) {
@@ -117,7 +140,7 @@ private:
         if(post_) post_();
     }
 
-    boost::contract::aux::base_function<FuncTraits, FuncPtr, Class, Arg0>
+    boost::contract::aux::base_function<Intro, Class, FuncPtr, Arg0>
             base_func_;
     Class* const obj_;
     boost::contract::virtual_body const virt_;

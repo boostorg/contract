@@ -59,5 +59,5 @@ test-pp pp_class_traits specialization ;
 test-pp pp_class_traits virt ;
 test-pp pp_class_traits bases ;
 
-test-pp subcontracting push_back_no_macros ;
+test-pp subcontracting inheritance_level3_multi2 ;
 
