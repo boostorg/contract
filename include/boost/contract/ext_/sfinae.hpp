@@ -15,16 +15,15 @@ namespace boost { namespace contract { namespace ext { namespace sfinae {
 typedef struct {} yes;
 typedef yes no[2];
 
-template< typename T, class Check >
+template<typename T, class Check>
 class check : private Check {
     using Check::apply;
-    template< typename > static no& apply ( ... );
+    template<typename> static no& apply(...);
 
 public:
     static bool const value = sizeof(apply<T>(0)) == sizeof(yes);
     typedef boost::mpl::bool_<value> type;
 };
-
 
 template< typename F, F >
 struct function_exists;

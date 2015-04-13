@@ -65,7 +65,7 @@ struct d {
 #define BASES e<T>, d<T>
 template< typename T, class S >
 struct c : BASES {
-    typedef BOOST_CONTRACT_BASE_TYPES(BASES) BOOST_CONTRACT_BASES;
+    typedef BOOST_CONTRACT_BASE_TYPES(BASES) base_types;
 #   undef BASES
 
     void invariant ( ) const {
@@ -112,7 +112,7 @@ struct b {
 #define BASES public c<T, S>, private b<S>
 template< typename T, class S = unsigned int >
 struct a : BASES {
-    typedef BOOST_CONTRACT_BASE_TYPES(BASES) BOOST_CONTRACT_BASES;
+    typedef BOOST_CONTRACT_BASE_TYPES(BASES) base_types;
 #   undef BASES
 
     void invariant ( ) const {

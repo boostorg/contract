@@ -20,22 +20,12 @@
 
 namespace boost { namespace contract { namespace aux {
 
-template<
-    class Intro,
-    class Class,
-    typename FuncPtr,
-    typename Arg0
-> class function;
-
-template< class Intro, class Class, typename FuncPtr, typename Arg0 >
+template<class DerivedFunction, class Intro, typename Func>
 class base_function {
-    typedef boost::contract::aux::function<Intro, Class, FuncPtr, Arg0>
-            derived_function_type;
-        
-    typedef typename boost::function_types::result_type<FuncPtr>::type
+    typedef typename boost::function_types::result_type<Func>::type
             result_type;
     typedef typename boost::mpl::pop_front<typename boost::function_types::
-            parameter_types<FuncPtr>::type>::type arg_types;
+            parameter_types<Func>::type>::type arg_types;
     typedef typename boost::mpl::eval_if<boost::is_same<typename
             boost::mpl::back<arg_types>::type, boost::contract::virtual_body>,
         boost::mpl::identity<arg_types>
@@ -44,26 +34,26 @@ class base_function {
     >::type virtual_arg_types;
 
 public:
-    base_function ( ) : virt_(boost::contract::virtual_body::user_call) {}
+    base_function() : virt_(boost::contract::virtual_body::user_call) {}
 
-    void derived_function ( derived_function_type* derived_func ) {
+    void derived_function(DerivedFunction* derived_func) {
         derived_func_ = derived_func;
     }
 
-    base_function& action ( boost::contract::virtual_body const virt ) {
+    base_function& action(boost::contract::virtual_body const virt) {
         virt_ = virt;
         return *this;
     }
 
-    template< class Base >
-    void operator() ( Base* ) {
+    template<class Base>
+    void operator()(Base*) {
         call<Base>(boost::mpl::bool_<Intro::template has_member_function<
                 Base, result_type, virtual_arg_types>::value>());
     }
 
 private:
-    template< class Base > void call ( boost::mpl::false_ const& ) {}
-    template< class Base > void call ( boost::mpl::true_ const& ) {
+    template<class Base> void call(boost::mpl::false_ const&) {}
+    template<class Base> void call(boost::mpl::true_ const&) {
         typedef typename boost::mpl::push_front<
             typename boost::mpl::push_front<virtual_arg_types, Base*>::type,
             result_type
@@ -91,21 +81,16 @@ private:
         }
     }
 
-    derived_function_type* derived_func_;
+    DerivedFunction* derived_func_;
     boost::contract::virtual_body virt_;
 };
 
-template< class Class, typename Arg0 >
-struct base_function<boost::contract::aux::none, Class,
-        boost::contract::aux::none, Arg0> {
-    void derived_function (
-        boost::contract::aux::function<boost::contract::aux::none, Class,
-                boost::contract::aux::none, Arg0>*
-    ) {}
+template<class DerivedFunction>
+struct base_function<DerivedFunction, boost::contract::aux::none,
+        boost::contract::aux::none> {
+    explicit base_function(DerivedFunction&) {}
 
-    base_function& action ( boost::contract::virtual_body const ) {
-        return *this;
-    }
+    base_function& action(boost::contract::virtual_body const) { return *this; }
 };
     
 } } } // namespace

@@ -1,0 +1,10 @@
+
+#ifndef BOOST_CONTRACT_AUX_CONFIG_HPP_
+#define BOOST_CONTRACT_AUX_CONFIG_HPP_
+
+#ifndef BOOST_CONTRACT_AUX_CONFIG_DEBUG
+#   define BOOST_CONTRACT_AUX_CONFIG_DEBUG 1
+#endif
+
+#endif // #include guard
+

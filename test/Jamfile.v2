@@ -61,3 +61,6 @@ test-pp pp_class_traits bases ;
 
 test-pp subcontracting inheritance_level3_multi2 ;
 
+run public_member_bases_v.cpp ;
+
+
