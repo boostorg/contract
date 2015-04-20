@@ -3,6 +3,7 @@
 #define BOOST_CONTRACT_PROTECTED_MEMBER_HPP_
 
 #include <boost/contract/type.hpp>
+#include <boost/contract/aux_/function.hpp>
 #include <boost/contract/aux_/function_key.hpp>
 #include <boost/make_shared.hpp>
 
@@ -12,7 +13,7 @@ namespace boost { namespace contract {
 
 boost::contract::type protected_member() {
     return boost::contract::type(boost::make_shared<boost::contract::aux::
-            function<boost;:contract::aux::protected_member> >());
+            function<boost::contract::aux::protected_member> >());
 }
 
 } } // namespace

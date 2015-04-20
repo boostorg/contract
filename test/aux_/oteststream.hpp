@@ -17,7 +17,7 @@ namespace oteststream_ {
     };
 }
 
-// Print to clog plus build internal string (like ostringstream) for checking.
+// Print to clog plus build internal string (using ostringstream) for checking.
 struct oteststream :
     private oteststream_::oss_base,
     public boost::iostreams::stream<boost::iostreams::tee_device<std::ostream,
@@ -35,7 +35,7 @@ struct oteststream :
     std::string str() const { return oss_.str(); }
     void str(std::string const& s) { oss_.str(s); }
 
-    // If found, display mismatching character.
+    // If found, display mismatching characters.
     bool check(std::string const& s) {
         std::string r = str();
         std::string::size_type i = 0;

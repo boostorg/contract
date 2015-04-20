@@ -8,6 +8,12 @@ run introspect.cpp ;
 
 run constructor_bases.cpp ;
 run destructor_bases.cpp ;
+
 run public_member_bases_virtual.cpp ;
 run public_member_bases_static.cpp ;
+
+run protected_member_bases.cpp ;
+run private_member_bases.cpp ;
+
+run free_function.cpp ;
 
