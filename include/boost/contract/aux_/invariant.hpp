@@ -1,50 +1,49 @@
 
-#ifndef BOOST_CONTRACT_INVARIANT_HPP_
-#define BOOST_CONTRACT_INVARIANT_HPP_
+#ifndef BOOST_CONTRACT_AUX_INVARIANT_HPP_
+#define BOOST_CONTRACT_AUX_INVARIANT_HPP_
 
 #include <boost/contract/config.hpp>
-#include <boost/contract/ext_/sfinae.hpp>
-#include <boost/preprocessor/facilities/empty.hpp>
-
-/* PRIVATE */
-
-#define BOOST_CONTRACT_INVARIANT_HAS_(name, tparam, func_member, cv, func_name)\
-    struct name { \
-        template<typename tparam> \
-        static boost::contract::ext::sfinae::yes& apply( \
-            boost::contract::ext::sfinae::function_exists< \
-                void func_member () cv, \
-                &tparam::func_name \
-            >* \
-        ); \
-    };
-
-/* CODE */
+#include <boost/contract/aux_/tti.hpp>
+#include <boost/function_types/property_tags.hpp>
+#include <boost/mpl/vector.hpp>
 
 namespace boost { namespace contract { namespace aux {
-    
+
 namespace invariant_ {
-    BOOST_CONTRACT_INVARIANT_HAS_(has_const, T, (T::*), const,
+    BOOST_CONTRACT_AUX_TTI_TRAIT_HAS_MEMBER_FUNCTION(has_invariant,
             BOOST_CONTRACT_CONFIG_INVARIANT)
+    
+    BOOST_CONTRACT_AUX_TTI_TRAIT_HAS_MEMBER_FUNCTION(
+            has_non_static_invariant, BOOST_CONTRACT_CONFIG_STATIC_INVARIANT)
 
-    BOOST_CONTRACT_INVARIANT_HAS_(has_mutable, T, (T::*), BOOST_PP_EMPTY(),
-            BOOST_CONTRACT_CONFIG_INVARIANT)
-
-    BOOST_CONTRACT_INVARIANT_HAS_(has_static, T, (*),
-            BOOST_PP_EMPTY(), BOOST_CONTRACT_CONFIG_STATIC_INVARIANT)
+    BOOST_CONTRACT_AUX_TTI_TRAIT_HAS_STATIC_MEMBER_FUNCTION(
+            has_static_invariant, BOOST_CONTRACT_CONFIG_STATIC_INVARIANT)
 }
 
-template<class Class>
-struct has_const_invariant :
-        boost::contract::ext::sfinae::check<Class, invariant_::has_const> {};
+// TODO: Unless PERMISSIVE, enforce: !has_invariant<C> ||
+// has_const_invariant<C> || has_const_volatile_invariant<C> 
 
-template<class Class>
-struct has_mutable_invariant :
-        boost::contract::ext::sfinae::check<Class, invariant_::has_mutable> {};
+template<typename T>
+struct has_const_invariant : invariant_::has_invariant<T, void,
+        boost::mpl::vector<>, boost::function_types::const_non_volatile> {};
 
-template<class Class>
-struct has_static_invariant :
-        boost::contract::ext::sfinae::check<Class, invariant_::has_static> {};
+template<typename T>
+struct has_const_volatile_invariant : invariant_::has_invariant<T, void,
+        boost::mpl::vector<>, boost::function_types::cv_qualified> {};
+
+template<typename T>
+struct has_invariant : invariant_::has_invariant<T, void,
+        boost::mpl::vector<> > {};
+
+// TODO: Unless PERMISSIVE, enforce: !has_non_static_invariant<Class>
+
+template<typename T>
+struct has_static_invariant : invariant_::has_static_invariant<T, void,
+        boost::mpl::vector<> > {};
+
+template<typename T>
+struct has_non_static_invariant : invariant_::has_non_static_invariant<T, void,
+        boost::mpl::vector<> > {};
 
 } } } // namespace
 

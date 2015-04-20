@@ -26,6 +26,19 @@
 #include <exception>
 #include <cassert>
 
+// TODO: Modelling after Clang message for assert() failure:
+// assertion "(Key != boost::contract::aux::constructor)" failed: file "..\include/boost/contract/aux_/function.hpp", line 156
+// This library should say:
+// precondition/postcondition/invariant/... "..." failed: file "...", line ...
+// for exception classes precondition/postcondition/..._failure (inheriting from
+// assertion_failure base exception to be thrown by CONTRACT_ASSERT) and failure
+// handlers [set_]precondition_failed.
+
+// TODO: Consider splitting this class into aux_/constructor, aux_/destructor,
+// etc. bases on Key while keeping all check_... functions in a
+// aux_/basic_function base class (or even in contract::type directly). The code
+// might be more clear without all the switch on Key.
+
 namespace boost { namespace contract { namespace aux {
 
 template<
@@ -48,19 +61,20 @@ template<
     >::type base_ptrs;
 
 #if !BOOST_CONTRACT_CONFIG_PERMISSIVE
-    BOOST_STATIC_ASSERT_MSG(!boost::contract::aux::has_mutable_invariant<
-            Class>::value, "class invariant function must be const");
-    BOOST_STATIC_ASSERT_MSG(
-        (!boost::mpl::and_<
-            boost::contract::aux::has_bases<Class>,
-            boost::mpl::or_<
-                boost::is_same<Intro, boost::contract::aux::none>,
-                boost::is_same<Func, boost::contract::aux::none>
-            >
-        >::value),
-        "must specify introspection type, function type, and function "
-        "arguments for member contract of class with bases"
-    );
+    // TODO: Fix those.
+    //BOOST_STATIC_ASSERT_MSG(!boost::contract::aux::has_mutable_invariant<
+    //        Class>::value, "class invariant function must be const");
+    //BOOST_STATIC_ASSERT_MSG(
+    //    (!boost::mpl::and_<
+    //        boost::contract::aux::has_bases<Class>,
+    //        boost::mpl::or_<
+    //            boost::is_same<Intro, boost::contract::aux::none>,
+    //            boost::is_same<Func, boost::contract::aux::none>
+    //        >
+    //    >::value),
+    //    "must specify introspection type, function type, and function "
+    //    "arguments for member contract of class with bases"
+    //);
     // TODO: static_assert(Func == none || class<Func>::type == Class)
 #endif
 
@@ -78,6 +92,7 @@ public:
         BOOST_CONTRACT_AUX_DEBUG((!boost::is_same<Func,
                 boost::contract::aux::none>::value));
         BOOST_CONTRACT_AUX_DEBUG((obj_));
+
         init();
     }
     
@@ -106,18 +121,19 @@ public:
 
 private:
     void init() { // Entry point for inv.
-        BOOST_CONTRACT_AUX_DEBUG((!obj_ ? boost::mpl::empty<base_ptrs>::value :
-                true));
+        BOOST_CONTRACT_AUX_DEBUG(virt_.action == boost::contract::virtual_body::
+                user_call || Key == boost::contract::aux::public_member);
+
         base_func_.derived_function(this);
 
-        if(Key != boost::contract::aux::protected_member) {
-            bool const static_inv_only = true;
-            check_subcontracted_inv(static_inv_only);
-        } else if(
-            Key != boost::contract::aux::private_member &&
-            Key != boost::contract::aux::constructor &&
-            Key != boost::contract::aux::free_function
+        if(
+            Key == boost::contract::aux::constructor ||
+            Key == boost::contract::aux::destructor ||
+            Key == boost::contract::aux::protected_member
         ) {
+            check_inv(/* static_inv_only = */ true);
+        } else if(Key != boost::contract::aux::private_member &&
+                Key != boost::contract::aux::free_function) {
             if(virt_.action == boost::contract::virtual_body::user_call) {
                 check_subcontracted_inv();
             } else if(virt_.action ==
@@ -125,9 +141,11 @@ private:
                 check_subcontracted_inv();
                 throw boost::contract::aux::no_error();
             } else if(virt_.action ==
+                // TODO: Do I really need the check_static_inv_only action or
+                // static-inv-check-only applies only to check_inv() and not
+                // to check_subcontracted_inv()?
                     boost::contract::virtual_body::check_static_inv_only) {
-                bool const static_inv_only = true;
-                check_subcontracted_inv(static_inv_only);
+                check_subcontracted_inv(/* static_inv_only = */ true);
                 throw boost::contract::aux::no_error();
             } // Else (check only pre, post, etc.) do nothing.
         }
@@ -153,8 +171,6 @@ private:
     }
     
     void post_available() { // "Normal exit" point when only post.
-        BOOST_CONTRACT_AUX_DEBUG((Key != boost::contract::aux::constructor));
-
         if(virt_.action == boost::contract::virtual_body::check_post_only) {
             check_subcontracted_post();
             throw boost::contract::aux::no_error();
@@ -166,15 +182,13 @@ public:
         bool const body_threw = std::uncaught_exception();
         if(virt_.action == boost::contract::virtual_body::user_call) {
             if(Key == boost::contract::aux::constructor) {
-                bool const static_inv_only = body_threw;
-                check_inv(static_inv_only);
-            } else if(
-                Key == boost::contract::aux::protected_member ||
-                Key == boost::contract::aux::destructor
-            ) {
-                bool const static_inv_only = boost::contract::aux::
-                        protected_member || !body_threw;
-                check_subcontracted_inv(static_inv_only);
+                check_inv(/* static_inv_only = */ body_threw);
+                if(!body_threw) check_post();
+            } else if(Key == boost::contract::aux::destructor) {
+                check_inv(/* static_inv_only = */ !body_threw);
+                if(!body_threw) check_post();
+            } else if(Key == boost::contract::aux::protected_member) {
+                check_subcontracted_inv(/* static_inv_only = */ true);
                 if(!body_threw) check_post();
             } else if(
                 Key == boost::contract::aux::private_member ||
@@ -250,7 +264,7 @@ private:
     boost::contract::aux::base_function<function, Intro, Func> base_func_;
     boost::contract::virtual_body const virt_;
     Class* const obj_;
-    // TODO: add_reference to all these Arg-i types.
+    // TODO: add_reference/perfect fwd to all these Arg-i types.
     // TODO: Support 0-to-n args.
     Arg0 arg0_;
 };

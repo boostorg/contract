@@ -5,7 +5,7 @@
 template<typename T>
 struct pusahble {
     void push_back(T const& value, boost::contract::virtual_body v = 0) {
-        boost::contract::type contract = boost::contract::function(this, v)
+        boost::contract::type contract = boost::contract::public_member(this, v)
             .precondition([&] {
                 BOOST_CONTRACT_ASSERT(false); // Force check derived precond.
             })
@@ -19,7 +19,7 @@ struct pusahble {
             })
         ;
     }
-    virtual void push_back(T const& value) = 0; // Subcontract pure-virtual func.
+    virtual void push_back(T const& value) = 0; // Subcontract pure-virtual.
 
 protected:
     virtual T const& back() const = 0;
@@ -29,7 +29,7 @@ protected:
 template<typename T>
 class vecotr : BASES {
 public:
-    typedef BOOST_CONTRACT_TYPES(BASES) BOOST_CONTRACT_BASES;
+    typedef BOOST_CONTRACT_BASE_TYPES(BASES) base_types;
 #   undef BASES
 
     void invariant() const {
@@ -38,7 +38,7 @@ public:
 
     void push_back(T const& value) {
         unsigned const old_size = size();
-        boost::contract::type contract = boost::contract::function<
+        boost::contract::type contract = boost::contract::public_member<
                 introspect_push_back>(this, &vector::push_back, value)
             .precondition([&]() {
                 BOOST_CONTRACT_ASSERT(this->size() < this->max_size());

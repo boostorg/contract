@@ -1,66 +1,13 @@
 
-echo """Usage:
-    Compile and run test file <dir>/<name>.cpp:                      [implicit]
-    $ bjam <dir>/<name> ...
-
-    Preprocess file <dir>/<name>.cpp (stop at preprocessed traits, -UDEBUG to
-    generate all C++ test code instead):                             [explicit]
-    $ bjam <dir>/<name>-pp [cxxflags=-UDEBUG] ...
-
-    Preprocess file <dir>/<name>.cpp using Boost.Wave (instead of toolset's
-    preprocessor):                                                   [explicit]
-    $ bjam <dir>/<name>-wave ...
-""" ;
-
 import testing ;
 
-actions wave { wave $(>) -o $(<) --timer }
+run base_types.cpp ;
+run has_bases.cpp ;
+run has_invariant.cpp ;
+run introspect.cpp ;
 
-rule test-pp ( dir file ) {
-    run $(dir)/$(file).cpp : : : <include>$(dir) : $(dir)/$(file) ;
-
-    preprocessed $(dir)/$(file)-pp : $(dir)/$(file).cpp :
-            <include>$(dir) <cxxflags>-DDEBUG ;
-    alias $(dir)/$(file)-pp.ii : $(dir)/$(file)-pp ;
-    explicit $(dir)/$(file)-pp $(dir)/$(file)-pp.ii ;
-
-    # TODO: It'd be nice to automatically run the generate.py before building
-    # using something like `bjam --generate ...` or `bjam generate ...`.
-    # TODO: It'd be nice to run all ...-wave targets at once using something
-    # like `bjam wave ...` or `bjam --wave ...`.
-    make $(dir)/$(file)-wave.ii : $(dir)/$(file).cpp : @wave ;
-    alias $(dir)/$(file)-wave : $(dir)/$(file)-wave.ii ;
-    explicit $(dir)/$(file)-wave $(dir)/$(file)-wave.ii ;
-}
-
-test-pp pp_func_traits access ;
-test-pp pp_func_traits verbatim ;
-test-pp pp_func_traits export ;
-test-pp pp_func_traits template ;
-test-pp pp_func_traits classifiers ;
-test-pp pp_func_traits return_ ;
-test-pp pp_func_traits name ;
-test-pp pp_func_traits params ;
-test-pp pp_func_traits cv ;
-test-pp pp_func_traits ref ;
-test-pp pp_func_traits except ;
-test-pp pp_func_traits trailing_return ;
-test-pp pp_func_traits virt ;
-test-pp pp_func_traits preconditions ;
-test-pp pp_func_traits postconditions ;
-
-test-pp pp_class_traits export ;
-test-pp pp_class_traits template ;
-test-pp pp_class_traits friend ;
-test-pp pp_class_traits key ;
-test-pp pp_class_traits verbatim ;
-test-pp pp_class_traits name ;
-test-pp pp_class_traits specialization ;
-test-pp pp_class_traits virt ;
-test-pp pp_class_traits bases ;
-
-test-pp subcontracting inheritance_level3_multi2 ;
-
-run public_member_bases_v.cpp ;
-
+run constructor_bases.cpp ;
+run destructor_bases.cpp ;
+run public_member_bases_virtual.cpp ;
+run public_member_bases_static.cpp ;
 

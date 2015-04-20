@@ -15,9 +15,5 @@
 #define BOOST_CONTRACT_AUX_NAME1(name1) \
     BOOST_PP_CAT(boost_contract_auxX, name1)
 
-#define BOOST_CONTRACT_AUX_NAME2(name1, name2) \
-    BOOST_PP_CAT(boost_contract_auxX, BOOST_PP_CAT(name1, BOOST_PP_CAT(X, \
-            name2)))
-
 #endif // #include guard
 

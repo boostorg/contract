@@ -3,6 +3,7 @@
 #define BOOST_CONTRACT_DESTRUCTOR_HPP_
 
 #include <boost/contract/type.hpp>
+#include <boost/contract/aux_/function.hpp>
 #include <boost/contract/aux_/function_key.hpp>
 #include <boost/make_shared.hpp>
 

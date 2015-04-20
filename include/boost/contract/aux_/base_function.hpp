@@ -5,6 +5,7 @@
 #include <boost/contract/virtual_body.hpp>
 #include <boost/contract/aux_/exception.hpp>
 #include <boost/contract/aux_/none.hpp>
+#include <boost/contract/aux_/debug.hpp>
 #include <boost/function_types/result_type.hpp>
 #include <boost/function_types/parameter_types.hpp>
 #include <boost/function_types/member_function_pointer.hpp>
@@ -87,10 +88,14 @@ private:
 
 template<class DerivedFunction>
 struct base_function<DerivedFunction, boost::contract::aux::none,
-        boost::contract::aux::none> {
-    explicit base_function(DerivedFunction&) {}
+        boost::contract::aux::none> { // Dummy implementation that does nothing.
+    base_function() {}
 
+    void derived_function(DerivedFunction*) {}
     base_function& action(boost::contract::virtual_body const) { return *this; }
+
+    template<class Base> // Should never actually be called at runtime.
+    void operator()(Base*) { BOOST_CONTRACT_AUX_DEBUG(false); }
 };
     
 } } } // namespace
