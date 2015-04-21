@@ -108,21 +108,25 @@ int main() {
     ok.str("");
     ok
         << "a::static_inv" << std::endl
+        << "a::inv" << std::endl
         << "a::dtor::body" << std::endl
         << "a::static_inv" << std::endl
         << "a::dtor::post" << std::endl
 
         << "c::static_inv" << std::endl
+        << "c::inv" << std::endl
         << "c::dtor::body" << std::endl
         << "c::static_inv" << std::endl
         << "c::dtor::post" << std::endl
         
         << "d::static_inv" << std::endl
+        << "d::inv" << std::endl
         << "d::dtor::body" << std::endl
         << "d::static_inv" << std::endl
         << "d::dtor::post" << std::endl
         
         << "b::static_inv" << std::endl
+        << "b::inv" << std::endl
         << "b::dtor::body" << std::endl
         << "b::static_inv" << std::endl
         << "b::dtor::post" << std::endl

@@ -2,14 +2,12 @@
 #ifndef BOOST_CONTRACT_VIRTUAL_BODY_HPP_
 #define BOOST_CONTRACT_VIRTUAL_BODY_HPP_
 
-#include <boost/contract/aux_/function_key.hpp>
-
 namespace boost { namespace contract {
 
 namespace aux {
-    template<boost::contract::aux::function_key, class, class, typename,
-            typename> class function;
     template<class, class, typename> class base_function;
+    template<class, class, typename, typename> class basic_function;
+    template<class, class, typename, typename> class public_member;
 }
 
 // Must be efficient to pass this as value param (to limit user API verbosity).
@@ -21,10 +19,16 @@ struct virtual_body {
     T const oldof_(T const& value) const { return value; }
 
 private:
-    template<boost::contract::aux::function_key, class, class, typename,
-            typename> friend class boost::contract::aux::function;
+    // TODO: See if there is a way to reduce friendship relationships (because
+    // they make the impl hard to follow). These ones are necessary because
+    // they are between public and private APIs of the lib. But maybe
+    // the ones among some of the private APIs of the lib could be reduced...
     template<class, class, typename> friend class
             boost::contract::aux::base_function;
+    template<class, class, typename, typename> friend class
+            boost::contract::aux::basic_function;
+    template<class, class, typename, typename> friend class
+            boost::contract::aux::public_member;
 
     enum action_type {
         user_call,

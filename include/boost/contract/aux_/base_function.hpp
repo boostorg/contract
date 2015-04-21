@@ -17,7 +17,6 @@
 #include <boost/mpl/eval_if.hpp>
 #include <boost/mpl/bool.hpp>
 #include <boost/mpl/identity.hpp>
-#include <cassert>
 
 namespace boost { namespace contract { namespace aux {
 
@@ -63,11 +62,11 @@ private:
                 base_virtual_func_types>::type base_virtual_func_ptr;
         base_virtual_func_ptr base_virtual_func = Intro::template
                 member_function_address<Base, base_virtual_func_ptr>();
-        assert(base_virtual_func);
+        BOOST_CONTRACT_AUX_DEBUG(base_virtual_func);
         
-        assert(derived_func_);
+        BOOST_CONTRACT_AUX_DEBUG(derived_func_);
         Base* const base = derived_func_->obj_;
-        assert(base);
+        BOOST_CONTRACT_AUX_DEBUG(base);
         
         try {
             (base->*base_virtual_func)(derived_func_->arg0_, virt_);

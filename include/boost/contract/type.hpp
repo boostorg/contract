@@ -7,37 +7,37 @@
 
 namespace boost { namespace contract {
 
-class type {
+class type { // This can be copied (as shallow smart pointer copy).
 public:
-    explicit type ( boost::shared_ptr<type> const self ) : self_(self) {}
+    explicit type(boost::shared_ptr<type> const self) : self_(self) {}
 
-    virtual ~type ( ) {}
+    virtual ~type() {}
 
     // TODO: Following should return special types so user cannot set pre/post
     // multiple times.
 
-    template< typename Pre >
-    type& precondition ( Pre const pre ) {
-        self_->pre_ = pre;
+    template<typename Precondition>
+    type& precondition(Precondition const f) {
+        self_->pre_ = f;
         self_->pre_available();
         return *this;
     }
 
-    template< typename Post >
-    type& postcondition ( Post const post ) {
-        self_->post_ = post;
+    template<typename Postcondition>
+    type& postcondition(Postcondition const f) {
+        self_->post_ = f;
         self_->post_available();
         return *this;
     }
     
 protected:
-    type ( ) {}
+    type() {}
 
-    virtual void pre_available ( ) {}
-    virtual void post_available ( ) {}
+    virtual void pre_available() {} // Called when pre functor is set.
+    virtual void post_available() {} // Called when post functor is set.
     
-    boost::function<void ( )> pre_;
-    boost::function<void ( )> post_;
+    boost::function<void ()> pre_;
+    boost::function<void ()> post_;
 
 private:
     boost::shared_ptr<type> self_;
