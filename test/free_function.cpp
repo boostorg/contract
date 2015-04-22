@@ -1,6 +1,7 @@
 
 #include "aux_/oteststream.hpp"
 #include <boost/contract/free_function.hpp>
+#include <boost/contract/type.hpp>
 #include <boost/detail/lightweight_test.hpp>
 #include <sstream>
 
@@ -10,10 +11,10 @@ boost::contract::aux::test::oteststream out;
 
 void f() {
     boost::contract::type c = boost::contract::free_function()
-        .precondition([&] () {
+        .precondition([&] {
             out << "f::pre" << std::endl;
         })
-        .postcondition([&] () {
+        .postcondition([&] {
             out << "f::post" << std::endl;
         })
     ;

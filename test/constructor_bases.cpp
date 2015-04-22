@@ -1,6 +1,7 @@
 
 #include "aux_/oteststream.hpp"
 #include <boost/contract/constructor.hpp>
+#include <boost/contract/type.hpp>
 #include <boost/contract/base_types.hpp>
 #include <boost/contract/assert.hpp>
 #include <boost/detail/lightweight_test.hpp>

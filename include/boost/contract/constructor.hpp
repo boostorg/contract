@@ -2,16 +2,16 @@
 #ifndef BOOST_CONTRACT_CONSTRUCTOR_HPP_
 #define BOOST_CONTRACT_CONSTRUCTOR_HPP_
 
-#include <boost/contract/type.hpp>
 #include <boost/contract/aux_/function/constructor.hpp>
+#include <boost/contract/aux_/set/post_only.hpp>
 #include <boost/make_shared.hpp>
 
 namespace boost { namespace contract {
 
 template<class Class>
-boost::contract::type constructor(Class* const object) {
-    return boost::contract::type(boost::make_shared<boost::contract::aux::
-            function::constructor<Class> >(object));
+boost::contract::aux::set::post_only constructor(Class* const object) {
+    return boost::contract::aux::set::post_only(boost::make_shared<
+            boost::contract::aux::function::constructor<Class> >(object));
 }
 
 // Uses Class tparam to avoid multiple inheritance from same type.

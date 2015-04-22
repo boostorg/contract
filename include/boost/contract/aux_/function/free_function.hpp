@@ -18,10 +18,10 @@ private:
     void entry() {}
 
     // Check pre (as soon as related functor set).
-    void pre_available() { check_pre(); }
+    void pre_available() /* override */ { check_pre(); }
     
     // Post always checked after body, at exit (see below).
-    void post_available() {}
+    void post_available() /* override */ {}
     
     // If body did not throw, check post (not a public member so no inv to
     // check, nor subcontracting).

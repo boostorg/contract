@@ -26,10 +26,10 @@ private:
     void entry() { this->check_inv(/* static_inv_only = */ true); }
 
     // Check pre (as soon as related functor set).
-    void pre_available() { this->check_pre(); }
+    void pre_available() /* override */ { this->check_pre(); }
     
     // Post always checked after body, at exit (see below).
-    void post_available() {}
+    void post_available() /* override */ {}
     
     // Static so no object and only static inv checked, plus check post but
     // only if body did not throw.

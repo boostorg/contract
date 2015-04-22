@@ -22,10 +22,10 @@ private:
     void entry() { this->check_inv(/* static_inv_only = */ true); }
 
     // Ctor pre checked by constructor_precondition at start of init list.
-    void pre_available() { BOOST_CONTRACT_AUX_DEBUG(false); }
+    void pre_available() /* override */ { BOOST_CONTRACT_AUX_DEBUG(false); }
     
     // Ctor post always checked later, at exit (see below).
-    void post_available() {}
+    void post_available() /* override */ {}
 
     // If ctor body threw, only check static inv, otherwise obj constructed so
     // check also non-static inv and post (subcontracting implemented

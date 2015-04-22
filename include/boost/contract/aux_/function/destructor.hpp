@@ -25,12 +25,12 @@ private:
     void entry() { this->check_inv(); }
 
     // Dtor cannot have pre because it has no parameters.
-    void pre_available() { BOOST_CONTRACT_AUX_DEBUG(false); }
+    void pre_available() /* override */ { BOOST_CONTRACT_AUX_DEBUG(false); }
     
     // Ctor post always checked after body, at exit (see below).
     // NOTE: Even if there is no obj after dtor body, this library allows for
     // dtor post (e.g., to check static members for an instance counter class).
-    void post_available() {}
+    void post_available() /* override */ {}
     
     // If dtor body threw, obj still exists so check subcontracted static and
     // non-static inv (but no post because of throw), otherwise obj destructed

@@ -58,23 +58,23 @@ template<
         boost::add_pointer<boost::mpl::placeholders::_1>
     >::type base_ptrs;
 
-#if !BOOST_CONTRACT_CONFIG_PERMISSIVE
-    // TODO: Fix those.
-    //BOOST_STATIC_ASSERT_MSG(!boost::contract::aux::has_mutable_invariant<
-    //        Class>::value, "class invariant function must be const");
-    //BOOST_STATIC_ASSERT_MSG(
-    //    (!boost::mpl::and_<
-    //        boost::contract::aux::has_bases<Class>,
-    //        boost::mpl::or_<
-    //            boost::is_same<Intro, boost::contract::aux::none>,
-    //            boost::is_same<Func, boost::contract::aux::none>
-    //        >
-    //    >::value),
-    //    "must specify introspection type, function type, and function "
-    //    "arguments for member contract of class with bases"
-    //);
-    // TODO: static_assert(Func == none || class<Func>::type == Class)
-#endif
+// TODO: Fix !CONFIG_PERMISSIVE static assertions.
+//#if !BOOST_CONTRACT_CONFIG_PERMISSIVE
+//    BOOST_STATIC_ASSERT_MSG(!boost::contract::aux::has_mutable_invariant<
+//            Class>::value, "class invariant function must be const");
+//    BOOST_STATIC_ASSERT_MSG(
+//        (!boost::mpl::and_<
+//            boost::contract::aux::has_bases<Class>,
+//            boost::mpl::or_<
+//                boost::is_same<Intro, boost::contract::aux::none>,
+//                boost::is_same<Func, boost::contract::aux::none>
+//            >
+//        >::value),
+//        "must specify introspection type, function type, and function "
+//        "arguments for member contract of class with bases"
+//    );
+//    // TODO: static_assert(Func == none || class<Func>::type == Class)
+//#endif
 
 public:
     explicit subcontracted_pre_post_inv(Class* const obj, Arg0 arg0) :
@@ -87,14 +87,10 @@ public:
     }
     
 protected:
-    void check_subcontracted_inv(bool const static_inv_only = false) {
+    void check_subcontracted_inv() {
         boost::mpl::for_each<base_ptrs>(check_base(*this,
-            static_inv_only ?
-                boost::contract::virtual_body::check_static_inv_only
-            :
-                boost::contract::virtual_body::check_inv_only
-        ));
-        this->check_inv(static_inv_only);
+                boost::contract::virtual_body::check_inv_only));
+        this->check_inv();
     }
 
     void check_subcontracted_pre() {

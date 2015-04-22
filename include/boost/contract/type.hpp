@@ -2,45 +2,31 @@
 #ifndef BOOST_CONTRACT_TYPE_HPP_
 #define BOOST_CONTRACT_TYPE_HPP_
 
-#include <boost/function.hpp>
+#include <boost/contract/aux_/set/pre_post.hpp>
+#include <boost/contract/aux_/set/pre_only.hpp>
+#include <boost/contract/aux_/set/pre_only.hpp>
+#include <boost/contract/aux_/set/nothing.hpp>
+#include <boost/contract/aux_/check/pre_post.hpp>
 #include <boost/shared_ptr.hpp>
 
 namespace boost { namespace contract {
 
 class type { // This can be copied (as shallow smart pointer copy).
 public:
-    explicit type(boost::shared_ptr<type> const self) : self_(self) {}
-
-    virtual ~type() {}
-
-    // TODO: Following should return special types so user cannot set pre/post
-    // multiple times.
-
-    template<typename Precondition>
-    type& precondition(Precondition const f) {
-        self_->pre_ = f;
-        self_->pre_available();
-        return *this;
-    }
-
-    template<typename Postcondition>
-    type& postcondition(Postcondition const f) {
-        self_->post_ = f;
-        self_->post_available();
-        return *this;
-    }
+    /* implicit */ type(boost::contract::aux::set::pre_post const& pre_post) :
+            contract_(pre_post.contract_) {}
     
-protected:
-    type() {}
-
-    virtual void pre_available() {} // Called when pre functor is set.
-    virtual void post_available() {} // Called when post functor is set.
+    /* implicit */ type(boost::contract::aux::set::pre_only const& pre_only) :
+            contract_(pre_only.contract_) {}
     
-    boost::function<void ()> pre_;
-    boost::function<void ()> post_;
+    /* implicit */ type(boost::contract::aux::set::post_only const& post_only) :
+            contract_(post_only.contract_) {}
+
+    /* implicit */ type(boost::contract::aux::set::nothing const& nothing) :
+            contract_(nothing.contract_) {}
 
 private:
-    boost::shared_ptr<type> self_;
+    boost::shared_ptr<boost::contract::aux::check::pre_post> contract_;
 };
 
 } } // namespace

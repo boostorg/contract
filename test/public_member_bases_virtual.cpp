@@ -1,6 +1,7 @@
 
 #include "aux_/oteststream.hpp"
 #include <boost/contract/public_member.hpp>
+#include <boost/contract/type.hpp>
 #include <boost/contract/introspect.hpp>
 #include <boost/contract/assert.hpp>
 #include <boost/contract/base_types.hpp>

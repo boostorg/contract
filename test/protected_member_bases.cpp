@@ -1,6 +1,7 @@
 
 #include "aux_/oteststream.hpp"
 #include <boost/contract/protected_member.hpp>
+#include <boost/contract/type.hpp>
 #include <boost/contract/base_types.hpp>
 #include <boost/detail/lightweight_test.hpp>
 #include <sstream>

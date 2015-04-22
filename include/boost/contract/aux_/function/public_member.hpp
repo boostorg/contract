@@ -78,23 +78,16 @@ public:
 private:
     // Check static and non-static subcontracted inv.
     void entry() {
-        if(
-            virt_.action == boost::contract::virtual_body::user_call ||
-            virt_.action == boost::contract::virtual_body::check_inv_only ||
-            // TODO: Do I really need the check_static_inv_only action or
-            // static-inv-check-only applies only to check_inv() and not
-            // to check_subcontracted_inv()?
-            virt_.action == boost::contract::virtual_body::check_static_inv_only
-        ) {
-            this->check_subcontracted_inv(/* static_inv_only = */ virt_.action
-                    == boost::contract::virtual_body::check_static_inv_only);
+        if(virt_.action == boost::contract::virtual_body::user_call ||
+                virt_.action == boost::contract::virtual_body::check_inv_only) {
+            this->check_subcontracted_inv();
             if(virt_.action != boost::contract::virtual_body::user_call)
                 throw boost::contract::aux::no_error();
         } // Else (check only pre, post, etc.) do nothing.
     }
 
     // Check subcontracted pre (as soon as related functor set).
-    void pre_available() {
+    void pre_available() /* override */ {
         if(virt_.action == boost::contract::virtual_body::user_call ||
                 virt_.action == boost::contract::virtual_body::check_pre_only) {
             this->check_subcontracted_pre();
@@ -104,7 +97,7 @@ private:
     }
     
     // Check post here only if check-post-only mode (otherwise check at exit).
-    void post_available() {
+    void post_available() /* override */ {
         if(virt_.action == boost::contract::virtual_body::check_post_only) {
             this->check_subcontracted_post();
             throw boost::contract::aux::no_error();
