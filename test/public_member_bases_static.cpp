@@ -22,10 +22,10 @@ struct b {
 
     static void s() {
         boost::contract::type c = boost::contract::public_member<b>()
-            .precondition([&] () {
+            .precondition([&] {
                 out << "b::s::pre" << std::endl;
             })
-            .postcondition([&] () {
+            .postcondition([&] {
                 out << "b::s::post" << std::endl;
             })
         ;
@@ -51,10 +51,10 @@ struct a
 
     static void s() {
         boost::contract::type c = boost::contract::public_member<a>()
-            .precondition([&] () {
+            .precondition([&] {
                 out << "a::s::pre" << std::endl;
             })
-            .postcondition([&] () {
+            .postcondition([&] {
                 out << "a::s::post" << std::endl;
             })
         ;

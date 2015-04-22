@@ -25,10 +25,10 @@ struct b {
 protected:
     void f() {
         boost::contract::type c = boost::contract::protected_member()
-            .precondition([&] () {
+            .precondition([&] {
                 out << "b::f::pre" << std::endl;
             })
-            .postcondition([&] () {
+            .postcondition([&] {
                 out << "b::f::post" << std::endl;
             })
         ;
@@ -56,10 +56,10 @@ struct a
 protected:
     void f() {
         boost::contract::type c = boost::contract::protected_member()
-            .precondition([&] () {
+            .precondition([&] {
                 out << "a::f::pre" << std::endl;
             })
-            .postcondition([&] () {
+            .postcondition([&] {
                 out << "a::f::post" << std::endl;
             })
         ;
