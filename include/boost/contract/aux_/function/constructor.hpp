@@ -1,19 +1,17 @@
 
-#ifndef BOOST_CONTRACT_AUX_CONSTRUCTOR_HPP_
-#define BOOST_CONTRACT_AUX_CONSTRUCTOR_HPP_
+#ifndef BOOST_CONTRACT_AUX_FUNCTION_CONSTRUCTOR_HPP_
+#define BOOST_CONTRACT_AUX_FUNCTION_CONSTRUCTOR_HPP_
 
-#include <boost/contract/aux_/basic_function.hpp>
-#include <boost/contract/aux_/debug.hpp>
+#include <boost/contract/aux_/check/pre_post_inv.hpp>
 #include <exception>
 
-namespace boost { namespace contract { namespace aux {
+namespace boost { namespace contract { namespace aux { namespace function {
 
 template<class Class>
-class constructor : public boost::contract::aux::basic_function<Class> {
+class constructor : public boost::contract::aux::check::pre_post_inv<Class> {
 public:
     explicit constructor(Class* const obj) :
-            boost::contract::aux::basic_function<Class>(obj) {
-        BOOST_CONTRACT_AUX_DEBUG(obj);
+            boost::contract::aux::check::pre_post_inv<Class>(obj) {
         entry();
     }
 
@@ -41,7 +39,7 @@ private:
 
 };
 
-} } } // namespace
+} } } } // namespace
 
 #endif // #include guard
 

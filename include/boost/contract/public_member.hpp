@@ -4,7 +4,8 @@
 
 #include <boost/contract/type.hpp>
 #include <boost/contract/virtual_body.hpp>
-#include <boost/contract/aux_/public_member.hpp>
+#include <boost/contract/aux_/function/public_static_member.hpp>
+#include <boost/contract/aux_/function/public_member.hpp>
 #include <boost/make_shared.hpp>
 
 // TODO: On C++11 Clang... these could static_assert enclosing func is pub?
@@ -42,7 +43,7 @@ template<class Itrospection, class Class, typename Function,
 boost::contract::type public_member(Class* const object, Function const&,
         Argument0 argument0, boost::contract::virtual_body const v) {
     return boost::contract::type(boost::make_shared<boost::contract::aux::
-        public_member<Class, Itrospection, Function, Argument0> >(
+        function::public_member<Class, Itrospection, Function, Argument0> >(
                 v, object, argument0)
     );
 }
@@ -56,7 +57,7 @@ template<class Introspection, class Class, typename Function,
 boost::contract::type public_member(Class* const object, Function const&,
         Argument0 argument0) {
     return boost::contract::type(boost::make_shared<boost::contract::aux::
-        public_member<Class, Introspection, Function, Argument0> >(
+        function::public_member<Class, Introspection, Function, Argument0> >(
                 object, argument0)
     );
 }
@@ -67,7 +68,7 @@ template<class Class>
 boost::contract::type public_member(Class* const object,
         boost::contract::virtual_body const v) {
     return boost::contract::type(boost::make_shared<boost::contract::aux::
-            public_member<Class> >(v, object));
+            function::public_member<Class> >(v, object));
 }
 
 // Contract for public member functions with a non-virtual body and members of a
@@ -75,14 +76,14 @@ boost::contract::type public_member(Class* const object,
 template<class Class>
 boost::contract::type public_member(Class* const object) {
     return boost::contract::type(boost::make_shared<boost::contract::aux::
-            public_member<Class> >(object));
+            function::public_member<Class> >(object));
 }
 
 // Contract for public static member functions.
 template<class Class>
 boost::contract::type public_member() {
     return boost::contract::type(boost::make_shared<boost::contract::aux::
-            public_member<Class> >());
+            function::public_static_member<Class> >());
 }
 
 } } // namespace

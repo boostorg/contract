@@ -1,32 +1,29 @@
 
-#ifndef BOOST_CONTRACT_AUX_PUBLIC_MEMBER_HPP_
-#define BOOST_CONTRACT_AUX_PUBLIC_MEMBER_HPP_
+#ifndef BOOST_CONTRACT_AUX_FUNCTION_PUBLIC_MEMBER_HPP_
+#define BOOST_CONTRACT_AUX_FUNCTION_PUBLIC_MEMBER_HPP_
 
-#include <boost/contract/aux_/basic_function.hpp>
+#include <boost/contract/aux_/check/subcontracted_pre_post_inv.hpp>
 #include <boost/contract/aux_/exception.hpp>
 #include <boost/contract/aux_/none.hpp>
 #include <boost/contract/aux_/debug.hpp>
 #include <boost/contract/virtual_body.hpp>
 #include <exception>
 
-namespace boost { namespace contract { namespace aux {
+namespace boost { namespace contract { namespace aux { namespace function {
 
 template<
     class Class,
     class Intro = boost::contract::aux::none,
     typename Func = boost::contract::aux::none,
     typename Arg0 = boost::contract::aux::none
-> class public_member : public boost::contract::aux::basic_function<
-        Class, Intro, Func, Arg0> {
+> class public_member : public boost::contract::aux::check::
+        subcontracted_pre_post_inv<Class, Intro, Func, Arg0> {
 public:
     // Must be used when bases and virtual body (but can also always be used).
-    explicit public_member(
-        boost::contract::virtual_body const virt,
-        Class* const obj,
-        Arg0 arg0
-    ) :
-        boost::contract::aux::basic_function<Class, Intro, Func, Arg0>(obj,
-                arg0),
+    explicit public_member(boost::contract::virtual_body const virt,
+            Class* const obj, Arg0 arg0) :
+        boost::contract::aux::check::subcontracted_pre_post_inv<Class, Intro,
+                Func, Arg0>(obj, arg0),
         virt_(virt)
     {
         BOOST_CONTRACT_AUX_DEBUG((!boost::is_same<Intro,
@@ -37,12 +34,9 @@ public:
     }
     
     // Can be used when bases and no virtual body.
-    explicit public_member(
-        Class* const obj,
-        Arg0 arg0
-    ) :
-        boost::contract::aux::basic_function<Class, Intro, Func, Arg0>(obj,
-                arg0),
+    explicit public_member(Class* const obj, Arg0 arg0) :
+        boost::contract::aux::check::subcontracted_pre_post_inv<Class, Intro,
+                Func, Arg0>(obj, arg0),
         virt_(boost::contract::virtual_body::user_call)
     {
         BOOST_CONTRACT_AUX_DEBUG((!boost::is_same<Intro,
@@ -53,11 +47,10 @@ public:
     }
     
     // Can be used when no bases and virtual body.
-    explicit public_member(
-        boost::contract::virtual_body const virt,
-        Class* const obj
-    ) :
-        boost::contract::aux::basic_function<Class, Intro, Func, Arg0>(obj),
+    explicit public_member(boost::contract::virtual_body const virt,
+            Class* const obj) :
+        boost::contract::aux::check::subcontracted_pre_post_inv<Class, Intro,
+                Func, Arg0>(obj),
         virt_(virt)
     {
         BOOST_CONTRACT_AUX_DEBUG((boost::is_same<Intro,
@@ -68,22 +61,9 @@ public:
     }
     
     // Can be used when no bases and no virtual body.
-    explicit public_member(
-        Class* const obj
-    ) :
-        boost::contract::aux::basic_function<Class, Intro, Func, Arg0>(obj),
-        virt_(boost::contract::virtual_body::user_call)
-    {
-        BOOST_CONTRACT_AUX_DEBUG((boost::is_same<Intro,
-                boost::contract::aux::none>::value));
-        BOOST_CONTRACT_AUX_DEBUG((boost::is_same<Func,
-                boost::contract::aux::none>::value));
-        entry();
-    }
-    
-    // Must be used for static members.
-    explicit public_member() :
-        boost::contract::aux::basic_function<Class, Intro, Func, Arg0>(),
+    explicit public_member(Class* const obj) :
+        boost::contract::aux::check::subcontracted_pre_post_inv<Class, Intro,
+                Func, Arg0>(obj),
         virt_(boost::contract::virtual_body::user_call)
     {
         BOOST_CONTRACT_AUX_DEBUG((boost::is_same<Intro,
@@ -144,7 +124,7 @@ private:
     boost::contract::virtual_body const virt_;
 };
 
-} } } // namespace
+} } } } // namespace
 
 #endif // #include guard
 

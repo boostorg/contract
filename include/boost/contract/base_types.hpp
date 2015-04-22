@@ -11,6 +11,7 @@
 #include <boost/contract/aux_/preprocessor/keyword/protected.hpp>
 #include <boost/contract/aux_/preprocessor/keyword/private.hpp>
 #include <boost/contract/aux_/preprocessor/keyword/virtual.hpp>
+#include <boost/mpl/vector.hpp>
 #include <boost/preprocessor/seq/enum.hpp>
 #include <boost/preprocessor/seq/fold_left.hpp>
 #include <boost/preprocessor/seq/push_back.hpp>

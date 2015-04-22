@@ -1,5 +1,5 @@
 
-#include <boost/contract/aux_/invariant.hpp>
+#include <boost/contract/aux_/type_traits/invariant.hpp>
 #include <boost/detail/lightweight_test.hpp>
 
 struct x {}; // Test no invariants.
@@ -29,35 +29,37 @@ struct ns {
 };
 
 int main() {
-    BOOST_TEST(!boost::contract::aux::has_const_invariant<x>::value);
-    BOOST_TEST(!boost::contract::aux::has_const_volatile_invariant<x>::value);
-    BOOST_TEST(!boost::contract::aux::has_invariant<x>::value);
-    BOOST_TEST(!boost::contract::aux::has_static_invariant<x>::value);
-    BOOST_TEST(!boost::contract::aux::has_non_static_invariant<x>::value);
+    using namespace boost::contract::aux::type_traits;
+
+    BOOST_TEST(!has_const_invariant<x>::value);
+    BOOST_TEST(!has_const_volatile_invariant<x>::value);
+    BOOST_TEST(!has_invariant<x>::value);
+    BOOST_TEST(!has_static_invariant<x>::value);
+    BOOST_TEST(!has_non_static_invariant<x>::value);
     
-    BOOST_TEST( boost::contract::aux::has_const_invariant<c>::value);
-    BOOST_TEST(!boost::contract::aux::has_const_volatile_invariant<c>::value);
-    BOOST_TEST(!boost::contract::aux::has_invariant<c>::value);
-    BOOST_TEST(!boost::contract::aux::has_static_invariant<c>::value);
-    BOOST_TEST(!boost::contract::aux::has_non_static_invariant<c>::value);
+    BOOST_TEST( has_const_invariant<c>::value);
+    BOOST_TEST(!has_const_volatile_invariant<c>::value);
+    BOOST_TEST(!has_invariant<c>::value);
+    BOOST_TEST(!has_static_invariant<c>::value);
+    BOOST_TEST(!has_non_static_invariant<c>::value);
     
-    BOOST_TEST(!boost::contract::aux::has_const_invariant<cv>::value);
-    BOOST_TEST( boost::contract::aux::has_const_volatile_invariant<cv>::value);
-    BOOST_TEST(!boost::contract::aux::has_invariant<cv>::value);
-    BOOST_TEST(!boost::contract::aux::has_static_invariant<cv>::value);
-    BOOST_TEST(!boost::contract::aux::has_non_static_invariant<cv>::value);
+    BOOST_TEST(!has_const_invariant<cv>::value);
+    BOOST_TEST( has_const_volatile_invariant<cv>::value);
+    BOOST_TEST(!has_invariant<cv>::value);
+    BOOST_TEST(!has_static_invariant<cv>::value);
+    BOOST_TEST(!has_non_static_invariant<cv>::value);
     
-    BOOST_TEST(!boost::contract::aux::has_const_invariant<i>::value);
-    BOOST_TEST(!boost::contract::aux::has_const_volatile_invariant<i>::value);
-    BOOST_TEST( boost::contract::aux::has_invariant<i>::value);
-    BOOST_TEST(!boost::contract::aux::has_static_invariant<i>::value);
-    BOOST_TEST(!boost::contract::aux::has_non_static_invariant<i>::value);
+    BOOST_TEST(!has_const_invariant<i>::value);
+    BOOST_TEST(!has_const_volatile_invariant<i>::value);
+    BOOST_TEST( has_invariant<i>::value);
+    BOOST_TEST(!has_static_invariant<i>::value);
+    BOOST_TEST(!has_non_static_invariant<i>::value);
     
-    BOOST_TEST(!boost::contract::aux::has_const_invariant<ns>::value);
-    BOOST_TEST(!boost::contract::aux::has_const_volatile_invariant<ns>::value);
-    BOOST_TEST(!boost::contract::aux::has_invariant<ns>::value);
-    BOOST_TEST(!boost::contract::aux::has_static_invariant<ns>::value);
-    BOOST_TEST( boost::contract::aux::has_non_static_invariant<ns>::value);
+    BOOST_TEST(!has_const_invariant<ns>::value);
+    BOOST_TEST(!has_const_volatile_invariant<ns>::value);
+    BOOST_TEST(!has_invariant<ns>::value);
+    BOOST_TEST(!has_static_invariant<ns>::value);
+    BOOST_TEST( has_non_static_invariant<ns>::value);
 
     return boost::report_errors();
 }

@@ -1,6 +1,6 @@
 
-#ifndef BOOST_CONTRACT_AUX_TTI_HPP_
-#define BOOST_CONTRACT_AUX_TTI_HPP_
+#ifndef BOOST_CONTRACT_AUX_TYPE_TRAITS_INTROSPECTION_HPP_
+#define BOOST_CONTRACT_AUX_TYPE_TRAITS_INTROSPECTION_HPP_
 
 #include <boost/contract/aux_/name.hpp>
 #include <boost/function_types/member_function_pointer.hpp>
@@ -19,29 +19,32 @@
 
 /* PUBLIC */
 
-#define BOOST_CONTRACT_AUX_TTI_TRAIT_HAS_TYPE(trait, type_name) \
+#define BOOST_CONTRACT_AUX_TYPE_TRAITS_INTROSPECTION_HAS_TYPE(trait, type_name)\
     template<typename BOOST_CONTRACT_AUX_NAME1(T)> \
     class trait { \
         template<class BOOST_CONTRACT_AUX_NAME1(C)> \
-        static boost::contract::aux::tti::yes& check(typename \
-                BOOST_CONTRACT_AUX_NAME1(C)::type_name*); \
+        static boost::contract::aux::type_traits::introspection::yes& check( \
+                typename BOOST_CONTRACT_AUX_NAME1(C)::type_name*); \
     \
-        BOOST_CONTRACT_AUX_TTI_TRAIT_END_(BOOST_CONTRACT_AUX_NAME1(T)) \
+        BOOST_CONTRACT_AUX_TYPE_TRAITS_INTROSPECTION_END_( \
+                BOOST_CONTRACT_AUX_NAME1(T)) \
     };
 
-#define BOOST_CONTRACT_AUX_TTI_TRAIT_HAS_MEMBER_FUNCTION(trait, func_name) \
-    BOOST_CONTRACT_AUX_TTI_TRAIT_HAS_MEMBER_FUNCTION_(/* is_static = */ 0, \
-            trait, func_name)
+#define BOOST_CONTRACT_AUX_TYPE_TRAITS_INTROSPECTION_HAS_MEMBER_FUNCTION( \
+        trait, func_name) \
+    BOOST_CONTRACT_AUX_TYPE_TRAITS_INTROSPECTION_HAS_MEMBER_FUNCTION_( \
+            /* is_static = */ 0, trait, func_name)
 
-#define BOOST_CONTRACT_AUX_TTI_TRAIT_HAS_STATIC_MEMBER_FUNCTION(trait, \
+#define \
+BOOST_CONTRACT_AUX_TYPE_TRAITS_INTROSPECTION_HAS_STATIC_MEMBER_FUNCTION(trait, \
         func_name) \
-    BOOST_CONTRACT_AUX_TTI_TRAIT_HAS_MEMBER_FUNCTION_(/* is_static = */ 1, \
-            trait, func_name)
+    BOOST_CONTRACT_AUX_TYPE_TRAITS_INTROSPECTION_HAS_MEMBER_FUNCTION_( \
+            /* is_static = */ 1, trait, func_name)
         
 /* PRIVATE */
 
-#define BOOST_CONTRACT_AUX_TTI_TRAIT_HAS_MEMBER_FUNCTION_(is_static, trait, \
-        func_name) \
+#define BOOST_CONTRACT_AUX_TYPE_TRAITS_INTROSPECTION_HAS_MEMBER_FUNCTION_( \
+        is_static, trait, func_name) \
     template< \
         typename BOOST_CONTRACT_AUX_NAME1(T), \
         typename BOOST_CONTRACT_AUX_NAME1(R), \
@@ -50,8 +53,8 @@
     > \
     class trait { \
         template<class BOOST_CONTRACT_AUX_NAME1(C)> \
-        static boost::contract::aux::tti::yes& check( \
-            boost::contract::aux::tti::check_function< \
+        static boost::contract::aux::type_traits::introspection::yes& check( \
+            boost::contract::aux::type_traits::introspection::check_function< \
                 typename \
                     BOOST_PP_IIF(is_static, \
                         boost::function_types::function_pointer \
@@ -79,21 +82,24 @@
             >* \
         ); \
     \
-        BOOST_CONTRACT_AUX_TTI_TRAIT_END_(BOOST_CONTRACT_AUX_NAME1(T)) \
+        BOOST_CONTRACT_AUX_TYPE_TRAITS_INTROSPECTION_END_( \
+                BOOST_CONTRACT_AUX_NAME1(T)) \
     };
 
-#define BOOST_CONTRACT_AUX_TTI_TRAIT_END_(tparam) \
+#define BOOST_CONTRACT_AUX_TYPE_TRAITS_INTROSPECTION_END_(tparam) \
         template<typename> \
-        static boost::contract::aux::tti::no& check(...); \
+        static boost::contract::aux::type_traits::introspection::no& check( \
+                ...); \
     \
     public: \
         static bool const value = sizeof(check<tparam>(0)) == \
-                sizeof(boost::contract::aux::tti::yes); \
+                sizeof(boost::contract::aux::type_traits::introspection::yes); \
         typedef boost::mpl::bool_<value> type;
 
 /* CODE */
 
-namespace boost { namespace contract { namespace aux { namespace tti {
+namespace boost { namespace contract { namespace aux { namespace type_traits {
+        namespace introspection {
 
 typedef struct {} yes;
 typedef yes no[2];
@@ -101,7 +107,7 @@ typedef yes no[2];
 template<typename F, F>
 struct check_function;
 
-} } } } // namespace
+} } } } } // namespace
 
 #endif // #include guard
 

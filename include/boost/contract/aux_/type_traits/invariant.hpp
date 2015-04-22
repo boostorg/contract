@@ -1,22 +1,22 @@
 
-#ifndef BOOST_CONTRACT_AUX_INVARIANT_HPP_
-#define BOOST_CONTRACT_AUX_INVARIANT_HPP_
+#ifndef BOOST_CONTRACT_AUX_TYPE_TRAITS_INVARIANT_HPP_
+#define BOOST_CONTRACT_AUX_TYPE_TRAITS_INVARIANT_HPP_
 
 #include <boost/contract/config.hpp>
-#include <boost/contract/aux_/tti.hpp>
+#include <boost/contract/aux_/type_traits/introspection.hpp>
 #include <boost/function_types/property_tags.hpp>
 #include <boost/mpl/vector.hpp>
 
-namespace boost { namespace contract { namespace aux {
+namespace boost { namespace contract { namespace aux { namespace type_traits {
 
 namespace invariant_ {
-    BOOST_CONTRACT_AUX_TTI_TRAIT_HAS_MEMBER_FUNCTION(has_invariant,
-            BOOST_CONTRACT_CONFIG_INVARIANT)
+    BOOST_CONTRACT_AUX_TYPE_TRAITS_INTROSPECTION_HAS_MEMBER_FUNCTION(
+            has_invariant, BOOST_CONTRACT_CONFIG_INVARIANT)
     
-    BOOST_CONTRACT_AUX_TTI_TRAIT_HAS_MEMBER_FUNCTION(
+    BOOST_CONTRACT_AUX_TYPE_TRAITS_INTROSPECTION_HAS_MEMBER_FUNCTION(
             has_non_static_invariant, BOOST_CONTRACT_CONFIG_STATIC_INVARIANT)
 
-    BOOST_CONTRACT_AUX_TTI_TRAIT_HAS_STATIC_MEMBER_FUNCTION(
+    BOOST_CONTRACT_AUX_TYPE_TRAITS_INTROSPECTION_HAS_STATIC_MEMBER_FUNCTION(
             has_static_invariant, BOOST_CONTRACT_CONFIG_STATIC_INVARIANT)
 }
 
@@ -45,7 +45,7 @@ template<typename T>
 struct has_non_static_invariant : invariant_::has_non_static_invariant<T, void,
         boost::mpl::vector<> > {};
 
-} } } // namespace
+} } } } // namespace
 
 #endif // #include guard
 

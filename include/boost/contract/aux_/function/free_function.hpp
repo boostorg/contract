@@ -1,13 +1,13 @@
 
-#ifndef BOOST_CONTRACT_AUX_FREE_FUNCTION_HPP_
-#define BOOST_CONTRACT_AUX_FREE_FUNCTION_HPP_
+#ifndef BOOST_CONTRACT_AUX_FUNCTION_FREE_FUNCTION_HPP_
+#define BOOST_CONTRACT_AUX_FUNCTION_FREE_FUNCTION_HPP_
 
-#include <boost/contract/aux_/basic_function.hpp>
+#include <boost/contract/aux_/check/pre_post.hpp>
 #include <exception>
 
-namespace boost { namespace contract { namespace aux {
+namespace boost { namespace contract { namespace aux { namespace function {
 
-class free_function : public boost::contract::aux::basic_function<> {
+class free_function : public boost::contract::aux::check::pre_post {
 public:
     explicit free_function() { entry(); }
 
@@ -18,7 +18,7 @@ private:
     void entry() {}
 
     // Check pre (as soon as related functor set).
-    void pre_available() { this->check_pre(); }
+    void pre_available() { check_pre(); }
     
     // Post always checked after body, at exit (see below).
     void post_available() {}
@@ -31,7 +31,7 @@ private:
     }
 };
 
-} } } // namespace
+} } } } // namespace
 
 #endif // #include guard
 

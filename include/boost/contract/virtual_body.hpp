@@ -5,9 +5,14 @@
 namespace boost { namespace contract {
 
 namespace aux {
-    template<class, class, typename> class base_function;
-    template<class, class, typename, typename> class basic_function;
-    template<class, class, typename, typename> class public_member;
+    namespace check {
+        template<class, class, typename, typename>
+        class subcontracted_pre_post_inv;
+    }
+    namespace function {
+        template<class, class, typename, typename>
+        class public_member;
+    }
 }
 
 // Must be efficient to pass this as value param (to limit user API verbosity).
@@ -23,12 +28,10 @@ private:
     // they make the impl hard to follow). These ones are necessary because
     // they are between public and private APIs of the lib. But maybe
     // the ones among some of the private APIs of the lib could be reduced...
-    template<class, class, typename> friend class
-            boost::contract::aux::base_function;
     template<class, class, typename, typename> friend class
-            boost::contract::aux::basic_function;
+            boost::contract::aux::check::subcontracted_pre_post_inv;
     template<class, class, typename, typename> friend class
-            boost::contract::aux::public_member;
+            boost::contract::aux::function::public_member;
 
     enum action_type {
         user_call,
