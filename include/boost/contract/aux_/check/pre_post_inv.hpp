@@ -6,6 +6,7 @@
 #include <boost/contract/aux_/check/pre_post.hpp>
 #include <boost/contract/aux_/type_traits/invariant.hpp>
 #include <boost/contract/aux_/debug.hpp>
+#include <boost/type_traits/add_const.hpp>
 #include <boost/mpl/bool.hpp>
 
 namespace boost { namespace contract { namespace aux { namespace check {

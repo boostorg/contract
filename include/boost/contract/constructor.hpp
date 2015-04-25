@@ -2,15 +2,15 @@
 #ifndef BOOST_CONTRACT_CONSTRUCTOR_HPP_
 #define BOOST_CONTRACT_CONSTRUCTOR_HPP_
 
+#include <boost/contract/set/postcondition_only.hpp>
 #include <boost/contract/aux_/function/constructor.hpp>
-#include <boost/contract/aux_/set/post_only.hpp>
 #include <boost/make_shared.hpp>
 
 namespace boost { namespace contract {
 
 template<class Class>
-boost::contract::aux::set::post_only constructor(Class* const object) {
-    return boost::contract::aux::set::post_only(boost::make_shared<
+boost::contract::set::postcondition_only constructor(Class* const object) {
+    return boost::contract::set::postcondition_only(boost::make_shared<
             boost::contract::aux::function::constructor<Class> >(object));
 }
 

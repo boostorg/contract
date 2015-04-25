@@ -2,10 +2,10 @@
 #ifndef BOOST_CONTRACT_PUBLIC_MEMBER_HPP_
 #define BOOST_CONTRACT_PUBLIC_MEMBER_HPP_
 
+#include <boost/contract/set/precondition_postcondition.hpp>
 #include <boost/contract/virtual_body.hpp>
 #include <boost/contract/aux_/function/public_static_member.hpp>
 #include <boost/contract/aux_/function/public_member.hpp>
-#include <boost/contract/aux_/set/pre_post.hpp>
 #include <boost/make_shared.hpp>
 
 // TODO: On C++11 Clang... these could static_assert enclosing func is pub?
@@ -40,23 +40,24 @@ namespace boost { namespace contract {
 // also if there are no base classes).
 template<class Itrospection, class Class, typename Function,
         typename Argument0>
-boost::contract::aux::set::pre_post public_member(Class* const object, Function
-        const&, Argument0 argument0, boost::contract::virtual_body const v) {
-    return boost::contract::aux::set::pre_post(boost::make_shared<
+boost::contract::set::precondition_postcondition public_member(
+    Class* const object, Function const&, Argument0 argument0,
+    boost::contract::virtual_body const v
+) {
+    return boost::contract::set::precondition_postcondition(boost::make_shared<
         boost::contract::aux::function::public_member<Class, Itrospection,
                 Function, Argument0> >(v, object, argument0)
     );
 }
-
 
 // Contract for public member functions with a non-virtual body and members of a
 // class that inherits from one or more base classes (optionally, it can be used
 // also if there are no base classes).
 template<class Introspection, class Class, typename Function,
         typename Argument0>
-boost::contract::aux::set::pre_post public_member(Class* const object, Function
-        const&, Argument0 argument0) {
-    return boost::contract::aux::set::pre_post(boost::make_shared<
+boost::contract::set::precondition_postcondition public_member(
+        Class* const object, Function const&, Argument0 argument0) {
+    return boost::contract::set::precondition_postcondition(boost::make_shared<
         boost::contract::aux::function::public_member<Class, Introspection,
                 Function, Argument0> >(object, argument0)
     );
@@ -65,24 +66,25 @@ boost::contract::aux::set::pre_post public_member(Class* const object, Function
 // Contract for public member functions with a virtual body and members of a
 // class that does not inherits from any base class.
 template<class Class>
-boost::contract::aux::set::pre_post public_member(Class* const object,
-        boost::contract::virtual_body const v) {
-    return boost::contract::aux::set::pre_post(boost::make_shared<
+boost::contract::set::precondition_postcondition public_member(
+        Class* const object, boost::contract::virtual_body const v) {
+    return boost::contract::set::precondition_postcondition(boost::make_shared<
             boost::contract::aux::function::public_member<Class> >(v, object));
 }
 
 // Contract for public member functions with a non-virtual body and members of a
 // class that does not inherits from any base class.
 template<class Class>
-boost::contract::aux::set::pre_post public_member(Class* const object) {
-    return boost::contract::aux::set::pre_post(boost::make_shared<
+boost::contract::set::precondition_postcondition public_member(
+        Class* const object) {
+    return boost::contract::set::precondition_postcondition(boost::make_shared<
             boost::contract::aux::function::public_member<Class> >(object));
 }
 
 // Contract for public static member functions.
 template<class Class>
-boost::contract::aux::set::pre_post public_member() {
-    return boost::contract::aux::set::pre_post(boost::make_shared<
+boost::contract::set::precondition_postcondition public_member() {
+    return boost::contract::set::precondition_postcondition(boost::make_shared<
             boost::contract::aux::function::public_static_member<Class> >());
 }
 

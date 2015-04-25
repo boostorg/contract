@@ -2,6 +2,8 @@
 #ifndef BOOST_CONTRACT_CONFIG_HPP_
 #define BOOST_CONTRACT_CONFIG_HPP_
 
+// TODO: Implement NO_... macros to disable pre/post/inv-entry/inv-exit/etc.
+
 // The name of the invariant member function ("invariant" by default).
 #ifndef BOOST_CONTRACT_CONFIG_INVARIANT
 #   define BOOST_CONTRACT_CONFIG_INVARIANT invariant

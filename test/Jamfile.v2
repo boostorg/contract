@@ -15,5 +15,12 @@ run public_member_bases_static.cpp ;
 run protected_member_bases.cpp ;
 run private_member_bases.cpp ;
 
-run free_function.cpp ;
+run free_function/call.cpp ;
+run free_function/set.cpp ;
+compile-fail free_function/set_pre_pre_error.cpp ;
+compile-fail free_function/set_pre_post_pre_error.cpp ;
+compile-fail free_function/set_post_pre_pre_error.cpp ;
+compile-fail free_function/set_post_post_error.cpp ;
+compile-fail free_function/set_post_pre_post_error.cpp ;
+compile-fail free_function/set_pre_post_post_error.cpp ;
 

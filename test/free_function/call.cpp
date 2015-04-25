@@ -1,5 +1,5 @@
 
-#include "aux_/oteststream.hpp"
+#include "../aux_/oteststream.hpp"
 #include <boost/contract/free_function.hpp>
 #include <boost/contract/type.hpp>
 #include <boost/detail/lightweight_test.hpp>

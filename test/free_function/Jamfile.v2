@@ -1,0 +1,12 @@
+
+import testing ;
+
+run call.cpp ;
+run set.cpp ;
+compile-fail set_pre_pre_error.cpp ;
+compile-fail set_pre_post_pre_error.cpp ;
+compile-fail set_post_pre_pre_error.cpp ;
+compile-fail set_post_post_error.cpp ;
+compile-fail set_post_pre_post_error.cpp ;
+compile-fail set_pre_post_post_error.cpp ;
+

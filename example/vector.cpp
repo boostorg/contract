@@ -7,9 +7,10 @@ class vector :
     #define BASES private boost::contract::constructor_precondition<vector>
     BASES
 {
+public:
     typedef BOOST_CONTRACT_BASE_TYPES(BASES) base_types;
     #undef BASES
-public:
+
     void invariant() const {
         BOOST_CONTRACT_ASSERT(emtpy() == (size() == 0));
         BOOST_CONTRACT_ASSERT(std::distance(begin(), end()) == int(size()));
@@ -19,16 +20,16 @@ public:
     }
 
     vector() : vector_() {
-        boost::contract::type c = boost::contract::constructor(this)
-            .postcondition([&] () {
+        auto c = boost::contract::constructor(this)
+            .postcondition([&] {
                 BOOST_CONTRACT_ASSERT(empty());
             })
         ;
     }
     
     explicit vector(Allocator const& allocator) : vector_(allocator) {
-        boost::contract::type c = boost::contract::constructor(this)
-            .postcondition([&] () {
+        auto c = boost::contract::constructor(this)
+            .postcondition([&] {
                 BOOST_CONTRACT_ASSERT(empty());
                 BOOST_CONTRACT_ASSERT(get_allocator() == allocator);
             })
@@ -36,13 +37,13 @@ public:
     }
     
     explicit vector(size_type const count) :
-        boost::contract::constructor_precondition([&] () {
+        boost::contract::constructor_precondition([&] {
             BOOST_CONTRACT_ASSERT(count >= 0);
         }),
         vector_(count)
     {
-        boost::contract::type c = boost::contract::constructor(this)
-            .postcondition([&] () {
+        auto c = boost::contract::constructor(this)
+            .postcondition([&] {
                 BOOST_CONTRACT_ASSERT(size() == count);
                 BOOST_CONTRACT_ASSERT(
                     boost::contract::check_if<boost::has_equal_to<T> >(
@@ -54,13 +55,13 @@ public:
     }
 
     vector(size_type const count, T const& value) :
-        boost::contract::constructor_precondition([&] () {
+        boost::contract::constructor_precondition([&] {
             BOOST_CONTRACT_ASSERT(count >= 0);
         }),
         vector_(count, value)
     {
-        boost::contract::type c = boost::contract::constructor(this)
-            .postcondition([&] () {
+        auto c = boost::contract::constructor(this)
+            .postcondition([&] {
                 BOOST_CONTRACT_ASSERT(size() == count);
                 BOOST_CONTRACT_ASSERT(
                     boost::contract::check_if<boost::has_equal_to<T> >(
@@ -73,16 +74,16 @@ public:
 
     template<typename Iterator>
     vector(Iterator first, Iterator last) : vector_(first, last) {
-        boost::contract::type c = boost::contract::constructor(this)
-            .postcondition([&] () {
+        auto c = boost::contract::constructor(this)
+            .postcondition([&] {
                 BOOST_CONTRACT_ASSERT(std::distance(first, lat) == int(size()));
             })
         ;
     }
 
     vector(vector const& other) {
-        boost::contract::type c = boost::contract::constructor(this)
-            .postcondition([&] () {
+        auto c = boost::contract::constructor(this)
+            .postcondition([&] {
                 BOOST_CONTRACT_ASSERT(
                     boost::contract::check_if<boost::has_equal_to<T> >(
                         &std::equal_to, other, *this
@@ -93,120 +94,107 @@ public:
     }
 
     vector& operator=(vector const& other) {
-        vector* result = 0;
-        boost::contract::type c = boost::contract::public_member(this)
-            .postcondition([&] () {
+        vector& result = *this;
+        auto c = boost::contract::public_member(this)
+            .postcondition([&] {
                 BOOST_CONTRACT_ASSERT(
                     boost::contract::check_if<boost::has_equal_to<T> >(
-                        &std::equal_to, *result, *this
+                        &std::equal_to, result, *this
                     )
                 );
                 BOOST_CONTRACT_ASSERT(
                     boost::contract::check_if<boost::has_equal_to<T> >(
-                        &std::equal_to, *result, other
+                        &std::equal_to, result, other
                     )
                 );
             })
         ;
         vector_ = right.vector_;
-        return *(result = this);
+        return result;
     }
 
     virtual ~vector() {
         // No pre/post, but still contract so to check invariants.
-        boost::contract::type c = boost::contract::destructor(this);
+        auto c = boost::contract::destructor(this);
     }
 
     size_type capacity() const {
-        size_type* result = 0;
-        boost::contract::type c = boost::contract::public_member(this)
-            .postcondition([&] () {
-                BOOST_CONTRACT_ASSERT(*result >= size());
+        size_type result;
+        auto c = boost::contract::public_member(this)
+            .postcondition([&] {
+                BOOST_CONTRACT_ASSERT(result >= size());
             })
         ;
-        size_type r = vector_.capacity();
-        // TODO: This might not work... does r get destructored before c, and
-        // so before post are called? If so, must either default construct and
-        // then copy just before return, or must use shared_ptr. Same for all
-        // other similar returns.
-        return *(result = &r);
+        return result = vector_.capacity();
     }
 
     iterator begin() {
-        iterator* result;
-        boost::contract::type c = boost::contract::public_member(this)
-            .postcondition([&] () {
-                if(empty()) BOOST_CONTRACT_ASSERTION(*result == end());
+        iterator result;
+        auto c = boost::contract::public_member(this)
+            .postcondition([&] {
+                if(empty()) BOOST_CONTRACT_ASSERTION(result == end());
             })
         ;
-        iterator r = vector_.begin();
-        return *(result = &r);
+        return result = vector_.begin();
     }
     
     const_iterator begin() const {
-        const_iterator* result;
-        boost::contract::type c = boost::contract::public_member(this)
-            .postcondition([&] () {
-                if(empty()) BOOST_CONTRACT_ASSERTION(*result == end());
+        const_iterator result;
+        auto c = boost::contract::public_member(this)
+            .postcondition([&] {
+                if(empty()) BOOST_CONTRACT_ASSERTION(result == end());
             })
         ;
-        const_iterator r = vector_.begin();
-        return *(result = &r);
+        return result = vector_.begin();
     }
 
     interator end() {
-        // No pre/post, but still contract so to check invariants.
-        boost::contract::type c = boost::contract::public_member(this);
+        auto c = boost::contract::public_member(this); // To check invariants.
         return vector_.end();
     }
     
     const_interator end() const {
-        boost::contract::type c = boost::contract::public_member(this);
+        auto c = boost::contract::public_member(this);
         return vector_.end();
     }
     
     iterator rbegin() {
-        iterator* result;
-        boost::contract::type c = boost::contract::public_member(this)
-            .postcondition([&] () {
-                if(empty()) BOOST_CONTRACT_ASSERTION(*result == end());
+        iterator result;
+        auto c = boost::contract::public_member(this)
+            .postcondition([&] {
+                if(empty()) BOOST_CONTRACT_ASSERTION(result == end());
             })
         ;
-        iterator r = vector_.rbegin();
-        return *(result = &r);
+        return result = vector_.rbegin();
     }
     
     const_iterator rbegin() const {
-        const_iterator* result;
-        boost::contract::type c = boost::contract::public_member(this)
-            .postcondition([&] () {
-                if(empty()) BOOST_CONTRACT_ASSERTION(*result == end());
+        const_iterator result;
+        auto c = boost::contract::public_member(this)
+            .postcondition([&] {
+                if(empty()) BOOST_CONTRACT_ASSERTION(result == end());
             })
         ;
-        const_iterator r = vector_.rbegin();
-        return *(result = &r);
+        return result = vector_.rbegin();
     }
 
     interator rend() {
-        boost::contract::type c = boost::contract::public_member(this);
+        auto c = boost::contract::public_member(this);
         return vector_.end();
     }
     
     const_interator rend() const {
-        boost::contract::type c = boost::contract::public_member(this);
+        auto c = boost::contract::public_member(this);
         return vector_.end();
     }
 
     void resize(size_type const new_size) {
-        // TODO: Using this oldof_ (and an overload oldof_(v, ...)) I should be
-        // able to remove copy overhead when post disabled... actually I
-        // might need to use a macro otherwise size() is alwasy evaluated...
-        size_type const old_size = boost::contract::oldof_(size());
-        boost::contract::type c = boost::contract::public_member(this)
-            .precondition([&] () {
+        auto old_size = BOOST_CONTRACT_OLDOF(size());
+        auto c = boost::contract::public_member(this)
+            .precondition([&] {
                 BOOST_CONTRACT_ASSERT(new_size >= 0);
             })
-            .postcondition([&] () {
+            .postcondition([&] {
                 BOOST_CONTRACT_ASSERT(size() == new_size);
                 if(new_size > old_size) BOOST_CONTRACT_ASSERT(
                     boost::contract::check_if<boost::has_equal_to<T> >(
@@ -220,12 +208,12 @@ public:
     }
 
     void resize(size_type const new_size, T const& value) {
-        size_type const old_size = BOOST_CONTRACT_OLDOF(size());
-        boost::contract::type c = boost::contract::public_member(this)
-            .precondition([&] () {
+        auto old_size = BOOST_CONTRACT_OLDOF(size());
+        auto c = boost::contract::public_member(this)
+            .precondition([&] {
                 BOOST_CONTRACT_ASSERT(new_size >= 0);
             })
-            .postcondition([&] () {
+            .postcondition([&] {
                 BOOST_CONTRACT_ASSERT(size() == new_size);
                 if(new_size > old_size) BOOST_CONTRACT_ASSERT(
                     boost::contract::check_if<boost::has_equal_to<T> >(
@@ -238,46 +226,43 @@ public:
     }
 
     size_type size() const {
-        size_type* result = 0;
-        boost::contract::type c = boost::contract::public_member(this)
-            .postcondition([&] () {
-                BOOST_CONTRACT_ASSERT(*result >= capacity());
+        size_type result;
+        auto c = boost::contract::public_member(this)
+            .postcondition([&] {
+                BOOST_CONTRACT_ASSERT(result >= capacity());
             })
         ;
-        size_type r = vector_.size();
-        return *(result = &r);
+        return result = vector_.size();
     }
 
     size_type max_size() const {
-        size_type* result = 0;
-        boost::contract::type c = boost::contract::public_member(this)
-            .postcondition([&] () {
-                BOOST_CONTRACT_ASSERT(*result >= capacity());
+        size_type result;
+        auto c = boost::contract::public_member(this)
+            .postcondition([&] {
+                BOOST_CONTRACT_ASSERT(result >= capacity());
             })
         ;
-        size_type r = vector_.max_size();
-        return *(result = &r);
+        return result = vector_.max_size();
     }
 
     bool empty() const {
-        bool* result = 0;
-        boost::contract::type c = boost::contract::public_member(this)
-            .postcondition([&] () {
-                BOOST_CONTRACT_ASSERT(*result == (size() == 0));
+        bool result;
+        auto c = boost::contract::public_member(this)
+            .postcondition([&] {
+                BOOST_CONTRACT_ASSERT(result == (size() == 0));
             })
         ;
-        bool r = vector_.empty();
-        return *(result = &r);
+        return result = vector_.empty();
     }
 
     Allocator get_allocator() const {
-        boost::contract::type c = boost::contract::public_member(this);
+        auto c = boost::contract::public_member(this);
         return vector_.get_allocator();
     }
     
     reference at(size_type const index) {
-        boost::contract::type c = boost::contract::public_member(this)
-            .precondition([&] () {
+        auto c = boost::contract::public_member(this)
+            .precondition([&] {
                 BOOST_CONTRACT_ASSERT(index < size());
             })
         ;
@@ -285,8 +270,8 @@ public:
     }
 
     const_reference at(size_type const index) const {
-        boost::contract::type c = boost::contract::public_member(this)
-            .precondition([&] () {
+        auto c = boost::contract::public_member(this)
+            .precondition([&] {
                 BOOST_CONTRACT_ASSERT(index < size());
             })
         ;
@@ -294,8 +279,8 @@ public:
     }
 
     reference operator[](size_type const index) {
-        boost::contract::type c = boost::contract::public_member(this)
-            .precondition([&] () {
+        auto c = boost::contract::public_member(this)
+            .precondition([&] {
                 BOOST_CONTRACT_ASSERT(index < size());
             })
         ;
@@ -303,8 +288,8 @@ public:
     }
 
     const_reference operator[](size_type const index) const {
-        boost::contract::type c = boost::contract::public_member(this)
-            .precondition([&] () {
+        auto c = boost::contract::public_member(this)
+            .precondition([&] {
                 BOOST_CONTRACT_ASSERT(index < size());
             })
         ;
@@ -312,17 +297,17 @@ public:
     }
 
     reference front() {
-        boost::contract::type c = booost::contract::public_member(this)
-            .precondition([&] () {
+        auto c = booost::contract::public_member(this)
+            .precondition([&] {
                 BOOST_CONTRACT_ASSERT(!emtpy());
-            }
+            })
         ;
         return vector_.front();
     }
     
     const_reference front() const {
-        boost::contract::type c = booost::contract::public_member(this)
-            .precondition([&] () {
+        auto c = booost::contract::public_member(this)
+            .precondition([&] {
                 BOOST_CONTRACT_ASSERT(!emtpy());
             }
         ;
@@ -330,8 +315,8 @@ public:
     }
     
     reference back() {
-        boost::contract::type c = booost::contract::public_member(this)
-            .precondition([&] () {
+        auto c = booost::contract::public_member(this)
+            .precondition([&] {
                 BOOST_CONTRACT_ASSERT(!emtpy());
             }
         ;
@@ -339,8 +324,8 @@ public:
     }
     
     const_reference back() const {
-        boost::contract::type c = booost::contract::public_member(this)
-            .precondition([&] () {
+        auto c = booost::contract::public_member(this)
+            .precondition([&] {
                 BOOST_CONTRACT_ASSERT(!emtpy());
             }
         ;
@@ -348,15 +333,13 @@ public:
     }
 
     void push_back(T const& value) {
-        #if BOOST_CONTRACT_OLDOF
-            size_type const old_size = size());
-            size_type const old_capacity = capacity();
-        #endif
-        boost::contract::type c = boost::contract::public_member(this)
-            .precondition([&] () {
+        auto old_size = BOOST_CONTRACT_OLDOF(size());
+        auto old_capacity = BOOST_CONTRACT_OLDOF(capacity());
+        auto c = boost::contract::public_member(this)
+            .precondition([&] {
                 BOOST_CONTRACT_ASSERT(size() < max_size());
             })
-            .postcondition([&] () {
+            .postcondition([&] {
                 BOOST_CONTRACT_ASSERT(size() == old_size + 1);
                 BOOST_CONTRACT_ASSERT(capacity() >= old_capacity);
                 BOOST_CONTRACT_ASSERT(
@@ -369,21 +352,23 @@ public:
     }
 
     void pop_back() {
-        BOOST_CONTRACT_OLDOF(size_type const old_size = size());
-        boost::contract::type c = boost::contract::public_member(this)
-            .precondition([&] () { BOOST_CONTRACT_ASSERT(!empty()); })
-            .postcondition([&] () {
+        auto old_size = BOOST_CONTRACT_OLDOF(size());
+        auto = boost::contract::public_member(this)
+            .precondition([&] {
+                BOOST_CONTRACT_ASSERT(!empty());
+            })
+            .postcondition([&] {
                 BOOST_CONTRACT_ASSERT(size() == old_size - 1);
-            )
+            })
         ;
         vector_.pop_back();
     }
 
     template<typename Iterator>
     void assign(Iterator const first, Iterator const last) {
-        boost::contract::type c = boost::contract::public_member(this)
+        auto c = boost::contract::public_member(this)
             // precondition: [begin(), end()) does not contain [first, last)
-            .postcondition([&] () {
+            .postcondition([&] {
                 BOOST_CONTRACT_ASSERT(std::distance(first, last) ==
                         int(size()));
             })
@@ -392,9 +377,11 @@ public:
     }
 
     void assign(size_type const count, T const& value) {
-        boost::contract::type c = boost::contract::public_member(this)
-            .precondition([&] () { BOOST_CONTRACT_ASSERT(count <= max_size()); }
-            .postcondition([&] () {
+        auto c = boost::contract::public_member(this)
+            .precondition([&] {
+                BOOST_CONTRACT_ASSERT(count <= max_size());
+            }
+            .postcondition([&] {
                 BOOST_CONTRACT_ASSERT(
                     boost::contract::check_if<boost::has_equal_to<T> >(
                         &boost::algorithm::all_of_equal, begin(), end(), value
@@ -406,37 +393,34 @@ public:
     }
 
     iterator insert(iterator const where, T const& value) {
-        iterator* result = 0;
-        BOOST_CONTRACT_OLDOF(size_type const old_size = size());
-        boost::contract::type c = boost::contract::public_member(this)
-            .precondition([&] () {
+        iterator result;
+        auto old_size = BOOST_CONTRACT_OLDOF(size());
+        auto c = boost::contract::public_member(this)
+            .precondition([&] {
                 BOOST_CONTRACT_ASSERT(size() < max_size());
             })
-            .postcondition([&] () {
+            .postcondition([&] {
                 BOOST_CONTRACT_ASSERT(size() == old_size + 1);
                 BOOST_CONTRACT_ASSERT(boost::contract::check_if<boost::
-                        has_equal_to<T> >(&std::equal_to, *result, value));
+                        has_equal_to<T> >(&std::equal_to, result, value));
             //  if(capacity() > oldof capacity())
             //      [begin(), end()) is invalid
             //  else
             //      [where, end()) is invalid
             })
         ;
-        iterator r = vector_.insert(where, value);
-        return *(result = &r);
+        return result = vector_.insert(where, value);
     }
 
     void insert(iterator where, size_type const count, T const& value) {
-        BOOST_CONTRACT_OLDOF(
-            size_type const old_size = size();
-            size_type const old_capacity = capacity();
-            iterator const old_where = where;
-        )
-        boost::contract::type c = boost::contract::public_member(this)
-            .precondition([&] () {
+        auto old_size = BOOST_CONTRACT_OLDOF(size());
+        auto old_capacity = BOOST_CONTRACT_OLDOF(capacity());
+        auto old_where = BOOST_CONTRACT_OLDOF(where);
+        auto c = boost::contract::public_member(this)
+            .precondition([&] {
                 BOOST_CONTRACT_ASSERT(size() + count < max_size());
             })
-            .postcondition([&] () {
+            .postcondition([&] {
                 BOOST_CONTRACT_ASSERT(size() == old_size + count);
                 BOOST_CONTRACT_ASSERT(capacity() >= old_capacity);
                 if(capacity() == old_capacity)
@@ -459,17 +443,15 @@ public:
 
     template<typename Iterator>
     void insert(Iterator where, Iterator first, Iterator last) {
-        BOOST_CONTRACT_OLDOF(
-            size_type const old_size = size();
-            size_type const old_capacity = capacity();
-        )
-        boost::contract::type c = boost::contract::public_member(this)
-            .precondition([&] () {
+        auto old_size = BOOST_CONTRACT_OLDOF(size());
+        auto old_capacity = BOOST_CONTRACT_OLDOF(capacity());
+        auto c = boost::contract::public_member(this)
+            .precondition([&] {
                 BOOST_CONTRACT_ASSERT(size() + std::distance(first, lat) <
                         max_size());
             //  [first, last) is not contained in [begin(), end())
             })
-            .postcondition([&] () {
+            .postcondition([&] {
                 BOOST_CONTRACT_ASSERT(size() == old_size + std::distance(first,
                         last));
                 BOOST_CONTRACT_ASSERT(capacity() >= old_capacity);
@@ -479,35 +461,34 @@ public:
     }
 
     iterator erase(iterator where) {
-        BOOST_CONTRACT_OLDOF(size_type const old_size = size());
+        iterator result;
+        auto old_size = BOOST_CONTRACT_OLDOF(size());
         boost::contract::type c = boost::contract::public_member(this)
-            .precondition([&] () {
+            .precondition([&] {
                 BOOST_CONTRACT_ASSERT(!empty());
                 BOOST_CONTRACT_ASSERT(where != end());
             })
-            .postcondition([&] () {
+            .postcondition([&] {
                 BOOST_CONTRACT_ASSERT(size() == old_size - 1);
-                if(empty()) BOOST_CONTRACT_ASSERT(*result == end());
+                if(empty()) BOOST_CONTRACT_ASSERT(result == end());
             //  [where, end()) is invalid
             })
         ;
-        return vector_.erase(first, last);
+        return result = vector_.erase(first, last);
     }
 
     void clear() {
         boost::contract::type c = boost::contract::public_member(this)
-            .postcondition([&] () { BOOST_CONTRACT_ASSERT(empty()); })
+            .postcondition([&] { BOOST_CONTRACT_ASSERT(empty()); })
         ;
         vector_.clear();
     }
 
     void swap(vector& other) {
-        BOOST_CONTRACT_OLDOF(
-            vector const old_self = *this;
-            vector const old_other = other;
-        )
-        boost::contract::type c = boost::contract::public_member(this)
-            .postcondition([&] () {
+        auto old_self = BOOST_CONTRACT_OLDOF(*this);
+        auto old_other = BOOST_CONTRACT_OLDOF(other);
+        auto = boost::contract::public_member(this)
+            .postcondition([&] {
                 BOOST_CONTRACT_ASSERT(
                     boost::contract::check_if<boost::has_equal_to<T> >(
                             &std::equal_to, other, old_self)

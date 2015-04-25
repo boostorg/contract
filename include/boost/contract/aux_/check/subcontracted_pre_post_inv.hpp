@@ -28,14 +28,6 @@
 #include <boost/mpl/eval_if.hpp>
 #include <boost/noncopyable.hpp>
 
-// TODO: Modelling after Clang message for assert() failure:
-// assertion "(Key != boost::contract::aux::constructor)" failed: file "..\include/boost/contract/aux_/function.hpp", line 156
-// This library should say:
-// precondition/postcondition/invariant/... "..." failed: file "...", line ...
-// for exception classes precondition/postcondition/..._failure (inheriting from
-// assertion_failure base exception to be thrown by CONTRACT_ASSERT) and failure
-// handlers [set_]precondition_failed.
-
 namespace boost { namespace contract { namespace aux { namespace check {
 
 template<

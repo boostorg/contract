@@ -20,19 +20,11 @@ namespace boost {
 namespace boost { namespace contract {
 
 // Must be efficient to pass this as value param (to limit user API verbosity).
-struct virtual_body {
+class virtual_body {
+public:
     /* implicit */ virtual_body(int const) : action(user_call) {}
 
-    // TODO: Fix old-of... but how?
-    template<typename T>
-    T const oldof_(T const& value) const { return value; }
-
 private:
-    template<class, class, typename, typename> friend class
-            boost::contract::aux::check::subcontracted_pre_post_inv;
-    template<class, class, typename, typename> friend class
-            boost::contract::aux::function::public_member;
-
     enum action_type {
         user_call,
         check_inv_only,
@@ -44,6 +36,16 @@ private:
             action(an_action) {}
 
     action_type action;
+
+    // Use friendship to limit public API.
+    
+    template<class, class, typename, typename>
+    friend class boost::contract::aux::check::subcontracted_pre_post_inv;
+
+    template<class, class, typename, typename>
+    friend class boost::contract::aux::function::public_member;
+
+    friend bool skip_oldof(virtual_body const);
 };
 
 } } // namespace

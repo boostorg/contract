@@ -4,7 +4,9 @@
 
 #include <boost/preprocessor/config/config.hpp>
 #if !BOOST_PP_VARIADICS
-#   define BOOST_CONTRACT_BASE_TYPES ERROR_variadic_macros_required_by_BOOST_CONTRACT_BASE_TYPES_otherwise_manually_program_base_types
+
+#define BOOST_CONTRACT_BASE_TYPES BOOST_CONTRACT_ERROR_variadic_macros_required_by_BOOST_CONTRACT_BASE_TYPES_otherwise_manually_program_base_types
+
 #else
 
 #include <boost/contract/aux_/preprocessor/keyword/public.hpp>
@@ -47,9 +49,6 @@
         BOOST_CONTRACT_BASE_TYPES_ERR_ \
     )(bases_tuple, bases_seq)
 
-// TODO: Make sure all compile-time error names read BOOST_CONTRACT_ERROR_...
-// (not just ERROR_... because that's not reserved for this library use).
-        
 #define BOOST_CONTRACT_BASE_TYPES_ERR_(bases_tuple, bases_seq) \
     BOOST_CONTRACT_ERROR_all_bases_must_explicitly_specify_public_protected_or_private base_tuple
     
