@@ -43,7 +43,7 @@ namespace boost {
 
 namespace boost { namespace contract { namespace set {
 
-class precondition_postcondition {
+class precondition_postcondition { // Allow (shallow ptr) copy for auto c = ...
 public:
     template<typename Precondition>
     boost::contract::set::postcondition_only precondition(
@@ -60,19 +60,7 @@ public:
     }
 
 private:
-    explicit precondition_postcondition(boost::shared_ptr<boost::contract::aux::
-            check::pre_post> const contract) : contract_(contract) {}
-
-    /* implicit */ precondition_postcondition(precondition_postcondition const&
-            other) : contract_(other.contract_) {}
-    precondition_postcondition& operator=(precondition_postcondition const&)
-            /* = delete */;
-    precondition_postcondition() /* = delete */;
-
-    boost::shared_ptr<boost::contract::aux::check::pre_post> contract_;
-    
     // Use friendship and deleted constructors to limit public API.
-
     friend class boost::contract::type;
 
     template<class Itrospection, class Class, typename Function,
@@ -101,6 +89,11 @@ private:
     friend precondition_postcondition boost::contract::protected_member();
     friend precondition_postcondition boost::contract::private_member();
     friend precondition_postcondition boost::contract::free_function();
+
+    explicit precondition_postcondition(boost::shared_ptr<boost::contract::aux::
+            check::pre_post> const contract) : contract_(contract) {}
+
+    boost::shared_ptr<boost::contract::aux::check::pre_post> contract_;
 };
 
 } } } // namespace

@@ -1,5 +1,5 @@
 
-#include "aux_/oteststream.hpp"
+#include "../aux_/oteststream.hpp"
 #include <boost/contract/public_member.hpp>
 #include <boost/contract/type.hpp>
 #include <boost/contract/introspect.hpp>

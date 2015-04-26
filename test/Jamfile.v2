@@ -1,26 +1,26 @@
 
-import testing ;
+subdir-run function : constructor_bases ;
+subdir-run function : destructor_bases ;
+subdir-run function : public_member_bases_virtual ;
+subdir-run function : public_member_bases_static ;
+subdir-run function : protected_member_bases ;
+subdir-run function : private_member_bases ;
+subdir-run function : free_function ;
 
-run base_types.cpp ;
-run has_bases.cpp ;
-run has_invariant.cpp ;
-run introspect.cpp ;
+subdir-run set : creation_set_post_nothing_comb ;
+subdir-compile-fail set : creation_set_post_post_error ;
+subdir-compile-fail set : creation_set_post_pre_error ;
+subdir-compile-fail set : creation_set_pre_error ;
+subdir-run set : function_set_pre_post_nothing_comb ;
+subdir-compile-fail set : function_set_post_post_error ;
+subdir-compile-fail set : function_set_post_pre_post_error ;
+subdir-compile-fail set : function_set_post_pre_pre_error ;
+subdir-compile-fail set : function_set_pre_post_post_error ;
+subdir-compile-fail set : function_set_pre_post_pre_error ;
+subdir-compile-fail set : function_set_pre_pre_error ;
 
-run constructor_bases.cpp ;
-run destructor_bases.cpp ;
-
-run public_member_bases_virtual.cpp ;
-run public_member_bases_static.cpp ;
-
-run protected_member_bases.cpp ;
-run private_member_bases.cpp ;
-
-run free_function/call.cpp ;
-run free_function/set.cpp ;
-compile-fail free_function/set_pre_pre_error.cpp ;
-compile-fail free_function/set_pre_post_pre_error.cpp ;
-compile-fail free_function/set_post_pre_pre_error.cpp ;
-compile-fail free_function/set_post_post_error.cpp ;
-compile-fail free_function/set_post_pre_post_error.cpp ;
-compile-fail free_function/set_pre_post_post_error.cpp ;
+subdir-run type_traits : introspect ;
+subdir-run type_traits : base_types ;
+subdir-run type_traits : has_bases ;
+subdir-run type_traits : has_invariant ;
 

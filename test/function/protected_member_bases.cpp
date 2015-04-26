@@ -1,12 +1,12 @@
 
-#include "aux_/oteststream.hpp"
-#include <boost/contract/private_member.hpp>
+#include "../aux_/oteststream.hpp"
+#include <boost/contract/protected_member.hpp>
 #include <boost/contract/type.hpp>
 #include <boost/contract/base_types.hpp>
 #include <boost/detail/lightweight_test.hpp>
 #include <sstream>
 
-// Test private member (not public API so substitution principle does not
+// Test protected member (not public API so substitution principle does not
 // apply so no subcontracting, plus not public API so no invariants checked).
 
 boost::contract::aux::test::oteststream out;
@@ -22,9 +22,9 @@ struct b {
     
     friend int main();
     
-private:
+protected:
     void f() {
-        boost::contract::type c = boost::contract::private_member()
+        boost::contract::type c = boost::contract::protected_member()
             .precondition([&] {
                 out << "b::f::pre" << std::endl;
             })
@@ -53,9 +53,9 @@ struct a
     
     friend int main();
 
-private:
+protected:
     void f() {
-        boost::contract::type c = boost::contract::private_member()
+        boost::contract::type c = boost::contract::protected_member()
             .precondition([&] {
                 out << "a::f::pre" << std::endl;
             })

@@ -24,7 +24,7 @@ namespace boost {
 
 namespace boost { namespace contract { namespace set {
 
-class postcondition_only {
+class postcondition_only { // Allow (shallow ptr) copy for `auto c = ...`.
 public:
     template<typename Postcondition>
     boost::contract::set::nothing postcondition(Postcondition const& f) {
@@ -33,18 +33,7 @@ public:
     }
     
 private:
-    explicit postcondition_only(boost::shared_ptr<boost::contract::aux::
-            check::pre_post> const contract) : contract_(contract) {}
-            
-    /* implicit */ postcondition_only(postcondition_only const& other) :
-            contract_(other.contract_) {}
-    postcondition_only& operator=(postcondition_only const&) /* = delete */;
-    postcondition_only() /* = delete */;
-
-    boost::shared_ptr<boost::contract::aux::check::pre_post> contract_;
-    
     // Use friendship and deleted constructors to limit public API.
-    
     friend class boost::contract::type;
     friend class boost::contract::set::precondition_postcondition;
     
@@ -53,6 +42,11 @@ private:
     
     template<class Class>
     friend postcondition_only boost::contract::destructor(Class* const);
+
+    explicit postcondition_only(boost::shared_ptr<boost::contract::aux::
+            check::pre_post> const contract) : contract_(contract) {}
+            
+    boost::shared_ptr<boost::contract::aux::check::pre_post> contract_;
 };
 
 } } } // namespace

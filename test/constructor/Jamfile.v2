@@ -1,9 +1,0 @@
-
-import testing ;
-
-run with_bases.cpp ;
-run set.cpp ;
-compile-fail set_pre_error.cpp ;
-compile-fail set_post_pre_error.cpp ;
-compile-fail set_post_post_error.cpp ;
-

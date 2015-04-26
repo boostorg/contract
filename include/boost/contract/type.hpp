@@ -11,7 +11,7 @@
 
 namespace boost { namespace contract {
 
-class type { // Must allow copy for `type c = ...` (shallow smart ptr copy).
+class type { // Allow (shallow ptr) copy for `type c = ...`.
 public:
     /* implicit */ type(boost::contract::set::precondition_postcondition const&
             c) : contract_(c.contract_) {}

@@ -1,46 +1,43 @@
 
 #include "../aux_/oteststream.hpp"
 #include <boost/contract/free_function.hpp>
-#include <boost/contract/type.hpp>
 #include <boost/detail/lightweight_test.hpp>
 #include <sstream>
 
+// Test pre and post, or nothing combinations that can be set for free functions
+// (member functions use same setter objects, so no need to test those too).
+
 boost::contract::aux::test::oteststream out;
 
-// Test free-function with neither pre nor post set.
 void nothing() {
-    boost::contract::type c = boost::contract::free_function();
+    auto c = boost::contract::free_function();
     out << "body" << std::endl;
 }
 
-// Test free-function with only pre set.
 void pre_only() {
-    boost::contract::type c = boost::contract::free_function()
+    auto c = boost::contract::free_function()
         .precondition([&] { out << "pre" << std::endl; })
     ;
     out << "body" << std::endl;
 }
 
-// Test free-function with only post set.
 void post_only() {
-    boost::contract::type c = boost::contract::free_function()
+    auto c = boost::contract::free_function()
         .postcondition([&] { out << "post" << std::endl; })
     ;
     out << "body" << std::endl;
 }
 
-// Test free-function with pre set before post.
 void pre_post() {
-    boost::contract::type c = boost::contract::free_function()
+    auto c = boost::contract::free_function()
         .precondition([&] { out << "pre" << std::endl; })
         .postcondition([&] { out << "post" << std::endl; })
     ;
     out << "body" << std::endl;
 }
 
-// Test free-function with post set before pre.
 void post_pre() {
-    boost::contract::type c = boost::contract::free_function()
+    auto c = boost::contract::free_function()
         .postcondition([&] { out << "post" << std::endl; })
         .precondition([&] { out << "pre" << std::endl; })
     ;

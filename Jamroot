@@ -1,5 +1,18 @@
 
+import testing ;
 import os ;
+
+rule subdir-run ( subdir : cpp_fname : requirements * )
+{
+    run $(subdir)/$(cpp_fname).cpp : : : <include>$(subdir) $(requirements) :
+            $(subdir)/$(cpp_fname) ;
+}
+
+rule subdir-compile-fail ( subdir : cpp_fname : requirements * )
+{
+    compile-fail $(subdir)/$(cpp_fname).cpp :
+            <include>$(subdir) $(requirements) : $(subdir)/$(cpp_fname) ;
+}
 
 if ! [ os.environ BOOST_ROOT ] {
     exit "Error: Set BOOST_ROOT environment variable to Boost root directory" ;

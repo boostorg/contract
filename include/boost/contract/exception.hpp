@@ -5,6 +5,7 @@
 #include <boost/config.hpp>
 #include <exception>
 #include <string>
+#include <sstream>
 #include <iostream>
 
 // TODO: Implement set_precondition/postcondition/invariant/entry_invariant/
@@ -24,10 +25,10 @@ struct assertion_failure : public std::exception {
             file_(""), line_(0), code_(code)
     { init(); }
 
-    virtual ~assertion_failue() {}
+    virtual ~assertion_failure() {}
 
     // Return `assertion "XYZ" failed: file "ABC", line 123`.
-    virtual char const* const what() const { return what_.c_str(); }
+    virtual char const* what() const BOOST_NOEXCEPT { return what_.c_str(); }
 
     char const* const file() const { return file_; }
     unsigned long line() const { return line_; }
@@ -35,13 +36,15 @@ struct assertion_failure : public std::exception {
 
 private:
     void init() {
-        what_ = "assertion";
-        if(std::string(code_) != "") what_ += " \"" + code_ + "\"";
-        what_ += " failed";
+        std::ostringstream text;
+        text.str("assertion");
+        if(std::string(code_) != "") text << " \"" << code_ << "\"";
+        text << " failed";
         if(std::string(file_) != "") {
-            what_ += ": \"" + file_ + "\"";
-            if(line != 0) what_ += ", line " + std::string(line_);
+            text << ": \"" << file_ << "\"";
+            if(line_ != 0) text << ", line " << line_;
         }
+        what_ = text.str();
     }
 
     char const* const file_;
@@ -53,9 +56,9 @@ private:
 struct precondition_failure : public assertion_failure {
     explicit precondition_failure(assertion_failure const& failure) :
             assertion_failure(failure) {
-        what_ = "precondition " + assertion_failure::what();
+        what_ = std::string("precondition ") + assertion_failure::what();
     }
-    virtual char const* const what() const { return what_.c_str(); }
+    virtual char const* what() const BOOST_NOEXCEPT { return what_.c_str(); }
 private:
     std::string what_;
 };
@@ -63,9 +66,9 @@ private:
 struct postcondition_failure : public assertion_failure {
     explicit postcondition_failure(assertion_failure const& failure) :
             assertion_failure(failure) {
-        what_ = "postcondition " + assertion_failure::what();
+        what_ = std::string("postcondition ") + assertion_failure::what();
     }
-    virtual char const* const what() const { return what_.c_str(); }
+    virtual char const* what() const BOOST_NOEXCEPT { return what_.c_str(); }
 private:
     std::string what_;
 };
@@ -75,9 +78,9 @@ struct invariant_failure : public assertion_failure {};
 struct entry_invariant_failure : public assertion_failure {
     explicit entry_invariant_failure(assertion_failure const& failure) :
             assertion_failure(failure) {
-        what_ = "exit invariant " + assertion_failure::what();
+        what_ = std::string("exit invariant ") + assertion_failure::what();
     }
-    virtual char const* const what() const { return what_.c_str(); }
+    virtual char const* what() const BOOST_NOEXCEPT { return what_.c_str(); }
 private:
     std::string what_;
 };
@@ -85,9 +88,9 @@ private:
 struct exit_invariant_failure : public assertion_failure {
     explicit exit_invariant_failure(assertion_failure const& failure) :
             assertion_failure(failure) {
-        what_ = "exit invariant " + assertion_failure::what();
+        what_ = std::string("exit invariant ") + assertion_failure::what();
     }
-    virtual char const* const what() const { return what_.c_str(); }
+    virtual char const* what() const BOOST_NOEXCEPT { return what_.c_str(); }
 private:
     std::string what_;
 };
@@ -112,7 +115,7 @@ namespace aux {
     void default_handler(from const) {
         try {
             throw;
-        } catch(boost::contract::failure const& error) {
+        } catch(boost::contract::assertion_failure const& error) {
             std::cerr << error.what() << std::endl;
             std::terminate();
         } catch(...) {
@@ -120,10 +123,10 @@ namespace aux {
         }
     }
 
-    failure_hander precondition_failure_handler = &default_handler;
-    failure_hander postcondition_failure_handler = &default_handler;
-    failure_hander entry_invariant_failure_handler = &default_handler;
-    failure_hander exit_invariant_failure_handler = &default_handler;
+    failure_handler precondition_failure_handler = &default_handler;
+    failure_handler postcondition_failure_handler = &default_handler;
+    failure_handler entry_invariant_failure_handler = &default_handler;
+    failure_handler exit_invariant_failure_handler = &default_handler;
 }
 
 failure_handler set_precondition_failure(failure_handler f)
@@ -163,4 +166,6 @@ void set_invariant_failure(failure_handler f) BOOST_NOEXCEPT_OR_NOTHROW {
 }
 
 } } // namespace
+
+#endif // #include guard
 

@@ -1,11 +1,11 @@
 
 #include "../aux_/oteststream.hpp"
 #include <boost/contract/constructor.hpp>
-#include <boost/contract/type.hpp>
 #include <boost/detail/lightweight_test.hpp>
 #include <sstream>
 
-// Test all possible orders in which pre/post can be set.
+// Test post or nothing combinations that can be set for constructors
+// (destructors use same setter objects, so no need to test those too).
 
 boost::contract::aux::test::oteststream out;
 
@@ -14,7 +14,7 @@ struct nothing {
     static void static_invariant() { out << "static_inv" << std::endl; }
 
     explicit nothing() {
-        boost::contract::type c = boost::contract::constructor(this);
+        auto c = boost::contract::constructor(this);
         out << "body" << std::endl;
     }
 };
@@ -28,7 +28,7 @@ struct pre_only : private boost::contract::constructor_precondition<pre_only> {
             out << "pre" << std::endl;
         })
     {
-        boost::contract::type c = boost::contract::constructor(this);
+        auto c = boost::contract::constructor(this);
         out << "body" << std::endl;
     }
 };
@@ -38,7 +38,7 @@ struct post_only {
     static void static_invariant() { out << "static_inv" << std::endl; }
 
     explicit post_only() {
-        boost::contract::type c = boost::contract::constructor(this)
+        auto c = boost::contract::constructor(this)
             .postcondition([&] { out << "post" << std::endl; })
         ;
         out << "body" << std::endl;
@@ -54,7 +54,7 @@ struct pre_post : private boost::contract::constructor_precondition<pre_post> {
             out << "pre" << std::endl;
         })
     {
-        boost::contract::type c = boost::contract::constructor(this)
+        auto c = boost::contract::constructor(this)
             .postcondition([&] { out << "post" << std::endl; })
         ;
         out << "body" << std::endl;

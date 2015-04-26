@@ -18,25 +18,20 @@ namespace boost {
 
 namespace boost { namespace contract { namespace set {
 
-class nothing {
+class nothing { // Allow (shallow ptr) copy for `auto c = ...`.
 public:
     // Allow to set nothing (neither precondition, nor postcondition).
 
 private:
-    explicit nothing(boost::shared_ptr<boost::contract::aux::check::pre_post>
-            const contract) : contract_(contract) {}
-
-    /* implicit */ nothing(nothing const& other) : contract_(other.contract_) {}
-    nothing& operator=(nothing const&) /* = delete */;
-    nothing() /* = delete */;
-
-    boost::shared_ptr<boost::contract::aux::check::pre_post> contract_;
-    
     // Use friendship and deleted constructors to limit public API.
-
     friend class boost::contract::type;
     friend class boost::contract::set::precondition_only;
     friend class boost::contract::set::postcondition_only;
+    
+    explicit nothing(boost::shared_ptr<boost::contract::aux::check::pre_post>
+            const contract) : contract_(contract) {}
+
+    boost::shared_ptr<boost::contract::aux::check::pre_post> contract_;
 };
 
 } } } // namespace
