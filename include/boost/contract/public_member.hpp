@@ -41,8 +41,8 @@ namespace boost { namespace contract {
 template<class Itrospection, class Class, typename Function,
         typename Argument0>
 boost::contract::set::precondition_postcondition public_member(
-    Class* const object, Function const&, Argument0 argument0,
-    boost::contract::virtual_body const v
+    boost::contract::virtual_body const v, Class* const object, Function const&,
+    Argument0 argument0
 ) {
     return boost::contract::set::precondition_postcondition(boost::make_shared<
         boost::contract::aux::function::public_member<Class, Itrospection,
@@ -67,7 +67,7 @@ boost::contract::set::precondition_postcondition public_member(
 // class that does not inherits from any base class.
 template<class Class>
 boost::contract::set::precondition_postcondition public_member(
-        Class* const object, boost::contract::virtual_body const v) {
+        boost::contract::virtual_body const v, Class* const object) {
     return boost::contract::set::precondition_postcondition(boost::make_shared<
             boost::contract::aux::function::public_member<Class> >(v, object));
 }

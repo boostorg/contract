@@ -7,6 +7,9 @@ subdir-run function : protected_member_bases ;
 subdir-run function : private_member_bases ;
 subdir-run function : free_function ;
 
+subdir-run oldof : oldof ;
+subdir-run oldof : oldof_virtual ;
+
 subdir-run set : creation_set_post_nothing_comb ;
 subdir-compile-fail set : creation_set_post_post_error ;
 subdir-compile-fail set : creation_set_post_pre_error ;

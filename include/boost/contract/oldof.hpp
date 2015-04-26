@@ -29,13 +29,14 @@
 
 #include <boost/preprocessor/facilities/overload.hpp>
 #include <boost/preprocessor/facilities/empty.hpp>
+#include <boost/preprocessor/cat.hpp>
 
 /* PUBLIC */
 
 #define BOOST_CONTRACT_OLDOF(...) \
-    BOOST_PP_OVERLOAD( \
+    BOOST_PP_CAT(BOOST_PP_OVERLOAD( /* CAT(... EMPTY()) workaround for MSVC */ \
 BOOST_CONTRACT_ERROR_macro_BOOST_CONTRACT_OLDOF_invalid_number_of_arguments_, \
-            __VA_ARGS__)(__VA_ARGS__)
+            __VA_ARGS__)(__VA_ARGS__), BOOST_PP_EMPTY())
 
 /* PRIVATE */
 
@@ -114,8 +115,8 @@ bool skip_oldof(boost::contract::virtual_body const v) {
 #ifdef BOOST_CONTRACT_CONFIG_NO_POSTCONDITIONS
     return true; // Never check post, so old-of never needed.
 #else
-    if(v == boost::contract::virtual_body::user_call ||
-            v == boost::contract::virtual_body::check_post_only) {
+    if(v.action == boost::contract::virtual_body::user_call ||
+            v.action == boost::contract::virtual_body::check_post_only) {
         return false; // Checking post, so old-of needed.
     }
     return true; // Not checking post, so old-of not needed.

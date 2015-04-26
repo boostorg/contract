@@ -1,7 +1,6 @@
 
 #include "../aux_/oteststream.hpp"
 #include <boost/contract/public_member.hpp>
-#include <boost/contract/type.hpp>
 #include <boost/contract/base_types.hpp>
 #include <boost/detail/lightweight_test.hpp>
 #include <sstream>
@@ -21,7 +20,7 @@ struct b {
     }
 
     static void s() {
-        boost::contract::type c = boost::contract::public_member<b>()
+        auto c = boost::contract::public_member<b>()
             .precondition([&] {
                 out << "b::s::pre" << std::endl;
             })
@@ -50,7 +49,7 @@ struct a
     }
 
     static void s() {
-        boost::contract::type c = boost::contract::public_member<a>()
+        auto c = boost::contract::public_member<a>()
             .precondition([&] {
                 out << "a::s::pre" << std::endl;
             })

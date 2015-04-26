@@ -9,14 +9,14 @@
 
 namespace boost {
     namespace contract {
-        class type;
+        class scoped;
         class virtual_body;
 
         template<class Itrospection, class Class, typename Function,
                 typename Argument0>
         boost::contract::set::precondition_postcondition public_member(
-            Class* const, Function const&, Argument0,
-            boost::contract::virtual_body const
+            boost::contract::virtual_body const, Class* const, Function const&,
+            Argument0
         );
         
         template<class Introspection, class Class, typename Function,
@@ -26,7 +26,7 @@ namespace boost {
     
         template<class Class>
         boost::contract::set::precondition_postcondition public_member(
-                Class* const, boost::contract::virtual_body const);
+                boost::contract::virtual_body const, Class* const);
     
         template<class Class>
         boost::contract::set::precondition_postcondition public_member(
@@ -61,13 +61,13 @@ public:
 
 private:
     // Use friendship and deleted constructors to limit public API.
-    friend class boost::contract::type;
+    friend class boost::contract::scoped;
 
     template<class Itrospection, class Class, typename Function,
             typename Argument0>
     friend precondition_postcondition boost::contract::public_member(
-        Class* const, Function const&, Argument0,
-        boost::contract::virtual_body const
+        boost::contract::virtual_body const, Class* const, Function const&,
+        Argument0
     );
         
     template<class Introspection, class Class, typename Function,
@@ -77,7 +77,7 @@ private:
         
     template<class Class>
     friend precondition_postcondition boost::contract::public_member(
-            Class* const, boost::contract::virtual_body const);
+            boost::contract::virtual_body const, Class* const);
         
     template<class Class>
     friend precondition_postcondition boost::contract::public_member(

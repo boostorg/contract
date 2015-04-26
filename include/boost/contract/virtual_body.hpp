@@ -25,6 +25,15 @@ public:
     /* implicit */ virtual_body(int const) : action(user_call) {}
 
 private:
+    // Use friendship to limit public API.
+    template<class, class, typename, typename>
+    friend class boost::contract::aux::check::subcontracted_pre_post_inv;
+
+    template<class, class, typename, typename>
+    friend class boost::contract::aux::function::public_member;
+
+    friend bool skip_oldof(virtual_body const);
+
     enum action_type {
         user_call,
         check_inv_only,
@@ -36,16 +45,6 @@ private:
             action(an_action) {}
 
     action_type action;
-
-    // Use friendship to limit public API.
-    
-    template<class, class, typename, typename>
-    friend class boost::contract::aux::check::subcontracted_pre_post_inv;
-
-    template<class, class, typename, typename>
-    friend class boost::contract::aux::function::public_member;
-
-    friend bool skip_oldof(virtual_body const);
 };
 
 } } // namespace

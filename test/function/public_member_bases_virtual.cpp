@@ -1,7 +1,6 @@
 
 #include "../aux_/oteststream.hpp"
 #include <boost/contract/public_member.hpp>
-#include <boost/contract/type.hpp>
 #include <boost/contract/introspect.hpp>
 #include <boost/contract/assert.hpp>
 #include <boost/contract/base_types.hpp>
@@ -29,8 +28,7 @@ struct e {
     // Test contract allows (but does not require) extra introspection,
     // function pointer, etc. parameter because class has no bases.
     void f(T& x, boost::contract::virtual_body v = 0) {
-        boost::contract::type c = boost::contract::public_member<introspect_f>(
-                this, &e::f, x, v)
+        auto c = boost::contract::public_member<introspect_f>(v, this, &e::f, x)
             .precondition([&]() {
                 out << "e::f::pre" << std::endl;
                 BOOST_CONTRACT_ASSERT(false); // To check subcontracted pre.
@@ -42,8 +40,6 @@ struct e {
         f_body(x);
     }
     virtual void f_body(T& x) = 0;
-
-private:
     BOOST_CONTRACT_INTROSPECT(f)
 };
 
@@ -63,7 +59,7 @@ struct d {
     // Test contract does not require (but allows) extra introspection,
     // function pointer, etc. parameter because class has no bases.
     void f(T& x, boost::contract::virtual_body v = 0) {
-        boost::contract::type c = boost::contract::public_member(this, v)
+        auto c = boost::contract::public_member(v, this)
             .precondition([&]() {
                 out << "d::f::pre" << std::endl;
                 BOOST_CONTRACT_ASSERT(false); // To check subcontracted pre.
@@ -98,8 +94,7 @@ struct c
     
     // Test virtual overrides virtual function.
     void f(T& x, boost::contract::virtual_body v = 0) {
-        boost::contract::type c = boost::contract::public_member<introspect_f>(
-                this, &c::f, x, v)
+        auto c = boost::contract::public_member<introspect_f>(v, this, &c::f, x)
             .precondition([&]() {
                 out << "c::f::pre" << std::endl;
                 BOOST_CONTRACT_ASSERT(false); // To check subcontracted pre.
@@ -111,12 +106,10 @@ struct c
         f_body(x);
     }
     virtual void f_body(T& x) {}
+    BOOST_CONTRACT_INTROSPECT(f)
 
     // Test non-contracted virtual function in contracted base.
     virtual void k() = 0;
-
-private:
-    BOOST_CONTRACT_INTROSPECT(f)
 };
 
 // Test a non-contracted base.
@@ -149,7 +142,7 @@ struct a
     
     // Test non-virtual overrides virtual function.
     void f(T& x) {
-        boost::contract::type c = boost::contract::public_member<introspect_f>(
+        auto c = boost::contract::public_member<introspect_f>(
                 this, &a::f, x)
             .precondition([&]() {
                 out << "a::f::pre" << std::endl;

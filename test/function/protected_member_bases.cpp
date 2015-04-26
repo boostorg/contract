@@ -1,7 +1,6 @@
 
 #include "../aux_/oteststream.hpp"
 #include <boost/contract/protected_member.hpp>
-#include <boost/contract/type.hpp>
 #include <boost/contract/base_types.hpp>
 #include <boost/detail/lightweight_test.hpp>
 #include <sstream>
@@ -24,7 +23,7 @@ struct b {
     
 protected:
     void f() {
-        boost::contract::type c = boost::contract::protected_member()
+        auto c = boost::contract::protected_member()
             .precondition([&] {
                 out << "b::f::pre" << std::endl;
             })
@@ -55,7 +54,7 @@ struct a
 
 protected:
     void f() {
-        boost::contract::type c = boost::contract::protected_member()
+        auto c = boost::contract::protected_member()
             .precondition([&] {
                 out << "a::f::pre" << std::endl;
             })

@@ -1,7 +1,6 @@
 
 #include "../aux_/oteststream.hpp"
 #include <boost/contract/destructor.hpp>
-#include <boost/contract/type.hpp>
 #include <boost/contract/base_types.hpp>
 #include <boost/scope_exit.hpp>
 #include <boost/detail/lightweight_test.hpp>
@@ -21,7 +20,7 @@ struct d { // Test inheritance level 0.
     }
 
     ~d() {
-        boost::contract::type c = boost::contract::destructor(this)
+        auto c = boost::contract::destructor(this)
             .postcondition([&] {
                 out << "d::dtor::post" << std::endl;
             })
@@ -46,7 +45,7 @@ struct c // Test inheritance level 1.
     }
 
     ~c() {
-        boost::contract::type c = boost::contract::destructor(this)
+        auto c = boost::contract::destructor(this)
             .postcondition([&] {
                 out << "c::dtor::post" << std::endl;
             })
@@ -65,7 +64,7 @@ struct b { // Test inheritance level 0.
     }
 
     ~b() {
-        boost::contract::type c = boost::contract::destructor(this)
+        auto c = boost::contract::destructor(this)
             .postcondition([&] {
                 out << "b::dtor::post" << std::endl;
             })
@@ -90,7 +89,7 @@ struct a // Test multiple inheritance and inheritance level 2.
     }
 
     ~a() {
-        boost::contract::type c = boost::contract::destructor(this)
+        auto c = boost::contract::destructor(this)
             .postcondition([&] {
                 out << "a::dtor::post" << std::endl;
             })

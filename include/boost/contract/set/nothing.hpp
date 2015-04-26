@@ -7,7 +7,7 @@
 
 namespace boost {
     namespace contract {
-        class type;
+        class scoped;
 
         namespace set {
             class precondition_only;
@@ -24,7 +24,7 @@ public:
 
 private:
     // Use friendship and deleted constructors to limit public API.
-    friend class boost::contract::type;
+    friend class boost::contract::scoped;
     friend class boost::contract::set::precondition_only;
     friend class boost::contract::set::postcondition_only;
     

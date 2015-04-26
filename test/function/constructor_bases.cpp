@@ -1,7 +1,6 @@
 
 #include "../aux_/oteststream.hpp"
 #include <boost/contract/constructor.hpp>
-#include <boost/contract/type.hpp>
 #include <boost/contract/base_types.hpp>
 #include <boost/contract/assert.hpp>
 #include <boost/detail/lightweight_test.hpp>
@@ -31,7 +30,7 @@ struct d
             out << "d::ctor::pre" << std::endl;
         })
     {
-        boost::contract::type c = boost::contract::constructor(this)
+        auto c = boost::contract::constructor(this)
             .postcondition([&] {
                 out << "d::ctor::post" << std::endl;
             })
@@ -62,7 +61,7 @@ struct c
         }),
         d(x)
     {
-        boost::contract::type c = boost::contract::constructor(this)
+        auto c = boost::contract::constructor(this)
             .postcondition([&] {
                 out << "c::ctor::post" << std::endl;
             })
@@ -91,7 +90,7 @@ struct b
             out << "b::ctor::pre" << std::endl;
         })
     {
-        boost::contract::type c = boost::contract::constructor(this)
+        auto c = boost::contract::constructor(this)
             .postcondition([&] {
                 out << "b::ctor::post" << std::endl;
             })
@@ -126,7 +125,7 @@ struct a
         c(x),
         value(x)
     {
-        boost::contract::type c = boost::contract::constructor(this)
+        auto c = boost::contract::constructor(this)
             .postcondition([&] {
                 out << "a::ctor::post" << std::endl;
                 BOOST_CONTRACT_ASSERT(this->value == x);

@@ -8,7 +8,7 @@
 
 namespace boost {
     namespace contract {
-        class type;
+        class scoped;
 
         template<class Class>
         boost::contract::set::postcondition_only constructor(Class* const);
@@ -34,7 +34,7 @@ public:
     
 private:
     // Use friendship and deleted constructors to limit public API.
-    friend class boost::contract::type;
+    friend class boost::contract::scoped;
     friend class boost::contract::set::precondition_postcondition;
     
     template<class Class>
