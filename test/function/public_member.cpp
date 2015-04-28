@@ -154,13 +154,12 @@ struct a
         f_body(x);
     }
     void f_body(T& x) { out << "a::f::body" << std::endl; }
+    BOOST_CONTRACT_INTROSPECT(f)
 
     void k() {}
 
 private:
     void g() {}
-
-    BOOST_CONTRACT_INTROSPECT(f)
 };
 
 int main() {

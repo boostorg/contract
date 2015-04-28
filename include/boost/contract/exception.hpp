@@ -8,9 +8,6 @@
 #include <sstream>
 #include <iostream>
 
-// TODO: Implement set_precondition/postcondition/invariant/entry_invariant/
-// exit_invariant_failed handlers.
-
 namespace boost { namespace contract {
 
 // Exceptions.
@@ -37,7 +34,7 @@ struct assertion_failure : public std::exception {
 private:
     void init() {
         std::ostringstream text;
-        text.str("assertion");
+        text << "assertion";
         if(std::string(code_) != "") text << " \"" << code_ << "\"";
         text << " failed";
         if(std::string(file_) != "") {
@@ -50,48 +47,6 @@ private:
     char const* const file_;
     unsigned long const line_;
     char const* const code_;
-    std::string what_;
-};
-
-struct precondition_failure : public assertion_failure {
-    explicit precondition_failure(assertion_failure const& failure) :
-            assertion_failure(failure) {
-        what_ = std::string("precondition ") + assertion_failure::what();
-    }
-    virtual char const* what() const BOOST_NOEXCEPT { return what_.c_str(); }
-private:
-    std::string what_;
-};
-
-struct postcondition_failure : public assertion_failure {
-    explicit postcondition_failure(assertion_failure const& failure) :
-            assertion_failure(failure) {
-        what_ = std::string("postcondition ") + assertion_failure::what();
-    }
-    virtual char const* what() const BOOST_NOEXCEPT { return what_.c_str(); }
-private:
-    std::string what_;
-};
-
-struct invariant_failure : public assertion_failure {};
-
-struct entry_invariant_failure : public assertion_failure {
-    explicit entry_invariant_failure(assertion_failure const& failure) :
-            assertion_failure(failure) {
-        what_ = std::string("exit invariant ") + assertion_failure::what();
-    }
-    virtual char const* what() const BOOST_NOEXCEPT { return what_.c_str(); }
-private:
-    std::string what_;
-};
-
-struct exit_invariant_failure : public assertion_failure {
-    explicit exit_invariant_failure(assertion_failure const& failure) :
-            assertion_failure(failure) {
-        what_ = std::string("exit invariant ") + assertion_failure::what();
-    }
-    virtual char const* what() const BOOST_NOEXCEPT { return what_.c_str(); }
-private:
     std::string what_;
 };
 
@@ -112,53 +67,155 @@ typedef void (*failure_handler)(from);
 // exported (so they are the same across DLL, etc.), plus they should be
 // protected by mutexes.
 namespace aux {
-    void default_handler(from const) {
-        try {
-            throw;
-        } catch(boost::contract::assertion_failure const& error) {
-            std::cerr << error.what() << std::endl;
-            std::terminate();
-        } catch(...) {
-            std::terminate();
+    namespace exception_ {
+        enum failure_handler_key {
+            pre_key,
+            post_key,
+            const_entry_inv_key,
+            const_volatile_entry_inv_key,
+            static_entry_inv_key,
+            const_exit_inv_key,
+            const_volatile_exit_inv_key,
+            static_exit_inv_key,
+        };
+
+        template<exception_::failure_handler_key Key>
+        void default_failure_handler(from const) {
+            std::string s = "";
+            switch(Key) {
+                case pre_key:
+                    s = "precondition "; break;
+                case post_key:
+                    s = "postcondition "; break;
+                case const_entry_inv_key:
+                    s = "const entry invariant "; break;
+                case const_volatile_entry_inv_key:
+                    s = "const volatile entry invariant "; break;
+                case static_entry_inv_key:
+                    s = "static entry invariant "; break;
+                case const_exit_inv_key:
+                    s= "const exit invariant "; break;
+                case const_volatile_exit_inv_key:
+                    s= "const volatile exit invariant "; break;
+                case static_exit_inv_key:
+                    s = "static exit invariant "; break;
+                // No default (so compiler warning/error on missing enum case).
+            }
+            try {
+                throw;
+            } catch(boost::contract::assertion_failure const& error) {
+                // what = 'assertion "..." failed: ...'.
+                std::cerr << s << error.what() << std::endl;
+            } catch(std::exception const& error) {
+                std::cerr << s << "checking threw standard exception with " <<
+                        "what(): " << error.what() << std::endl;
+            } catch(...) {
+                std::cerr << s << "checking threw unknown exception" <<
+                        std::endl;
+            }
+            std::terminate(); // Default handlers log and call terminate.
         }
     }
 
-    failure_handler precondition_failure_handler = &default_handler;
-    failure_handler postcondition_failure_handler = &default_handler;
-    failure_handler entry_invariant_failure_handler = &default_handler;
-    failure_handler exit_invariant_failure_handler = &default_handler;
+    failure_handler pre_failure_handler = &exception_::
+            default_failure_handler<exception_::pre_key>;
+    failure_handler post_failure_handler = &exception_::
+            default_failure_handler<exception_::post_key>;
+    
+    failure_handler const_entry_inv_failure_handler = &exception_::
+            default_failure_handler<exception_::const_entry_inv_key>;
+    failure_handler const_volatile_entry_inv_failure_handler = &exception_::
+            default_failure_handler<exception_::const_volatile_entry_inv_key>;
+    failure_handler static_entry_inv_failure_handler = &exception_::
+            default_failure_handler<exception_::static_entry_inv_key>;
+    
+    failure_handler const_exit_inv_failure_handler = &exception_::
+            default_failure_handler<exception_::const_exit_inv_key>;
+    failure_handler const_volatile_exit_inv_failure_handler = &exception_::
+            default_failure_handler<exception_::const_volatile_exit_inv_key>;
+    failure_handler static_exit_inv_failure_handler = &exception_::
+            default_failure_handler<exception_::static_exit_inv_key>;
 }
 
 failure_handler set_precondition_failure(failure_handler f)
         BOOST_NOEXCEPT_OR_NOTHROW {
-    failure_handler result = boost::contract::aux::precondition_failure_handler;
-    boost::contract::aux::precondition_failure_handler = f;
+    failure_handler result = boost::contract::aux::pre_failure_handler;
+    boost::contract::aux::pre_failure_handler = f;
     return result;
 }
 
 failure_handler set_postcondition_failure(failure_handler f)
         BOOST_NOEXCEPT_OR_NOTHROW {
-    failure_handler result = boost::contract::aux::
-            postcondition_failure_handler;
-    boost::contract::aux::postcondition_failure_handler = f;
+    failure_handler result = boost::contract::aux::post_failure_handler;
+    boost::contract::aux::post_failure_handler = f;
     return result;
 }
 
-failure_handler set_entry_invariant_failure(failure_handler f)
+// Entry invariants.
+
+failure_handler set_const_entry_invariant_failure(failure_handler f)
         BOOST_NOEXCEPT_OR_NOTHROW {
     failure_handler result = boost::contract::aux::
-            entry_invariant_failure_handler;
-    boost::contract::aux::entry_invariant_failure_handler = f;
+            const_entry_inv_failure_handler;
+    boost::contract::aux::const_entry_inv_failure_handler = f;
     return result;
 }
 
-failure_handler set_exit_invariant_failure(failure_handler f)
+failure_handler set_const_volatile_entry_invariant_failure(failure_handler f)
         BOOST_NOEXCEPT_OR_NOTHROW {
     failure_handler result = boost::contract::aux::
-            exit_invariant_failure_handler;
-    boost::contract::aux::exit_invariant_failure_handler = f;
+            const_volatile_entry_inv_failure_handler;
+    boost::contract::aux::const_volatile_entry_inv_failure_handler = f;
     return result;
 }
+
+failure_handler set_static_entry_invariant_failure(failure_handler f)
+        BOOST_NOEXCEPT_OR_NOTHROW {
+    failure_handler result = boost::contract::aux::
+            static_entry_inv_failure_handler;
+    boost::contract::aux::static_entry_inv_failure_handler = f;
+    return result;
+}
+
+void set_entry_invariant_failure(failure_handler f) BOOST_NOEXCEPT_OR_NOTHROW {
+    set_const_entry_invariant_failure(f);
+    set_const_volatile_entry_invariant_failure(f);
+    set_static_entry_invariant_failure(f);
+}
+
+// Exit invariants.
+
+failure_handler set_const_exit_invariant_failure(failure_handler f)
+        BOOST_NOEXCEPT_OR_NOTHROW {
+    failure_handler result = boost::contract::aux::
+            const_exit_inv_failure_handler;
+    boost::contract::aux::const_exit_inv_failure_handler = f;
+    return result;
+}
+
+failure_handler set_const_volatile_exit_invariant_failure(failure_handler f)
+        BOOST_NOEXCEPT_OR_NOTHROW {
+    failure_handler result = boost::contract::aux::
+            const_volatile_exit_inv_failure_handler;
+    boost::contract::aux::const_volatile_exit_inv_failure_handler = f;
+    return result;
+}
+
+failure_handler set_static_exit_invariant_failure(failure_handler f)
+        BOOST_NOEXCEPT_OR_NOTHROW {
+    failure_handler result = boost::contract::aux::
+            static_exit_inv_failure_handler;
+    boost::contract::aux::static_exit_inv_failure_handler = f;
+    return result;
+}
+
+void set_exit_invariant_failure(failure_handler f) BOOST_NOEXCEPT_OR_NOTHROW {
+    set_const_exit_invariant_failure(f);
+    set_const_volatile_exit_invariant_failure(f);
+    set_static_exit_invariant_failure(f);
+}
+
+// All invariants.
 
 void set_invariant_failure(failure_handler f) BOOST_NOEXCEPT_OR_NOTHROW {
     set_entry_invariant_failure(f);

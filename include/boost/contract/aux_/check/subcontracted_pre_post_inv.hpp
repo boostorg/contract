@@ -2,14 +2,14 @@
 #ifndef BOOST_CONTRACT_AUX_CHECK_SUBCONTRACTED_PRE_POST_INV_HPP_
 #define BOOST_CONTRACT_AUX_CHECK_SUBCONTRACTED_PRE_POST_INV_HPP_
 
-#include <boost/contract/config.hpp>
 #include <boost/contract/virtual_body.hpp>
+#include <boost/contract/exception.hpp>
+#include <boost/contract/config.hpp>
 #include <boost/contract/aux_/check/pre_post_inv.hpp>
 #include <boost/contract/aux_/type_traits/bases.hpp>
 #include <boost/contract/aux_/exception.hpp>
 #include <boost/contract/aux_/none.hpp>
 #include <boost/contract/aux_/debug.hpp>
-#include <boost/contract/virtual_body.hpp>
 #include <boost/function_types/result_type.hpp>
 #include <boost/function_types/parameter_types.hpp>
 #include <boost/function_types/member_function_pointer.hpp>
@@ -69,27 +69,27 @@ template<
 //#endif
 
 public:
-    explicit subcontracted_pre_post_inv(Class* const obj, Arg0 arg0) :
-        boost::contract::aux::check::pre_post_inv<Class>(obj),
+    explicit subcontracted_pre_post_inv(boost::contract::from const from,
+            Class* const obj, Arg0 arg0) :
+        boost::contract::aux::check::pre_post_inv<Class>(from, obj),
         arg0_(arg0)
     {}
     
-    explicit subcontracted_pre_post_inv(Class* const obj) : boost::contract::
-            aux::check::pre_post_inv<Class>(obj) {
-    }
+    explicit subcontracted_pre_post_inv(boost::contract::from const from,
+            Class* const obj) :
+        boost::contract::aux::check::pre_post_inv<Class>(from, obj)
+    {}
+
+    virtual ~subcontracted_pre_post_inv() {}
     
 protected:
-    void check_subcontracted_inv() {
-        boost::mpl::for_each<base_ptrs>(check_base(*this,
-                boost::contract::virtual_body::check_inv_only));
-        this->check_inv();
-    }
-
-    void check_subcontracted_pre() {
+    // Allow to throw on failure for relaxing subcontracted pre.
+    void check_subcontracted_pre(bool const throw_on_failure = false) {
         try {
             boost::mpl::for_each<base_ptrs>(check_base(*this,
                     boost::contract::virtual_body::check_pre_only));
-            this->check_pre(); // Pre logic-or: Last check, error also throws.
+            // Pre logic-or: Last check, error also throws.
+            this->check_pre(throw_on_failure);
         } catch(boost::contract::aux::no_error const&) {
             // Pre logic-or: Stop at 1st no_error (thrown by callee).
         }
@@ -99,6 +99,18 @@ protected:
         boost::mpl::for_each<base_ptrs>(check_base(*this,
                 boost::contract::virtual_body::check_post_only));
         this->check_post();
+    }
+    
+    void check_subcontracted_entry_inv() {
+        boost::mpl::for_each<base_ptrs>(check_base(*this,
+                boost::contract::virtual_body::check_entry_inv_only));
+        this->check_entry_inv();
+    }
+    
+    void check_subcontracted_exit_inv() {
+        boost::mpl::for_each<base_ptrs>(check_base(*this,
+                boost::contract::virtual_body::check_exit_inv_only));
+        this->check_exit_inv();
     }
 
     class check_base {
@@ -147,16 +159,13 @@ protected:
             Base* const base = outer_.object();
             BOOST_CONTRACT_AUX_DEBUG(base);
             
-            try {
-                (base->*base_virtual_func)(outer_.arg0_, virt_);
-            } catch(boost::contract::aux::no_error const&) {
-                if(virt_.action == boost::contract::virtual_body::
-                        check_pre_only) {
+            try { (base->*base_virtual_func)(outer_.arg0_, virt_); }
+            catch(boost::contract::aux::no_error const&) {
+                if(virt_ == boost::contract::virtual_body::check_pre_only) {
                     throw; // Pre logic-or: 1st no_err stops (throw to caller).
                 }
             } catch(...) {
-                if(virt_.action == boost::contract::virtual_body::
-                        check_pre_only) {
+                if(virt_ == boost::contract::virtual_body::check_pre_only) {
                     // Pre logic-or: Ignore err, possibly checks up to caller.
                 }
             }

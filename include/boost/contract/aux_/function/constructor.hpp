@@ -2,6 +2,7 @@
 #ifndef BOOST_CONTRACT_AUX_FUNCTION_CONSTRUCTOR_HPP_
 #define BOOST_CONTRACT_AUX_FUNCTION_CONSTRUCTOR_HPP_
 
+#include <boost/contract/exception.hpp>
 #include <boost/contract/aux_/check/pre_post_inv.hpp>
 #include <exception>
 
@@ -10,8 +11,8 @@ namespace boost { namespace contract { namespace aux { namespace function {
 template<class Class>
 class constructor : public boost::contract::aux::check::pre_post_inv<Class> {
 public:
-    explicit constructor(Class* const obj) :
-            boost::contract::aux::check::pre_post_inv<Class>(obj) {
+    explicit constructor(Class* const obj) : boost::contract::aux::check::
+            pre_post_inv<Class>(boost::contract::from_constructor, obj) {
         entry();
     }
 
@@ -19,7 +20,7 @@ public:
 
 private:
     // No object before ctor body so only static inv at entry.
-    void entry() { this->check_inv(/* static_inv_only = */ true); }
+    void entry() { this->check_entry_inv(/* static_inv_only = */ true); }
 
     // Ctor pre checked by constructor_precondition at start of init list.
     void pre_available() /* override */ { BOOST_CONTRACT_AUX_DEBUG(false); }
@@ -33,7 +34,7 @@ private:
     // check_subcontracted_... in this case).
     void exit() {
         bool const body_threw = std::uncaught_exception();
-        this->check_inv(/* static_inv_only = */ body_threw);
+        this->check_exit_inv(/* static_inv_only = */ body_threw);
         if(!body_threw) this->check_post();
     }
 

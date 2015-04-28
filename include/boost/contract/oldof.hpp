@@ -12,6 +12,12 @@
 #include <boost/preprocessor/config/config.hpp>
 #include <boost/config.hpp>
 
+// TODO: There is a problem with old-of of virtual body functions for which
+// old-of of the base function are evaluated *after* the derived virtual
+// function body is executed (so invalidating old-of values)... Can I fix this?
+// Maybe passing a (mutable) pointer v and implementing a "stack" (like a map
+// of boost::any indexed by old-of #) inside the mutable object pointed by v...
+
 // IMPORTANT: Following old-of templates and macros ensure that:
 //  1.  Old-value expressions are evaluated only once and only when old-of
 //      should not be skipped.
@@ -115,8 +121,8 @@ bool skip_oldof(boost::contract::virtual_body const v) {
 #ifdef BOOST_CONTRACT_CONFIG_NO_POSTCONDITIONS
     return true; // Never check post, so old-of never needed.
 #else
-    if(v.action == boost::contract::virtual_body::user_call ||
-            v.action == boost::contract::virtual_body::check_post_only) {
+    if(v == boost::contract::virtual_body::user_call ||
+            v == boost::contract::virtual_body::check_post_only) {
         return false; // Checking post, so old-of needed.
     }
     return true; // Not checking post, so old-of not needed.

@@ -1,14 +1,14 @@
 
-subdir-run function : constructor_bases ;
-subdir-run function : destructor_bases ;
-subdir-run function : public_member_bases_virtual ;
-subdir-run function : public_member_bases_static ;
-subdir-run function : protected_member_bases ;
-subdir-run function : private_member_bases ;
+subdir-run function : constructor ;
+subdir-run function : destructor ;
+subdir-run function : public_member ;
+subdir-run function : public_static_member ;
+subdir-run function : protected_member ;
+subdir-run function : private_member ;
 subdir-run function : free_function ;
 
 subdir-run oldof : oldof ;
-subdir-run oldof : oldof_virtual ;
+subdir-run oldof : oldof_v ;
 
 subdir-run set : creation_set_post_nothing_comb ;
 subdir-compile-fail set : creation_set_post_post_error ;

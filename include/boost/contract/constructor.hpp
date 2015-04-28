@@ -3,6 +3,7 @@
 #define BOOST_CONTRACT_CONSTRUCTOR_HPP_
 
 #include <boost/contract/set/postcondition_only.hpp>
+#include <boost/contract/exception.hpp>
 #include <boost/contract/aux_/function/constructor.hpp>
 #include <boost/make_shared.hpp>
 
@@ -20,7 +21,13 @@ struct constructor_precondition {
     constructor_precondition() {} // For overloaded constructors with no pre.
 
     template<typename Precondition>
-    explicit constructor_precondition(Precondition const& f) { f(); }
+    explicit constructor_precondition(Precondition const& f) {
+        try { f(); }
+        catch(...) {
+            boost::contract::aux::pre_failure_handler(
+                    boost::contract::from_constructor);
+        }
+    }
 };
 
 } } // namespace

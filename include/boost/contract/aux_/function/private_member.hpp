@@ -2,6 +2,7 @@
 #ifndef BOOST_CONTRACT_AUX_FUNCTION_PRIVATE_MEMBER_HPP_
 #define BOOST_CONTRACT_AUX_FUNCTION_PRIVATE_MEMBER_HPP_
 
+#include <boost/contract/exception.hpp>
 #include <boost/contract/aux_/function/free_function.hpp>
 
 namespace boost { namespace contract { namespace aux { namespace function {
@@ -10,7 +11,11 @@ namespace boost { namespace contract { namespace aux { namespace function {
 // invariants (so no inv) and they do not participate in virtual function
 // polymorphism according to substitution principle (so no subcontracting).
 // Therefore, their contracts behave like contracts of free functions.
-typedef boost::contract::aux::function::free_function private_member;
+class private_member : public free_function {
+public:
+    explicit private_member() :
+            free_function(boost::contract::from_private_member) {}
+};
 
 } } } } // namespace
 

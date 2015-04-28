@@ -2,6 +2,7 @@
 #ifndef BOOST_CONTRACT_AUX_FUNCTION_PUBLIC_STATIC_MEMBER_HPP_
 #define BOOST_CONTRACT_AUX_FUNCTION_PUBLIC_STATIC_MEMBER_HPP_
 
+#include <boost/contract/exception.hpp>
 #include <boost/contract/aux_/check/pre_post_inv.hpp>
 #include <exception>
 
@@ -10,8 +11,8 @@ namespace boost { namespace contract { namespace aux { namespace function {
 template<class Class> class public_static_member :
         public boost::contract::aux::check::pre_post_inv<Class> {
 public:
-    explicit public_static_member() :
-            boost::contract::aux::check::pre_post_inv<Class>() {
+    explicit public_static_member() : boost::contract::aux::check::
+            pre_post_inv<Class>(boost::contract::from_public_member) {
         entry();
     }
     
@@ -23,7 +24,7 @@ private:
     // subcontracting for any of the checks below).
 
     // Static so no object so check static inv only.
-    void entry() { this->check_inv(/* static_inv_only = */ true); }
+    void entry() { this->check_entry_inv(/* static_inv_only = */ true); }
 
     // Check pre (as soon as related functor set).
     void pre_available() /* override */ { this->check_pre(); }
@@ -35,7 +36,7 @@ private:
     // only if body did not throw.
     void exit() {
         bool const body_threw = std::uncaught_exception();
-        this->check_inv(/* static_inv_only = */ true);
+        this->check_exit_inv(/* static_inv_only = */ true);
         if(!body_threw) this->check_post();
     }
 };

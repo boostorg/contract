@@ -2,6 +2,7 @@
 #ifndef BOOST_CONTRACT_AUX_FUNCTION_DESTRUCTOR_HPP_
 #define BOOST_CONTRACT_AUX_FUNCTION_DESTRUCTOR_HPP_
 
+#include <boost/contract/exception.hpp>
 #include <boost/contract/aux_/check/pre_post_inv.hpp>
 #include <boost/contract/aux_/debug.hpp>
 #include <exception>
@@ -11,8 +12,8 @@ namespace boost { namespace contract { namespace aux { namespace function {
 template<class Class>
 class destructor : public boost::contract::aux::check::pre_post_inv<Class> {
 public:
-    explicit destructor(Class* const obj) :
-            boost::contract::aux::check::pre_post_inv<Class>(obj) {
+    explicit destructor(Class* const obj) : boost::contract::aux::check::
+            pre_post_inv<Class>(boost::contract::from_destructor, obj) {
         entry();
     }
 
@@ -22,7 +23,7 @@ private:
     // Obj still exists (before dtor body) so check static and non-static inv
     // (subcontracting implemented automatically via C++ object destruction
     // mechanism, so no calls to check_subcontracted_... in this case).
-    void entry() { this->check_inv(); }
+    void entry() { this->check_entry_inv(); }
 
     // Dtor cannot have pre because it has no parameters.
     void pre_available() /* override */ { BOOST_CONTRACT_AUX_DEBUG(false); }
@@ -41,7 +42,7 @@ private:
     // for that so this library must handle such a case.
     void exit() {
         bool const body_threw = std::uncaught_exception();
-        this->check_inv(/* static_inv_only = */ !body_threw);
+        this->check_exit_inv(/* static_inv_only = */ !body_threw);
         if(!body_threw) this->check_post();
     }
 };
