@@ -2,6 +2,7 @@
 #ifndef BOOST_CONTRACT_SET_PRECONDITION_POSTCONDITION_HPP_
 #define BOOST_CONTRACT_SET_PRECONDITION_POSTCONDITION_HPP_
 
+#include <boost/contract/virtual_body.hpp>
 #include <boost/contract/set/precondition_only.hpp>
 #include <boost/contract/set/postcondition_only.hpp>
 #include <boost/contract/aux_/check/pre_post.hpp>
@@ -10,13 +11,12 @@
 namespace boost {
     namespace contract {
         class scoped;
-        class virtual_body;
 
         template<class Itrospection, class Class, typename Function,
                 typename Argument0>
         boost::contract::set::precondition_postcondition public_member(
-            boost::contract::virtual_body const, Class* const, Function const&,
-            Argument0
+            boost::contract::virtual_body const, Class* const,
+            Function const&, Argument0
         );
         
         template<class Introspection, class Class, typename Function,
@@ -66,8 +66,8 @@ private:
     template<class Itrospection, class Class, typename Function,
             typename Argument0>
     friend precondition_postcondition boost::contract::public_member(
-        boost::contract::virtual_body const, Class* const, Function const&,
-        Argument0
+        boost::contract::virtual_body const, Class* const,
+        Function const&, Argument0
     );
         
     template<class Introspection, class Class, typename Function,

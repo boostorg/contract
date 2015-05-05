@@ -8,7 +8,11 @@ subdir-run function : private_member ;
 subdir-run function : free_function ;
 
 subdir-run oldof : oldof ;
+subdir-compile-fail oldof : oldof_const_error ;
+subdir-compile-fail oldof : oldof_auto_const_error ;
 subdir-run oldof : oldof_v ;
+subdir-compile-fail oldof : oldof_v_const_error ;
+subdir-compile-fail oldof : oldof_v_auto_const_error ;
 
 subdir-run set : creation_set_post_nothing_comb ;
 subdir-compile-fail set : creation_set_post_post_error ;

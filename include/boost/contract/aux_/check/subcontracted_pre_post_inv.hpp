@@ -7,6 +7,7 @@
 #include <boost/contract/config.hpp>
 #include <boost/contract/aux_/check/pre_post_inv.hpp>
 #include <boost/contract/aux_/type_traits/bases.hpp>
+#include <boost/contract/aux_/virtual_call.hpp>
 #include <boost/contract/aux_/exception.hpp>
 #include <boost/contract/aux_/none.hpp>
 #include <boost/contract/aux_/debug.hpp>
@@ -27,6 +28,25 @@
 #include <boost/mpl/placeholders.hpp>
 #include <boost/mpl/eval_if.hpp>
 #include <boost/noncopyable.hpp>
+
+// TODO: Fix !CONFIG_PERMISSIVE static assertions.
+//#if !BOOST_CONTRACT_CONFIG_PERMISSIVE
+//    BOOST_STATIC_ASSERT_MSG(!boost::contract::aux::has_mutable_invariant<
+//            Class>::value, "class invariant function must be const");
+//    BOOST_STATIC_ASSERT_MSG(
+//        (!boost::mpl::and_<
+//            boost::contract::aux::has_bases<Class>,
+//            boost::mpl::or_<
+//                boost::is_same<Intro, boost::contract::aux::none>,
+//                boost::is_same<Func, boost::contract::aux::none>
+//            >
+//        >::value),
+//        "must specify introspection type, function type, and function "
+//        "arguments for member contract of class with bases"
+//    );
+//    // TODO: static_assert(Func == none || class<Func>::type == Class)
+//#endif
+
 
 namespace boost { namespace contract { namespace aux { namespace check {
 
@@ -50,44 +70,43 @@ template<
         boost::add_pointer<boost::mpl::placeholders::_1>
     >::type base_ptrs;
 
-// TODO: Fix !CONFIG_PERMISSIVE static assertions.
-//#if !BOOST_CONTRACT_CONFIG_PERMISSIVE
-//    BOOST_STATIC_ASSERT_MSG(!boost::contract::aux::has_mutable_invariant<
-//            Class>::value, "class invariant function must be const");
-//    BOOST_STATIC_ASSERT_MSG(
-//        (!boost::mpl::and_<
-//            boost::contract::aux::has_bases<Class>,
-//            boost::mpl::or_<
-//                boost::is_same<Intro, boost::contract::aux::none>,
-//                boost::is_same<Func, boost::contract::aux::none>
-//            >
-//        >::value),
-//        "must specify introspection type, function type, and function "
-//        "arguments for member contract of class with bases"
-//    );
-//    // TODO: static_assert(Func == none || class<Func>::type == Class)
-//#endif
-
 public:
-    explicit subcontracted_pre_post_inv(boost::contract::from const from,
-            Class* const obj, Arg0 arg0) :
+    explicit subcontracted_pre_post_inv(
+        boost::contract::from const from,
+        boost::contract::virtual_body const virt, Class* const obj,
+        Arg0 arg0
+    ) :
         boost::contract::aux::check::pre_post_inv<Class>(from, obj),
+        virt_(virt),
         arg0_(arg0)
-    {}
+    { init(); }
     
     explicit subcontracted_pre_post_inv(boost::contract::from const from,
-            Class* const obj) :
-        boost::contract::aux::check::pre_post_inv<Class>(from, obj)
-    {}
+            boost::contract::virtual_body const virt, Class* const obj) :
+        boost::contract::aux::check::pre_post_inv<Class>(from, obj),
+        virt_(virt)
+    { init(); }
 
     virtual ~subcontracted_pre_post_inv() {}
     
 protected:
+    void copy_subcontracted_oldof() {
+        boost::mpl::for_each<base_ptrs>(check_base_.action(
+                boost::contract::aux::virtual_call::copy_oldof));
+        // Old-of values always copied on stack for derived func being called.
+    }
+    
+    void check_subcontracted_entry_inv() {
+        boost::mpl::for_each<base_ptrs>(check_base_.action(
+                boost::contract::aux::virtual_call::check_entry_inv));
+        this->check_entry_inv();
+    }
+    
     // Allow to throw on failure for relaxing subcontracted pre.
     void check_subcontracted_pre(bool const throw_on_failure = false) {
         try {
-            boost::mpl::for_each<base_ptrs>(check_base(*this,
-                    boost::contract::virtual_body::check_pre_only));
+            boost::mpl::for_each<base_ptrs>(check_base_.action(
+                    boost::contract::aux::virtual_call::check_pre));
             // Pre logic-or: Last check, error also throws.
             this->check_pre(throw_on_failure);
         } catch(boost::contract::aux::no_error const&) {
@@ -95,30 +114,41 @@ protected:
         }
     }
 
+    void check_subcontracted_exit_inv() {
+        boost::mpl::for_each<base_ptrs>(check_base_.action(
+                boost::contract::aux::virtual_call::check_exit_inv));
+        this->check_exit_inv();
+    }
+
     void check_subcontracted_post() {
-        boost::mpl::for_each<base_ptrs>(check_base(*this,
-                boost::contract::virtual_body::check_post_only));
+        boost::mpl::for_each<base_ptrs>(check_base_.action(
+                boost::contract::aux::virtual_call::check_post));
         this->check_post();
     }
-    
-    void check_subcontracted_entry_inv() {
-        boost::mpl::for_each<base_ptrs>(check_base(*this,
-                boost::contract::virtual_body::check_entry_inv_only));
-        this->check_entry_inv();
-    }
-    
-    void check_subcontracted_exit_inv() {
-        boost::mpl::for_each<base_ptrs>(check_base(*this,
-                boost::contract::virtual_body::check_exit_inv_only));
-        this->check_exit_inv();
+
+    boost::contract::virtual_body virtual_call() { return virt_; }
+
+private:
+    void init() {
+        if(!virt_) {
+            virt_ = boost::contract::virtual_body(
+                    new boost::contract::aux::virtual_call());
+        }
+        check_base_.nest(this);
     }
 
     class check_base {
     public:
-        explicit check_base(subcontracted_pre_post_inv& outer,
-                boost::contract::virtual_body const virt) :
-            outer_(outer), virt_(virt)
-        {}
+        explicit check_base() : nest_(0),
+                action_(boost::contract::aux::virtual_call::user_call) {}
+
+        void nest(subcontracted_pre_post_inv* n) { nest_ = n; }
+
+        check_base& action(
+                boost::contract::aux::virtual_call::action_type const a) {
+            action_ = a;
+            return *this;
+        }
 
         template<class Base>
         void operator()(Base*) {
@@ -127,8 +157,10 @@ protected:
             typedef typename boost::mpl::pop_front<
                 typename boost::function_types::parameter_types<Func>::type
             >::type arg_types;
-            typedef typename boost::mpl::eval_if<boost::is_same<typename boost::
-                    mpl::back<arg_types>::type, boost::contract::virtual_body>,
+            typedef typename boost::mpl::eval_if<
+                boost::is_same<typename boost::mpl::back<arg_types>::type,
+                        boost::contract::virtual_body>
+            ,
                 boost::mpl::identity<arg_types>
             ,
                 boost::mpl::push_back<arg_types, boost::contract::virtual_body>
@@ -156,25 +188,36 @@ protected:
                     member_function_address<Base, base_virtual_func_ptr>();
             BOOST_CONTRACT_AUX_DEBUG(base_virtual_func);
             
-            Base* const base = outer_.object();
+            BOOST_CONTRACT_AUX_DEBUG(nest_);
+            Base* const base = nest_->object();
             BOOST_CONTRACT_AUX_DEBUG(base);
             
-            try { (base->*base_virtual_func)(outer_.arg0_, virt_); }
-            catch(boost::contract::aux::no_error const&) {
-                if(virt_ == boost::contract::virtual_body::check_pre_only) {
+            boost::contract::aux::virtual_call::action_type a =
+                    nest_->virt_->action;
+            nest_->virt_->action = action_;
+            try {
+                (base->*base_virtual_func)(nest_->arg0_, nest_->virt_);
+            } catch(boost::contract::aux::no_error const&) {
+                if(nest_->virt_->action ==
+                        boost::contract::aux::virtual_call::check_pre) {
+                    nest_->virt_->action = a;
                     throw; // Pre logic-or: 1st no_err stops (throw to caller).
                 }
             } catch(...) {
-                if(virt_ == boost::contract::virtual_body::check_pre_only) {
+                if(nest_->virt_->action ==
+                        boost::contract::aux::virtual_call::check_pre) {
                     // Pre logic-or: Ignore err, possibly checks up to caller.
                 }
             }
+            nest_->virt_->action = a;
         }
 
-        subcontracted_pre_post_inv& outer_;
-        boost::contract::virtual_body virt_;
+        subcontracted_pre_post_inv* nest_;
+        boost::contract::aux::virtual_call::action_type action_;
     };
 
+    check_base check_base_;
+    boost::contract::virtual_body virt_;
     // TODO: add_reference/perfect fwd to all these Arg-i types.
     // TODO: Support 0-to-n args.
     Arg0 arg0_;

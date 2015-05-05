@@ -4,11 +4,10 @@
 
 #include <boost/contract/virtual_body.hpp>
 #include <boost/contract/config.hpp>
-#include <boost/contract/aux_/none.hpp>
-#include <boost/shared_ptr.hpp>
-#include <boost/make_shared.hpp>
-#include <boost/pointer_cast.hpp>
-#include <boost/type_traits/add_const.hpp>
+#include <boost/contract/aux_/oldof.hpp>
+#include <boost/contract/aux_/virtual_call.hpp>
+#include <boost/type_traits/remove_reference.hpp>
+#include <boost/optional.hpp>
 #include <boost/preprocessor/config/config.hpp>
 #include <boost/config.hpp>
 
@@ -34,7 +33,6 @@
 #else
 
 #include <boost/preprocessor/facilities/overload.hpp>
-#include <boost/preprocessor/facilities/empty.hpp>
 #include <boost/preprocessor/cat.hpp>
 
 /* PUBLIC */
@@ -46,28 +44,30 @@ BOOST_CONTRACT_ERROR_macro_BOOST_CONTRACT_OLDOF_invalid_number_of_arguments_, \
 
 /* PRIVATE */
 
-#ifdef BOOST_NO_CXX11_AUTO_DECLARATIONS
-#   define BOOST_CONTRACT_OLDOF_TYPEOF_(value) /* nothing */
-#else
-#   include <boost/typeof/typeof.hpp>
-#   define BOOST_CONTRACT_OLDOF_TYPEOF_(value) BOOST_TYPEOF(value)
-#endif
-
 // NOTE: Following are not local macros, do NOT #undef them. These macro names
 // are use so all variadic macro argument numbers > 2 will generate appropriate
 // ERROR symbols.
 
 #define \
-BOOST_CONTRACT_ERROR_macro_BOOST_CONTRACT_OLDOF_invalid_number_of_arguments_2( \
-        v_opt, value) \
-    (boost::contract::skip_oldof(v_opt) ? boost::contract::oldof< \
-            BOOST_CONTRACT_OLDOF_TYPEOF_((value))>() : (value))
-
-#define \
 BOOST_CONTRACT_ERROR_macro_BOOST_CONTRACT_OLDOF_invalid_number_of_arguments_1( \
         value) \
+    (boost::contract::oldof BOOST_CONTRACT_OLDOF_TYPEOF_(value) ( \
+        boost::contract::copy_oldof() ? value : boost::contract::oldof() \
+    ))
+
+#define \
 BOOST_CONTRACT_ERROR_macro_BOOST_CONTRACT_OLDOF_invalid_number_of_arguments_2( \
-            BOOST_PP_EMPTY(), value)
+        v, value) \
+    (boost::contract::oldof BOOST_CONTRACT_OLDOF_TYPEOF_(value) ( \
+        v, boost::contract::copy_oldof(v) ? value : boost::contract::oldof() \
+    ))
+
+#ifdef BOOST_NO_CXX11_AUTO_DECLARATIONS
+#   define BOOST_CONTRACT_OLDOF_TYPEOF_(value) /* nothing */
+#else
+#   include <boost/typeof/typeof.hpp>
+#   define BOOST_CONTRACT_OLDOF_TYPEOF_(value) <BOOST_TYPEOF(value)>
+#endif
 
 #endif // VARIADICS
 
@@ -75,66 +75,42 @@ BOOST_CONTRACT_ERROR_macro_BOOST_CONTRACT_OLDOF_invalid_number_of_arguments_2( \
 
 namespace boost { namespace contract {
 
-template<typename T = boost::contract::aux::none> class oldof;
-
-// Used on compilers that do not support auto decl./type-of to erase old-value
-// type T (and later un-erase it via pointer cast in oldof template below).
-template<>
-class oldof<boost::contract::aux::none> {
-public:
-    oldof() : ptr_() {}
-
-    template<typename T> // This make_shared calls T's copy ctor.
-    oldof(T const& value) : ptr_(boost::make_shared<T>(value)) {}
-
-private:
-    boost::shared_ptr<void> ptr_;
-
-    template<typename T> friend class oldof; // Within same template family.
-};
-
-template<typename T>
-class oldof {
-public:
-    oldof() : ptr_() {}
-    
-    // This make_shared calls T's copy ctor.
-    oldof(T const& value) : ptr_(boost::make_shared<T>(value)) {}
-
-    // This casts the pointer (to un-erase the type), so no T copy here.
-    oldof(oldof<boost::contract::aux::none> const& old) :
-            ptr_(boost::static_pointer_cast<T>(old.ptr_)) {}
-
-    // Add const because contracts should not modify old-values.
-
-    typename boost::add_const<T>::type& operator*() const { return *ptr_; }
-
-    typename boost::add_const<T>::type* const operator->() const {
-        return ptr_.get();
-    }
-
-private:
-    boost::shared_ptr<T> ptr_;
-};
-
-bool skip_oldof(boost::contract::virtual_body const v) {
+bool copy_oldof(boost::contract::virtual_body v = 0) {
 #ifdef BOOST_CONTRACT_CONFIG_NO_POSTCONDITIONS
-    return true; // Never check post, so old-of never needed.
+    return false; // Never check post, so old-of never copied.
 #else
-    if(v == boost::contract::virtual_body::user_call ||
-            v == boost::contract::virtual_body::check_post_only) {
-        return false; // Checking post, so old-of needed.
-    }
-    return true; // Not checking post, so old-of not needed.
+    // Copy if user call (also !v) or virtual contract call for copy.
+    return !v || v->action == boost::contract::aux::virtual_call::user_call ||
+            v->action == boost::contract::aux::virtual_call::copy_oldof;
 #endif
 }
 
-bool skip_oldof() {
-#ifdef BOOST_CONTRACT_CONFIG_NO_POSTCONDITIONS
-    return true; // Never check post, so old-of never needed.
-#else
-    return false; // Contracts of virtual-body functions, always check post.
-#endif
+boost::contract::aux::oldof oldof() { return boost::contract::aux::oldof(); }
+
+// Un-erasure via explicit type T so to allow to use C++11 auto decl.
+template<typename T>
+boost::shared_ptr<typename boost::remove_reference<T>::type const>
+oldof(boost::contract::virtual_body v,
+        boost::contract::aux::oldof const& old) {
+    return boost::contract::aux::oldof(v, old);
+}
+
+// Un-erasure will be done based on explicit decl type (no auto allowed).
+boost::contract::aux::oldof oldof(boost::contract::virtual_body const v,
+        boost::contract::aux::oldof const& old) {
+    return boost::contract::aux::oldof(v, old);
+}
+
+// Un-erasure via explicit type T so to allow to use C++11 auto decl.
+template<typename T>
+boost::shared_ptr<typename boost::remove_reference<T>::type const> oldof(
+        boost::contract::aux::oldof const& old) {
+    return boost::contract::aux::oldof(0, old);
+}
+
+// Un-erasure will be done based on explicit decl type (no auto allowed).
+boost::contract::aux::oldof oldof(boost::contract::aux::oldof const& old) {
+    return boost::contract::aux::oldof(0, old);
 }
 
 } } // namespace

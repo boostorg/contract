@@ -2,6 +2,9 @@
 #ifndef BOOST_CONTRACT_HPP_
 #define BOOST_CONTRACT_HPP_
 
+// TODO: Include all public headers here. Consider moving non-independent
+// headers in a sudir like core/.
+
 #include <boost/contract/bases.hpp>
 #include <boost/contract/function.hpp>
 #include <boost/contract/type.hpp>
