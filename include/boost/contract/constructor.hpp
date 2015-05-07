@@ -2,16 +2,17 @@
 #ifndef BOOST_CONTRACT_CONSTRUCTOR_HPP_
 #define BOOST_CONTRACT_CONSTRUCTOR_HPP_
 
-#include <boost/contract/set/postcondition_only.hpp>
-#include <boost/contract/exception.hpp>
+#include <boost/contract/core/var.hpp> // Here so user can store contract.
+#include <boost/contract/core/set_postcondition_only.hpp>
+#include <boost/contract/aux_/exception.hpp>
 #include <boost/contract/aux_/function/constructor.hpp>
 #include <boost/make_shared.hpp>
 
 namespace boost { namespace contract {
 
 template<class Class>
-boost::contract::set::postcondition_only constructor(Class* const object) {
-    return boost::contract::set::postcondition_only(boost::make_shared<
+boost::contract::set_postcondition_only constructor(Class* const object) {
+    return boost::contract::set_postcondition_only(boost::make_shared<
             boost::contract::aux::function::constructor<Class> >(object));
 }
 

@@ -2,7 +2,8 @@
 #ifndef BOOST_CONTRACT_PROTECTED_MEMBER_HPP_
 #define BOOST_CONTRACT_PROTECTED_MEMBER_HPP_
 
-#include <boost/contract/set/precondition_postcondition.hpp>
+#include <boost/contract/core/var.hpp> // Here so user can store contract.
+#include <boost/contract/core/set_precondition_postcondition.hpp>
 #include <boost/contract/aux_/function/protected_member.hpp>
 #include <boost/make_shared.hpp>
 
@@ -10,8 +11,8 @@
 
 namespace boost { namespace contract {
 
-boost::contract::set::precondition_postcondition protected_member() {
-    return boost::contract::set::precondition_postcondition(boost::make_shared<
+boost::contract::set_precondition_postcondition protected_member() {
+    return boost::contract::set_precondition_postcondition(boost::make_shared<
             boost::contract::aux::function::protected_member>());
 }
 

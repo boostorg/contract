@@ -2,7 +2,6 @@
 #ifndef BOOST_CONTRACT_AUX_CHECK_PRE_POST_HPP_
 #define BOOST_CONTRACT_AUX_CHECK_PRE_POST_HPP_
 
-#include <boost/contract/exception.hpp>
 #include <boost/contract/aux_/exception.hpp>
 #include <boost/function.hpp>
 

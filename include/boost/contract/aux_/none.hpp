@@ -4,7 +4,8 @@
 
 namespace boost { namespace contract { namespace aux {
 
-struct none {};
+struct none { static none value; };
+none none::value;
 
 } } } // namespace
 

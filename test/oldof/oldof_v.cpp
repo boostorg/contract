@@ -1,9 +1,10 @@
 
+#include <iostream>
+#include "../aux_/friend.hpp"
 #include <boost/contract/oldof.hpp>
 #include <boost/contract/public_member.hpp>
 #include <boost/contract/base_types.hpp>
 #include <boost/contract/introspect.hpp>
-#include <boost/contract/config.hpp>
 #include <boost/detail/lightweight_test.hpp>
 #include <string>
 
@@ -19,7 +20,7 @@ private:
     str& operator=(str const&);
 };
 
-str& eval(str& s) { ++eval_count; return s; }
+str const& eval(str const& s) { ++eval_count; return s; }
 
 struct d {
     str s;
@@ -29,22 +30,25 @@ struct d {
     void invariant() const {}
     static void static_invariant() {}
 
-    void f(char const z, boost::contract::virtual_body v = 0) {
+    boost::contract::var f_contract(char const& z,
+            boost::contract::virtual_* v = 0) const {
         // Test explicit type declaration.
         boost::shared_ptr<str const> old_s = BOOST_CONTRACT_OLDOF(v, eval(s));
-        if(!v || v->action == boost::contract::aux::virtual_call::check_post) {
+        if(boost::contract::aux::test::friend_::checking_post(v)) {
             BOOST_TEST(old_s);
             BOOST_TEST_EQ(old_s->x, "d");
         } else {
             BOOST_TEST(!old_s);
         }
-        auto c = boost::contract::public_member(v, this)
+        return boost::contract::public_member(v, this)
             .precondition([&] {})
             .postcondition([&] { BOOST_TEST_EQ(old_s->x, "d"); })
         ;
-        f_body(z);
     }
-    virtual void f_body(char const z) { s.x += z; }
+    virtual void f(char const z) {
+        boost::contract::var contract = f_contract(z);
+        s.x += z;
+    }
 };
 
 struct c
@@ -61,23 +65,23 @@ struct c
     void invariant() const {}
     static void static_invariant() {}
 
-    void f(char const z, boost::contract::virtual_body v = 0) {
+    boost::contract::var f_contract(char const& z,
+            boost::contract::virtual_* v = 0) const {
         // Test auto type declaration (C++11).
         auto old_s = BOOST_CONTRACT_OLDOF(v, eval(s));
-        if(!v || v->action == boost::contract::aux::virtual_call::check_post) {
+        if(boost::contract::aux::test::friend_::checking_post(v)) {
             BOOST_TEST(old_s);
             BOOST_TEST_EQ(old_s->x, "c");
         } else {
             BOOST_TEST(!old_s);
         }
-        auto c = boost::contract::public_member<introspect_f>(v, this, &c::f, z)
+        return boost::contract::public_member<introspect_f_contract>(v, this, z)
             .precondition([&] {})
             .postcondition([&] { BOOST_TEST_EQ(old_s->x, "c"); })
         ;
-        f_body(z);
     }
-    virtual void f_body(char const z) = 0;
-    BOOST_CONTRACT_INTROSPECT(f)
+    virtual void f(char const z) = 0;
+    BOOST_CONTRACT_INTROSPECT(f_contract)
 };
 
 struct b {
@@ -88,21 +92,21 @@ struct b {
     void invariant() const {}
     static void static_invariant() {}
 
-    void f(char const z, boost::contract::virtual_body v = 0) {
+    boost::contract::var f_contract(char const& z,
+            boost::contract::virtual_* v = 0) const {
         boost::shared_ptr<str const> old_s = BOOST_CONTRACT_OLDOF(v, eval(s));
-        if(!v || v->action == boost::contract::aux::virtual_call::check_post) {
+        if(boost::contract::aux::test::friend_::checking_post(v)) {
             BOOST_TEST(old_s);
             BOOST_TEST_EQ(old_s->x, "b");
         } else {
             BOOST_TEST(!old_s);
         }
-        auto c = boost::contract::public_member(v, this)
+        return boost::contract::public_member(v, this)
             .precondition([&] {})
             .postcondition([&] { BOOST_TEST_EQ(old_s->x, "b"); })
         ;
-        f_body(z);
     }
-    virtual void f_body(char const z) = 0;
+    virtual void f(char const z) = 0;
 };
 
 struct a
@@ -119,22 +123,35 @@ struct a
     void invariant() const {}
     static void static_invariant() {}
 
-    void f(char const z, boost::contract::virtual_body v = 0) {
+    boost::contract::var f_contract(char const& z,
+            boost::contract::virtual_* v = 0) const {
         auto old_s = BOOST_CONTRACT_OLDOF(v, eval(s));
-        if(!v || v->action == boost::contract::aux::virtual_call::check_post) {
+        if(boost::contract::aux::test::friend_::checking_post(v)) {
             BOOST_TEST(old_s);
             BOOST_TEST_EQ(old_s->x, "a");
         } else {
             BOOST_TEST(!old_s);
         }
-        auto c = boost::contract::public_member<introspect_f>(v, this, &a::f, z)
-            .precondition([&] {})
-            .postcondition([&] { BOOST_TEST_EQ(old_s->x, "a"); })
+        return boost::contract::public_member<introspect_f_contract>(v, this, z)
+            .precondition([&] {
+        //        std::clog << "pre>>>" << old_s->x << "<<<" << std::endl;
+            })
+            .postcondition([&] {
+                std::clog << "post>>> " << old_s->x << "<<<" << std::endl;
+                BOOST_TEST_EQ(old_s->x, "a");
+            })
         ;
-        f_body(z);
     }
-    virtual void f_body(char const z) { s.x += z; }
-    BOOST_CONTRACT_INTROSPECT(f)
+    virtual void f(char const z) {
+        boost::shared_ptr<boost::contract::virtual_> v =
+                boost::make_shared<boost::contract::virtual_>();
+        boost::contract::var contract = f_contract(z, v.get());
+        std::clog << v->old_values_.size() << std::endl;
+        std::clog << "body start" << std::endl;
+        s.x += z;
+        std::clog << "body finish" << std::endl;
+    }
+    BOOST_CONTRACT_INTROSPECT(f_contract)
 };
 
 int main() {
@@ -150,17 +167,17 @@ int main() {
     BOOST_TEST_EQ(eval_count, 0);
 #endif
     
-    // Test with `v` but without bases.
-    copy_count = eval_count = 0;
-    d dd;
-    dd.f('z');
-#ifndef BOOST_CONTRACT_CONFIG_NO_POSTCONDITIONS
-    BOOST_TEST_EQ(copy_count, 1);
-    BOOST_TEST_EQ(eval_count, 1);
-#else
-    BOOST_TEST_EQ(copy_count, 0);
-    BOOST_TEST_EQ(eval_count, 0);
-#endif
+//    // Test with `v` but without bases.
+//    copy_count = eval_count = 0;
+//    d dd;
+//    dd.f('z');
+//#ifndef BOOST_CONTRACT_CONFIG_NO_POSTCONDITIONS
+//    BOOST_TEST_EQ(copy_count, 1);
+//    BOOST_TEST_EQ(eval_count, 1);
+//#else
+//    BOOST_TEST_EQ(copy_count, 0);
+//    BOOST_TEST_EQ(eval_count, 0);
+//#endif
 
     return boost::report_errors();
 }

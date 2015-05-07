@@ -2,17 +2,18 @@
 #ifndef BOOST_CONTRACT_AUX_OLDOF_HPP_
 #define BOOST_CONTRACT_AUX_OLDOF_HPP_
 
-#include <boost/contract/virtual_body.hpp>
+#include <boost/contract/core/virtual.hpp>
 #include <boost/contract/aux_/debug.hpp>
 #include <boost/make_shared.hpp>
 #include <boost/shared_ptr.hpp>
 
 namespace boost { namespace contract { namespace aux {
 
-struct oldof {
+class oldof { // Must allow copies (shallow pointer copies).
+public:
     oldof() : virt_(), value_() {} // Null value ptr when no oldof.
 
-    explicit oldof(boost::contract::virtual_body const virt, oldof const& old) :
+    explicit oldof(boost::contract::virtual_* const virt, oldof const& old) :
             virt_(virt), value_(old.value_) {}
 
     template<typename T>
@@ -30,18 +31,22 @@ struct oldof {
                     boost::static_pointer_cast<T const>(value_);
             BOOST_CONTRACT_AUX_DEBUG(result);
             return result;
-        } else if(virt_->action ==
-                boost::contract::aux::virtual_call::copy_oldof) {
+        } else if(
+            virt_->action_ == boost::contract::virtual_::user_call ||
+            virt_->action_ == boost::contract::virtual_::copy_oldof
+        ) {
             BOOST_CONTRACT_AUX_DEBUG(value_);
-            virt_->old_values.push_back(value_);
+            virt_->old_values_.push(value_);
+            std::clog << "pushed" << std::endl;
             return boost::shared_ptr<T const>();
         } else if(
-            virt_->action == boost::contract::aux::virtual_call::user_call ||
-            virt_->action == boost::contract::aux::virtual_call::check_post
+            virt_->action_ == boost::contract::virtual_::check_post ||
+            virt_->action_ == boost::contract::virtual_::check_this_post
         ) {
             BOOST_CONTRACT_AUX_DEBUG(!value_);
-            boost::shared_ptr<void> value = virt_->old_values.front();
-            virt_->old_values.pop_front();
+            boost::shared_ptr<void> value = virt_->old_values_.front();
+            virt_->old_values_.pop();
+            std::clog << "popped" << std::endl;
             BOOST_CONTRACT_AUX_DEBUG(value);
             boost::shared_ptr<T const> result = 
                     boost::static_pointer_cast<T const>(value);
@@ -53,7 +58,7 @@ struct oldof {
     }
 
 private:
-    boost::contract::virtual_body virt_;
+    boost::contract::virtual_* virt_;
     boost::shared_ptr<void> value_; // Type erased to `void*`.
 };
 

@@ -2,7 +2,7 @@
 #ifndef BOOST_CONTRACT_AUX_FUNCTION_PRIVATE_MEMBER_HPP_
 #define BOOST_CONTRACT_AUX_FUNCTION_PRIVATE_MEMBER_HPP_
 
-#include <boost/contract/exception.hpp>
+#include <boost/contract/core/exception.hpp>
 #include <boost/contract/aux_/function/free_function.hpp>
 
 namespace boost { namespace contract { namespace aux { namespace function {

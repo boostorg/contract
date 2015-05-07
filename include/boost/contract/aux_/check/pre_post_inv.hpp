@@ -2,9 +2,9 @@
 #ifndef BOOST_CONTRACT_AUX_CHECK_PRE_POST_INV_HPP_
 #define BOOST_CONTRACT_AUX_CHECK_PRE_POST_INV_HPP_
 
-#include <boost/contract/exception.hpp>
-#include <boost/contract/config.hpp>
+#include <boost/contract/core/config.hpp>
 #include <boost/contract/aux_/check/pre_post.hpp>
+#include <boost/contract/aux_/exception.hpp>
 #include <boost/contract/aux_/type_traits/invariant.hpp>
 #include <boost/contract/aux_/debug.hpp>
 #include <boost/type_traits/add_const.hpp>

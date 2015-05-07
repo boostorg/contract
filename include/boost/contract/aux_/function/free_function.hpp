@@ -2,7 +2,7 @@
 #ifndef BOOST_CONTRACT_AUX_FUNCTION_FREE_FUNCTION_HPP_
 #define BOOST_CONTRACT_AUX_FUNCTION_FREE_FUNCTION_HPP_
 
-#include <boost/contract/exception.hpp>
+#include <boost/contract/core/exception.hpp>
 #include <boost/contract/aux_/check/pre_post.hpp>
 #include <exception>
 

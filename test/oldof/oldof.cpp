@@ -1,7 +1,6 @@
 
-#include <boost/contract/oldof.hpp>
 #include <boost/contract/free_function.hpp>
-#include <boost/contract/config.hpp>
+#include <boost/contract/oldof.hpp>
 #include <boost/detail/lightweight_test.hpp>
 
 // Test old-values evaluated and copied only once.
@@ -16,14 +15,14 @@ private:
     num& operator=(num const&);
 };
 
-num& eval(num& n) { ++eval_count; return n; }
+num const& eval(num const& n) { ++eval_count; return n; }
 
 void swap(num& a, num& b) {
     // Test explicit type declaration.
     boost::shared_ptr<num const> old_a = BOOST_CONTRACT_OLDOF(eval(a));
     // Test auto type declaration (C++11).
     auto old_b = BOOST_CONTRACT_OLDOF(eval(b));
-    auto c = boost::contract::free_function()
+    boost::contract::var contract = boost::contract::free_function()
         .precondition([&] {})
         .postcondition([&] {
             BOOST_TEST_EQ(a.i, old_b->i);

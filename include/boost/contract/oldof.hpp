@@ -2,29 +2,17 @@
 #ifndef BOOST_CONTRACT_OLDOF_HPP_
 #define BOOST_CONTRACT_OLDOF_HPP_
 
-#include <boost/contract/virtual_body.hpp>
-#include <boost/contract/config.hpp>
+#include <boost/contract/core/virtual.hpp>
+#include <boost/contract/core/config.hpp>
 #include <boost/contract/aux_/oldof.hpp>
-#include <boost/contract/aux_/virtual_call.hpp>
 #include <boost/type_traits/remove_reference.hpp>
 #include <boost/optional.hpp>
 #include <boost/preprocessor/config/config.hpp>
 #include <boost/config.hpp>
 
-// TODO: There is a problem with old-of of virtual body functions for which
-// old-of of the base function are evaluated *after* the derived virtual
-// function body is executed (so invalidating old-of values)... Can I fix this?
-// Maybe passing a (mutable) pointer v and implementing a "stack" (like a map
-// of boost::any indexed by old-of #) inside the mutable object pointed by v...
-
-// IMPORTANT: Following old-of templates and macros ensure that:
-//  1.  Old-value expressions are evaluated only once and only when old-of
-//      should not be skipped.
-//  2.  Old-values are copied only once (using old-value type copy constructor)
-//      and only when old-of should not be skipped.
-// Old-of are skipped if either postconditions are disabled all together (see
-// also CONFIG_NO_POSTCONDITONS), or if virtual-body functions are called to
-// not check postconditions (as controlled by the "v" extra parameter).
+// IMPORTANT: The following makes sure old values expressions are evaluated
+// only once, they are copied only once, and only when preconditions are
+// enabled.
 
 #if !BOOST_PP_VARIADICS
 
@@ -75,13 +63,13 @@ BOOST_CONTRACT_ERROR_macro_BOOST_CONTRACT_OLDOF_invalid_number_of_arguments_2( \
 
 namespace boost { namespace contract {
 
-bool copy_oldof(boost::contract::virtual_body v = 0) {
+bool copy_oldof(boost::contract::virtual_* const v = 0) {
 #ifdef BOOST_CONTRACT_CONFIG_NO_POSTCONDITIONS
     return false; // Never check post, so old-of never copied.
 #else
-    // Copy if user call (also !v) or virtual contract call for copy.
-    return !v || v->action == boost::contract::aux::virtual_call::user_call ||
-            v->action == boost::contract::aux::virtual_call::copy_oldof;
+    // Copy if user call (so also if !v) or virtual contract call for copy.
+    return !v || v->action_ == boost::contract::virtual_::user_call ||
+            v->action_ == boost::contract::virtual_::copy_oldof;
 #endif
 }
 
@@ -90,13 +78,13 @@ boost::contract::aux::oldof oldof() { return boost::contract::aux::oldof(); }
 // Un-erasure via explicit type T so to allow to use C++11 auto decl.
 template<typename T>
 boost::shared_ptr<typename boost::remove_reference<T>::type const>
-oldof(boost::contract::virtual_body v,
+oldof(boost::contract::virtual_* const v,
         boost::contract::aux::oldof const& old) {
     return boost::contract::aux::oldof(v, old);
 }
 
 // Un-erasure will be done based on explicit decl type (no auto allowed).
-boost::contract::aux::oldof oldof(boost::contract::virtual_body const v,
+boost::contract::aux::oldof oldof(boost::contract::virtual_* const v,
         boost::contract::aux::oldof const& old) {
     return boost::contract::aux::oldof(v, old);
 }

@@ -2,7 +2,7 @@
 #ifndef BOOST_CONTRACT_AUX_TYPE_TRAITS_BASES_HPP_
 #define BOOST_CONTRACT_AUX_TYPE_TRAITS_BASES_HPP_
 
-#include <boost/contract/config.hpp>
+#include <boost/contract/core/config.hpp>
 #include <boost/contract/aux_/type_traits/introspection.hpp>
 
 namespace boost { namespace contract { namespace aux { namespace type_traits {

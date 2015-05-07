@@ -2,7 +2,7 @@
 #ifndef BOOST_CONTRACT_AUX_TYPE_TRAITS_INVARIANT_HPP_
 #define BOOST_CONTRACT_AUX_TYPE_TRAITS_INVARIANT_HPP_
 
-#include <boost/contract/config.hpp>
+#include <boost/contract/core/config.hpp>
 #include <boost/contract/aux_/type_traits/introspection.hpp>
 #include <boost/function_types/property_tags.hpp>
 #include <boost/mpl/vector.hpp>

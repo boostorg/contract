@@ -2,7 +2,7 @@
 #ifndef BOOST_CONTRACT_ASSERT_HPP_
 #define BOOST_CONTRACT_ASSERT_HPP_
 
-#include <boost/contract/exception.hpp>
+#include <boost/contract/core/exception.hpp>
 #include <boost/preprocessor/stringize.hpp>
 
 /* PUBLIC */

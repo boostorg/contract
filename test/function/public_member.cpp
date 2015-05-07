@@ -15,62 +15,54 @@ boost::contract::aux::test::oteststream out;
 // Test inheritance level 0 (no bases).
 template<typename T>
 struct e {
-    void invariant() const {
-        out << "e::inv" << std::endl;
-    }
-    
-    static void static_invariant() {
-        out << "e::static_inv" << std::endl;
-    }
+    void invariant() const { out << "e::inv" << std::endl; }
+    static void static_invariant() { out << "e::static_inv" << std::endl; }
 
     virtual ~e() {}
 
     // Test contract allows (but does not require) extra introspection,
     // function pointer, etc. parameter because class has no bases.
-    void f(T& x, boost::contract::virtual_body v = 0) {
-        auto c = boost::contract::public_member<introspect_f>(v, this, &e::f, x)
-            .precondition([&]() {
+    boost::contract::var f_contract(T const& x,
+            boost::contract::virtual_* v = 0) const {
+        return boost::contract::public_member<introspect_f_contract>(v, this, x)
+            .precondition([&] {
                 out << "e::f::pre" << std::endl;
                 BOOST_CONTRACT_ASSERT(false); // To check subcontracted pre.
             })
-            .postcondition([&]() {
-                out << "e::f::post" << std::endl;
-            })
+            .postcondition([&] { out << "e::f::post" << std::endl; })
         ;
-        f_body(x);
     }
-    virtual void f_body(T& x) = 0;
-    BOOST_CONTRACT_INTROSPECT(f)
+    virtual void f(T const& x) = 0;
+    BOOST_CONTRACT_INTROSPECT(f_contract)
 };
 
 // Test inheritance level 0 (no bases).
 template<typename T>
 struct d {
-    void invariant() const {
-        out << "d::inv" << std::endl;
-    }
-    
-    static void static_invariant() {
-        out << "d::static_inv" << std::endl;
-    }
+    void invariant() const { out << "d::inv" << std::endl; }
+    static void static_invariant() { out << "d::static_inv" << std::endl; }
 
     virtual ~d() {}
 
     // Test contract does not require (but allows) extra introspection,
     // function pointer, etc. parameter because class has no bases.
-    void f(T& x, boost::contract::virtual_body v = 0) {
-        auto c = boost::contract::public_member(v, this)
-            .precondition([&]() {
+    boost::contract::var f_contract(T const& x,
+            boost::contract::virtual_* v = 0) const {
+        return boost::contract::public_member(v, this)
+            .precondition([&] {
                 out << "d::f::pre" << std::endl;
                 BOOST_CONTRACT_ASSERT(false); // To check subcontracted pre.
             })
-            .postcondition([&]() {
-                out << "d::f::post" << std::endl;
-            })
+            .postcondition([&] { out << "d::f::post" << std::endl; })
         ;
-        f_body(x);
     }
-    virtual void f_body(T& x) = 0;
+    virtual void f(T const& x) {
+        boost::contract::var contract = f_contract(x);
+        out << "d::f::body" << std::endl;
+    }
+    
+    // Test non-contracted virtual function in contracted base.
+    virtual void k() = 0;
 };
 
 // Test inheritance level 1 and multiple inheritance (both contracted bases).
@@ -82,34 +74,29 @@ struct c
     typedef BOOST_CONTRACT_BASE_TYPES(BASES) base_types;
     #undef BASES
 
-    void invariant() const {
-        out << "c::inv" << std::endl;
-    }
-    
-    static void static_invariant() {
-        out << "c::static_inv" << std::endl;
-    }
+    void invariant() const { out << "c::inv" << std::endl; }
+    static void static_invariant() { out << "c::static_inv" << std::endl; }
     
     virtual ~c() {}
-    
-    // Test virtual overrides virtual function.
-    void f(T& x, boost::contract::virtual_body v = 0) {
-        auto c = boost::contract::public_member<introspect_f>(v, this, &c::f, x)
-            .precondition([&]() {
-                out << "c::f::pre" << std::endl;
-                BOOST_CONTRACT_ASSERT(false); // To check subcontracted pre.
-            })
-            .postcondition([&]() {
-                out << "c::f::post" << std::endl;
-            })
-        ;
-        f_body(x);
-    }
-    virtual void f_body(T& x) {}
-    BOOST_CONTRACT_INTROSPECT(f)
 
-    // Test non-contracted virtual function in contracted base.
-    virtual void k() = 0;
+    // Test virtual overrides virtual function.
+    boost::contract::var f_contract(T const& x,
+            boost::contract::virtual_* v = 0) const {
+        return boost::contract::public_member<introspect_f_contract>(v, this, x)
+            .precondition([&] {
+                out << "c::f::pre" << std::endl;
+                BOOST_CONTRACT_ASSERT(x < 0); // To check subcontracted pre.
+            })
+            .postcondition([&] { out << "c::f::post" << std::endl; })
+        ;
+    }
+    virtual void f(T const& x) {
+        boost::contract::var contract = f_contract(x);
+        out << "c::f::body" << std::endl;
+    }
+    BOOST_CONTRACT_INTROSPECT(f_contract)
+
+    void k() {}
 };
 
 // Test a non-contracted base.
@@ -130,33 +117,21 @@ struct a
     typedef BOOST_CONTRACT_BASE_TYPES(BASES) base_types;
     #undef BASES
 
-    void invariant() const {
-        out << "a::inv" << std::endl;
-    }
-
-    static void static_invariant() {
-        out << "a::static_inv" << std::endl;
-    }
+    void invariant() const { out << "a::inv" << std::endl; }
+    static void static_invariant() { out << "a::static_inv" << std::endl; }
 
     virtual ~a() {}
     
     // Test non-virtual overrides virtual function.
-    void f(T& x) {
-        auto c = boost::contract::public_member<introspect_f>(
-                this, &a::f, x)
-            .precondition([&]() {
-                out << "a::f::pre" << std::endl;
-            })
-            .postcondition([&]() {
-                out << "a::f::post" << std::endl;
-            }) 
+    void f(T const& x) {
+        boost::contract::var contract = boost::contract::public_member<
+                introspect_f_contract>(this, x)
+            .precondition([&] { out << "a::f::pre" << std::endl; })
+            .postcondition([&] { out << "a::f::post" << std::endl; }) 
         ;
-        f_body(x);
+        out << "a::f::body" << std::endl;
     }
-    void f_body(T& x) { out << "a::f::body" << std::endl; }
-    BOOST_CONTRACT_INTROSPECT(f)
-
-    void k() {}
+    BOOST_CONTRACT_INTROSPECT(f_contract)
 
 private:
     void g() {}
@@ -164,12 +139,6 @@ private:
 
 int main() {
     std::ostringstream ok;
-
-    a<int> aa;
-    int x = 123;
-    
-    out.str("");
-    aa.f(x);
     ok.str("");
     ok
         << "e::static_inv" << std::endl
@@ -201,6 +170,69 @@ int main() {
         << "d::f::post" << std::endl
         << "c::f::post" << std::endl
         << "a::f::post" << std::endl
+    ;
+
+    typedef int i;
+    typedef unsigned int u;
+    i x = 123;
+
+    // Test virtual call via derived class.
+    a<i, u> ai;
+    out.str("");
+    ai.f(x);
+    BOOST_TEST(out.check(ok.str()));
+    
+    // Test virtual call via base class reference.
+    out << std::endl;
+    c<i, u>& ci = ai;
+    out.str("");
+    ci.f(x);
+    BOOST_TEST(out.check(ok.str()));
+    
+    // Test virtual call via base class pointer.
+    out << std::endl;
+    d<i>* di = &ai;
+    out.str("");
+    di->f(x);
+    BOOST_TEST(out.check(ok.str()));
+
+    // Test pure virtual call via abstract base class (reference).
+    out << std::endl;
+    e<i>& ei = ci;
+    out.str("");
+    ei.f(x);
+    BOOST_TEST(out.check(ok.str()));
+    
+    // Test virtual call to derived class c (to double check no a's contracts).
+    out << std::endl;
+    c<i, u> cii;
+    out.str("");
+    cii.f(-x); // Negative x so c::f pre will pass this time (not base anymore).
+    ok.str("");
+    ok
+        << "e::static_inv" << std::endl
+        << "e::inv" << std::endl
+        << "d::static_inv" << std::endl
+        << "d::inv" << std::endl
+        << "c::static_inv" << std::endl
+        << "c::inv" << std::endl
+
+        << "e::f::pre" << std::endl
+        << "d::f::pre" << std::endl
+        << "c::f::pre" << std::endl
+        
+        << "c::f::body" << std::endl
+        
+        << "e::static_inv" << std::endl
+        << "e::inv" << std::endl
+        << "d::static_inv" << std::endl
+        << "d::inv" << std::endl
+        << "c::static_inv" << std::endl
+        << "c::inv" << std::endl
+        
+        << "e::f::post" << std::endl
+        << "d::f::post" << std::endl
+        << "c::f::post" << std::endl
     ;
     BOOST_TEST(out.check(ok.str()));
 
