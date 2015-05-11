@@ -1,4 +1,8 @@
 
+subdir-run const : free_function ;
+subdir-run const : public_member ;
+subdir-run const : public_virtual_member ;
+
 subdir-run function : constructor ;
 subdir-run function : destructor ;
 subdir-run function : public_member ;

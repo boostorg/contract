@@ -2,13 +2,14 @@
 #ifndef BOOST_CONTRACT_EXCEPTION_HPP_
 #define BOOST_CONTRACT_EXCEPTION_HPP_
 
+//#include <boost/thread/mutex.hpp>
 #include <boost/config.hpp>
 #include <exception>
 #include <sstream>
+#include <string>
+#include <iostream>
 
 namespace boost { namespace contract {
-
-// Exceptions.
 
 struct assertion_failure : public std::exception {
     explicit assertion_failure(char const* const file = "",
@@ -36,7 +37,7 @@ private:
         if(std::string(code_) != "") text << " \"" << code_ << "\"";
         text << " failed";
         if(std::string(file_) != "") {
-            text << ": \"" << file_ << "\"";
+            text << ": file \"" << file_ << "\"";
             if(line_ != 0) text << ", line " << line_;
         }
         what_ = text.str();
@@ -48,8 +49,6 @@ private:
     std::string what_;
 };
 
-// Handlers.
-
 enum from {
     from_constructor,
     from_destructor,
@@ -59,104 +58,241 @@ enum from {
     from_free_function
 };
 
-typedef void (*failure_handler)(from);
+typedef void (*assertion_failed_handler)(from);
 
-namespace aux {
-    extern failure_handler pre_failure_handler;
-    extern failure_handler post_failure_handler;
+namespace exception_ {
+    enum failed_key {
+        pre_key,
+        post_key,
+        const_entry_inv_key,
+        const_volatile_entry_inv_key,
+        static_entry_inv_key,
+        const_exit_inv_key,
+        const_volatile_exit_inv_key,
+        static_exit_inv_key,
+    };
 
-    extern failure_handler const_entry_inv_failure_handler;
-    extern failure_handler const_volatile_entry_inv_failure_handler;
-    extern failure_handler static_entry_inv_failure_handler;
+    template<failed_key Key>
+    void default_handler(from) {
+        std::string s = "";
+        switch(Key) {
+            case pre_key:
+                s = "precondition "; break;
+            case post_key:
+                s = "postcondition "; break;
+            case const_entry_inv_key:
+                s = "const entry invariant "; break;
+            case const_volatile_entry_inv_key:
+                s = "const volatile entry invariant "; break;
+            case static_entry_inv_key:
+                s = "static entry invariant "; break;
+            case const_exit_inv_key:
+                s= "const exit invariant "; break;
+            case const_volatile_exit_inv_key:
+                s= "const volatile exit invariant "; break;
+            case static_exit_inv_key:
+                s = "static exit invariant "; break;
+            // No default (so compiler warning/error on missing enum case).
+        }
+        try {
+            throw;
+        } catch(boost::contract::assertion_failure const& error) {
+            // what = 'assertion "..." failed: ...'.
+            std::cerr << s << error.what() << std::endl;
+        } catch(std::exception const& error) {
+            std::cerr << s << "checking threw standard exception with " <<
+                    "what(): " << error.what() << std::endl;
+        } catch(...) {
+            std::cerr << s << "checking threw unknown exception" <<
+                    std::endl;
+        }
+        std::terminate(); // Default handlers log and call terminate.
+    }
 
-    extern failure_handler const_exit_inv_failure_handler;
-    extern failure_handler const_volatile_exit_inv_failure_handler;
-    extern failure_handler static_exit_inv_failure_handler;
+    // TODO: These (and some of the related def code) should be moved in a .cpp.
+    //boost::mutex pre_failed_mutex;
+    assertion_failed_handler pre_failed_handler =
+            &default_handler<pre_key>;
+    
+    //boost::mutex post_failed_mutex;
+    assertion_failed_handler post_failed_handler =
+            &default_handler<post_key>;
+    
+    //boost::mutex const_entry_inv_failed_mutex;
+    assertion_failed_handler const_entry_inv_failed_handler =
+            &default_handler<const_entry_inv_key>;
+    
+    //boost::mutex const_volatile_entry_inv_failed_mutex;
+    assertion_failed_handler const_volatile_entry_inv_failed_handler =
+            &default_handler<const_volatile_entry_inv_key>;
+    
+    //boost::mutex static_entry_inv_failed_mutex;
+    assertion_failed_handler static_entry_inv_failed_handler =
+            &default_handler<static_entry_inv_key>;
+    
+    //boost::mutex const_exit_inv_failed_mutex;
+    assertion_failed_handler const_exit_inv_failed_handler =
+            &default_handler<const_exit_inv_key>;
+    
+    //boost::mutex const_volatile_exit_inv_failed_mutex;
+    assertion_failed_handler const_volatile_exit_inv_failed_handler =
+            &default_handler<const_volatile_exit_inv_key>;
+    
+    //boost::mutex static_exit_inv_failed_mutex;
+    assertion_failed_handler static_exit_inv_failed_handler =
+            &default_handler<static_exit_inv_key>;
 }
 
-failure_handler set_precondition_failure(failure_handler f)
-        BOOST_NOEXCEPT_OR_NOTHROW {
-    failure_handler result = boost::contract::aux::pre_failure_handler;
-    boost::contract::aux::pre_failure_handler = f;
+#define BOOST_CONTRACT_EXCEPTION_SET_HANDLER_(_mutex, handler, f) \
+    /*boost::mutex::scoped_lock lock(exception_::_mutex);*/ \
+    assertion_failed_handler result = exception_::handler; \
+    exception_::handler = f; \
     return result;
-}
+    
+#define BOOST_CONTRACT_EXCEPTION_GET_HANDLER_(_mutex, handler) \
+    /*boost::mutex::scoped_lock lock(exception_::_mutex)*/; \
+    return exception_::handler;
+    
+#define BOOST_CONTRACT_EXCEPTION_CALL_HANDLER_(_mutex, handler, where) \
+    /*boost::mutex::scoped_lock lock(exception_::_mutex);*/ \
+    exception_::handler(where);
 
-failure_handler set_postcondition_failure(failure_handler f)
+assertion_failed_handler set_precondition_failed(assertion_failed_handler f)
         BOOST_NOEXCEPT_OR_NOTHROW {
-    failure_handler result = boost::contract::aux::post_failure_handler;
-    boost::contract::aux::post_failure_handler = f;
-    return result;
+    BOOST_CONTRACT_EXCEPTION_SET_HANDLER_(pre_failed_mutex, pre_failed_handler,
+            f)
+}
+assertion_failed_handler get_precondition_failed() BOOST_NOEXCEPT_OR_NOTHROW {
+    BOOST_CONTRACT_EXCEPTION_GET_HANDLER_(pre_failed_mutex, pre_failed_handler)
+}
+void precondition_failed(from where) /* can throw */ {
+    BOOST_CONTRACT_EXCEPTION_CALL_HANDLER_(pre_failed_mutex, pre_failed_handler,
+            where)
 }
 
-// Entry invariants.
-
-failure_handler set_const_entry_invariant_failure(failure_handler f)
+assertion_failed_handler set_postcondition_failed(assertion_failed_handler f)
         BOOST_NOEXCEPT_OR_NOTHROW {
-    failure_handler result = boost::contract::aux::
-            const_entry_inv_failure_handler;
-    boost::contract::aux::const_entry_inv_failure_handler = f;
-    return result;
+    BOOST_CONTRACT_EXCEPTION_SET_HANDLER_(post_failed_mutex,
+            post_failed_handler, f)
+}
+assertion_failed_handler get_postcondition_failed() BOOST_NOEXCEPT_OR_NOTHROW {
+    BOOST_CONTRACT_EXCEPTION_GET_HANDLER_(post_failed_mutex,
+            post_failed_handler)
+}
+void postcondition_failed(from where) /* can throw */ {
+    BOOST_CONTRACT_EXCEPTION_CALL_HANDLER_(post_failed_mutex,
+            post_failed_handler, where)
 }
 
-failure_handler set_const_volatile_entry_invariant_failure(failure_handler f)
+assertion_failed_handler set_const_entry_invariant_failed(
+        assertion_failed_handler f) BOOST_NOEXCEPT_OR_NOTHROW {
+    BOOST_CONTRACT_EXCEPTION_SET_HANDLER_(const_entry_inv_failed_mutex,
+            const_entry_inv_failed_handler, f)
+}
+assertion_failed_handler get_const_entry_invariant_failed()
         BOOST_NOEXCEPT_OR_NOTHROW {
-    failure_handler result = boost::contract::aux::
-            const_volatile_entry_inv_failure_handler;
-    boost::contract::aux::const_volatile_entry_inv_failure_handler = f;
-    return result;
+    BOOST_CONTRACT_EXCEPTION_GET_HANDLER_(const_entry_inv_failed_mutex,
+            const_entry_inv_failed_handler)
+}
+void const_entry_invariant_failed(from where) /* can throw */ {
+    BOOST_CONTRACT_EXCEPTION_CALL_HANDLER_(const_entry_inv_failed_mutex,
+            const_entry_inv_failed_handler, where)
 }
 
-failure_handler set_static_entry_invariant_failure(failure_handler f)
+assertion_failed_handler set_const_volatile_entry_invariant_failed(
+        assertion_failed_handler f) BOOST_NOEXCEPT_OR_NOTHROW {
+    BOOST_CONTRACT_EXCEPTION_SET_HANDLER_(const_volatile_entry_inv_failed_mutex,
+            const_volatile_entry_inv_failed_handler, f)
+}
+assertion_failed_handler get_const_volatile_entry_invariant_failed()
         BOOST_NOEXCEPT_OR_NOTHROW {
-    failure_handler result = boost::contract::aux::
-            static_entry_inv_failure_handler;
-    boost::contract::aux::static_entry_inv_failure_handler = f;
-    return result;
+    BOOST_CONTRACT_EXCEPTION_GET_HANDLER_(const_volatile_entry_inv_failed_mutex,
+            const_volatile_entry_inv_failed_handler)
+}
+void const_volatile_entry_invariant_failed(from where) /* can throw */ {
+    BOOST_CONTRACT_EXCEPTION_CALL_HANDLER_(
+        const_volatile_entry_inv_failed_mutex, 
+        const_volatile_entry_inv_failed_handler,
+        where
+    )
 }
 
-void set_entry_invariant_failure(failure_handler f) BOOST_NOEXCEPT_OR_NOTHROW {
-    set_const_entry_invariant_failure(f);
-    set_const_volatile_entry_invariant_failure(f);
-    set_static_entry_invariant_failure(f);
+assertion_failed_handler set_static_entry_invariant_failed(
+        assertion_failed_handler f) BOOST_NOEXCEPT_OR_NOTHROW {
+    BOOST_CONTRACT_EXCEPTION_SET_HANDLER_(static_entry_inv_failed_mutex,
+            static_entry_inv_failed_handler, f)
 }
-
-// Exit invariants.
-
-failure_handler set_const_exit_invariant_failure(failure_handler f)
+assertion_failed_handler get_static_entry_invariant_failed()
         BOOST_NOEXCEPT_OR_NOTHROW {
-    failure_handler result = boost::contract::aux::
-            const_exit_inv_failure_handler;
-    boost::contract::aux::const_exit_inv_failure_handler = f;
-    return result;
+    BOOST_CONTRACT_EXCEPTION_GET_HANDLER_(static_entry_inv_failed_mutex,
+            static_entry_inv_failed_handler)
+}
+void static_entry_invariant_failed(from where) /* can throw */ {
+    BOOST_CONTRACT_EXCEPTION_CALL_HANDLER_(static_entry_inv_failed_mutex,
+            static_entry_inv_failed_handler, where)
 }
 
-failure_handler set_const_volatile_exit_invariant_failure(failure_handler f)
+assertion_failed_handler set_const_exit_invariant_failed(
+        assertion_failed_handler f) BOOST_NOEXCEPT_OR_NOTHROW {
+    BOOST_CONTRACT_EXCEPTION_SET_HANDLER_(const_exit_inv_failed_mutex,
+            const_exit_inv_failed_handler, f)
+}
+assertion_failed_handler get_const_exit_invariant_failed()
         BOOST_NOEXCEPT_OR_NOTHROW {
-    failure_handler result = boost::contract::aux::
-            const_volatile_exit_inv_failure_handler;
-    boost::contract::aux::const_volatile_exit_inv_failure_handler = f;
-    return result;
+    BOOST_CONTRACT_EXCEPTION_GET_HANDLER_(const_exit_inv_failed_mutex,
+            const_exit_inv_failed_handler)
+}
+void const_exit_invariant_failed(from where) /* can throw */ {
+    BOOST_CONTRACT_EXCEPTION_CALL_HANDLER_(const_exit_inv_failed_mutex,
+            const_exit_inv_failed_handler, where)
 }
 
-failure_handler set_static_exit_invariant_failure(failure_handler f)
+assertion_failed_handler set_const_volatile_exit_invariant_failed(
+        assertion_failed_handler f) BOOST_NOEXCEPT_OR_NOTHROW {
+    BOOST_CONTRACT_EXCEPTION_SET_HANDLER_(const_volatile_exit_inv_failed_mutex,
+            const_volatile_exit_inv_failed_handler, f)
+}
+assertion_failed_handler get_const_volatile_exit_invariant_failed()
         BOOST_NOEXCEPT_OR_NOTHROW {
-    failure_handler result = boost::contract::aux::
-            static_exit_inv_failure_handler;
-    boost::contract::aux::static_exit_inv_failure_handler = f;
-    return result;
+    BOOST_CONTRACT_EXCEPTION_GET_HANDLER_(const_volatile_exit_inv_failed_mutex,
+            const_volatile_exit_inv_failed_handler)
+}
+void const_volatile_exit_invariant_failed(from where) /* can throw */ {
+    BOOST_CONTRACT_EXCEPTION_CALL_HANDLER_(const_volatile_exit_inv_failed_mutex,
+            const_volatile_exit_inv_failed_handler, where)
 }
 
-void set_exit_invariant_failure(failure_handler f) BOOST_NOEXCEPT_OR_NOTHROW {
-    set_const_exit_invariant_failure(f);
-    set_const_volatile_exit_invariant_failure(f);
-    set_static_exit_invariant_failure(f);
+assertion_failed_handler set_static_exit_invariant_failed(
+        assertion_failed_handler f) BOOST_NOEXCEPT_OR_NOTHROW {
+    BOOST_CONTRACT_EXCEPTION_SET_HANDLER_(static_exit_inv_failed_mutex,
+            static_exit_inv_failed_handler, f)
+}
+assertion_failed_handler get_static_exit_invariant_failed()
+        BOOST_NOEXCEPT_OR_NOTHROW {
+    BOOST_CONTRACT_EXCEPTION_GET_HANDLER_(static_exit_inv_failed_mutex,
+            static_exit_inv_failed_handler)
+}
+void static_exit_invariant_failed(from where) /* can throw */ {
+    BOOST_CONTRACT_EXCEPTION_CALL_HANDLER_(static_exit_inv_failed_mutex,
+            static_exit_inv_failed_handler, where)
 }
 
-// All invariants.
-
-void set_invariant_failure(failure_handler f) BOOST_NOEXCEPT_OR_NOTHROW {
-    set_entry_invariant_failure(f);
-    set_exit_invariant_failure(f);
+void set_entry_invariant_failed(assertion_failed_handler f)
+        BOOST_NOEXCEPT_OR_NOTHROW {
+    set_const_entry_invariant_failed(f);
+    set_const_volatile_entry_invariant_failed(f);
+    set_static_entry_invariant_failed(f);
+}
+void set_exit_invariant_failed(assertion_failed_handler f)
+        BOOST_NOEXCEPT_OR_NOTHROW {
+    set_const_exit_invariant_failed(f);
+    set_const_volatile_exit_invariant_failed(f);
+    set_static_exit_invariant_failed(f);
+}
+void set_invariant_failed(assertion_failed_handler f)
+        BOOST_NOEXCEPT_OR_NOTHROW {
+    set_entry_invariant_failed(f);
+    set_exit_invariant_failed(f);
 }
 
 } } // namespace

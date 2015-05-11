@@ -1,41 +1,43 @@
 
-#ifndef BOOST_CONTRACT_AUX_FUNCTION_FREE_FUNCTION_HPP_
-#define BOOST_CONTRACT_AUX_FUNCTION_FREE_FUNCTION_HPP_
+#ifndef BOOST_CONTRACT_AUX_FREE_FUNCTION_HPP_
+#define BOOST_CONTRACT_AUX_FREE_FUNCTION_HPP_
 
 #include <boost/contract/core/exception.hpp>
-#include <boost/contract/aux_/check/pre_post.hpp>
+#include <boost/contract/core/call.hpp>
+#include <boost/contract/aux_/condition/check_pre_post.hpp>
+#include <boost/shared_ptr.hpp>
 #include <exception>
 
-namespace boost { namespace contract { namespace aux { namespace function {
+namespace boost { namespace contract { namespace aux {
 
-class free_function : public boost::contract::aux::check::pre_post {
+class free_function : public boost::contract::aux::check_pre_post {
 public:
-    explicit free_function(boost::contract::from const from =
-            boost::contract::from_free_function) :
-        boost::contract::aux::check::pre_post(from)
-    { entry(); }
+    explicit free_function() :
+        boost::contract::aux::check_pre_post(
+                boost::contract::from_free_function)
+    {}
 
-    virtual ~free_function() { exit(); }
-    
+    explicit free_function(boost::shared_ptr<boost::contract::aux::call> call) :
+        boost::contract::aux::check_pre_post(
+                boost::contract::from_free_function, call)
+    {}
+
 private:
-    // Do nothing (not a public member so no inv to check, nor subcontracting).
-    void entry() {}
-
-    // Check pre (as soon as related functor set).
     void pre_available() /* override */ { check_pre(); }
+
+    void post_available() /* override */ {
+        if(call()) check_post(); // Throw (so not in dtor).
+    }
     
-    // Post always checked after body, at exit (see below).
-    void post_available() /* override */ {}
-    
-    // If body did not throw, check post (not a public member so no inv to
-    // check, nor subcontracting).
-    void exit() {
-        bool const body_threw = std::uncaught_exception();
-        if(!body_threw) check_post();
+public:
+    ~free_function() {
+        if(!call() && !std::uncaught_exception()) { // Body didn't throw.
+            check_post();
+        }
     }
 };
 
-} } } } // namespace
+} } } // namespace
 
 #endif // #include guard
 

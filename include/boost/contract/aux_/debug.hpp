@@ -3,11 +3,12 @@
 #define BOOST_CONTRACT_AUX_DEBUG_HPP_
 
 #include <boost/contract/aux_/config.hpp>
-#if BOOST_CONTRACT_AUX_CONFIG_DEBUG
-#   include <cassert>
-#   define BOOST_CONTRACT_AUX_DEBUG(cond) assert(cond)
+
+#ifdef BOOST_CONTRACT_AUX_CONFIG_NDEBUG
+#   define BOOST_CONTRACT_AUX_DEBUG(cond)
 #else
-#   define BOOST_COTNRACT_AUX_DEBUG(cond)
+#   include <cassert>
+#   define BOOST_CONTRACT_AUX_DEBUG(cond) (assert(cond))
 #endif
 
 #endif // #include guard

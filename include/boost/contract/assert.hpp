@@ -8,8 +8,10 @@
 /* PUBLIC */
 
 #define BOOST_CONTRACT_ASSERT(condition) \
-    if(!(condition)) throw boost::contract::assertion_failure( \
-            __FILE__, __LINE__, BOOST_PP_STRINGIZE(condition));
+    if(!(condition)) { \
+        throw boost::contract::assertion_failure(__FILE__, __LINE__, \
+                BOOST_PP_STRINGIZE(cond)); \
+    }
 
 #endif // #include guard
 
