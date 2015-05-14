@@ -2,9 +2,11 @@
 #ifndef BOOST_CONTRACT_AUX_CALL_HPP_
 #define BOOST_CONTRACT_AUX_CALL_HPP_
 
+/** @cond */
 #include <boost/shared_ptr.hpp>
 #include <boost/noncopyable.hpp>
 #include <queue>
+/** @endcond */
 
 namespace boost { namespace contract { namespace aux {
 

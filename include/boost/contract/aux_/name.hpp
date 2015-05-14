@@ -3,7 +3,9 @@
 #define BOOST_CONTRACT_AUX_NAME_HPP_
 
 #include <boost/contract/aux_/config.hpp>
+/** @cond */
 #include <boost/preprocessor/cat.hpp>
+/** @endcond */
 
 /* PUBLIC */
 

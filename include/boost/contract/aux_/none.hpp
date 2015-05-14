@@ -4,10 +4,13 @@
 
 namespace boost { namespace contract { namespace aux {
 
-struct none { // Tag for "no type".
+class none { // Tag for "no type".
+public:
     static none value; // Tag for "no value".
 
-    // Must contain no functionality (so it cannot actually be used by mistake).
+    // Allow default constructor and copy operations.
+    
+    // Must contain no other member (so it cannot be used by mistake).
 };
 
 none none::value;

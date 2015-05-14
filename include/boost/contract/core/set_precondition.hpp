@@ -2,9 +2,13 @@
 #ifndef BOOST_CONTRACT_SET_PRECONDITION_HPP_
 #define BOOST_CONTRACT_SET_PRECONDITION_HPP_
 
+/** @file */
+
 #include <boost/contract/core/set_nothing.hpp>
 #include <boost/contract/aux_/condition/check_pre_post.hpp>
+/** @cond */
 #include <boost/shared_ptr.hpp>
+/** @endcond */
 
 namespace boost { namespace contract {
 

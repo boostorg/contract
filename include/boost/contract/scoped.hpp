@@ -2,12 +2,16 @@
 #ifndef BOOST_CONTRACT_SCOPED_HPP_
 #define BOOST_CONTRACT_SCOPED_HPP_
 
+/** @file */
+
 #include <boost/contract/core/set_precondition_postcondition.hpp>
 #include <boost/contract/core/set_precondition.hpp>
 #include <boost/contract/core/set_postcondition.hpp>
 #include <boost/contract/core/set_nothing.hpp>
 #include <boost/contract/aux_/condition/check_nothing.hpp>
+/** @cond */
 #include <boost/shared_ptr.hpp>
+/** @endcond */
 
 namespace boost { namespace contract {
 

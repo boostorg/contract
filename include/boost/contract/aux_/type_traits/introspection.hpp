@@ -3,6 +3,7 @@
 #define BOOST_CONTRACT_AUX_INTROSPECTION_HPP_
 
 #include <boost/contract/aux_/name.hpp>
+/** @cond */
 #include <boost/function_types/member_function_pointer.hpp>
 #include <boost/function_types/function_pointer.hpp>
 #include <boost/function_types/property_tags.hpp>
@@ -11,6 +12,7 @@
 #include <boost/preprocessor/tuple/eat.hpp>
 #include <boost/preprocessor/tuple/rem.hpp>
 #include <boost/preprocessor/control/iif.hpp>
+/** @endcond */
 
 // NOTE: Unfortunately, it is not possible to use Boost.TTI because it not
 // always works on MSVC (e.g., when the introspecting meta-function is invoked

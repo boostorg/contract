@@ -3,7 +3,9 @@
 #define BOOST_CONTRACT_AUX_EXCEPTION_HPP_
 
 #include <boost/contract/core/exception.hpp>
+/** @cond */
 #include <string>
+/** @endcond */
 
 namespace boost { namespace contract { namespace aux {
 

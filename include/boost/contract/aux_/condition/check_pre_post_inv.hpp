@@ -8,8 +8,10 @@
 #include <boost/contract/aux_/call.hpp>
 #include <boost/contract/aux_/type_traits/invariant.hpp>
 #include <boost/contract/aux_/exception.hpp>
+/** @cond */
 #include <boost/mpl/bool.hpp>
 #include <boost/shared_ptr.hpp>
+/** @endcond */
 
 namespace boost { namespace contract { namespace aux {
 
@@ -29,19 +31,19 @@ public:
 
 protected:
     void check_entry_inv(bool static_inv_only = false) {
-        if(!this->call() || this->call()->action ==
+        if(!this->contract_call() || this->contract_call()->action ==
                 boost::contract::aux::call::check_entry_inv) {
             check_inv(/* on_entry = */ true, static_inv_only);
-            if(this->call()) throw no_error();
+            if(this->contract_call()) throw no_error();
         }
     }
 
     // If call(), can't call from dtor (as throw no_error on OK).
     void check_exit_inv(bool static_inv_only = false) {
-        if(!this->call() || this->call()->action ==
+        if(!this->contract_call() || this->contract_call()->action ==
                 boost::contract::aux::call::check_exit_inv) {
             check_inv(/* on_entry = */ false, static_inv_only);
-            if(this->call()) throw no_error();
+            if(this->contract_call()) throw no_error();
         }
     }
 

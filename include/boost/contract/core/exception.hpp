@@ -2,12 +2,16 @@
 #ifndef BOOST_CONTRACT_EXCEPTION_HPP_
 #define BOOST_CONTRACT_EXCEPTION_HPP_
 
+/** @file */
+
+/** @cond */
 //#include <boost/thread/mutex.hpp>
 #include <boost/config.hpp>
 #include <exception>
 #include <sstream>
 #include <string>
 #include <iostream>
+/** @endcond */
 
 namespace boost { namespace contract {
 

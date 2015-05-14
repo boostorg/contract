@@ -5,13 +5,13 @@ import os ;
 rule subdir-run ( subdir : cpp_fname : requirements * )
 {
     run $(subdir)/$(cpp_fname).cpp : : : <include>$(subdir) $(requirements) :
-            $(subdir)/$(cpp_fname) ;
+            $(subdir)-$(cpp_fname) ;
 }
 
 rule subdir-compile-fail ( subdir : cpp_fname : requirements * )
 {
     compile-fail $(subdir)/$(cpp_fname).cpp :
-            <include>$(subdir) $(requirements) : $(subdir)/$(cpp_fname) ;
+            <include>$(subdir) $(requirements) : $(subdir)-$(cpp_fname) ;
 }
 
 if ! [ os.environ BOOST_ROOT ] {
@@ -22,14 +22,6 @@ local BOOST_ROOT = [ os.environ BOOST_ROOT ] ;
 echo "Build Boost.Contract's source, tests, examples, documentation, etc." ;
 echo "Using Boost libraries from (see $BOOST_ROOT): $(BOOST_ROOT)" ;
 echo ;
-
-echo """Usage:
-    Build all (-a), quit on first error (-q), using MSVC, GCC, and CLANG:
-    $ bjam -aq toolset=msvc,gcc,clang ...
-
-    Clock how long the build takes:
-    $ time bjam ...
-""" ;
 
 use-project boost : $(BOOST_ROOT) ;
 

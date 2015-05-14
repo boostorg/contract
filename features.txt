@@ -1,0 +1,46 @@
+
+Features to test:
+
+*   Constructors w/ subcontracting
+    --> pre > (bases...) > static_inv > body > static_inv > inv > post
+    --> protected and private bases ALSO contract (because always part of C++ obj construction mechanism)
+*   Constructor preconditions checked before member initialization list
+*   Constructors have no `.precondition` (must use `constructor_precondition` instead)
+*   Overloaded Constructors with no preconditions
+*   Constructors above w/ bind
+
+*   Destructors subcontracting (w/ postconditions)
+    --> protected and private bases do not subcontract
+*   Destructors have no `.precondition`
+*   Destructors above w/ bind
+
+*   Private members check pre and post, but no cv/static invariants and no subcontracting
+*   Private members above w/ bind
+
+*   Protected members check pre and post, but no cv/static invariants and no subcontracting
+*   Protected members above w/ bind
+
+*   Static public members check pre, post, and static invariants, but no cv invariants and no subcontracting
+*   Static public members above w/ bind
+
+*   Public members subcontracting (pre in logic-or, post and inv in logic-and)
+    --> protected and private bases do not subcontract
+*   Require, but always allow, bind for public virtual members
+*   Require, but always allow, introspect for overriding public members
+*   Public members above w/ bind
+
+*   Free functions pre and post (but obviously no cv/static invariants and no subcontracting)
+*   Free functions above w/ bind
+*   Check (just for free functions, other contract use same set_... classes anyways) that:
+    OK:     nothing | pre (only) | post (only) | pre > post | port > pre
+    Error:  pre > pre | post > post | pre > post > pre | pre > post > post
+
+*   Old values with/without bind, with/without subcontracting
+    --> copied and evaluated only once by OLDOF
+*   Result... maybe test with/without boost::optional...
+*   On body throw... for all contract types
+*   Failure handlers and throw on contract failure
+*   Disable pre, post, and/or entry/exit inv (all combinations)
+*   Overloading for all contracts
+*   Volatile inv
+

@@ -2,8 +2,12 @@
 #ifndef BOOST_CONTRACT_SET_NOTHING_HPP_
 #define BOOST_CONTRACT_SET_NOTHING_HPP_
 
+/** @file */
+
 #include <boost/contract/aux_/condition/check_nothing.hpp>
+/** @cond */
 #include <boost/shared_ptr.hpp>
+/** @endcond */
 
 namespace boost { namespace contract {
 
@@ -16,6 +20,8 @@ private: // Friendship to minimize lib's public API.
     friend class set_precondition;
     friend class set_postcondition;
 
+    template<typename F, typename A0>
+    friend set_nothing bind(F, A0 const&);
     template<typename F, typename A0, typename A1>
     friend set_nothing bind(F, A0 const&, A1 const&);
 

@@ -3,43 +3,53 @@
 #define BOOST_CONTRACT_AUX_PUBLIC_MEMBER_HPP_
 
 #include <boost/contract/aux_/call.hpp>
-#include <boost/contract/aux_/condition/check_pre_post_inv.hpp>
+#include <boost/contract/aux_/condition/check_subcontracted_pre_post_inv.hpp>
+/** @cond */
 #include <boost/shared_ptr.hpp>
 #include <exception>
+/** @endcond */
 
 namespace boost { namespace contract { namespace aux {
 
-template<class C>
-class public_member : public boost::contract::aux::check_pre_post_inv<C> {
+template<class I, class C, typename A0>
+class public_member : public boost::contract::aux::
+        check_subcontracted_pre_post_inv<I, C, A0> {
 public:
-    explicit public_member(C const* obj) :
-        boost::contract::aux::check_pre_post_inv<C>(
-                boost::contract::from_public_member, obj)
+    explicit public_member(C const* obj, A0 const& a0) :
+        boost::contract::aux::check_subcontracted_pre_post_inv<I, C, A0>(
+                boost::contract::from_public_member, obj, a0)
     { init(); }
-
+    
     explicit public_member(boost::shared_ptr<boost::contract::aux::call> call,
-            C const* obj) :
-        boost::contract::aux::check_pre_post_inv<C>(
-                boost::contract::from_public_member, call, obj)
+            C const* obj, A0 const& a0) :
+        boost::contract::aux::check_subcontracted_pre_post_inv<I, C, A0>(
+                boost::contract::from_public_member, call, obj, a0)
     { init(); }
 
 private:
     void init() {
-        this->check_entry_inv();
-        if(this->call()) this->check_exit_inv(); // Throw (so not in dtor).
+        this->copy_subcontracted_oldof();
+        this->check_subcontracted_entry_inv();
+        // Throw (so not in dtor).
+        if(this->contract_call()) this->check_subcontracted_exit_inv();
     }
 
-    void pre_available() /* override */ { this->check_pre(); }
+    void pre_available() /* override */ { this->check_subcontracted_pre(); }
 
     void post_available() /* override */ {
-        if(this->call()) this->check_post(); // Throw (so not in dtor).
+        // Body did not throw.
+        if(this->contract_call() && !std::uncaught_exception()) {
+            // Throw no_error (so not in dtor).
+            this->check_subcontracted_post();
+        }
     }
     
 public:
     ~public_member() {
-        if(!this->call() && !std::uncaught_exception()) { // Body didn't throw.
-            this->check_exit_inv();
-            this->check_post();
+        // Body didn't throw.
+        if(!this->contract_call() && !std::uncaught_exception()) {
+            this->check_subcontracted_exit_inv();
+            this->check_subcontracted_post();
         }
     }
 };

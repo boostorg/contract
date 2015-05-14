@@ -2,29 +2,37 @@
 #ifndef BOOST_CONTRACT_OLDOF_HPP_
 #define BOOST_CONTRACT_OLDOF_HPP_
 
+/** @file */
+
 #include <boost/contract/core/call.hpp>
 #include <boost/contract/aux_/call.hpp>
 #include <boost/contract/aux_/debug.hpp>
+/** @cond */
 #include <boost/make_shared.hpp>
 #include <boost/shared_ptr.hpp>
+/** @endcond */
 
+/** @cond */
 #include <boost/preprocessor/config/config.hpp>
+/** @endcond */
 #if !BOOST_PP_VARIADICS
 #   define BOOST_CONTRACT_OLDOF \
-BOOST_CONTRACT_ERROR_variadic_macros_required_by_BOOST_CONTRACT_OLDOF_otherwise_manually_program_old_values
+BOOST_CONTRACT_ERROR_macro_OLDOF_requires_variadic_macros_otherwise_manually_program_old_values
 #else
 
+/** @cond */
 #include <boost/config.hpp>
 #include <boost/preprocessor/facilities/overload.hpp>
 #include <boost/preprocessor/facilities/empty.hpp>
 #include <boost/preprocessor/cat.hpp>
+/** @endcond */
 
 /* PUBLIC */
 
 #define BOOST_CONTRACT_OLDOF(...) \
     BOOST_PP_CAT( /* CAT(..., EMTPY()) required on MSVC */ \
         BOOST_PP_OVERLOAD( \
-BOOST_CONTRACT_ERROR_invoked_macro_BOOST_CONTRACT_OLDOF_with_invalid_number_of_arguments_, \
+BOOST_CONTRACT_ERROR_macro_OLDOF_has_invalid_number_of_arguments_, \
             __VA_ARGS__ \
         )(__VA_ARGS__), \
         BOOST_PP_EMPTY() \
@@ -32,14 +40,14 @@ BOOST_CONTRACT_ERROR_invoked_macro_BOOST_CONTRACT_OLDOF_with_invalid_number_of_a
 
 /* PRIVATE */
 
-#define \
-BOOST_CONTRACT_ERROR_invoked_macro_BOOST_CONTRACT_OLDOF_with_invalid_number_of_arguments_1(value) \
+#define BOOST_CONTRACT_ERROR_macro_OLDOF_has_invalid_number_of_arguments_1( \
+        value) \
     BOOST_CONTRACT_OLDOF_AUTO_(value)(boost::contract::oldof( \
         boost::contract::copy_oldof() ? (value) : boost::contract::oldof() \
     ))
 
-#define \
-BOOST_CONTRACT_ERROR_invoked_macro_BOOST_CONTRACT_OLDOF_with_invalid_number_of_arguments_2(c, value) \
+#define BOOST_CONTRACT_ERROR_macro_OLDOF_has_invalid_number_of_arguments_2( \
+        c, value) \
     BOOST_CONTRACT_OLDOF_AUTO_(value)(boost::contract::oldof(c, \
         boost::contract::copy_oldof(c) ? (value) : boost::contract::oldof() \
     ))
@@ -47,7 +55,9 @@ BOOST_CONTRACT_ERROR_invoked_macro_BOOST_CONTRACT_OLDOF_with_invalid_number_of_a
 #ifdef BOOST_NO_CXX11_AUTO_DECLARATIONS
 #   define BOOST_CONTRACT_OLDOF_AUTO_(value) /* nothing */
 #else
+/** @cond */
 #   include <boost/typeof/typeof.hpp>
+/** @endcond */
 // Explicitly force shared_ptr<T const> conversion to allow for C++11 auto decl.
 #   define BOOST_CONTRACT_OLDOF_AUTO_(value) \
         boost::shared_ptr<BOOST_TYPEOF(value) const>
@@ -85,7 +95,6 @@ public:
     template<typename T>
     /* implicit */ oldof(T const& old_value) :
             value_(boost::make_shared<T>(old_value)) { // T's one single copy.
-        std::clog << "oldof copy" << std::endl;
     }
 
     // TODO: I might be able to use unique_ptr here instead of shared_ptr. That
@@ -99,12 +108,10 @@ public:
             boost::shared_ptr<T const> old_value =
                     boost::static_pointer_cast<T const>(value_);
             BOOST_CONTRACT_AUX_DEBUG(old_value);
-            std::clog << "oldof un-erased: " << *old_value << std::endl;
             return old_value;
         } else if(call_->action == boost::contract::aux::call::copy_oldof) {
             BOOST_CONTRACT_AUX_DEBUG(value_);
             call_->old_values.push(value_);
-            std::clog << "oldof push" << std::endl;
             return boost::shared_ptr<T const>();
         } else if(call_->action == boost::contract::aux::call::check_post) {
             BOOST_CONTRACT_AUX_DEBUG(!value_);
@@ -114,7 +121,6 @@ public:
             boost::shared_ptr<T const> old_value =
                     boost::static_pointer_cast<T const>(value);
             BOOST_CONTRACT_AUX_DEBUG(old_value);
-            std::clog << "oldof pop: " << *old_value << std::endl;
             return old_value;
         }
         BOOST_CONTRACT_AUX_DEBUG(!value_);

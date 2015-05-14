@@ -1,37 +1,4 @@
 
-subdir-run const : free_function ;
-subdir-run const : public_member ;
-subdir-run const : public_virtual_member ;
-
-subdir-run function : constructor ;
-subdir-run function : destructor ;
-subdir-run function : public_member ;
-subdir-run function : public_static_member ;
-subdir-run function : protected_member ;
-subdir-run function : private_member ;
-subdir-run function : free_function ;
-
-subdir-run oldof : oldof ;
-subdir-compile-fail oldof : oldof_const_error ;
-subdir-compile-fail oldof : oldof_auto_const_error ;
-subdir-run oldof : oldof_v ;
-subdir-compile-fail oldof : oldof_v_const_error ;
-subdir-compile-fail oldof : oldof_v_auto_const_error ;
-
-subdir-run set : creation_set_post_nothing_comb ;
-subdir-compile-fail set : creation_set_post_post_error ;
-subdir-compile-fail set : creation_set_post_pre_error ;
-subdir-compile-fail set : creation_set_pre_error ;
-subdir-run set : function_set_pre_post_nothing_comb ;
-subdir-compile-fail set : function_set_post_post_error ;
-subdir-compile-fail set : function_set_post_pre_post_error ;
-subdir-compile-fail set : function_set_post_pre_pre_error ;
-subdir-compile-fail set : function_set_pre_post_post_error ;
-subdir-compile-fail set : function_set_pre_post_pre_error ;
-subdir-compile-fail set : function_set_pre_pre_error ;
-
-subdir-run type_traits : introspect ;
-subdir-run type_traits : base_types ;
-subdir-run type_traits : has_bases ;
-subdir-run type_traits : has_invariant ;
+subdir-run          constructor : bases ;
+subdir-compile-fail constructor : no_pre-error ;
 

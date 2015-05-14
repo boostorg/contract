@@ -1,7 +1,7 @@
 
 #include <iostream>
 #include <boost/contract/base_types.hpp>
-#include <boost/contract/public_member.hpp>
+#include <boost/contract/protected_member.hpp>
 #include <boost/contract/introspect.hpp>
 #include <boost/contract/oldof.hpp>
 #include <boost/contract/assert.hpp>
@@ -15,10 +15,11 @@ struct b {
     void invariant() const { std::clog << "b::inv" << std::endl; }
     static void static_invariant() { std::clog << "b::static_inv" << std::endl;}
 
-    // virtual => ..._contract
+    // Test base contract not checked.
+protected:
     void f_contract(std::string const& s, boost::contract::call c) const {
         boost::shared_ptr<std::string const> old_y = BOOST_CONTRACT_OLDOF(c, y);
-        boost::contract::public_member(c, this)
+        boost::contract::protected_member(c)
             .precondition([&] { std::clog << "b::f::pre" << std::endl; })
             .postcondition([&] {
                 std::clog << "b::f::post" << std::endl;
@@ -44,31 +45,36 @@ struct a
     std::string x;
     a() : x("a") {}
 
+    // Test invariants not checked.
     void invariant() const { std::clog << "a::inv" << std::endl; }
     static void static_invariant() { std::clog << "a::static_inv" << std::endl;}
 
-    // override => introspect_...
-    void f(std::string const& s) /* override */ {
-        boost::shared_ptr<std::string const> old_x = BOOST_CONTRACT_OLDOF(x);
-        boost::contract::scoped contract = boost::contract::public_member<
-                introspect_f_contract>(this, s)
+protected:
+    void f_contract(std::string const& s, boost::contract::call c) {
+        boost::shared_ptr<std::string const> old_x = BOOST_CONTRACT_OLDOF(c, x);
+        boost::contract::protected_member(c)
             .precondition([&] { std::clog << "a::f::pre" << std::endl; })
             .postcondition([&] {
                 std::clog << "a::f::post" << std::endl;
                 BOOST_CONTRACT_ASSERT(x == *old_x + s);
             })
         ;
-
+    }
+    void f(std::string const& s) /* override */ {
+        boost::contract::scoped contract = boost::contract::bind(
+                &a::f_contract, this, s);
         std::clog << "a::f::body" << std::endl;
         y = y + s;
         x = x + s;
     }
-    BOOST_CONTRACT_INTROSPECT(f_contract)
+
+public:
+    void call_f(std::string const& s) { f(s); }
 };
 
 int main() {
     a aa;
-    aa.f("s");
+    aa.call_f("s");
     return 0;
 }
 

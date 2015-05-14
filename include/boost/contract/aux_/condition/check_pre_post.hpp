@@ -6,8 +6,10 @@
 #include <boost/contract/aux_/condition/check_nothing.hpp>
 #include <boost/contract/aux_/call.hpp>
 #include <boost/contract/aux_/exception.hpp>
+/** @cond */
 #include <boost/shared_ptr.hpp>
 #include <boost/function.hpp>
+/** @endcond */
 
 namespace boost { namespace contract { namespace aux {
 
@@ -20,7 +22,9 @@ public:
     explicit check_pre_post(boost::contract::from from) : from_(from) {}
     
     explicit check_pre_post(boost::contract::from from, boost::shared_ptr<
-            boost::contract::aux::call> call) : from_(from), call_(call) {}
+            boost::contract::aux::call> call) :
+        from_(from), contract_call_(call)
+    {}
 
     virtual ~check_pre_post() {}
 
@@ -32,7 +36,8 @@ public:
 
 protected:
     void check_pre(bool throw_on_failure = false) {
-        if(!call_ || call_->action == boost::contract::aux::call::check_pre) {
+        if(!contract_call_ || contract_call_->action ==
+                boost::contract::aux::call::check_pre) {
             if(pre_) {
                 try { pre_(); }
                 catch(...) {
@@ -42,7 +47,7 @@ protected:
                     boost::contract::precondition_failed(from_);
                 }
             }
-            if(call_) throw boost::contract::aux::no_error();
+            if(contract_call_) throw boost::contract::aux::no_error();
         }
     }
 
@@ -66,12 +71,13 @@ protected:
     
     // If call(), can't call from a dtor (as throw no_error on OK).
     void check_post() {
-        if(!call_ || call_->action == boost::contract::aux::call::check_post) {
+        if(!contract_call_ || contract_call_->action ==
+                boost::contract::aux::call::check_post) {
             if(post_) {
                 try { post_(); }
                 catch(...) { boost::contract::postcondition_failed(from_); }
             }
-            if(call_) throw boost::contract::aux::no_error();
+            if(contract_call_) throw boost::contract::aux::no_error();
         }
     }
     
@@ -79,13 +85,16 @@ protected:
     virtual void post_available() {}
 
     boost::contract::from from() const { return from_; }
-    boost::shared_ptr<boost::contract::aux::call> call() { return call_; }
+
+    boost::shared_ptr<boost::contract::aux::call> contract_call() {
+        return contract_call_;
+    }
 
 private:
     boost::function<void ()> pre_;
     boost::function<void ()> post_;
     boost::contract::from from_;
-    boost::shared_ptr<boost::contract::aux::call> call_;
+    boost::shared_ptr<boost::contract::aux::call> contract_call_;
 };
 
 } } }

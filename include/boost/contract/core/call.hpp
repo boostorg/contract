@@ -2,16 +2,24 @@
 #ifndef BOOST_CONTRACT_CALL_HPP_
 #define BOOST_CONTRACT_CALL_HPP_
 
+/** @file */
+
 #include <boost/contract/aux_/call.hpp>
+/** @cond */
 #include <boost/shared_ptr.hpp>
+/** @endcond */
 
 namespace boost {
     namespace contract {
         class set_precondition_postcondition;
+        class set_postcondition;
 
         namespace aux {
             template<typename, typename, typename>
             class bind;
+
+            template<class, class, typename>
+            class check_subcontracted_pre_post_inv;
         }
     }
 }
@@ -25,16 +33,33 @@ public:
 private: // Friendship to minimize lib's public API.
     friend bool copy_oldof(call const&);
     friend class oldof;
-    
-    template<typename, typename, typename>
-    friend class boost::contract::aux::bind;
 
+    template<class C>
+    friend boost::contract::set_postcondition constructor(
+            call const&, C const*);
+    
+    template<class C>
+    friend boost::contract::set_postcondition destructor(
+            call const&, C const*);
+    
+    template<class C>
+    friend boost::contract::set_precondition_postcondition public_member(
+            call const&, C const*);
+    
+    friend boost::contract::set_precondition_postcondition protected_member(
+            call const&);
+    
+    friend boost::contract::set_precondition_postcondition private_member(
+            call const&);
+    
     friend boost::contract::set_precondition_postcondition free_function(
             call const&);
 
-    template<class C>
-    friend boost::contract::set_precondition_postcondition public_member(
-            boost::contract::call const&, C const*);
+    template<typename, typename, typename>
+    friend class boost::contract::aux::bind;
+            
+    template<class, class, typename>
+    friend class boost::contract::aux::check_subcontracted_pre_post_inv;
 
     explicit call(boost::shared_ptr<boost::contract::aux::call> _call) :
             call_(_call) {}
