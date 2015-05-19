@@ -31,7 +31,7 @@ private:
     // mechanism, so no calls to check_subcontracted_... in this case).
     void init() {
         this->check_entry_inv();
-        if(this->contract_call()) {
+        if(this->decl_call()) {
             this->check_exit_inv(/* static_inv_only = */
                     !std::uncaught_exception());
         }
@@ -43,7 +43,7 @@ private:
     // NOTE: Even if there is no obj after dtor body, this library allows for
     // dtor post (e.g., to check static members for an instance counter class).
     void post_available() /* override */ {
-        if(this->contract_call() && !std::uncaught_exception()) {
+        if(this->decl_call() && !std::uncaught_exception()) {
             this->check_post();
         }
     }
@@ -57,7 +57,7 @@ public:
     // NOTE: In theory C++ destructors should not throw, but the language allows
     // for that so this library must handle such a case.
     ~destructor() {
-        if(!this->contract_call()) {
+        if(!this->decl_call()) {
             this->check_exit_inv(/* static_inv_only = */
                     !std::uncaught_exception());
             if(!std::uncaught_exception()) this->check_post();

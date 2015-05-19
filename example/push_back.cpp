@@ -4,8 +4,9 @@
 
 template<typename T>
 struct pusahble {
-    void push_back(T const& value, boost::contract::virtual_body v = 0) {
-        auto contract = boost::contract::public_member(v, this)
+    virtual void push_back(T const& value,
+            boost::contract::virtual_* v = 0) = 0 {
+        boost::contract::var c = boost::contract::public_member(v, this)
             .precondition([&] {
                 BOOST_CONTRACT_ASSERT(false); // Force check derived precond.
             })
@@ -19,8 +20,6 @@ struct pusahble {
             })
         ;
     }
-    virtual void push_back(T const& value) = 0; // Subcontract pure-virtual.
-
 protected:
     virtual T const& back() const = 0;
 };
@@ -38,10 +37,11 @@ public:
         BOOST_CONTRACT_ASSERT(empty() == (size() == 0));
     }
 
-    void push_back(T const& value, boost::contract::virtual_body v = 0) {
-        auto old_size = BOOST_CONTRACT_OLDOF(v, size());
+    virtual void push_back(T const& value, boost::contract::virtual_* v = 0) {
+        boost::shared_ptr<unsigned const> old_size =
+                BOOST_CONTRACT_OLDOF(v, size());
         boost::contract::type contract = boost::contract::public_member<
-                introspect_push_back>(v, this, &vector::push_back, value)
+                introspect_push_back>(v, this, value)
             .precondition([&]() {
                 BOOST_CONTRACT_ASSERT(this->size() < this->max_size());
             })
@@ -49,9 +49,9 @@ public:
                 BOOST_CONTRACT_ASSERT(this->size() == old_size + 1);
             })
         ;
-        push_back_body(value);
+        vector_.push_back(value);
     }
-    virtual void push_back_body(T const& value) { vector_.push_back(value); }
+    BOOST_CONTRACT_INTROSPECT(push_back)
 
     bool empty() const { return vector_.empty(); }
     unsigned size() const { return vector_.size(); }
@@ -60,7 +60,18 @@ public:
 
 private:
     std::vector<T> vector_;
-
-    BOOST_CONTRACT_INTROSPECT(push_back)
 };
+
+void my_sqrt(double& x) { // My square root (with contracts).
+    boost::shared_ptr<double const> old_x = BOOST_CONTRACT_OLDOF(x);
+    boost::contract::scoped contract = boost::contract::free_function()
+        .precondition([&] {
+            BOOST_CONTRACT_ASSERT(x >= 0);
+        })
+        .postcondition([&] {
+            BOOST_CONTRACT_ASSERT(x * x == old_x);
+        })
+    ;
+    x = std::sqrt(x); // C++ square root (without contracts).
+}
 

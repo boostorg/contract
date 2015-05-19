@@ -1,4 +1,24 @@
 
-subdir-run          constructor : bases ;
+subdir-run constructor : bases ;
+subdir-run constructor : bases_decl ;
+subdir-run constructor : overload ;
+subdir-run constructor : overload_decl ;
 subdir-compile-fail constructor : no_pre-error ;
+
+subdir-run destructor : bases ;
+subdir-run destructor : bases_decl ;
+subdir-compile-fail destructor : no_pre-error ;
+
+subdir-run public_member : bases ;
+
+subdir-run free_function : pre_post ;
+subdir-run free_function : pre_post_decl ;
+subdir-run free_function : post_pre ;
+subdir-run free_function : pre_only ;
+subdir-run free_function : post_only ;
+subdir-run free_function : nothing ;
+subdir-compile-fail free_function : pre_pre-error ;
+subdir-compile-fail free_function : post_post-error ;
+subdir-compile-fail free_function : pre_post_pre-error ;
+subdir-compile-fail free_function : post_pre_post-error ;
 

@@ -1,4 +1,6 @@
 
+// Test constructor cannot use `.precondition(...)`.
+
 #include <boost/contract/scoped.hpp>
 #include <boost/contract/constructor.hpp>
 

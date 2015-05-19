@@ -35,8 +35,7 @@ struct oteststream :
     std::string str() const { return oss_.str(); }
     void str(std::string const& s) { oss_.str(s); }
 
-    // If found, display mismatching characters.
-    bool check(std::string const& s) {
+    bool eq(std::string const& s) { // Also display mismatching characters.
         std::string r = str();
         std::string::size_type i = 0;
         for(; i < r.size() && i < s.size(); ++i) if(r[i] != s[i]) break;

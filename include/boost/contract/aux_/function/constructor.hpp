@@ -29,7 +29,7 @@ private:
     void init() {
         // No object before ctor body so only static inv at entry.
         this->check_entry_inv(/* static_inv_only = */ true);
-        if(this->contract_call()) { // Throw no error (so not in dtor).
+        if(this->decl_call()) { // Throw no error (so not in dtor).
             this->check_exit_inv(/* static_inv_only = */
                     std::uncaught_exception());
         }
@@ -38,7 +38,7 @@ private:
     // Ctor pre checked by constructor_precondition at start of init list.
 
     void post_available() /* override */ {
-        if(this->contract_call() && !std::uncaught_exception()) {
+        if(this->decl_call() && !std::uncaught_exception()) {
             this->check_post(); // Throw no_error (so not in dtor).
         }
     }
@@ -49,7 +49,7 @@ public:
     // automatically via C++ object constructor mechanism, so no calls to
     // check_subcontracted_... in this case).
     ~constructor() {
-        if(!this->contract_call()) {
+        if(!this->decl_call()) {
             this->check_exit_inv(/* static_inv_only = */
                     std::uncaught_exception());
             if(!std::uncaught_exception()) this->check_post();

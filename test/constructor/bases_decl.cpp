@@ -1,9 +1,10 @@
 
-// Test constructor subcontracting.
+// Test constructor subcontracting and contract declaration functions.
 
 #include "../aux_/oteststream.hpp"
 #include "../aux_/cpcnt.hpp"
 #include <boost/contract/constructor.hpp>
+#include <boost/contract/decl_function.hpp>
 #include <boost/contract/base_types.hpp>
 #include <boost/contract/assert.hpp>
 #include <boost/contract/oldof.hpp>
@@ -43,15 +44,12 @@ struct t
         out << Id << "::ctor::pre" << std::endl;
         BOOST_CONTRACT_ASSERT(arg.value < 0);
     }
-    explicit t(arg_cnt& arg) :
-        boost::contract::constructor_precondition<t<Id> >(
-                boost::bind(&t::constructor_precondition, boost::cref(arg)))
-    {
+    void constructor(arg_cnt const& arg, boost::contract::decl c) const {
         boost::shared_ptr<arg_cnt const> old_arg =
-                BOOST_CONTRACT_OLDOF(arg_cnt::eval(arg));
+                BOOST_CONTRACT_OLDOF(c, arg_cnt::eval(arg));
         boost::shared_ptr<n_cnt const> old_n =
-                BOOST_CONTRACT_OLDOF(n_cnt::eval(n));
-        boost::contract::var contract = boost::contract::constructor(this)
+                BOOST_CONTRACT_OLDOF(c, n_cnt::eval(n));
+        boost::contract::var contract = boost::contract::constructor(c, this)
             .postcondition([&] {
                 out << Id << "::ctor::post" << std::endl;
                 BOOST_CONTRACT_ASSERT(i_ == old_arg->value);
@@ -59,6 +57,17 @@ struct t
                 BOOST_CONTRACT_ASSERT(n.value == old_n->value + 1);
             })
         ;
+    }
+    explicit t(arg_cnt& arg) :
+        boost::contract::constructor_precondition<t<Id> >(boost::bind(
+                &t::constructor_precondition, boost::cref(arg)))
+    {
+        unsigned save_arg_copies = arg.copies();
+        boost::contract::var contract = boost::contract::decl_function(
+                this, arg, &t::constructor);
+        // Test decl_function did not copy (only 1 copy from contract old-of).
+        BOOST_TEST_EQ(arg.copies(), save_arg_copies + 1);
+
         out << Id << "::ctor::body" << std::endl;
         i_ = arg.value;
         arg.value = ++n.value;
@@ -98,19 +107,16 @@ struct c
     struct arg_tag;
     typedef boost::contract::aux::test::cpcnt<arg_tag, int> arg_cnt;
 
-    explicit c(arg_cnt& arg, t<'d'>::arg_cnt& d_arg, t<'e'>::arg_cnt& e_arg,
-            t<'f'>::arg_cnt& f_arg) :
-        boost::contract::constructor_precondition<c>([&] {
-            out << "c::ctor::pre" << std::endl;
-            BOOST_CONTRACT_ASSERT(arg.value < 0);
-        }),
-        t<'d'>(d_arg), t<'e'>(e_arg), t<'f'>(f_arg)
-    {
+    static void constructor_precondition(arg_cnt const& arg) {
+        out << "c::ctor::pre" << std::endl;
+        BOOST_CONTRACT_ASSERT(arg.value < 0);
+    }
+    void constructor(arg_cnt const& arg, boost::contract::decl c) const {
         boost::shared_ptr<arg_cnt const> old_arg =
-                BOOST_CONTRACT_OLDOF(arg_cnt::eval(arg));
+                BOOST_CONTRACT_OLDOF(c, arg_cnt::eval(arg));
         boost::shared_ptr<n_cnt const> old_n =
-                BOOST_CONTRACT_OLDOF(n_cnt::eval(n));
-        boost::contract::var contract = boost::contract::constructor(this)
+                BOOST_CONTRACT_OLDOF(c, n_cnt::eval(n));
+        boost::contract::var contract = boost::contract::constructor(c, this)
             .postcondition([&] {
                 out << "c::ctor::post" << std::endl;
                 BOOST_CONTRACT_ASSERT(i_ == old_arg->value);
@@ -118,6 +124,19 @@ struct c
                 BOOST_CONTRACT_ASSERT(n.value == old_n->value + 1);
             })
         ;
+    }
+    explicit c(arg_cnt& arg, t<'d'>::arg_cnt& d_arg, t<'e'>::arg_cnt& e_arg,
+            t<'f'>::arg_cnt& f_arg) :
+        boost::contract::constructor_precondition<c>(boost::bind(
+                &constructor_precondition, boost::cref(arg))),
+        t<'d'>(d_arg), t<'e'>(e_arg), t<'f'>(f_arg)
+    {
+        unsigned save_arg_copies = arg.copies();
+        boost::contract::var contract = boost::contract::decl_function(
+                this, arg, &c::constructor);
+        // Test decl_function did not copy (only 1 copy from contract old-of).
+        BOOST_TEST_EQ(arg.copies(), save_arg_copies + 1);
+
         out << "c::ctor::body" << std::endl;
         i_ = arg.value;
         arg.value = ++n.value;
@@ -145,7 +164,7 @@ struct b
     virtual ~b() {}
 };
 
-// Test constructor with both non-contracted and contracted bases.
+// Test both non-contracted and contracted bases.
 struct a
     #define BASES private boost::contract::constructor_precondition<a>, \
             public b, public c
@@ -169,20 +188,16 @@ struct a
     struct arg_tag;
     typedef boost::contract::aux::test::cpcnt<arg_tag, int> arg_cnt;
 
-    explicit a(arg_cnt& arg, c::arg_cnt& c_arg, t<'d'>::arg_cnt& d_arg,
-            t<'e'>::arg_cnt& e_arg, t<'f'>::arg_cnt& f_arg) :
-        boost::contract::constructor_precondition<a>([&] {
-            out << "a::ctor::pre" << std::endl;
-            BOOST_CONTRACT_ASSERT(arg.value < 0);
-        }),
-        b(),
-        c(c_arg, d_arg, e_arg, f_arg)
-    {
+    static void constructor_precondition(arg_cnt const& arg) {
+        out << "a::ctor::pre" << std::endl;
+        BOOST_CONTRACT_ASSERT(arg.value < 0);
+    }
+    void constructor(arg_cnt const& arg, boost::contract::decl c) const {
         boost::shared_ptr<arg_cnt const> old_arg =
-                BOOST_CONTRACT_OLDOF(arg_cnt::eval(arg));
+                BOOST_CONTRACT_OLDOF(c, arg_cnt::eval(arg));
         boost::shared_ptr<n_cnt const> old_n =
-                BOOST_CONTRACT_OLDOF(n_cnt::eval(n));
-        boost::contract::var contract = boost::contract::constructor(this)
+                BOOST_CONTRACT_OLDOF(c, n_cnt::eval(n));
+        boost::contract::var contract = boost::contract::constructor(c, this)
             .postcondition([&] {
                 out << "a::ctor::post" << std::endl;
                 BOOST_CONTRACT_ASSERT(i_ == old_arg->value);
@@ -190,6 +205,19 @@ struct a
                 BOOST_CONTRACT_ASSERT(n.value == old_n->value + 1);
             })
         ;
+    }
+    explicit a(arg_cnt& arg, c::arg_cnt& c_arg, t<'d'>::arg_cnt& d_arg,
+            t<'e'>::arg_cnt& e_arg, t<'f'>::arg_cnt& f_arg) :
+        boost::contract::constructor_precondition<a>(boost::bind(
+                &a::constructor_precondition, boost::cref(arg))),
+        b(), c(c_arg, d_arg, e_arg, f_arg)
+    {
+        unsigned save_arg_copies = arg.copies();
+        boost::contract::var contract = boost::contract::decl_function(
+                this, arg, &a::constructor);
+        // Test decl_function did not copy (only 1 copy from contract old-of).
+        BOOST_TEST_EQ(arg.copies(), save_arg_copies + 1);
+
         out << "a::ctor::body" << std::endl;
         i_ = arg.value;
         arg.value = ++n.value;

@@ -16,34 +16,33 @@
 namespace boost { namespace contract { namespace aux {
 
 template<class C>
-class check_pre_post_inv : // Copyable (as shallow ptr).
-        public boost::contract::aux::check_pre_post {
+class check_pre_post_inv : public check_pre_post { // Copyable (as *).
 public:
     explicit check_pre_post_inv(boost::contract::from from, C const* obj) :
-            boost::contract::aux::check_pre_post(from), obj_(obj) {}
+            check_pre_post(from), obj_(obj) {}
     
     explicit check_pre_post_inv(boost::contract::from from, boost::shared_ptr<
-            boost::contract::aux::call> call, C const* obj) :
-        boost::contract::aux::check_pre_post(from, call), obj_(obj)
+            call> decl_call, C const* obj) :
+        check_pre_post(from, decl_call), obj_(obj)
     {}
 
     virtual ~check_pre_post_inv() {}
 
 protected:
     void check_entry_inv(bool static_inv_only = false) {
-        if(!this->contract_call() || this->contract_call()->action ==
-                boost::contract::aux::call::check_entry_inv) {
+        if(!this->decl_call() || this->decl_call()->action ==
+                call::check_entry_inv) {
             check_inv(/* on_entry = */ true, static_inv_only);
-            if(this->contract_call()) throw no_error();
+            if(this->decl_call()) throw no_error();
         }
     }
 
     // If call(), can't call from dtor (as throw no_error on OK).
     void check_exit_inv(bool static_inv_only = false) {
-        if(!this->contract_call() || this->contract_call()->action ==
-                boost::contract::aux::call::check_exit_inv) {
+        if(!this->decl_call() || this->decl_call()->action ==
+                call::check_exit_inv) {
             check_inv(/* on_entry = */ false, static_inv_only);
-            if(this->contract_call()) throw no_error();
+            if(this->decl_call()) throw no_error();
         }
     }
 
@@ -51,10 +50,10 @@ protected:
 
 private:
     void check_inv(bool on_entry, bool static_inv_only) {
-        check_static_inv(on_entry, boost::mpl::bool_<boost::contract::aux::
+        check_static_inv(on_entry, boost::mpl::bool_<
                 has_static_invariant<C>::value>());
         if(!static_inv_only) {
-            check_const_inv(on_entry, boost::mpl::bool_<boost::contract::aux::
+            check_const_inv(on_entry, boost::mpl::bool_<
                     has_const_invariant<C>::value>());
         }
     }

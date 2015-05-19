@@ -3,12 +3,12 @@
 #define BOOST_CONTRACT_AUX_CHECK_PRE_POST_HPP_
 
 #include <boost/contract/core/exception.hpp>
-#include <boost/contract/aux_/condition/check_nothing.hpp>
+#include <boost/contract/aux_/condition/check_base.hpp>
 #include <boost/contract/aux_/call.hpp>
 #include <boost/contract/aux_/exception.hpp>
 /** @cond */
 #include <boost/shared_ptr.hpp>
-#include <boost/function.hpp>
+#include <boost/function.hpp> // TODO: Can I reduce boost.function overhead?
 /** @endcond */
 
 namespace boost { namespace contract { namespace aux {
@@ -17,27 +17,26 @@ namespace boost { namespace contract { namespace aux {
 // (if function is a lambda) and it could be expensive... check all classes
 // that MUST be copiable, make sure their copies are effecient, make all other
 // calsses noncopyable.
-class check_pre_post : public boost::contract::aux::check_nothing {
+class check_pre_post : public check_base {
 public:
     explicit check_pre_post(boost::contract::from from) : from_(from) {}
     
-    explicit check_pre_post(boost::contract::from from, boost::shared_ptr<
-            boost::contract::aux::call> call) :
-        from_(from), contract_call_(call)
-    {}
+    explicit check_pre_post(boost::contract::from from,
+            boost::shared_ptr<call> _call) : from_(from), decl_call_(_call) {
+        if(decl_call_) decl_call_->after_contract = true;
+    }
 
     virtual ~check_pre_post() {}
 
     template<typename F>
-    void set_pre(F f) { pre_ = f; pre_available(); }
+    void set_pre(F const& f) { pre_ = f; pre_available(); }
 
     template<typename F>
-    void set_post(F f) { post_ = f; post_available(); }
+    void set_post(F const& f) { post_ = f; post_available(); }
 
 protected:
     void check_pre(bool throw_on_failure = false) {
-        if(!contract_call_ || contract_call_->action ==
-                boost::contract::aux::call::check_pre) {
+        if(!decl_call_ || decl_call_->action == call::check_pre) {
             if(pre_) {
                 try { pre_(); }
                 catch(...) {
@@ -47,7 +46,7 @@ protected:
                     boost::contract::precondition_failed(from_);
                 }
             }
-            if(contract_call_) throw boost::contract::aux::no_error();
+            if(decl_call_) throw no_error();
         }
     }
 
@@ -71,13 +70,12 @@ protected:
     
     // If call(), can't call from a dtor (as throw no_error on OK).
     void check_post() {
-        if(!contract_call_ || contract_call_->action ==
-                boost::contract::aux::call::check_post) {
+        if(!decl_call_ || decl_call_->action == call::check_post) {
             if(post_) {
                 try { post_(); }
                 catch(...) { boost::contract::postcondition_failed(from_); }
             }
-            if(contract_call_) throw boost::contract::aux::no_error();
+            if(decl_call_) throw no_error();
         }
     }
     
@@ -86,15 +84,13 @@ protected:
 
     boost::contract::from from() const { return from_; }
 
-    boost::shared_ptr<boost::contract::aux::call> contract_call() {
-        return contract_call_;
-    }
+    boost::shared_ptr<call> decl_call() { return decl_call_; }
 
 private:
     boost::function<void ()> pre_;
     boost::function<void ()> post_;
     boost::contract::from from_;
-    boost::shared_ptr<boost::contract::aux::call> contract_call_;
+    boost::shared_ptr<call> decl_call_;
 };
 
 } } }

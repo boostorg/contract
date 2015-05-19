@@ -5,7 +5,7 @@
 /** @file */
 
 #include <boost/contract/core/set_precondition_postcondition.hpp>
-#include <boost/contract/core/call.hpp>
+#include <boost/contract/core/decl.hpp>
 #include <boost/contract/aux_/function/free_function.hpp>
 /** @cond */
 #include <boost/make_shared.hpp>
@@ -19,7 +19,7 @@ boost::contract::set_precondition_postcondition free_function() {
 }
 
 boost::contract::set_precondition_postcondition free_function(
-        boost::contract::call const& c) {
+        boost::contract::decl const& c) {
     return boost::contract::set_precondition_postcondition(boost::make_shared<
             boost::contract::aux::free_function>(c.call_));
 }

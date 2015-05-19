@@ -20,9 +20,10 @@ struct call : private boost::noncopyable { // Do not copy queue.
         check_exit_inv
     };
 
-    explicit call() : action() {}
+    explicit call() : action(), after_contract(false), old_values() {}
     
     action_enum action;
+    bool after_contract;
     std::queue<boost::shared_ptr<void> > old_values;
 };
 

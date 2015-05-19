@@ -31,14 +31,14 @@ private:
         this->copy_subcontracted_oldof();
         this->check_subcontracted_entry_inv();
         // Throw (so not in dtor).
-        if(this->contract_call()) this->check_subcontracted_exit_inv();
+        if(this->decl_call()) this->check_subcontracted_exit_inv();
     }
 
     void pre_available() /* override */ { this->check_subcontracted_pre(); }
 
     void post_available() /* override */ {
         // Body did not throw.
-        if(this->contract_call() && !std::uncaught_exception()) {
+        if(this->decl_call() && !std::uncaught_exception()) {
             // Throw no_error (so not in dtor).
             this->check_subcontracted_post();
         }
@@ -47,7 +47,7 @@ private:
 public:
     ~public_member() {
         // Body didn't throw.
-        if(!this->contract_call() && !std::uncaught_exception()) {
+        if(!this->decl_call() && !std::uncaught_exception()) {
             this->check_subcontracted_exit_inv();
             this->check_subcontracted_post();
         }

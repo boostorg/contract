@@ -18,10 +18,7 @@ if ! [ os.environ BOOST_ROOT ] {
     exit "Error: Set BOOST_ROOT environment variable to Boost root directory" ;
 }
 local BOOST_ROOT = [ os.environ BOOST_ROOT ] ;
-
-echo "Build Boost.Contract's source, tests, examples, documentation, etc." ;
 echo "Using Boost libraries from (see $BOOST_ROOT): $(BOOST_ROOT)" ;
-echo ;
 
 use-project boost : $(BOOST_ROOT) ;
 

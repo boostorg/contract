@@ -2,7 +2,7 @@
 #ifndef BOOST_CONTRACT_AUX_CHECK_SUBCONTRACTED_PRE_POST_INV_HPP_
 #define BOOST_CONTRACT_AUX_CHECK_SUBCONTRACTED_PRE_POST_INV_HPP_
 
-#include <boost/contract/core/call.hpp>
+#include <boost/contract/core/decl.hpp>
 #include <boost/contract/aux_/condition/check_pre_post_inv.hpp>
 #include <boost/contract/aux_/type_traits/base_types.hpp>
 #include <boost/contract/aux_/exception.hpp>
@@ -35,12 +35,12 @@ namespace boost { namespace contract { namespace aux {
 // calsses noncopyable? What does truly need to be copyable and why?
 
 template<class I, class C, typename A0>
-class check_subcontracted_pre_post_inv : // Copyable as shallow ptr and ref.
-        public boost::contract::aux::check_pre_post_inv<C> {
+class check_subcontracted_pre_post_inv : // Copyable (as * and &).
+        public check_pre_post_inv<C> {
     // Base types as pointers because mpl::for_each will construct them.
     typedef typename boost::mpl::transform<
-        typename boost::mpl::eval_if<boost::contract::aux::has_base_types<C>,
-            boost::contract::aux::base_types_of<C>
+        typename boost::mpl::eval_if<has_base_types<C>,
+            base_types_of<C>
         ,
             boost::mpl::identity<boost::mpl::vector<> >
         >::type,
@@ -53,19 +53,19 @@ public:
         C const* obj,
         A0 const& a0
     ) :
-        boost::contract::aux::check_pre_post_inv<C>(from, obj),
-        subcontracting_call_(boost::make_shared<boost::contract::aux::call>()),
+        check_pre_post_inv<C>(from, obj),
+        c_(boost::make_shared<call>()),
         a0_(a0)
     { init(); }
     
     explicit check_subcontracted_pre_post_inv(
         boost::contract::from from,
-        boost::shared_ptr<boost::contract::aux::call> call,
+        boost::shared_ptr<call> decl_call,
         C const* obj,
         A0 const& a0
     ) :
-        boost::contract::aux::check_pre_post_inv<C>(from, call, obj),
-        subcontracting_call_(boost::make_shared<boost::contract::aux::call>()),
+        check_pre_post_inv<C>(from, decl_call, obj),
+        c_(decl_call),
         a0_(a0)
     { init(); }
 
@@ -73,56 +73,71 @@ public:
     
 protected:
     void copy_subcontracted_oldof() {
-        subcontracting_call_->action = boost::contract::aux::call::copy_oldof;
-        boost::mpl::for_each<base_ptrs>(check_base_);
+        if(this->decl_call() && this->decl_call()->action != call::copy_oldof) {
+            return;
+        }
+        c_.call_->action = call::copy_oldof;
+        boost::mpl::for_each<base_ptrs>(check_base_class_);
         // No this->... here (calling func old-ofs on stack or handled by bind).
     }
     
     void check_subcontracted_entry_inv() {
-        subcontracting_call_->action =
-                boost::contract::aux::call::check_entry_inv;
-        boost::mpl::for_each<base_ptrs>(check_base_);
+        if(this->decl_call() && this->decl_call()->action !=
+                call::check_entry_inv) {
+            return;
+        }
+        c_.call_->action = call::check_entry_inv;
+        boost::mpl::for_each<base_ptrs>(check_base_class_);
         this->check_entry_inv();
     }
     
     // Allow to throw on failure for relaxing subcontracted pre.
     void check_subcontracted_pre(bool throw_on_failure = false) {
-        subcontracting_call_->action = boost::contract::aux::call::check_pre;
+        if(this->decl_call() && this->decl_call()->action != call::check_pre) {
+            return;
+        }
+        c_.call_->action = call::check_pre;
         try {
-            boost::mpl::for_each<base_ptrs>(check_base_);
+            boost::mpl::for_each<base_ptrs>(check_base_class_);
             // Pre logic-or: Last check, error also throws.
             this->check_pre(throw_on_failure);
-        } catch(boost::contract::aux::no_error const&) {
+        } catch(no_error const&) {
             // Pre logic-or: Stop at 1st no_error (thrown by callee).
         }
     }
 
     void check_subcontracted_exit_inv() {
-        subcontracting_call_->action =
-                boost::contract::aux::call::check_exit_inv;
-        boost::mpl::for_each<base_ptrs>(check_base_);
+        if(this->decl_call() && this->decl_call()->action !=
+                call::check_exit_inv) {
+            return;
+        }
+        c_.call_->action = call::check_exit_inv;
+        boost::mpl::for_each<base_ptrs>(check_base_class_);
         this->check_exit_inv();
     }
 
     void check_subcontracted_post() {
-        subcontracting_call_->action = boost::contract::aux::call::check_post;
-        boost::mpl::for_each<base_ptrs>(check_base_);
+        if(this->decl_call() && this->decl_call()->action != call::check_post) {
+            return;
+        }
+        c_.call_->action = call::check_post;
+        boost::mpl::for_each<base_ptrs>(check_base_class_);
         this->check_post();
     }
 
 private:
-    void init() { check_base_.nest(this); }
-
-    class check_base {
+    void init() { check_base_class_.nest(this); }
+    
+    class check_base_class { // Copyable (as *).
     public:
-        explicit check_base() : nest_() {}
+        explicit check_base_class() : nest_() {}
 
         void nest(check_subcontracted_pre_post_inv* n) { nest_ = n; }
 
         template<class B>
         void operator()(B*) {
             typedef void result_type;
-            typedef boost::mpl::vector<A0 const&, boost::contract::call>
+            typedef boost::mpl::vector<A0 const&, boost::contract::decl>
                     arg_types;
 
             call<B, result_type, arg_types>(
@@ -155,21 +170,14 @@ private:
             B const* base_obj = nest_->object();
             BOOST_CONTRACT_AUX_DEBUG(base_obj);
 
-            boost::contract::call c(nest_->subcontracting_call_);
-            if(nest_->contract_call()) {
-                BOOST_CONTRACT_AUX_DEBUG(nest_->contract_call()->action ==
-                        c.call_->action);
-                c.call_ = nest_->contract_call(); // Use existing call.
-            }
-
             try {
-                (base_obj->*base_func)(nest_->a0_, c);
-            } catch(boost::contract::aux::no_error const&) {
-                if(c.call_->action == boost::contract::aux::call::check_pre) {
+                (base_obj->*base_func)(nest_->a0_, nest_->c_);
+            } catch(no_error const&) {
+                if(nest_->c_.call_->action == call::check_pre) {
                     throw; // Pre logic-or: 1st no_err stops (throw to caller).
                 }
             } catch(...) {
-                if(c.call_->action == boost::contract::aux::call::check_pre) {
+                if(nest_->c_.call_->action == call::check_pre) {
                     // Pre logic-or: Ignore err, possibly checks up to caller.
                 }
             }
@@ -178,9 +186,9 @@ private:
         check_subcontracted_pre_post_inv* nest_;
     };
 
-    boost::shared_ptr<boost::contract::aux::call> subcontracting_call_;
-    check_base check_base_;
-    A0 const& a0_;
+    boost::contract::decl c_; // Copyable (as *).
+    check_base_class check_base_class_; // Copyable (as *).
+    A0 const& a0_; // TODO: Support configurable func arity.
 };
 
 } } } // namespace
