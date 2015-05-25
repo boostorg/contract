@@ -3,11 +3,12 @@
 
 #include "../aux_/oteststream.hpp"
 #include <boost/contract/public_member.hpp>
+#include <boost/contract/decl_function.hpp>
 #include <boost/contract/base_types.hpp>
-#include <boost/contract/assert.hpp>
 #include <boost/contract/oldof.hpp>
-#include <boost/contract/scoped.hpp>
-#include <boost/contract/override.hpp>
+#include <boost/contract/var.hpp>
+#include <boost/contract/assert.hpp>
+#include <boost/contract/introspect.hpp>
 #include <boost/shared_ptr.hpp>
 #include <boost/detail/lightweight_test.hpp>
 #include <string>
@@ -25,28 +26,25 @@ struct t {
     std::string z;
     t() : z("") { z.push_back(Id); }
 
-    // Test pure virtual (=> decl).
-    virtual std::string f(std::string& s, boost::contract::virtual_* v = 0);
-};
-    
-template<char Id>
-std::string t<Id>::f(std::string& s, boost::contract::virtual_* v) {
-    boost::shared_ptr<std::string const> old_u = BOOST_CONTRACT_OLDOF(v, z);
-    boost::shared_ptr<std::string const> old_s = BOOST_CONTRACT_OLDOF(v, s);
-    boost::contract::scoped c = boost::contract::public_member(v, this)
-        .precondition([&] {
-            out << Id << "::f::pre" << std::endl;
-            BOOST_CONTRACT_ASSERT(s != "");
+    void f(std::string const& s, boost::contract::decl c) const {
+        boost::shared_ptr<std::string const> old_u = BOOST_CONTRACT_OLDOF(c, z);
+        boost::shared_ptr<std::string const> old_s = BOOST_CONTRACT_OLDOF(c, s);
+        boost::contract::var contract = boost::contract::public_member(c, this)
+            .precondition([&] {
+                out << Id << "::f::pre" << std::endl;
+                BOOST_CONTRACT_ASSERT(s != "");
 //                BOOST_CONTRACT_ASSERT(false);
-        })
-        .postcondition([&] {
-            out << Id << "::f::post" << std::endl;
-            BOOST_CONTRACT_ASSERT(z == *old_u + *old_s);
-            BOOST_CONTRACT_ASSERT(s.find(*old_u) != std::string::npos);
-        })
-    ;
-    return "";
-}
+            })
+            .postcondition([&] {
+                out << Id << "::f::post" << std::endl;
+                BOOST_CONTRACT_ASSERT(z == *old_u + *old_s);
+                BOOST_CONTRACT_ASSERT(s.find(*old_u) != std::string::npos);
+            })
+        ;
+    }
+    // Test pure virtual (=> decl).
+    virtual void f(std::string& s) = 0;
+};
 
 struct c
     #define BASES public t<'d'>, protected t<'p'>, private t<'q'>, public t<'e'>
@@ -64,13 +62,11 @@ struct c
     std::string y;
     c() : y("c") {}
 
-    // Test both overriding (=> introspect) and virtual (=> decl).
-    virtual std::string f(std::string& s, boost::contract::virtual_* v = 0)
-            /* override */ {
-        boost::shared_ptr<std::string const> old_y = BOOST_CONTRACT_OLDOF(v, y);
-        boost::shared_ptr<std::string const> old_s = BOOST_CONTRACT_OLDOF(v, s);
-        boost::contract::scoped c = boost::contract::public_member<
-                override_f>(v, &c::f, this, s)
+    void f(std::string const& s, boost::contract::decl c) const {
+        boost::shared_ptr<std::string const> old_y = BOOST_CONTRACT_OLDOF(c, y);
+        boost::shared_ptr<std::string const> old_s = BOOST_CONTRACT_OLDOF(c, s);
+        boost::contract::var contract = boost::contract::public_member<
+                introspect_f>(c, this, s)
             .precondition([&] {
                 out << "c::f::pre" << std::endl;
                 BOOST_CONTRACT_ASSERT(s != "");
@@ -82,15 +78,19 @@ struct c
                 BOOST_CONTRACT_ASSERT(s.find(*old_y) != std::string::npos);
             })
         ;
-        out << "c::f::body" << std::endl;
-        return s;
     }
-    BOOST_CONTRACT_OVERRIDE(f)
+    // Test both overriding (=> introspect) and virtual (=> decl).
+    virtual void f(std::string& s) /* override */ {
+        boost::contract::var contract = boost::contract::decl_function(
+                this, s, &c::f);
+        out << "c::f::body" << std::endl;
+    }
+    BOOST_CONTRACT_INTROSPECT(f)
 };
 
 // Test not (fully) contracted base is not part of subcontracting.
 struct b {
-    virtual std::string f(std::string& s) { return s; } // No contract.
+    virtual void f(std::string&) = 0; // No contract.
 };
 
 // Test public member with both non-contracted and contracted bases.
@@ -111,21 +111,17 @@ struct a
     a() : x("a") {}
 
     // Test overriding (=> introspect).
-    // TODO: Do I need this virtual_* or not? ... would a polymorphic cass to
-    // c still call into this f impl if virtual_* is not here? I'd think so...
-    std::string f(std::string& s, boost::contract::virtual_* v = 0)
-            /* override */ {
-        std::string result = "";
-        boost::shared_ptr<std::string const> old_x = BOOST_CONTRACT_OLDOF(v, x);
-        boost::shared_ptr<std::string const> old_s = BOOST_CONTRACT_OLDOF(v, s);
-        boost::contract::scoped c = boost::contract::public_member<
-                override_f>(v, &a::f, this, s)
+    void f(std::string& s) /* override */ {
+        boost::shared_ptr<std::string const> old_x = BOOST_CONTRACT_OLDOF(x);
+        boost::shared_ptr<std::string const> old_s = BOOST_CONTRACT_OLDOF(s);
+        boost::contract::var contract = boost::contract::public_member<
+                introspect_f>(this, s)
             .precondition([&] {
                 out << "a::f::pre" << std::endl;
                 BOOST_CONTRACT_ASSERT(s != "");
             })
             .postcondition([&] {
-                out << "a::f::post ** " << result << std::endl;
+                out << "a::f::post" << std::endl;
                 BOOST_CONTRACT_ASSERT(x == *old_x + *old_s);
                 BOOST_CONTRACT_ASSERT(s.find(*old_x) != std::string::npos);
             })
@@ -148,10 +144,8 @@ struct a
         save = t<'e'>::z;
         t<'e'>::z += save_s;
         s += save;
-
-        return result = save_s;
     }
-    BOOST_CONTRACT_OVERRIDE(f)
+    BOOST_CONTRACT_INTROSPECT(f)
 };
 
 int main() {
@@ -162,7 +156,6 @@ int main() {
     std::cout << aa.x << std::endl;
     std::cout << aa.y << std::endl;
     std::cout << aa.t<'d'>::z << std::endl;
-    std::cout << aa.t<'e'>::z << std::endl;
     //BOOST_TEST_EQ(aa.val(), 456);
     //BOOST_TEST_EQ(i, 123);
 

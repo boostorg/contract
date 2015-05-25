@@ -4,8 +4,7 @@
 
 /** @file */
 
-#include <boost/contract/core/decl.hpp>
-#include <boost/contract/aux_/call.hpp>
+#include <boost/contract/core/virtual.hpp>
 #include <boost/contract/aux_/debug.hpp>
 /** @cond */
 #include <boost/make_shared.hpp>
@@ -47,9 +46,9 @@ BOOST_CONTRACT_ERROR_macro_OLDOF_has_invalid_number_of_arguments_, \
     ))
 
 #define BOOST_CONTRACT_ERROR_macro_OLDOF_has_invalid_number_of_arguments_2( \
-        c, value) \
-    BOOST_CONTRACT_OLDOF_AUTO_(value)(boost::contract::old(c, \
-        boost::contract::copy_old(c) ? (value) : boost::contract::old() \
+        v, value) \
+    BOOST_CONTRACT_OLDOF_AUTO_(value)(boost::contract::old(v, \
+        boost::contract::copy_old(v) ? (value) : boost::contract::old() \
     ))
 
 #ifdef BOOST_NO_CXX11_AUTO_DECLARATIONS
@@ -77,20 +76,19 @@ bool copy_old() {
 #endif
 }
 
-bool copy_old(decl const& c) {
+bool copy_old(virtual_* v) {
 #ifdef BOOST_CONTRACT_CONFIG_NO_POSTCONDITIONS
     return false; // Post checking disabled, so never copy old values.
 #else
-    return c.call_ && c.call_->action == boost::contract::aux::call::copy_oldof;
+    return !v || v->action_ == boost::contract::virtual_::copy_oldof;
 #endif
 }
 
-class old {
+class old { // Copyable (as *).
 public:
-    explicit old() : decl_call_(), value_() {}
+    explicit old() : v_(0), value_() {}
 
-    explicit old(decl const& c, old const& other) :
-            decl_call_(c.call_), value_(other.value_) {}
+    explicit old(virtual_* v, old const& other) : v_(v), value_(other.value_) {}
 
     template<typename T>
     /* implicit */ old(T const& old_value) :
@@ -103,23 +101,21 @@ public:
 
     template<typename T>
     operator boost::shared_ptr<T const>() {
-        if(!decl_call_) {
+        if(!v_) {
             BOOST_CONTRACT_AUX_DEBUG(value_);
             boost::shared_ptr<T const> old_value =
                     boost::static_pointer_cast<T const>(value_);
             BOOST_CONTRACT_AUX_DEBUG(old_value);
             return old_value;
-        } else if(decl_call_->action ==
-                boost::contract::aux::call::copy_oldof) {
+        } else if(v_->action_ == boost::contract::virtual_::copy_oldof) {
             BOOST_CONTRACT_AUX_DEBUG(value_);
-            decl_call_->old_values.push(value_);
+            v_->old_values_.push(value_);
             return boost::shared_ptr<T const>();
-        } else if(decl_call_->action ==
-                boost::contract::aux::call::check_post) {
+        } else if(v_->action_ == boost::contract::virtual_::check_post) {
             BOOST_CONTRACT_AUX_DEBUG(!value_);
-            boost::shared_ptr<void> value = decl_call_->old_values.front();
+            boost::shared_ptr<void> value = v_->old_values_.front();
             BOOST_CONTRACT_AUX_DEBUG(value);
-            decl_call_->old_values.pop();
+            v_->old_values_.pop();
             boost::shared_ptr<T const> old_value =
                     boost::static_pointer_cast<T const>(value);
             BOOST_CONTRACT_AUX_DEBUG(old_value);
@@ -130,7 +126,7 @@ public:
     }
 
 private:
-    boost::shared_ptr<boost::contract::aux::call> decl_call_;
+    virtual_* v_;
     boost::shared_ptr<void> value_;
 };
 

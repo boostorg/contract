@@ -5,9 +5,7 @@
 #include <boost/contract/core/config.hpp>
 #include <boost/contract/core/exception.hpp>
 #include <boost/contract/aux_/condition/check_pre_post.hpp>
-#include <boost/contract/aux_/call.hpp>
 #include <boost/contract/aux_/type_traits/invariant.hpp>
-#include <boost/contract/aux_/exception.hpp>
 /** @cond */
 #include <boost/mpl/bool.hpp>
 #include <boost/shared_ptr.hpp>
@@ -18,35 +16,21 @@ namespace boost { namespace contract { namespace aux {
 template<class C>
 class check_pre_post_inv : public check_pre_post { // Copyable (as *).
 public:
-    explicit check_pre_post_inv(boost::contract::from from, C const* obj) :
+    explicit check_pre_post_inv(boost::contract::from from, C* obj) :
             check_pre_post(from), obj_(obj) {}
     
-    explicit check_pre_post_inv(boost::contract::from from, boost::shared_ptr<
-            call> decl_call, C const* obj) :
-        check_pre_post(from, decl_call), obj_(obj)
-    {}
-
     virtual ~check_pre_post_inv() {}
 
 protected:
-    void check_entry_inv(bool static_inv_only = false) {
-        if(!this->decl_call() || this->decl_call()->action ==
-                call::check_entry_inv) {
-            check_inv(/* on_entry = */ true, static_inv_only);
-            if(this->decl_call()) throw no_error();
-        }
+    void check_entry_inv() {
+        check_inv(/* on_enty = */ true, /* static_inv_only = */ false);
+    }
+    
+    void check_exit_inv() {
+        check_inv(/* on_enty = */ false, /* static_inv_only = */ false);
     }
 
-    // If call(), can't call from dtor (as throw no_error on OK).
-    void check_exit_inv(bool static_inv_only = false) {
-        if(!this->decl_call() || this->decl_call()->action ==
-                call::check_exit_inv) {
-            check_inv(/* on_entry = */ false, static_inv_only);
-            if(this->decl_call()) throw no_error();
-        }
-    }
-
-    C const* object() const { return obj_; }
+    C* object() { return obj_; }
 
 private:
     void check_inv(bool on_entry, bool static_inv_only) {
@@ -84,7 +68,7 @@ private:
 
     // TODO: Add volatile inv here...
 
-    C const* obj_;
+    C* obj_;
 };
 
 } } }

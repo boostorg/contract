@@ -29,6 +29,9 @@ private:
             boost::contract::aux::check_pre_post> check) : check_(check) {}
 
     boost::shared_ptr<boost::contract::aux::check_pre_post> check_;
+
+    // Friendship used to limit library's public API.
+    friend class scoped;
 };
 
 } } // namespace

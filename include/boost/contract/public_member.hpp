@@ -5,7 +5,7 @@
 /** @file */
 
 #include <boost/contract/core/set_precondition_postcondition.hpp>
-#include <boost/contract/core/decl.hpp>
+#include <boost/contract/core/virtual.hpp>
 #include <boost/contract/aux_/function/public_member.hpp>
 #include <boost/contract/aux_/none.hpp>
 /** @cond */
@@ -14,39 +14,88 @@
 
 namespace boost { namespace contract {
 
+// For non-virtual of class with no bases.
+template<class C>
+set_precondition_postcondition public_member(C* obj) {
+    return set_precondition_postcondition(boost::make_shared<
+        boost::contract::aux::public_member<
+            boost::contract::aux::none,
+            boost::contract::aux::none,
+            C,
+            boost::contract::aux::none
+        >
+    >(0, obj, boost::contract::aux::none::value));
+}
+
+// For virtual members of class with no bases.
+template<class C>
+set_precondition_postcondition public_member(virtual_* v, C* obj) {
+    return set_precondition_postcondition(boost::make_shared<
+        boost::contract::aux::public_member<
+            boost::contract::aux::none,
+            boost::contract::aux::none,
+            C,
+            boost::contract::aux::none
+        >
+    >(v, obj, boost::contract::aux::none::value));
+}
+
 // TODO: Support configurable function arity.
+// arity = 0
 
-template<class C>
-set_precondition_postcondition public_member(C const* obj) {
+// For non-virtual members of class with bases.
+template<class O, typename F, class C>
+set_precondition_postcondition public_member(F, C* obj) {
     return set_precondition_postcondition(boost::make_shared<
-        boost::contract::aux::public_member<boost::contract::aux::none, C,
-                boost::contract::aux::none>
-    >(obj, boost::contract::aux::none::value));
+        boost::contract::aux::public_member<
+            O,
+            F,
+            C,
+            boost::contract::aux::none
+        >
+    >(0, obj, boost::contract::aux::none::value));
 }
 
-template<class C>
-set_precondition_postcondition public_member(decl const& c, C const* obj) {
+// For virtual members of class with bases.
+template<class O, typename F, class C>
+set_precondition_postcondition public_member(virtual_* v, F, C* obj) {
     return set_precondition_postcondition(boost::make_shared<
-        boost::contract::aux::public_member<boost::contract::aux::none, C,
-                boost::contract::aux::none>
-    >(c.call_, obj, boost::contract::aux::none::value));
+        boost::contract::aux::public_member<
+            O,
+            F,
+            C,
+            boost::contract::aux::none
+        >
+    >(v, obj, boost::contract::aux::none::value));
 }
 
-template<class I, class C, typename A0>
-set_precondition_postcondition public_member(C const* obj,
-        A0 const& a0) {
+// arity = 1
+
+template<class O, typename F, class C, typename A0>
+set_precondition_postcondition public_member(F, C* obj, A0& a0) {
     return set_precondition_postcondition(boost::make_shared<
-        boost::contract::aux::public_member<I, C, A0>
-    >(obj, a0));
+        boost::contract::aux::public_member<
+            O,
+            F,
+            C,
+            A0
+        >
+    >(0, obj, a0));
 }
 
-template<class I, class C, typename A0>
-set_precondition_postcondition public_member(decl const& c, C const* obj,
-        A0 const& a0) {
+template<class O, typename F, class C, typename A0>
+set_precondition_postcondition public_member(virtual_* v, F, C* obj, A0& a0) {
     return set_precondition_postcondition(boost::make_shared<
-        boost::contract::aux::public_member<I, C, A0>
-    >(c.call_, obj, a0));
+        boost::contract::aux::public_member<
+            O,
+            F,
+            C,
+            A0
+        >
+    >(v, obj, a0));
 }
+
+// TODO: Support configurable arity.
 
 } } // namespace
 
