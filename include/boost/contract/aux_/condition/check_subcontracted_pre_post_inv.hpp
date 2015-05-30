@@ -37,10 +37,10 @@ namespace boost { namespace contract { namespace aux {
 // TODO: Can I make this, other check_... classes, and maybe even other
 // calsses noncopyable? What does truly need to be copyable and why?
 
-// O, F, and A-i can be none types (but C cannot).
-template<class O, typename F, class C, typename A0>
+// O, R, F, and A-i can be none types (but C cannot).
+template<class O, typename R, typename F, class C, typename A0>
 class check_subcontracted_pre_post_inv : // Copyable (as * and &).
-        public check_pre_post_inv<C> {
+        public check_pre_post_inv<R, C> {
     // Base types as pointers because mpl::for_each will construct them.
     typedef typename boost::mpl::transform<
         typename boost::mpl::eval_if<has_base_types<C>,
@@ -59,8 +59,8 @@ class check_subcontracted_pre_post_inv : // Copyable (as * and &).
 
 public:
     explicit check_subcontracted_pre_post_inv(boost::contract::from from,
-            boost::contract::virtual_* v, C* obj, A0& a0) :
-        check_pre_post_inv<C>(from, obj), a0_(a0)
+            boost::contract::virtual_* v, C* obj, R& r, A0& a0) :
+        check_pre_post_inv<R, C>(from, obj), r_(r), a0_(a0)
     {
         if(v) {
             base_call_ = true;
@@ -70,6 +70,7 @@ public:
             if(!boost::mpl::empty<base_ptrs>::value) {
                 v_ = new boost::contract::virtual_(
                         boost::contract::virtual_::no_action);
+                v_->result_ = &r_;
             } else v_ = 0;
         }
         check_base_.nest(this);
@@ -116,12 +117,19 @@ protected:
 
     void check_subcontracted_post() {
         check(boost::contract::virtual_::check_post,
-                &check_subcontracted_pre_post_inv::check_post);
+                &check_subcontracted_pre_post_inv::cp);
     }
 
     bool base_call() const { return base_call_; }
 
 private:
+    void cp() {
+        std::clog << "**" << r_ << "**" << std::endl; 
+        R& r = r_;
+        if(base_call_) r = *static_cast<R*>(v_->result_);
+        this->check_post(r);
+    }
+
     void check(boost::contract::virtual_::action_enum a,
             void (check_subcontracted_pre_post_inv::* f)() = 0) {
         if(!base_call_ || v_->action_ == a) {
@@ -180,6 +188,7 @@ private:
     boost::contract::virtual_* v_;
     bool base_call_;
     check_base check_base_; // Copyable (as *).
+    R& r_;
     A0& a0_; // TODO: Support configurable func arity.
 };
 

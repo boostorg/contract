@@ -15,6 +15,12 @@ public:
 
 none none::value;
 
+// TODO: Remove, for testing only...
+#include <iostream>
+std::ostream& operator<<(std::ostream& out, none const&) {
+    return out << "<none>";
+}
+
 } } } // namespace
 
 #endif // #include guard

@@ -21,12 +21,13 @@ namespace boost {
 
 namespace boost { namespace contract {
     
+template<typename R>
 class set_precondition_postcondition {
 public:
     template<typename F>
-    set_postcondition_only precondition(F const& f) {
+    set_postcondition_only<R> precondition(F const& f) {
         check_->set_pre(f);
-        return set_postcondition_only(check_);
+        return set_postcondition_only<R>(check_);
     }
 
     template<typename F>
@@ -37,27 +38,18 @@ public:
 
 private:
     explicit set_precondition_postcondition(boost::shared_ptr<
-            boost::contract::aux::check_pre_post> check) : check_(check) {}
+            boost::contract::aux::check_pre_post<R> > check) : check_(check) {}
 
-    boost::shared_ptr<boost::contract::aux::check_pre_post> check_;
+    boost::shared_ptr<boost::contract::aux::check_pre_post<R> > check_;
 
     // Friendship used to limit library's public API.
     friend class scoped;
 
-    template<class C>
-    friend set_precondition_postcondition public_member(C*);
-    template<class C>
-    friend set_precondition_postcondition public_member(virtual_*, C*);
-    // arity = 0
-    template<class O, typename F, class C>
-    friend set_precondition_postcondition public_member(F, C*);
-    template<class O, typename F, class C>
-    friend set_precondition_postcondition public_member(virtual_*, F, C*);
-    // arity = 1
-    template<class O, typename F, class C, typename A0>
-    friend set_precondition_postcondition public_member(F, C*, A0&);
-    template<class O, typename F, class C, typename A0>
-    friend set_precondition_postcondition public_member(virtual_*, F, C*, A0&);
+    template<typename R_, class C>
+    friend set_precondition_postcondition<R_> public_member(virtual_*, R_&, C*);
+    template<class O, typename R_, typename F, class C, typename A0>
+    friend set_precondition_postcondition<R_> public_member(
+            virtual_*, R_&, F, C*, A0&);
     // TODO: Support configurable arity.
 };
 

@@ -12,6 +12,7 @@
 
 namespace boost { namespace contract {
 
+template<typename R>
 class set_postcondition_only {
 public:
     template<typename F>
@@ -22,13 +23,13 @@ public:
 
 private:
     explicit set_postcondition_only(boost::shared_ptr<
-            boost::contract::aux::check_pre_post> check) : check_(check) {}
+            boost::contract::aux::check_pre_post<R> > check) : check_(check) {}
 
-    boost::shared_ptr<boost::contract::aux::check_pre_post> check_;
+    boost::shared_ptr<boost::contract::aux::check_pre_post<R> > check_;
 
     // Friendship used to limit library's public API.
     friend class scoped;
-    friend class set_precondition_postcondition;
+    template<typename> friend class set_precondition_postcondition;
 };
 
 } } // namespace

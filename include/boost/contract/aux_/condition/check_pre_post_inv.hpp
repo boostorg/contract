@@ -13,11 +13,11 @@
 
 namespace boost { namespace contract { namespace aux {
 
-template<class C>
-class check_pre_post_inv : public check_pre_post { // Copyable (as *).
+template<typename R, class C>
+class check_pre_post_inv : public check_pre_post<R> { // Copyable (as *).
 public:
     explicit check_pre_post_inv(boost::contract::from from, C* obj) :
-            check_pre_post(from), obj_(obj) {}
+            check_pre_post<R>(from), obj_(obj) {}
     
     virtual ~check_pre_post_inv() {}
 

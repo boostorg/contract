@@ -11,12 +11,12 @@
 
 namespace boost { namespace contract { namespace aux {
 
-template<class O, typename F, class C, typename A0>
-class public_member : public check_subcontracted_pre_post_inv<O, F, C, A0> {
+template<class O, typename R, typename F, class C, typename A0>
+class public_member : public check_subcontracted_pre_post_inv<O, R, F, C, A0> {
 public:
-    explicit public_member(boost::contract::virtual_* v, C* obj, A0& a0) :
-        check_subcontracted_pre_post_inv<O, F, C, A0>(
-                boost::contract::from_public_member, v, obj, a0)
+    explicit public_member(boost::contract::virtual_* v, C* obj, R& r, A0& a0) :
+        check_subcontracted_pre_post_inv<O, R, F, C, A0>(
+                boost::contract::from_public_member, v, obj, r, a0)
     {
         this->copy_subcontracted_oldof();
         this->check_subcontracted_entry_inv();

@@ -4,7 +4,7 @@
 
 /** @file */
 
-#include <boost/contract/aux_/condition/check_pre_post.hpp>
+#include <boost/contract/aux_/condition/check_pre_only.hpp>
 /** @cond */
 #include <boost/shared_ptr.hpp>
 /** @endcond */
@@ -22,14 +22,14 @@ public:
 
 private:
     explicit set_nothing(boost::shared_ptr<
-            boost::contract::aux::check_pre_post> check) : check_(check) {}
+            boost::contract::aux::check_pre_only> check) : check_(check) {}
 
-    boost::shared_ptr<boost::contract::aux::check_pre_post> check_;
+    boost::shared_ptr<boost::contract::aux::check_pre_only> check_;
 
     // Friendship used to limit library's public API.
     friend class scoped;
     friend class set_precondition_only;
-    friend class set_postcondition_only;
+    template<typename R> friend class set_postcondition_only;
 };
 
 } } // namespace

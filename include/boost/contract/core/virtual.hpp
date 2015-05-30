@@ -11,7 +11,7 @@
 namespace boost {
     namespace contract {
         namespace aux {
-            template<class, typename, class, typename>
+            template<class, typename, typename, class, typename>
             class check_subcontracted_pre_post_inv;
         }
     }
@@ -36,12 +36,13 @@ private:
 
     action_enum action_;
     std::queue<boost::shared_ptr<void> > old_values_;
+    void* result_;
 
     // Friendship used to limit library's public API.
     friend bool copy_old(virtual_*);
     friend class old;
 
-    template<class, typename, class, typename>
+    template<class, typename, typename, class, typename>
     friend class boost::contract::aux::check_subcontracted_pre_post_inv;
 };
 

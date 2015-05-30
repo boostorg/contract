@@ -26,26 +26,28 @@ struct t {
     t() : z("") { z.push_back(Id); }
 
     // Test pure virtual (=> decl).
-    virtual std::string f(std::string& s, boost::contract::virtual_* v = 0);
+    virtual std::string f(std::string& s, boost::contract::virtual_* v = 0) = 0;
 };
     
 template<char Id>
 std::string t<Id>::f(std::string& s, boost::contract::virtual_* v) {
+    std::string result;
     boost::shared_ptr<std::string const> old_u = BOOST_CONTRACT_OLDOF(v, z);
     boost::shared_ptr<std::string const> old_s = BOOST_CONTRACT_OLDOF(v, s);
-    boost::contract::scoped c = boost::contract::public_member(v, this)
+    boost::contract::scoped c = boost::contract::public_member(v, result, this)
         .precondition([&] {
             out << Id << "::f::pre" << std::endl;
             BOOST_CONTRACT_ASSERT(s != "");
 //                BOOST_CONTRACT_ASSERT(false);
         })
-        .postcondition([&] {
+        .postcondition([&] (std::string const& result) {
             out << Id << "::f::post" << std::endl;
             BOOST_CONTRACT_ASSERT(z == *old_u + *old_s);
             BOOST_CONTRACT_ASSERT(s.find(*old_u) != std::string::npos);
+            BOOST_CONTRACT_ASSERT(result == *old_s);
         })
     ;
-    return "";
+    return result = "";
 }
 
 struct c
@@ -67,23 +69,25 @@ struct c
     // Test both overriding (=> introspect) and virtual (=> decl).
     virtual std::string f(std::string& s, boost::contract::virtual_* v = 0)
             /* override */ {
+        std::string result;
         boost::shared_ptr<std::string const> old_y = BOOST_CONTRACT_OLDOF(v, y);
         boost::shared_ptr<std::string const> old_s = BOOST_CONTRACT_OLDOF(v, s);
         boost::contract::scoped c = boost::contract::public_member<
-                override_f>(v, &c::f, this, s)
+                override_f>(v, result, &c::f, this, s)
             .precondition([&] {
                 out << "c::f::pre" << std::endl;
                 BOOST_CONTRACT_ASSERT(s != "");
 //                BOOST_CONTRACT_ASSERT(false);
             })
-            .postcondition([&] {
+            .postcondition([&] (std::string const& result) {
                 out << "c::f::post" << std::endl;
                 BOOST_CONTRACT_ASSERT(y == *old_y + *old_s);
                 BOOST_CONTRACT_ASSERT(s.find(*old_y) != std::string::npos);
+                BOOST_CONTRACT_ASSERT(result == *old_s);
             })
         ;
         out << "c::f::body" << std::endl;
-        return s;
+        return result = s;
     }
     BOOST_CONTRACT_OVERRIDE(f)
 };
@@ -115,19 +119,20 @@ struct a
     // c still call into this f impl if virtual_* is not here? I'd think so...
     std::string f(std::string& s, boost::contract::virtual_* v = 0)
             /* override */ {
-        std::string result = "";
+        std::string result;
         boost::shared_ptr<std::string const> old_x = BOOST_CONTRACT_OLDOF(v, x);
         boost::shared_ptr<std::string const> old_s = BOOST_CONTRACT_OLDOF(v, s);
         boost::contract::scoped c = boost::contract::public_member<
-                override_f>(v, &a::f, this, s)
+                override_f>(v, result, &a::f, this, s)
             .precondition([&] {
                 out << "a::f::pre" << std::endl;
                 BOOST_CONTRACT_ASSERT(s != "");
             })
-            .postcondition([&] {
+            .postcondition([&] (std::string const& result) {
                 out << "a::f::post ** " << result << std::endl;
                 BOOST_CONTRACT_ASSERT(x == *old_x + *old_s);
                 BOOST_CONTRACT_ASSERT(s.find(*old_x) != std::string::npos);
+                BOOST_CONTRACT_ASSERT(result == *old_s);
             })
         ;
         out << "a::f::body" << std::endl;
