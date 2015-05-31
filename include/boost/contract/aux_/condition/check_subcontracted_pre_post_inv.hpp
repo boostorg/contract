@@ -2,6 +2,7 @@
 #ifndef BOOST_CONTRACT_AUX_CHECK_SUBCONTRACTED_PRE_POST_INV_HPP_
 #define BOOST_CONTRACT_AUX_CHECK_SUBCONTRACTED_PRE_POST_INV_HPP_
 
+// TODO: Review and cleanup all #includes.
 #include <boost/contract/core/virtual.hpp>
 #include <boost/contract/aux_/condition/check_pre_post_inv.hpp>
 #include <boost/contract/aux_/type_traits/base_types.hpp>
@@ -33,6 +34,10 @@
 /** @endcond */
 
 namespace boost { namespace contract { namespace aux {
+
+namespace check_subcontracted_pre_post_inv_ {
+    struct no_error {}; // Exception to signal OK (must not inherit).
+}
 
 // TODO: Can I make this, other check_... classes, and maybe even other
 // calsses noncopyable? What does truly need to be copyable and why?
@@ -93,7 +98,7 @@ protected:
     }
     
     // Allow to throw on failure for relaxing subcontracted pre.
-    void check_subcontracted_pre(bool throw_on_failure = false) {
+    void check_subcontracted_pre() {
         if(!base_call_ || v_->action_ ==
                 boost::contract::virtual_::check_pre) {
             try {
@@ -102,11 +107,11 @@ protected:
                     boost::mpl::for_each<base_ptrs>(check_base_);
                 }
                 // Pre logic-or: Last check, error also throws.
-                this->check_pre(throw_on_failure);
-            } catch(no_error const&) {
+                this->check_pre(/* throw_on_failure = */ base_call_);
+            } catch(check_subcontracted_pre_post_inv_::no_error const&) {
                 // Pre logic-or: Stop at 1st no_error (thrown by callee).
             }
-            if(base_call_) throw no_error();
+            if(base_call_) throw check_subcontracted_pre_post_inv_::no_error();
         }
     }
 
@@ -117,19 +122,17 @@ protected:
 
     void check_subcontracted_post() {
         check(boost::contract::virtual_::check_post,
-                &check_subcontracted_pre_post_inv::cp);
+                &check_subcontracted_pre_post_inv::check_post_result);
     }
 
     bool base_call() const { return base_call_; }
 
 private:
-    void cp() {
-        std::clog << "**" << r_ << "**" << std::endl; 
-        R& r = r_;
-        if(base_call_) r = *static_cast<R*>(v_->result_);
+    void check_post_result() {
+        R& r = base_call_ ? *static_cast<R*>(v_->result_) : r_;
         this->check_post(r);
     }
-
+    
     void check(boost::contract::virtual_::action_enum a,
             void (check_subcontracted_pre_post_inv::* f)() = 0) {
         if(!base_call_ || v_->action_ == a) {
@@ -138,11 +141,9 @@ private:
                 boost::mpl::for_each<base_ptrs>(check_base_);
             }
             if(f) (this->*f)();
-            if(base_call_) throw no_error();
+            if(base_call_) throw check_subcontracted_pre_post_inv_::no_error();
         }
     }
-
-    struct no_error {}; // Exception to signal OK (must not inherit).
 
     class check_base { // Copyable (as *).
     public:
@@ -162,6 +163,7 @@ private:
     private:
         template<class B>
         void call(boost::mpl::false_ const&) {}
+
         template<class B>
         void call(boost::mpl::true_ const&) {
             BOOST_CONTRACT_AUX_DEBUG(nest_->object());
@@ -171,7 +173,7 @@ private:
             try {
                 O::template BOOST_CONTRACT_AUX_NAME1(base_call)<B, C, A0>(
                         nest_->object(), nest_->a0_, nest_->v_);
-            } catch(no_error const&) {
+            } catch(check_subcontracted_pre_post_inv_::no_error const&) {
                 if(nest_->v_->action_ == boost::contract::virtual_::check_pre) {
                     throw; // Pre logic-or: 1st no_err stops (throw to caller).
                 }
@@ -184,7 +186,7 @@ private:
 
         check_subcontracted_pre_post_inv* nest_;
     };
-
+    
     boost::contract::virtual_* v_;
     bool base_call_;
     check_base check_base_; // Copyable (as *).

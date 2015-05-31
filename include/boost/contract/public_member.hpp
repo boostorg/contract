@@ -42,6 +42,16 @@ set_precondition_postcondition<void> public_member(virtual_* v, C* obj) {
     >(v, obj, boost::contract::aux::none::value));
 }
 
+// TODO: R should be specified *only* when v is present. If F present but not
+// v then R should NOT be specified. Because an overriding functions must
+// always use v even if no longer decl virtual so to overload correct func
+// from base class with v param (otherwise most compilers will give a warning
+// and overloading will not work) so "virtual result" R never needed unless v
+// is present... actually, this meas also F is there only when v is there!
+//
+//      O, [R], F allowed only when v is present!
+//
+
 // For virtual members of class with no bases.
 template<typename R, class C>
 set_precondition_postcondition<R> public_member(virtual_* v, R& r, C* obj) {
