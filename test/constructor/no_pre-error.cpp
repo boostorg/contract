@@ -1,12 +1,12 @@
 
 // Test constructor cannot use `.precondition(...)`.
 
-#include <boost/contract/scoped.hpp>
 #include <boost/contract/constructor.hpp>
+#include <boost/contract/scoped.hpp>
 
 struct a {
     a() {
-        boost::contract::scoped contract = boost::contract::constructor(this)
+        boost::contract::scoped c = boost::contract::constructor(this)
             .precondition([] {}) // Error (must use constructor_precondition).
         ;
     }

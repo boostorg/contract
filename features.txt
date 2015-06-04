@@ -1,20 +1,16 @@
 
 Features to test:
 
-o   Constructors w/ subcontracting
+x   Constructors w/ subcontracting
     --> pre > bases' pre > for x in [bases, class] ( static_inv (but not inv) > body > static_inv > inv > post )
     --> protected and private bases ALSO contract (because always part of C++ obj construction mechanism)
-o   Constructor preconditions checked before member initialization list
-o   Constructors have no `.precondition` (must use `constructor_precondition` instead)
-o   Overloaded Constructors, also with no preconditions
-o   Constructors above w/ bind
+x   Constructor preconditions checked before member initialization list
+x   Constructors have no `.precondition` (must use `constructor_precondition` instead)
 
-o   Destructors subcontracting (w/ postconditions)
+x   Destructors subcontracting (w/ postconditions)
     --> for x in [class, reverse(bases)] ( static_inv > inv > body > static_inv (but not inv) > post )
     --> protected and private bases ALSO contract (because always part of C++ obj destructor mechanism)
-o   Destructors have no `.precondition` (because destructors have no argument)
-o   Destructors above w/ bind
-(No overload because destructors have no argument)
+x   Destructors have no `.precondition` (because destructors have no argument)
 
 *   Private members check pre and post, but no cv/static invariants and no subcontracting
 *   Private members above w/ bind
@@ -29,28 +25,21 @@ o   Destructors above w/ bind
     --> pre in logic-or
     --> post and inv in logic-and
     --> protected and private bases do not subcontract
-*   Require, but always allow, bind for public virtual members
-*   Require, but always allow, introspect for overriding public members
-*   Public members above w/ bind
 
-o   Free functions pre and post (but obviously no cv/static invariants and no subcontracting)
-o   Free functions above w/ bind
-o   Check (just for free functions, other contract use same set_... classes anyways) that:
+x   Free functions pre and post (but obviously no cv/static invariants and no subcontracting)
+x   Check (just for free functions, other contract use same set_... classes anyways) that:
     OK:     nothing | pre (only) | post (only) | pre > post | post > pre
     Error:  pre > pre | post > post | pre > post > pre | post > pre > post
 
-For all contract types (constructors, etc.):
-*   Member function passed to bind must be const
-*   Function passed to bind must take all args as T const&, but last arg that must be boost::contract::call
-*   Arguments passed to bind should not be every copied (cpcnt == 0)
-
-*   Old values with/without bind, with/without subcontracting
+x   Old values with/without subcontracting
     --> copied and evaluated only once by OLDOF
-*   Test bind wit a member function taking no argument and a free function taking a single argument as pointer (to make sure these overloads can be resolved)
-*   Result... maybe test with/without boost::optional...
+*   Result... by ref so never copied
+*   Result as boost::optional... by ref so never copied
 *   On body throw... for all contract types
+*   Throw from contract (non-contract exception)
 *   Failure handlers and throw on contract failure
 *   Disable pre, post, and/or entry/exit inv (all combinations)
+*   Contracts disabled while checking contracts...
 *   Overloading for all contracts
 *   Volatile inv
 *   No static inv / const inv / volatile inv when static_inv / inv const / inv const volatile func not defined (for ctor, dtor, and pub member)

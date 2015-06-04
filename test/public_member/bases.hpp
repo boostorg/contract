@@ -139,6 +139,11 @@ struct c
 
 // Test no subcontracting from not (fully) contracted base.
 struct b {
+    void invariant() const { out << "b::inv" << std::endl; }
+    static void static_invariant() { out << "b::static_inv" << std::endl; }
+
+    virtual ~b() {}
+
     virtual result_type& f(s_type& s) { // No contract.
         static result_type result("none-b");
         out << "b::f::body" << std::endl;

@@ -6,6 +6,7 @@
 #include <boost/contract/core/exception.hpp>
 #include <boost/contract/aux_/condition/check_pre_post.hpp>
 #include <boost/contract/aux_/type_traits/invariant.hpp>
+#include <boost/contract/aux_/debug.hpp>
 /** @cond */
 #include <boost/mpl/bool.hpp>
 #include <boost/shared_ptr.hpp>
@@ -16,19 +17,18 @@ namespace boost { namespace contract { namespace aux {
 template<typename R, class C>
 class check_pre_post_inv : public check_pre_post<R> { // Copyable (as *).
 public:
+    // obj can be 0 for static member functions.
     explicit check_pre_post_inv(boost::contract::from from, C* obj) :
             check_pre_post<R>(from), obj_(obj) {}
     
     virtual ~check_pre_post_inv() {}
 
 protected:
-    void check_entry_inv() {
-        check_inv(/* on_enty = */ true, /* static_inv_only = */ false);
-    }
-    
-    void check_exit_inv() {
-        check_inv(/* on_enty = */ false, /* static_inv_only = */ false);
-    }
+    void check_exit_inv() { check_inv(false, false); }
+    void check_entry_inv() { check_inv(true, false); }
+
+    void check_entry_static_inv() { check_inv(true, true); }
+    void check_exit_static_inv() { check_inv(false, true); }
 
     C* object() { return obj_; }
 
@@ -56,6 +56,7 @@ private:
     
     void check_const_inv(bool, boost::mpl::false_ const&) {}
     void check_const_inv(bool on_entry, boost::mpl::true_ const&) {
+        BOOST_CONTRACT_AUX_DEBUG(obj_);
         try { obj_->BOOST_CONTRACT_CONFIG_INVARIANT(); }
         catch(...) {
             if(on_entry) {

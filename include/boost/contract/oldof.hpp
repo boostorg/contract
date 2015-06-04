@@ -26,6 +26,9 @@ BOOST_CONTRACT_ERROR_macro_OLDOF_requires_variadic_macros_otherwise_manually_pro
 #include <boost/preprocessor/cat.hpp>
 /** @endcond */
 
+// TODO: Consider providing an .old(...) setter for all contracts that will be
+// called to copy old-values before body execution but after pre/inv.
+
 /* PUBLIC */
 
 #define BOOST_CONTRACT_OLDOF(...) \
@@ -91,9 +94,8 @@ public:
     explicit old(virtual_* v, old const& other) : v_(v), value_(other.value_) {}
 
     template<typename T>
-    /* implicit */ old(T const& old_value) :
-            value_(boost::make_shared<T>(old_value)) { // T's one single copy.
-    }
+    /* implicit */ old(T const& old_value) : v_(0),
+            value_(boost::make_shared<T>(old_value)) {} // T's one single copy.
 
     // TODO: I might be able to use unique_ptr here instead of shared_ptr. That
     // might be the true for the pointer that holds contract and call as well...

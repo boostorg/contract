@@ -5,7 +5,6 @@
 /** @file */
 
 #include <boost/contract/core/set_postcondition_only.hpp>
-#include <boost/contract/core/decl.hpp>
 #include <boost/contract/core/exception.hpp>
 #include <boost/contract/aux_/function/constructor.hpp>
 /** @cond */
@@ -15,14 +14,8 @@
 namespace boost { namespace contract {
 
 template<class C>
-set_postcondition_only constructor(decl const& c, C const* obj) {
-    return set_postcondition_only(boost::make_shared<
-            boost::contract::aux::constructor<C> >(c.call_, obj));
-}
-
-template<class C>
-set_postcondition_only constructor(C const* obj) {
-    return set_postcondition_only(boost::make_shared<
+set_postcondition_only<> constructor(C* obj) {
+    return set_postcondition_only<>(boost::make_shared<
             boost::contract::aux::constructor<C> >(obj));
 }
 

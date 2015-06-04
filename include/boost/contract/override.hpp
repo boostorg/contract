@@ -6,6 +6,7 @@
 
 #include <boost/contract/core/virtual.hpp>
 #include <boost/contract/aux_/type_traits/introspection.hpp>
+#include <boost/contract/aux_/none.hpp>
 #include <boost/contract/aux_/name.hpp>
 /** @cond */
 #include <boost/preprocessor/cat.hpp>
@@ -20,6 +21,20 @@
     struct trait { \
         BOOST_CONTRACT_AUX_INTROSPECTION_HAS_MEMBER_FUNCTION( \
                 BOOST_CONTRACT_AUX_NAME1(has_member_function), f) \
+    \
+        template< \
+            class BOOST_CONTRACT_AUX_NAME1(B), \
+            class BOOST_CONTRACT_AUX_NAME1(C) \
+        > \
+        static void BOOST_CONTRACT_AUX_NAME1(base_call)( \
+            BOOST_CONTRACT_AUX_NAME1(C)* BOOST_CONTRACT_AUX_NAME1(obj), \
+            boost::contract::aux::none&, \
+            boost::contract::virtual_* BOOST_CONTRACT_AUX_NAME1(v) \
+        ) { \
+            BOOST_CONTRACT_AUX_NAME1(obj)->BOOST_CONTRACT_AUX_NAME1(B)::f( \
+                BOOST_CONTRACT_AUX_NAME1(v) \
+            ); \
+        } \
     \
         template< \
             class BOOST_CONTRACT_AUX_NAME1(B), \

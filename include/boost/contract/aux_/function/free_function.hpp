@@ -4,7 +4,7 @@
 
 #include <boost/contract/core/exception.hpp>
 #include <boost/contract/aux_/condition/check_pre_post.hpp>
-#include <boost/contract/aux_/call.hpp>
+#include <boost/contract/aux_/none.hpp>
 /** @cond */
 #include <boost/shared_ptr.hpp>
 #include <exception>
@@ -14,24 +14,16 @@ namespace boost { namespace contract { namespace aux {
 
 // Also used for private and protected members.
 template<boost::contract::from From>
-class basic_free_function : public check_pre_post {
+class basic_free_function : public check_pre_post</* R = */ none> {
 public:
-    explicit basic_free_function() : check_pre_post(From) {}
-
-    explicit basic_free_function(boost::shared_ptr<call> decl_call) :
-            check_pre_post(From, decl_call) {}
+    explicit basic_free_function() : check_pre_post</* R = */ none>(From) {}
 
 private:
-    void pre_available() /* override */ { check_pre(); }
+    void pre_available() /* override */ { this->check_pre(); }
 
-    void post_available() /* override */ {
-        // Throw no_error (so not in dtor).
-        if(this->decl_call() && !std::uncaught_exception()) check_post();
-    }
-    
 public:
     ~basic_free_function() {
-        if(!this->decl_call() && !std::uncaught_exception()) check_post();
+        if(!std::uncaught_exception()) this->check_post();
     }
 };
 

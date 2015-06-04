@@ -171,7 +171,7 @@ private:
             BOOST_CONTRACT_AUX_DEBUG(nest_->v_->action_ !=
                     boost::contract::virtual_::no_action);
             try {
-                O::template BOOST_CONTRACT_AUX_NAME1(base_call)<B, C, A0>(
+                O::template BOOST_CONTRACT_AUX_NAME1(base_call)<B>(
                         nest_->object(), nest_->a0_, nest_->v_);
             } catch(check_subcontracted_pre_post_inv_::no_error const&) {
                 if(nest_->v_->action_ == boost::contract::virtual_::check_pre) {

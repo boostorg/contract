@@ -21,15 +21,15 @@ public:
     }
 
 private:
-    explicit set_precondition_only(boost::shared_ptr<
-            boost::contract::aux::check_pre_only> check) : check_(check) {}
-
-    boost::shared_ptr<boost::contract::aux::check_pre_only> check_;
+    typedef boost::shared_ptr<boost::contract::aux::check_pre_only> check_ptr;
+    explicit set_precondition_only(check_ptr check) : check_(check) {}
+    check_ptr check_;
 
     // Friendship used to limit library's public API.
     friend class scoped;
-    template<typename R> friend class set_precondition_postcondition;
-
+    
+    template<typename>
+    friend class set_precondition_postcondition;
 };
 
 } } // namespace

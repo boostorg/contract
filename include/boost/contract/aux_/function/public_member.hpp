@@ -4,6 +4,7 @@
 
 #include <boost/contract/core/virtual.hpp>
 #include <boost/contract/aux_/condition/check_subcontracted_pre_post_inv.hpp>
+#include <boost/contract/aux_/debug.hpp>
 /** @cond */
 #include <boost/shared_ptr.hpp>
 #include <exception>
@@ -37,10 +38,9 @@ private:
     
 public:
     ~public_member() {
-        // Body didn't throw.
-        if(!this->base_call() && !std::uncaught_exception()) {
+        if(!this->base_call()) {
             this->check_subcontracted_exit_inv();
-            this->check_subcontracted_post();
+            if(!std::uncaught_exception()) this->check_subcontracted_post();
         }
     }
 };

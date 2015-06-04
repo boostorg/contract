@@ -4,8 +4,8 @@
 
 #include <boost/contract/core/exception.hpp>
 #include <boost/contract/aux_/condition/check_pre_only.hpp>
-#include <boost/contract/aux_/none.hpp>
 #include <boost/contract/aux_/debug.hpp>
+#include <boost/contract/aux_/none.hpp>
 /** @cond */
 #include <boost/function.hpp> // TODO: Can I reduce boost.function overhead?
 /** @endcond */
@@ -41,7 +41,7 @@ private:
 
 // TODO: I should avoid repeating code between this and above...
 template<>
-class check_pre_post<void> : public check_pre_only {
+class check_pre_post<none> : public check_pre_only {
 public:
     explicit check_pre_post(boost::contract::from from) :
             check_pre_only(from) {}
@@ -52,10 +52,12 @@ public:
     void set_post(F const& f) { post_ = f; post_available(); }
 
 protected:
-    void check_post(boost::contract::aux::none&) {
+    void check_post() {
         try { if(post_) post_(); }
         catch(...) { boost::contract::postcondition_failed(from()); }
     }
+    
+    void check_post(none&) { check_post(); }
     
     virtual void post_available() {}
 

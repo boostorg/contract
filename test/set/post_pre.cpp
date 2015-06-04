@@ -1,16 +1,16 @@
 
-// Test post specified before pre (for free func, but same for all contracts).
+// Test post before pre (for free func, but same for all contracts).
 
 #include "../aux_/oteststream.hpp"
 #include <boost/contract/free_function.hpp>
-#include <boost/contract/var.hpp>
+#include <boost/contract/scoped.hpp>
 #include <boost/detail/lightweight_test.hpp>
 #include <sstream>
 
 boost::contract::aux::test::oteststream out;
 
 void f() {
-    boost::contract::var contract = boost::contract::free_function()
+    boost::contract::scoped c = boost::contract::free_function()
         .postcondition([] { out << "f::post" << std::endl; })
         .precondition([] { out << "f::pre" << std::endl; })
     ;

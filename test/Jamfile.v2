@@ -1,5 +1,35 @@
 
-subdir-run public_member : bases_leaf_call ;
-subdir-run public_member : bases_virtual_call ;
-subdir-run public_member : bases_branch_call ;
+subdir-run constructor : bases ;
+subdir-run constructor : body_throw ;
+subdir-compile-fail constructor : no_pre-error ;
+
+subdir-run destructor : bases ;
+subdir-run destructor : body_throw ;
+subdir-compile-fail destructor : no_pre-error ;
+
+subdir-run public_member : bases ;
+subdir-run public_member : bases_virtual ;
+subdir-run public_member : bases_branch ;
+subdir-run public_member : body_throw ;
+subdir-run public_member : static ;
+subdir-run public_member : static_body_throw ;
+
+subdir-run protected_member : bases ;
+subdir-run protected_member : body_throw ;
+
+subdir-run private_member : bases ;
+subdir-run private_member : body_throw ;
+
+subdir-run free_function : nominal ;
+subdir-run free_function : body_throw ;
+
+subdir-run set : nothing ;
+subdir-run set : pre_only ;
+subdir-run set : post_only ;
+subdir-run set : pre_post ;
+subdir-run set : post_pre ;
+subdir-compile-fail set : pre_pre-error ;
+subdir-compile-fail set : post_post-error ;
+subdir-compile-fail set : pre_post_pre-error ;
+subdir-compile-fail set : post_pre_post-error ;
 

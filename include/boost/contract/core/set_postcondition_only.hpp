@@ -6,13 +6,14 @@
 
 #include <boost/contract/core/set_nothing.hpp>
 #include <boost/contract/aux_/condition/check_pre_post.hpp>
+#include <boost/contract/aux_/none.hpp>
 /** @cond */
 #include <boost/shared_ptr.hpp>
 /** @endcond */
 
 namespace boost { namespace contract {
 
-template<typename R>
+template<typename R = void>
 class set_postcondition_only {
 public:
     template<typename F>
@@ -22,14 +23,22 @@ public:
     }
 
 private:
-    explicit set_postcondition_only(boost::shared_ptr<
-            boost::contract::aux::check_pre_post<R> > check) : check_(check) {}
-
-    boost::shared_ptr<boost::contract::aux::check_pre_post<R> > check_;
+    typedef boost::shared_ptr<boost::contract::aux::check_pre_post<
+            typename boost::contract::aux::none_if_void<R>::type> > check_ptr;
+    explicit set_postcondition_only(check_ptr check) : check_(check) {}
+    check_ptr check_;
 
     // Friendship used to limit library's public API.
     friend class scoped;
-    template<typename> friend class set_precondition_postcondition;
+
+    template<typename>
+    friend class set_precondition_postcondition;
+
+    template<class C>
+    friend set_postcondition_only constructor(C*);
+
+    template<class C>
+    friend set_postcondition_only destructor(C*);
 };
 
 } } // namespace
