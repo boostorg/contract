@@ -11,10 +11,17 @@
 #include <boost/shared_ptr.hpp>
 /** @endcond */
 
-namespace boost { namespace contract {
+namespace boost {
+    namespace contract {
+        template<typename>
+        class set_precondition_postcondition;
+    }
+}
 
+namespace boost { namespace contract {
+    
 template<typename R = void>
-class set_postcondition_only {
+class set_postcondition_only { // Copyable as shared * (OK also for RAII).
 public:
     template<typename F>
     set_nothing postcondition(F const& f) {
@@ -25,14 +32,14 @@ public:
 private:
     typedef boost::shared_ptr<boost::contract::aux::check_pre_post<
             typename boost::contract::aux::none_if_void<R>::type> > check_ptr;
+
     explicit set_postcondition_only(check_ptr check) : check_(check) {}
+
     check_ptr check_;
 
     // Friendship used to limit library's public API.
-    friend class scoped;
-
-    template<typename>
-    friend class set_precondition_postcondition;
+    friend class guard;
+    friend class set_precondition_postcondition<R>;
 
     template<class C>
     friend set_postcondition_only constructor(C*);

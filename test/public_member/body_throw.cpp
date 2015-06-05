@@ -6,7 +6,7 @@
 #include <boost/contract/assert.hpp>
 #include <boost/contract/base_types.hpp>
 #include <boost/contract/override.hpp>
-#include <boost/contract/scoped.hpp>
+#include <boost/contract/guard.hpp>
 #include <boost/detail/lightweight_test.hpp>
 #include <sstream>
 
@@ -19,7 +19,7 @@ struct c {
     struct e {};
 
     virtual void f(boost::contract::virtual_* v = 0) {
-        boost::contract::scoped c = boost::contract::public_member(v, this)
+        boost::contract::guard c = boost::contract::public_member(v, this)
             .precondition([&] {
                 out << "c::f::pre" << std::endl;
                 BOOST_CONTRACT_ASSERT(false); // To check derived pre.
@@ -44,7 +44,7 @@ struct b
     struct e {};
 
     virtual void f(boost::contract::virtual_* v = 0) /* override */ {
-        boost::contract::scoped c = boost::contract::public_member<override_f>(
+        boost::contract::guard c = boost::contract::public_member<override_f>(
                 v, &b::f, this)
             .precondition([&] {
                 out << "b::f::pre" << std::endl;
@@ -71,7 +71,7 @@ struct a
     struct e {};
 
     void f(boost::contract::virtual_* v = 0) /* override */ {
-        boost::contract::scoped c = boost::contract::public_member<override_f>(
+        boost::contract::guard c = boost::contract::public_member<override_f>(
                 v, &a::f, this)
             .precondition([&] { out << "a::f::pre" << std::endl; })
             .postcondition([&] { out << "a::f::post" << std::endl; })

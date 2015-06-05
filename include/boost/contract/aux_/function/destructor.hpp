@@ -4,6 +4,7 @@
 
 #include <boost/contract/core/exception.hpp>
 #include <boost/contract/aux_/condition/check_pre_post_inv.hpp>
+#include <boost/contract/aux_/check_guard.hpp>
 #include <boost/contract/aux_/none.hpp>
 /** @cond */
 #include <exception>
@@ -19,6 +20,7 @@ public:
         check_pre_post_inv</* R = */ none, C>(
                 boost::contract::from_destructor, obj)
     {
+        BOOST_CONTRACT_AUX_CHECK_GUARD_OR_RETURN
         // Obj exists (before dtor body) so check static and non-static inv.
         this->check_entry_inv();
     }
@@ -26,6 +28,7 @@ public:
     // Dtor cannot have pre because it has no parameters.
     
     ~destructor() {
+        BOOST_CONTRACT_AUX_CHECK_GUARD_OR_RETURN
         // If dtor body threw, obj still exists so check subcontracted static
         // and non-static inv (but no post because of throw). Otherwise, obj
         // destructed so check static inv and post (even if there is no obj

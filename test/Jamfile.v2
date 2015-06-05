@@ -20,8 +20,10 @@ subdir-run protected_member : body_throw ;
 subdir-run private_member : bases ;
 subdir-run private_member : body_throw ;
 
-subdir-run free_function : nominal ;
+subdir-run free_function : main ;
 subdir-run free_function : body_throw ;
+
+subdir-run disable : checking ;
 
 subdir-run set : nothing ;
 subdir-run set : pre_only ;

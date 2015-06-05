@@ -11,8 +11,8 @@
 /** @endcond */
 
 namespace boost { namespace contract {
-
-class set_precondition_only {
+    
+class set_precondition_only { // Copyable as shared * (OK also for RAII).
 public:
     template<typename F>
     set_nothing precondition(F const& f) {
@@ -22,12 +22,14 @@ public:
 
 private:
     typedef boost::shared_ptr<boost::contract::aux::check_pre_only> check_ptr;
+
     explicit set_precondition_only(check_ptr check) : check_(check) {}
+
     check_ptr check_;
 
     // Friendship used to limit library's public API.
-    friend class scoped;
-    
+    friend class guard;
+        
     template<typename>
     friend class set_precondition_postcondition;
 };

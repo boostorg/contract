@@ -4,7 +4,7 @@
 #include "../aux_/oteststream.hpp"
 #include <boost/contract/destructor.hpp>
 #include <boost/contract/base_types.hpp>
-#include <boost/contract/scoped.hpp>
+#include <boost/contract/guard.hpp>
 #include <boost/config.hpp>
 #include <boost/detail/lightweight_test.hpp>
 #include <exception>
@@ -18,7 +18,7 @@ struct c {
     static void static_invariant() { out << "c::static_inv" << std::endl; }
 
     ~c() {
-        boost::contract::scoped c = boost::contract::destructor(this)
+        boost::contract::guard c = boost::contract::destructor(this)
             .postcondition([&] {
                 out << "c::dtor::post" << std::endl;
             })
@@ -41,7 +41,7 @@ struct b
     struct e {};
 
     ~b() {
-        boost::contract::scoped c = boost::contract::destructor(this)
+        boost::contract::guard c = boost::contract::destructor(this)
             .postcondition([&] {
                 out << "b::dtor::post" << std::endl;
             })
@@ -62,7 +62,7 @@ struct a
     static void static_invariant() { out << "a::static_inv" << std::endl; }
 
     ~a() {
-        boost::contract::scoped c = boost::contract::destructor(this)
+        boost::contract::guard c = boost::contract::destructor(this)
             .postcondition([&] {
                 out << "a::dtor::post" << std::endl;
             })

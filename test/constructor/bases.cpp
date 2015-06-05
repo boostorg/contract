@@ -7,7 +7,7 @@
 #include <boost/contract/base_types.hpp>
 #include <boost/contract/assert.hpp>
 #include <boost/contract/oldof.hpp>
-#include <boost/contract/scoped.hpp>
+#include <boost/contract/guard.hpp>
 #include <boost/bind.hpp>
 #include <boost/ref.hpp>
 #include <boost/detail/lightweight_test.hpp>
@@ -50,7 +50,7 @@ struct t
                 BOOST_CONTRACT_OLDOF(z_type::eval(z));
         boost::shared_ptr<l_type const> old_l =
                 BOOST_CONTRACT_OLDOF(l_type::eval(l));
-        boost::contract::scoped c = boost::contract::constructor(this)
+        boost::contract::guard c = boost::contract::constructor(this)
             .postcondition([&] {
                 out << Id << "::ctor::post" << std::endl;
                 BOOST_CONTRACT_ASSERT(k_ == old_z->value);
@@ -108,7 +108,7 @@ struct c
                 BOOST_CONTRACT_OLDOF(y_type::eval(y));
         boost::shared_ptr<m_type const> old_m =
                 BOOST_CONTRACT_OLDOF(m_type::eval(m));
-        boost::contract::scoped c = boost::contract::constructor(this)
+        boost::contract::guard c = boost::contract::constructor(this)
             .postcondition([&] {
                 out << "c::ctor::post" << std::endl;
                 BOOST_CONTRACT_ASSERT(j_ == old_y->value);
@@ -178,7 +178,7 @@ struct a
                 BOOST_CONTRACT_OLDOF(x_type::eval(x));
         boost::shared_ptr<n_type const> old_n =
                 BOOST_CONTRACT_OLDOF(n_type::eval(n));
-        boost::contract::scoped c = boost::contract::constructor(this)
+        boost::contract::guard c = boost::contract::constructor(this)
             .postcondition([&] {
                 out << "a::ctor::post" << std::endl;
                 BOOST_CONTRACT_ASSERT(i_ == old_x->value);

@@ -3,7 +3,7 @@
 
 #include "../aux_/oteststream.hpp"
 #include <boost/contract/free_function.hpp>
-#include <boost/contract/scoped.hpp>
+#include <boost/contract/guard.hpp>
 #include <boost/detail/lightweight_test.hpp>
 #include <sstream>
 
@@ -12,7 +12,7 @@ boost::contract::aux::test::oteststream out;
 struct e {};
 
 void f() {
-    boost::contract::scoped c = boost::contract::free_function()
+    boost::contract::guard c = boost::contract::free_function()
         .precondition([&] { out << "f::pre" << std::endl; })
         .postcondition([&] { out << "f::post" << std::endl; })
     ;

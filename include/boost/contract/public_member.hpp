@@ -15,14 +15,14 @@
 
 namespace boost { namespace contract {
 
-// For public static member functions.
+// For static members.
 template<class C>
 set_precondition_postcondition<> public_member() {
     return set_precondition_postcondition<>(boost::make_shared<
             boost::contract::aux::public_static_member<C> >());
 }
 
-// For non-virtual of class with no bases.
+// For non-virtual, non-overriding members.
 template<class C>
 set_precondition_postcondition<> public_member(C* obj) {
     return set_precondition_postcondition<>(boost::make_shared<
@@ -33,11 +33,24 @@ set_precondition_postcondition<> public_member(C* obj) {
             C,
             boost::contract::aux::none
         >
-    >(0, obj, boost::contract::aux::none::value,
-            boost::contract::aux::none::value));
+    >(static_cast<boost::contract::virtual_*>(0), obj, boost::contract::aux::
+            none::value, boost::contract::aux::none::value));
 }
 
-// For virtual members of class with no bases.
+// NOTE: O and R (optionally) allowed only when v is present because:
+// * An overriding func must override a base func declared virtual so with
+//   v extra param, thus the overriding func must also always have v (i.e., O
+//   might be present only if v is also present).
+//   However, the first appearing virtual func (e.g., in root class) will not
+//   override any previously declared virtual func so does not need O (i.e., O
+//   always optional).
+//   Furthermore, F needs to be specified only together with O.
+// * R is only used for virtual functions (i.e., R might be present only if v
+//   is also present).
+//   However, R is never specified, not even for virtual functions, when the
+//   return type is void (i.e., R always optional).
+
+// For virtual, non-overriding, void members.
 template<class C>
 set_precondition_postcondition<> public_member(virtual_* v, C* obj) {
     return set_precondition_postcondition<>(boost::make_shared<
@@ -52,17 +65,7 @@ set_precondition_postcondition<> public_member(virtual_* v, C* obj) {
             boost::contract::aux::none::value));
 }
 
-// TODO: R should be specified *only* when v is present. If F present but not
-// v then R should NOT be specified. Because an overriding functions must
-// always use v even if no longer decl virtual so to overload correct func
-// from base class with v param (otherwise most compilers will give a warning
-// and overloading will not work) so "virtual result" R never needed unless v
-// is present... actually, this meas also F is there only when v is there!
-//
-//      O, [R], F allowed only when v is present!
-//
-
-// For virtual members of class with no bases.
+// For virtual, non-overriding, non-void members.
 template<typename R, class C>
 set_precondition_postcondition<R> public_member(virtual_* v, R& r, C* obj) {
     return set_precondition_postcondition<R>(boost::make_shared<
@@ -76,24 +79,9 @@ set_precondition_postcondition<R> public_member(virtual_* v, R& r, C* obj) {
     >(v, obj, r, boost::contract::aux::none::value));
 }
 
-// TODO: Support configurable function arity.
-// arity = 0
+/* Overriding (arity = 0) */
 
-// For non-virtual members of class with bases.
-template<class O, typename F, class C>
-set_precondition_postcondition<> public_member(F, C* obj) {
-    return set_precondition_postcondition<>(boost::make_shared<
-        boost::contract::aux::public_member<
-            O,
-            boost::contract::aux::none,
-            F,
-            C,
-            boost::contract::aux::none
-        >
-    >(0, obj, boost::contract::aux::none::value));
-}
-
-// For virtual members of class with bases.
+// For virtual, overriding, void members.
 template<class O, typename F, class C>
 set_precondition_postcondition<> public_member(virtual_* v, F, C* obj) {
     return set_precondition_postcondition<>(boost::make_shared<
@@ -108,26 +96,26 @@ set_precondition_postcondition<> public_member(virtual_* v, F, C* obj) {
             boost::contract::aux::none::value));
 }
 
-// arity = 1
-
-template<class O, typename F, class C, typename A0>
-set_precondition_postcondition<> public_member(F, C* obj, A0& a0) {
-    return set_precondition_postcondition<>(boost::make_shared<
+// For virtual, overriding, non-void members of class with bases.
+template<class O, typename R, typename F, class C>
+set_precondition_postcondition<R> public_member(virtual_* v, R& r, F, C* obj) {
+    return set_precondition_postcondition<R>(boost::make_shared<
         boost::contract::aux::public_member<
             O,
-            boost::contract::aux::none,
+            R,
             F,
             C,
-            A0
+            boost::contract::aux::none
         >
-    >(0, obj, a0));
+    >(v, obj, r, boost::contract::aux::none::value));
 }
 
+/* Overriding (arity = 1) */
+
 template<class O, typename F, class C, typename A0>
-set_precondition_postcondition<boost::contract::aux::none> public_member(
+set_precondition_postcondition<> public_member(
         virtual_* v, F, C* obj, A0& a0) {
-    return set_precondition_postcondition<boost::contract::aux::none>(
-            boost::make_shared<
+    return set_precondition_postcondition<>(boost::make_shared<
         boost::contract::aux::public_member<
             O,
             boost::contract::aux::none,

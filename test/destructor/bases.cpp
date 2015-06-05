@@ -7,7 +7,7 @@
 #include <boost/contract/base_types.hpp>
 #include <boost/contract/assert.hpp>
 #include <boost/contract/oldof.hpp>
-#include <boost/contract/scoped.hpp>
+#include <boost/contract/guard.hpp>
 #include <boost/detail/lightweight_test.hpp>
 #include <sstream>
 
@@ -32,7 +32,7 @@ struct t {
     virtual ~t() {
         boost::shared_ptr<l_type const> old_l =
                 BOOST_CONTRACT_OLDOF(l_type::eval(l));
-        boost::contract::scoped c = boost::contract::destructor(this)
+        boost::contract::guard c = boost::contract::destructor(this)
             .postcondition([old_l] {
                 out << Id << "::dtor::post" << std::endl;
                 BOOST_CONTRACT_ASSERT(t<Id>::l.value == old_l->value - 1);
@@ -75,7 +75,7 @@ struct c
     virtual ~c() {
         boost::shared_ptr<m_type const> old_m =
                 BOOST_CONTRACT_OLDOF(m_type::eval(m));
-        boost::contract::scoped c = boost::contract::destructor(this)
+        boost::contract::guard c = boost::contract::destructor(this)
             .postcondition([old_m] {
                 out << "c::dtor::post" << std::endl;
                 BOOST_CONTRACT_ASSERT(c::m.value == old_m->value - 1);
@@ -124,7 +124,7 @@ struct a
     virtual ~a() {
         boost::shared_ptr<n_type const> old_n =
                 BOOST_CONTRACT_OLDOF(n_type::eval(n));
-        boost::contract::scoped c = boost::contract::destructor(this)
+        boost::contract::guard c = boost::contract::destructor(this)
             .postcondition([old_n] {
                 out << "a::dtor::post" << std::endl;
                 BOOST_CONTRACT_ASSERT(a::n.value == old_n->value - 1);

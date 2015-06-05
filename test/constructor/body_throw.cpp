@@ -4,7 +4,7 @@
 #include "../aux_/oteststream.hpp"
 #include <boost/contract/constructor.hpp>
 #include <boost/contract/base_types.hpp>
-#include <boost/contract/scoped.hpp>
+#include <boost/contract/guard.hpp>
 #include <boost/detail/lightweight_test.hpp>
 #include <sstream>
 
@@ -25,7 +25,7 @@ struct c
             out << "c::ctor::pre" << std::endl;
         })
     {
-        boost::contract::scoped c = boost::contract::constructor(this)
+        boost::contract::guard c = boost::contract::constructor(this)
             .postcondition([&] {
                 out << "c::ctor::post" << std::endl;
             })
@@ -52,7 +52,7 @@ struct b
             out << "b::ctor::pre" << std::endl;
         })
     {
-        boost::contract::scoped c = boost::contract::constructor(this)
+        boost::contract::guard c = boost::contract::constructor(this)
             .postcondition([&] {
                 out << "b::ctor::post" << std::endl;
             })
@@ -77,7 +77,7 @@ struct a
             out << "a::ctor::pre" << std::endl;
         })
     {
-        boost::contract::scoped c = boost::contract::constructor(this)
+        boost::contract::guard c = boost::contract::constructor(this)
             .postcondition([&] {
                 out << "a::ctor::post" << std::endl;
             })

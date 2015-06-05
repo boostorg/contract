@@ -1,6 +1,6 @@
 
-#ifndef BOOST_CONTRACT_SCOPED_HPP_
-#define BOOST_CONTRACT_SCOPED_HPP_
+#ifndef BOOST_CONTRACT_GUARD_HPP_
+#define BOOST_CONTRACT_GUARD_HPP_
 
 /** @file */
 
@@ -11,26 +11,27 @@
 #include <boost/contract/aux_/condition/check_pre_only.hpp>
 /** @cond */
 #include <boost/shared_ptr.hpp>
+#include <boost/noncopyable.hpp>
 /** @endcond */
 
 namespace boost { namespace contract {
 
-class scoped { // Copyable (as shallow *).
+class guard { // Copyable as shared * (OK also for RAII).
 public:
-    // All implicit to allow `scoped c = ...`.
+    // All implicit to allow `guard c = ...`.
     
     template<typename R>
-    /* implicit */ scoped(set_precondition_postcondition<R> const& contract) :
+    /* implicit */ guard(set_precondition_postcondition<R> const& contract) :
             check_(contract.check_) {}
 
-    /* implicit */ scoped(set_precondition_only const& contract) :
+    /* implicit */ guard(set_precondition_only const& contract) :
             check_(contract.check_) {}
     
     template<typename R>
-    /* implicit */ scoped(set_postcondition_only<R> const& contract) :
+    /* implicit */ guard(set_postcondition_only<R> const& contract) :
             check_(contract.check_) {}
     
-    /* implicit */ scoped(set_nothing const& contract) :
+    /* implicit */ guard(set_nothing const& contract) :
             check_(contract.check_) {}
 
 private:

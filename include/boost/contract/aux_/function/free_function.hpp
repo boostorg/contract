@@ -4,6 +4,7 @@
 
 #include <boost/contract/core/exception.hpp>
 #include <boost/contract/aux_/condition/check_pre_post.hpp>
+#include <boost/contract/aux_/check_guard.hpp>
 #include <boost/contract/aux_/none.hpp>
 /** @cond */
 #include <boost/shared_ptr.hpp>
@@ -19,10 +20,14 @@ public:
     explicit basic_free_function() : check_pre_post</* R = */ none>(From) {}
 
 private:
-    void pre_available() /* override */ { this->check_pre(); }
+    void pre_available() /* override */ {
+        BOOST_CONTRACT_AUX_CHECK_GUARD_OR_RETURN
+        this->check_pre();
+    }
 
 public:
     ~basic_free_function() {
+        BOOST_CONTRACT_AUX_CHECK_GUARD_OR_RETURN
         if(!std::uncaught_exception()) this->check_post();
     }
 };

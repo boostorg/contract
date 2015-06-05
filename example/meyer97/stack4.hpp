@@ -3,12 +3,14 @@
 #define STACK4_HPP_
 
 #include <boost/contract.hpp>
+#include <boost/bind.hpp>
 
 template<typename T>
 class stack4
     #define BASES private boost::contract::constructor_precondition<stack4<T> >
     : BASES
 {
+public:
     typedef BOOST_CONTRACT_BASE_TYPES(BASES) base_types;
     #undef BASES
 
@@ -18,15 +20,15 @@ class stack4
         BOOST_CONTRACT_ASSERT(empty() == (count() == 0)); // Empty if no item.
     }
 
-public:
     /* Initialization */
 
     // Allocate static from a maximum of n items.
-    explicit stack4(int n) :
-        boost::contract::constructor_precondition<stack4>([&] {
-            BOOST_CONTRACT_ASSERT(n >= 0); // Non-negative capacity.
-        })
-    {
+    static void stack4_precondition(int const& n) {
+        // Its own func. for MSVC 2010 bug with lambdas in template init. list.
+        BOOST_CONTRACT_ASSERT(n >= 0); // Non-negative capacity.
+    }
+    explicit stack4(int n) : boost::contract::constructor_precondition<stack4>(
+            boost::bind(&stack4::stack4_precondition, boost::cref(n))) {
         auto c = boost::contract::constructor(this)
             .postcondition([&] {
                 BOOST_CONTRACT_ASSERT(capacity() == n); // Capacity set.
@@ -66,7 +68,7 @@ public:
 
         delete[] array_;
         capacity_ = other.capacity_;
-        count_ = other.capacity_;
+        count_ = other.count_;
         array_ = new T[other.capacity_];
         for(int i = 0; i < other.count_; ++i) array_[i] = other.array_[i];
         return *this;
@@ -109,8 +111,8 @@ public:
         bool result;
         auto c = boost::contract::public_member(this)
             .postcondition([&] {
-                BOOST_CONTRACT_ASSERT(result ==
-                        (count() == 0)); // Empty definition.
+                BOOST_CONTRACT_ASSERT( // Empty definition.
+                        result == (count() == 0));
             })
         ;
         return result = (count_ == 0);
@@ -121,8 +123,8 @@ public:
         bool result;
         auto c = boost::contract::public_member(this)
             .postcondition([&] {
-                BOOST_CONTRACT_ASSERT(result ==
-                        (count() == capacity())); // Full definition.
+                BOOST_CONTRACT_ASSERT( // Full definition.
+                        result == (count() == capacity()));
             })
         ;
         return result = (count_ == capacity_);

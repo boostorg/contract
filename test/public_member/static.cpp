@@ -4,7 +4,7 @@
 #include "../aux_/oteststream.hpp"
 #include <boost/contract/base_types.hpp>
 #include <boost/contract/public_member.hpp>
-#include <boost/contract/scoped.hpp>
+#include <boost/contract/guard.hpp>
 #include <boost/detail/lightweight_test.hpp>
 #include <sstream>
 
@@ -15,7 +15,7 @@ struct b {
     static void static_invariant() { out << "b::static_inv" << std::endl; }
 
     static void f() {
-        boost::contract::scoped c = boost::contract::public_member<b>()
+        boost::contract::guard c = boost::contract::public_member<b>()
             .precondition([&] {
                 out << "b::f::pre" << std::endl;
             })
@@ -38,7 +38,7 @@ struct a
     static void static_invariant() { out << "a::static_inv" << std::endl; }
 
     static void f() {
-        boost::contract::scoped c = boost::contract::public_member<a>()
+        boost::contract::guard c = boost::contract::public_member<a>()
             .precondition([&] {
                 out << "a::f::pre" << std::endl;
             })

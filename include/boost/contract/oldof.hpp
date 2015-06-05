@@ -5,6 +5,7 @@
 /** @file */
 
 #include <boost/contract/core/virtual.hpp>
+#include <boost/contract/aux_/check_guard.hpp>
 #include <boost/contract/aux_/debug.hpp>
 /** @cond */
 #include <boost/make_shared.hpp>
@@ -75,7 +76,7 @@ bool copy_old() {
 #ifdef BOOST_CONTRACT_CONFIG_NO_POSTCONDITIONS
     return false; // Post checking disabled, so never copy old values.
 #else
-    return true;
+    return !boost::contract::aux::check_guard::checking();
 #endif
 }
 
@@ -83,7 +84,8 @@ bool copy_old(virtual_* v) {
 #ifdef BOOST_CONTRACT_CONFIG_NO_POSTCONDITIONS
     return false; // Post checking disabled, so never copy old values.
 #else
-    return !v || v->action_ == boost::contract::virtual_::copy_oldof;
+    if(v) return v->action_ == boost::contract::virtual_::copy_oldof;
+    else return !boost::contract::aux::check_guard::checking();
 #endif
 }
 
@@ -98,12 +100,14 @@ public:
             value_(boost::make_shared<T>(old_value)) {} // T's one single copy.
 
     // TODO: I might be able to use unique_ptr here instead of shared_ptr. That
-    // might be the true for the pointer that holds contract and call as well...
+    // might be true for the pointer that holds contract and call as well...
     // do some testing to figure that out (unique_ptr adds less overhead).
 
     template<typename T>
     operator boost::shared_ptr<T const>() {
-        if(!v_) {
+        if(!v_ && boost::contract::aux::check_guard::checking()) {
+            // Return null shared ptr (see after if statement).
+        } else if(!v_) {
             BOOST_CONTRACT_AUX_DEBUG(value_);
             boost::shared_ptr<T const> old_value =
                     boost::static_pointer_cast<T const>(value_);

@@ -3,7 +3,7 @@
 
 #include "../aux_/oteststream.hpp"
 #include <boost/contract/public_member.hpp>
-#include <boost/contract/scoped.hpp>
+#include <boost/contract/guard.hpp>
 #include <boost/detail/lightweight_test.hpp>
 #include <sstream>
 
@@ -16,7 +16,7 @@ struct a {
     struct e {};
 
     static void f() {
-        boost::contract::scoped c = boost::contract::public_member<a>()
+        boost::contract::guard c = boost::contract::public_member<a>()
             .precondition([&] {
                 out << "a::f::pre" << std::endl;
             })

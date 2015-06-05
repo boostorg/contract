@@ -3,7 +3,7 @@
 
 #include "../aux_/oteststream.hpp"
 #include <boost/contract/private_member.hpp>
-#include <boost/contract/scoped.hpp>
+#include <boost/contract/guard.hpp>
 #include <boost/detail/lightweight_test.hpp>
 #include <sstream>
 
@@ -19,7 +19,7 @@ struct a {
 
 private:
     virtual void f() {
-        boost::contract::scoped c = boost::contract::private_member()
+        boost::contract::guard c = boost::contract::private_member()
             .precondition([&] { out << "a::f::pre" << std::endl; })
             .postcondition([&] { out << "a::f::post" << std::endl; })
         ;
