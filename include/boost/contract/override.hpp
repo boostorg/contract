@@ -2,6 +2,11 @@
 #ifndef BOOST_CONTRACT_OVERRIDE_HPP_
 #define BOOST_CONTRACT_OVERRIDE_HPP_
 
+// TODO: It might make the most sense to allow override *only* if the func
+// is actually overriding a base contract. If no base contract is found to
+// override, the lib could generate a compile-time error. That way this lib's
+// override has the same semantics of C++11 override, but for subcontracting.
+
 /** @file */
 
 #include <boost/contract/core/virtual.hpp>

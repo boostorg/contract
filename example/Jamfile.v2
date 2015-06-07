@@ -1,3 +1,9 @@
 
 subdir-run meyer97 : stack4_main ;
+subdir-run meyer97 : stack3 ;
+
+subdir-run mitchell02 : stack ;
+subdir-run mitchell02 : simple_queue ;
+subdir-run mitchell02 : dictionary ;
+subdir-run mitchell02 : name_list ;
 

@@ -5,6 +5,7 @@
 #include <boost/contract.hpp>
 #include <boost/bind.hpp>
 
+// Dispenser with LIFO access policy and fixed max capacity.
 template<typename T>
 class stack4
     #define BASES private boost::contract::constructor_precondition<stack4<T> >
@@ -77,6 +78,7 @@ public:
     // Destroy this stack.
     virtual ~stack4() {
         auto c = boost::contract::destructor(this); // Check invariants.
+
         delete[] array_;
     }
 
@@ -85,12 +87,14 @@ public:
     // Max number of stack items.
     int capacity() const {
         auto c = boost::contract::public_member(this); // Check invariants.
+
         return capacity_;
     }
 
     // Number of stack items.
     int count() const {
         auto c = boost::contract::public_member(this); // Check invariants.
+
         return count_;
     }
 
@@ -101,9 +105,10 @@ public:
                 BOOST_CONTRACT_ASSERT(!empty()); // Not empty (count > 0).
             })
         ;
+
         return array_[count_ - 1];
     }
-
+    
     /* Status Report */
 
     // Is stack empty?
@@ -111,10 +116,11 @@ public:
         bool result;
         auto c = boost::contract::public_member(this)
             .postcondition([&] {
-                BOOST_CONTRACT_ASSERT( // Empty definition.
-                        result == (count() == 0));
+                // Empty definition.
+                BOOST_CONTRACT_ASSERT(result == (count() == 0));
             })
         ;
+
         return result = (count_ == 0);
     }
 
@@ -127,10 +133,11 @@ public:
                         result == (count() == capacity()));
             })
         ;
+
         return result = (count_ == capacity_);
     }
 
-    /* Element Change */
+    /* Item Change */
 
     // Add x on top.
     void put(T const& x) {
@@ -145,6 +152,7 @@ public:
                 BOOST_CONTRACT_ASSERT(count() == *old_count + 1); // One more.
             })
         ;
+
         array_[count_++] = x;
     }
 
@@ -160,6 +168,7 @@ public:
                 BOOST_CONTRACT_ASSERT(count() == *old_count - 1); // One less.
             })
         ;
+
         --count_;
     }
 

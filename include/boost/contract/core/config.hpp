@@ -4,6 +4,12 @@
 
 /** @file */
 
+// TODO: base_types, invariant, and static_invariant must be public. Allow to
+// make them private (so to not alter user's public API) by declaring some
+// `friend class boost::contract::aux::access;` from the user's class (then
+// this lib can access base_types, invariant, and static_invariant via that
+// access class).
+
 #ifndef BOOST_CONTRACT_CONFIG_BASE_TYPES
 #   define BOOST_CONTRACT_CONFIG_BASE_TYPES base_types
 #endif
