@@ -43,4 +43,7 @@ x   Old values with/without subcontracting
 *   Overloading for all contracts
 *   Volatile inv
 *   No static inv / const inv / volatile inv when static_inv / inv const / inv const volatile func not defined (for ctor, dtor, and pub member)
+*   Derived public function override base protected virtual function (subst
+    princ does not apply here because base protected virtual cannot be called
+    by users so it cannot be "substituted")... what will this lib do?
 

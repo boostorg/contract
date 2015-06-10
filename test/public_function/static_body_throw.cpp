@@ -1,8 +1,8 @@
 
-// Test private member function throwing.
+// Test public static member function throwing.
 
 #include "../aux_/oteststream.hpp"
-#include <boost/contract/private_member.hpp>
+#include <boost/contract/public_function.hpp>
 #include <boost/contract/guard.hpp>
 #include <boost/detail/lightweight_test.hpp>
 #include <sstream>
@@ -15,13 +15,14 @@ struct a {
 
     struct e {};
 
-    void call_f() { f(); }
-
-private:
-    virtual void f() {
-        boost::contract::guard c = boost::contract::private_member()
-            .precondition([&] { out << "a::f::pre" << std::endl; })
-            .postcondition([&] { out << "a::f::post" << std::endl; })
+    static void f() {
+        boost::contract::guard c = boost::contract::public_function<a>()
+            .precondition([&] {
+                out << "a::f::pre" << std::endl;
+            })
+            .postcondition([&] {
+                out << "a::f::post" << std::endl;
+            })
         ;
         out << "a::f::body" << std::endl;
         throw a::e();
@@ -31,16 +32,17 @@ private:
 int main() {
     std::ostringstream ok;
 
-    a aa;
     bool threw = false;
     out.str("");
-    try { aa.call_f(); }
+    try { a::f(); }
     catch(a::e const&) { threw = true; }
     BOOST_TEST(threw);
     ok.str(""); ok
+        << "a::static_inv" << std::endl
         << "a::f::pre" << std::endl
         << "a::f::body" << std::endl
-        // Test no post because body threw (never inv because not public).
+        << "a::static_inv" << std::endl
+        // Test no post (but still static inv) because body threw.
     ;
     BOOST_TEST(out.eq(ok.str()));
 

@@ -1,9 +1,9 @@
 
-// Test public static member function contracts.
+// Test protected member function contracts.
 
 #include "../aux_/oteststream.hpp"
 #include <boost/contract/base_types.hpp>
-#include <boost/contract/public_member.hpp>
+#include <boost/contract/protected_function.hpp>
 #include <boost/contract/guard.hpp>
 #include <boost/detail/lightweight_test.hpp>
 #include <sstream>
@@ -14,8 +14,9 @@ struct b {
     void invariant() const { out << "b::inv" << std::endl; }
     static void static_invariant() { out << "b::static_inv" << std::endl; }
 
-    static void f() {
-        boost::contract::guard c = boost::contract::public_member<b>()
+protected:
+    virtual void f() {
+        boost::contract::guard c = boost::contract::protected_function()
             .precondition([&] {
                 out << "b::f::pre" << std::endl;
             })
@@ -37,8 +38,11 @@ struct a
     void invariant() const { out << "a::inv" << std::endl; }
     static void static_invariant() { out << "a::static_inv" << std::endl; }
 
-    static void f() {
-        boost::contract::guard c = boost::contract::public_member<a>()
+    void call_f() { f(); }
+
+protected:
+    virtual void f() {
+        boost::contract::guard c = boost::contract::protected_function()
             .precondition([&] {
                 out << "a::f::pre" << std::endl;
             })
@@ -53,15 +57,14 @@ struct a
 int main() {
     std::ostringstream ok;
 
+    a aa;
     out.str("");
-    a::f();
+    aa.call_f();
     ok.str(""); ok
-        // Static so no object thus only static inv, plus never virtual so subst
-        // principle does not apply and no subcontracting.
-        << "a::static_inv" << std::endl
+        // Test not part of public API so no inv, plus cannot be called directly
+        // so no substitution principle and no subcontracting.
         << "a::f::pre" << std::endl
         << "a::f::body" << std::endl
-        << "a::static_inv" << std::endl
         << "a::f::post" << std::endl
     ;
     BOOST_TEST(out.eq(ok.str()));

@@ -3,7 +3,7 @@
 #define BOOST_CONTRACT_AUX_CHECK_PRE_POST_HPP_
 
 #include <boost/contract/core/exception.hpp>
-#include <boost/contract/aux_/condition/check_pre_only.hpp>
+#include <boost/contract/aux_/check/check_pre_only.hpp>
 #include <boost/contract/aux_/debug.hpp>
 #include <boost/contract/aux_/none.hpp>
 /** @cond */

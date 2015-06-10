@@ -4,7 +4,7 @@
 
 // TODO: Review and cleanup all #includes.
 #include <boost/contract/core/virtual.hpp>
-#include <boost/contract/aux_/condition/check_pre_post_inv.hpp>
+#include <boost/contract/aux_/check/check_pre_post_inv.hpp>
 #include <boost/contract/aux_/type_traits/base_types.hpp>
 #include <boost/contract/aux_/type_traits/member_function_types.hpp>
 #include <boost/contract/aux_/debug.hpp>
@@ -42,16 +42,19 @@ namespace check_subcontracted_pre_post_inv_ {
 // TODO: Can I make this, other check_... classes, and maybe even other
 // calsses noncopyable? What does truly need to be copyable and why?
 
+// TODO: Here I must assert that if O != none then at least one of the bases
+// contains a virtual contracted function that can be overridden.
+
 // O, R, F, and A-i can be none types (but C cannot).
-template<class O, typename R, typename F, class C, typename A0>
+template<class O, typename R, typename F, class C, typename A0, typename A1>
 class check_subcontracted_pre_post_inv : // Copyable (as * and &).
         public check_pre_post_inv<R, C> {
     // Base types as pointers because mpl::for_each will construct them.
     typedef typename boost::mpl::transform<
-        typename boost::mpl::eval_if<has_base_types<C>,
-            base_types_of<C>
-        ,
+        typename boost::mpl::eval_if<boost::is_same<O, none>,
             boost::mpl::identity<boost::mpl::vector<> >
+        ,
+            base_types_of<C> // Already asserted has_base_types<C> if O != none.
         >::type,
         boost::add_pointer<boost::mpl::placeholders::_1>
     >::type base_ptrs;
@@ -64,8 +67,8 @@ class check_subcontracted_pre_post_inv : // Copyable (as * and &).
 
 public:
     explicit check_subcontracted_pre_post_inv(boost::contract::from from,
-            boost::contract::virtual_* v, C* obj, R& r, A0& a0) :
-        check_pre_post_inv<R, C>(from, obj), r_(r), a0_(a0)
+            boost::contract::virtual_* v, C* obj, R& r, A0& a0, A1& a1) :
+        check_pre_post_inv<R, C>(from, obj), r_(r), a0_(a0), a1_(a1)
     {
         if(v) {
             base_call_ = true;
@@ -172,7 +175,7 @@ private:
                     boost::contract::virtual_::no_action);
             try {
                 O::template BOOST_CONTRACT_AUX_NAME1(base_call)<B>(
-                        nest_->object(), nest_->a0_, nest_->v_);
+                        nest_->object(), nest_->a0_, nest_->a1_, nest_->v_);
             } catch(check_subcontracted_pre_post_inv_::no_error const&) {
                 if(nest_->v_->action_ == boost::contract::virtual_::check_pre) {
                     throw; // Pre logic-or: 1st no_err stops (throw to caller).
@@ -191,7 +194,8 @@ private:
     bool base_call_;
     check_base check_base_; // Copyable (as *).
     R& r_;
-    A0& a0_; // TODO: Support configurable func arity.
+    A0& a0_;
+    A1& a1_; // TODO: Support configurable func arity.
 };
 
 } } } // namespace

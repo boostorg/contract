@@ -12,9 +12,9 @@
 #include <boost/contract/guard.hpp>
 #include <boost/contract/oldof.hpp>
 #include <boost/contract/override.hpp>
-#include <boost/contract/private_member.hpp>
-#include <boost/contract/protected_member.hpp>
-#include <boost/contract/public_member.hpp>
+#include <boost/contract/private_function.hpp>
+#include <boost/contract/protected_function.hpp>
+#include <boost/contract/public_function.hpp>
 
 #endif // #include guard
 

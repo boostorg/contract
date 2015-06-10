@@ -7,18 +7,18 @@ subdir-run destructor : bases ;
 subdir-run destructor : body_throw ;
 subdir-compile-fail destructor : no_pre-error ;
 
-subdir-run public_member : bases ;
-subdir-run public_member : bases_virtual ;
-subdir-run public_member : bases_branch ;
-subdir-run public_member : body_throw ;
-subdir-run public_member : static ;
-subdir-run public_member : static_body_throw ;
+subdir-run public_function : bases ;
+subdir-run public_function : bases_virtual ;
+subdir-run public_function : bases_branch ;
+subdir-run public_function : body_throw ;
+subdir-run public_function : static ;
+subdir-run public_function : static_body_throw ;
 
-subdir-run protected_member : bases ;
-subdir-run protected_member : body_throw ;
+subdir-run protected_function : bases ;
+subdir-run protected_function : body_throw ;
 
-subdir-run private_member : bases ;
-subdir-run private_member : body_throw ;
+subdir-run private_function : bases ;
+subdir-run private_function : body_throw ;
 
 subdir-run free_function : main ;
 subdir-run free_function : body_throw ;

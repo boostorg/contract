@@ -3,7 +3,7 @@
 #define BOOST_CONTRACT_AUX_CONSTRUCTOR_HPP_
 
 #include <boost/contract/core/exception.hpp>
-#include <boost/contract/aux_/condition/check_pre_post_inv.hpp>
+#include <boost/contract/aux_/check/check_pre_post_inv.hpp>
 #include <boost/contract/aux_/check_guard.hpp>
 #include <boost/contract/aux_/none.hpp>
 /** @cond */

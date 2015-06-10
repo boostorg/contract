@@ -127,7 +127,7 @@ Consult this documentation in [@index.html HTML] or [@contractpp.pdf PDF] format
 [/ include virtual_specifiers.qbk]
 [/ include concepts.qbk]
 [/ include named_parameters.qbk]
-[/ include examples.qbk]
+[include examples.qbk]
 [include grammar.qbk]
 [/ include no_variadic_macros.qbk]
 [/ xinclude reference.xml]

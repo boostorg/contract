@@ -56,9 +56,9 @@ private:
 enum from {
     from_constructor,
     from_destructor,
-    from_public_member,
-    from_protected_member,
-    from_private_member,
+    from_public_function,
+    from_protected_function,
+    from_private_function,
     from_free_function
 };
 

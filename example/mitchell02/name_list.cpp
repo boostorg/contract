@@ -2,7 +2,7 @@
 #include <boost/contract.hpp>
 #include <boost/detail/lightweight_test.hpp>
 #include <string>
-#include <list>
+#include <vector>
 #include <algorithm>
 
 // List of names.
@@ -32,15 +32,14 @@ public:
 
     // Number of names in list.
     int count() const {
-        auto c = boost::contract::public_member(this); // Check invariants.
-
+        auto c = boost::contract::public_function(this); // Check invariants.
         return names_.size();
     }
 
     // Is name in list?
     bool has(std::string const& name) const {
         bool result;
-        auto c = boost::contract::public_member(this)
+        auto c = boost::contract::public_function(this)
             .postcondition([&] {
                 // If empty, has not.
                 if(count() == 0) BOOST_CONTRACT_ASSERT(!result);
@@ -58,7 +57,7 @@ public:
             boost::contract::virtual_* v = 0) {
         auto old_has_name = BOOST_CONTRACT_OLDOF(v, has(name));
         auto old_count = BOOST_CONTRACT_OLDOF(v, count());
-        auto c = boost::contract::public_member(v, this)
+        auto c = boost::contract::public_function(v, this)
             .precondition([&] {
                 BOOST_CONTRACT_ASSERT(!has(name)); // Not already in list.
             })
@@ -74,7 +73,7 @@ public:
     }
 
 private:
-    std::list<std::string> names_;
+    std::vector<std::string> names_;
 };
 
 class relaxed_name_list
@@ -92,7 +91,7 @@ public:
             boost::contract::virtual_* v = 0) /* override */ {
         auto old_has_name = BOOST_CONTRACT_OLDOF(v, has(name));
         auto old_count = BOOST_CONTRACT_OLDOF(v, count());
-        auto c = boost::contract::public_member<override_put>(v,
+        auto c = boost::contract::public_function<override_put>(v,
                 &relaxed_name_list::put, this, name)
             .precondition([&] { // Relax inherited preconditions.
                 BOOST_CONTRACT_ASSERT(has(name)); // Already in list.
@@ -105,7 +104,7 @@ public:
             })
         ;
 
-        if(!has(name)) name_list::put(name);
+        if(!has(name)) name_list::put(name); // Else, do nothing.
     }
     BOOST_CONTRACT_OVERRIDE(put);
 };

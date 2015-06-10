@@ -5,5 +5,12 @@ subdir-run meyer97 : stack3 ;
 subdir-run mitchell02 : stack ;
 subdir-run mitchell02 : simple_queue ;
 subdir-run mitchell02 : dictionary ;
+subdir-run mitchell02 : customer_manager ;
 subdir-run mitchell02 : name_list ;
+subdir-run mitchell02 : courier ;
+subdir-run mitchell02 : observer_main ;
+subdir-run mitchell02 : counter_main ;
+
+subdir-run cline90 : stack ;
+subdir-run cline90 : vector_main ;
 

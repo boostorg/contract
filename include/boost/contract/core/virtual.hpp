@@ -11,7 +11,7 @@
 namespace boost {
     namespace contract {
         namespace aux {
-            template<class, typename, typename, class, typename>
+            template<class, typename, typename, class, typename, typename>
             class check_subcontracted_pre_post_inv;
         }
     }
@@ -42,7 +42,7 @@ private:
     friend bool copy_old(virtual_*);
     friend class old;
 
-    template<class, typename, typename, class, typename>
+    template<class, typename, typename, class, typename, typename>
     friend class boost::contract::aux::check_subcontracted_pre_post_inv;
 };
 

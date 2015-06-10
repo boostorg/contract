@@ -1,4 +1,6 @@
 
+//[meyer97_stack3
+// File: stack3.cpp
 #include "stack4.hpp"
 #include <boost/contract.hpp>
 #include <boost/optional.hpp>
@@ -48,21 +50,21 @@ public:
 
     // Max number of stack items.
     int capacity() const {
-        auto c = boost::contract::public_member(this); // Check invariants.
+        auto c = boost::contract::public_function(this); // Check invariants.
 
         return stack_.capacity();
     }
 
     // Number of stack items.
     int count() const {
-        auto c = boost::contract::public_member(this); // Check invariants.
+        auto c = boost::contract::public_function(this); // Check invariants.
 
         return stack_.count();
     }
 
     // Top item if present, otherwise none and set error (no preconditions).
     boost::optional<T const&> item() const {
-        auto c = boost::contract::public_member(this)
+        auto c = boost::contract::public_function(this)
             .postcondition([&] {
                 BOOST_CONTRACT_ASSERT( // Error if impossible.
                         this->empty() == (error() == underflow_error));
@@ -84,19 +86,19 @@ public:
 
     // Error indicator set by various operations.
     error_code error() const {
-        auto c = boost::contract::public_member(this); // Check invariants.
+        auto c = boost::contract::public_function(this); // Check invariants.
 
         return error_;
     }
 
     bool empty() const {
-        auto c = boost::contract::public_member(this); // Check invariants.
+        auto c = boost::contract::public_function(this); // Check invariants.
 
         return stack_.empty();
     }
 
     bool full() const {
-        auto c = boost::contract::public_member(this); // Check invariants.
+        auto c = boost::contract::public_function(this); // Check invariants.
         
         return stack_.full();
     }
@@ -107,7 +109,7 @@ public:
     void put(T const& x) {
         auto old_full = BOOST_CONTRACT_OLDOF(full());
         auto old_count = BOOST_CONTRACT_OLDOF(count());
-        auto c = boost::contract::public_member(this)
+        auto c = boost::contract::public_function(this)
             .postcondition([&] {
                 // Error if impossible.
                 BOOST_CONTRACT_ASSERT(*old_full == (error() == overflow_error));
@@ -133,7 +135,7 @@ public:
     void remove() {
         auto old_empty = BOOST_CONTRACT_OLDOF(empty());
         auto old_count = BOOST_CONTRACT_OLDOF(count());
-        auto c = boost::contract::public_member(this)
+        auto c = boost::contract::public_function(this)
             .postcondition([&] {
                 // Error if impossible.
                 BOOST_CONTRACT_ASSERT(*old_empty == (error() ==
@@ -178,4 +180,5 @@ int main() {
 
     return boost::report_errors();
 }
+//]
 

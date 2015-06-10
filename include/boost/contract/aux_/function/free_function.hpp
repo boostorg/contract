@@ -3,7 +3,7 @@
 #define BOOST_CONTRACT_AUX_FREE_FUNCTION_HPP_
 
 #include <boost/contract/core/exception.hpp>
-#include <boost/contract/aux_/condition/check_pre_post.hpp>
+#include <boost/contract/aux_/check/check_pre_post.hpp>
 #include <boost/contract/aux_/check_guard.hpp>
 #include <boost/contract/aux_/none.hpp>
 /** @cond */
@@ -13,7 +13,7 @@
 
 namespace boost { namespace contract { namespace aux {
 
-// Also used for private and protected members.
+// Also used for private and protected member functions.
 template<boost::contract::from From>
 class basic_free_function : public check_pre_post</* R = */ none> {
 public:

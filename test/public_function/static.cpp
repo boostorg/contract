@@ -1,9 +1,9 @@
 
-// Test protected member function contracts.
+// Test public static member function contracts.
 
 #include "../aux_/oteststream.hpp"
 #include <boost/contract/base_types.hpp>
-#include <boost/contract/protected_member.hpp>
+#include <boost/contract/public_function.hpp>
 #include <boost/contract/guard.hpp>
 #include <boost/detail/lightweight_test.hpp>
 #include <sstream>
@@ -14,9 +14,8 @@ struct b {
     void invariant() const { out << "b::inv" << std::endl; }
     static void static_invariant() { out << "b::static_inv" << std::endl; }
 
-protected:
-    virtual void f() {
-        boost::contract::guard c = boost::contract::protected_member()
+    static void f() {
+        boost::contract::guard c = boost::contract::public_function<b>()
             .precondition([&] {
                 out << "b::f::pre" << std::endl;
             })
@@ -38,11 +37,8 @@ struct a
     void invariant() const { out << "a::inv" << std::endl; }
     static void static_invariant() { out << "a::static_inv" << std::endl; }
 
-    void call_f() { f(); }
-
-protected:
-    virtual void f() {
-        boost::contract::guard c = boost::contract::protected_member()
+    static void f() {
+        boost::contract::guard c = boost::contract::public_function<a>()
             .precondition([&] {
                 out << "a::f::pre" << std::endl;
             })
@@ -57,14 +53,15 @@ protected:
 int main() {
     std::ostringstream ok;
 
-    a aa;
     out.str("");
-    aa.call_f();
+    a::f();
     ok.str(""); ok
-        // Test not part of public API so no inv, plus cannot be called directly
-        // so no substitution principle and no subcontracting.
+        // Static so no object thus only static inv, plus never virtual so subst
+        // principle does not apply and no subcontracting.
+        << "a::static_inv" << std::endl
         << "a::f::pre" << std::endl
         << "a::f::body" << std::endl
+        << "a::static_inv" << std::endl
         << "a::f::post" << std::endl
     ;
     BOOST_TEST(out.eq(ok.str()));

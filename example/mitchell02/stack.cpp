@@ -31,14 +31,14 @@ public:
 
     // Number of items.
     int count() const {
-        auto c = boost::contract::public_member(this); // Check invariants.
+        auto c = boost::contract::public_function(this); // Check invariants.
 
         return items_.size();
     }
 
     // Item at index in [1, count()] (as in Eiffel).
     T const& item_at(int index) const {
-        auto c = boost::contract::public_member(this)
+        auto c = boost::contract::public_function(this)
             .precondition([&] {
                 BOOST_CONTRACT_ASSERT(index > 0); // Positive index.
                 BOOST_CONTRACT_ASSERT(index <= count()); // Index within count.
@@ -53,7 +53,7 @@ public:
     // If no items.
     bool is_empty() const {
         bool result;
-        auto c = boost::contract::public_member(this)
+        auto c = boost::contract::public_function(this)
             .postcondition([&] {
                 // Consistent with count.
                 BOOST_CONTRACT_ASSERT(result == (count() == 0));
@@ -66,7 +66,7 @@ public:
     // Top item.
     T const& item() const {
         boost::optional<T const&> result; // Avoid extra construction of T.
-        auto c = boost::contract::public_member(this)
+        auto c = boost::contract::public_function(this)
             .precondition([&] {
                 BOOST_CONTRACT_ASSERT(count() > 0); // Not empty.
             })
@@ -84,7 +84,7 @@ public:
     // Push item to the top.
     void put(T const& new_item) {
         auto old_count = BOOST_CONTRACT_OLDOF(count());
-        auto c = boost::contract::public_member(this)
+        auto c = boost::contract::public_function(this)
             .postcondition([&] {
                 BOOST_CONTRACT_ASSERT(count() == *old_count + 1); // Count inc.
                 BOOST_CONTRACT_ASSERT(item() == new_item); // Item set.
@@ -97,7 +97,7 @@ public:
     // Pop top item.
     void remove() {
         auto old_count = BOOST_CONTRACT_OLDOF(count());
-        auto c = boost::contract::public_member(this)
+        auto c = boost::contract::public_function(this)
             .precondition([&] {
                 BOOST_CONTRACT_ASSERT(count() > 0); // Not empty.
             })

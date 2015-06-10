@@ -57,14 +57,14 @@ public:
     // Items in queue (in their order).
     // (Somewhat exposes implementation but allows to check more contracts.)
     std::vector<T> const& items() const {
-        auto c = boost::contract::public_member(this); // Check invariants.
+        auto c = boost::contract::public_function(this); // Check invariants.
 
         return items_;
     }
 
     // Max number of items queue can hold.
     int capacity() const {
-        auto c = boost::contract::public_member(this); // Check invariants.
+        auto c = boost::contract::public_function(this); // Check invariants.
 
         return items_.capacity();
     }
@@ -74,7 +74,7 @@ public:
     // Number of items.
     int count() const {
         int result;
-        auto c = boost::contract::public_member(this)
+        auto c = boost::contract::public_function(this)
             .postcondition([&] {
                 // Return items count.
                 BOOST_CONTRACT_ASSERT(result == int(items().size()));
@@ -87,7 +87,7 @@ public:
     // Item at head.
     T const& head() const {
         boost::optional<T const&> result;
-        auto c = boost::contract::public_member(this)
+        auto c = boost::contract::public_function(this)
             .precondition([&] {
                 BOOST_CONTRACT_ASSERT(!is_empty()); // Not empty.
             })
@@ -103,7 +103,7 @@ public:
     // If queue contains no item.
     bool is_empty() const {
         bool result;
-        auto c = boost::contract::public_member(this)
+        auto c = boost::contract::public_function(this)
             .postcondition([&] {
                 // Consistent with count.
                 BOOST_CONTRACT_ASSERT(result == (count() == 0));
@@ -116,7 +116,7 @@ public:
     // If queue as no room for another item.
     bool is_full() const {
         bool result;
-        auto c = boost::contract::public_member(this)
+        auto c = boost::contract::public_function(this)
             .postcondition([&] {
                 BOOST_CONTRACT_ASSERT( // Consistent with size and capacity.
                         result == (capacity() == int(items().size())));
@@ -135,7 +135,7 @@ public:
         if(O_N <= COMPLEXITY_MAX) old_items = BOOST_CONTRACT_OLDOF(items());
 
         auto old_count = BOOST_CONTRACT_OLDOF(count());
-        auto c = boost::contract::public_member(this)
+        auto c = boost::contract::public_function(this)
             .precondition([&] {
                 BOOST_CONTRACT_ASSERT(!is_empty()); // Not empty.
             })
@@ -157,7 +157,7 @@ public:
         if(O_N <= COMPLEXITY_MAX) old_items = BOOST_CONTRACT_OLDOF(items());
 
         auto old_count = BOOST_CONTRACT_OLDOF(count());
-        auto c = boost::contract::public_member(this)
+        auto c = boost::contract::public_function(this)
             .precondition([&] {
                 BOOST_CONTRACT_ASSERT(count() < capacity()); // Room for add.
             })
@@ -176,7 +176,7 @@ private:
     // Contract helper.
     static bool all_equal(std::vector<T> const& left,
             std::vector<T> const& right, unsigned offset = 0) {
-        auto c = boost::contract::private_member()
+        auto c = boost::contract::private_function()
             .precondition([&] {
                 // Correct offset.
                 BOOST_CONTRACT_ASSERT(right.size() == left.size() + offset);

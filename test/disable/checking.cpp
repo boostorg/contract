@@ -5,7 +5,7 @@
 #include "../aux_/cpcnt.hpp"
 #include <boost/contract/oldof.hpp>
 #include <boost/contract/guard.hpp>
-#include <boost/contract/public_member.hpp>
+#include <boost/contract/public_function.hpp>
 #include <boost/contract/assert.hpp>
 #include <boost/shared_ptr.hpp>
 #include <boost/detail/lightweight_test.hpp>
@@ -23,7 +23,7 @@ struct a {
         int result;
         boost::shared_ptr<x_type const> old_x = BOOST_CONTRACT_OLDOF(
                 x_type::eval(x));
-        boost::contract::guard c = boost::contract::public_member(this)
+        boost::contract::guard c = boost::contract::public_function(this)
             .precondition([&] { out << "a::f::pre" << std::endl; })
             .postcondition([&] {
                 out << "a::f::post" << std::endl;
@@ -49,7 +49,7 @@ struct b {
     static void static_invariant() { out << "b::static_inv" << std::endl; }
 
     void g() {
-        boost::contract::guard c = boost::contract::public_member(this)
+        boost::contract::guard c = boost::contract::public_function(this)
             .precondition([&] {
                 out << "b::g::pre" << std::endl;
                 BOOST_CONTRACT_ASSERT(call_f());

@@ -4,7 +4,7 @@
 
 /** @file */
 
-#include <boost/contract/aux_/condition/check_pre_only.hpp>
+#include <boost/contract/aux_/check/check_pre_only.hpp>
 /** @cond */
 #include <boost/shared_ptr.hpp>
 /** @endcond */
@@ -18,7 +18,7 @@ namespace boost { namespace contract {
 
 class set_nothing { // Copyable as shared * (OK also for RAII).
 public:
-    // No set function members here.
+    // No set member functions here.
 
 private:
     typedef boost::shared_ptr<boost::contract::aux::check_pre_only> check_ptr;

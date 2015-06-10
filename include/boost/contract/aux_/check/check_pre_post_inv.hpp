@@ -4,7 +4,7 @@
 
 #include <boost/contract/core/config.hpp>
 #include <boost/contract/core/exception.hpp>
-#include <boost/contract/aux_/condition/check_pre_post.hpp>
+#include <boost/contract/aux_/check/check_pre_post.hpp>
 #include <boost/contract/aux_/type_traits/invariant.hpp>
 #include <boost/contract/aux_/debug.hpp>
 /** @cond */

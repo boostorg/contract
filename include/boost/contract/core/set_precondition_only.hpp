@@ -5,7 +5,7 @@
 /** @file */
 
 #include <boost/contract/core/set_nothing.hpp>
-#include <boost/contract/aux_/condition/check_pre_only.hpp>
+#include <boost/contract/aux_/check/check_pre_only.hpp>
 /** @cond */
 #include <boost/shared_ptr.hpp>
 /** @endcond */

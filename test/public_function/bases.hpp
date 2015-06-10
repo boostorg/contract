@@ -2,11 +2,11 @@
 #ifndef BASES_HPP_
 #define BASES_HPP_
 
-// Test public member subcontracting (also with old and return values).
+// Test public member function subcontracting (also with old and return values).
 
 #include "../aux_/oteststream.hpp"
 #include "../aux_/cpcnt.hpp"
-#include <boost/contract/public_member.hpp>
+#include <boost/contract/public_function.hpp>
 #include <boost/contract/base_types.hpp>
 #include <boost/contract/assert.hpp>
 #include <boost/contract/oldof.hpp>
@@ -56,7 +56,7 @@ result_type& t<Id>::f(s_type& s, boost::contract::virtual_* v) {
             BOOST_CONTRACT_OLDOF(v, z_type::eval(z));
     boost::shared_ptr<s_type const> old_s =
             BOOST_CONTRACT_OLDOF(v, s_type::eval(s));
-    boost::contract::guard c = boost::contract::public_member(v, result, this)
+    boost::contract::guard c = boost::contract::public_function(v, result, this)
         .precondition([&] {
             out << Id << "::f::pre" << std::endl;
             BOOST_CONTRACT_ASSERT(s.value[0] == Id);
@@ -101,7 +101,7 @@ struct c
                 BOOST_CONTRACT_OLDOF(v, y_type::eval(y));
         boost::shared_ptr<s_type const> old_s =
                 BOOST_CONTRACT_OLDOF(v, s_type::eval(s));
-        boost::contract::guard c = boost::contract::public_member<
+        boost::contract::guard c = boost::contract::public_function<
                 override_f>(v, result, &c::f, this, s)
             .precondition([&] {
                 out << "c::f::pre" << std::endl;
@@ -152,7 +152,7 @@ struct b {
     }
 };
 
-// Test public member with both non-contracted and contracted bases.
+// Test public function with both non-contracted and contracted bases.
 struct a
     #define BASES public b, public c
     : BASES
@@ -180,7 +180,7 @@ struct a
                 BOOST_CONTRACT_OLDOF(v, x_type::eval(x));
         boost::shared_ptr<s_type const> old_s =
                 BOOST_CONTRACT_OLDOF(v, s_type::eval(s));
-        boost::contract::guard c = boost::contract::public_member<
+        boost::contract::guard c = boost::contract::public_function<
                 override_f>(v, result, &a::f, this, s)
             .precondition([&] {
                 out << "a::f::pre" << std::endl;

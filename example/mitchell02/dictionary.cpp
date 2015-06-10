@@ -31,15 +31,14 @@ public:
 
     // Number of key entries.
     int count() const {
-        auto c = boost::contract::public_member(this); // Check invariants.
-
+        auto c = boost::contract::public_function(this); // Check invariants.
         return items_.size();
     }
 
     // Has entry for key?
     bool has(K const& key) const {
         bool result;
-        auto c = boost::contract::public_member(this)
+        auto c = boost::contract::public_function(this)
             .postcondition([&] {
                 // Empty has no key.
                 if(count() == 0) BOOST_CONTRACT_ASSERT(!result);
@@ -51,12 +50,13 @@ public:
 
     // Value for a given key.
     T const& value_for(K const& key) const {
-        auto c = boost::contract::public_member(this)
+        auto c = boost::contract::public_function(this)
             .precondition([&] {
                 BOOST_CONTRACT_ASSERT(has(key)); // Has key.
             })
         ;
 
+        // Find != end because of precondition (no defensive programming).
         return items_.find(key)->second;
     }
 
@@ -65,7 +65,7 @@ public:
     // Add value of a given key.
     void put(K const& key, T const& value) {
         auto old_count = BOOST_CONTRACT_OLDOF(count());
-        auto c = boost::contract::public_member(this)
+        auto c = boost::contract::public_function(this)
             .precondition([&] {
                 BOOST_CONTRACT_ASSERT(!has(key)); // Has not key already.
             })
@@ -83,7 +83,7 @@ public:
     // Remove value for given key.
     void remove(K const& key) {
         auto old_count = BOOST_CONTRACT_OLDOF(count());
-        auto c = boost::contract::public_member(this)
+        auto c = boost::contract::public_function(this)
             .precondition([&] {
                 BOOST_CONTRACT_ASSERT(has(key)); // Has key.
             })

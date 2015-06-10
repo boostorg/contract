@@ -1,4 +1,6 @@
 
+//[meyer97_stack4_header
+// File: stack4.hpp
 #ifndef STACK4_HPP_
 #define STACK4_HPP_
 
@@ -59,7 +61,7 @@ public:
 
     // Deep copy via assignment.
     stack4& operator=(stack4 const& other) {
-        auto c = boost::contract::public_member(this)
+        auto c = boost::contract::public_function(this)
             .postcondition([&] {
                 BOOST_CONTRACT_ASSERT(capacity() == other.capacity());
                 BOOST_CONTRACT_ASSERT(count() == other.count());
@@ -78,7 +80,6 @@ public:
     // Destroy this stack.
     virtual ~stack4() {
         auto c = boost::contract::destructor(this); // Check invariants.
-
         delete[] array_;
     }
 
@@ -86,21 +87,19 @@ public:
 
     // Max number of stack items.
     int capacity() const {
-        auto c = boost::contract::public_member(this); // Check invariants.
-
+        auto c = boost::contract::public_function(this); // Check invariants.
         return capacity_;
     }
 
     // Number of stack items.
     int count() const {
-        auto c = boost::contract::public_member(this); // Check invariants.
-
+        auto c = boost::contract::public_function(this); // Check invariants.
         return count_;
     }
 
     // Top item.
     T const& item() const {
-        auto c = boost::contract::public_member(this)
+        auto c = boost::contract::public_function(this)
             .precondition([&] {
                 BOOST_CONTRACT_ASSERT(!empty()); // Not empty (count > 0).
             })
@@ -114,7 +113,7 @@ public:
     // Is stack empty?
     bool empty() const {
         bool result;
-        auto c = boost::contract::public_member(this)
+        auto c = boost::contract::public_function(this)
             .postcondition([&] {
                 // Empty definition.
                 BOOST_CONTRACT_ASSERT(result == (count() == 0));
@@ -127,7 +126,7 @@ public:
     // Is stack full?
     bool full() const {
         bool result;
-        auto c = boost::contract::public_member(this)
+        auto c = boost::contract::public_function(this)
             .postcondition([&] {
                 BOOST_CONTRACT_ASSERT( // Full definition.
                         result == (count() == capacity()));
@@ -142,7 +141,7 @@ public:
     // Add x on top.
     void put(T const& x) {
         auto old_count = BOOST_CONTRACT_OLDOF(count());
-        auto c = boost::contract::public_member(this)
+        auto c = boost::contract::public_function(this)
             .precondition([&] {
                 BOOST_CONTRACT_ASSERT(!full()); // Not full.
             })
@@ -159,7 +158,7 @@ public:
     // Remove top item.
     void remove() {
         auto old_count = BOOST_CONTRACT_OLDOF(count());
-        auto c = boost::contract::public_member(this)
+        auto c = boost::contract::public_function(this)
             .precondition([&] {
                 BOOST_CONTRACT_ASSERT(!empty()); // Not empty (count > 0).
             })
@@ -179,4 +178,5 @@ private:
 };
 
 #endif // #include guard
+//]
 
