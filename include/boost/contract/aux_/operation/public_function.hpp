@@ -3,7 +3,7 @@
 #define BOOST_CONTRACT_AUX_PUBLIC_FUNCTION_HPP_
 
 #include <boost/contract/core/virtual.hpp>
-#include <boost/contract/aux_/check/check_subcontracted_pre_post_inv.hpp>
+#include <boost/contract/aux_/condition/check_subcontracted_pre_post_inv.hpp>
 #include <boost/contract/aux_/debug.hpp>
 #include <boost/contract/aux_/check_guard.hpp>
 /** @cond */
@@ -19,7 +19,7 @@ public:
     explicit public_function(
             boost::contract::virtual_* v, C* obj, R& r, A0& a0, A1& a1) :
         check_subcontracted_pre_post_inv<O, R, F, C, A0, A1>(
-                boost::contract::from_public_function, v, obj, r, a0, a1)
+                boost::contract::from_function, v, obj, r, a0, a1)
     {
         BOOST_CONTRACT_AUX_SUBCONTRACTED_CHECK_GUARD_OR_RETURN
         this->copy_subcontracted_oldof();

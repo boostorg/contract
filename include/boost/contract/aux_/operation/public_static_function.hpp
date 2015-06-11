@@ -4,7 +4,7 @@
 
 #include <boost/contract/core/virtual.hpp>
 #include <boost/contract/core/exception.hpp>
-#include <boost/contract/aux_/check/check_pre_post_inv.hpp>
+#include <boost/contract/aux_/condition/check_pre_post_inv.hpp>
 #include <boost/contract/aux_/check_guard.hpp>
 #include <boost/contract/aux_/none.hpp>
 /** @cond */
@@ -19,7 +19,7 @@ template<class C>
 class public_static_function : public check_pre_post_inv<none, C> {
 public:
     explicit public_static_function() : check_pre_post_inv<none, C>(
-            boost::contract::from_public_function, /* obj = */ 0) {
+            boost::contract::from_function, /* obj = */ 0) {
         BOOST_CONTRACT_AUX_CHECK_GUARD_OR_RETURN
         this->check_entry_static_inv();
     }

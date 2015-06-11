@@ -78,8 +78,6 @@ protected:
 
     // All observers attached to this subject.
     std::vector<observer const*> observers() const {
-        auto c = boost::contract::protected_function();
-
         std::vector<observer const*> obs;
         for(std::vector<observer*>::const_iterator i = observers_.cbegin();
                 i != observers_.cend(); ++i) {
@@ -92,7 +90,7 @@ protected:
 
     // Update all attached observers.
     void notify() {
-        auto c = boost::contract::protected_function()
+        auto c = boost::contract::function()
             .postcondition([&] {
                 if(O_N <= COMPLEXITY_MAX) {
                     // All updated.
@@ -114,8 +112,6 @@ private:
     /* Contract Helpers */
 
     static bool all_observers_valid(std::vector<observer const*> const& obs) {
-        auto c = boost::contract::private_function();
-
         for(std::vector<observer const*>::const_iterator i = obs.cbegin();
                 i != obs.cend(); ++i) {
             if(!*i) return false;
@@ -128,7 +124,7 @@ private:
         std::vector<observer const*> const& new_obs,
         observer const* ob
     ) {
-        auto c = boost::contract::private_function()
+        auto c = boost::contract::function()
             .precondition([&] {
                 BOOST_CONTRACT_ASSERT(ob); // Not null.
             })
@@ -149,8 +145,6 @@ private:
     }
 
     static bool all_observers_updated(std::vector<observer const*> const& obs) {
-        auto c = boost::contract::private_function();
-
         for(std::vector<observer const*>::const_iterator i = obs.cbegin();
                 i != obs.cend(); ++i) {
             if(!*i) return false;

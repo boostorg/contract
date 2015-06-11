@@ -14,14 +14,8 @@ subdir-run public_function : body_throw ;
 subdir-run public_function : static ;
 subdir-run public_function : static_body_throw ;
 
-subdir-run protected_function : bases ;
-subdir-run protected_function : body_throw ;
-
-subdir-run private_function : bases ;
-subdir-run private_function : body_throw ;
-
-subdir-run free_function : main ;
-subdir-run free_function : body_throw ;
+subdir-run function : pre_post ;
+subdir-run function : body_throw ;
 
 subdir-run disable : checking ;
 

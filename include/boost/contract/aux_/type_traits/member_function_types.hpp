@@ -4,6 +4,7 @@
 
 #include <boost/contract/core/virtual.hpp>
 #include <boost/contract/aux_/none.hpp>
+/** @cond */
 #include <boost/function_types/result_type.hpp>
 #include <boost/function_types/parameter_types.hpp>
 #include <boost/function_types/property_tags.hpp>
@@ -16,6 +17,7 @@
 #include <boost/mpl/if.hpp>
 #include <boost/mpl/and.hpp>
 #include <boost/mpl/identity.hpp>
+/** @endcond */
 
 namespace boost { namespace contract { namespace aux {
 

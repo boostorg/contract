@@ -75,6 +75,17 @@ public:
 
         return data_[index];
     }
+    
+    T const& operator[](int index) const {
+        auto c = boost::contract::public_function(this)
+            .precondition([&] {
+                BOOST_CONTRACT_ASSERT(index >= 0);
+                BOOST_CONTRACT_ASSERT(index < size());
+            })
+        ;
+
+        return data_[index];
+    }
 
 private:
     T* data_;

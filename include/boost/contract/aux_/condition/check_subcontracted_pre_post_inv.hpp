@@ -4,7 +4,7 @@
 
 // TODO: Review and cleanup all #includes.
 #include <boost/contract/core/virtual.hpp>
-#include <boost/contract/aux_/check/check_pre_post_inv.hpp>
+#include <boost/contract/aux_/condition/check_pre_post_inv.hpp>
 #include <boost/contract/aux_/type_traits/base_types.hpp>
 #include <boost/contract/aux_/type_traits/member_function_types.hpp>
 #include <boost/contract/aux_/debug.hpp>
@@ -78,7 +78,8 @@ public:
             if(!boost::mpl::empty<base_ptrs>::value) {
                 v_ = new boost::contract::virtual_(
                         boost::contract::virtual_::no_action);
-                v_->result_ = &r_;
+                // C-style cast to handle both pointer type and const.
+                v_->result_ = (void*)&r_;
             } else v_ = 0;
         }
         check_base_.nest(this);
@@ -132,6 +133,7 @@ protected:
 
 private:
     void check_post_result() {
+        // Ternary op here avoids extra copy of R (because constructing a &).
         R& r = base_call_ ? *static_cast<R*>(v_->result_) : r_;
         this->check_post(r);
     }

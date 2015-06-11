@@ -3,7 +3,7 @@
 
 #include "../aux_/oteststream.hpp"
 #include "../aux_/cpcnt.hpp"
-#include <boost/contract/free_function.hpp>
+#include <boost/contract/function.hpp>
 #include <boost/contract/oldof.hpp>
 #include <boost/contract/assert.hpp>
 #include <boost/contract/guard.hpp>
@@ -22,7 +22,7 @@ bool swap(x_type& x, y_type& y) {
             BOOST_CONTRACT_OLDOF(x_type::eval(x));
     boost::shared_ptr<y_type const> old_y =
             BOOST_CONTRACT_OLDOF(y_type::eval(y));
-    boost::contract::guard c = boost::contract::free_function()
+    boost::contract::guard c = boost::contract::function()
         .precondition([&] {
             out << "swap::pre" << std::endl;
             BOOST_CONTRACT_ASSERT(x.value != y.value);

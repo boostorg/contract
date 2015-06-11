@@ -13,4 +13,6 @@ subdir-run mitchell02 : counter_main ;
 
 subdir-run cline90 : stack ;
 subdir-run cline90 : vector_main ;
+subdir-run cline90 : vstack ;
+subdir-run cline90 : calendar ;
 

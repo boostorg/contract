@@ -6,7 +6,7 @@
 
 #include <boost/contract/core/set_precondition_only.hpp>
 #include <boost/contract/core/set_postcondition_only.hpp>
-#include <boost/contract/aux_/check/check_pre_post.hpp>
+#include <boost/contract/aux_/condition/check_pre_post.hpp>
 #include <boost/contract/aux_/none.hpp>
 /** @cond */
 #include <boost/shared_ptr.hpp>
@@ -47,9 +47,7 @@ private:
 
     // Friendship used to limit library's public API.
     friend class guard;
-    friend set_precondition_postcondition<> free_function();
-    friend set_precondition_postcondition<> protected_function();
-    friend set_precondition_postcondition<> private_function();
+    friend set_precondition_postcondition<> function();
 
     template<class C>
     friend set_precondition_postcondition<> public_function();

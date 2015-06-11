@@ -176,7 +176,7 @@ private:
     // Contract helper.
     static bool all_equal(std::vector<T> const& left,
             std::vector<T> const& right, unsigned offset = 0) {
-        auto c = boost::contract::private_function()
+        auto c = boost::contract::function()
             .precondition([&] {
                 // Correct offset.
                 BOOST_CONTRACT_ASSERT(right.size() == left.size() + offset);

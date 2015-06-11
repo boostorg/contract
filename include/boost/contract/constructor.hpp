@@ -6,7 +6,7 @@
 
 #include <boost/contract/core/set_postcondition_only.hpp>
 #include <boost/contract/core/exception.hpp>
-#include <boost/contract/aux_/function/constructor.hpp>
+#include <boost/contract/aux_/operation/constructor.hpp>
 /** @cond */
 #include <boost/make_shared.hpp>
 /** @endcond */

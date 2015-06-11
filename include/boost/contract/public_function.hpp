@@ -6,42 +6,29 @@
 
 #include <boost/contract/core/set_precondition_postcondition.hpp>
 #include <boost/contract/core/virtual.hpp>
-#include <boost/contract/aux_/function/public_function.hpp>
-#include <boost/contract/aux_/function/public_static_function.hpp>
+#include <boost/contract/aux_/operation/public_function.hpp>
+#include <boost/contract/aux_/operation/public_static_function.hpp>
 #include <boost/contract/aux_/type_traits/base_types.hpp>
 #include <boost/contract/aux_/none.hpp>
 /** @cond */
+#include <boost/optional.hpp>
+#include <boost/make_shared.hpp>
 #include <boost/function_types/result_type.hpp>
+#include <boost/function_types/function_arity.hpp>
 #include <boost/type_traits/is_same.hpp>
 #include <boost/type_traits/remove_reference.hpp>
 #include <boost/static_assert.hpp>
-#include <boost/make_shared.hpp>
 /** @endcond */
 
 /* PRIVATE */
 
-// Always enforce this so this lib can check and enforce override.
-#define BOOST_CONTRACT_PUBLIC_FUNCTION_HAS_BASE_TYPES_(C) \
-    BOOST_STATIC_ASSERT_MSG( \
-        boost::contract::aux::has_base_types<C>::value, \
-        "enclosing class missing 'base types' typdef" \
-    );
-
-#define BOOST_CONTRACT_PUBLIC_FUNCTION_HAS_RESULT_(F, R) \
-    BOOST_STATIC_ASSERT_MSG( \
-        boost::is_same< \
-            typename boost::remove_reference<typename boost::function_types:: \
-                    result_type<F>::type>::type, \
-            R \
-        >::value, \
-        "miss-matching result type for specified function" \
-    );
-
+// This check is strictly not necessary because compilation will fail anyways,
+// but it helps limiting cryptic compiler's errors.
 #define BOOST_CONTRACT_PUBLIC_FUNCTION_HAS_ARITY(F, arity) \
     BOOST_STATIC_ASSERT_MSG( \
-        /* -1 for this and -1 for virtual_* so -2 total */ \
+        /* -2 for both `this` and `virtual_*` extra parameters */ \
         boost::function_types::function_arity<F>::value - 2 == arity, \
-        "missing one or more parameters for specified function" \
+        "missing one or more arguments for specified function" \
     );
 
 // Always enforce this so base contracts can always specify postconditions with
@@ -52,12 +39,40 @@
             typename boost::function_types::result_type<F>::type, \
             void \
         >::value, \
-        "missing result parameter for non-void function" \
+        "missing result argument for non-void function" \
+    );
+
+#define BOOST_CONTRACT_PUBLIC_FUNCTION_HAS_RESULT_(F, R) \
+    BOOST_STATIC_ASSERT_MSG( \
+        boost::is_same< \
+            typename boost::remove_reference<typename boost::function_types:: \
+                    result_type<F>::type>::type, \
+            typename boost::contract::public_function_:: \
+                    remove_optional<R>::type \
+        >::value, \
+        "miss-matching result type for specified function" \
+    );
+
+// Always enforce this so this lib can check and enforce override.
+#define BOOST_CONTRACT_PUBLIC_FUNCTION_HAS_BASE_TYPES_(C) \
+    BOOST_STATIC_ASSERT_MSG( \
+        boost::contract::aux::has_base_types<C>::value, \
+        "enclosing class missing 'base types' typdef" \
     );
 
 /* CODE */
 
 namespace boost { namespace contract {
+
+namespace public_function_ {
+    template<typename R>
+    struct remove_optional { typedef R type; };
+
+    template<typename R>
+    struct remove_optional<boost::optional<R> > {
+        typedef typename boost::remove_reference<R>::type type;
+    };
+}
 
 // For static member functions.
 template<class C>

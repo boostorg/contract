@@ -19,12 +19,6 @@ none none::value;
 template<typename T> struct none_if_void { typedef T type; };
 template<> struct none_if_void<void> { typedef none type; };
 
-// TODO: Remove, for testing only...
-#include <iostream>
-std::ostream& operator<<(std::ostream& out, none const&) {
-    return out << "<none>";
-}
-
 } } } // namespace
 
 #endif // #include guard

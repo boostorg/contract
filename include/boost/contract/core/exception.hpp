@@ -56,10 +56,7 @@ private:
 enum from {
     from_constructor,
     from_destructor,
-    from_public_function,
-    from_protected_function,
-    from_private_function,
-    from_free_function
+    from_function
 };
 
 typedef void (*assertion_failed_handler)(from);

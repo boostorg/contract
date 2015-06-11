@@ -1,9 +1,9 @@
 
-#ifndef BOOST_CONTRACT_AUX_FREE_FUNCTION_HPP_
-#define BOOST_CONTRACT_AUX_FREE_FUNCTION_HPP_
+#ifndef BOOST_CONTRACT_AUX_FUNCTION_HPP_
+#define BOOST_CONTRACT_AUX_FUNCTION_HPP_
 
 #include <boost/contract/core/exception.hpp>
-#include <boost/contract/aux_/check/check_pre_post.hpp>
+#include <boost/contract/aux_/condition/check_pre_post.hpp>
 #include <boost/contract/aux_/check_guard.hpp>
 #include <boost/contract/aux_/none.hpp>
 /** @cond */
@@ -13,11 +13,11 @@
 
 namespace boost { namespace contract { namespace aux {
 
-// Also used for private and protected member functions.
-template<boost::contract::from From>
-class basic_free_function : public check_pre_post</* R = */ none> {
+// Used for free function, private and protected member functions.
+class function : public check_pre_post</* R = */ none> {
 public:
-    explicit basic_free_function() : check_pre_post</* R = */ none>(From) {}
+    explicit function() : check_pre_post</* R = */ none>(
+            boost::contract::from_function) {}
 
 private:
     void pre_available() /* override */ {
@@ -26,13 +26,11 @@ private:
     }
 
 public:
-    ~basic_free_function() {
+    ~function() {
         BOOST_CONTRACT_AUX_CHECK_GUARD_OR_RETURN
         if(!std::uncaught_exception()) this->check_post();
     }
 };
-
-typedef basic_free_function<boost::contract::from_free_function> free_function;
 
 } } } // namespace
 
