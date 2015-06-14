@@ -2,6 +2,8 @@
 import testing ;
 import os ;
 
+# Following `subdir-...` create targets named "subdir_name-file_name".
+
 rule subdir-run ( subdir : cpp_fname : requirements * )
 {
     run $(subdir)/$(cpp_fname).cpp : : : <include>$(subdir) $(requirements) :
@@ -19,7 +21,6 @@ if ! [ os.environ BOOST_ROOT ] {
 }
 local BOOST_ROOT = [ os.environ BOOST_ROOT ] ;
 echo "Using Boost libraries from (see $BOOST_ROOT): $(BOOST_ROOT)" ;
-
 use-project boost : $(BOOST_ROOT) ;
 
 project

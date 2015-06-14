@@ -6,6 +6,7 @@
 
 #include <boost/contract/assert.hpp>
 #include <boost/contract/base_types.hpp>
+#include <boost/contract/call_if.hpp>
 #include <boost/contract/constructor.hpp>
 #include <boost/contract/destructor.hpp>
 #include <boost/contract/function.hpp>

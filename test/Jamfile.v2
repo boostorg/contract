@@ -1,31 +1,60 @@
 
-subdir-run constructor : bases ;
-subdir-run constructor : body_throw ;
-subdir-compile-fail constructor : no_pre-error ;
+test-suite constructor :
+    [ subdir-run constructor : bases ]
+    [ subdir-run constructor : body_throw ]
+    [ subdir-compile-fail constructor : no_pre-error ]
+;
 
-subdir-run destructor : bases ;
-subdir-run destructor : body_throw ;
-subdir-compile-fail destructor : no_pre-error ;
+test-suite destructor :
+    [ subdir-run destructor : bases ]
+    [ subdir-run destructor : body_throw ]
+    [ subdir-compile-fail destructor : no_pre-error ]
+;
 
-subdir-run public_function : bases ;
-subdir-run public_function : bases_virtual ;
-subdir-run public_function : bases_branch ;
-subdir-run public_function : body_throw ;
-subdir-run public_function : static ;
-subdir-run public_function : static_body_throw ;
+test-suite public_function :
+    [ subdir-run public_function : bases ]
+    [ subdir-run public_function : bases_virtual ]
+    [ subdir-run public_function : bases_branch ]
+    [ subdir-run public_function : body_throw ]
+    [ subdir-run public_function : static ]
+    [ subdir-run public_function : static_body_throw ]
+;
 
-subdir-run function : pre_post ;
-subdir-run function : body_throw ;
+test-suite function :
+    [ subdir-run function : pre_post ]
+    [ subdir-run function : body_throw ]
+;
 
-subdir-run disable : checking ;
+test-suite disable :
+    [ subdir-run disable : checking ]
+;
 
-subdir-run set : nothing ;
-subdir-run set : pre_only ;
-subdir-run set : post_only ;
-subdir-run set : pre_post ;
-subdir-run set : post_pre ;
-subdir-compile-fail set : pre_pre-error ;
-subdir-compile-fail set : post_post-error ;
-subdir-compile-fail set : pre_post_pre-error ;
-subdir-compile-fail set : post_pre_post-error ;
+test-suite set :
+    [ subdir-run set : nothing ]
+    [ subdir-run set : pre_only ]
+    [ subdir-run set : post_only ]
+    [ subdir-run set : pre_post ]
+    [ subdir-run set : post_pre ]
+    [ subdir-compile-fail set : pre_pre-error ]
+    [ subdir-compile-fail set : post_post-error ]
+    [ subdir-compile-fail set : pre_post_pre-error ]
+    [ subdir-compile-fail set : post_pre_post-error ]
+;
+
+test-suite call_if :
+    [ subdir-run call_if : true_ ]
+    [ subdir-run call_if : false_ ]
+    [ subdir-run call_if : true_void ]
+    [ subdir-run call_if : false_void ]
+    [ subdir-run call_if : equal_to ]
+;
+
+# C++14 supported only by Clang... so in its own suite and explicit.
+test-suite cxx14 :
+    [ subdir-run call_if : equal_to_cxx14 :
+            <toolset>clang:<cxxflags>-std=c++1y ]
+    [ subdir-run call_if : myadvance_cxx14 :
+            <toolset>clang:<cxxflags>-std=c++1y ]
+;
+explicit cxx14 ;
 
