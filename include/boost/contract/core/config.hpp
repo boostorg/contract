@@ -4,6 +4,18 @@
 
 /** @file */
 
+#ifndef BOOST_CONTRACT_CONFIG_NO_PRECONDITIONS
+#   define BOOST_CONTRACT_CONFIG_NO_PRECONDITIONS 0
+#endif
+
+#ifndef BOOST_CONTRACT_CONFIG_NO_POSTCONDITIONS
+#   define BOOST_CONTRACT_CONFIG_NO_POSTCONDITIONS 0
+#endif
+
+#ifndef BOOST_CONTRACT_CONFIG_NO_INVARIANTS
+#   define BOOST_CONTRACT_CONFIG_NO_INVARIANTS 0
+#endif
+
 // TODO: base_types, invariant, and static_invariant must be public. Allow to
 // make them private (so to not alter user's public API) by declaring some
 // `friend class boost::contract::aux::access;` from the user's class (then

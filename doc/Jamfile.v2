@@ -1,7 +1,6 @@
 
 import quickbook ;
 using boostbook ;
-using doxygen ;
 
 #doxygen reference
 #    :
@@ -31,20 +30,18 @@ using doxygen ;
 #        <doxygen:param>ALIASES=" Params=\"<b>Parameters:</b> <table border="0">\" Param{2}=\"<tr><td><b><tt>\\1</tt></b></td><td>\\2</td></tr>\" EndParams=\"</table>\" Returns=\"<b>Returns:</b>\" Note=\"<b>Note:</b>\" Warning=\"<b>Warning:</b>\" SeeAlso=\"<b>See also:</b>\" RefSect{2}=\"\\xmlonly<link linkend='contract__.\\1'>\\2</link>\\endxmlonly\" RefClass{1}=\"\\xmlonly<computeroutput><classname alt='\\1'>\\1</classname></computeroutput>\\endxmlonly\" RefFunc{1}=\"\\xmlonly<computeroutput><functionname alt='\\1'>\\1</functionname></computeroutput>\\endxmlonly\" RefMacro{1}=\"\\xmlonly<computeroutput><macroname alt='\\1'>\\1</macroname></computeroutput>\\endxmlonly\" RefEnum{1}=\"\\xmlonly<computeroutput><enumname alt='\\1'>\\1</enumname></computeroutput>\\endxmlonly\" "
 #    ;
 
-xml contractpp : qbk/contract.qbk ;
-#: <dependency>reference ;
+xml contract
+    : qbk/contract.qbk
+#    : <dependency>reference
+;
 
-boostbook doc : contractpp :
-    <location>html
-    <xsl:param>toc.max.depth=1
-    <xsl:param>boost.defaults=Boost
-    <xsl:param>boost.root=../../
-    <xsl:param>admon.graphics.path=../../doc/src/images/
-    <xsl:param>html.stylesheet=../../doc/src/boostbook.css
-    <format>pdf:<xsl:param>admon.graphics.extension=".svg"
-    <format>pdf:<xsl:param>img.src.path=html/
-    <format>pdf:<xsl:param>draft.more="no"
-    <format>pdf:<xsl:param>page.orientation="landscape"
-    <format>pdf:<xsl:param>paper.type="A3"
+boostbook doc
+    : contract
+    :
+        <location>html
+        <xsl:param>boost.defaults=Boost
+        <xsl:param>boost.root=../../
+        <xsl:param>admon.graphics.path=../../doc/src/images/
+        <xsl:param>html.stylesheet=../../doc/src/boostbook.css
 ;
 

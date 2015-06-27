@@ -1,15 +1,9 @@
 
-[/ Copyright (C) 2008-2012 Lorenzo Caminiti ]
-[/ Distributed under the Boost Software License, Version 1.0 ]
-[/ (see accompanying file LICENSE_1_0.txt or a copy at ]
-[/ http://www.boost.org/LICENSE_1_0.txt) ]
-[/ Home at http://sourceforge.net/projects/contractpp ]
-
-[library Contract++
+[library Boost.Contract
     [quickbook 1.5]
-    [version 0.4.1]
+    [version 1.0]
     [authors [Caminiti <email>lorcaminiti@gmail.com</email>, Lorenzo]]
-    [copyright 2008-2012 Lorenzo Caminiti]
+    [copyright 2008-2015 Lorenzo Caminiti]
     [license Distributed under the Boost Software License, Version 1.0 (see accompanying file LICENSE_1_0.txt or a copy at [@http://www.boost.org/LICENSE_1_0.txt])]
     [/ purpose Contract Programming for C++]
     [/ category Correctness and Testing]
@@ -101,8 +95,8 @@
 [def __Release_Notes__ [link contract__.release_notes Release Notes]]
 [def __Acknowledgments__ [link contract__.acknowledgments Acknowledgments]]
 
-[def __logic_and__ [link logic_and_anchor logic-and]]
-[def __logic_or__ [link logic_or_anchor logic-or]]
+[def __AND__ [link logic_and_anchor [^AND]]]
+[def __OR__ [link logic_or_anchor [^OR]]]
 [def __Assignable__ [@http://www.boost.org/doc/libs/release/libs/utility/Assignable.html [^Assignable]]]
 [def __ConstantCopyConstructible__ [link contract__.advanced_topics.old_and_result_value_copies [^ConstantCopyConstructible]]]
 [def __CopyConstructible__ [@http://www.boost.org/doc/libs/release/libs/utility/CopyConstructible.html [^CopyConstructible]]]
@@ -113,25 +107,30 @@
 [:['["Our field needs more formality, but the profession has not realized it yet.]]]
 [:['-- Bertrand Meyer (see __Meyer97__ page 400)]]
 
-This library implements Contract Programming for the C++ programming language.
-In addition, the library implements virtual specifiers (`final`, `override`, and `new`, see __CXX11__), concept checking, and named parameters.
+This library implements
+[@http://en.wikipedia.org/wiki/Design_by_contract Contract Programming] (a.k.a., Design by Contract, DbC)
+[footnote
+Design by Contract (DbC) is a registered trademark of [@http://en.wikipedia.org/wiki/Eiffel_Software Eiffel Software].
+Its methodology was first introduced by the __Eiffel__ programming language (see __Meyer97__).
+]
+for the C++ programming language.
+All Contract Programming features are supported: subcontracting, class invariants, postconditions (with old and result values), preconditions, customizable actions on assertion failure, optional assertion compilation, disable assertion checking within other assertion checking, etc.
 
-Consult this documentation in [@index.html HTML] or [@contractpp.pdf PDF] format.
+Consult this documentation in [@index.html HTML] or [@contract.pdf PDF] format.
 
-[/ include introduction.qbk]
-[/ include full_table_of_contents.qbk]
-[/ include getting_started.qbk]
-[/ include contract_programming_overview.qbk]
-[/ include tutorial.qbk]
-[/ include advanced_topics.qbk]
-[/ include virtual_specifiers.qbk]
-[/ include concepts.qbk]
-[/ include named_parameters.qbk]
-[include examples.qbk]
+[include introduction.qbk]
+[include getting_started.qbk]
+[include contract_programming_overview.qbk]
+[include tutorial.qbk]
+[include advanced_topics.qbk]
+[include virtual_specifiers.qbk]
+[include concepts.qbk]
+[include named_parameters.qbk]
+[/ include examples.qbk]
 [include grammar.qbk]
-[/ include no_variadic_macros.qbk]
+[include no_variadic_macros.qbk]
 [/ xinclude reference.xml]
-[/ include release_notes.qbk]
-[/ include bibliography.qbk]
-[/ include acknowledgments.qbk]
+[include release_notes.qbk]
+[include bibliography.qbk]
+[include acknowledgments.qbk]
 

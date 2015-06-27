@@ -50,12 +50,12 @@ struct call_if_statement<true, Then, R> { // Copyable as *.
     R else_(Else const&) const { return *r_; }
 
     template<bool ElseIfCond, typename ElseIfThen>
-    call_if_statement<true, Then, R> else_if_c(ElseIfThen const&) {
+    call_if_statement<true, Then, R> else_if_c(ElseIfThen const&) const {
         return *this;
     }
 
     template<class ElseIfCond, typename ElseIfThen>
-    call_if_statement<true, Then, R> else_if(ElseIfThen const&) {
+    call_if_statement<true, Then, R> else_if(ElseIfThen const&) const {
         return *this;
     }
     
@@ -74,12 +74,12 @@ struct call_if_statement<true, Then, void> {
     void else_(Else const&) const {}
     
     template<bool ElseIfCond, typename ElseIfThen>
-    call_if_statement<true, Then, void> else_if_c(ElseIfThen const&) {
+    call_if_statement<true, Then, void> else_if_c(ElseIfThen const&) const {
         return *this;
     }
 
     template<class ElseIfCond, typename ElseIfThen>
-    call_if_statement<true, Then, void> else_if(ElseIfThen const&) {
+    call_if_statement<true, Then, void> else_if(ElseIfThen const&) const {
         return *this;
     }
 };
@@ -101,12 +101,13 @@ struct call_if_statement<false, Then, boost::contract::aux::none> {
     }
     
     template<bool ElseIfCond, typename ElseIfThen>
-    call_if_statement<ElseIfCond, ElseIfThen> else_if_c(ElseIfThen f) {
+    call_if_statement<ElseIfCond, ElseIfThen> else_if_c(ElseIfThen f) const {
         return call_if_statement<ElseIfCond, ElseIfThen>(f);
     }
     
     template<class ElseIfCond, typename ElseIfThen>
-    call_if_statement<ElseIfCond::value, ElseIfThen> else_if(ElseIfThen f) {
+    call_if_statement<ElseIfCond::value, ElseIfThen> else_if(ElseIfThen f)
+            const {
         return call_if_statement<ElseIfCond::value, ElseIfThen>(f);
     }
 };

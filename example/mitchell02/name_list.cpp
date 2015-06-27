@@ -91,8 +91,8 @@ public:
             boost::contract::virtual_* v = 0) /* override */ {
         auto old_has_name = BOOST_CONTRACT_OLDOF(v, has(name));
         auto old_count = BOOST_CONTRACT_OLDOF(v, count());
-        auto c = boost::contract::public_function<override_put>(v,
-                &relaxed_name_list::put, this, name)
+        auto c = boost::contract::public_function<override_put>(
+                v, &relaxed_name_list::put, this, name)
             .precondition([&] { // Relax inherited preconditions.
                 BOOST_CONTRACT_ASSERT(has(name)); // Already in list.
             })

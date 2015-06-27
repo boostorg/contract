@@ -1,489 +1,502 @@
 
-[/ Copyright (C) 2008-2012 Lorenzo Caminiti ]
-[/ Distributed under the Boost Software License, Version 1.0 ]
-[/ (see accompanying file LICENSE_1_0.txt or a copy at ]
-[/ http://www.boost.org/LICENSE_1_0.txt) ]
-[/ Home at http://sourceforge.net/projects/contractpp ]
-
 [section Tutorial]
 
-This section explains how to program contracts using this library.
-See the __Grammar__ section for a complete guide on this library syntax.
+This section gives an introduction on how to program contracts using this library.
+
+[import ../example/features/identifiers.cpp]
 
 [section Free Functions]
 
-Consider the following free function `postinc` which performs a post-increment on its parameter (see also [file example/contracts no_contract_postinc.cpp]):
+Consider the following free function `inc` which increments its argument by `1` and returns the value its argument had before the increment (this function is equivalent to the usual C++ operator `int operator++(int& x, int)`).
+Let's write the contract for such a function using code comments (see also [@../../example/features/inc_no_contract.cpp =inc_no_contract.cpp=]):
 
-[import ../example/contracts/no_contract_postinc.cpp]
-[no_contract_postinc]
+[import ../../example/features/inc_no_contract.cpp]
+[inc_no_contract]
 
-Let's now program the function declaration using the [macroref CONTRACT_FUNCTION] macro but without programming the contract yet (see also [file example/contracts no_pre_post_postinc.cpp]):
+The precondition states that the argument to increment must be smaller than the maximum allowable value of its type (otherwise the increment will go out-of-range).
+The postconditions state that the argument was actually incremented by `1` and that the function return value is equal to the argument before it was incremented.
 
-[import ../example/contracts/no_pre_post_postinc.cpp]
-[no_pre_post_postinc]
+Now let's program this function and its contract using the [funcref boost::contract::function] function from this library (see also [@../../example/features/inc.cpp =inc.cpp=]):
 
-All necessary header files for this library are included by `#include <contract.hpp>` (see also the __Getting_Started__ section).
+[import ../../example/features/inc.cpp]
+[inc]
 
-The function body is programmed outside the library macro.
-Therefore, while this library alters the function declaration syntax, it does not change the syntax used to implement the function.
+All necessary header files of this library are included by `#include <boost/contract.hpp>`.
+Alternatively, programmers can selectively include only the header files they actually need among =boost/contract/*.hpp= (see also __Getting_Started__).
 
-The function name `(postinc)` must always be wrapped within parenthesis so it can be passed to this library macros.
+It is possible to specify both preconditions and postconditions for free functions (see also __Preconditions__ and __Postconditions__).
 
-The function result and parameter types must be wrapped within parenthesis unless they are fundamental types containing no symbol (symbols are tokens different from the alphanumeric tokens `a-z`, `A-Z`, `0-9`).
-In this example, the result type `int const` is a fundamental type and it contains no symbol so the parenthesis around it `(int const)` are allowed but not required.
-[footnote
-In the examples presented in this documentation, extra parenthesis are in general avoided unless strictly required (for example, extra parenthesis around fundamental types containing no symbol `void`, `bool`, `unsigned int const`, etc are always omitted).
-In the authors' opinion, the syntax is more readable with lesser parenthesis.
-However, other programmers might find it more readable to always specify extra parenthesis around result and parameter types for consistency even when they are not strictly required.
+[funcref boost::contract::function] returns an RAII object (that can be assigned to a local variable of explicit type [classref boost::contract::guard] when programmers are not using C++11 auto declarations).
+The free function body is programmed right after the declaration of this RAII object.
+At construction, this RAII object does the following:
+
+# Check preconditions, by calling the functor [^['f]]`()` passed to `.precondition(`[^['f]]`)`.
+
+At destruction instead:
+
+# If the function body did not throw an exception:
+    # Check postconditions, by calling the functor [^['g]]`()` passed to `.postcondition(`[^['g]]`)`.
+
+This ensures that free function contracts are correctly checked at run-time (see also __Function_Calls__).
+
+[note
+A free function can avoid calling [funcref boost::contract::function] for efficiency but only when it has no preconditions and no postconditions.
 ]
-Instead, the parameter type `int&` is a fundamental type but it contains the reference symbol `&` so it must be wrapped within parenthesis `(int&)`.
-
-[important
-In general, every token which is not a known keyword (`int` is a known keyword but the function name is not) or that contains a non-alphanumeric symbol (e.g., `int&`) must be wrapped within round parenthesis `(...)` unless it is the very last token of a given syntactic element (e.g., the function parameter name `value` is the last token of the parameter declaration).
-[footnote
-*Rationale.*
-This library uses preprocessor meta-programming to parse declarations and contracts of classes and functions.
-The preprocessor cannot parse a token if it is not known a priori or if it contains symbols, unless such a token is wrapped within round parenthesis `()`.
-For example, the function name is arbitrary, it cannot be known a priori, so it must always be wrapped within parenthesis.
-If a type is a fundamental type then it is known a priori (because it is composed of known C++ keywords `int`, `const`, `unsigned`, etc), and if the fundamental type also contains no symbols (`&`, `*`, etc) then the parenthesis around such a type are optional.
-]
-
-See the __Grammar__ section for more information.
-]
-
-Each function parameter must always specify both its type and its name (parameter names can instead by omitted in usual C++ declarations).
-[footnote
-*Rationale.*
-It would be possible to modify the library syntax to make parameter names optional but that will complicate the library implementation without adding any feature for programmers.
-]
-As usual, additional parameters can be specified separated by commas `,` on compilers that support variadic macros (these include most modern compilers, MSVC, GCC, and all __CXX11__ compilers, see the __No_Variadic_Macros__ section for compilers that do not support variadic macros).
-The configuration macro [macroref CONTRACT_CONFIG_FUNCTION_ARITY_MAX] indicates the maximum number of function parameters that can be specified.
-An empty parameter list must be specified using `void` (this is similar to the usual C++ syntax that allows to declare a function with no parameter using [^['result-type function-name ]]`( void )`).
-[footnote
-*Rationale.*
-Unfortunately, it is not possible to specify an empty parameter list simply as [^['result-type function-name ]]`( )` because the preprocessor can only parse `( )` if empty macro parameters are supported.
-Empty macro parameters together with variadic macros where added to __C99__ and the preferred syntax of this library uses variadic macros.
-However, not all compilers (notably MSVC) that support variadic macros also correctly support empty macro parameters so `( void )` is always used instead of `( )` to increase portability.
-]
-Default parameter values can be specified using `, default `[^['default-value]] immediately following the parameter name.
-The storage classifiers `auto` and `register` can be specified as usual as part of the parameter type.
-[footnote
-Note that the `auto` storage classifier in deprecated by __CXX11__ so it should be used with the usual care when writing programs that should be portable from __CXX03__ to __CXX11__.
-]
-Functions can be overloaded by specifying different parameter types and they can recursively call themselves as usual.
-
-For example, the following function `postinc` is overloaded to work on `long` instead of `int` numbers, it is implemented using recursion, it increments the specified number by `offset` which is stored into a register variable and it has a default value of `1` (see also [file example/contracts params_postinc.cpp]):
-
-[import ../example/contracts/params_postinc.cpp]
-[params_postinc]
-[params_postinc_call]
-
-Function and array types cannot be directly used as function parameter types within the contract macros but extra `typedef` declarations can be used to workaround this limitation (for multi-dimensional arrays, the maximum number of supported array dimensions is specified by the [macroref CONTRACT_CONFIG_ARRAY_DIMENSION_MAX] macro).
-For example (see also [file example/contracts params_funcptr_array_apply.cpp]):
-
-[import ../example/contracts/params_funcptr_array_apply.cpp]
-[params_funcptr_array_apply]
-[params_funcptr_array_apply_call]
-
-Spaces and new-lines make no syntactical difference and they can be used freely within this library macros.
-[footnote
-An MSVC preprocessor bug requires to use at least one space or newline to separate a parameter name from its type even when the parameter type is wrapped within parenthesis.
-]
-The following aesthetic conventions are followed in this documentation (because the authors think they improve readability):
-
-# Round parenthesis are spaced when a list of tokens is expected (e.g., the function parameter list): `( `[^['token1]]` )`, `( `[^['token1]]`, `[^['token2]]` )`, `( `[^['token1]]`, `[^['token2]]`, `[^['token3]]` )`, etc.
-# Round parenthesis are not spaced when only a single token is expected (e.g., the function name): `(`[^['token]]`)`.
 
 [endsect]
+
+The same considerations also apply to private and protected member functions because their contracts are also programmed using [funcref boost::contract::function] like for free functions (see also __Private_and_Protected_Functions__).
 
 [section Preconditions]
 
-Let's program the preconditions of `postinc` (see also [file example/contracts pre_only_postinc.cpp]):
+When preconditions are specified, they are programmed using a functor that can be called with no parameter [^['f]]`()` and it is passed to `.precondition(`[^['f]]`)`.
+Contracts that do not have preconditions simply do not call `.precondition(...)`.
+
+C++11 lambda functions are very convenient to program preconditions, but any other nullary functor can be used (see also __No_Lambda_Functions__).
+[footnote
+C++11 lambda functions with no parameters can be programmed as `[...] () { ... }` but also equivalently as `[...] { ... }`.
+This second from is often used in this documentation omitting the empty parameter list `()` for brevity.
+]
+For example, for a free function contract (but same for all other contracts):
+
+    auto c = boost::contract::function()    // Same for all other contracts.
+        .precondition([&] {                 // Capture by reference or value...
+            BOOST_CONTRACT_ASSERT(...);     // ...but should not modify captures.
+            ...
+        })
+        ...
+    ;
+
+The precondition functor should capture all the variables that it needs to assert the preconditions.
+These variables can be captured by value when the overhead associated with copying such variables is acceptable (but in this documentation preconditions often capture these variables by reference to avoid such overhead).
+In any case, precondition assertions should not modify the value of the captured variables, even when those are captured by reference (see also __Constant_Correctness__).
+
+Any code can be programmed for the precondition functor, but it is recommended to keep this code simple using mainly assertions and if-statements (to avoid programming complex preconditions that might be buggy and slow to execute at run-time).
+It is also recommended to use the [macroref BOOST_CONTRACT_ASSERT] macro to program the assertions because it enables this library to print very informative error messages when the asserted conditions are evaluated to be false at run-time (this is not a variadic macro, but see also __No_Macros__):
     
-[import ../example/contracts/pre_only_postinc.cpp]
-[pre_only_postinc]
+    BOOST_CONTRACT_ASSERT(``/boolean-condition/``)
+    // Or, if condition has commas `,` not already within parenthesis `(...)`.
+    BOOST_CONTRACT_ASSERT((``/boolean-condition/``))
 
-In this example, the preconditions assert only one boolean condition but additional boolean conditions can be listed separated by commas `,`.
-Preconditions are automatically checked by the library when the `postinc` function is called, immediately before the body is executed (i.e., at function /entry/).
-See also the __Free_Function_Calls__ section.
+This library will automatically call [funcref boost::contract::precondition_failed] if any of the [macroref BOOST_CONTRACT_ASSERT] macro conditions are `false` and also if the precondition functor call throws any exception (by default, this terminates the program calling `std::terminate`, but see __Throw_on_Failure__ to throw exceptions, exit the program with an error code, etc.).
 
-Contracts are supposed to check but not to modify the state of the program (see the __Constant_Correctness__ section).
-Therefore, this library  evaluates all contract conditions in constant-correct context.
-Specifically, in this example the type of `value` is automatically promoted from `int&` to `int const&` within the preconditions and an attempt to modify `value` within the preconditions will correctly generate a compile-time error.
-
-[endsect]
-
-[section Postconditions (Result and Old Values)]
-
-Let's program the postconditions of `postinc` completing the contract (see also [file example/contracts post_also_postinc.cpp]):
-
-[import ../example/contracts/post_also_postinc.cpp]
-[post_also_postinc]
-
-Postconditions are automatically checked by the library when the `postinc` function is called, immediately after the body is executed but only if the body does not throw an exception (i.e., at function /normal exit/).
-See also the __Free_Function_Calls__ section.
-
-Postconditions can access the function return value by declaring a variable of type `auto` 
-[footnote
-*Rationale.*
-The __CXX11__ `auto` declaration syntax is adopted for postcondition return value declarations however this library knows the result type because it is specified in the function declaration within the macros so no type deduction is actually used to implement auto declarations of return values.
-Similarly, the __CXX11__ `auto` declaration syntax is adopted for postcondition old value declarations however this library deduces the type of old value expressions using __Boost_Typeof__ so no __CXX11__ feature is actually needed (in this case programmers can optionally specify the old value type so to not use __Boost_Typeof__ as explained in the __Advanced_Topics__ section).
-]
-and assigning it to the `return` keyword (the variable name is arbitrary but `result` is often used).
-
-Postconditions can also access the /old value/ that an expression had just before the body was executed.
-This is done by declaring a variable of type `auto` and assigning it to [macroref CONTRACT_OLDOF] [^['expression]] (the variable name is arbitrary but the `old_` prefix is often used).
-Before executing the function body, the library automatically copies (once) the value of the specified expression into a variable with the specified name which is then made available to the postconditions.
-Therefore, the type of an old value expression must have a copy constructor (or, more precisely, it must be be __ConstantCopyConstructible__), otherwise the library will generate a compile-time error.
-The parenthesis around the expression passed to the [macroref CONTRACT_OLDOF] macro are allowed but not required (in this example, `CONTRACT_OLDOF(value)` could have been equivalently used instead of `CONTRACT_OLDOF value` but the latter was preferred because of lesser parenthesis).
-In this sense, the syntax of the `CONTRACT_OLDOF` macro resembles the syntax of the `sizeof` operator which also allows but does not require parenthesis when applied to value expressions (i.e., `sizeof value` and `sizeof(value)` are both valid).
-[footnote
-*Rationale.*
-This is also the syntax specified by __N1962__ for the `oldof` operator which is the equivalent of the `CONTRACT_OLDOF` macro.
-]
-(The maximum number of supported and possible old value declarations is specified by the [macroref CONTRACT_CONFIG_OLDOF_MAX] and [macroref CONTRACT_LIMIT_OLDOFS] macros respectively.)
-
-Postconditions always access result and old values in constant-correct context so that contracts cannot modify the state of the program (see the __Constant_Correctness__ section).
-
-In general, it is recommended to specify multiple assertions separated by commas and not to group them together into a single condition using the operator `and` (or `&&`).
-This is because if assertion conditions are programmed together using `and` then it will not be clear which assertion condition actually failed in case the contract is broken.
-For example, if in the code above we programmed one single postcondition `(value == old_value + 1) and (result == old_value)` then in case the postcondition failed we would not know which condition failed `value == old_value + 1` or `result == old_value`.
+Preconditions can be specified before or after postconditions (by calling `.precondition(...)` before or after `.postcondition(...)`).
+This library will generate a compile-time error if preconditions are specified multiple times for the same contract.
 
 [note
-All tokens must be specified in the fixed order listed in the __Grammar__ section (it is not possible to specify postconditions before preconditions, `volatile` before `const` for member functions, etc).
-[footnote
-*Rationale.*
-This library macros could have been implemented to allow to mix the order of some tokens (preconditions and postconditions, `volatile` and `const`).
-However, that would have complicated the macro implementation without any added functionality for the user.
-]
+Contracts are most useful when the assertions only use public members that are accessible to the caller so the caller can properly check and use the contract.
+In particular, preconditions of a public member function or constructor that use non-public members are essentially incorrect because they cannot be fully checked by the caller (in fact, Eiffel generates a compile-time error in this case).
+
+This library leaves it up to the programmers to only use public members when programming contracts and especially when programming preconditions (see also __Specification_and_Implementation__).
 ]
 
 [endsect]
 
-[section Classes and Class Invariants]
+[section Postconditions]
 
-Consider the following class `ivector` which is a vector of integers with a constructor, destructor, and the `push_back` member function (see also [file example/contracts no_contract_ivector.cpp]):
+When postconditions are specified, they are programmed using a functor that can be called with no parameter [^['g]]`()` and it is passed to `.postcondition(`[^['g]]`)`.
+Contracts that do not have postconditions simply do not call `.postcondition(...)`.
 
-[import ../example/contracts/no_contract_ivector.cpp]
-[no_contract_ivector]
+C++11 lambda functions are very convenient to program postconditions, but any other nullary functor can be used (see also __No_Lambda_Functions__).
+For example, for a free function contract (but same for all other contracts):
 
-Let's program the class declaration and the class invariants using the [macroref CONTRACT_CLASS] and [macroref CONTRACT_CLASS_INVARIANT] macros respectively (see also [file example/contracts class_ivector.cpp]):
+    auto c = boost::contract::function()    // Same for all other contracts.
+        ...
+        .postcondition([&] {                // Capture by reference...
+            BOOST_CONTRACT_ASSERT(...);     // ...but should not modify captures.
+            ...
+        })
+    ;
 
-[import ../example/contracts/class_ivector.cpp]
-[class_ivector_classinv]
+The postcondition functor should capture all variables that it needs to assert the postconditions.
+In general, these variables should be captured by reference and not by value (because postconditions need to access the value these variables will have at function exit, and not the value these variables had when the postcondition functor was first constructed).
+Postconditions can also capture return and old values (see also __Return_Value__ and __Old_Values__).
+In any case, postcondition assertions should not modify the value of the captured variables (see also __Constant_Correctness__).
 
-A class must always be declared using the [macroref CONTRACT_CLASS] macro in oder to later be able to program contracts for its constructors, destructor, and member functions.
-Similarly to function names, the class name must always be wrapped within parenthesis `(ivector)` (because the class name is not a known keyword and it is not the last element of the class declaration syntax for example when base classes and are specified after the class name).
-Only constructors, destructors, and member functions that are public check the class invariants while the ones that are either protected or private do not (see the __Contract_Programming_Overview__ section).
-The class invariant must always be specified for a class declared using the [macroref CONTRACT_CLASS] macro and it must appear at the very beginning of the class definition (no statement can precede the [macroref CONTRACT_CLASS_INVARIANT] macro, not even a `typedef` or a `friend` declaration).
-If a class has no class invariant, the class invariants must be specified `void`:
+Any code can be programmed for the postcondition functor, but it is recommended to keep this code simple using mainly assertions and if-statements (to avoid programming complex postconditions that might be buggy and slow to execute at run-time).
+It is also recommended to use the [macroref BOOST_CONTRACT_ASSERT] macro to program the assertions because it enables this library to print very informative error messages when the asserted conditions are evaluated to be false at run-time (this is not a variadic macro, but see also __No_Macros__):
 
-    CONTRACT_CLASS(
-        class (ivector)
-    ) {
-        CONTRACT_CLASS_INVARIANT( void ) // No class invariant.
+    BOOST_CONTRACT_ASSERT(``/boolean-condition/``)
+    // Or, if condition has commas `,` not already within parenthesis `(...)`.
+    BOOST_CONTRACT_ASSERT((``/boolean-condition/``))
 
-        // ...
+This library will automatically call [funcref boost::contract::postcondition_failed] if any of the [macroref BOOST_CONTRACT_ASSERT] macro conditions are `false` and also if the postcondition functor call throws any exception (by default, this terminates the program calling `std::terminate`, but see __Throw_on_Failure__ to throw exceptions, exit the program with an error code, etc.).
 
-Using the same macro, this library also allows to specify contracts for `struct`:
+Postconditions can be specified before or after preconditions (by calling `.postcondition(...)` before or after `.precondition(...)`).
+This library will generate a compile-time error if postconditions are specified multiple times for the same contract.
+
+[endsect]
+
+[section Return Value]
+
+When the function non-void return value is used in postconditions, programmers are responsible to declare a local variable before the contract and to assign it to the return value at function exit (when the function does not throw an exception).
+[footnote
+The name of the local variable that holds the return value is arbitrary, but `result` is often used in this documentation.
+]
+For example, for a free function contract (but same for all other contracts):
+
+    ``/return-type/`` result;                     // Must be assigned to return value.
+    auto c = boost::contract::function()    // Same for all other contracts.
+        ...
+        .postcondition([&] {                // Also capture `result` reference...
+            ...                             // ...but should not modify captures.
+        })
+    ;
+
+At any point where the enclosing function returns, programmers are responsible to assign the result variable to the expression being returned.
+This can be easily done by making sure that /all/ the `return` statements in the function are of the form:
+
+    return result = ``/expression/``;             // Assign `result` at each return.
+
+The functor used to program postconditions should capture the result variable by reference (because postconditions must access the value this variable will have at function exit, and not the value this variable had when the postcondition functor was first constructed).
+The return value should never be used in preconditions (because the return value is not yet evaluated and set when preconditions are checked, see also __Assertions__).
+In any case, programmers should not modify the result variable in the contract assertions (see also __Constant_Correctness__).
+
+It is also possible to declared result variables using `boost::optional` when the return type does not have a default constructor, or if the default constructor is too expensive to execute, etc. (see also __Optional_Return_Value__).
+
+Virtual and overriding public member functions must always declare and use a result variable even when that is not directly used in postconditions (see also __Virtual_Public_Functions__ and __Overriding_Public_Functions__).
+
+[endsect]
+
+[section Old Values]
+
+When old values are used in postconditions, programmes are responsible to declare local variables before the contract and to assign them to the related expressions via the [macroref BOOST_CONTRACT_OLDOF] macro.
+[footnote
+The name of the local variable that holds an old value is arbitrary, but `old_`[^['name]] is often used in this documentation.
+]
+For example, for a free function contract (but same for all other contracts):
+
+    ...
+    boost::shared_ptr<``/type/`` const> old_``/name/`` = BOOST_CONTRACT_OLDOF(``/expression/``);
+    auto c = boost::contract::function()    // Or some other contract object.
+        ...
+        .postcondition([&] {                // Capture by reference...
+            ...                             // ...but should not modify captures.
+        })
+    ;
+
+Old values are handled as smart pointers to `const` values (so they cannot be mistakenly changed by the contract assertions, see also __Constant_Correctness__).
 [footnote
 *Rationale.*
-There is no need for a `CONTRACT_STRUCT` macro because this library macros can parse the class declaration and distinguish between the `struct` and `class` specifiers.
+`boost::shared_ptr` was used instead of `std::shared_ptr` because this library is designed to work well with Boost and technically to not require C++11 (even if the use of this library without C++11 lambda functions requires programmer to write a fare amount of boiler-plate code).
 ]
+Therefore, old values must be dereferenced using `operator*` or `operator->` when they are used in postconditions (otherwise the compiler will most likely error).
+This library ensures that old value smart pointers are not null by the time postconditions are checked so programmers can always safely dereference old value pointers in postconditions without any extra checking.
 
-    CONTRACT_CLASS(
-        struct (ivector) // Structs with contracts.
-    ) {
-        // ...
+Old values should never be used in preconditions (because old values are same as original values when preconditions are checked, see also __Assertions__).
+In fact, this library does not even guarantee that old value pointers are always not null when precondition functors are called (for example, when postcondition contract checking is disabled using [macroref BOOST_CONTRACT_CONFIG_NO_POSTCONDITONS], when checking an overridden virtual function contract via subcontracting, etc.).
+Finally, see __Old_Values_at_Body__ for always delaying the assignment of old values until after preconditions (and possibly class invariants) have been checked first (in case it is important to simplify old value expressions programming them under the assumption that precondition and class invariant conditions are satisfied already).
 
-The usual differences between `struct` and `class` also apply when this library is used (i.e., default member and inheritance access levels are `public` for `struct` and `private` for `class`).
+This library ensures that old values are only copied once by the [macroref BOOST_CONTRACT_OLDOF] macro that they are actually never copied when postcondition contract checking is disabled by the [macroref BOOST_CONTRACT_CONFIF_NO_POSTCONDITIONS] configuration macro.
+
+[macroref BOOST_CONTRACT_OLDOF] is actually a variadic macro and it takes an extra parameter when used in virtual or overriding public functions (see also __Virtual_Public_Functions__ and __Overriding_Public_Functions__, and see __No_Macros__ to program old values without using macros).
+
+In the rest of this documentation, C++11 auto declarations will be often used for old values instead of explicitly writing the `boost::shared_ptr<... const>` type.
+This is done just for convenience, and programmers can alway explicitly specify the declaration type if they are not using C++11 auto declarations.
+
+[endsect]
+
+[section Class Invariants]
+
+When class invariants are specified, they are programmed in a public `const` member function named `invariant` taking no argument and returning `void`.
+Classes that do not have invariants, simply do not declare an `invariant` member function.
+[footnote
+This library uses template meta-programming (SFINAE-based introspection techniques) to check invariants only for classes that declare a member function named `invariant`.
+]
+For example:
+
+    class a {
+    public:                             // Must be public.
+        void invariant() const {        // Must be const.
+            BOOST_CONTRACT_ASSERT(...);
+            ...
+        }
+
+        ...
+    };
+
+
+This member function must be `const` because contracts should not modify the object state (see also __Constant_Correctness__).
+This library will generate a compile-time error if the `const` qualifier is missing (unless [macroref BOOST_CONTRACT_CONFIG_PERMISSIVE] is set).
+
+Any code can be programmed in the `invariant` function, but it is recommended to keep this code simple using mainly assertions and if-statements (to avoid programming complex invariants that might be buggy and slow to execute at run-time).
+It is also recommended to use the [macroref BOOST_CONTRACT_ASSERT] macro to program the assertions because it enables this library to print very informative error messages when the asserted conditions are evaluated to be false at run-time (this is not a variadic macro, but see also __No_Macros__):
+    
+    BOOST_CONTRACT_ASSERT(``/boolean-condition/``)
+    // Or, if condition has commas `,` not already within parenthesis `(...)`.
+    BOOST_CONTRACT_ASSERT((``/boolean-condition/``))
+
+This library will automatically call [funcref boost::contract::entry_invariant_failed] or [funcref boost::contract::exit_invariant_failed] if any of the [macroref BOOST_CONTRACT_ASSERT] macro conditions are `false` and also if the `invariant` function throws an exception (by default, this terminates the program calling `std::terminate`, but see __Throw_on_Failure__ to throw exceptions, exit the program with an error code, etc.).
+
+See __Access__ to avoid making `invariant` a public member function (e.g., in cases when all public members of a class must be controlled exactly).
+Set the [macroref BOOST_CONTRACT_CONFIG_INVARIANT] configuration macro to use a name different from `invariant` (e.g., because `invariant` clashes with other names in the user-defined class).
+
+Furthermore, see __Static_Public_Functions__ and __Volatile_Public_Functions__ for programming class invariants for `static` and `volatile` public member function calls respectively.
 
 [note
-Unfortunately, this library does not allow to specify contracts for `union`.
-[footnote
-*Rationale.*
-The authors have not fully investigated if this library could be extended to specify contracts for unions.
-It is possible that future revisions of this library will support contracts for unions (see also [@http://sourceforge.net/apps/trac/contractpp/ticket/50 Ticket 50]).
+No contracts are checked (not event class invariants) when a data member is accessed directly (this is different from Eiffel where even accessing public data members checks class invariants).
+Therefore, it might be best for both `class`es and `struct`s to have no mutable public data members and to access data members publicly only via appropriate public member functions that can check the class invariants.
 ]
-]
-
-No contracts are checked (not event the class invariants) when a data member is accessed directly so it might be best for both classes and structs to have no non-constant public data member (but access all data members via appropriate member functions that can check the class and sturct contracts).
 
 [endsect]
 
 [section Constructors]
 
-Let's program the `ivector` class constructor and its contract using the [macroref CONTRACT_CONSTRUCTOR] macro (see also [file example/contracts class_ivector.cpp]):
+Contracts for constructors are programmed using the [funcref boost::contract::constructor] function and the [classref boost::contract::constructor_precondition] base class.
+For example (see also [@../../example/features/identifiers.cpp =identifiers.cpp=]):
 
-[class_ivector_constructor]
+[unique_identifiers_constructor]
 
-Constructor, destructor, and member function declarations must always repeat their access level `public`, `protected`, or `private`
-[footnote
-*Rationale*
-This library needs to know each member access level because in Contract Programming only public members are supposed to check class invariants while protected and private members only check preconditions and postconditions but not the class invariants.
-Unfortunately, in C++ it is not possible for a member to introspect its access level using template meta-programming.
-Therefore, this library requires the access level to be specified within the macros and it uses preprocessor meta-programming to detect it.
-Furthermore, given that the access level is has to be specified, the [macroref CONTRACT_FUNCTION] macro also uses it to differentiate between free and member functions so no additional macro `CONTRACT_MEMBER` is needed.
-]
-which is specified without the usual trailing column symbol `:`.
-(This use of `public`, `protected`, and `private` resembles __Java__'s syntax.)
+It is not possible to specify preconditions using `.precondition(...)` for constructors (the library will generate a compile-time error if `.precondition(...)` is used on the object returned by [funcref boost::contract::constructor]).
+Constructor preconditions are specified using the [classref boost::contract:constructor_precondition] base class instead (see also __Preconditions__).
+Programmes should not access the object `this` from constructor preconditions (because the object does not exists yet before the constructor body is executed, see also __No_Lambda_Functions__).
+Constructors without preconditions simply do not explicitly initialize the [classref boost::contract::constructor_precondition] base (the base default constructor is used instead and that checks no contract).
+When [classref boost::contract::constructor_precondition] is used:
 
-The constructor name `(ivector)` and the non-fundamental parameter type `(size_type)` must be wrapped within parenthesis (because they are not known keywords and they are not at the end of a syntactic element).
-
-Member initializers are programed as a comma-separated list but using the specifier [^initialize( /expression1/, /expression2/, ... )] instead of the usual column symbol [^: /expression1/, /expression2/, ...].
-When specified, they must appear at the very end of constructor declarations (after both preconditions and postcondition if present).
+* It must be specified as the /first/ class in the inheritance list (so constructor preconditions are checked before initializing any other base or member).
+* Its inheritance level should always be `private` (so this extra base class does not alter the public inheritance tree of the derived class).
+* It takes the derived class as template parameter (the Curiously Recursive Template Pattern (CRTP) is used here to avoid ambiguity errors with multiple inheritance).
 [footnote
 *Rationale.*
-Member initializers are specified after the preconditions and postconditions because they are part of the constructor definition while preconditions and postconditions are part of the constructor declaration.
+The [classref boost::contract::constructor_precondition] takes the derived class as its template parameter so the instantiated template type is unique for each derived class always avoiding base class ambiguities even in case of multiple inheritance.
+Virtual inheritance cannot be used resolve such ambiguities because virtual bases are initialized only once by the out-most deriving class, and that would not allow to properly check preconditions of all base classes.
 ]
-Unfortunately, when member initializers are specified, the constructor body must be defined together with its declaration and contract (see the __Forward_Declarations_and_Body_Definitions__ section).
 
-There is no object before the constructor body is executed, therefore this library will generate a compile-time error if either preconditions or postcondition old value expressions try to access the object `this`.
-For the same reason, only static class invariants are checked at entry of public constructors (non-static class invariants are checked at public constructor normal exit but not at entry).
-Finally, preconditions are checked before member initializers are executed (so the initializers can rely on preconditions for validating constructor arguments).
-See also the __Constructor_Calls__ section.
+It is possible to specify postconditions for constructors (see also __Postconditions__).
+Programmers should not access the old value of the object `this` in constructor postconditions (because the object did not exist yet before the constructor body was executed, see also __No_Lambda_Functions__).
+[funcref boost::contract::constructor] takes `this` as a parameter because constructors check class invariants (see also __Class_Invariants__).
+
+[funcref boost::contract::constructor] returns an RAII object (that can be assigned to a local variable of explicit type [classref boost::contract::guard] when programmers are not using C++11 auto declarations).
+The constructor body is programmed right after the declaration of this RAII object.
+At construction, this RAII object does the following:
+
+# Check static class invariants, by calling ['[^typeof]]`(*this)::static_invariant()` (but not non-static class invariants because the object does not exists yet).
+
+At destruction instead:
+
+# Check static class invariants, by calling ['[^typeof]]`(*this)::static_invariant()`.
+# If the constructor body did not throw an exception:
+    # Check non-static class invariants, by calling `this->invariant()`.
+    # Check postconditions, by calling the functor ['[^g]]`()` passed to `.postcondition(`['[^g]]`)`.
+
+This together with C++ construction mechanism of base classes and the use of [classref boost::contract::constructor_precondition] ensures that the constructor contracts are correctly checked at run-time (see also __Constructor_Calls__).
+
+[note
+A constructor can avoid calling [funcref boost::contract::constructor] for efficiency but only when it has no postconditions and its class has no invariants.
+(Even if [funcref boost::contract::constuctor] is not used, the constructor's class can still have bases because their contracts are always checked by C++ construction mechanism.)
+]
+
+Private and protected constructors can omit [funcref boost::contract::constructor] because they are not part of the public interface of the class so they are not required to check class invariants (see also __Constructor_Calls__).
+They could still use [classref boost::contract::constructor_precondition] to check preconditions before member initializations, and use [funcref boost::contract::function] to just check postconditions instead.
 
 [endsect]
 
 [section Destructors]
 
-Let's program the `ivector` class destructor using the [macroref CONTRACT_DESTRUCTOR] macro (see also [file example/contracts class_ivector.cpp]):
+Contracts for destructors are programmed using the [funcref boost::contract::destructor] function.
+For example (see also [@../../example/features/identifiers.cpp =identifiers.cpp=]):
 
-[class_ivector_destructor]
+[unique_identifiers_destructor]
 
-The destructor access level `public`, `protected`, or `private` must always be specified.
-The destructor name `(~ivector)` must be wrapped within parenthesis.
-The destructor empty parameter list must be specified using `void` (same as for constructors, member functions, and free functions with no parameters).
+It is not possible to specify preconditions for destructors (the library will generate a compile-time error if `.precondition(...)` is used here because destructors can be called at any time after construction so they have no precondition).
+It is possible to specify postconditions for destructors (see also __Postconditions__ and see __Static_Public_Functions__ for an example).
+Programmers should not access the object `this` in destructor postconditions (because the object no longer exists after the destructor body has been executed, see also __No_Lambda_Functions__).
+[funcref boost::contract::destructor] takes `this` as a parameter because destructors check class invariants (see also __Class_Invariants__).
 
-Destructors have no parameter and there is no object after the destructor body is executed.
-Therefore, destructors cannot specify neither preconditions nor postconditions.
-[footnote
-Future revisions of this library might implement static postconditions for destructors (see the __Destructor_Calls__ section).
-]
-However, it is still necessary to contract (at least public) destructors so they check static and non-static class invariants at entry, and non-static class invariants at exit.
-See also the __Destructor_Calls__ section.
+[funcref boost::contract::destructor] returns an RAII object (that can be assigned to a local variable of explicit type [classref boost::contract::guard] when programmers are not using C++11 auto declarations).
+The destructor body is programmed right after the declaration of this RAII object.
+At construction, this RAII object does the following:
 
-[important
-Only members declared using this library macros check the class invariants.
-Therefore, at least all public members of a class with non-empty class invariants should be declared using this library macros even when they have no preconditions and no postconditions so that they check the class invariants (that is the case for public destructors).
-]
+# Check static and non-static class invariants, by calling ['[^typeof]]`(*this)::static_invariant()` __AND__ `this->invariant()`.
 
-In general, there is no need to use this library macros to declare free functions, constructors, destructors, and member function only when:
+At destruction instead:
 
-# A free function has no preconditions and no postconditions.
-# A private or protected constructor, destructor, or member function has no preconditions and no postconditions (regardless of class invariants because private and protected members never check class invariants).
-# A public constructor, destructor, or member function has no preconditions, no postconditions, and its class has no class invariants.
+# Check static class invariants, by calling ['[^typeof]]`(*this)::static_invariant()`.
+# If the destructor body threw an exception:
+    # Check non-static class invariants, by calling `this->invariant()` (because the object was not successfully destructed).
+# Else:
+    # Check postconditions, by calling the functor ['[^g]]`()` passed to `.postcondition(`['[^g]]`)`.
 
-[endsect]
-
-[section Member Functions]
-
-Let's program the member function `ivector::push_back` and its contract using the [macroref CONTRACT_FUNCTION] macro (see also [file example/contracts class_ivector.cpp]):
-
-[class_ivector_member]
-
-The member function access level `public`, `protected`, or `private` must always be specified.
-The member function name `(push_back)` must be wrapped within parenthesis.
-The member function result type `void` and parameter type `int const` can but do not have to be wrapped within parenthesis (because they are both fundamental types containing no symbol).
-
-Public non-static member functions check static and non-static class invariants at both entry and exit.
-Preconditions are checked at entry and postconditions are checked at normal exit.
-Both preconditions and postconditions can access the object and the member function parameters in constant-correct context.
-Postconditions can declare return and old value variables (again, in constant-correct context).
-See also the __Member_Function_Calls__ section.
+This together with C++ destruction mechanism of base classes ensures that destructor contracts are correctly checked at run-time (see also __Destructor_Calls__).
 
 [note
-Contracts are most useful when the assertions only use public members that are accessible from the caller so the caller can properly verify and use the contract.
-In particular, preconditions of a member function or constructor that use non-public members are essentially incorrect because they cannot be verified by the caller before calling the function (in fact, __Eiffel__ generates a compile-time error in this case).
-
-This library leave it up to programmers to only use public members when programming contracts and especially when programming preconditions (see the __Specification_vs__Implementation__ section).
+A destructor can avoid calling [funcref boost::contract::destructor] for efficiency but only when it has no postconditions and its class has no invariants.
+(Even if [funcref boost::contract::destructor] is not used, the destructor's class can still have bases because their contracts are always checked by C++ destruction mechanism.)
 ]
+
+Private and protected destructors can omit [funcref boost::contract::destructor] because they are not part of the public interface of the class so they are not required to check class invariants (see also __Destructor_Calls__).
+They could use [funcref boost::contract::function] to just check postconditions instead.
 
 [endsect]
 
-[section Inheritance and Subcontracting]
+[section Public Functions]
 
-Consider the following class `unique_identifiers` which is a collection of unique integral identifiers (see also [file example/contracts subcontract_identifiers.cpp]):
+Contracts for public member functions are programmed using the [funcref boost::contract::public_function] function.
 
-[import ../example/contracts/subcontract_identifiers.cpp]
-[subcontract_identifiers_unique]
+Let's first consider public member functions that are not static, not virtual, and do not override any function from base classes.
+For example, the following such a function `find` is declared as a member of the `unique_identifiers` class (see also [@../../example/features/identifiers.cpp =identifiers.cpp=]):
 
-Reading the contracts we can understand the semantics of the class operation (even if we do not consult the class implementation):
+[unique_identifiers_find]
 
-# The collection is constructed with zero size as specified by the constructor postconditions.
-Consistently, the class invariants assert that the class size must never be negative (but it can be zero).
-# The member function `unique_identifiers::add` allows to add an integral identifier to the collection.
-The preconditions assert that the specified identifier must not already be part of the collection making sure that duplicate identifiers are never added.
-# If the specified identifier was not already part of the collection (`old_found` is `false`) then the postconditions assert that the identifier is added and consequently that the size of the collection increased by one.
-Note that both postconditions are trivially `true` if instead the identifier was already part of the collection (`old_found` is `true`).
-We call these type of assertions that are "guarded" by an activation condition /select assertions/ (here we have used the C++ ternary operator `?:` to program select assertions, the __Advanced_Topics__ section will introduce an alternative construct for select assertions).
+It is possible to specify both preconditions and postconditions for public member functions (see also __Preconditions__ and __Postconditions__).
+[funcref boost::contract::public_function] takes `this` as a parameter because public member functions check class invariants (see also __Class_Invariants__).
 
-Let's assume that we want to derive from `unique_identifiers` another type of collection `duplicate_identifiers` which instead allows to add duplicate identifiers (see also [file example/contracts subcontract_identifiers.cpp]):
+[funcref boost::contract::public_function] returns an RAII object (that can be assigned to a local variable of explicit type [classref boost::contract::guard] when programmers are not using C++11 auto declarations).
+The public member function body is programmed right after the declaration of this RAII object.
+At construction, this RAII object does the following:
 
-[subcontract_identifiers_duplicate]
+# Check static and non-static class invariants, by calling ['[^typeof]]`(*this)::static_invariant()` __AND__ `this->invariant()`.
+# Check preconditions, by calling the functor ['[^f]]`()` passed to `.precondition(`['[^f]]`)`.
 
-The derived class `duplicate_identifiers` publicly inherits from the base class `unique_identifiers` using the specifier [^extends( /base1/, /base2/, ... )] instead of the usual column symbol [^: /base1/, /base2/, ...]. (This use of `extends` resembles __Java__'s syntax.)
-As usual, the inheritance access level `public`, `protected`, or `private` is optional and it defaults to `public` for `struct` and to `private` for `class`.
-Virtual base classes can also be specified but `virtual` must always be specified after the inheritance access level `public`, `protected`, or `private` if present.
-Multiple base classes (`base1`, `base2`, etc) can be specified for multiple-inheritance (the configuration macro [macroref CONTRACT_CONFIG_INHERITANCE_MAX] indicates the maximum number of base classes that can be specified).
+At destruction instead:
+
+# Check static and non-static class invariants, by calling ['[^typeof]]`(*this)::static_invariant()` __AND__ `this->invariant()` (even if the function body threw an exception).
+# If the function body did not throw an exception:
+    # Check postconditions, by calling the functor ['[^g]]`()` passed to `.postcondition(`['[^g]]`)`.
+
+This ensures that public member function contracts are correctly checked at run-time (see also __Public_Function_Calls__).
 
 [note
-This library automatically subcontracts the derived class when one or more base classes are specified (see the __Contract_Programming_Overview__ section).
-]
-
-Let's assume that a `duplicate_identifers` object is constructed with identifier `123` and that we try to add the identifier `123` again:
-
-[subcontract_identifiers_duplicate_add]
-
-Reading both the derived and base class contracts, we can understand the semantics of the derived class operation (even if we do not consult the base and derived class implementations):
-
-# The `duplicate_identifiers` constructor creates a collection with size one as specified by the constructor postconditions.
-Therefore, the `duplicate_identifiers` class invariants assert that size is always positive.
-Subcontracting automatically checks the `unique_identifiers` base class invariants in __logic_and__ with the `duplicate_identifiers` derived class invariants thus class invariants can only be strengthened by derived classes (this is necessary because the derived class can be used whenever the base class is used therefore the derived class must satisfy the base class invariants at all times, see also the __substitution_principle__ and the __Contract_Programming_Overview__ section).
-# Subcontracting automatically checks the `unique_identifiers::add` overridden preconditions in __logic_or__ with the `duplicate_identifiers::add` overriding preconditions thus preconditions can only be weakened by overriding member functions (this is necessary because the overriding member function can be called under the conditions for which the overridden function is called, see also the __substitution_principle__ and the __Member_Function_Calls__ section).
-Indeed, in this example the `unique_identifiers::add` preconditions fail (because `123` is already in the collection) but the `derived_identifiers::add` preconditions pass so the __logic_or__ of the two sets of preconditions passes and the call `ids.add(123)` is a valid call.
-# Subcontracting automatically checks the `unique_identifiers::add` overridden postconditions in __logic_and__ with the `duplicate_identifiers::add` overriding postconditions thus postconditions can only be strengthen by overriding member functions (this is necessary because the overriding function can be called in any context in which the overridden function is called, see also the __substitution_principle__ and the __Member_Function_Calls__ section).
-Indeed, in this example the `unique_identifiers::add` postconditions pass because the identifier `123` was already added (`old_found` is `true`) and `unique_identifiers::add` select assertions trivially return `true`.
-The `duplicate_identifiers::add` postconditions are then checked in __logic_and__ and they correctly assert that the collection size did not change given that `123` was already added.
-Therefore, the call `ids.add(123)` is valid but adds no identifier.
-
-Finally, note that within the body of overriding functions it is necessary to use the [macroref CONTRACT_MEMBER_BODY] macro to call the overridden function as in `unique_identifiers::CONTRACT_MEMBER_BODY(add)(id)`.
-
-[warning
-Unfortunately, invoking the overridden function from within the overriding function body without using [macroref CONTRACT_MEMBER_BODY] results in infinite recursion.
-[footnote
-*Rationale*.
-In this case, the library implementation will recursively check contracts of the overriding function forever (in all other cases, this library is able to avoid infinite recursions due to contract checking).
-]
-This limitation might be removed in future revisions of this library (see also [@https://sourceforge.net/apps/trac/contractpp/ticket/46 Ticket 46]).
+A public member function can avoid calling [funcref boost::contract::public_function] for efficiency but only when it has no preconditions and no postconditions, it is not virtual, it does not override any virtual function, and its class has no invariant.
 ]
 
 [endsect]
 
-[section Class Templates]
+[section Virtual Public Functions]
 
-Let's program a class template `vector` similar to the class `ivector` we have seen before but that works on a generic value type `T` and not just on `int` (see also [file example/contracts class_template_vector.cpp] and [file example/contracts pushable.hpp]):
+Let's now consider public member functions that are virtual but that still do not override any function from base classes.
+For example, the following such a function `push_back` is declared as a member of the `unique_identifiers` class (see also [@../../example/features/identifiers.cpp =identifiers.cpp=]):
 
-[import ../example/contracts/class_template_vector.cpp]
-[class_template_vector]
+[unique_identifiers_push_back]
 
-(The specifications of the code in this example are not fully programmed, in particular concepts, see the __Concepts__ section, and assertion requirements, see the __Advanced_Topics__ section, have been omitted for simplicity.)
+Public virtual functions must declare an extra trailing parameter of type [classref boost::contract::virtual_]`*` and assign it to `0` by default (i.e., null).
+Because this extra parameter is the last one and it has a default value, it does not alter the calling interface of the virtual function and callers will essentially never have to deal with it explicitly (a part from when manipulating the virtual function type for function pointer type-casting, etc.).
+Programmers must pass the extra virtual parameter as the very first argument to all [macroref BOOST_CONTRACT_OLDOF] and [funcref boost::contract::public_function] calls in the virtual function.
+[footnote
+*Rationale.*
+The [classref boost::contract::virtual_]`*` optional parameter is used by this library to determine that a function is virtual (in C++ it is not possible to introspect if a function has been declared `virtual`).
+Furthermore, this parameter is used by this library to pass result and old values that are evaluated by overriding function to the overridden virtual functions, and also to check preconditions and postconditions (but without executing the body) of the overridden virtual functions when subcontracting.
+]
 
-Note that templates are declared using the specifier `template( typename T, ... )` which uses round parenthesis instead of the usual angular parenthesis `template< typename T, ... >`.
-However, after a template is declared using round parenthesis, angular parenthesis are used as usual to instantiate the template (e.g., the base class `pushable<T>`).
+Furthermore, for non-void public virtual functions, programmers must pass a reference to the function return value as the second argument to [funcref boost::contract::public_function].
+In this case the functor specified to `.postcondition(...)` takes a single parameter (possibly as a constant reference `const&`) to the return value (this library will generate a compile-time error otherwise).
+[footnote
+*Rationale.*
+The functor passed to `.postcondition(...)` takes the extra return value parameter because that is used by this library to pass the return value evaluated by the overriding function to all its overridden virtual functions when subcontracting.
+]
 
 [important
-Within a type-dependent scope (e.g., within the class template of the above example) the special macros with the `_TPL` postfix must be used instead of the macros we have seen so far.
+It is the responsibility of the programmers to pass the virtual extra parameter to all [macroref BOOST_CONTRACT_OLDOF] and [funcref boost::contract::public_function] calls, and also to pass the return value reference to [funcref boost::contract::public_function] for non-void functions.
+This library cannot automatically generate compile-time errors if programmers fail to do so, but in general contract checking will not correctly work at run-time in such cases.
+
+['Remember: When "`v`" is present, always pass it to old-of macros and contract-function calls; Always pass result after "`v`" for non-void functions.]
+]
+
+For the rest, the same considerations made in __Public_Functions__ apply.
+
+[endsect]
+
+[section Overriding Public Functions (Subcontracting)]
+
+Let's now consider public member functions (virtual or not) that override public virtual functions from one or more public base class.
+For example, the following such a function `push_back` is declared as a member of the `identifiers` derived class and it overrides `push_back` from the `unique_identifiers` base class (see also [@../../example/features/identifiers.cpp =identifiers.cpp=]):
+[footnote
+In this document, overriding functions are often marked with the `/* override */` comment.
+On compilers that support C++11 virtual specifiers `override` can be used instead (`override` is not used in the documentation only because virtual specifiers are not widely supported yet, even by compilers that support other C++11 features like lambda functions).
+]
+
+[identifiers_push_back]
+
+(See the __Base_Types__ section below for more information about [macroref BOOST_CONTRACT_BASE_TYPES] and `base_types`.)
+
+Overriding public functions must always list the extra trailing parameter of type [classref boost::contract::virtual_]`*` with `0` default value, even when they are not declared `virtual` (because this parameter is present in the signature of the virtual function being overridden from base classes).
+Programmers must pass the extra virtual parameter as the very first argument to all [macroref BOOST_CONTRACT_OLDOF] and [funcref boost::contract::public_function] calls in the overriding function (as for non-overriding virtual public functions discussed above).
+
+For overriding functions, [funcref boost::contract::public_function] takes an explicit template argument `override_`[^['function-name]] that must be defined at class scope using [macroref BOOST_CONTRACT_OVERRIDE][^(['function-name])] (see right after the function).
+When called from overriding public functions, [funcref boost::contract::public_function] also take a pointer to the enclosing function, the object `this` (because overriding public functions check class invariants), and references to each function argument in the order they appear in the function declaration.
 [footnote
 *Rationale.*
-The library must know if the enclosing scope is a template so it knows when to prefix nested type expressions with `typename` (because __CXX03__ does not allow to use `typename` outside templates).
-This constraints could be relaxed on future revisions of this library for __CXX11__ compilers (because __CXX11__ allows to use `typename` more freely).
-Earlier versions of this library did not require to use the special `_TPL` macros within templates because the library internally implemented every contracted function using a template function, possibly with dummy template parameters, even if the original function was not a template so `typename` could always be used by the library.
-The dummy template parameters were hidden to the user so this approach did not change the user API and had the benefit of not requiring the `_TPL` macros.
-However, this approach increased compilation time because of the extra templates that it introduced so the current revision of the library uses the `_TPL` macros.
-]
-(The same applies to function templates, see below.)
+The object `this` is passed after the function pointer to follow `bind`'s syntax.
+The function pointer and references to all function arguments are needed for overriding virtual public functions because this library has to call overridden virtual public functions to check their contracts for subcontracting (even if without executing their bodies).
 ]
 
-In the example above, the enclosing class template `vector` is not declared using the [macroref CONTRACT_CLASS_TPL] macro because its enclosing scope is not type-dependent (it is the global namespace).
-Within such a class template however, all contract macros must use the `_TPL` postfix so [macroref CONTRACT_CLASS_INVARIANT_TPL], [macroref CONTRACT_CONSTRUCTOR_TPL], [macroref CONTRACT_DESTRUCTOR_TPL], and [macroref CONTRACT_FUNCTION_TPL] must be used to specify class invariants, declare constructors, declare the destructor, and declare member functions respectively.
-In general, the [macroref CONTRACT_CLASS_TPL] macro is used when declaring a class nested within a class template (see the __Advanced_Topics__ section).
-
-This libraries supports all the different kinds of template parameters that C++ supports: type template parameters, value template parameters, and template template parameters.
-
-* Type template parameters can be prefixed by either `typename` or `class` as usual, `typename A` or `class C`.
-* The type of value template parameters must be wrapped within parenthesis `(A) D` but the parenthesis are optional for fundamental types that contain no symbol `int B`.
-* Template template parameters use round parenthesis for their template specifier but then their inner template parameters are specified using the usual C++ syntax `template( typename X, template< ... > class Y, ... ) class E`.
-
-Default template parameters are specified using `, default `[^['default-value]] right after the template parameter declaration.
-For example (see also [file example/contracts template_params.cpp]):
-
-[import ../example/contracts/template_params.cpp]
-[template_params_class]
-
-Finally, the syntax `template( void )` is used instead of the usual `template< >` to specify a template with no template parameters (this is typically used for template specializations, see the __Advanced_Topics__ section).
-
-[endsect]
-
-[section Function Templates]
-
-Let's program a function template `postinc` similar to the function `postinc` that we have seen before but that works on a generic type `T` and not just on `int` (see also [file example/contracts function_template_postinc.cpp]):
-
-[import ../example/contracts/function_template_postinc.cpp]
-[function_template_postinc]
-
-(The specifications of the code in this example are not fully programmed, in particular concepts, see the __Concepts__ section, and assertion requirements, see the __Advanced_Topics__ section, have been omitted for simplicity.)
-
-Type, value, and template template parameters are specified for function templates using the same syntax used for class template parameters, for example (see also [file example/contracts template_params.cpp]):
-
-[template_params_function]
-
-Note that as usual, function templates cannot have default template parameters in __CXX03__.
-
-[endsect]
-
-[section Forward Declarations and Body Definitions]
-
-This library supports contracts for classes and functions that have forward declarations.
-Furthermore, the function body definition can be deferred and separated from the function declaration and its contracts.
-For example (see also [file example/contracts body_natural.hpp], [file example/contracts body_natural_impl.hpp], and [file example/contracts body_natural.cpp]):
-
-[import ../example/contracts/body_natural.hpp]
-[body_natural]
-
-In this example, the class `natural` and the function `less` are first forward declared and later declared.
-Note that the contracts can be specified only once and together with the class or function declaration (not with the forward declarations that can be many).
+Furthermore, for non-void overriding public functions, programmers must pass a reference to the function return value as the second argument to [funcref boost::contract::public_function] (this library will generate a compile-time error otherwise).
+[footnote
+*Rationale.*
+Again, the extra return value parameter is used to pass the return value to the overridden virtual public functions when subcontracting.
+However, in this case the library has also the function pointer so it will generate a compile-time error if the function is non-void and programmers forget to specify the extra return value parameter (this extra error checking was not possible instead for non-overriding virtual public functions because their contracts do not use the function pointer, see also __Virtual_Public_Functions__).
+]
+In this case the functor specified to `.postcondition(...)` takes a single parameter (possibly as a constant reference `const&`) to the return value (this library will generate a compile-time error otherwise).
 
 [important
-This library forces to specify contracts with the function and class declarations and not with their definitions.
-This is correct because contracts are part of the program specifications (declarations) and not of the program implementation (definitions), see also the __Specification_vs__Implementation__ section.
+['Remember: When "`v`" is present, always pass it to old-of macros and contract-function calls; Always pass result after "`v`" for non-void functions.]
 ]
 
-Note that as usual in C++, not all functions need to be defined when they are first declared.
-In this example, `less` and `natural::get` are defined together with their declarations and contracts while the other function bodies are defined separately.
+[funcref boost::contract::public_function] returns an RAII object (that can be assigned to a local variable of explicit type [classref boost::contract::guard] when programmers are not using C++11 auto declarations).
+The public member function body is programmed right after the declaration of this RAII object.
+At construction, this RAII object doe the following:
 
-The definitions of the free function `greater`, the constructor `natural::natural`, the destructor `natural::~natural`, and the member function `natural::equal` are deferred and separated from their declarations and contracts.
-In fact, a semicolon `;` is specified right after the contract declaration macros instead of programming the function bodies.
-As usual in C++, the semicolon `;` indicates that the function body definition is deferred and it will appear at some other point in the program (often in a =.cpp= file that can be compiled separately).
-In this example, the deferred functions are templates or template members therefore the definitions where programmed in a header file that must be made available when the template declarations are compiled (see also [file example/contracts body_natural_impl.hpp]):
-[footnote
-In principle, this library supports `export` templates that can be used to program template definitions separately from their declarations and in files that can be pre-compiled.
-However, `export` templates are not supported by most __CXX03__ compilers (in fact, [@http://www.comeaucomputing.com/4.0/docs/userman/export.html Comeau] might be the  only compiler that supports them), they were removed from __CXX11__, and they are an untested feature of this library.
-Instead of using `export` templates, it is common practise in C++ to program both template declarations and definitions together so they can be compiled correctly.
-In this example, the authors have used a separate header file `..._impl.hpp` to logically separate template declarations and definitions but the header is included at the bottom of the declaration header file so the definitions are always available together with their declarations.
-]
+# Check static and non-static class invariants for all overridden bases and for the derived class, by calling [^['typeof](['overridden_base])]`::static_invariant()` __AND__ [^['overridden_base]]`.invariant()` __AND__... [^['typeof]]`(*this)::static_invariant()` __AND__ `this->invariant()`.
+# Check preconditions for all overridden base functions and for the overriding derived function in __OR__ with each other, by calling functors [^['f1]]`()` __OR__... [^['fn]]`()` passed to `.precondition(`[^['f1]]`)`, ..., `.precondition(`[^['fn]]`)` for all of the overridden and overriding functions respectively.
 
-[import ../example/contracts/body_natural_impl.hpp]
-[body_natural_impl]
+At destruction instead:
 
-The usual C++ syntax is used to define the bodies (in fact this library only alters the syntax of class and function declarations but not the syntax of their definitions).
-However, free function, constructor, destructor, and member function names must be specified using the macros [macroref CONTRACT_FREE_BODY], [macroref CONTRACT_CONSTRUCTOR_BODY], [macroref CONTRACT_DESTRUCTOR_BODY], and [macroref CONTRACT_MEMBER_BODY] respectively.
+# Check static and non-static class invariants for all overridden bases and for the derived class, by calling [^['typeof](['overridden_base])]`::static_invariant()` __AND__ [^['overridden_base]]`.invariant()` __AND__... [^['typeof]]`(*this)::static_invariant()` __AND__ `this->invariant()` (even if the function body threw an exception).
+# If the function body did not throw an exception:
+    # Check postconditions for all overridden base functions and for the overriding derived function in __AND__ with each other, by calling functors [^['g1]]`()` __AND__... [^['gn]]`()` passed to `.postcondition(`[^['g1]]`)`, ..., `.postcondition(`[^['gn]]`)` for all of the overridden and overriding functions respectively.
+
+This ensures that overriding public function subcontracts are checked correctly at run-time (see also __Public_Function_Calls__).
+
+This library will generate a compile-time error if there is no suitable virtual function to overload in any of the public base classes (similar to C++11 `override` virtual specifier, but limited to functions with the extra [classref boost::contract::virtual_]`*` parameter and searched recursively only in `public` base classes passed to [macroref BOOST_CONTRACT_BASE_TYPES]).
+
+For the rest, the same considerations made in __Virtual_Public_Functions__ apply.
+
+[endsect]
+
+[section Base Types (Subcontracting)]
+
+In order to support subcontracting, this library must be made aware of base classes.
+Programmers do that using the [macroref BOOST_CONTRACT_BASE_TYPES] macro to declared a public member type named `base_types` with a `typedef`.
+For example (see also [@../../example/features/identifiers.cpp =identifiers.cpp=]):
+
+[multi_identifiers]
+
+For convenience, a /local macro/ named `BASES` (any other name can be used) is often used here to avoid repeating the base list twice (first when inheriting `: ...` and then when calling [macroref BOOST_CONTRACT_BASE_TYPES]`(...)`).
+Being a local macro, `BASES` must be undefined after it has been used to declare `base_types` (to avoid macro redefinition errors).
+
+[macroref BOOST_CONTRACT_BASE_TYPES] is a variadic macro and accepts a list of bases separated by commas (see __No_Macros__ to program `base_types` without using macros).
+When the extra base [classref boost::contract::constructor_precondition] is used to program constructor preconditions, it must always be private and appear as the very first base (see also __Constructors__).
+
+[important
+Each base passed to [macroref BOOST_CONTRACT_BASE_TYPES] must /explicitly/ specify its inheritance access level `public`, `protected`, or `private` (`virtual` can be specified before or after the access level as usual in C++).
 [footnote
 *Rationale.*
-Four different body macros are needed because contracts are disabled differently for the different type of functions.
-For example, disabling preconditions and postconditions turns off contracts for free functions but not for member functions, disabling class invariants turns off contracts for destructors but not for constructors, etc.
+This library explicitly requires the inheritance access level because derived classes must subcontract only from public bases, but not from protected or private bases (see __Public_Function_Calls__).
+Therefore, [macroref BOOST_CONTRACT_BASE_TYPES] inspect each inheritance access level (using preprocessor meta-programming) and strips non-public bases from the `base_types` list of bases to consider for subcontracting.
 ]
-The free and member body macros take one parameter which is the function name.
-The constructor and destructor body macros take two parameters that are the fully qualified class type (including eventual template parameters as usual) and the class name which must be prefixed by the tilde symbol `~` for destructors as usual.
-[footnote
-Some compilers accept to repeat template parameter names in the constructor and destructor names.
-However, this is not __CXX03__ compliant (and, for example, it was fixed in more recent versions of GCC) therefore programmers are advised to specify the template parameter names only for the class type and not for the constructor and destructor names (this is also why the macros must take a second parameter with the class name instead of just the class type parameter).
-]
-The class type parameter must be wrapped within extra parenthesis like in this example but only if it contains multiple template parameters (because these use unwrapped commas which cannot be passed within macro parameters, see the beginning of the __Advanced_Topics__ section).
+This library will generate a compiler-error if the first base is missing the inheritance access level, but this library is not able to automatically detect if the access level is missing from subsequent bases.
 
-In this example, it was possible to separate the constructor body definition because the constructor did not specify member initializers.
+Therefore, it is the responsibility of the programmers to make sure that all bases passed to [macroref BOOST_CONTRACT_BASE_TYPES] explicitly specify their inheritance access level.
+(Note that the inheritance access level is instead optional in C++ because `private` is implicitly assumed for `class` types and `public` for `struct` types.)
+]
 
-[warning
-Unfortunately, when member initializers are specified, the macro [macroref CONTRACT_CONSTRUCTOR_BODY] cannot be used, the constructor body definition cannot be deferred, and the constructor body must be defined together with the constructor declaration and its contract inside the class definition.
-[footnote
-*Rationale.*
-This limitation comes from the fact that __CXX03__ does not support delegating constructors.
-If member initializers are specified within the contract, the deferred body will not compile when contract compilation is turned off by the configuration macros.
-If instead member initializers are specified with the deferred body definition, the deferred body will not compile when contract compilation is turned on by the configuration macros.
-There is no way to reconcile these two conditions without delegating constructors, so definitions cannot be deferred for constructors that specify member initializers.
-This limitation could be removed in future revisions of this library for __CXX11__ compilers that support delegating constructors (see also [@http://sourceforge.net/apps/trac/contractpp/ticket/51 Ticket 51]).
-]
-]
+See __Access__ to avoid making `base_types` a public member type (e.g., in cases when all public members of a class must be controlled exactly).
+Set the [macroref BOOST_CONTRACT_CONFIG_BASE_TYPES] configuration macro to use a name different from `base_types` (e.g., because `base_types` clashes with other names in the user-defined class).
+
+[endsect]
+
+[section Private and Protected Functions]
+
+Private and protected member functions do not check class invariants (because they are not part of the public class interface) and they do not subcontract (because they are not accessible at the calling site where the __substitution_principle__ applies, see also __Function_Calls__).
+Instead, private and protected member functions only check preconditions and postconditions, like free functions do.
+
+Therefore, [funcref boost::contract::function] is used to program contracts for private and protected functions, like for free functions.
+For example (see also [@../../example/features/countdown.cpp =countdown.cpp=]):
+
+[import ../../example/features/countdown.cpp]
+[countdown]
+
+The same considerations made in __Free_Functions__ apply.
 
 [endsect]
 

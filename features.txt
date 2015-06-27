@@ -46,4 +46,32 @@ x   Old values with/without subcontracting
 *   Derived public function override base protected virtual function (subst
     princ does not apply here because base protected virtual cannot be called
     by users so it cannot be "substituted")... what will this lib do?
+*   add a test to disable/ similar to n1962/factial.cpp, where the contract
+    recursively calls the function itself in the assertions
+*   add a test for throwing exception handlers (somewhat similar to
+    stroustrup97/string.cpp but but comprehensive)
+*   see if MSVC 2013 resolves issues with call_if::else_([] { return true; })
+    result type deduction, and also using lambdas within
+    constructor_precondition
+*   Volatile class invariants...
+*   Check inv after C++11 move operations... documented pro/cons
+*   Compiler-error if public_function<override...> does not find any function
+    to actually override
+*   Config macro to disable no assertion during preconditions (to avoid passing
+    unchecked argument to function body)
+*   Look at Andrzej's discussion on preconditions:
+    https://akrzemi1.wordpress.com/2013/01/04/preconditions-part-i/
+*   Can constructor/destructor body call a volatile member function? If so,
+    they should also check volatile class invariant (currently they don't...)
+*   If an overriding functions does not specify preconditions, make sure the
+    overridden preconditions are checked (and not that subcontracted
+    preconditions always pass just because the overriding function does not
+    specify them)
+*   Can I use unique_ptr instead of shared_ptr for old values, and maybe also
+    for contract variables internal to the library, etc... ?
+*   Test function and array argument types like
+    `void f(int x[2][3], int (*g)(int))`
+*   What shall I do with unions... can/shall I contract them? Check-out which
+    members C++11 unions can have (ctors, dtor, etc.)
+*   Make work the case a pure virtual uses boost::optional<T> result but an overriding function uses just T result, and the other way around too.
 

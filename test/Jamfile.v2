@@ -53,7 +53,7 @@ test-suite call_if :
 test-suite cxx14 :
     [ subdir-run call_if : equal_to_cxx14 :
             <toolset>clang:<cxxflags>-std=c++1y ]
-    [ subdir-run call_if : myadvance_cxx14 :
+    [ subdir-run call_if : advance_cxx14 :
             <toolset>clang:<cxxflags>-std=c++1y ]
 ;
 explicit cxx14 ;

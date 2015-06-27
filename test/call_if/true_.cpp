@@ -10,7 +10,7 @@
 
 boost::contract::aux::test::oteststream out;
 
-struct equal {
+struct eq {
     typedef bool result_type; // Test non-void result type.
 
     template<typename L, typename R>
@@ -28,7 +28,7 @@ int main() {
     out.str("");
     out <<
         boost::contract::call_if<boost::has_equal_to<int> >(
-            boost::bind(equal(), 123, 456) // False.
+            boost::bind(eq(), 123, 456) // False.
         ) // Test no else (not called).
     << std::endl;
     ok.str(""); ok << false << std::endl;
@@ -37,7 +37,7 @@ int main() {
     out.str("");
     out <<
         boost::contract::call_if<boost::has_equal_to<int> >(
-            boost::bind(equal(), 123, 123) // True.
+            boost::bind(eq(), 123, 123) // True.
         ).else_([] { return false; }) // Test else not called.
     << std::endl;
     ok.str(""); ok << true << std::endl;
@@ -46,9 +46,9 @@ int main() {
     out.str("");
     out << // Test "..._c".
         boost::contract::call_if_c<boost::has_equal_to<int>::value>(
-            boost::bind(equal(), 123, 123) // True.
+            boost::bind(eq(), 123, 123) // True.
         ).else_( // Test else not called.
-            boost::bind(equal(), x1, x2) // Compiler-error... but not called.
+            boost::bind(eq(), x1, x2) // Compiler-error... but not called.
         )
     << std::endl;
     ok.str(""); ok << true << std::endl;

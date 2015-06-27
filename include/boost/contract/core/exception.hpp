@@ -81,18 +81,21 @@ namespace exception_ {
                 s = "precondition "; break;
             case post_key:
                 s = "postcondition "; break;
+            // NOTE: Following only needs to distinguish between entry and
+            // exit invariant (const, volatile, static, etc. can already be
+            // distinguished by code around assertion failure line number).
             case const_entry_inv_key:
-                s = "const entry invariant "; break;
+                s = "entry invariant "; break;
             case const_volatile_entry_inv_key:
-                s = "const volatile entry invariant "; break;
+                s = "entry invariant "; break;
             case static_entry_inv_key:
-                s = "static entry invariant "; break;
+                s = "entry invariant "; break;
             case const_exit_inv_key:
-                s= "const exit invariant "; break;
+                s= "exit invariant "; break;
             case const_volatile_exit_inv_key:
-                s= "const volatile exit invariant "; break;
+                s= "exit invariant "; break;
             case static_exit_inv_key:
-                s = "static exit invariant "; break;
+                s = "exit invariant "; break;
             // No default (so compiler warning/error on missing enum case).
         }
         try {
@@ -295,6 +298,10 @@ void set_invariant_failed(assertion_failed_handler f)
     set_entry_invariant_failed(f);
     set_exit_invariant_failed(f);
 }
+
+// TODO: Simplify the invariant failure handlers. I only need two, one for
+// entry_inv and one for exit_inv (I do not need to distinguish volatile,
+// const, static... they are all inv).
 
 } } // namespace
 

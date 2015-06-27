@@ -24,6 +24,18 @@ test-suite cline90 :
 
 test-suite n1962 :
     [ subdir-run n1962 : vector ]
+    [ subdir-run n1962 : sqrt ]
+    [ subdir-run n1962 : circle ]
+    [ subdir-run n1962 : equal ]
+    [ subdir-run n1962 : factorial ]
+    [ subdir-run n1962 : sum ]
 ;
-explicit n1962 ; # TODO: Remove this...
+
+test-suite stroustrup97 :
+    [ subdir-run stroustrup97 : string ]
+;
+
+test-suite doc :
+    [ subdir-run doc : push_back ]
+;
 
