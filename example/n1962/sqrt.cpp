@@ -1,4 +1,5 @@
 
+//[n1962_sqrt
 #include <boost/contract.hpp>
 #include <boost/detail/lightweight_test.hpp>
 #include <cmath>
@@ -22,4 +23,5 @@ int main() {
     BOOST_TEST(fabs(mysqrt(4.0, precision) - 2.0) <= precision);
     return boost::report_errors();
 }
+//]
 

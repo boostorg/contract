@@ -1,4 +1,5 @@
 
+//[n1962_equal
 #include <boost/contract.hpp>
 #include <boost/detail/lightweight_test.hpp>
 
@@ -41,4 +42,5 @@ int main() {
 
     return boost::report_errors();
 }
+//]
 

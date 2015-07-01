@@ -5,9 +5,8 @@
 // http://www.boost.org/LICENSE_1_0.txt)
 // Home at http://sourceforge.net/projects/contractpp
 
-//[n1962_vector_npaper
-// File: vector_npaper.cpp
-// Extra spaces, newlines, etc used to align text with this library code.
+//[n1962_vector_n1962
+// Extra newlines, etc. used to align text with this library code.
 
 #include <boost/utility.hpp>
 #include <boost/algorithm/cxx11/all_of.hpp>

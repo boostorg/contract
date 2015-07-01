@@ -1,13 +1,6 @@
 
-// Copyright (C) 2008-2012 Lorenzo Caminiti
-// Use, modification, and distribution is subject to the
-// Boost Software License, Version 1.0 (see accompanying file
-// LICENSE_1_0.txt or a copy at http://www.boost.org/LICENSE_1_0.txt).
-// Documentation at http://contractpp.sourceforge.net.
-
 //[n1962_sqrt_d
-// File: sqrt.d
-// Extra spaces, newlines, etc used to align text with this library code.
+// Extra newlines, etc. used to align text with this library code.
 
 
 

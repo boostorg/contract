@@ -1,4 +1,5 @@
 
+//[mitchell02_dictionary
 #include <boost/contract.hpp>
 #include <boost/detail/lightweight_test.hpp>
 #include <utility>
@@ -114,4 +115,5 @@ int main() {
     
     return boost::report_errors();
 }
+//]
 

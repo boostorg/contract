@@ -9,7 +9,7 @@
 template<typename T>
 class pushable;
 
-//[push_back
+//[introduction
 #include <boost/contract.hpp>
 #include <vector>
 #include <cstddef>
@@ -24,7 +24,7 @@ public:
     #undef BASES
 
     void invariant() const { // Checked in AND with base class invariants.
-        BOOST_CONTRACT_ASSERT(size() <= capacity());
+        BOOST_CONTRACT_ASSERT(size() <= capacity()); // Line 27.
     }
 
     virtual void push_back(T const& value, boost::contract::virtual_* v = 0)
@@ -33,10 +33,10 @@ public:
         auto c = boost::contract::public_function<override_push_back>(
                 v, &vector::push_back, this, value)
             .precondition([&] { // Checked in OR with base preconditions.
-                BOOST_CONTRACT_ASSERT(size() < max_size());
+                BOOST_CONTRACT_ASSERT(size() < max_size()); // Line 36.
             })
             .postcondition([&] { // Checked in AND with base postconditions.
-                BOOST_CONTRACT_ASSERT(size() == *old_size + 1);
+                BOOST_CONTRACT_ASSERT(size() == *old_size + 1); // Line 39.
             })
         ;
 

@@ -1,5 +1,5 @@
 
-//[countdown
+//[private_protected
 template<typename T = int>
 class countdwon {
 public:

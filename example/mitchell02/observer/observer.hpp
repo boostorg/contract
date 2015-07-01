@@ -1,4 +1,5 @@
 
+//[mitchell02_observer
 #ifndef OBSERVER_HPP_
 #define OBSERVER_HPP_
 
@@ -42,4 +43,5 @@ void observer::update(boost::contract::virtual_* v) {
 }
 
 #endif // #include guard
+//]
 

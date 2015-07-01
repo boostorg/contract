@@ -1,4 +1,5 @@
 
+//[mitchell02_counter
 #ifndef COUNTER_HPP_
 #define COUNTER_HPP_
 
@@ -55,4 +56,5 @@ private:
 };
 
 #endif // #include guard
+//]
 

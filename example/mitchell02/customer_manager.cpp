@@ -1,4 +1,5 @@
 
+//[mitchell02_customer_manager
 #include <boost/contract.hpp>
 #include <boost/detail/lightweight_test.hpp>
 #include <string>
@@ -123,4 +124,5 @@ int main() {
 
     return boost::report_errors();
 }
+//]
 

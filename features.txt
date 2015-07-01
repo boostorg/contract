@@ -74,4 +74,9 @@ x   Old values with/without subcontracting
 *   What shall I do with unions... can/shall I contract them? Check-out which
     members C++11 unions can have (ctors, dtor, etc.)
 *   Make work the case a pure virtual uses boost::optional<T> result but an overriding function uses just T result, and the other way around too.
+*   What happens to OLDOF and related assertions if old-of expression type T does not have a copy constructor? ...maybe just mention that these cases are rare... and they can be handled with call_if and C++14 lambdas, or writing verbose functors even without C++14...
+*   Figure out correct impl of volatile class invariants...
+*   Test OLDOF for non-copy-constructible types. In this case OLDOF (and old) could just skip the copy leaving the pointer to be null. Then programmers could check if the old-value pointer is null so skip evaluating its assertion in postconditions... this seems a simple and elegant solution (without having to use call_if, bind, etc. here). C++11 std::is_copy_constructible could be used, but maybe still be wrapped within a boost::contract::has_oldof trait so to work on C++03 via user specializations...
+    Hhmmm... but this will not allow programmers to force compilation to fail in case the old value expr is not copyable... that's not good then.
+*   Test what happens if bodies throw (e.g., public func should check inv, dtor too, but ctor not, etc.)
 

@@ -1,4 +1,5 @@
 
+//[mitchell02_observer_main
 #include "observer/observer.hpp"
 #include "observer/subject.hpp"
 #include <boost/contract.hpp>
@@ -94,4 +95,5 @@ int main() {
 
     return boost::report_errors();
 }
+//]
 

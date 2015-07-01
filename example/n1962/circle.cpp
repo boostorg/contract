@@ -1,4 +1,5 @@
 
+//[n1962_circle
 #include <boost/contract.hpp>
 #include <boost/detail/lightweight_test.hpp>
 #include <cassert>
@@ -52,4 +53,5 @@ int main() {
     BOOST_TEST_EQ(c.compute_area(), 12);
     return boost::report_errors();
 }
+//]
 

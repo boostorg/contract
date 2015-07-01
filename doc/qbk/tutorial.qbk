@@ -1,25 +1,25 @@
 
+[import ../example/features/public.cpp]
+
 [section Tutorial]
 
 This section gives an introduction on how to program contracts using this library.
 
-[import ../example/features/identifiers.cpp]
-
 [section Free Functions]
 
 Consider the following free function `inc` which increments its argument by `1` and returns the value its argument had before the increment (this function is equivalent to the usual C++ operator `int operator++(int& x, int)`).
-Let's write the contract for such a function using code comments (see also [@../../example/features/inc_no_contract.cpp =inc_no_contract.cpp=]):
+Let's write the contract for such a function using code comments (see also [@../../example/features/no_contracts.cpp =no_contracts.cpp=]):
 
-[import ../../example/features/inc_no_contract.cpp]
-[inc_no_contract]
+[import ../../example/features/no_contracts.cpp]
+[no_contracts]
 
 The precondition states that the argument to increment must be smaller than the maximum allowable value of its type (otherwise the increment will go out-of-range).
 The postconditions state that the argument was actually incremented by `1` and that the function return value is equal to the argument before it was incremented.
 
-Now let's program this function and its contract using the [funcref boost::contract::function] function from this library (see also [@../../example/features/inc.cpp =inc.cpp=]):
+Now let's program this function and its contract using the [funcref boost::contract::function] function from this library (see also [@../../example/features/free_function.cpp =free_function.cpp=]):
 
-[import ../../example/features/inc.cpp]
-[inc]
+[import ../../example/features/free_function.cpp]
+[free_function]
 
 All necessary header files of this library are included by `#include <boost/contract.hpp>`.
 Alternatively, programmers can selectively include only the header files they actually need among =boost/contract/*.hpp= (see also __Getting_Started__).
@@ -243,9 +243,9 @@ Therefore, it might be best for both `class`es and `struct`s to have no mutable 
 [section Constructors]
 
 Contracts for constructors are programmed using the [funcref boost::contract::constructor] function and the [classref boost::contract::constructor_precondition] base class.
-For example (see also [@../../example/features/identifiers.cpp =identifiers.cpp=]):
+For example (see also [@../../example/features/public.cpp =public.cpp=]):
 
-[unique_identifiers_constructor]
+[public_constructor]
 
 It is not possible to specify preconditions using `.precondition(...)` for constructors (the library will generate a compile-time error if `.precondition(...)` is used on the object returned by [funcref boost::contract::constructor]).
 Constructor preconditions are specified using the [classref boost::contract:constructor_precondition] base class instead (see also __Preconditions__).
@@ -294,9 +294,9 @@ They could still use [classref boost::contract::constructor_precondition] to che
 [section Destructors]
 
 Contracts for destructors are programmed using the [funcref boost::contract::destructor] function.
-For example (see also [@../../example/features/identifiers.cpp =identifiers.cpp=]):
+For example (see also [@../../example/features/public.cpp =public.cpp=]):
 
-[unique_identifiers_destructor]
+[public_destructor]
 
 It is not possible to specify preconditions for destructors (the library will generate a compile-time error if `.precondition(...)` is used here because destructors can be called at any time after construction so they have no precondition).
 It is possible to specify postconditions for destructors (see also __Postconditions__ and see __Static_Public_Functions__ for an example).
@@ -334,9 +334,9 @@ They could use [funcref boost::contract::function] to just check postconditions 
 Contracts for public member functions are programmed using the [funcref boost::contract::public_function] function.
 
 Let's first consider public member functions that are not static, not virtual, and do not override any function from base classes.
-For example, the following such a function `find` is declared as a member of the `unique_identifiers` class (see also [@../../example/features/identifiers.cpp =identifiers.cpp=]):
+For example, the following such a function `find` is declared as a member of the `unique_identifiers` class (see also [@../../example/features/public.cpp =public.cpp=]):
 
-[unique_identifiers_find]
+[public_function]
 
 It is possible to specify both preconditions and postconditions for public member functions (see also __Preconditions__ and __Postconditions__).
 [funcref boost::contract::public_function] takes `this` as a parameter because public member functions check class invariants (see also __Class_Invariants__).
@@ -365,9 +365,9 @@ A public member function can avoid calling [funcref boost::contract::public_func
 [section Virtual Public Functions]
 
 Let's now consider public member functions that are virtual but that still do not override any function from base classes.
-For example, the following such a function `push_back` is declared as a member of the `unique_identifiers` class (see also [@../../example/features/identifiers.cpp =identifiers.cpp=]):
+For example, the following such a function `push_back` is declared as a member of the `unique_identifiers` class (see also [@../../example/features/public.cpp =public.cpp=]):
 
-[unique_identifiers_push_back]
+[public_virtual_function]
 
 Public virtual functions must declare an extra trailing parameter of type [classref boost::contract::virtual_]`*` and assign it to `0` by default (i.e., null).
 Because this extra parameter is the last one and it has a default value, it does not alter the calling interface of the virtual function and callers will essentially never have to deal with it explicitly (a part from when manipulating the virtual function type for function pointer type-casting, etc.).
@@ -399,13 +399,13 @@ For the rest, the same considerations made in __Public_Functions__ apply.
 [section Overriding Public Functions (Subcontracting)]
 
 Let's now consider public member functions (virtual or not) that override public virtual functions from one or more public base class.
-For example, the following such a function `push_back` is declared as a member of the `identifiers` derived class and it overrides `push_back` from the `unique_identifiers` base class (see also [@../../example/features/identifiers.cpp =identifiers.cpp=]):
+For example, the following such a function `push_back` is declared as a member of the `identifiers` derived class and it overrides `push_back` from the `unique_identifiers` base class (see also [@../../example/features/public.cpp =public.cpp=]):
 [footnote
 In this document, overriding functions are often marked with the `/* override */` comment.
 On compilers that support C++11 virtual specifiers `override` can be used instead (`override` is not used in the documentation only because virtual specifiers are not widely supported yet, even by compilers that support other C++11 features like lambda functions).
 ]
 
-[identifiers_push_back]
+[public_override_function]
 
 (See the __Base_Types__ section below for more information about [macroref BOOST_CONTRACT_BASE_TYPES] and `base_types`.)
 
@@ -413,7 +413,7 @@ Overriding public functions must always list the extra trailing parameter of typ
 Programmers must pass the extra virtual parameter as the very first argument to all [macroref BOOST_CONTRACT_OLDOF] and [funcref boost::contract::public_function] calls in the overriding function (as for non-overriding virtual public functions discussed above).
 
 For overriding functions, [funcref boost::contract::public_function] takes an explicit template argument `override_`[^['function-name]] that must be defined at class scope using [macroref BOOST_CONTRACT_OVERRIDE][^(['function-name])] (see right after the function).
-When called from overriding public functions, [funcref boost::contract::public_function] also take a pointer to the enclosing function, the object `this` (because overriding public functions check class invariants), and references to each function argument in the order they appear in the function declaration.
+When called from overriding public functions, [funcref boost::contract::public_function] also takes a pointer to the enclosing function, the object `this` (because overriding public functions check class invariants), and references to each function argument in the order they appear in the function declaration.
 [footnote
 *Rationale.*
 The object `this` is passed after the function pointer to follow `bind`'s syntax.
@@ -449,6 +449,9 @@ This ensures that overriding public function subcontracts are checked correctly 
 
 This library will generate a compile-time error if there is no suitable virtual function to overload in any of the public base classes (similar to C++11 `override` virtual specifier, but limited to functions with the extra [classref boost::contract::virtual_]`*` parameter and searched recursively only in `public` base classes passed to [macroref BOOST_CONTRACT_BASE_TYPES]).
 
+[macroref BOOST_CONTRACT_OVERRIDE] does not have to be used in a public section of the class (see also __Access__).
+[macroref BOOST_CONTRACT_OVERRIDE] must be used only once in a given class and overloaded functions can reuse it, plus [macroref BOOST_CONTRACT_NAMED_OVERRIDE] can be used to generate a name different from `override_...` (see also __Overloads_and_Named_Override__).
+
 For the rest, the same considerations made in __Virtual_Public_Functions__ apply.
 
 [endsect]
@@ -457,9 +460,9 @@ For the rest, the same considerations made in __Virtual_Public_Functions__ apply
 
 In order to support subcontracting, this library must be made aware of base classes.
 Programmers do that using the [macroref BOOST_CONTRACT_BASE_TYPES] macro to declared a public member type named `base_types` with a `typedef`.
-For example (see also [@../../example/features/identifiers.cpp =identifiers.cpp=]):
+For example (see also [@../../example/features/public.cpp =public.cpp=]):
 
-[multi_identifiers]
+[public_base_types]
 
 For convenience, a /local macro/ named `BASES` (any other name can be used) is often used here to avoid repeating the base list twice (first when inheriting `: ...` and then when calling [macroref BOOST_CONTRACT_BASE_TYPES]`(...)`).
 Being a local macro, `BASES` must be undefined after it has been used to declare `base_types` (to avoid macro redefinition errors).
@@ -491,10 +494,10 @@ Private and protected member functions do not check class invariants (because th
 Instead, private and protected member functions only check preconditions and postconditions, like free functions do.
 
 Therefore, [funcref boost::contract::function] is used to program contracts for private and protected functions, like for free functions.
-For example (see also [@../../example/features/countdown.cpp =countdown.cpp=]):
+For example (see also [@../../example/features/private_protected.cpp =private_protected.cpp=]):
 
-[import ../../example/features/countdown.cpp]
-[countdown]
+[import ../../example/features/private_protected.cpp]
+[private_protected]
 
 The same considerations made in __Free_Functions__ apply.
 

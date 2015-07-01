@@ -1,6 +1,6 @@
 
 // Vector of unique integer numbers.
-//[unique_identifiers_constructor
+//[public_constructor
 // An identifier can be pushed only once in this container.
 class unique_identifiers
     : private boost::contract::constructor_precondition<unique_identifiers>
@@ -26,7 +26,7 @@ public:
     /* ... */
 //]
     
-    //[unique_identifiers_destructor
+    //[public_destructor
     // Destroy this container.
     virtual ~unique_identifiers() {
         auto c = boost::contract::destructor(this); // Check invariants.
@@ -39,7 +39,7 @@ public:
         return vect_.size();
     }
 
-    //[unique_identifiers_find
+    //[public_function
     // Check if specified identifier is in container.
     bool find(int id) const {
         bool result;
@@ -55,7 +55,7 @@ public:
     }
     //]
 
-    //[unique_identifiers_push_back
+    //[public_virtual_function
     // Specified identifier must not already be in container.
     virtual int push_back(int id, boost::contract::virtual_* v = 0) {
         int result;
@@ -88,7 +88,7 @@ private:
     std::vector<int> vect_;
 };
 
-//[identifiers_push_back
+//[public_override_function
 // Can push same identifier multiple times in container (but with no effect).
 class identifiers
     #define BASES public unique_identifiers
@@ -134,7 +134,7 @@ public:
     }
 };
 
-//[multi_identifiers
+//[public_base_types
 class multi_identifiers
     #define BASES \
         private boost::contract::constructor_precondition<multi_identifiers>, \

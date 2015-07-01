@@ -1,4 +1,5 @@
 
+//[cline90_vector
 #ifndef VECTOR_HPP_
 #define VECTOR_HPP_
 
@@ -93,4 +94,5 @@ private:
 };
 
 #endif // #include guard
+//]
 

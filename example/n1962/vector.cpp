@@ -1,4 +1,5 @@
 
+//[n1962_vector
 #include <boost/contract.hpp>
 #include <boost/bind.hpp>
 #include <boost/algorithm/cxx11/all_of.hpp>
@@ -664,4 +665,5 @@ int main() {
 
     return boost::report_errors();
 }
+//]
 

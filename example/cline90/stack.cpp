@@ -1,4 +1,5 @@
 
+//[cline90_stack
 #include <boost/contract.hpp>
 #include <boost/bind.hpp>
 #include <boost/detail/lightweight_test.hpp>
@@ -85,4 +86,5 @@ int main() {
     BOOST_TEST_EQ(s.pop(), 123);
     return boost::report_errors();
 }
+//]
 

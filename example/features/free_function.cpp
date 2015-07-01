@@ -1,5 +1,5 @@
 
-//[inc
+//[free_function
 #include <boost/contract.hpp>
 
 int inc(int& x) {

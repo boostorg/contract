@@ -103,6 +103,7 @@ namespace exception_ {
         } catch(boost::contract::assertion_failure const& error) {
             // what = 'assertion "..." failed: ...'.
             std::cerr << s << error.what() << std::endl;
+        // TODO: Below, I should use Boost.Exception diagnostic message...
         } catch(std::exception const& error) {
             std::cerr << s << "checking threw standard exception with " <<
                     "what(): " << error.what() << std::endl;

@@ -1,8 +1,10 @@
 
+//[stroustrup97_string
 #include <boost/contract.hpp>
 #include <boost/bind.hpp>
 #include <boost/detail/lightweight_test.hpp>
 #include <cstring>
+#include <iostream>
 
 // Adapted from an example presented in the book "The C++ Programming Language"
 // (Stroustrup, 1997) to illustrate importance of class invariants. Simple
@@ -123,4 +125,5 @@ int main() {
 
     return boost::report_errors();
 }
+//]
 

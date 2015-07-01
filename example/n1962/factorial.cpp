@@ -1,4 +1,5 @@
 
+//[n1962_factorial
 #include <boost/contract.hpp>
 #include <boost/detail/lightweight_test.hpp>
 
@@ -40,4 +41,5 @@ int main() {
     BOOST_TEST_EQ(factorial(4), 24);
     return boost::report_errors();
 }
+//]
 

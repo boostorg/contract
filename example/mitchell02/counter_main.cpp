@@ -1,4 +1,5 @@
 
+//[mitchell02_counter_main
 #include "counter/counter.hpp"
 #include "counter/decrement_button.hpp"
 #include "observer/observer.hpp"
@@ -65,4 +66,5 @@ int main() {
 
     return boost::report_errors();
 }
+//]
 

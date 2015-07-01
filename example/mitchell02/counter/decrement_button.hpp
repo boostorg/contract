@@ -1,4 +1,5 @@
 
+//[mitchell02_decrement_button
 #ifndef DECREMENT_BUTTON_HPP_
 #define DECREMENT_BUTTON_HPP_
 
@@ -78,4 +79,5 @@ private:
 };
 
 #endif // #include guard
+//]
 

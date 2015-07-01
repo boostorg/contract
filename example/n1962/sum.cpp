@@ -1,4 +1,5 @@
 
+//[n1962_sum
 #include <boost/contract.hpp>
 #include <boost/detail/lightweight_test.hpp>
 
@@ -20,4 +21,5 @@ int main() {
     BOOST_TEST_EQ(sum(4, a), 10);
     return boost::report_errors();
 }
+//]
 

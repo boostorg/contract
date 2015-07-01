@@ -1,4 +1,5 @@
 
+//[mitchell02_push_button
 #ifndef PUSH_BUTTON_HPP_
 #define PUSH_BUTTON_HPP_
 
@@ -68,4 +69,5 @@ void push_button::on_bn_clicked(boost::contract::virtual_* v) {
 }
 
 #endif // #include guard
+//]
 

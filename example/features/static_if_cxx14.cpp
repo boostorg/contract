@@ -1,7 +1,6 @@
 
 // Test possible impl. advance() in single function with C++14 generic lambdas.
 
-#include "../aux_/oteststream.hpp"
 #include <boost/contract/call_if.hpp>
 #include <boost/detail/lightweight_test.hpp>
 #include <type_traits>
@@ -10,8 +9,6 @@
 #include <vector>
 #include <list>
 #include <sstream>
-
-boost::contract::aux::test::oteststream out;
 
 template<typename Iter>
 struct is_random_access_iterator : std::is_same<
@@ -31,23 +28,21 @@ struct is_input_iterator : std::is_same<
     std::input_iterator_tag
 > {};
 
+//[static_if_cxx14
 template<typename Iter, typename Dist>
 void myadvance(Iter& i, Dist n) {
     Iter *p = &i; // So captures change actual pointed iterator value.
     boost::contract::call_if<is_random_access_iterator<Iter> >(
         std::bind([] (auto p, auto n) {
-            out << "random iterator" << std::endl;
             *p += n;
         }, p, n)
     ).template else_if<is_bidirectional_iterator<Iter> >(
         std::bind([] (auto p, auto n) {
-            out << "bidirectional iterator" << std::endl;
             if(n >= 0) while(n--) ++*p;
             else while(n++) --*p;
         }, p, n)
     ).template else_if<is_input_iterator<Iter> >(
         std::bind([] (auto p, auto n) {
-            out << "input iterator" << std::endl;
             while(n--) ++*p;
         }, p, n)
     ).else_(
@@ -56,6 +51,7 @@ void myadvance(Iter& i, Dist n) {
         }, std::false_type()) // Use constexpr value.
     );
 }
+//]
 
 struct x {}; // Test not an iterator (static_assert failure in else_ above).
 

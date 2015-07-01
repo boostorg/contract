@@ -1,4 +1,5 @@
 
+//[mitchell02_simple_queue
 #include <boost/contract.hpp>
 #include <boost/bind.hpp>
 #include <boost/optional.hpp>
@@ -212,4 +213,5 @@ int main() {
 
     return boost::report_errors();
 }
+//]
 

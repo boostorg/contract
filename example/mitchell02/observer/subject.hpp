@@ -1,4 +1,5 @@
 
+//[mitchell02_subject
 #ifndef SUBJECT_HPP_
 #define SUBJECT_HPP_
 
@@ -157,4 +158,5 @@ private:
 };
 
 #endif // #include guard
+//]
 

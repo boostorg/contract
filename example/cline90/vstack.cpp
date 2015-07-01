@@ -1,4 +1,5 @@
 
+//[cline90_vstack
 #include "vector.hpp"
 #include <boost/contract.hpp>
 #include <boost/optional.hpp>
@@ -223,4 +224,5 @@ int main() {
 
     return boost::report_errors();
 }
+//]
 
