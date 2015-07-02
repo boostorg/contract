@@ -7,6 +7,8 @@
 
 [section Bibliography]
 
+This section lists all references consulted while designing and developing this library.
+
 [#Bright04_anchor] [Bright04] W. Bright. [@http://www.digitalmars.com/d/2.0/dbc.html /Contract Programming for the D Programming Language/]. 2004.
 
 [#Bright04b_anchor] [Bright04b] W. Bright. [@http://www.digitalmars.com/ctg/contract.html /Contract Programming for the Digital Mars C++ Compiler/]. 2004.

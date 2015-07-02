@@ -136,36 +136,30 @@ TODO
 
 [endsect]
 
-[section Throw on Failure]
+[section Overloads and Named Overrides]
 
-[import ../../example/features/throw_on_failure.cpp]
+Calls to [funcref boost::contract::public_function] from different overloaded functions reuse the same `override_`[^['function-name]] template argument.
+Therefore, [macroref BOOST_CONTRACT_OVERRIDE][^(['function-name])] is used only once in a given class even when [^['function-name]] is overloaded.
+For example (see also [@../../example/features/override_overload.cpp =override_overload.cpp=]):
 
-If a condition checked using [macroref BOOST_CONTRACT_ASSERT] is `false` or if code specified in preconditions, postconditions, and class invariants throw any exception, this library calls the /contract failure handler/ functions [funcref boost::contract::precondition_failed], [funcref boost::contract::postcondition_failed], [funcref boost::contract::entry_invariant_failed], or [funcref boost::contract::exit_invariant_failed] respectively (in fact, [macroref BOOST_CONTRACT_ASSERT] simply expand to code that throw [classref boost::contract::assertion_failure], see also __No_Macros__).
+[import ../../example/features/override_overload.cpp]
+[override_overload]
 
-By default, these handler functions print a message to the standard error `std::cerr` and then terminate the program calling `std::terminate()`.
+Note that the function name passed to [macroref BOOST_CONTRACT_OVERRIDE] should never start with an underscore to avoid generating names containing double underscores `override__...` that are reserved by the C++ standard.
+There is a separate macro [macroref BOOST_CONTRACT_NAMED_OVERRIDE] that can be used to explicitly specify the name of the type that will be passed to [funcref boost::contract::public_function] as a template argument:
 [footnote
 *Rationale.*
-In general, when a contract fails the only safe thing to do is to terminate the program execution (because the contract failure indicates a bug in the program, and in general the program might be in a state for which no operation can be successfully performed, so the program should be stopped).
-Therefore, that is what this library does by default.
-However, for a specific application, programmers could implement some fail-safe mechanism for which some mission-critical operations can always be performed upon handling specific failures.
-Therefore, this library allows programmers to override the default contract failure handlers to fully customize how to handle contract failures.
+It is best to use a different macro name [macroref BOOST_CONTRACT_NAMED_OVERRIDE] instead of overloading [macroref BOOST_CONTRACT_OVERRIDE] using variadic macros because the override macros cannot be programmed manually by the users so making them variadic macros would prevent using this library on compilers that do not support variadic macros (see also __No_Macros__).
 ]
-However, programmers can override the default contract failure handlers to perform any custom action on contract failure using [funcref boost::contract::set_precondition_failed], [funcref boost::contract::set_postcondition_failed], [funcref boost::contract::set_entry_invariant_failed] and [funcref boost::contract::set_exit_exit_invariant_failed] (or just [funcref boost::contract::set_invariant_failed] to set both entry and exit invariant failure handlers at once).
-For example (see also [@../../example/features/throw_on_failure.cpp =throw_on_failure.cpp=]):
 
-[throw_on_failure_handler]
+    BOOST_CONTRACT_OVERRIDE(``[^['function-name]]``) // Generate `override_...`.
+    BOOST_CONTRACT_NAMED_OVERRIDE(``[^['type-name]]``, ``[^['function-name]]``)
 
-Note that in order to comply with C++ and STL exception safety, destructors should never throw.
-This library passes a [classref boost::contract::from] parameter to the contract failure handler functions that can be used to identify if the contract failure occurred during a destructor, a constructor, or a function call.
-This way programmers can ensure to never throw from a destructor call (in the example above, failures from destructors are simply ignored... in general, this is not a safe thing to do, but how to handle such a case in real code is left up to the specific applications being programmed).
+This second macro can be used for function names that start with an underscore `_...`, when the name `override_`[^['function-name]] clashes with another name the user class, or in any other case when programmers need to generate a name different than `override_...`.
+For example (see also [@../../example/features/named_override.cpp =named_override.cpp=]):
 
-Then the contract assertions can be programmed to throw [classref boost::contract::assertion_failure] using [macroref BOOST_CONTRACT_ASSERT] (see also __No_Macro__), or any other exception using:
-
-    if(``[^['error-condition]]``) throw ...;
-
-For example (see also [@../../example/features/throw_on_failure.cpp =throw_on_failure.cpp=]):
-
-[throw_on_failure_cstring]
+[import ../../example/features/named_override.cpp]
+[named_override]
 
 [endsect]
 
@@ -197,33 +191,6 @@ The same technique can be used for free, private, and protected functions.
 
 [endsect]
 
-[section Overloads and Named Overrides]
-
-Calls to [funcref boost::contract::public_function] from different overloaded functions reuse the same `override_`[^['function-name]] template argument.
-Therefore, [macroref BOOST_CONTRACT_OVERRIDE][^(['function-name])] is used only once in a given class even when [^['function-name]] is overloaded.
-For example (see also [@../../example/features/override_overload.cpp =override_overload.cpp=]):
-
-[import ../../example/features/override_overload.cpp]
-[override_overload]
-
-Note that the function name passed to [macroref BOOST_CONTRACT_OVERRIDE] should never start with an underscore to avoid generating names containing double underscores `override__...` that are reserved by the C++ standard.
-There is a separate macro [macroref BOOST_CONTRACT_NAMED_OVERRIDE] that can be used to explicitly specify the name of the type that will be passed to [funcref boost::contract::public_function] as a template argument:
-[footnote
-*Rationale.*
-It is best to use a different macro name [macroref BOOST_CONTRACT_NAMED_OVERRIDE] instead of overloading [macroref BOOST_CONTRACT_OVERRIDE] using variadic macros because the override macros cannot be programmed manually by the users so making them variadic macros would prevent using this library on compilers that do not support variadic macros (see also __No_Macros__).
-]
-
-    BOOST_CONTRACT_OVERRIDE(``[^['function-name]]``) // Generate `override_...`.
-    BOOST_CONTRACT_NAMED_OVERRIDE(``[^['type-name]]``, ``[^['function-name]]``)
-
-This second macro can be used for function names that start with an underscore `_...`, when the name `override_`[^['function-name]] clashes with another name the user class, or in any other case when programmers need to generate a name different than `override_...`.
-For example (see also [@../../example/features/named_override.cpp =named_override.cpp=]):
-
-[import ../../example/features/named_override.cpp]
-[named_override]
-
-[endsect]
-
 [section Access]
 
 As we have seen, this library requires programmers to augment their classes declaring special members that are internally used to implement contracts:
@@ -250,6 +217,39 @@ For example (see also [@../../example/features/access.cpp =access.cpp=]):
 This technique is not used in most examples of this documentation only for brevity, but programmers are encouraged to use it in real code.
 
 See also __Base_Types__, __Class_Invariant__, and __Overloads_and_Named_Override__ to declare these members with different names (e.g., when they clash with other names in the user-defined class).
+
+[endsect]
+
+[section Throw on Failure]
+
+[import ../../example/features/throw_on_failure.cpp]
+
+If a condition checked using [macroref BOOST_CONTRACT_ASSERT] is `false` or if code specified in preconditions, postconditions, and class invariants throw any exception, this library calls the /contract failure handler/ functions [funcref boost::contract::precondition_failed], [funcref boost::contract::postcondition_failed], [funcref boost::contract::entry_invariant_failed], or [funcref boost::contract::exit_invariant_failed] respectively (in fact, [macroref BOOST_CONTRACT_ASSERT] simply expand to code that throw [classref boost::contract::assertion_failure], see also __No_Macros__).
+
+By default, these handler functions print a message to the standard error `std::cerr` and then terminate the program calling `std::terminate()`.
+[footnote
+*Rationale.*
+In general, when a contract fails the only safe thing to do is to terminate the program execution (because the contract failure indicates a bug in the program, and in general the program might be in a state for which no operation can be successfully performed, so the program should be stopped).
+Therefore, that is what this library does by default.
+However, for a specific application, programmers could implement some fail-safe mechanism for which some mission-critical operations can always be performed upon handling specific failures.
+Therefore, this library allows programmers to override the default contract failure handlers to fully customize how to handle contract failures.
+]
+However, programmers can override the default contract failure handlers to perform any custom action on contract failure using [funcref boost::contract::set_precondition_failed], [funcref boost::contract::set_postcondition_failed], [funcref boost::contract::set_entry_invariant_failed] and [funcref boost::contract::set_exit_exit_invariant_failed] (or just [funcref boost::contract::set_invariant_failed] to set both entry and exit invariant failure handlers at once).
+For example (see also [@../../example/features/throw_on_failure.cpp =throw_on_failure.cpp=]):
+
+[throw_on_failure_handler]
+
+Note that in order to comply with C++ and STL exception safety, destructors should never throw.
+This library passes a [classref boost::contract::from] parameter to the contract failure handler functions that can be used to identify if the contract failure occurred during a destructor, a constructor, or a function call.
+This way programmers can ensure to never throw from a destructor call (in the example above, failures from destructors are simply ignored... in general, this is not a safe thing to do, but how to handle such a case in real code is left up to the specific applications being programmed).
+
+Then the contract assertions can be programmed to throw [classref boost::contract::assertion_failure] using [macroref BOOST_CONTRACT_ASSERT] (see also __No_Macro__), or any other exception using:
+
+    if(``[^['error-condition]]``) throw ...;
+
+For example (see also [@../../example/features/throw_on_failure.cpp =throw_on_failure.cpp=]):
+
+[throw_on_failure_cstring]
 
 [endsect]
 

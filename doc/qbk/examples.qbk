@@ -3,8 +3,8 @@
 
 This section lists a few non-trivial examples taken from different Contract Programming sources and re-implemented using this library.
 
-Some of these examples might be from old sources, containing old or obsolete code practices, not be optimized for execution speed, and they be more relevant in the context of programming languages different from C++ (e.g., Eiffel or D).
-Nevertheless, programmers are encouraged to review these examples to see a few different applications of this library that could be useful in practice.
+Some of these examples might be from old sources, containing old or obsolete code practices, not optimized for execution speed, and they be more relevant in the context of other programming languages different from C++ (because the considered sources were also for the Eiffel and D programming languages).
+Nevertheless, programmers are encouraged to review these examples to see a few diverse uses of this library that could program contracts in ways similar to what programmers need in their specific C++ applications.
 
 Sources:
 

@@ -1,124 +1,96 @@
 
+DOCS ---------------------------------------------------------------------------
 
-*   Possible to remove public/protected/private (simplify syntax)?
-    --> This requires to be able to implement has_public_f meta-function...
-    --> Use CONTRACT_MEMBER/FUNCTION to differentiate function kind.
+*   Add a comment to the docs that for multi-threading, a recursive (for
+    virtual calls?) scoped lock can appear before contract code.
 
-*   Possible to remove CONTRACT_CLASS_INVARIANT( void ) (simplify syntax)?
-    --> See related ticket.
+*   Look at Andrzej's discussion on preconditions:
+    https://akrzemi1.wordpress.com/2013/01/04/preconditions-part-i/
 
-*   Possible to remove _TPL in C++11 (simplify syntax)?
+IMPLEMENTATION -----------------------------------------------------------------
 
+*   Should C++11 move preserve class invariants at exit and/or on throw?
+    *   If not, how I can program C++11 move operations with the lib? (If I user
+        boost::contract::function then I don't check inv at entry...)
 
+*   Volatile members and class invariants.
 
-*   Assume C++11 variadic-macros (simplify impl).
-    --> No longer need to support sequence-syntax.
+*   Disable pre, post, and/or entry/exit inv (all combinations).
 
-*   Assume C++11 auto/decltype or better Boost.Typeof (simplify impl).
-    --> No longer need to support `(type) ...` in syntax.
+*   Deep-search functions to override in base_types.
+    *   And compiler-error if public_function<override...> does not find any
+        function to actually override.
 
-*   Maybe use lambdas instead of local functions... would this simplify impl of
-    const-blocks?
+*   Can I use unique_ptr instead of shared_ptr for old values, and maybe also
+    for contract variables internal to the library, etc... ?
 
-*   Remove `(f) ( void )` use just `(f) ( )` instead (assuming variadic-macros).
+*   What shall I do with unions... can/shall I contract them? Check-out which
+    members C++11 unions can have (ctors, dtor, etc.).
 
-*   Make a note that older revs of the lib did not use any C++11 feature...
+*   Make work the case a pure virtual uses boost::optional<T> result but an
+    overriding function uses just T result, and the other way around too.
 
-*   Remove concepts (simplify impl, plus C++11 decltype-expr-sfinae...).
+*   What happens to OLDOF and related assertions if old-of expression type T
+    does not have a copy constructor?
+    *   In this case OLDOF (and old) could just skip the copy leaving the
+        pointer to be null. Then programmers could check if the old-value
+        pointer is null so skip evaluating its assertion in postconditions...
+        this seems a simple and elegant solution (without having to use
+        call_if, bind, etc. here).
+    *   C++11 std::is_copy_constructible could be used, but maybe still be
+        wrapped within a boost::contract::has_oldof trait so to work on C++03
+        via user specializations...
+    *   Hhmmm... but this will not allow programmers to force compilation to
+        fail in case the old value expr is not copyable... that's not good
+        then... but maybe in these cases users can just
+        BOOST_STATIC_ASSERT(has_oldof<???>).
 
-*   Remove named params (simplify impl, plus C++11 version of Boost.Parameters
-    without macros...).
+TESTING ------------------------------------------------------------------------
 
-*   Remove loop-variants and block-invariants.
+*   .old(...)
+    *   I can add this to all existing tests...
+    *   Also include in set/ tests.
 
-*   Remove virtual specifiers (simplify impl, plus now in C++11...).
+*   Use MSVC 2013 (instead of MSVC 2010)
+    *   I should be able to use lambdas also in ctor templates member inits...
+    *   Add a note about this MSVC 2010 bug in the docs.
 
+*   Result by ref so never copied (not even when boost::optional).
 
-*   Allow unnamed parameters (template, function, etc)?
+*   Failure handlers and throw on contract failure (non-contract exception).
+    *   Add a test for throwing exception handlers (somewhat similar to
+        stroustrup97/string.cpp but more comprehensive).
+    *   Test what happens if bodies throw (e.g., public func should check inv,
+        dtor too, but ctor not, etc.)... test all contract types when bodies
+        throw.
 
-*   Support all C++11 decl features.
-    --> Move semantics (these should all "just work", but try them).
-    --> constexpr (for functions, constructors, operators, etc).
-    --> Default constructor syntax
-        T() = default; T() = delete; ... (use "as" instead of "=")
-        I don't need to support = delete because that's no decl and so has no
-        contracts.
-        However, I'd ideally support = default so I can add contracts for
-        default declarations.
-    --> `extern template class ...` do I need to do anything here given that
-        contracts will not be specified when template instantiation is forced
-        off or on (similar to `template class vector<int>;`)... probably not,
-        but test it!
-    --> std::initializer_list<T> I don't need to do anything special to support
-        initializer constructors but test them!
-    --> Support trailing-return-type using `return` instead of `->`:
-        template<t ypename R, typename L >
-        auto add ( R r, L l ) -> decltype(r + l) ;
-        template( typename R, typename L )
-        FUNC( auto (add) ( (R) r, (L) l ) return(decltype(r + l)) );
-        Or:
-        FUNC( auto (f) ( ) return(int) );
-        FUNC( auto (f) ( ) return int );
-    --> Delegating constructors... Will these pose problems/bugs for contracts?
-        When shall class invariants be checked (i.e., when is an object
-        considered constructed full)? Can these be used to overcome Contract++
-        CONSTRUCTOR_BODY limitations?
-    --> Support virtual specifiers override (func) and final (class and func).
-    --> Explicit conversion operators `explicit operator T() ...`.
-    --> Variadic (templates).
-        I should be able to support variadic templates and variadic functions
-        without changing the syntax:
-        template( typename... Args )
-        void (f) ( (Args...) args )
-        Because `... Args` will be parsed as one token for the template param
-        name then it'll be parsed again as a token `Args...` as the function
-        param type. Same for value- and template- template params.
-        Also I should be able to support C-style variadic functions:
-        void (f) ( int size, ... )
-        Because `...` will be parsed as the parameter type (no name).
-    --> User-define literals `... operator "" ...` (only free or member too?).
-    --> Anything to do for threading... (probably not given that's all in STL).
-    --> Make sure `long long int` can be specified (ideally, the syntax will
-        support `{long}* int` etc so type qualifier can be repeated as many
-        times as the user wants and the compiler will just error if they used
-        incorrectly).
-    --> Double check that alignas(...) cannot be used in class/function decl
-        (but only in var decl). If so, no need to support it.
-    --> Support attributes [[...]] maybe as ((...) -- Or:
-        Support MSVC/GCC/CLang decl-spec (for DLLs, etc).
-        I can support verbatim(...) in the class and function declaration
-        positions used by MSVC, G++, and CLang (I won't support positions used
-        by other compilers).
-        Read more about C++11 attributes [[...]], where they can appear in
-        class/function decl, and the default attributes [[noreturn]] and
-        [[carries_dependency]] so to decide how to support C++11 attributes +
-        MSVC __declspec + GCC __attributes__ in the syntax.
-    --> Type deduction:
-        I should probably allow `auto` and `decltype(...)` (extra paren not
-        necessary) everywhere a type is expected as I do for `int` (`(int)` not
-        necessary), including func param types.
+*   Contracts disabled while checking contracts.
+    *   Add a test to disable/ similar to n1962/factorial.cpp, where the
+        contract recursively calls the function itself in the assertions.
+    *   Add a config macro to disable no assertion during preconditions (to
+        avoid passing unchecked argument to function body...).
 
-*   Using C++11 delegating constructors --> see if I can remove initialize()
-    (and their function-try-blocks) all together from this library macros
-    (as they belong with constructor definitions and not declarations).
+*   Overloading for all contracts.
+    *   Test subcontracting of overloaded virtual (overload both overridden and
+        overriding functions).
 
-*   C++14
-    --> Function return type deduction:
-        auto f ( ) { return true; }
-        FUNC( auto (f) ( ) /* no return... here */ ) { return true; }
-    --> Check what "variable templates" are... (probably not in class/func decl
-        so OK, but check).
+*   No static inv / const inv / volatile inv checked when static_inv /
+    inv const / inv const volatile func not defined (for ctor, dtor, and
+    public functions)
 
-*   Support usual redundant C++ syntax:
-    --> `(f) ( )` and `(f) ( void )` (but only `template< >`, no void here)
-    --> `T const` and `const T`
-    --> `const volatile` and `volatile const`
-    --> Is this valid C++ `struct x : public virtual y` and
-        `struct x : virtual public y`? If so, support both (but I think only
-        the 1st one of these is valid...).
-    --> Optional (template, func, etc) param names.
+*   Derived public function override base protected virtual function (subst
+    princ does not apply here because base protected virtual cannot be called
+    by users so it cannot be "substituted")... what will this lib do?
 
-*   Add all and only (not size_t!!) syntax highlight to both QuickBook and VIM.
-*   Make Boost.Preprocess macros highlighted in VIM in dark yellow.
+*   If an overriding functions does not specify preconditions, make sure the
+    overridden preconditions are checked (and not that subcontracted
+    preconditions always pass just because the overriding function does not
+    specify them).
 
+*   Test function and array argument types like:
+    `void f(int x[2][3], int (*g)(int))`
+
+*   Test there's never ambiguity among the overloaded public_function APIs
+    (e.g., between public_function(v, func_ptr, this) and
+    public_function<O>(v, &a::f, this), etc.).
 
