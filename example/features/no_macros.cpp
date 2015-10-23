@@ -5,10 +5,11 @@ class vector {
 public:
     void push_back(T const& value, boost::contract::virtual_* v = 0)
         // Program old-value without macros (pass extra `v` if virtual).
-        boost::shared_ptr<int const> old_size =
-                boost::contract::copy_old() ? size() : boost::contract::old();
+        boost::contract::old_ptr<int> old_size = boost::contract::make_old(
+            boost::contract::copy_old() ? size() : boost::contract::make_old()
+        );
 
-        auto c = boost::contract::public_function(this)
+        boost::contract::guard c = boost::contract::public_function(this)
             .postcondition([&] {
                 BOOST_CONTRACT_ASSERT(size() == *old_size + 1);
             })
@@ -33,11 +34,12 @@ private:
 class identifiers {
 public:
     virtual void push_back(int id, boost::contract::virtual_* v = 0)
-        // Program old-value without macros with extra `v`.
-        boost::shared_ptr<int const> old_size =
-                boost::contract::copy_old(v) ? size() : boost::contract::old();
+        // Program old-value without macros but with extra `v`.
+        boost::contract::old_ptr<int> old_size = boost::contract::make_old(v,
+            boost::contract::copy_old(v) ? size() : boost::contract::make_old()
+        );
 
-        auto c = boost::contract::public_function(this)
+        boost::contract::guard c = boost::contract::public_function(this)
             .postcondition([&] {
                 BOOST_CONTRACT_ASSERT(size() == *old_size + 1);
             })
@@ -64,8 +66,10 @@ private:
 
 class multi_identifiers :
     private boost::contract::constructor_precondition<multi_identifiers>,
-    public identifiers, public virtual pushable,
-    protected sizer, private capacitor
+    public identifiers,
+    public virtual pushable,
+    protected sizer,
+    private capacitor
 {
 public:
     // Program `base_types` without macros (list only public bases).

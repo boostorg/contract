@@ -5,7 +5,7 @@
 // Test public member function subcontracting (also with old and return values).
 
 #include "../aux_/oteststream.hpp"
-#include "../aux_/cpcnt.hpp"
+#include "../aux_/counter.hpp"
 #include <boost/contract/public_function.hpp>
 #include <boost/contract/base_types.hpp>
 #include <boost/contract/assert.hpp>
@@ -18,7 +18,7 @@
 boost::contract::aux::test::oteststream out;
 
 struct s_tag;
-typedef boost::contract::aux::test::cpcnt<s_tag, std::string> s_type;
+typedef boost::contract::aux::test::counter<s_tag, std::string> s_type;
 
 struct result_type {
     std::string value;
@@ -40,7 +40,7 @@ struct t {
     static void static_invariant() { out << Id << "::static_inv" << std::endl; }
 
     struct z_tag;
-    typedef boost::contract::aux::test::cpcnt<z_tag, std::string> z_type;
+    typedef boost::contract::aux::test::counter<z_tag, std::string> z_type;
     z_type z;
 
     t() { z.value.push_back(Id); }
@@ -54,12 +54,15 @@ result_type& t<Id>::f(s_type& s, boost::contract::virtual_* v) {
     static result_type result(r.str());
     boost::shared_ptr<z_type const> old_z =
             BOOST_CONTRACT_OLDOF(v, z_type::eval(z));
-    boost::shared_ptr<s_type const> old_s =
-            BOOST_CONTRACT_OLDOF(v, s_type::eval(s));
+    boost::shared_ptr<s_type const> old_s;
     boost::contract::guard c = boost::contract::public_function(v, result, this)
         .precondition([&] {
             out << Id << "::f::pre" << std::endl;
             BOOST_CONTRACT_ASSERT(s.value[0] == Id);
+        })
+        .old([&] {
+            out << Id << "::f::old" << std::endl;
+            old_s = BOOST_CONTRACT_OLDOF(v, s_type::eval(s));
         })
         .postcondition([&] (result_type const& result) {
             out << Id << "::f::post" << std::endl;
@@ -89,7 +92,7 @@ struct c
     static void static_invariant() { out << "c::static_inv" << std::endl; }
 
     struct y_tag;
-    typedef boost::contract::aux::test::cpcnt<y_tag, std::string> y_type;
+    typedef boost::contract::aux::test::counter<y_tag, std::string> y_type;
     y_type y;
 
     c() { y.value = "c"; }
@@ -99,13 +102,16 @@ struct c
         static result_type result("none-c");
         boost::shared_ptr<y_type const> old_y =
                 BOOST_CONTRACT_OLDOF(v, y_type::eval(y));
-        boost::shared_ptr<s_type const> old_s =
-                BOOST_CONTRACT_OLDOF(v, s_type::eval(s));
+        boost::shared_ptr<s_type const> old_s;
         boost::contract::guard c = boost::contract::public_function<
                 override_f>(v, result, &c::f, this, s)
             .precondition([&] {
                 out << "c::f::pre" << std::endl;
                 BOOST_CONTRACT_ASSERT(s.value == "C");
+            })
+            .old([&] {
+                out << "c::f::old" << std::endl;
+                old_s = BOOST_CONTRACT_OLDOF(v, s_type::eval(s));
             })
             .postcondition([&] (result_type const& result) {
                 out << "c::f::post" << std::endl;
@@ -167,7 +173,7 @@ struct a
     static void static_invariant() { out << "a::static_inv" << std::endl; }
 
     struct x_tag;
-    typedef boost::contract::aux::test::cpcnt<x_tag, std::string> x_type;
+    typedef boost::contract::aux::test::counter<x_tag, std::string> x_type;
     x_type x;
 
     a() { x.value = "a"; }
@@ -178,13 +184,16 @@ struct a
         static result_type result("none-a");
         boost::shared_ptr<x_type const> old_x =
                 BOOST_CONTRACT_OLDOF(v, x_type::eval(x));
-        boost::shared_ptr<s_type const> old_s =
-                BOOST_CONTRACT_OLDOF(v, s_type::eval(s));
+        boost::shared_ptr<s_type const> old_s;
         boost::contract::guard c = boost::contract::public_function<
                 override_f>(v, result, &a::f, this, s)
             .precondition([&] {
                 out << "a::f::pre" << std::endl;
                 BOOST_CONTRACT_ASSERT(s.value == "A");
+            })
+            .old([&] {
+                out << "a::f::old" << std::endl;
+                old_s = BOOST_CONTRACT_OLDOF(v, s_type::eval(s));
             })
             .postcondition([&] (result_type const& result) {
                 out << "a::f::post" << std::endl;

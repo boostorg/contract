@@ -24,6 +24,7 @@ struct c {
                 out << "c::f::pre" << std::endl;
                 BOOST_CONTRACT_ASSERT(false); // To check derived pre.
             })
+            .old([&] { out << "c::f::old" << std::endl; })
             .postcondition([&] { out << "c::f::post" << std::endl; })
         ;
         out << "c::f::body" << std::endl;
@@ -50,6 +51,7 @@ struct b
                 out << "b::f::pre" << std::endl;
                 BOOST_CONTRACT_ASSERT(false); // To check derived pre.
             })
+            .old([&] { out << "b::f::old" << std::endl; })
             .postcondition([&] { out << "b::f::post" << std::endl; })
         ;
         out << "b::f::body" << std::endl;
@@ -74,6 +76,7 @@ struct a
         boost::contract::guard c = boost::contract::public_function<override_f>(
                 v, &a::f, this)
             .precondition([&] { out << "a::f::pre" << std::endl; })
+            .old([&] { out << "a::f::old" << std::endl; })
             .postcondition([&] { out << "a::f::post" << std::endl; })
         ;
         out << "a::f::body" << std::endl;
@@ -104,6 +107,10 @@ int main() {
         << "b::f::pre" << std::endl
         << "a::f::pre" << std::endl
         
+        << "c::f::old" << std::endl
+        << "b::f::old" << std::endl
+        << "a::f::old" << std::endl
+
         << "a::f::body" << std::endl
         
         << "c::static_inv" << std::endl
@@ -112,6 +119,7 @@ int main() {
         << "b::inv" << std::endl
         << "a::static_inv" << std::endl
         << "a::inv" << std::endl
+
         // Test no post (but still subcontracted inv) because body threw.
     ;
     BOOST_TEST(out.eq(ok.str()));

@@ -1,14 +1,13 @@
 
-// Test multi post around pre error (for free func, but same for all contracts).
+// Test old before pre error (for free func, but same for all contracts).
 
 #include <boost/contract/function.hpp>
 #include <boost/contract/guard.hpp>
 
 void f() {
     boost::contract::guard c = boost::contract::function()
-        .postcondition([] {})
+        .old([] {}) // Error (old before pre).
         .precondition([] {})
-        .postcondition([] {}) // Error (multiple post around pre).
     ;
 }
 

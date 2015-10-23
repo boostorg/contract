@@ -4,7 +4,7 @@
 
 /** @file */
 
-#include <boost/contract/core/set_precondition_postcondition.hpp>
+#include <boost/contract/core/set_precondition_old_postcondition.hpp>
 #include <boost/contract/aux_/operation/function.hpp>
 /** @cond */
 #include <boost/make_shared.hpp>
@@ -12,8 +12,8 @@
 
 namespace boost { namespace contract {
 
-set_precondition_postcondition<> function() {
-    return set_precondition_postcondition<>(boost::make_shared<
+set_precondition_old_postcondition<> function() {
+    return set_precondition_old_postcondition<>(boost::make_shared<
             boost::contract::aux::function>());
 }
 

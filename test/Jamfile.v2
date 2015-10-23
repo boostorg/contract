@@ -31,14 +31,16 @@ test-suite disable :
 
 test-suite set :
     [ subdir-run set : nothing ]
-    [ subdir-run set : pre_only ]
-    [ subdir-run set : post_only ]
-    [ subdir-run set : pre_post ]
-    [ subdir-run set : post_pre ]
-    [ subdir-compile-fail set : pre_pre-error ]
-    [ subdir-compile-fail set : post_post-error ]
-    [ subdir-compile-fail set : pre_post_pre-error ]
-    [ subdir-compile-fail set : post_pre_post-error ]
+    [ subdir-run set : only_pre ]
+    [ subdir-run set : only_old ]
+    [ subdir-run set : only_post ]
+    [ subdir-run set : both_pre_old ]
+    [ subdir-run set : both_old_post ]
+    [ subdir-run set : both_pre_post ]
+    [ subdir-run set : all_pre_old_post ]
+    [ subdir-compile-fail set : old_pre-error ]
+    [ subdir-compile-fail set : post_old-error ]
+    [ subdir-compile-fail set : post_pre-error ]
 ;
 
 test-suite call_if :

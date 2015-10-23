@@ -6,6 +6,7 @@
 #include <boost/shared_ptr.hpp>
 #include <boost/noncopyable.hpp>
 #include <queue>
+#include <stack>
 /** @endcond */
     
 namespace boost {
@@ -25,17 +26,22 @@ private:
     enum action_enum {
         // virtual_ always hold/passed by ptr so null ptr used for user call.
         no_action,
-        copy_oldof,
+        push_old_init,
         check_entry_inv,
         check_pre,
+        call_old_copy,
+        push_old_copy,
+        check_exit_inv,
+        pop_old_copy,
         check_post,
-        check_exit_inv
+        pop_old_init = check_post // These must be the same value.
     };
 
-    explicit virtual_(action_enum a) : action_(a), old_values_() {}
+    explicit virtual_(action_enum a) : action_(a) {}
 
     action_enum action_;
-    std::queue<boost::shared_ptr<void> > old_values_;
+    std::queue<boost::shared_ptr<void> > old_inits_;
+    std::stack<boost::shared_ptr<void> > old_copies_;
     void* result_;
 
     // Friendship used to limit library's public API.

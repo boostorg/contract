@@ -4,10 +4,23 @@
 
 /** @file */
 
-#include <boost/contract/aux_/condition/check_pre_only.hpp>
+#include <boost/contract/aux_/condition/check_base.hpp>
 /** @cond */
 #include <boost/shared_ptr.hpp>
 /** @endcond */
+
+namespace boost {
+    namespace contract {
+        template<typename>
+        class set_precondition_old_postcondition;
+        
+        template<typename>
+        class set_old_postcondition;
+        
+        template<typename>
+        class set_postcondition_only;
+    }
+}
     
 namespace boost { namespace contract {
 
@@ -21,15 +34,18 @@ public:
     // No set member functions here.
 
 private:
-    typedef boost::shared_ptr<boost::contract::aux::check_pre_only> check_ptr;
-    
-    explicit set_nothing(check_ptr check) : check_(check) {}
-    
+    typedef boost::shared_ptr<boost::contract::aux::check_base> check_ptr;
+    explicit set_nothing(check_ptr check): check_(check) {}
     check_ptr check_;
 
     // Friendship used to limit library's public API.
     friend class guard;
-    friend class set_precondition_only;
+
+    template<typename>
+    friend class set_precondition_old_postcondition;
+    
+    template<typename>
+    friend class set_old_postcondition;
 
     template<typename>
     friend class set_postcondition_only;

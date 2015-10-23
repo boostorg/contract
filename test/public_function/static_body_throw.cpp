@@ -17,12 +17,9 @@ struct a {
 
     static void f() {
         boost::contract::guard c = boost::contract::public_function<a>()
-            .precondition([&] {
-                out << "a::f::pre" << std::endl;
-            })
-            .postcondition([&] {
-                out << "a::f::post" << std::endl;
-            })
+            .precondition([&] { out << "a::f::pre" << std::endl; })
+            .old([&] { out << "a::f::old" << std::endl; })
+            .postcondition([&] { out << "a::f::post" << std::endl; })
         ;
         out << "a::f::body" << std::endl;
         throw a::e();
@@ -40,6 +37,7 @@ int main() {
     ok.str(""); ok
         << "a::static_inv" << std::endl
         << "a::f::pre" << std::endl
+        << "a::f::old" << std::endl
         << "a::f::body" << std::endl
         << "a::static_inv" << std::endl
         // Test no post (but still static inv) because body threw.

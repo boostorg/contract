@@ -19,9 +19,8 @@ struct c {
 
     ~c() {
         boost::contract::guard c = boost::contract::destructor(this)
-            .postcondition([&] {
-                out << "c::dtor::post" << std::endl;
-            })
+            .old([&] { out << "c::dtor::old" << std::endl; })
+            .postcondition([] { out << "c::dtor::post" << std::endl; })
         ;
         out << "c::dtor::body" << std::endl;
         // Do not throw (from inheritance root).
@@ -42,9 +41,8 @@ struct b
 
     ~b() {
         boost::contract::guard c = boost::contract::destructor(this)
-            .postcondition([&] {
-                out << "b::dtor::post" << std::endl;
-            })
+            .old([&] { out << "b::dtor::old" << std::endl; })
+            .postcondition([] { out << "b::dtor::post" << std::endl; })
         ;
         out << "b::dtor::body" << std::endl;
         throw b::e(); // Test body throw (from inheritance mid branch).
@@ -63,9 +61,8 @@ struct a
 
     ~a() {
         boost::contract::guard c = boost::contract::destructor(this)
-            .postcondition([&] {
-                out << "a::dtor::post" << std::endl;
-            })
+            .old([&] { out << "a::dtor::old" << std::endl; })
+            .postcondition([] { out << "a::dtor::post" << std::endl; })
         ;
         out << "a::dtor::body" << std::endl;
         // Do not throw (from inheritance leaf).
@@ -77,6 +74,7 @@ void t() {
     ok.str(""); ok
         << "a::static_inv" << std::endl
         << "a::inv" << std::endl
+        << "a::dtor::old" << std::endl
         << "a::dtor::body" << std::endl
         << "a::static_inv" << std::endl
         // Test a destructed (so only static_inv and post).
@@ -84,10 +82,12 @@ void t() {
 
         << "b::static_inv" << std::endl
         << "b::inv" << std::endl
+        << "b::dtor::old" << std::endl
         << "b::dtor::body" << std::endl
 
+// TODO: Document this (even if dtors should never throw in C++ anyways...).
 // Unfortunately, only Clang gets this right... Both MSVC and GCC seem to stop
-// everything as soon as the destructor throw an exception.
+// everything as soon as the destructor throws an exception...
 #ifdef BOOST_CLANG
         // Test b not destructed (so both static_inv and inv, but no post).
         << "b::static_inv" << std::endl
@@ -95,6 +95,7 @@ void t() {
         
         << "c::static_inv" << std::endl
         << "c::inv" << std::endl
+        << "c::dtor::old" << std::endl
         << "c::dtor::body" << std::endl
         // Test c not destructed (so both static_inv and inv, but no post).
         << "c::static_inv" << std::endl
@@ -113,7 +114,7 @@ int main() {
         a aa;
     } // Call destructor (which calls t on throw).
 
-    BOOST_TEST(false); // Must not exit from here, but via t.
+    BOOST_TEST(false); // Must not exit from here, but from t.
     return boost::report_errors();
 }
 

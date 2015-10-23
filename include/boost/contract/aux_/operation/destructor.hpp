@@ -19,16 +19,25 @@ public:
     explicit destructor(C* obj) :
         check_pre_post_inv</* R = */ none, C>(
                 boost::contract::from_destructor, obj)
-    {
-        BOOST_CONTRACT_AUX_CHECK_GUARD_OR_RETURN
-        // Obj exists (before dtor body) so check static and non-static inv.
-        this->check_entry_inv();
-    }
+    {}
 
-    // Dtor cannot have pre because it has no parameters.
+private:
+    void init() /* override */ {
+        if(check_guard::checking()) return;
+        {
+            check_guard checking;
+            // Obj exists (before dtor body) so check static and non-static inv.
+            this->check_entry_inv();
+            // Dtor cannot have pre because it has no parameters.
+        }
+        this->copy_old();
+    }
     
+public:
     ~destructor() {
-        BOOST_CONTRACT_AUX_CHECK_GUARD_OR_RETURN
+        this->assert_guarded();
+        if(check_guard::checking()) return;
+        check_guard checking;
         // If dtor body threw, obj still exists so check subcontracted static
         // and non-static inv (but no post because of throw). Otherwise, obj
         // destructed so check static inv and post (even if there is no obj

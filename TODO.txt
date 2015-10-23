@@ -1,23 +1,15 @@
 
-DOCS ---------------------------------------------------------------------------
-
-*   Add a comment to the docs that for multi-threading, a recursive (for
-    virtual calls?) scoped lock can appear before contract code.
-
-*   Look at Andrzej's discussion on preconditions:
-    https://akrzemi1.wordpress.com/2013/01/04/preconditions-part-i/
-
 IMPLEMENTATION -----------------------------------------------------------------
 
 *   Should C++11 move preserve class invariants at exit and/or on throw?
     *   If not, how I can program C++11 move operations with the lib? (If I user
         boost::contract::function then I don't check inv at entry...)
 
-*   Volatile members and class invariants.
+->  Volatile members and class invariants.
 
 *   Disable pre, post, and/or entry/exit inv (all combinations).
 
-*   Deep-search functions to override in base_types.
+->  Deep-search functions to override in base_types.
     *   And compiler-error if public_function<override...> does not find any
         function to actually override.
 
@@ -27,7 +19,7 @@ IMPLEMENTATION -----------------------------------------------------------------
 *   What shall I do with unions... can/shall I contract them? Check-out which
     members C++11 unions can have (ctors, dtor, etc.).
 
-*   Make work the case a pure virtual uses boost::optional<T> result but an
+->  Make work the case a pure virtual uses boost::optional<T> result but an
     overriding function uses just T result, and the other way around too.
 
 *   What happens to OLDOF and related assertions if old-of expression type T
@@ -45,11 +37,28 @@ IMPLEMENTATION -----------------------------------------------------------------
         then... but maybe in these cases users can just
         BOOST_STATIC_ASSERT(has_oldof<???>).
 
-TESTING ------------------------------------------------------------------------
+->  Implement .old(..)
+    *   Also if .old(...) throws, call contract failure handlers (more correct),
+        but if old declaration throws (including = BOOST_CONTRACT_OLDOF(...))
+        function throws (less correct).
+    *   Add .old(...) to all existing test?
+    *   Add .old(...) to set/ tests.
 
-*   .old(...)
-    *   I can add this to all existing tests...
-    *   Also include in set/ tests.
+*   Library data (already checking guard, failure handlers, etc.).
+    *   Move in src/ files (also re-design impl to move as much code as possible
+        (i.e., min templates) to src/ for faster compile-times.
+    *   Thread safety (of lib's data if THREAD_SAFE #defined).
+
+->  If an overriding functions does not specify preconditions, make sure the
+    overridden preconditions are checked (and not that subcontracted
+    preconditions always pass just because the overriding function does not
+    specify them).
+
+->  Use boost::contract::old_ptr instead of shared_ptr for old-of types (so I
+    can later change this type in future rev of the library if I need to). Only
+    export operator-> and operator* (but not other shared_ptr operations).
+
+TESTING ------------------------------------------------------------------------
 
 *   Use MSVC 2013 (instead of MSVC 2010)
     *   I should be able to use lambdas also in ctor templates member inits...
@@ -63,6 +72,11 @@ TESTING ------------------------------------------------------------------------
     *   Test what happens if bodies throw (e.g., public func should check inv,
         dtor too, but ctor not, etc.)... test all contract types when bodies
         throw.
+    *   Test what happens if old expr thros (with and without .old(...)).
+
+*   Test subcontracting when:
+    *   Overridden missing pre and/or post and/or inv.
+    *   Overridden missing from direct parent, but found in grand parent.
 
 *   Contracts disabled while checking contracts.
     *   Add a test to disable/ similar to n1962/factorial.cpp, where the
@@ -82,15 +96,22 @@ TESTING ------------------------------------------------------------------------
     princ does not apply here because base protected virtual cannot be called
     by users so it cannot be "substituted")... what will this lib do?
 
-*   If an overriding functions does not specify preconditions, make sure the
-    overridden preconditions are checked (and not that subcontracted
-    preconditions always pass just because the overriding function does not
-    specify them).
-
 *   Test function and array argument types like:
     `void f(int x[2][3], int (*g)(int))`
 
 *   Test there's never ambiguity among the overloaded public_function APIs
     (e.g., between public_function(v, func_ptr, this) and
     public_function<O>(v, &a::f, this), etc.).
+
+DOCS ---------------------------------------------------------------------------
+
+*   Add a comment to the docs that for multi-threading, a recursive (for
+    virtual calls?) scoped lock can appear before contract code.
+
+*   Look at Andrzej's discussion on preconditions:
+    https://akrzemi1.wordpress.com/2013/01/04/preconditions-part-i/
+
+*   pre > old > post all optional, but when specified must be specified in that
+    order (rationale, this makes contract code more readable and simplify lib
+    impl.)
 

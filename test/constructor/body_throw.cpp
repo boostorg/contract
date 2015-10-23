@@ -26,9 +26,8 @@ struct c
         })
     {
         boost::contract::guard c = boost::contract::constructor(this)
-            .postcondition([&] {
-                out << "c::ctor::post" << std::endl;
-            })
+            .old([&] { out << "c::ctor::old" << std::endl; })
+            .postcondition([&] { out << "c::ctor::post" << std::endl; })
         ;
         out << "c::ctor::body" << std::endl;
         // Do not throw (from inheritance root).
@@ -48,14 +47,13 @@ struct b
     struct e {};
 
     b() :
-        boost::contract::constructor_precondition<b>([&] {
+        boost::contract::constructor_precondition<b>([] {
             out << "b::ctor::pre" << std::endl;
         })
     {
         boost::contract::guard c = boost::contract::constructor(this)
-            .postcondition([&] {
-                out << "b::ctor::post" << std::endl;
-            })
+            .old([&] { out << "b::ctor::old" << std::endl; })
+            .postcondition([&] { out << "b::ctor::post" << std::endl; })
         ;
         out << "b::ctor::body" << std::endl;
         throw b::e(); // Test body throw (from inheritance mid branch).
@@ -78,9 +76,8 @@ struct a
         })
     {
         boost::contract::guard c = boost::contract::constructor(this)
-            .postcondition([&] {
-                out << "a::ctor::post" << std::endl;
-            })
+            .old([&] { out << "a::ctor::old" << std::endl; })
+            .postcondition([&] { out << "a::ctor::post" << std::endl; })
         ;
         out << "a::ctor::body" << std::endl;
         // Do not throw (from inheritance leaf).
@@ -101,12 +98,14 @@ int main() {
         
         << "c::ctor::pre" << std::endl
         << "c::static_inv" << std::endl
+        << "c::ctor::old" << std::endl
         << "c::ctor::body" << std::endl
         << "c::static_inv" << std::endl
         << "c::inv" << std::endl
         << "c::ctor::post" << std::endl
         
         << "b::static_inv" << std::endl
+        << "b::ctor::old" << std::endl
         << "b::ctor::body" << std::endl
         // Test b body threw so only static inv exit checked and then C++
         // construction mechanism quits.

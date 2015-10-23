@@ -23,6 +23,10 @@ int main() {
         << "e::f::pre" << std::endl
         << "c::f::pre" << std::endl
 
+        << "d::f::old" << std::endl
+        << "e::f::old" << std::endl
+        << "c::f::old" << std::endl
+
         << "c::f::body" << std::endl
         
         << "d::static_inv" << std::endl
@@ -32,8 +36,11 @@ int main() {
         << "c::static_inv" << std::endl
         << "c::inv" << std::endl
         
+        << "d::f::old" << std::endl
         << "d::f::post" << std::endl
+        << "e::f::old" << std::endl
         << "e::f::post" << std::endl
+        // No old call here because not a base object.
         << "c::f::post" << std::endl
     ;
     BOOST_TEST(out.eq(ok.str()));

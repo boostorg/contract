@@ -2,7 +2,7 @@
 // Test destructor subcontracting.
 
 #include "../aux_/oteststream.hpp"
-#include "../aux_/cpcnt.hpp"
+#include "../aux_/counter.hpp"
 #include <boost/contract/destructor.hpp>
 #include <boost/contract/base_types.hpp>
 #include <boost/contract/assert.hpp>
@@ -24,16 +24,20 @@ struct t {
         BOOST_CONTRACT_ASSERT(l.value >= 0);
     }
 
-    struct l_tag; typedef boost::contract::aux::test::cpcnt<l_tag, int> l_type;
+    struct l_tag;
+    typedef boost::contract::aux::test::counter<l_tag, int> l_type;
     static l_type l;
 
     explicit t() : k_(-1) { ++l.value; }
 
     virtual ~t() {
-        boost::shared_ptr<l_type const> old_l =
-                BOOST_CONTRACT_OLDOF(l_type::eval(l));
+        boost::shared_ptr<l_type const> old_l;
         boost::contract::guard c = boost::contract::destructor(this)
-            .postcondition([old_l] {
+            .old([&] {
+                out << Id << "::dtor::old" << std::endl;
+                old_l = BOOST_CONTRACT_OLDOF(l_type::eval(l));
+            })
+            .postcondition([&old_l] {
                 out << Id << "::dtor::post" << std::endl;
                 BOOST_CONTRACT_ASSERT(t<Id>::l.value == old_l->value - 1);
             })
@@ -67,7 +71,8 @@ struct c
         BOOST_CONTRACT_ASSERT(m.value >= 0);
     }
     
-    struct m_tag; typedef boost::contract::aux::test::cpcnt<m_tag, int> m_type;
+    struct m_tag;
+    typedef boost::contract::aux::test::counter<m_tag, int> m_type;
     static m_type m;
 
     explicit c() : j_(-1) { ++m.value; }
@@ -76,7 +81,11 @@ struct c
         boost::shared_ptr<m_type const> old_m =
                 BOOST_CONTRACT_OLDOF(m_type::eval(m));
         boost::contract::guard c = boost::contract::destructor(this)
-            .postcondition([old_m] {
+            .old([&] {
+                out << "c::dtor::old" << std::endl;
+                // Test old-of assignment above instead.
+            })
+            .postcondition([&old_m] {
                 out << "c::dtor::post" << std::endl;
                 BOOST_CONTRACT_ASSERT(c::m.value == old_m->value - 1);
             })
@@ -116,16 +125,20 @@ struct a
         BOOST_CONTRACT_ASSERT(n.value >= 0);
     }
     
-    struct n_tag; typedef boost::contract::aux::test::cpcnt<n_tag, int> n_type;
+    struct n_tag;
+    typedef boost::contract::aux::test::counter<n_tag, int> n_type;
     static n_type n;
 
     explicit a() : i_(-1) { ++n.value; }
 
     virtual ~a() {
-        boost::shared_ptr<n_type const> old_n =
-                BOOST_CONTRACT_OLDOF(n_type::eval(n));
+        boost::shared_ptr<n_type const> old_n;
         boost::contract::guard c = boost::contract::destructor(this)
-            .postcondition([old_n] {
+            .old([&] {
+                out << "a::dtor::old" << std::endl;
+                old_n = BOOST_CONTRACT_OLDOF(n_type::eval(n));
+            })
+            .postcondition([&old_n] {
                 out << "a::dtor::post" << std::endl;
                 BOOST_CONTRACT_ASSERT(a::n.value == old_n->value - 1);
             })
@@ -149,6 +162,7 @@ int main() {
     ok.str(""); ok
         << "a::static_inv" << std::endl
         << "a::inv" << std::endl
+        << "a::dtor::old" << std::endl
         << "a::dtor::body" << std::endl
         // Test static inv, but not const inv, checked after destructor body.
         << "a::static_inv" << std::endl
@@ -156,12 +170,14 @@ int main() {
 
         << "c::static_inv" << std::endl
         << "c::inv" << std::endl
+        << "c::dtor::old" << std::endl
         << "c::dtor::body" << std::endl
         << "c::static_inv" << std::endl
         << "c::dtor::post" << std::endl
         
         << "e::static_inv" << std::endl
         << "e::inv" << std::endl
+        << "e::dtor::old" << std::endl
         << "e::dtor::body" << std::endl
         << "e::static_inv" << std::endl
         << "e::dtor::post" << std::endl
@@ -169,6 +185,7 @@ int main() {
         // Test check also private bases (because part of C++ destruction).
         << "q::static_inv" << std::endl
         << "q::inv" << std::endl
+        << "q::dtor::old" << std::endl
         << "q::dtor::body" << std::endl
         << "q::static_inv" << std::endl
         << "q::dtor::post" << std::endl
@@ -176,24 +193,45 @@ int main() {
         // Test check also protected bases (because part of C++ destruction).
         << "p::static_inv" << std::endl
         << "p::inv" << std::endl
+        << "p::dtor::old" << std::endl
         << "p::dtor::body" << std::endl
         << "p::static_inv" << std::endl
         << "p::dtor::post" << std::endl
         
         << "d::static_inv" << std::endl
         << "d::inv" << std::endl
+        << "d::dtor::old" << std::endl
         << "d::dtor::body" << std::endl
         << "d::static_inv" << std::endl
         << "d::dtor::post" << std::endl
     ;
     BOOST_TEST(out.eq(ok.str()));
 
-    BOOST_TEST_EQ(a::n.copies(), 1); BOOST_TEST_EQ(a::n.evals(), 1);
-    BOOST_TEST_EQ(c::m.copies(), 1); BOOST_TEST_EQ(c::m.evals(), 1);
-    BOOST_TEST_EQ(t<'d'>::l.copies(), 1); BOOST_TEST_EQ(t<'d'>::l.evals(), 1);
-    BOOST_TEST_EQ(t<'p'>::l.copies(), 1); BOOST_TEST_EQ(t<'p'>::l.evals(), 1);
-    BOOST_TEST_EQ(t<'q'>::l.copies(), 1); BOOST_TEST_EQ(t<'q'>::l.evals(), 1);
-    BOOST_TEST_EQ(t<'e'>::l.copies(), 1); BOOST_TEST_EQ(t<'e'>::l.evals(), 1);
+    // Following destroy only copies (actual objects are static data members).
+
+    BOOST_TEST_EQ(a::n_type::copies(), 1);
+    BOOST_TEST_EQ(a::n_type::evals(), 1);
+    BOOST_TEST_EQ(a::n_type::copies(), a::n_type::dtors()); // No leak.
+    
+    BOOST_TEST_EQ(c::m_type::copies(), 1);
+    BOOST_TEST_EQ(c::m_type::evals(), 1);
+    BOOST_TEST_EQ(c::m_type::copies(), c::m_type::dtors()); // No leak.
+    
+    BOOST_TEST_EQ(t<'d'>::l_type::copies(), 1);
+    BOOST_TEST_EQ(t<'d'>::l_type::evals(), 1);
+    BOOST_TEST_EQ(t<'d'>::l_type::copies(), t<'d'>::l_type::dtors()); // No leak
+    
+    BOOST_TEST_EQ(t<'p'>::l_type::copies(), 1);
+    BOOST_TEST_EQ(t<'p'>::l_type::evals(), 1);
+    BOOST_TEST_EQ(t<'p'>::l_type::copies(), t<'p'>::l_type::dtors()); // No leak
+    
+    BOOST_TEST_EQ(t<'q'>::l_type::copies(), 1);
+    BOOST_TEST_EQ(t<'q'>::l_type::evals(), 1);
+    BOOST_TEST_EQ(t<'q'>::l_type::copies(), t<'q'>::l_type::dtors()); // No leak
+    
+    BOOST_TEST_EQ(t<'e'>::l_type::copies(), 1);
+    BOOST_TEST_EQ(t<'e'>::l_type::evals(), 1);
+    BOOST_TEST_EQ(t<'e'>::l_type::copies(), t<'e'>::l_type::dtors()); // No leak
 
     return boost::report_errors();
 }

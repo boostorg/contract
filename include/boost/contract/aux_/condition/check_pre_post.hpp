@@ -2,10 +2,10 @@
 #ifndef BOOST_CONTRACT_AUX_CHECK_PRE_POST_HPP_
 #define BOOST_CONTRACT_AUX_CHECK_PRE_POST_HPP_
 
-#include <boost/contract/core/exception.hpp>
-#include <boost/contract/aux_/condition/check_pre_only.hpp>
+#include <boost/contract/aux_/condition/check_base.hpp>
 #include <boost/contract/aux_/debug.hpp>
 #include <boost/contract/aux_/none.hpp>
+#include <boost/contract/core/exception.hpp>
 /** @cond */
 #include <boost/optional.hpp>
 #include <boost/function.hpp> // TODO: Can I reduce boost.function overhead?
@@ -24,17 +24,15 @@ namespace boost { namespace contract { namespace aux {
 // the base uses optional but the derived does not). Fix that.
 
 template<typename R>
-class check_pre_post : public check_pre_only {
+class check_pre_post : public check_base {
 public:
-    explicit check_pre_post(boost::contract::from from) :
-            check_pre_only(from) {}
+    explicit check_pre_post(boost::contract::from from) : check_base(from) {}
 
     virtual ~check_pre_post() {}
 
     template<typename F>
     void set_post(F const& f) {
         BOOST_CONTRACT_ERROR_postcondition_result_parameter_required = f;
-        post_available();
     }
 
 protected:
@@ -46,26 +44,22 @@ protected:
         } catch(...) { boost::contract::postcondition_failed(from()); }
     }
     
-    virtual void post_available() {}
-
 private:
     boost::function<void (R const&)>
-    BOOST_CONTRACT_ERROR_postcondition_result_parameter_required;
+            BOOST_CONTRACT_ERROR_postcondition_result_parameter_required;
 };
 
 // TODO: Try to limit code repetition between code below and above.
 template<>
-class check_pre_post<none> : public check_pre_only {
+class check_pre_post<none> : public check_base {
 public:
-    explicit check_pre_post(boost::contract::from from) :
-            check_pre_only(from) {}
+    explicit check_pre_post(boost::contract::from from) : check_base(from) {}
 
     virtual ~check_pre_post() {}
 
     template<typename F>
     void set_post(F const& f) {
         BOOST_CONTRACT_ERROR_postcondition_result_parameter_not_allowed = f;
-        post_available();
     }
 
 protected:
@@ -79,11 +73,9 @@ protected:
     
     void check_post(none&) { check_post(); }
     
-    virtual void post_available() {}
-
 private:
     boost::function<void ()>
-    BOOST_CONTRACT_ERROR_postcondition_result_parameter_not_allowed;
+            BOOST_CONTRACT_ERROR_postcondition_result_parameter_not_allowed;
 };
 
 } } }

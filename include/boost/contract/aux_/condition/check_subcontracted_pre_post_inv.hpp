@@ -89,15 +89,15 @@ public:
     virtual ~check_subcontracted_pre_post_inv() {
         if(!base_call_ && v_) delete v_;
     }
-    
+
 protected:
-    void copy_subcontracted_oldof() {
-        // Old values of overloading func. on stack (so no `f` for copy_oldof).
-        check(boost::contract::virtual_::copy_oldof);
+    void init_subcontracted_old() {
+        // Old values of overloaded func on stack (so no functor `f` here).
+        execute(boost::contract::virtual_::push_old_init);
     }
     
     void check_subcontracted_entry_inv() {
-        check(boost::contract::virtual_::check_entry_inv,
+        execute(boost::contract::virtual_::check_entry_inv,
                 &check_subcontracted_pre_post_inv::check_entry_inv);
     }
     
@@ -119,26 +119,47 @@ protected:
         }
     }
 
+    void copy_subcontracted_old() {
+        execute(boost::contract::virtual_::call_old_copy,
+                &check_subcontracted_pre_post_inv::copy_old_v);
+    }
+
     void check_subcontracted_exit_inv() {
-        check(boost::contract::virtual_::check_exit_inv,
+        execute(boost::contract::virtual_::check_exit_inv,
                 &check_subcontracted_pre_post_inv::check_exit_inv);
     }
 
     void check_subcontracted_post() {
-        check(boost::contract::virtual_::check_post,
-                &check_subcontracted_pre_post_inv::check_post_result);
+        execute(boost::contract::virtual_::check_post,
+                &check_subcontracted_pre_post_inv::check_post_v);
     }
 
     bool base_call() const { return base_call_; }
 
 private:
-    void check_post_result() {
+    void check_post_v() {
+        if(base_call_) {
+            boost::contract::virtual_::action_enum a = v_->action_;
+            v_->action_ = boost::contract::virtual_::pop_old_copy;
+            this->copy_old();
+            v_->action_ = a;
+        }
         // Ternary op here avoids extra copy of R (because constructing a &).
         R& r = base_call_ ? *static_cast<R*>(v_->result_) : r_;
         this->check_post(r);
     }
+
+    void copy_old_v() {
+        boost::contract::virtual_::action_enum a;
+        if(base_call_) {
+            a = v_->action_;
+            v_->action_ = boost::contract::virtual_::push_old_copy;
+        }
+        this->copy_old();
+        if(base_call_) v_->action_ = a;
+    }
     
-    void check(boost::contract::virtual_::action_enum a,
+    void execute(boost::contract::virtual_::action_enum a,
             void (check_subcontracted_pre_post_inv::* f)() = 0) {
         if(!base_call_ || v_->action_ == a) {
             if(v_) {
