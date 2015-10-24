@@ -6,7 +6,7 @@
 #include <boost/contract/destructor.hpp>
 #include <boost/contract/base_types.hpp>
 #include <boost/contract/assert.hpp>
-#include <boost/contract/oldof.hpp>
+#include <boost/contract/old.hpp>
 #include <boost/contract/guard.hpp>
 #include <boost/detail/lightweight_test.hpp>
 #include <sstream>
@@ -31,7 +31,7 @@ struct t {
     explicit t() : k_(-1) { ++l.value; }
 
     virtual ~t() {
-        boost::shared_ptr<l_type const> old_l;
+        boost::contract::old_ptr<l_type> old_l;
         boost::contract::guard c = boost::contract::destructor(this)
             .old([&] {
                 out << Id << "::dtor::old" << std::endl;
@@ -78,7 +78,7 @@ struct c
     explicit c() : j_(-1) { ++m.value; }
 
     virtual ~c() {
-        boost::shared_ptr<m_type const> old_m =
+        boost::contract::old_ptr<m_type> old_m =
                 BOOST_CONTRACT_OLDOF(m_type::eval(m));
         boost::contract::guard c = boost::contract::destructor(this)
             .old([&] {
@@ -132,7 +132,7 @@ struct a
     explicit a() : i_(-1) { ++n.value; }
 
     virtual ~a() {
-        boost::shared_ptr<n_type const> old_n;
+        boost::contract::old_ptr<n_type> old_n;
         boost::contract::guard c = boost::contract::destructor(this)
             .old([&] {
                 out << "a::dtor::old" << std::endl;

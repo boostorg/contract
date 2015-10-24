@@ -25,6 +25,12 @@ test-suite function :
     [ subdir-run function : body_throw ]
 ;
 
+test-suite oldof :
+    [ subdir-run oldof : no_macros ]
+    [ subdir-run oldof : auto ]
+    [ subdir-compile-fail oldof : no_make_old-error ]
+;
+
 test-suite disable :
     [ subdir-run disable : checking ]
 ;

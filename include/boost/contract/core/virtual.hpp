@@ -46,7 +46,7 @@ private:
 
     // Friendship used to limit library's public API.
     friend bool copy_old(virtual_*);
-    friend class old;
+    friend class convertible_old;
 
     template<class, typename, typename, class, typename, typename>
     friend class boost::contract::aux::check_subcontracted_pre_post_inv;

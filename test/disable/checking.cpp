@@ -3,11 +3,10 @@
 
 #include "../aux_/oteststream.hpp"
 #include "../aux_/counter.hpp"
-#include <boost/contract/oldof.hpp>
+#include <boost/contract/old.hpp>
 #include <boost/contract/guard.hpp>
 #include <boost/contract/public_function.hpp>
 #include <boost/contract/assert.hpp>
-#include <boost/shared_ptr.hpp>
 #include <boost/detail/lightweight_test.hpp>
 #include <sstream>
 
@@ -22,7 +21,7 @@ struct a {
 
     int f(x_type& x) {
         int result;
-        boost::shared_ptr<x_type const> old_x = BOOST_CONTRACT_OLDOF(
+        boost::contract::old_ptr<x_type> old_x = BOOST_CONTRACT_OLDOF(
                 x_type::eval(x));
         boost::contract::guard c = boost::contract::public_function(this)
             .precondition([&] { out << "a::f::pre" << std::endl; })

@@ -11,7 +11,7 @@
 #include <boost/contract/destructor.hpp>
 #include <boost/contract/function.hpp>
 #include <boost/contract/guard.hpp>
-#include <boost/contract/oldof.hpp>
+#include <boost/contract/old.hpp>
 #include <boost/contract/override.hpp>
 #include <boost/contract/public_function.hpp>
 

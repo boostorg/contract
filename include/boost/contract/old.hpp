@@ -1,6 +1,6 @@
 
-#ifndef BOOST_CONTRACT_OLDOF_HPP_
-#define BOOST_CONTRACT_OLDOF_HPP_
+#ifndef BOOST_CONTRACT_OLD_HPP_
+#define BOOST_CONTRACT_OLD_HPP_
 
 /** @file */
 
@@ -23,15 +23,14 @@ BOOST_CONTRACT_ERROR_macro_OLDOF_requires_variadic_macros_otherwise_manually_pro
 
 /** @cond */
 #include <boost/config.hpp>
+#include <boost/spirit/home/classic/core/safe_bool.hpp>
 #include <boost/preprocessor/facilities/overload.hpp>
 #include <boost/preprocessor/facilities/empty.hpp>
 #include <boost/preprocessor/cat.hpp>
 /** @endcond */
 
-// TODO: Consider providing an .old(...) setter for all contracts that will be
-// called to copy old-values before body execution but after pre/inv, and will
-// call postcondition failure handler in case oldof calc throws (instead of
-// making function throw).
+// TODO: Can I use unique_ptr instead of shared ptr? If not here... maybe for
+// holding contracts, etc.
 
 /* PUBLIC */
 
@@ -48,14 +47,14 @@ BOOST_CONTRACT_ERROR_macro_OLDOF_has_invalid_number_of_arguments_, \
 
 #define BOOST_CONTRACT_ERROR_macro_OLDOF_has_invalid_number_of_arguments_1( \
         value) \
-    BOOST_CONTRACT_OLDOF_AUTO_TYPEOF_(value)(boost::contract::old( \
-        boost::contract::copy_old() ? (value) : boost::contract::old() \
+    BOOST_CONTRACT_OLDOF_AUTO_TYPEOF_(value)(boost::contract::make_old( \
+        boost::contract::copy_old() ? (value) : boost::contract::make_old() \
     ))
 
 #define BOOST_CONTRACT_ERROR_macro_OLDOF_has_invalid_number_of_arguments_2( \
         v, value) \
-    BOOST_CONTRACT_OLDOF_AUTO_TYPEOF_(value)(boost::contract::old(v, \
-        boost::contract::copy_old(v) ? (value) : boost::contract::old() \
+    BOOST_CONTRACT_OLDOF_AUTO_TYPEOF_(value)(boost::contract::make_old(v, \
+        boost::contract::copy_old(v) ? (value) : boost::contract::make_old() \
     ))
 
 #ifdef BOOST_NO_CXX11_AUTO_DECLARATIONS
@@ -66,7 +65,7 @@ BOOST_CONTRACT_ERROR_macro_OLDOF_has_invalid_number_of_arguments_, \
 /** @endcond */
 // Explicitly force shared_ptr<T const> conversion to allow for C++11 auto decl.
 #   define BOOST_CONTRACT_OLDOF_AUTO_TYPEOF_(value) \
-        boost::shared_ptr<BOOST_TYPEOF(value) const>
+        boost::contract::old_ptr<BOOST_TYPEOF(value)>
 #endif
 
 #endif // VARIADICS
@@ -74,6 +73,31 @@ BOOST_CONTRACT_ERROR_macro_OLDOF_has_invalid_number_of_arguments_, \
 /* CODE */
 
 namespace boost { namespace contract {
+
+// Used to avoid exposing entire shared_ptr API (e.g., client stealing
+// ownership of this pointer could break this lib).
+template<typename T>
+class old_ptr // Copyable (as *).
+    : boost::spirit::classic::safe_bool<old_ptr<T> >
+{ 
+public:
+    explicit old_ptr() {}
+    
+    // operator safe-bool() const (see below).
+
+    T const& operator*() const { return ptr_.operator*(); }
+    T const* operator->() const { return ptr_.operator->(); }
+
+private:
+    explicit old_ptr(boost::shared_ptr<T const> ptr) : ptr_(ptr) {}
+
+    bool operator_bool() const { return ptr_.operator bool(); }
+
+    boost::shared_ptr<T const> ptr_;
+
+    friend struct boost::spirit::classic::safe_bool<old_ptr>;
+    friend class convertible_old;
+};
 
 bool copy_old() {
 #if BOOST_CONTRACT_CONFIG_NO_POSTCONDITIONS
@@ -93,90 +117,47 @@ bool copy_old(virtual_* v) {
 #endif
 }
 
-// TODO: Rename this make_old (that is is different from .old(...)) and add
-// old_ptr so with and without macros:
-//  auto x = BOOST_CONTRACT_OLDOF(v, x);
-//  old_ptr<T> x = BOOST_CONTRACT_OLDOF(v, x);
-//  old_ptr<T> x = make_old(v, copy_old(v) ? x : make_old());
-// plus, make_old() return old_erasure type without operator old_ptr<T> so
-// following correctly gives compiler error:
-//  old_ptr<T> = copy_old(v) ? x : make_old();
-// 
-// template<typename T>
-// class old_ptr {
-// public:
-//     T const& operator*() const;
-//     T const* operator->() const;
-// 
-// private:
-//     boost::shared_ptr<T> ptr_;
-// };
-// 
-// class old_erasure {
-// public:
-//     // Implicitly called by using ternary operator `... ? ... : make_old()`.
-//     template<typename T>
-//     /* implicit */ old_erasure(T const& old);
-// 
-//     friend old_erasure make_old() { return old_erasure(); }
-// 
-// private:
-//     explicit old_erasure();
-// };
-// 
-// class old_unerasure {
-// public:
-//     // Implicitly called by constructor init `old_ptr<T> old_x = ...`.
-//     template<typename T>
-//     operator old_ptr<T>();
-// 
-//     friend old_unerasure make_old(old_erasure const& old) {
-//         return old_unerasure(0, old);
-//     }
-//     
-//     friend old_unerasure make_old(virtual_* v, old_erasure const& old) {
-//         return old_unerasure(v, old);
-//     }
-// 
-// private:
-//     explicit old_unerasure(virtual_* v, old_erasure const& old);
-// };
-class old { // Copyable (as *).
+class unconvertible_old { // Copyable (as *). 
 public:
-    explicit old() : v_(0), value_() {}
-
-    explicit old(virtual_* v, old const& other) : v_(v), value_(other.value_) {}
-
+    // Implicitly called by ternary operator `... ? ... : make_old()`.
     template<typename T>
-    /* implicit */ old(T const& old_value) : v_(0),
-            value_(boost::make_shared<T>(old_value)) {} // T's one single copy.
+    /* implicit */ unconvertible_old(T const& old_value) : 
+            ptr_(boost::make_shared<T>(old_value)) {} // T's one single copy.
 
-    // TODO: I might be able to use unique_ptr here instead of shared_ptr. That
-    // might be true for the pointer that holds contract and call as well...
-    // do some testing to figure that out (unique_ptr adds less overhead).
+private:
+    explicit unconvertible_old() {}
 
+    boost::shared_ptr<void> ptr_;
+
+    friend class convertible_old;
+    friend unconvertible_old make_old();
+};
+
+class convertible_old { // Copyable (as *).
+public:
+    // Implicitly called by constructor init `old_ptr<T> old_x = ...`.
     template<typename T>
-    operator boost::shared_ptr<T const>() {
+    /* implicit */ operator old_ptr<T>() {
         if(!v_ && boost::contract::aux::check_guard::checking()) {
             // Return null shared ptr (see after if statement).
         } else if(!v_) {
-            BOOST_CONTRACT_AUX_DEBUG(value_);
-            boost::shared_ptr<T const> old_value =
-                    boost::static_pointer_cast<T const>(value_);
-            BOOST_CONTRACT_AUX_DEBUG(old_value);
-            return old_value;
+            BOOST_CONTRACT_AUX_DEBUG(ptr_);
+            boost::shared_ptr<T const> old =
+                    boost::static_pointer_cast<T const>(ptr_);
+            BOOST_CONTRACT_AUX_DEBUG(old);
+            return old_ptr<T>(old);
         } else if(v_->action_ == boost::contract::virtual_::push_old_init ||
                 v_->action_ == boost::contract::virtual_::push_old_copy) {
-            BOOST_CONTRACT_AUX_DEBUG(value_);
+            BOOST_CONTRACT_AUX_DEBUG(ptr_);
             if(v_->action_ == boost::contract::virtual_::push_old_init) {
-                v_->old_inits_.push(value_);
+                v_->old_inits_.push(ptr_);
             } else {
-                v_->old_copies_.push(value_);
+                v_->old_copies_.push(ptr_);
             }
-            return boost::shared_ptr<T const>();
+            return old_ptr<T>();
         } else if(v_->action_ == boost::contract::virtual_::pop_old_init ||
                 v_->action_ == boost::contract::virtual_::pop_old_copy) {
-            BOOST_CONTRACT_AUX_DEBUG(!value_);
+            BOOST_CONTRACT_AUX_DEBUG(!ptr_);
             boost::shared_ptr<void> value;
             if(v_->action_ == boost::contract::virtual_::pop_old_init) {
                 value = v_->old_inits_.front();
@@ -189,19 +170,35 @@ public:
             } else {
                 v_->old_copies_.pop();
             }
-            boost::shared_ptr<T const> old_value =
+            boost::shared_ptr<T const> old =
                     boost::static_pointer_cast<T const>(value);
-            BOOST_CONTRACT_AUX_DEBUG(old_value);
-            return old_value;
+            BOOST_CONTRACT_AUX_DEBUG(old);
+            return old_ptr<T>(old);
         }
-        BOOST_CONTRACT_AUX_DEBUG(!value_);
-        return boost::shared_ptr<T const>();
+        BOOST_CONTRACT_AUX_DEBUG(!ptr_);
+        return old_ptr<T>();
     }
 
 private:
+    explicit convertible_old(virtual_* v, unconvertible_old const& old) :
+            v_(v), ptr_(old.ptr_) {}
+
     virtual_* v_;
-    boost::shared_ptr<void> value_;
+    boost::shared_ptr<void> ptr_;
+    
+    friend convertible_old make_old(unconvertible_old const&);
+    friend convertible_old make_old(virtual_*, unconvertible_old const&);
 };
+    
+unconvertible_old make_old() { return unconvertible_old(); }
+
+convertible_old make_old(unconvertible_old const& old) {
+    return convertible_old(0, old);
+}
+
+convertible_old make_old(virtual_* v, unconvertible_old const& old) {
+    return convertible_old(v, old);
+}
 
 } } // namespace
 

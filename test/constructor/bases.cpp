@@ -6,7 +6,7 @@
 #include <boost/contract/constructor.hpp>
 #include <boost/contract/base_types.hpp>
 #include <boost/contract/assert.hpp>
-#include <boost/contract/oldof.hpp>
+#include <boost/contract/old.hpp>
 #include <boost/contract/guard.hpp>
 #include <boost/bind.hpp>
 #include <boost/ref.hpp>
@@ -45,8 +45,8 @@ struct t
             BOOST_CONTRACT_ASSERT(z.value < 0);
         })
     {
-        boost::shared_ptr<z_type const> old_z;
-        boost::shared_ptr<l_type const> old_l =
+        boost::contract::old_ptr<z_type> old_z;
+        boost::contract::old_ptr<l_type> old_l =
                 BOOST_CONTRACT_OLDOF(l_type::eval(l));
         boost::contract::guard c = boost::contract::constructor(this)
             .old([&] {
@@ -108,9 +108,9 @@ struct c
         }),
         t<'d'>(dz), t<'p'>(pz), t<'q'>(qz), t<'e'>(ez)
     {
-        boost::shared_ptr<y_type const> old_y =
+        boost::contract::old_ptr<y_type> old_y =
                 BOOST_CONTRACT_OLDOF(y_type::eval(y));
-        boost::shared_ptr<m_type const> old_m;
+        boost::contract::old_ptr<m_type> old_m;
         boost::contract::guard c = boost::contract::constructor(this)
             .old([&] {
                 out << "c::ctor::old" << std::endl;
@@ -183,8 +183,8 @@ struct a
         }),
         b(), c(y, dz, pz, qz, ez)
     {
-        boost::shared_ptr<x_type const> old_x;
-        boost::shared_ptr<n_type const> old_n =
+        boost::contract::old_ptr<x_type> old_x;
+        boost::contract::old_ptr<n_type> old_n =
                 BOOST_CONTRACT_OLDOF(n_type::eval(n));
         boost::contract::guard c = boost::contract::constructor(this)
             .old([&] {

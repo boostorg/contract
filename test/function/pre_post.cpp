@@ -4,10 +4,9 @@
 #include "../aux_/oteststream.hpp"
 #include "../aux_/counter.hpp"
 #include <boost/contract/function.hpp>
-#include <boost/contract/oldof.hpp>
+#include <boost/contract/old.hpp>
 #include <boost/contract/assert.hpp>
 #include <boost/contract/guard.hpp>
-#include <boost/shared_ptr.hpp>
 #include <boost/detail/lightweight_test.hpp>
 #include <sstream>
 
@@ -18,9 +17,9 @@ struct y_tag; typedef boost::contract::aux::test::counter<y_tag, int> y_type;
 
 bool swap(x_type& x, y_type& y) {
     bool result;
-    boost::shared_ptr<x_type const> old_x =
+    boost::contract::old_ptr<x_type> old_x =
             BOOST_CONTRACT_OLDOF(x_type::eval(x));
-    boost::shared_ptr<y_type const> old_y;
+    boost::contract::old_ptr<y_type> old_y;
     boost::contract::guard c = boost::contract::function()
         .precondition([&] {
             out << "swap::pre" << std::endl;

@@ -9,10 +9,9 @@
 #include <boost/contract/public_function.hpp>
 #include <boost/contract/base_types.hpp>
 #include <boost/contract/assert.hpp>
-#include <boost/contract/oldof.hpp>
+#include <boost/contract/old.hpp>
 #include <boost/contract/guard.hpp>
 #include <boost/contract/override.hpp>
-#include <boost/shared_ptr.hpp>
 #include <string>
 
 boost::contract::aux::test::oteststream out;
@@ -52,9 +51,9 @@ template<char Id>
 result_type& t<Id>::f(s_type& s, boost::contract::virtual_* v) {
     std::ostringstream r; r << "none-" << Id;
     static result_type result(r.str());
-    boost::shared_ptr<z_type const> old_z =
+    boost::contract::old_ptr<z_type> old_z =
             BOOST_CONTRACT_OLDOF(v, z_type::eval(z));
-    boost::shared_ptr<s_type const> old_s;
+    boost::contract::old_ptr<s_type> old_s;
     boost::contract::guard c = boost::contract::public_function(v, result, this)
         .precondition([&] {
             out << Id << "::f::pre" << std::endl;
@@ -100,9 +99,9 @@ struct c
     virtual result_type& f(s_type& s, boost::contract::virtual_* v = 0)
             /* override */ {
         static result_type result("none-c");
-        boost::shared_ptr<y_type const> old_y =
+        boost::contract::old_ptr<y_type> old_y =
                 BOOST_CONTRACT_OLDOF(v, y_type::eval(y));
-        boost::shared_ptr<s_type const> old_s;
+        boost::contract::old_ptr<s_type> old_s;
         boost::contract::guard c = boost::contract::public_function<
                 override_f>(v, result, &c::f, this, s)
             .precondition([&] {
@@ -182,9 +181,9 @@ struct a
     result_type& f(s_type& s, boost::contract::virtual_* v = 0)
             /* override */ {
         static result_type result("none-a");
-        boost::shared_ptr<x_type const> old_x =
+        boost::contract::old_ptr<x_type> old_x =
                 BOOST_CONTRACT_OLDOF(v, x_type::eval(x));
-        boost::shared_ptr<s_type const> old_s;
+        boost::contract::old_ptr<s_type> old_s;
         boost::contract::guard c = boost::contract::public_function<
                 override_f>(v, result, &a::f, this, s)
             .precondition([&] {
