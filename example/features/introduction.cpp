@@ -16,12 +16,12 @@ class pushable;
 
 template<typename T>
 class vector
-#   define BASES public pushable<T>
+    #define BASES public pushable<T>
     : BASES
 {
 public:
     typedef BOOST_CONTRACT_BASE_TYPES(BASES) base_types; // Subcontracting.
-#   undef BASES
+    #undef BASES
 
     void invariant() const { // Checked in AND with base class invariants.
         BOOST_CONTRACT_ASSERT(size() <= capacity()); // Line 27.
@@ -70,8 +70,9 @@ public:
 
 template<typename T> // Contract for pure virtual function.
 void pushable<T>::push_back(T const& value, boost::contract::virtual_* v) {
-    auto old_capacity = BOOST_CONTRACT_OLDOF(v, capacity());
-    auto c = boost::contract::public_function(v, this)
+    boost::contract::old_ptr<std::size_t> old_capacity =
+            BOOST_CONTRACT_OLDOF(v, capacity());
+    boost::contract::guard c = boost::contract::public_function(v, this)
         .precondition([&] {
             BOOST_CONTRACT_ASSERT(capacity() < max_size());
         })

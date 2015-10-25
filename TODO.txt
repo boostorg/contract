@@ -37,13 +37,6 @@ IMPLEMENTATION -----------------------------------------------------------------
         then... but maybe in these cases users can just
         BOOST_STATIC_ASSERT(has_oldof<???>).
 
-->  Implement .old(..)
-    *   Also if .old(...) throws, call contract failure handlers (more correct),
-        but if old declaration throws (including = BOOST_CONTRACT_OLDOF(...))
-        function throws (less correct).
-    *   Add .old(...) to all existing test?
-    *   Add .old(...) to set/ tests.
-
 *   Library data (already checking guard, failure handlers, etc.).
     *   Move in src/ files (also re-design impl to move as much code as possible
         (i.e., min templates) to src/ for faster compile-times.
@@ -53,10 +46,6 @@ IMPLEMENTATION -----------------------------------------------------------------
     overridden preconditions are checked (and not that subcontracted
     preconditions always pass just because the overriding function does not
     specify them).
-
-->  Use boost::contract::old_ptr instead of shared_ptr for old-of types (so I
-    can later change this type in future rev of the library if I need to). Only
-    export operator-> and operator* (but not other shared_ptr operations).
 
 TESTING ------------------------------------------------------------------------
 
@@ -114,4 +103,10 @@ DOCS ---------------------------------------------------------------------------
 *   pre > old > post all optional, but when specified must be specified in that
     order (rationale, this makes contract code more readable and simplify lib
     impl.)
+
+*   Using .old(...) copies old values before body but after entry checks of inv
+    and pre (more correct), plus it calls post_broken_handler in case old copy
+    throws (also more correct). However, if .old(...) more correct, in practise
+    init old directly at function entry above contract should be OK most of the
+    times.
 

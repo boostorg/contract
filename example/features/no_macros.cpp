@@ -6,7 +6,7 @@ public:
     void push_back(T const& value, boost::contract::virtual_* v = 0)
         // Program old-value without macros (pass extra `v` if virtual).
         boost::contract::old_ptr<int> old_size = boost::contract::make_old(
-            boost::contract::copy_old() ? size() : boost::contract::make_old()
+            boost::contract::copy_old() ? size() : boost::contract::null_old()
         );
 
         boost::contract::guard c = boost::contract::public_function(this)
@@ -36,7 +36,7 @@ public:
     virtual void push_back(int id, boost::contract::virtual_* v = 0)
         // Program old-value without macros but with extra `v`.
         boost::contract::old_ptr<int> old_size = boost::contract::make_old(v,
-            boost::contract::copy_old(v) ? size() : boost::contract::make_old()
+            boost::contract::copy_old(v) ? size() : boost::contract::null_old()
         );
 
         boost::contract::guard c = boost::contract::public_function(this)

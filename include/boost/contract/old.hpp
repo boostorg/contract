@@ -48,13 +48,13 @@ BOOST_CONTRACT_ERROR_macro_OLDOF_has_invalid_number_of_arguments_, \
 #define BOOST_CONTRACT_ERROR_macro_OLDOF_has_invalid_number_of_arguments_1( \
         value) \
     BOOST_CONTRACT_OLDOF_AUTO_TYPEOF_(value)(boost::contract::make_old( \
-        boost::contract::copy_old() ? (value) : boost::contract::make_old() \
+        boost::contract::copy_old() ? (value) : boost::contract::null_old() \
     ))
 
 #define BOOST_CONTRACT_ERROR_macro_OLDOF_has_invalid_number_of_arguments_2( \
         v, value) \
     BOOST_CONTRACT_OLDOF_AUTO_TYPEOF_(value)(boost::contract::make_old(v, \
-        boost::contract::copy_old(v) ? (value) : boost::contract::make_old() \
+        boost::contract::copy_old(v) ? (value) : boost::contract::null_old() \
     ))
 
 #ifdef BOOST_NO_CXX11_AUTO_DECLARATIONS
@@ -119,7 +119,7 @@ bool copy_old(virtual_* v) {
 
 class unconvertible_old { // Copyable (as *). 
 public:
-    // Implicitly called by ternary operator `... ? ... : make_old()`.
+    // Implicitly called by ternary operator `... ? ... : null_old()`.
     template<typename T>
     /* implicit */ unconvertible_old(T const& old_value) : 
             ptr_(boost::make_shared<T>(old_value)) {} // T's one single copy.
@@ -130,7 +130,7 @@ private:
     boost::shared_ptr<void> ptr_;
 
     friend class convertible_old;
-    friend unconvertible_old make_old();
+    friend unconvertible_old null_old();
 };
 
 class convertible_old { // Copyable (as *).
@@ -190,7 +190,7 @@ private:
     friend convertible_old make_old(virtual_*, unconvertible_old const&);
 };
     
-unconvertible_old make_old() { return unconvertible_old(); }
+unconvertible_old null_old() { return unconvertible_old(); }
 
 convertible_old make_old(unconvertible_old const& old) {
     return convertible_old(0, old);

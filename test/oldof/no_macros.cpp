@@ -27,7 +27,7 @@ void b::swap(i_type& i, j_type& j, boost::contract::virtual_* v) {
         boost::contract::copy_old(v) ?
             i_type::eval(i)
         :
-            boost::contract::make_old()
+            boost::contract::null_old()
     );
     boost::contract::old_ptr<j_type> old_j;
     boost::contract::guard c = boost::contract::public_function(v, this)
@@ -38,7 +38,7 @@ void b::swap(i_type& i, j_type& j, boost::contract::virtual_* v) {
         .old([&] {
             out << "b::swap::old" << std::endl;
             old_j = boost::contract::make_old(v, boost::contract::copy_old(v) ?
-                    j_type::eval(j) : boost::contract::make_old());
+                    j_type::eval(j) : boost::contract::null_old());
         })
         .postcondition([&] {
             out << "b::swap::post" << std::endl;
@@ -77,7 +77,7 @@ void swap(x_type& x, y_type& y) {
         boost::contract::copy_old() ?
             x_type::eval(x)
         :
-            boost::contract::make_old()
+            boost::contract::null_old()
     );
     boost::contract::old_ptr<y_type> old_y;
     boost::contract::guard c = boost::contract::function()
@@ -88,7 +88,7 @@ void swap(x_type& x, y_type& y) {
         .old([&] {
             out << "swap::old" << std::endl;
             old_y = boost::contract::make_old(boost::contract::copy_old() ?
-                    y_type::eval(y) : boost::contract::make_old());
+                    y_type::eval(y) : boost::contract::null_old());
         })
         .postcondition([&] {
             out << "swap::post" << std::endl;
