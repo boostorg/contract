@@ -57,7 +57,7 @@
 #define BOOST_CONTRACT_PUBLIC_FUNCTION_HAS_BASE_TYPES_(C) \
     BOOST_STATIC_ASSERT_MSG( \
         boost::contract::aux::has_base_types<C>::value, \
-        "enclosing class missing 'base types' typdef" \
+        "enclosing class missing 'base types' typedef" \
     );
 
 /* CODE */

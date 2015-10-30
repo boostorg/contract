@@ -51,5 +51,12 @@
 //      the lib's cast on v' void* result_ will probably segfault?).
 //  #ifdef PERMISSIVE
 
+// TODO: Make sure this is used everywhere it makes sense instead of using
+// mpl::vector directly in code impl.
+#ifndef BOOST_CONTRACT_CONFIG_MPL_SEQ
+#   include <boost/mpl/vector.hpp>
+#   define BOOST_CONTRACT_CONFIG_MPL_SEQ boost::mpl::vector
+#endif
+
 #endif // #include guard
 

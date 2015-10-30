@@ -1,6 +1,12 @@
 
 IMPLEMENTATION -----------------------------------------------------------------
 
+*   Add a config macro to define the Boost.MPL sequence to use to hold bases.
+    By default this should be boost::mpl::vector (because more efficient), but
+    it could be #defined to boost::mpl::list by users in case vector's max size
+    limit is hit (mpl::vector has a max size, while mpl::list does not, but
+    mpl::list usually compiles slower than mpl::vector).
+
 *   Should C++11 move preserve class invariants at exit and/or on throw?
     *   If not, how I can program C++11 move operations with the lib? (If I user
         boost::contract::function then I don't check inv at entry...)
@@ -61,7 +67,7 @@ TESTING ------------------------------------------------------------------------
     *   Test what happens if bodies throw (e.g., public func should check inv,
         dtor too, but ctor not, etc.)... test all contract types when bodies
         throw.
-    *   Test what happens if old expr thros (with and without .old(...)).
+    *   Test what happens if old expr throws (with and without .old(...)).
 
 *   Test subcontracting when:
     *   Overridden missing pre and/or post and/or inv.

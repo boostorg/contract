@@ -2,8 +2,8 @@
 #ifndef BOOST_CONTRACT_AUX_CHECK_SUBCONTRACTED_PRE_POST_INV_HPP_
 #define BOOST_CONTRACT_AUX_CHECK_SUBCONTRACTED_PRE_POST_INV_HPP_
 
-// TODO: Review and cleanup all #includes.
 #include <boost/contract/core/virtual.hpp>
+#include <boost/contract/core/config.hpp>
 #include <boost/contract/aux_/condition/check_pre_post_inv.hpp>
 #include <boost/contract/aux_/type_traits/base_types.hpp>
 #include <boost/contract/aux_/type_traits/member_function_types.hpp>
@@ -15,24 +15,17 @@
 #include <boost/function_types/property_tags.hpp>
 #include <boost/type_traits/add_pointer.hpp>
 #include <boost/type_traits/is_same.hpp>
-#include <boost/type_traits/is_const.hpp>
-#include <boost/type_traits/is_volatile.hpp>
 #include <boost/mpl/for_each.hpp>
-#include <boost/mpl/vector.hpp>
-#include <boost/mpl/transform.hpp>
-#include <boost/mpl/pop_front.hpp>
-#include <boost/mpl/push_front.hpp>
+#include <boost/mpl/fold.hpp>
 #include <boost/mpl/push_back.hpp>
-#include <boost/mpl/back.hpp>
+#include <boost/mpl/contains.hpp>
 #include <boost/mpl/empty.hpp>
-#include <boost/mpl/bool.hpp>
 #include <boost/mpl/identity.hpp>
-#include <boost/mpl/placeholders.hpp>
 #include <boost/mpl/eval_if.hpp>
-#include <boost/make_shared.hpp>
-#include <boost/shared_ptr.hpp>
+#include <boost/mpl/placeholders.hpp>
+#include <boost/static_assert.hpp>
 /** @endcond */
-
+    
 namespace boost { namespace contract { namespace aux {
 
 namespace check_subcontracted_pre_post_inv_ {
@@ -42,28 +35,66 @@ namespace check_subcontracted_pre_post_inv_ {
 // TODO: Can I make this, other check_... classes, and maybe even other
 // calsses noncopyable? What does truly need to be copyable and why?
 
-// TODO: Here I must assert that if O != none then at least one of the bases
-// contains a virtual contracted function that can be overridden.
-
 // O, R, F, and A-i can be none types (but C cannot).
 template<class O, typename R, typename F, class C, typename A0, typename A1>
 class check_subcontracted_pre_post_inv : // Copyable (as * and &).
         public check_pre_post_inv<R, C> {
-    // Base types as pointers because mpl::for_each will construct them.
-    typedef typename boost::mpl::transform<
-        typename boost::mpl::eval_if<boost::is_same<O, none>,
-            boost::mpl::identity<boost::mpl::vector<> >
+    template<class Class, typename Result = BOOST_CONTRACT_CONFIG_MPL_SEQ<> >
+    class overridden_bases_of {
+        struct search_bases {
+            typedef typename boost::mpl::fold<
+                typename base_types_of<Class>::type,
+                Result,
+                // _1 = result, _2 = current base from base_types.
+                boost::mpl::eval_if<boost::mpl::contains<boost::mpl::_1,
+                        boost::add_pointer<boost::mpl::_2> >,
+                    boost::mpl::_1 // Base already in result, do not add again.
+                ,
+                    boost::mpl::eval_if<
+                        typename O::template BOOST_CONTRACT_AUX_NAME1(
+                                has_member_function)<
+                            boost::mpl::_2,
+                            typename member_function_types<C, F>::
+                                    result_type,
+                            typename member_function_types<C, F>::
+                                    virtual_argument_types,
+                            typename member_function_types<C, F>::
+                                    property_tag
+                        >
+                    ,
+                        boost::mpl::push_back<
+                            overridden_bases_of<boost::mpl::_2,
+                                    boost::mpl::_1>,
+                            // Bases as * since for_each later constructs them.
+                            boost::add_pointer<boost::mpl::_2
+                        > >
+                    ,
+                        overridden_bases_of<boost::mpl::_2, boost::mpl::_1>
+                    >
+                >
+            >::type type;
+        };
+    public:
+        typedef typename boost::mpl::eval_if<has_base_types<Class>,
+            search_bases
         ,
-            base_types_of<C> // Already asserted has_base_types<C> if O != none.
-        >::type,
-        boost::add_pointer<boost::mpl::placeholders::_1>
-    >::type base_ptrs;
+            boost::mpl::identity<Result> // Return result (stop recursion).
+        >::type type;
+    };
+    
+    typedef typename boost::mpl::eval_if<boost::is_same<O, none>,
+        boost::mpl::identity<BOOST_CONTRACT_CONFIG_MPL_SEQ<> >
+    ,
+        overridden_bases_of<C>
+    >::type overridden_bases;
 
-    // Followings evaluate to none if F is none type.
-    typedef typename member_function_types<C, F>::result_type result_type;
-    typedef typename member_function_types<C, F>::virtual_argument_types
-            virt_arg_types;
-    typedef typename member_function_types<C, F>::property_tag property_tag;
+#ifndef BOOST_CONTRACT_CONFIG_PERMISSIVE
+    BOOST_STATIC_ASSERT_MSG(boost::mpl::or_<boost::is_same<O, none>,
+            boost::mpl::not_<boost::mpl::empty<overridden_bases> > >::value,
+        "subcontracting function marked 'override' but does not override "
+        "any contracted member function"
+    );
+#endif
 
 public:
     explicit check_subcontracted_pre_post_inv(boost::contract::from from,
@@ -75,7 +106,7 @@ public:
             v_ = v; // Invariant: v_ never null if base_call_.
         } else {
             base_call_ = false;
-            if(!boost::mpl::empty<base_ptrs>::value) {
+            if(!boost::mpl::empty<overridden_bases>::value) {
                 v_ = new boost::contract::virtual_(
                         boost::contract::virtual_::no_action);
                 // C-style cast to handle both pointer type and const.
@@ -106,9 +137,9 @@ protected:
         if(!base_call_ || v_->action_ ==
                 boost::contract::virtual_::check_pre) {
             try {
-                if(v_) {
+                if(!base_call_ && v_) {
                     v_->action_ = boost::contract::virtual_::check_pre;
-                    boost::mpl::for_each<base_ptrs>(check_base_);
+                    boost::mpl::for_each<overridden_bases>(check_base_);
                 }
                 // Pre logic-or: Last check, error also throws.
                 this->check_pre(/* throw_on_failure = */ base_call_);
@@ -162,9 +193,9 @@ private:
     void execute(boost::contract::virtual_::action_enum a,
             void (check_subcontracted_pre_post_inv::* f)() = 0) {
         if(!base_call_ || v_->action_ == a) {
-            if(v_) {
+            if(!base_call_ && v_) {
                 v_->action_ = a;
-                boost::mpl::for_each<base_ptrs>(check_base_);
+                boost::mpl::for_each<overridden_bases>(check_base_);
             }
             if(f) (this->*f)();
             if(base_call_) throw check_subcontracted_pre_post_inv_::no_error();
@@ -179,19 +210,6 @@ private:
 
         template<class B>
         void operator()(B*) {
-            // TODO: If not in B, search B's inheritance graph deeply for f.
-            call<B>(boost::mpl::bool_<O::template
-                    BOOST_CONTRACT_AUX_NAME1(has_member_function)<
-                B, result_type, virt_arg_types, property_tag
-            >::value>());
-        }
-
-    private:
-        template<class B>
-        void call(boost::mpl::false_ const&) {}
-
-        template<class B>
-        void call(boost::mpl::true_ const&) {
             BOOST_CONTRACT_AUX_DEBUG(nest_->object());
             BOOST_CONTRACT_AUX_DEBUG(nest_->v_);
             BOOST_CONTRACT_AUX_DEBUG(nest_->v_->action_ !=
@@ -210,6 +228,7 @@ private:
             }
         }
 
+    private:
         check_subcontracted_pre_post_inv* nest_;
     };
     
