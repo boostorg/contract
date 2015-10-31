@@ -24,10 +24,7 @@ namespace boost {
     
 namespace boost { namespace contract {
 
-// TODO: Make sure all friend declarations are at bottom of public if part of
-// public API, or at bottom of private if part of private API.
-
-// TODO: Do I need to store contracts as shared_ptr or unique_ptr is sufficient?
+// TODO: Do I need to store contracts as shared_ptr or unique_ptr is sufficient? Actually, double check all shared_ptr used in the lib anywhere (also in old_ptr, etc.) and see if unique_ptr would be sufficient there.
 
 class set_nothing { // Copyable as shared * (OK also for RAII).
 public:

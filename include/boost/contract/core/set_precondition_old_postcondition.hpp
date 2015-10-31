@@ -13,8 +13,6 @@
 #include <boost/shared_ptr.hpp>
 /** @endcond */
 
-// TODO: Read what's the best practise for namespace qualification and use it.
-
 namespace boost {
     namespace contract {
         class virtual_;
@@ -99,8 +97,6 @@ private:
             typename A0, typename A1>
     friend set_precondition_old_postcondition<R_> public_function(
             virtual_*, R_&, F, C*, A0&, A1&);
-
-    // TODO: Support configurable arity.
 };
 
 } } // namespace

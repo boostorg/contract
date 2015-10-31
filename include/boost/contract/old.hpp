@@ -29,8 +29,9 @@ BOOST_CONTRACT_ERROR_macro_OLDOF_requires_variadic_macros_otherwise_manually_pro
 #include <boost/preprocessor/cat.hpp>
 /** @endcond */
 
-// TODO: Can I use unique_ptr instead of shared ptr? If not here... maybe for
-// holding contracts, etc.
+// TODO: What happens to OLDOF/.old() and related assertions if old-of expression types T do not have a copy constructor? (1) In this case OLDOF and .old() could just skip the copy leaving the old_ptr to null. Then programmers could check if the old_ptr is null so to skip evaluating its assertion in postconditions... this seems a simple and elegant solution (without having to use call_if, bind, etc.). (2) C++11 std::is_copy_constructible could be used, but maybe still be wrapped without a boost::contract::has_old<T> trait so to work so to work on C++03 via users specializations (traits always mpl::true_ if not specialized). (3) However, this will not allow programmers to force compilation errors in case old value expression types T are not copyable... that is not good then... but maybe in these cases programmers could explicitly use BOOST_STATIC_ASSERT(has_old<T>::value) to force the compiler error (but shouldn't getting this error be the default behaviour of the library without requiring the explicit static assertion instead?).
+
+// TODO: Test old value and postcondition when a type does not have all operations required to check postcondition (e.g., T without operator== in vector::push_back postcondition `back() == old_value`).
 
 /* PUBLIC */
 

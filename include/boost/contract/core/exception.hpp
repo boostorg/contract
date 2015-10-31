@@ -300,9 +300,7 @@ void set_invariant_failed(assertion_failed_handler f)
     set_exit_invariant_failed(f);
 }
 
-// TODO: Simplify the invariant failure handlers. I only need two, one for
-// entry_inv and one for exit_inv (I do not need to distinguish volatile,
-// const, static... they are all inv).
+// TODO: Simplify the invariant failure handlers. I only need two, one for entry_inv and one for exit_inv (I do not need to distinguish volatile, const, static... they are all inv).
 
 } } // namespace
 

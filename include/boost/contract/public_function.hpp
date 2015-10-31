@@ -258,8 +258,6 @@ set_precondition_old_postcondition<R> public_function(
     >(v, obj, r, a0, a1));
 }
 
-// TODO: Support configurable arity.
-
 } } // namespace
 
 #endif // #include guard

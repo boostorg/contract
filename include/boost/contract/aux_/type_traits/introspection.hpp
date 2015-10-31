@@ -17,7 +17,7 @@
 // NOTE: Unfortunately, it is not possible to use Boost.TTI because it not
 // always works on MSVC (e.g., when the introspecting meta-function is invoked
 // multiple times, MSVC 2010 gives an internal compiler error). This is a
-// simpler introspecting implementation that seem to work better with MSVC.
+// simpler introspecting implementation that seems to work better on MSVC.
 
 /* PUBLIC */
 

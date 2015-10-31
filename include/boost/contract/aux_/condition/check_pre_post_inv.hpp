@@ -67,7 +67,7 @@ private:
         }
     }
 
-    // TODO: Add volatile inv here...
+    // TODO: Add support for volatile member functions and class invariants.
 
     C* obj_;
 };

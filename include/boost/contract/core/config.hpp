@@ -4,6 +4,10 @@
 
 /** @file */
 
+// TODO: Disable pre, post, and/or entry/exit inv (all combinations). Can I compile lib1 with some contract enabled/disable settings, lib2 with other settings and then link the two together?
+
+// TODO: Add a config macro PRECONDITIONS_DISABLE_NOTHING to avoid disabling contract assertions within assertions checking for preconditions (to avoid passing unchecked arguments to function body...). This is what N1962 does... but this macro should be #undef by default.
+
 #ifndef BOOST_CONTRACT_CONFIG_NO_PRECONDITIONS
 #   define BOOST_CONTRACT_CONFIG_NO_PRECONDITIONS 0
 #endif
@@ -15,12 +19,6 @@
 #ifndef BOOST_CONTRACT_CONFIG_NO_INVARIANTS
 #   define BOOST_CONTRACT_CONFIG_NO_INVARIANTS 0
 #endif
-
-// TODO: base_types, invariant, and static_invariant must be public. Allow to
-// make them private (so to not alter user's public API) by declaring some
-// `friend class boost::contract::aux::access;` from the user's class (then
-// this lib can access base_types, invariant, and static_invariant via that
-// access class).
 
 #ifndef BOOST_CONTRACT_CONFIG_BASE_TYPES
 #   define BOOST_CONTRACT_CONFIG_BASE_TYPES base_types
@@ -36,27 +34,8 @@
 #   define BOOST_CONTRACT_CONFIG_STATIC_INVARIANT static_invariant
 #endif
 
-// TODO: Implement following up/down error levels.
-//  #ifdef PEDANTIC
-//  *   error: if contracted class missing `invariant const [volatile]`
-//      mistakes: inv func could be missing const, be misspelled, not be
-//      public, etc.
-//  *   error: if `invariant const` but not `invariant const volatile` and
-//      there are contracts for volatile members.
-//      mistakes: assume `invariant const` will be called also for volatile
-//      members.
-//  *   error: if R != result_type<F>& && R != optional<result_type<F>>&
-//      mistakes: c++ should warn already if overriding func has different
-//      result type (but maybe not if it's a covariant type, in which case
-//      the lib's cast on v' void* result_ will probably segfault?).
-//  #ifdef PERMISSIVE
-
-// TODO: Make sure this is used everywhere it makes sense instead of using
-// mpl::vector directly in code impl.
-#ifndef BOOST_CONTRACT_CONFIG_MPL_SEQ
-#   include <boost/mpl/vector.hpp>
-#   define BOOST_CONTRACT_CONFIG_MPL_SEQ boost::mpl::vector
-#endif
+// BOOST_CONTRACT_CONFIG_PERMISSING (#undef by default).
+// TODO: Implement following static errors (unless PERMISSIVE): (1) error if contracted class has `invariant` or `invariant volatile` without `const` qualifiers; (2) error if `invariant const` but not `invariant const volatile` and there are contracts for volatile members (mistake: assume `invariant const` will be called also for volatile members); (3) error if R != result_type<F>& && R != optional<result_type<F>>& (mistake: C++ should warn already if overriding func has different result type (but maybe not if it's a covariant type, in which case the lib's cast on v' void* result_ will probably segfault? test it...).
 
 #endif // #include guard
 

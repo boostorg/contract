@@ -15,16 +15,21 @@
 #include <boost/function_types/property_tags.hpp>
 #include <boost/type_traits/add_pointer.hpp>
 #include <boost/type_traits/is_same.hpp>
+#include <boost/mpl/vector.hpp>
 #include <boost/mpl/for_each.hpp>
 #include <boost/mpl/fold.hpp>
 #include <boost/mpl/push_back.hpp>
 #include <boost/mpl/contains.hpp>
 #include <boost/mpl/empty.hpp>
 #include <boost/mpl/identity.hpp>
+#include <boost/mpl/or.hpp>
+#include <boost/mpl/not.hpp>
 #include <boost/mpl/eval_if.hpp>
 #include <boost/mpl/placeholders.hpp>
 #include <boost/static_assert.hpp>
 /** @endcond */
+
+// TODO: If overriding function does not specify .precondition(...), make sure the overridden preconditions are still checked (and not that subcontracted preconditions always pass just because the overriding function does not specify them).
     
 namespace boost { namespace contract { namespace aux {
 
@@ -32,20 +37,17 @@ namespace check_subcontracted_pre_post_inv_ {
     struct no_error {}; // Exception to signal OK (must not inherit).
 }
 
-// TODO: Can I make this, other check_... classes, and maybe even other
-// calsses noncopyable? What does truly need to be copyable and why?
-
 // O, R, F, and A-i can be none types (but C cannot).
 template<class O, typename R, typename F, class C, typename A0, typename A1>
 class check_subcontracted_pre_post_inv : // Copyable (as * and &).
         public check_pre_post_inv<R, C> {
-    template<class Class, typename Result = BOOST_CONTRACT_CONFIG_MPL_SEQ<> >
+    template<class Class, typename Result = boost::mpl::vector<> >
     class overridden_bases_of {
         struct search_bases {
             typedef typename boost::mpl::fold<
                 typename base_types_of<Class>::type,
                 Result,
-                // _1 = result, _2 = current base from base_types.
+                // Fold: _1 = result, _2 = current base type from base_types.
                 boost::mpl::eval_if<boost::mpl::contains<boost::mpl::_1,
                         boost::add_pointer<boost::mpl::_2> >,
                     boost::mpl::_1 // Base already in result, do not add again.
@@ -66,8 +68,8 @@ class check_subcontracted_pre_post_inv : // Copyable (as * and &).
                             overridden_bases_of<boost::mpl::_2,
                                     boost::mpl::_1>,
                             // Bases as * since for_each later constructs them.
-                            boost::add_pointer<boost::mpl::_2
-                        > >
+                            boost::add_pointer<boost::mpl::_2>
+                        >
                     ,
                         overridden_bases_of<boost::mpl::_2, boost::mpl::_1>
                     >
@@ -83,7 +85,7 @@ class check_subcontracted_pre_post_inv : // Copyable (as * and &).
     };
     
     typedef typename boost::mpl::eval_if<boost::is_same<O, none>,
-        boost::mpl::identity<BOOST_CONTRACT_CONFIG_MPL_SEQ<> >
+        boost::mpl::vector<>
     ,
         overridden_bases_of<C>
     >::type overridden_bases;
@@ -236,8 +238,9 @@ private:
     bool base_call_;
     check_base check_base_; // Copyable (as *).
     R& r_;
+    // TODO: Support configurable func arity (using both C++11 variadic templates and boost.preprocessor when C++11 variadic template are not supported).
     A0& a0_;
-    A1& a1_; // TODO: Support configurable func arity.
+    A1& a1_;
 };
 
 } } } // namespace

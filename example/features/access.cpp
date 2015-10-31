@@ -72,7 +72,7 @@ private:
 //]
 
 public:
-    // TODO: Write contracts for those too.
+    // TODO: Write contracts for those functions too.
     std::size_t size() const { return vect_.size(); }
     std::size_t max_size() const { return vect_.max_size(); }
     std::size_t capacity() const { return vect_.capacity(); }

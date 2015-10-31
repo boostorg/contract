@@ -4,9 +4,7 @@
 
 namespace boost { namespace contract { namespace aux {
 
-// TODO: Consider what to do with multi-threads... multi-reads/one-write locks
-// via boost::shared_mutex? should each thread have each own contract checking
-// bool resource?
+// TODO: Consider what to do with multi-threads... shall I use multi-reads/one-write locks via boost::shared_mutex? should each thread have its own contract checking bool resource? If global locks must be introduced, provide a NO_TREAD_SAFE configuration macro to disable them.
 
 struct check_guard {
     explicit check_guard() { checking_ = true; }
@@ -18,7 +16,7 @@ private:
     static bool checking_;
 };
 
-// TODO: This state must go into a .cpp with dyn linking (for DLLs).
+// TODO: This and all other lib states must go into a .cpp with dyn linking (DLL). Also move as much as code as possible to .cpp files (and try to minimize template is not strictly necessary) so to speed up compilation.
 bool check_guard::checking_ = false;
 
 } } } // namespace

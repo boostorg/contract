@@ -4,7 +4,8 @@
 
 #include <boost/contract/core/exception.hpp>
 /** @cond */
-#include <boost/function.hpp> // TODO: Can I reduce boost.function overhead?
+// TODO: Can I reduce boost.function overhead? Check also everywhere else boost.function is used.
+#include <boost/function.hpp>
 #include <cassert>
 /** @endcond */
 
@@ -48,8 +49,7 @@ protected:
     }
 
     void copy_old() {
-        // TODO: Document that using .old calls failure handler, = OLDOF makes
-        // enclosing function throw instead, when old copy throws.
+        // TODO: Document that when old copies throw, using .old() calls post failure handler (more correct), while using = OLDOF makes enclosing user function throw (less correct). Plus of course using .old() makes old copies after inv and pre are checked, while using = OLDOF makes old copies before inv and pre checking (this is less correct in theory, but it should not really matter in most practical cases unless the old copy are programmed assuming inv and pre are satisfied).
         try { if(old_) old_(); }
         catch(...) { boost::contract::postcondition_failed(from()); }
     }

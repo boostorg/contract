@@ -22,8 +22,7 @@ namespace invariant_ {
             has_static_invariant, BOOST_CONTRACT_CONFIG_STATIC_INVARIANT)
 }
 
-// TODO: Unless PERMISSIVE, enforce: !has_invariant<C> ||
-// has_const_invariant<C> || has_const_volatile_invariant<C> 
+// TODO: Unless PERMISSIVE, enforce: !has_invariant<C> || has_const_invariant<C> || has_const_volatile_invariant<C> 
 
 template<typename T>
 struct has_const_invariant : invariant_::has_invariant<T, void,
