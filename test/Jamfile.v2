@@ -16,6 +16,7 @@ test-suite public_function :
     [ subdir-run public_function : bases_virtual ]
     [ subdir-run public_function : bases_branch ]
     [ subdir-run public_function : bases_sparse ]
+    [ subdir-run public_function : bases_optional_result ]
     [ subdir-run public_function : body_throw ]
     [ subdir-run public_function : static ]
     [ subdir-run public_function : static_body_throw ]

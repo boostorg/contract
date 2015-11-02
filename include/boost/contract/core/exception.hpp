@@ -5,17 +5,33 @@
 /** @file */
 
 /** @cond */
-//#include <boost/thread/mutex.hpp>
+#include <boost/exception/diagnostic_information.hpp>
 #include <boost/config.hpp>
 #include <exception>
 #include <sstream>
 #include <string>
 #include <iostream>
+#include <typeinfo>
 /** @endcond */
 
 namespace boost { namespace contract {
 
-struct assertion_failure : public std::exception {
+// Placeholder base class to group all this lib exceptions.
+// IMPORTANT: Must not inherit from std::exception as derived exceptions will.
+struct exception {};
+
+class bad_virtual_result_cast :
+        public std::bad_cast, public boost::contract::exception {
+public:
+    explicit bad_virtual_result_cast(char const* what) : what_(what) {}
+    virtual char const* what() const BOOST_NOEXCEPT { return what_.c_str(); }
+private:
+    std::string what_;
+};
+
+class assertion_failure :
+        public std::exception, public boost::contract::exception {
+public:
     explicit assertion_failure(char const* const file = "",
             unsigned long const line = 0, char const* const code = "") :
         file_(file), line_(line), code_(code)
@@ -101,15 +117,11 @@ namespace exception_ {
         try {
             throw;
         } catch(boost::contract::assertion_failure const& error) {
-            // what = 'assertion "..." failed: ...'.
+            // what = "assertion '...' failed: ...".
             std::cerr << s << error.what() << std::endl;
-        // TODO: Below, I should use Boost.Exception diagnostic message...
-        } catch(std::exception const& error) {
-            std::cerr << s << "checking threw standard exception with " <<
-                    "what(): " << error.what() << std::endl;
         } catch(...) {
-            std::cerr << s << "checking threw unknown exception" <<
-                    std::endl;
+            std::cerr << s << "checking threw following exception:" << std::endl
+                    << boost::current_exception_diagnostic_information();
         }
         std::terminate(); // Default handlers log and call terminate.
     }

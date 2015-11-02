@@ -7,7 +7,6 @@
 #include <boost/contract/aux_/none.hpp>
 #include <boost/contract/core/exception.hpp>
 /** @cond */
-#include <boost/optional.hpp>
 #include <boost/function.hpp>
 /** @endcond */
 

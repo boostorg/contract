@@ -3,6 +3,7 @@
 #define BOOST_CONTRACT_VIRTUAL_HPP_
 
 /** @cond */
+#include <boost/any.hpp>
 #include <boost/shared_ptr.hpp>
 #include <boost/noncopyable.hpp>
 #include <queue>
@@ -37,12 +38,16 @@ private:
         pop_old_init = check_post // These must be the same value.
     };
 
-    explicit virtual_(action_enum a) : action_(a) {}
+    explicit virtual_(action_enum a) : action_(a), result_(),
+            result_optional_() {}
 
     action_enum action_;
+    
     std::queue<boost::shared_ptr<void> > old_inits_;
     std::stack<boost::shared_ptr<void> > old_copies_;
-    void* result_;
+
+    boost::any result_;
+    bool result_optional_;
 
     // Friendship used to limit library's public API.
     friend bool copy_old(virtual_*);

@@ -379,10 +379,20 @@ Furthermore, this parameter is used by this library to pass result and old value
 ]
 
 Furthermore, for non-void public virtual functions, programmers must pass a reference to the function return value as the second argument to [funcref boost::contract::public_function].
-In this case the functor specified to `.postcondition(...)` takes a single parameter (possibly as a constant reference `const&`) to the return value (this library will generate a compile-time error otherwise).
+In this case the functor specified to `.postcondition(...)` takes a single parameter (possibly as a constant reference `const&`) to the return value.
 [footnote
 *Rationale.*
 The functor passed to `.postcondition(...)` takes the extra return value parameter because that is used by this library to pass the return value evaluated by the overriding function to all its overridden virtual functions when subcontracting.
+]
+
+[important
+It is the responsibility of the programmers to pass the extra result parameter to [funcref boost::contract::public_function] for non-void virtual functions.
+[footnote
+*Rationale.*
+This library does not require the function type when using [funcref boost::contract::public_function] for non-overriding virtual functions.
+Therefore, this library does not know if the enclosing function has a non-void return type and it cannot enforce that at compile-time.
+It can do that only for overriding virtual functions.
+]
 ]
 
 [important
