@@ -34,7 +34,7 @@ public:
         this->assert_guarded();
         if(check_guard::checking()) return;
         check_guard checking;
-        if(!std::uncaught_exception()) this->check_post();
+        if(!std::uncaught_exception()) this->check_post(none());
     }
 };
 

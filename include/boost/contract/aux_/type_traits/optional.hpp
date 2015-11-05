@@ -1,6 +1,6 @@
 
-#ifndef BOOST_CONTRACT_AUX_IS_OPTIONAL_HPP_
-#define BOOST_CONTRACT_AUX_IS_OPTIONAL_HPP_
+#ifndef BOOST_CONTRACT_AUX_OPTIONAL_HPP_
+#define BOOST_CONTRACT_AUX_OPTIONAL_HPP_
 
 /** @cond */
 #include <boost/optional.hpp>
@@ -14,6 +14,12 @@ struct is_optional : boost::false_type {};
 
 template<typename T>
 struct is_optional<boost::optional<T> > : boost::true_type {};
+
+template<typename T>
+struct optional_value_type { typedef T type; };
+
+template<typename T>
+struct optional_value_type<boost::optional<T> > { typedef T type; };
 
 } } } // namespace
 

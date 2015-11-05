@@ -9,6 +9,8 @@
 #include <queue>
 #include <stack>
 /** @endcond */
+
+// TODO: Always program static_inv before inv in tests, examples, etc (because that is the order they are checked).
     
 namespace boost {
     namespace contract {
@@ -38,7 +40,7 @@ private:
         pop_old_init = check_post // These must be the same value.
     };
 
-    explicit virtual_(action_enum a) : action_(a), result_(),
+    explicit virtual_(action_enum a) : action_(a), result_ptr_(),
             result_optional_() {}
 
     action_enum action_;
@@ -46,7 +48,8 @@ private:
     std::queue<boost::shared_ptr<void> > old_inits_;
     std::stack<boost::shared_ptr<void> > old_copies_;
 
-    boost::any result_;
+    boost::any result_ptr_;
+    char const* result_type_name_;
     bool result_optional_;
 
     // Friendship used to limit library's public API.

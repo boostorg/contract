@@ -40,7 +40,7 @@ public:
         if(check_guard::checking()) return;
         check_guard checking;
         this->check_exit_static_inv();
-        if(!std::uncaught_exception()) this->check_post();
+        if(!std::uncaught_exception()) this->check_post(none());
     }
 };
 

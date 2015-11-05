@@ -44,7 +44,7 @@ public:
             this->check_exit_static_inv();
         } else {
             this->check_exit_inv();
-            this->check_post();
+            this->check_post(none());
         }
     }
 };

@@ -8,7 +8,7 @@
 #include <boost/contract/aux_/condition/check_pre_post_inv.hpp>
 #include <boost/contract/aux_/type_traits/base_types.hpp>
 #include <boost/contract/aux_/type_traits/member_function_types.hpp>
-#include <boost/contract/aux_/type_traits/is_optional.hpp>
+#include <boost/contract/aux_/type_traits/optional.hpp>
 #include <boost/contract/aux_/debug.hpp>
 /** @cond */
 #include <boost/optional.hpp>
@@ -18,6 +18,7 @@
 #include <boost/function_types/member_function_pointer.hpp>
 #include <boost/function_types/property_tags.hpp>
 #include <boost/type_traits/add_pointer.hpp>
+#include <boost/type_traits/remove_reference.hpp>
 #include <boost/type_traits/is_same.hpp>
 #include <boost/mpl/vector.hpp>
 #include <boost/mpl/for_each.hpp>
@@ -31,6 +32,7 @@
 #include <boost/mpl/eval_if.hpp>
 #include <boost/mpl/placeholders.hpp>
 #include <boost/static_assert.hpp>
+#include <boost/utility/enable_if.hpp>
 #include <sstream>
 #include <typeinfo>
 /** @endcond */
@@ -99,8 +101,8 @@ class check_subcontracted_pre_post_inv : // Copyable (as * and &).
 #ifndef BOOST_CONTRACT_CONFIG_PERMISSIVE
     BOOST_STATIC_ASSERT_MSG(boost::mpl::or_<boost::is_same<O, none>,
             boost::mpl::not_<boost::mpl::empty<overridden_bases> > >::value,
-        "subcontracting function marked 'override' but does not override "
-        "any contracted member function"
+        "subcontracting function specified as 'override' but does not "
+        "override any contracted member function"
     );
 #endif
 
@@ -117,7 +119,8 @@ public:
             if(!boost::mpl::empty<overridden_bases>::value) {
                 v_ = new boost::contract::virtual_(
                         boost::contract::virtual_::no_action);
-                v_->result_ = &r_;
+                v_->result_ptr_ = &r_;
+                v_->result_type_name_ = typeid(R).name();
                 v_->result_optional_ = is_optional<R>::value;
             } else v_ = 0;
         }
@@ -175,43 +178,6 @@ protected:
     bool base_call() const { return base_call_; }
 
 private:
-    void check_post_v() {
-        if(base_call_) {
-            boost::contract::virtual_::action_enum a = v_->action_;
-            v_->action_ = boost::contract::virtual_::pop_old_copy;
-            this->copy_old();
-            v_->action_ = a;
-        }
-
-        R* r = &r_;
-        if(base_call_) {
-            try {
-                if(v_->result_optional_ && !is_optional<R>::value) {
-                    // These &* do not cancel: * is opt's value and & its addr.
-                    r = &**boost::any_cast<boost::optional<R>*>(v_->result_);
-                } else {
-                    r = boost::any_cast<R*>(v_->result_);
-                }
-            } catch(boost::bad_any_cast const&) {
-                // bad_any_cast does not print type name, so use custom except.
-                try {
-                    std::ostringstream text;
-                    text
-                        << "incompatible virtual function contract result type "
-                        << "conversion from '" << v_->result_.type().name()
-                        << "' to '" << typeid(R).name() << "'"
-                    ;
-                    throw boost::contract::bad_virtual_result_cast(
-                            text.str().c_str());
-                } catch(...) {
-                    boost::contract::postcondition_failed(from());
-                }
-            }
-        }
-        BOOST_CONTRACT_AUX_DEBUG(r);
-        this->check_post(*r);
-    }
-
     void copy_old_v() {
         boost::contract::virtual_::action_enum a;
         if(base_call_) {
@@ -220,6 +186,61 @@ private:
         }
         this->copy_old();
         if(base_call_) v_->action_ = a;
+    }
+    
+    void check_post_v() {
+        if(base_call_) {
+            boost::contract::virtual_::action_enum a = v_->action_;
+            v_->action_ = boost::contract::virtual_::pop_old_copy;
+            this->copy_old();
+            v_->action_ = a;
+        }
+
+        typedef typename boost::remove_reference<typename
+                optional_value_type<R>::type>::type r_type;
+        boost::optional<r_type const&> r; // No result copy in following code.
+        if(!base_call_) r = r_;
+        else if(v_->result_optional_) {
+            try {
+                r = **boost::any_cast<boost::optional<r_type>*>(
+                        v_->result_ptr_);
+            } catch(boost::bad_any_cast const&) {
+                try { // Handle optional<...&>.
+                    r = **boost::any_cast<boost::optional<r_type&>*>(
+                            v_->result_ptr_);
+                } catch(boost::bad_any_cast const&) {
+                    try { // No type names in bad_any_cast so use custom except.
+                        throw boost::contract::bad_virtual_result_cast(
+                                v_->result_type_name_, typeid(r_type).name());
+                    } catch(...) {
+                        boost::contract::postcondition_failed(from());
+                    }
+                }
+            }
+        } else {
+            try {
+                r = *boost::any_cast<r_type*>(v_->result_ptr_);
+            } catch(boost::bad_any_cast const&) {
+                try {
+                    throw boost::contract::bad_virtual_result_cast(
+                            v_->result_type_name_, typeid(r_type).name());
+                } catch(...) { boost::contract::postcondition_failed(from()); }
+            }
+        }
+        check_post_r<R>(r);
+    }
+    
+    template<typename R_, typename Result>
+    typename boost::enable_if<is_optional<R_> >::type check_post_r(
+            Result const& r) {
+        this->check_post(r);
+    }
+    
+    template<typename R_, typename Result>
+    typename boost::disable_if<is_optional<R_> >::type check_post_r(
+            Result const& r) {
+        BOOST_CONTRACT_AUX_DEBUG(r);
+        this->check_post(*r);
     }
     
     void execute(boost::contract::virtual_::action_enum a,

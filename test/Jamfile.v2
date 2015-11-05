@@ -11,25 +11,30 @@ test-suite destructor :
     [ subdir-compile-fail destructor : no_pre_error ]
 ;
 
+test-suite function :
+    [ subdir-run function : pre_post ]
+    [ subdir-run function : body_throw ]
+;
+
 test-suite public_function :
     [ subdir-run public_function : bases ]
     [ subdir-run public_function : bases_virtual ]
     [ subdir-run public_function : bases_branch ]
     [ subdir-run public_function : bases_sparse ]
-    [ subdir-run public_function : bases_optional_result ]
     [ subdir-run public_function : body_throw ]
     [ subdir-run public_function : static ]
     [ subdir-run public_function : static_body_throw ]
     [ subdir-compile-fail public_function : override_error ]
     [ subdir-run public_function : override_permissive ]
 ;
-
-test-suite function :
-    [ subdir-run function : pre_post ]
-    [ subdir-run function : body_throw ]
+    
+test-suite result :
+    [ subdir-run result : mixed_optional ]
+    [ subdir-run result : mixed_optional_ref ]
+    [ subdir-compile-fail result : type_mismatch_error ]
 ;
 
-test-suite old :
+test-suite oldof :
     [ subdir-run oldof : no_macros ]
     [ subdir-run oldof : auto ]
     [ subdir-compile-fail oldof : no_make_old_error ]

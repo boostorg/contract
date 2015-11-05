@@ -15,24 +15,34 @@ struct counter {
     ~counter() { ++dtors_; }
     static unsigned dtors() { return dtors_; }
 
-    counter(counter const& other) : value(other.value) { ++copies_; ++ctors_; }
-    static unsigned copies() { return copies_; }
+    /* implicit */ counter(counter const& other) : value(other.value) {
+        ++ctor_copies_;
+        ++ctors_;
+    }
+
+    counter& operator=(counter const& other) {
+        value = other.value;
+        ++op_copies_;
+        return *this;
+    }
+    
+    static unsigned copies() { return ctor_copies_ + op_copies_; }
 
     static counter const& eval(counter const& me) { ++me.evals_; return me; }
     static unsigned evals() { return evals_; }
 
 private:
-    counter& operator=(counter const&) /* = delete */;
-    
     static unsigned ctors_; // Total constructions (including copies).
     static unsigned dtors_;
-    static unsigned copies_;
+    static unsigned ctor_copies_;
+    static unsigned op_copies_;
     static unsigned evals_;
 };
 
 template<class Tag, typename T> unsigned counter<Tag, T>::ctors_ = 0;
 template<class Tag, typename T> unsigned counter<Tag, T>::dtors_ = 0;
-template<class Tag, typename T> unsigned counter<Tag, T>::copies_ = 0;
+template<class Tag, typename T> unsigned counter<Tag, T>::ctor_copies_ = 0;
+template<class Tag, typename T> unsigned counter<Tag, T>::op_copies_ = 0;
 template<class Tag, typename T> unsigned counter<Tag, T>::evals_ = 0;
     
 } } } } // namespace

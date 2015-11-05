@@ -34,37 +34,28 @@ protected:
 
 private:
     void check_inv(bool on_entry, bool static_inv_only) {
-        check_static_inv(on_entry, boost::mpl::bool_<
-                has_static_invariant<C>::value>());
-        if(!static_inv_only) {
-            check_const_inv(on_entry, boost::mpl::bool_<
-                    has_const_invariant<C>::value>());
+        try {
+            check_static_inv(on_entry, boost::mpl::bool_<
+                    has_static_invariant<C>::value>());
+            if(!static_inv_only) {
+                check_const_inv(on_entry, boost::mpl::bool_<
+                        has_const_invariant<C>::value>());
+            }
+        } catch(...) {
+            if(on_entry) boost::contract::entry_invariant_failed(from());
+            else boost::contract::exit_invariant_failed(from());
         }
     }
 
     void check_static_inv(bool, boost::mpl::false_ const&) {}
     void check_static_inv(bool on_entry, boost::mpl::true_ const&) {
-        try { C::BOOST_CONTRACT_CONFIG_STATIC_INVARIANT(); }
-        catch(...) {
-            if(on_entry) {
-                boost::contract::static_entry_invariant_failed(from());
-            } else {
-                boost::contract::static_exit_invariant_failed(from());
-            }
-        }
+        C::BOOST_CONTRACT_CONFIG_STATIC_INVARIANT();
     }
     
     void check_const_inv(bool, boost::mpl::false_ const&) {}
     void check_const_inv(bool on_entry, boost::mpl::true_ const&) {
         BOOST_CONTRACT_AUX_DEBUG(obj_);
-        try { obj_->BOOST_CONTRACT_CONFIG_INVARIANT(); }
-        catch(...) {
-            if(on_entry) {
-                boost::contract::const_entry_invariant_failed(from());
-            } else {
-                boost::contract::const_exit_invariant_failed(from());
-            }
-        }
+        obj_->BOOST_CONTRACT_CONFIG_INVARIANT();
     }
 
     // TODO: Add support for volatile member functions and class invariants.

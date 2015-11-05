@@ -50,7 +50,7 @@
             typename boost::contract::public_function_:: \
                     remove_optional<R>::type \
         >::value, \
-        "miss-matching result type for specified function" \
+        "mismatching result type for specified function" \
     );
 
 // Always enforce this so this lib can check and enforce override.
@@ -84,6 +84,7 @@ set_precondition_old_postcondition<> public_function() {
 // For non-virtual, non-overriding member functions.
 template<class C>
 set_precondition_old_postcondition<> public_function(C* obj) {
+    boost::contract::aux::none n;
     return set_precondition_old_postcondition<>(boost::make_shared<
         boost::contract::aux::public_function<
             boost::contract::aux::none,
@@ -92,12 +93,7 @@ set_precondition_old_postcondition<> public_function(C* obj) {
             C,
             boost::contract::aux::none, boost::contract::aux::none
         >
-    >(
-        static_cast<boost::contract::virtual_*>(0),
-        obj,
-        boost::contract::aux::none::value,
-        boost::contract::aux::none::value, boost::contract::aux::none::value
-    ));
+    >(static_cast<boost::contract::virtual_*>(0), obj, n, n, n));
 }
 
 // NOTE: O and R (optionally) allowed only when v is present because:
@@ -117,6 +113,7 @@ set_precondition_old_postcondition<> public_function(C* obj) {
 template<class C>
 set_precondition_old_postcondition<> public_function(virtual_* v, C* obj) {
     // NOTE: No F so cannot enforce enclosing function is void (up to user).
+    boost::contract::aux::none n;
     return set_precondition_old_postcondition<>(boost::make_shared<
         boost::contract::aux::public_function<
             boost::contract::aux::none,
@@ -125,8 +122,7 @@ set_precondition_old_postcondition<> public_function(virtual_* v, C* obj) {
             C,
             boost::contract::aux::none, boost::contract::aux::none
         >
-    >(v, obj, boost::contract::aux::none::value, boost::contract::aux::none::
-            value, boost::contract::aux::none::value));
+    >(v, obj, n, n, n));
 }
 
 // For virtual, non-overriding, non-void member functions.
@@ -134,6 +130,7 @@ template<typename R, class C>
 set_precondition_old_postcondition<R> public_function(
         virtual_* v, R& r, C* obj) {
     // NOTE: No F so cannot enforce enclosing function returns R (up to user).
+    boost::contract::aux::none n;
     return set_precondition_old_postcondition<R>(boost::make_shared<
         boost::contract::aux::public_function<
             boost::contract::aux::none,
@@ -142,8 +139,7 @@ set_precondition_old_postcondition<R> public_function(
             C,
             boost::contract::aux::none, boost::contract::aux::none
         >
-    >(v, obj, r, boost::contract::aux::none::value,
-            boost::contract::aux::none::value));
+    >(v, obj, r, n, n));
 }
 
 /* Overriding (arity = 0) */
@@ -154,6 +150,7 @@ set_precondition_old_postcondition<> public_function(virtual_* v, F, C* obj) {
     BOOST_CONTRACT_PUBLIC_FUNCTION_HAS_ARITY(F, 0)
     BOOST_CONTRACT_PUBLIC_FUNCTION_HAS_VOID_RESULT_(F)
     BOOST_CONTRACT_PUBLIC_FUNCTION_HAS_BASE_TYPES_(C)
+    boost::contract::aux::none n;
     return set_precondition_old_postcondition<>(boost::make_shared<
         boost::contract::aux::public_function<
             O,
@@ -162,8 +159,7 @@ set_precondition_old_postcondition<> public_function(virtual_* v, F, C* obj) {
             C,
             boost::contract::aux::none, boost::contract::aux::none
         >
-    >(v, obj, boost::contract::aux::none::value, boost::contract::aux::none::
-            value, boost::contract::aux::none::value));
+    >(v, obj, n, n, n));
 }
 
 // For virtual, overriding, non-void member functions of class with bases.
@@ -173,6 +169,7 @@ set_precondition_old_postcondition<R> public_function(
     BOOST_CONTRACT_PUBLIC_FUNCTION_HAS_ARITY(F, 0)
     BOOST_CONTRACT_PUBLIC_FUNCTION_HAS_RESULT_(F, R)
     BOOST_CONTRACT_PUBLIC_FUNCTION_HAS_BASE_TYPES_(C)
+    boost::contract::aux::none n;
     return set_precondition_old_postcondition<R>(boost::make_shared<
         boost::contract::aux::public_function<
             O,
@@ -181,8 +178,7 @@ set_precondition_old_postcondition<R> public_function(
             C,
             boost::contract::aux::none, boost::contract::aux::none
         >
-    >(v, obj, r, boost::contract::aux::none::value,
-            boost::contract::aux::none::value));
+    >(v, obj, r, n, n));
 }
 
 /* Overriding (arity = 1) */
@@ -193,6 +189,7 @@ set_precondition_old_postcondition<> public_function(
     BOOST_CONTRACT_PUBLIC_FUNCTION_HAS_ARITY(F, 1)
     BOOST_CONTRACT_PUBLIC_FUNCTION_HAS_VOID_RESULT_(F)
     BOOST_CONTRACT_PUBLIC_FUNCTION_HAS_BASE_TYPES_(C)
+    boost::contract::aux::none n;
     return set_precondition_old_postcondition<>(boost::make_shared<
         boost::contract::aux::public_function<
             O,
@@ -201,8 +198,7 @@ set_precondition_old_postcondition<> public_function(
             C,
             A0, boost::contract::aux::none
         >
-    >(v, obj, boost::contract::aux::none::value, a0,
-            boost::contract::aux::none::value));
+    >(v, obj, n, a0, n));
 }
 
 template<class O, typename R, typename F, class C, typename A0>
@@ -211,6 +207,7 @@ set_precondition_old_postcondition<R> public_function(
     BOOST_CONTRACT_PUBLIC_FUNCTION_HAS_ARITY(F, 1)
     BOOST_CONTRACT_PUBLIC_FUNCTION_HAS_RESULT_(F, R)
     BOOST_CONTRACT_PUBLIC_FUNCTION_HAS_BASE_TYPES_(C)
+    boost::contract::aux::none n;
     return set_precondition_old_postcondition<R>(boost::make_shared<
         boost::contract::aux::public_function<
             O,
@@ -219,7 +216,7 @@ set_precondition_old_postcondition<R> public_function(
             C,
             A0, boost::contract::aux::none
         >
-    >(v, obj, r, a0, boost::contract::aux::none::value));
+    >(v, obj, r, a0, n));
 }
 
 /* Overriding (arity = 2) */
@@ -230,6 +227,7 @@ set_precondition_old_postcondition<> public_function(
     BOOST_CONTRACT_PUBLIC_FUNCTION_HAS_ARITY(F, 2)
     BOOST_CONTRACT_PUBLIC_FUNCTION_HAS_VOID_RESULT_(F)
     BOOST_CONTRACT_PUBLIC_FUNCTION_HAS_BASE_TYPES_(C)
+    boost::contract::aux::none n;
     return set_precondition_old_postcondition<>(boost::make_shared<
         boost::contract::aux::public_function<
             O,
@@ -238,7 +236,7 @@ set_precondition_old_postcondition<> public_function(
             C,
             A0, A1
         >
-    >(v, obj, boost::contract::aux::none::value, a0, a1));
+    >(v, obj, n, a0, a1));
 }
     
 template<class O, typename R, typename F, class C, typename A0, typename A1>
