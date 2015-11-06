@@ -34,10 +34,12 @@ test-suite result :
     [ subdir-compile-fail result : type_mismatch_error ]
 ;
 
-test-suite oldof :
-    [ subdir-run oldof : no_macros ]
-    [ subdir-run oldof : auto ]
-    [ subdir-compile-fail oldof : no_make_old_error ]
+test-suite old :
+    [ subdir-run old : no_macros ]
+    [ subdir-run old : auto ]
+    [ subdir-run old : noncopyable ]
+    [ subdir-compile-fail old : noncopyable_error ]
+    [ subdir-compile-fail old : no_make_old_error ]
 ;
 
 test-suite disable :

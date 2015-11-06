@@ -11,6 +11,8 @@
 /** @cond */
 #include <boost/make_shared.hpp>
 #include <boost/shared_ptr.hpp>
+#include <boost/type_traits/is_copy_constructible.hpp>
+#include <boost/utility/enable_if.hpp>
 /** @endcond */
 
 /** @cond */
@@ -23,13 +25,10 @@ BOOST_CONTRACT_ERROR_macro_OLDOF_requires_variadic_macros_otherwise_manually_pro
 
 /** @cond */
 #include <boost/config.hpp>
-#include <boost/spirit/home/classic/core/safe_bool.hpp>
 #include <boost/preprocessor/facilities/overload.hpp>
 #include <boost/preprocessor/facilities/empty.hpp>
 #include <boost/preprocessor/cat.hpp>
 /** @endcond */
-
-// TODO: What happens to OLDOF/.old() and related assertions if old-of expression types T do not have a copy constructor? (1) In this case OLDOF and .old() could just skip the copy leaving the old_ptr to null. Then programmers could check if the old_ptr is null so to skip evaluating its assertion in postconditions... this seems a simple and elegant solution (without having to use call_if, bind, etc.). (2) C++11 std::is_copy_constructible could be used, but maybe still be wrapped without a boost::contract::has_old<T> trait so to work so to work on C++03 via users specializations (traits always mpl::true_ if not specialized). (3) However, this will not allow programmers to force compilation errors in case old value expression types T are not copyable... that is not good then... but maybe in these cases programmers could explicitly use BOOST_STATIC_ASSERT(has_old<T>::value) to force the compiler error (but shouldn't getting this error be the default behaviour of the library without requiring the explicit static assertion instead?).
 
 // TODO: Test old value and postcondition when a type does not have all operations required to check postcondition (e.g., T without operator== in vector::push_back postcondition `back() == old_value`).
 
@@ -73,30 +72,35 @@ BOOST_CONTRACT_ERROR_macro_OLDOF_has_invalid_number_of_arguments_, \
 
 /* CODE */
 
+// Specialization because `unconvertible_old` incomplete type when trait used.
+namespace boost {
+    namespace contract {
+        class unconvertible_old;
+    }
+    template<>
+    struct is_copy_constructible<contract::unconvertible_old> : true_type {};
+}
+
 namespace boost { namespace contract {
 
 // Used to avoid exposing entire shared_ptr API (e.g., client stealing
 // ownership of this pointer could break this lib).
 template<typename T>
-class old_ptr // Copyable (as *).
-    : boost::spirit::classic::safe_bool<old_ptr<T> >
-{ 
+class old_ptr { // Copyable (as *).
 public:
     explicit old_ptr() {}
     
-    // operator safe-bool() const (see below).
-
     T const& operator*() const { return ptr_.operator*(); }
     T const* operator->() const { return ptr_.operator->(); }
+
+    // TODO: Use safe bool instead.
+    operator bool() { return !!ptr_; }
 
 private:
     explicit old_ptr(boost::shared_ptr<T const> ptr) : ptr_(ptr) {}
 
-    bool operator_bool() const { return ptr_.operator bool(); }
-
     boost::shared_ptr<T const> ptr_;
 
-    friend struct boost::spirit::classic::safe_bool<old_ptr>;
     friend class convertible_old;
 };
 
@@ -120,10 +124,19 @@ bool copy_old(virtual_* v) {
 
 class unconvertible_old { // Copyable (as *). 
 public:
-    // Implicitly called by ternary operator `... ? ... : null_old()`.
+    // Following implicitly called by ternary operator `... ? ... : null_old()`.
+
     template<typename T>
-    /* implicit */ unconvertible_old(T const& old_value) : 
-            ptr_(boost::make_shared<T>(old_value)) {} // T's one single copy.
+    /* implicit */ unconvertible_old(
+        T const& old_value,
+        typename boost::enable_if<boost::is_copy_constructible<T> >::type* = 0
+    ) : ptr_(boost::make_shared<T>(old_value)) {} // The one single copy of T.
+    
+    template<typename T>
+    /* implicit */ unconvertible_old(
+        T const&,
+        typename boost::disable_if<boost::is_copy_constructible<T> >::type* = 0
+    ) : ptr_() {} // Null ptr, no copy of T.
 
 private:
     explicit unconvertible_old() {}
@@ -139,7 +152,10 @@ public:
     // Implicitly called by constructor init `old_ptr<T> old_x = ...`.
     template<typename T>
     /* implicit */ operator old_ptr<T>() {
-        if(!v_ && boost::contract::aux::check_guard::checking()) {
+        if(!boost::is_copy_constructible<T>::value) {
+            BOOST_CONTRACT_AUX_DEBUG(!ptr_); // Non-copyable so no old...
+            return old_ptr<T>(); // ...and return null.
+        } else if(!v_ && boost::contract::aux::check_guard::checking()) {
             // Return null shared ptr (see after if statement).
         } else if(!v_) {
             BOOST_CONTRACT_AUX_DEBUG(ptr_);
@@ -159,20 +175,20 @@ public:
         } else if(v_->action_ == boost::contract::virtual_::pop_old_init ||
                 v_->action_ == boost::contract::virtual_::pop_old_copy) {
             BOOST_CONTRACT_AUX_DEBUG(!ptr_);
-            boost::shared_ptr<void> value;
+            boost::shared_ptr<void> ptr;
             if(v_->action_ == boost::contract::virtual_::pop_old_init) {
-                value = v_->old_inits_.front();
+                ptr = v_->old_inits_.front();
             } else {
-                value = v_->old_copies_.top();
+                ptr = v_->old_copies_.top();
             }
-            BOOST_CONTRACT_AUX_DEBUG(value);
+            BOOST_CONTRACT_AUX_DEBUG(ptr);
             if(v_->action_ == boost::contract::virtual_::pop_old_init) {
                 v_->old_inits_.pop();
             } else {
                 v_->old_copies_.pop();
             }
             boost::shared_ptr<T const> old =
-                    boost::static_pointer_cast<T const>(value);
+                    boost::static_pointer_cast<T const>(ptr);
             BOOST_CONTRACT_AUX_DEBUG(old);
             return old_ptr<T>(old);
         }

@@ -24,8 +24,6 @@
 
 // TODO: Using MSVC 2013 (instead of MSVC 2010) I should be able to use lambdas also in ctor template member inits for all tests and examples. Also add a note a bout this MSVC 2010 bug in the docs.
 
-// TODO: Test result by ref so never copied, not even when boost::optional.
-
 // TODO: Test failure handlers, throw on contract failure, and throw user-defined exceptions: (1) Add a test for throwing exception handlers (somewhat similar to stroustrup97/string.cpp but more comprehensive); (2) Test what happens if bodies throw (e.g., public function should still check inv, dtor too, but ctor should not, etc.)... test all contract types when bodies throw; (3) Test what happens if old expression copies throw (with OLDOF and with .old()).
 
 // TODO: Test subcontracting when overridden function/class missing pre and/or post and/or inv.
