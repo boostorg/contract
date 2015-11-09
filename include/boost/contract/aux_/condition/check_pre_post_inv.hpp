@@ -2,11 +2,10 @@
 #ifndef BOOST_CONTRACT_AUX_CHECK_PRE_POST_INV_HPP_
 #define BOOST_CONTRACT_AUX_CHECK_PRE_POST_INV_HPP_
 
-#include <boost/contract/core/config.hpp>
+#include <boost/contract/core/access.hpp>
 #include <boost/contract/core/exception.hpp>
+#include <boost/contract/core/config.hpp>
 #include <boost/contract/aux_/condition/check_pre_post.hpp>
-#include <boost/contract/aux_/type_traits/invariant.hpp>
-#include <boost/contract/aux_/debug.hpp>
 /** @cond */
 #include <boost/mpl/bool.hpp>
 #include <boost/shared_ptr.hpp>
@@ -35,11 +34,11 @@ protected:
 private:
     void check_inv(bool on_entry, bool static_inv_only) {
         try {
-            check_static_inv(on_entry, boost::mpl::bool_<
-                    has_static_invariant<C>::value>());
+            check_static_inv(on_entry, boost::mpl::bool_<boost::contract::
+                    access::has_static_invariant<C>::value>());
             if(!static_inv_only) {
-                check_const_inv(on_entry, boost::mpl::bool_<
-                        has_const_invariant<C>::value>());
+                check_const_inv(on_entry, boost::mpl::bool_<boost::contract::
+                        access::has_const_invariant<C>::value>());
             }
         } catch(...) {
             if(on_entry) boost::contract::entry_invariant_failed(from());
@@ -49,13 +48,12 @@ private:
 
     void check_static_inv(bool, boost::mpl::false_ const&) {}
     void check_static_inv(bool on_entry, boost::mpl::true_ const&) {
-        C::BOOST_CONTRACT_CONFIG_STATIC_INVARIANT();
+        boost::contract::access::static_invariant<C>();
     }
     
     void check_const_inv(bool, boost::mpl::false_ const&) {}
     void check_const_inv(bool on_entry, boost::mpl::true_ const&) {
-        BOOST_CONTRACT_AUX_DEBUG(obj_);
-        obj_->BOOST_CONTRACT_CONFIG_INVARIANT();
+        boost::contract::access::const_invariant(obj_);
     }
 
     // TODO: Add support for volatile member functions and class invariants.

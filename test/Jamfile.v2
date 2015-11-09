@@ -2,6 +2,7 @@
 test-suite constructor :
     [ subdir-run constructor : bases ]
     [ subdir-run constructor : body_throw ]
+    [ subdir-run constructor : access ]
     [ subdir-compile-fail constructor : no_pre_error ]
 ;
 
@@ -24,6 +25,7 @@ test-suite public_function :
     [ subdir-run public_function : body_throw ]
     [ subdir-run public_function : static ]
     [ subdir-run public_function : static_body_throw ]
+    [ subdir-run public_function : access ]
     [ subdir-compile-fail public_function : override_error ]
     [ subdir-run public_function : override_permissive ]
 ;
@@ -37,9 +39,11 @@ test-suite result :
 test-suite old :
     [ subdir-run old : no_macros ]
     [ subdir-run old : auto ]
+    [ subdir-run old : no_equal ]
     [ subdir-run old : noncopyable ]
-    [ subdir-compile-fail old : noncopyable_error ]
     [ subdir-compile-fail old : no_make_old_error ]
+    [ subdir-compile-fail old : noncopyable_error ]
+    [ subdir-compile-fail old : no_equal_error ]
 ;
 
 test-suite disable :

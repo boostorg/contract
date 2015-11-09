@@ -16,8 +16,6 @@
 #include <boost/contract/call_if.hpp>
 #include <boost/contract/config.hpp>
 
-// TODO: base_types, invariant, and static_invariant must be public. Allow to make them private (so to not alter user's public API) by declaring some `friend class boost::contract::aux::access;` from the user's class (then this lib can access base_types, invariant, and static_invariant via that access class). Document that if invariant function is made private but access is not made friend, this library will not check invariants and will not error (is this true? test it...).
-
 // TODO: Should C++11 move preserve class invariants at exit and/or on throw? Maybe not because after move no other public member can be called (but dtor can... so dtor should not check inv at that time...). If so, users could use an internal moved_ data member to guard class invariant checking and set that after the move operation... How can I program C++11 move operations with this lib? Should I used boost::contract::function instead of public_function? (But probably not because that does not subcontract and does not check inv at entry...)
 
 // TODO: What shall I do with unions? Can/shall I contract them? Double check which members C++11 unions can have (ctor, dtor, etc?).

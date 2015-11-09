@@ -4,11 +4,11 @@
 
 /** @file */
 
+#include <boost/contract/core/access.hpp>
 #include <boost/contract/core/set_precondition_old_postcondition.hpp>
 #include <boost/contract/core/virtual.hpp>
 #include <boost/contract/aux_/operation/public_function.hpp>
 #include <boost/contract/aux_/operation/public_static_function.hpp>
-#include <boost/contract/aux_/type_traits/base_types.hpp>
 #include <boost/contract/aux_/none.hpp>
 /** @cond */
 #include <boost/optional.hpp>
@@ -56,7 +56,7 @@
 // Always enforce this so this lib can check and enforce override.
 #define BOOST_CONTRACT_PUBLIC_FUNCTION_HAS_BASE_TYPES_(C) \
     BOOST_STATIC_ASSERT_MSG( \
-        boost::contract::aux::has_base_types<C>::value, \
+        boost::contract::access::has_base_types<C>::value, \
         "enclosing class missing 'base types' typedef" \
     );
 

@@ -2,11 +2,11 @@
 #ifndef BOOST_CONTRACT_AUX_CHECK_SUBCONTRACTED_PRE_POST_INV_HPP_
 #define BOOST_CONTRACT_AUX_CHECK_SUBCONTRACTED_PRE_POST_INV_HPP_
 
+#include <boost/contract/core/access.hpp>
 #include <boost/contract/core/virtual.hpp>
 #include <boost/contract/core/config.hpp>
 #include <boost/contract/core/exception.hpp>
 #include <boost/contract/aux_/condition/check_pre_post_inv.hpp>
-#include <boost/contract/aux_/type_traits/base_types.hpp>
 #include <boost/contract/aux_/type_traits/member_function_types.hpp>
 #include <boost/contract/aux_/type_traits/optional.hpp>
 #include <boost/contract/aux_/debug.hpp>
@@ -53,7 +53,7 @@ class check_subcontracted_pre_post_inv : // Copyable (as * and &).
     class overridden_bases_of {
         struct search_bases {
             typedef typename boost::mpl::fold<
-                typename base_types_of<Class>::type,
+                typename boost::contract::access::base_types_of<Class>::type,
                 Result,
                 // Fold: _1 = result, _2 = current base type from base_types.
                 boost::mpl::eval_if<boost::mpl::contains<boost::mpl::_1,
@@ -85,7 +85,8 @@ class check_subcontracted_pre_post_inv : // Copyable (as * and &).
             >::type type;
         };
     public:
-        typedef typename boost::mpl::eval_if<has_base_types<Class>,
+        typedef typename boost::mpl::eval_if<
+                boost::contract::access::has_base_types<Class>,
             search_bases
         ,
             boost::mpl::identity<Result> // Return result (stop recursion).

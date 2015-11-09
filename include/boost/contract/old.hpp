@@ -7,6 +7,7 @@
 #include <boost/contract/core/config.hpp>
 #include <boost/contract/core/virtual.hpp>
 #include <boost/contract/aux_/check_guard.hpp>
+#include <boost/contract/aux_/operator_safe_bool.hpp>
 #include <boost/contract/aux_/debug.hpp>
 /** @cond */
 #include <boost/make_shared.hpp>
@@ -29,8 +30,6 @@ BOOST_CONTRACT_ERROR_macro_OLDOF_requires_variadic_macros_otherwise_manually_pro
 #include <boost/preprocessor/facilities/empty.hpp>
 #include <boost/preprocessor/cat.hpp>
 /** @endcond */
-
-// TODO: Test old value and postcondition when a type does not have all operations required to check postcondition (e.g., T without operator== in vector::push_back postcondition `back() == old_value`).
 
 /* PUBLIC */
 
@@ -91,10 +90,10 @@ public:
     explicit old_ptr() {}
     
     T const& operator*() const { return ptr_.operator*(); }
+
     T const* operator->() const { return ptr_.operator->(); }
 
-    // TODO: Use safe bool instead.
-    operator bool() { return !!ptr_; }
+    BOOST_CONTRACT_AUX_OPERATOR_SAFE_BOOL(old_ptr<T>, !!ptr_)
 
 private:
     explicit old_ptr(boost::shared_ptr<T const> ptr) : ptr_(ptr) {}
