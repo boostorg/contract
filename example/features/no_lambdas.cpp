@@ -1,5 +1,6 @@
 
 #include "separate_body.hpp"
+#include <boost/bind.hpp>
 
 //[no_lambdas_cpp
 template<typename T, std::size_t MaxSize>

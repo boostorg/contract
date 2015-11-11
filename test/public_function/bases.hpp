@@ -32,11 +32,12 @@ private: // Test non-copyable and non-default-constructible result.
 // Test base without additional bases and pure virtual.
 template<char Id>
 struct t {
+    static void static_invariant() { out << Id << "::static_inv" << std::endl; }
+    
     void invariant() const {
         out << Id << "::inv" << std::endl;
         BOOST_CONTRACT_ASSERT(z.value != "");
     }
-    static void static_invariant() { out << Id << "::static_inv" << std::endl; }
 
     struct z_tag;
     typedef boost::contract::aux::test::counter<z_tag, std::string> z_type;
@@ -84,11 +85,12 @@ struct c
     typedef BOOST_CONTRACT_BASE_TYPES(BASES) base_types;
     #undef BASES
 
+    static void static_invariant() { out << "c::static_inv" << std::endl; }
+    
     void invariant() const {
         out << "c::inv" << std::endl;
         BOOST_CONTRACT_ASSERT(y.value != "");
     }
-    static void static_invariant() { out << "c::static_inv" << std::endl; }
 
     struct y_tag;
     typedef boost::contract::aux::test::counter<y_tag, std::string> y_type;
@@ -144,8 +146,8 @@ struct c
 
 // Test no subcontracting from not (fully) contracted base.
 struct b {
-    void invariant() const { out << "b::inv" << std::endl; }
     static void static_invariant() { out << "b::static_inv" << std::endl; }
+    void invariant() const { out << "b::inv" << std::endl; }
 
     virtual ~b() {}
 
@@ -165,11 +167,12 @@ struct a
     typedef BOOST_CONTRACT_BASE_TYPES(BASES) base_types;
     #undef BASES
 
+    static void static_invariant() { out << "a::static_inv" << std::endl; }
+    
     void invariant() const {
         out << "a::inv" << std::endl;
         BOOST_CONTRACT_ASSERT(x.value != "");
     }
-    static void static_invariant() { out << "a::static_inv" << std::endl; }
 
     struct x_tag;
     typedef boost::contract::aux::test::counter<x_tag, std::string> x_type;

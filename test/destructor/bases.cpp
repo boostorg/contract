@@ -15,13 +15,14 @@ boost::contract::aux::test::oteststream out;
 
 template<char Id>
 struct t {
-    void invariant() const {
-        out << Id << "::inv" << std::endl;
-        BOOST_CONTRACT_ASSERT(k_ < 0);
-    }
     static void static_invariant() {
         out << Id << "::static_inv" << std::endl;
         BOOST_CONTRACT_ASSERT(l.value >= 0);
+    }
+    
+    void invariant() const {
+        out << Id << "::inv" << std::endl;
+        BOOST_CONTRACT_ASSERT(k_ < 0);
     }
 
     struct l_tag;
@@ -62,13 +63,14 @@ struct c
     typedef BOOST_CONTRACT_BASE_TYPES(BASES) base_types;
     #undef BASES
 
-    void invariant() const {
-        out << "c::inv" << std::endl;
-        BOOST_CONTRACT_ASSERT(j_ < 0);
-    }
     static void static_invariant() {
         out << "c::static_inv" << std::endl;
         BOOST_CONTRACT_ASSERT(m.value >= 0);
+    }
+    
+    void invariant() const {
+        out << "c::inv" << std::endl;
+        BOOST_CONTRACT_ASSERT(j_ < 0);
     }
     
     struct m_tag;
@@ -101,8 +103,8 @@ c::m_type c::m;
 
 // Test not (fully) contracted base is not part of destructor subcontracting.
 struct b {
-    void invariant() const { out << "b::inv" << std::endl; }
     static void static_invariant() { out << "b::static_inv" << std::endl; }
+    void invariant() const { out << "b::inv" << std::endl; }
 
     explicit b() {}
     virtual ~b() {} // No contract.
@@ -116,13 +118,14 @@ struct a
     typedef BOOST_CONTRACT_BASE_TYPES(BASES) base_types;
     #undef BASES
 
-    void invariant() const {
-        out << "a::inv" << std::endl;
-        BOOST_CONTRACT_ASSERT(i_ < 0);
-    }
     static void static_invariant() {
         out << "a::static_inv" << std::endl;
         BOOST_CONTRACT_ASSERT(n.value >= 0);
+    }
+
+    void invariant() const {
+        out << "a::inv" << std::endl;
+        BOOST_CONTRACT_ASSERT(i_ < 0);
     }
     
     struct n_tag;

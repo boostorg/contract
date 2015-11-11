@@ -1,7 +1,6 @@
 
 //[cline90_stack
 #include <boost/contract.hpp>
-#include <boost/bind.hpp>
 #include <boost/detail/lightweight_test.hpp>
 
 template<typename T>
@@ -15,12 +14,10 @@ public:
 
     // NOTE: Incomplete contract assertions, addressing only `empty` and `full`.
 
-    static void stack_precondition(int const& capacity) {
-        BOOST_CONTRACT_ASSERT(capacity >= 0);
-    }
     explicit stack(int capacity) :
-        boost::contract::constructor_precondition<stack>(boost::bind(
-                &stack::stack_precondition, boost::cref(capacity))),
+        boost::contract::constructor_precondition<stack>([&] {
+            BOOST_CONTRACT_ASSERT(capacity >= 0);
+        }),
         data_(new T[capacity]), capacity_(capacity), size_(0)
     {
         auto c = boost::contract::constructor(this)

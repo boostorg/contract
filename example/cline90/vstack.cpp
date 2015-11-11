@@ -139,12 +139,10 @@ public:
         BOOST_CONTRACT_ASSERT(length() < capacity());
     }
 
-    static void vstack_precondition(int const& count) {
-        BOOST_CONTRACT_ASSERT(count >= 0);
-    }
     explicit vstack(int count = 10) :
-        boost::contract::constructor_precondition<vstack>(boost::bind(
-                &vstack::vstack_precondition, boost::cref(count))),
+        boost::contract::constructor_precondition<vstack>([&] {
+            BOOST_CONTRACT_ASSERT(count >= 0);
+        }),
         vect_(count), // OK, executed after precondition so count >= 0.
         len_(0)
     {

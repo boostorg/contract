@@ -35,7 +35,6 @@
 #endif
 
 // BOOST_CONTRACT_CONFIG_PERMISSING (#undef by default).
-// TODO: Implement following static errors (unless PERMISSIVE): (1) error if contracted class has `invariant` or `invariant volatile` without `const` qualifiers; (2) error if `invariant const` but not `invariant const volatile` and there are contracts for volatile members (mistake: assume `invariant const` will be called also for volatile members); (3) error if R != result_type<F>& && R != optional<result_type<F>>& (mistake: C++ should warn already if overriding func has different result type (but maybe not if it's a covariant type, in which case the lib's cast on v' void* result_ will probably segfault? test it...).
 
 #endif // #include guard
 

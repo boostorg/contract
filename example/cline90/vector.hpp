@@ -4,7 +4,6 @@
 #define VECTOR_HPP_
 
 #include <boost/contract.hpp>
-#include <boost/bind.hpp>
 
 template<typename T>
 class vector
@@ -21,12 +20,10 @@ public:
         BOOST_CONTRACT_ASSERT(size() >= 0);
     }
 
-    static void vector_precondition(int const& count) {
-        BOOST_CONTRACT_ASSERT(count >= 0);
-    }
     explicit vector(int count = 10) :
-        boost::contract::constructor_precondition<vector>(boost::bind(
-                &vector::vector_precondition, boost::cref(count))),
+        boost::contract::constructor_precondition<vector>([&] {
+            BOOST_CONTRACT_ASSERT(count >= 0);
+        }),
         data_(new T[count]),
         size_(count)
     {

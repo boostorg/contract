@@ -1,7 +1,6 @@
 
 //[mitchell02_simple_queue
 #include <boost/contract.hpp>
-#include <boost/bind.hpp>
 #include <boost/optional.hpp>
 #include <boost/detail/lightweight_test.hpp>
 #include <vector>
@@ -28,15 +27,10 @@ public:
     /* Creation */
 
     // Create empty queue.
-    static void simple_queue_precondition(int const& _capacity) {
-        BOOST_CONTRACT_ASSERT(_capacity > 0); // Positive capacity.
-    }
     explicit simple_queue(int _capacity) :
-        boost::contract::constructor_precondition<simple_queue>(
-            boost::bind(&simple_queue::simple_queue_precondition,
-                    boost::cref(_capacity)
-            )
-        )
+        boost::contract::constructor_precondition<simple_queue>([&] {
+            BOOST_CONTRACT_ASSERT(_capacity > 0); // Positive capacity.
+        })
     {
         auto c = boost::contract::constructor(this)
             .postcondition([&] {

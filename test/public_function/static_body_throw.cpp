@@ -10,8 +10,8 @@
 boost::contract::aux::test::oteststream out;
 
 struct a {
-    void invariant() const { out << "a::inv" << std::endl; }
     static void static_invariant() { out << "a::static_inv" << std::endl; }
+    void invariant() const { out << "a::inv" << std::endl; }
 
     struct e {};
 

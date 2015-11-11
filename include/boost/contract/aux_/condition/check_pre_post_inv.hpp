@@ -7,8 +7,13 @@
 #include <boost/contract/core/config.hpp>
 #include <boost/contract/aux_/condition/check_pre_post.hpp>
 /** @cond */
-#include <boost/mpl/bool.hpp>
-#include <boost/shared_ptr.hpp>
+#include <boost/utility/enable_if.hpp>
+#include <boost/function_types/property_tags.hpp>
+#include <boost/type_traits/is_volatile.hpp>
+#include <boost/mpl/vector.hpp>
+#include <boost/mpl/and.hpp>
+#include <boost/mpl/not.hpp>
+#include <boost/static_assert.hpp>
 /** @endcond */
 
 namespace boost { namespace contract { namespace aux {
@@ -16,6 +21,52 @@ namespace boost { namespace contract { namespace aux {
 template<typename R, class C>
 class check_pre_post_inv : public check_pre_post<R> { // Copyable (as *).
 public:
+#ifndef BOOST_CONTRACT_CONFIG_PERMISSIVE
+    BOOST_STATIC_ASSERT_MSG(
+        !boost::contract::access::has_static_invariant_f<C, void, boost::mpl::
+                vector<> >::value,
+        "static invariant member function cannot be mutable "
+        "(it must be static instead)"
+    );
+    BOOST_STATIC_ASSERT_MSG(
+        !boost::contract::access::has_static_invariant_f<C, void, boost::mpl::
+                vector<>, boost::function_types::const_non_volatile>::value,
+        "static invariant member function cannot be const qualified "
+        "(it must be static instead)"
+    );
+    BOOST_STATIC_ASSERT_MSG(
+        !boost::contract::access::has_static_invariant_f<C, void, boost::mpl::
+                vector<>, boost::function_types::volatile_non_const>::value,
+        "static invariant member function cannot be volatile qualified "
+        "(it must be static instead)"
+    );
+    BOOST_STATIC_ASSERT_MSG(
+        !boost::contract::access::has_static_invariant_f<C, void, boost::mpl::
+                vector<>, boost::function_types::cv_qualified>::value,
+        "static invariant member function cannot be const volatile qualified "
+        "(it must be static instead)"
+    );
+
+    BOOST_STATIC_ASSERT_MSG(
+        !boost::contract::access::has_invariant_s<C, void, boost::mpl::
+                vector<> >::value,
+        "non-static invariant member function cannot be static "
+        "(it must be either const or const volatile qualified instead)"
+    );
+    BOOST_STATIC_ASSERT_MSG(
+        !boost::contract::access::has_invariant_f<C, void, boost::mpl::
+                vector<>, boost::function_types::non_cv>::value,
+        "non-static invariant member function cannot be mutable "
+        "(it must be either const or const volatile qualified instead)"
+    );
+    BOOST_STATIC_ASSERT_MSG(
+        !boost::contract::access::has_invariant_f<C, void, boost::mpl::
+                vector<>, boost::function_types::volatile_non_const>::value,
+        "non-static invariant member function cannot be volatile qualified "
+        "(it must be const or const volatile qualified instead)"
+    );
+#endif
+
     // obj can be 0 for static member functions.
     explicit check_pre_post_inv(boost::contract::from from, C* obj) :
             check_pre_post<R>(from), obj_(obj) {}
@@ -34,11 +85,13 @@ protected:
 private:
     void check_inv(bool on_entry, bool static_inv_only) {
         try {
-            check_static_inv(on_entry, boost::mpl::bool_<boost::contract::
-                    access::has_static_invariant<C>::value>());
+            // Static members only check static inv.
+            check_static_inv<C>();
             if(!static_inv_only) {
-                check_const_inv(on_entry, boost::mpl::bool_<boost::contract::
-                        access::has_const_invariant<C>::value>());
+                // Volatile (const or not) members check static and cv inv.
+                check_cv_inv<C>();
+                // Other members (const or not) check static, cv, and const.
+                check_const_inv<C>();
             }
         } catch(...) {
             if(on_entry) boost::contract::entry_invariant_failed(from());
@@ -46,17 +99,45 @@ private:
         }
     }
 
-    void check_static_inv(bool, boost::mpl::false_ const&) {}
-    void check_static_inv(bool on_entry, boost::mpl::true_ const&) {
-        boost::contract::access::static_invariant<C>();
-    }
-    
-    void check_const_inv(bool, boost::mpl::false_ const&) {}
-    void check_const_inv(bool on_entry, boost::mpl::true_ const&) {
-        boost::contract::access::const_invariant(obj_);
-    }
 
-    // TODO: Add support for volatile member functions and class invariants.
+    template<class C_>
+    typename boost::enable_if<
+            boost::contract::access::has_static_invariant<C_> >::type
+    check_static_inv() { boost::contract::access::static_invariant<C_>(); }
+
+    template<class C_>
+    typename boost::disable_if<
+            boost::contract::access::has_static_invariant<C_> >::type
+    check_static_inv() {}
+
+
+    template<class C_>
+    typename boost::enable_if<
+            boost::contract::access::has_cv_invariant<C_> >::type
+    check_cv_inv() { boost::contract::access::cv_invariant(obj_); }
+    
+    template<class C_>
+    typename boost::disable_if<
+            boost::contract::access::has_cv_invariant<C_> >::type
+    check_cv_inv() {}
+
+    template<class C_>
+    struct call_const_inv :
+        boost::mpl::and_<
+            boost::contract::access::has_const_invariant<C_>,
+            // Volatile (like const) cannot be stripped so [const] volatile
+            // members only check cv invariant, and cannot check const inv.
+            boost::mpl::not_<boost::is_volatile<C_> >
+        >
+    {};
+    
+    template<class C_>
+    typename boost::enable_if<call_const_inv<C_> >::type
+    check_const_inv() { boost::contract::access::const_invariant(obj_); }
+
+    template<class C_>
+    typename boost::disable_if<call_const_inv<C_> >::type
+    check_const_inv() {}
 
     C* obj_;
 };

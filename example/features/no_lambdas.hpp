@@ -7,11 +7,12 @@ class array
     : private boost::contract::constructor_precondition<array<T, MaxSize> >
 {
 public:
-    void invariant() const {
-        BOOST_CONTRACT_ASSERT(size() <= MaxSize);
-    }
     static void static_invariant() const {
         BOOST_CONTRACT_ASSERT(instances() >= 0);
+    }
+
+    void invariant() const {
+        BOOST_CONTRACT_ASSERT(size() <= MaxSize);
     }
 
     explicit array(std::size_t count);

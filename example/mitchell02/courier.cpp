@@ -32,14 +32,14 @@ public:
     typedef BOOST_CONTRACT_BASE_TYPES(BASES) base_types;
     #undef BASES
 
-    void invariant() const {
-        // Above min. insurance.
-        BOOST_CONTRACT_ASSERT(insurance_cover_usd() >= min_insurance_usd);
-    }
-
     static void static_invariant() {
         // Positive min. insurance.
         BOOST_CONTRACT_ASSERT(min_insurance_usd >= 0.0);
+    }
+    
+    void invariant() const {
+        // Above min. insurance.
+        BOOST_CONTRACT_ASSERT(insurance_cover_usd() >= min_insurance_usd);
     }
     
     static double min_insurance_usd;
@@ -113,14 +113,14 @@ public:
     typedef BOOST_CONTRACT_BASE_TYPES(BASES) base_types; // Subcontracting.
     #undef BASES
 
-    void invariant() const {
-        // Above different insurance value.
-        BOOST_CONTRACT_ASSERT(insurance_cover_usd() >= different_insurance_usd);
-    }
-
     static void static_invariant() {
         BOOST_CONTRACT_ASSERT( // Better insurance amount.
                 different_insurance_usd >= courier::min_insurance_usd);
+    }
+    
+    void invariant() const {
+        // Above different insurance value.
+        BOOST_CONTRACT_ASSERT(insurance_cover_usd() >= different_insurance_usd);
     }
 
     static double different_insurance_usd;

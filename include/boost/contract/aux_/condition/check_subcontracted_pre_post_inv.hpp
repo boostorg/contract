@@ -100,8 +100,11 @@ class check_subcontracted_pre_post_inv : // Copyable (as * and &).
     >::type overridden_bases;
 
 #ifndef BOOST_CONTRACT_CONFIG_PERMISSIVE
-    BOOST_STATIC_ASSERT_MSG(boost::mpl::or_<boost::is_same<O, none>,
-            boost::mpl::not_<boost::mpl::empty<overridden_bases> > >::value,
+    BOOST_STATIC_ASSERT_MSG(
+        boost::mpl::or_<
+            boost::is_same<O, none>,
+            boost::mpl::not_<boost::mpl::empty<overridden_bases> >
+        >::value,
         "subcontracting function specified as 'override' but does not "
         "override any contracted member function"
     );
@@ -232,14 +235,12 @@ private:
     }
     
     template<typename R_, typename Result>
-    typename boost::enable_if<is_optional<R_> >::type check_post_r(
-            Result const& r) {
-        this->check_post(r);
-    }
+    typename boost::enable_if<is_optional<R_> >::type
+    check_post_r(Result const& r) { this->check_post(r); }
     
     template<typename R_, typename Result>
-    typename boost::disable_if<is_optional<R_> >::type check_post_r(
-            Result const& r) {
+    typename boost::disable_if<is_optional<R_> >::type
+    check_post_r(Result const& r) {
         BOOST_CONTRACT_AUX_DEBUG(r);
         this->check_post(*r);
     }

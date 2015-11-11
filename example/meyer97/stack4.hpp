@@ -5,7 +5,6 @@
 #define STACK4_HPP_
 
 #include <boost/contract.hpp>
-#include <boost/bind.hpp>
 
 // Dispenser with LIFO access policy and fixed max capacity.
 template<typename T>
@@ -26,12 +25,11 @@ public:
     /* Initialization */
 
     // Allocate static from a maximum of n items.
-    static void stack4_precondition(int const& n) {
-        // Its own func. for MSVC 2010 bug with lambdas in template init. list.
-        BOOST_CONTRACT_ASSERT(n >= 0); // Non-negative capacity.
-    }
-    explicit stack4(int n) : boost::contract::constructor_precondition<stack4>(
-            boost::bind(&stack4::stack4_precondition, boost::cref(n))) {
+    explicit stack4(int n) :
+        boost::contract::constructor_precondition<stack4>([&] {
+            BOOST_CONTRACT_ASSERT(n >= 0); // Non-negative capacity.
+        })
+    {
         auto c = boost::contract::constructor(this)
             .postcondition([&] {
                 BOOST_CONTRACT_ASSERT(capacity() == n); // Capacity set.

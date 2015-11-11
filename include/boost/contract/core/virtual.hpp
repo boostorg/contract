@@ -10,8 +10,6 @@
 #include <stack>
 /** @endcond */
 
-// TODO: Always program static_inv before inv in tests, examples, etc (because that is the order they are checked).
-    
 namespace boost {
     namespace contract {
         namespace aux {

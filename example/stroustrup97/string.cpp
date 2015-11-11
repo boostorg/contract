@@ -1,7 +1,6 @@
 
 //[stroustrup97_string
 #include <boost/contract.hpp>
-#include <boost/bind.hpp>
 #include <boost/detail/lightweight_test.hpp>
 #include <cstring>
 #include <iostream>
@@ -37,13 +36,11 @@ public:
         if(chars_[size_] != '\0') throw invariant_error();
     }
 
-    static void string_precondition(char const* const chars) {
-        if(!chars) throw string::null_error();
-        if(strlen(chars) > too_large) throw too_large_error();
-    }
     /* implicit */ string(char const* chars) :
-        boost::contract::constructor_precondition<string>(
-                boost::bind(&string_precondition, chars))
+        boost::contract::constructor_precondition<string>([&] {
+            if(!chars) throw string::null_error();
+            if(strlen(chars) > too_large) throw too_large_error();
+        })
     {
         auto c = boost::contract::constructor(this); // Check invariants.
         init(chars);

@@ -1,5 +1,5 @@
 
-// Test a::f overrides, but base b does not have f (has g instead).
+// Test error if override func does not actually override (unless PERMISSIVE).
 
 #include <boost/contract/public_function.hpp>
 #include <boost/contract/base_types.hpp>

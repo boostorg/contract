@@ -13,8 +13,8 @@
 boost::contract::aux::test::oteststream out;
 
 struct a {
-    void invariant() const { out << "a::inv" << std::endl; }
     static void static_invariant() { out << "a::static_inv" << std::endl; }
+    void invariant() const { out << "a::inv" << std::endl; }
 
     struct x_tag;
     typedef boost::contract::aux::test::counter<x_tag, int> x_type;
@@ -46,8 +46,8 @@ bool call_f() {
 }
 
 struct b {
-    void invariant() const { out << "b::inv" << std::endl; }
     static void static_invariant() { out << "b::static_inv" << std::endl; }
+    void invariant() const { out << "b::inv" << std::endl; }
 
     void g() {
         boost::contract::guard c = boost::contract::public_function(this)

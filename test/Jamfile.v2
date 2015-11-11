@@ -3,13 +3,33 @@ test-suite constructor :
     [ subdir-run constructor : bases ]
     [ subdir-run constructor : body_throw ]
     [ subdir-run constructor : access ]
-    [ subdir-compile-fail constructor : no_pre_error ]
+
+    [ subdir-compile-fail constructor : pre_error ]
 ;
 
 test-suite destructor :
     [ subdir-run destructor : bases ]
     [ subdir-run destructor : body_throw ]
-    [ subdir-compile-fail destructor : no_pre_error ]
+    [ subdir-run destructor : access ]
+
+    [ subdir-compile-fail destructor : pre_error ]
+;
+
+test-suite public_function :
+    [ subdir-run public_function : bases ]
+    [ subdir-run public_function : bases_pre ]
+    [ subdir-run public_function : bases_virtual ]
+    [ subdir-run public_function : bases_branch ]
+    [ subdir-run public_function : bases_sparse ]
+
+    [ subdir-run public_function : body_throw ]
+    [ subdir-run public_function : access ]
+
+    [ subdir-run public_function : static ]
+    [ subdir-run public_function : static_body_throw ]
+
+    [ subdir-compile-fail public_function : override_error ]
+    [ subdir-run public_function : override_permissive ]
 ;
 
 test-suite function :
@@ -17,32 +37,50 @@ test-suite function :
     [ subdir-run function : body_throw ]
 ;
 
-test-suite public_function :
-    [ subdir-run public_function : bases ]
-    [ subdir-run public_function : bases_virtual ]
-    [ subdir-run public_function : bases_branch ]
-    [ subdir-run public_function : bases_sparse ]
-    [ subdir-run public_function : body_throw ]
-    [ subdir-run public_function : static ]
-    [ subdir-run public_function : static_body_throw ]
-    [ subdir-run public_function : access ]
-    [ subdir-compile-fail public_function : override_error ]
-    [ subdir-run public_function : override_permissive ]
+test-suite invariant :
+    [ subdir-run invariant : all_static_cv_const ]
+    [ subdir-run invariant : both_static_cv ]
+    [ subdir-run invariant : both_cv_const ]
+    [ subdir-run invariant : both_static_const ]
+    [ subdir-run invariant : only_static ]
+    [ subdir-run invariant : only_cv ]
+    [ subdir-run invariant : only_const ]
+    [ subdir-run invariant : no_inv ]
+
+    [ subdir-compile-fail invariant : static_inv_mutable_error ]
+    [ subdir-run invariant : static_inv_mutable_permissive ]
+    [ subdir-compile-fail invariant : static_inv_const_error ]
+    [ subdir-run invariant : static_inv_const_permissive ]
+    [ subdir-compile-fail invariant : static_inv_volatile_error ]
+    [ subdir-run invariant : static_inv_volatile_permissive ]
+    [ subdir-compile-fail invariant : static_inv_cv_error ]
+    [ subdir-run invariant : static_inv_cv_permissive ]
+    
+    [ subdir-compile-fail invariant : inv_static_error ]
+    [ subdir-run invariant : inv_static_permissive ]
+    [ subdir-compile-fail invariant : inv_mutable_error ]
+    [ subdir-run invariant : inv_mutable_permissive ]
+    [ subdir-compile-fail invariant : inv_volatile_error ]
+    [ subdir-run invariant : inv_volatile_permissive ]
 ;
     
 test-suite result :
     [ subdir-run result : mixed_optional ]
     [ subdir-run result : mixed_optional_ref ]
+
     [ subdir-compile-fail result : type_mismatch_error ]
 ;
 
 test-suite old :
-    [ subdir-run old : no_macros ]
     [ subdir-run old : auto ]
-    [ subdir-run old : no_equal ]
-    [ subdir-run old : noncopyable ]
+
+    [ subdir-run old : no_macros ]
     [ subdir-compile-fail old : no_make_old_error ]
+
+    [ subdir-run old : noncopyable ]
     [ subdir-compile-fail old : noncopyable_error ]
+    
+    [ subdir-run old : no_equal ]
     [ subdir-compile-fail old : no_equal_error ]
 ;
 
@@ -51,14 +89,15 @@ test-suite disable :
 ;
 
 test-suite set :
-    [ subdir-run set : nothing ]
-    [ subdir-run set : only_pre ]
-    [ subdir-run set : only_old ]
-    [ subdir-run set : only_post ]
+    [ subdir-run set : all_pre_old_post ]
     [ subdir-run set : both_pre_old ]
     [ subdir-run set : both_old_post ]
     [ subdir-run set : both_pre_post ]
-    [ subdir-run set : all_pre_old_post ]
+    [ subdir-run set : only_pre ]
+    [ subdir-run set : only_old ]
+    [ subdir-run set : only_post ]
+    [ subdir-run set : nothing ]
+
     [ subdir-compile-fail set : old_pre_error ]
     [ subdir-compile-fail set : post_old_error ]
     [ subdir-compile-fail set : post_pre_error ]
@@ -67,8 +106,10 @@ test-suite set :
 test-suite call_if :
     [ subdir-run call_if : true_ ]
     [ subdir-run call_if : false_ ]
+
     [ subdir-run call_if : true_void ]
     [ subdir-run call_if : false_void ]
+    
     [ subdir-run call_if : equal_to ]
 ;
 

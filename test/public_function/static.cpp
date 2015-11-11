@@ -11,8 +11,8 @@
 boost::contract::aux::test::oteststream out;
 
 struct b {
-    void invariant() const { out << "b::inv" << std::endl; }
     static void static_invariant() { out << "b::static_inv" << std::endl; }
+    void invariant() const { out << "b::inv" << std::endl; }
 
     static void f() {
         boost::contract::guard c = boost::contract::public_function<b>()
@@ -31,8 +31,8 @@ struct a
     typedef BOOST_CONTRACT_BASE_TYPES(BASES) base_types;
     #undef BASES
 
-    void invariant() const { out << "a::inv" << std::endl; }
     static void static_invariant() { out << "a::static_inv" << std::endl; }
+    void invariant() const { out << "a::inv" << std::endl; }
 
     static void f() {
         boost::contract::guard c = boost::contract::public_function<a>()

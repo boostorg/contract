@@ -17,8 +17,8 @@ struct c
     typedef BOOST_CONTRACT_BASE_TYPES(BASES) base_types;
     #undef BASES
 
-    void invariant() const { out << "c::inv" << std::endl; }
     static void static_invariant() { out << "c::static_inv" << std::endl; }
+    void invariant() const { out << "c::inv" << std::endl; }
 
     c() :
         boost::contract::constructor_precondition<c>([&] {
@@ -41,8 +41,8 @@ struct b
     typedef BOOST_CONTRACT_BASE_TYPES(BASES) base_types;
     #undef BASES
 
-    void invariant() const { out << "b::inv" << std::endl; }
     static void static_invariant() { out << "b::static_inv" << std::endl; }
+    void invariant() const { out << "b::inv" << std::endl; }
 
     struct e {};
 
@@ -67,8 +67,8 @@ struct a
     typedef BOOST_CONTRACT_BASE_TYPES(BASES) base_types;
     #undef BASES
 
-    void invariant() const { out << "a::inv" << std::endl; }
     static void static_invariant() { out << "a::static_inv" << std::endl; }
+    void invariant() const { out << "a::inv" << std::endl; }
 
     a() :
         boost::contract::constructor_precondition<a>([&] {

@@ -13,8 +13,8 @@
 boost::contract::aux::test::oteststream out;
 
 struct j {
-    void invariant() const { out << "j::inv" << std::endl; }
     static void static_invariant() { out << "j::static_inv" << std::endl; }
+    void invariant() const { out << "j::inv" << std::endl; }
 
     virtual void f(char ch, boost::contract::virtual_* v = 0) {
         boost::contract::guard c = boost::contract::public_function(v, this)
@@ -30,8 +30,8 @@ struct j {
 };
 
 struct i {
-    void invariant() const { out << "i::inv" << std::endl; }
     static void static_invariant() { out << "i::static_inv" << std::endl; }
+    void invariant() const { out << "i::inv" << std::endl; }
 
     virtual void f(char ch, boost::contract::virtual_* v = 0) {
         boost::contract::guard c = boost::contract::public_function(v, this)
@@ -55,8 +55,8 @@ struct h
     typedef BOOST_CONTRACT_BASE_TYPES(BASES) base_types;
     #undef BASES
     
-    void invariant() const { out << "h::inv" << std::endl; }
     static void static_invariant() { out << "h::static_inv" << std::endl; }
+    void invariant() const { out << "h::inv" << std::endl; }
 
     virtual void f(char ch, boost::contract::virtual_* v = 0) /* override */ {
         boost::contract::guard c = boost::contract::public_function<
@@ -80,8 +80,8 @@ struct e
     typedef BOOST_CONTRACT_BASE_TYPES(BASES) base_types;
     #undef BASES
     
-    void invariant() const { out << "e::inv" << std::endl; }
     static void static_invariant() { out << "e::static_inv" << std::endl; }
+    void invariant() const { out << "e::inv" << std::endl; }
 
     virtual void f(char ch, boost::contract::virtual_* v = 0) /* override */ {
         boost::contract::guard c = boost::contract::public_function<
@@ -105,13 +105,13 @@ struct d
     typedef BOOST_CONTRACT_BASE_TYPES(BASES) base_types;
     #undef BASES
     
-    void invariant() const { out << "d::inv" << std::endl; }
     static void static_invariant() { out << "d::static_inv" << std::endl; }
+    void invariant() const { out << "d::inv" << std::endl; }
 };
 
 struct c {
-    void invariant() const { out << "c::inv" << std::endl; }
     static void static_invariant() { out << "c::static_inv" << std::endl; }
+    void invariant() const { out << "c::inv" << std::endl; }
     
     virtual void f(char ch, boost::contract::virtual_* v = 0) {
         boost::contract::guard c = boost::contract::public_function(v, this)
@@ -133,8 +133,8 @@ struct b
     typedef BOOST_CONTRACT_BASE_TYPES(BASES) base_types;
     #undef BASES
     
-    void invariant() const { out << "b::inv" << std::endl; }
     static void static_invariant() { out << "b::static_inv" << std::endl; }
+    void invariant() const { out << "b::inv" << std::endl; }
 };
 
 struct x {};
@@ -149,8 +149,8 @@ struct a
     typedef BOOST_CONTRACT_BASE_TYPES(BASES) base_types;
     #undef BASES
     
-    void invariant() const { out << "a::inv" << std::endl; }
     static void static_invariant() { out << "a::static_inv" << std::endl; }
+    void invariant() const { out << "a::inv" << std::endl; }
 
     virtual void f(char ch, boost::contract::virtual_* v = 0) /* override */ {
         boost::contract::guard c = boost::contract::public_function<
