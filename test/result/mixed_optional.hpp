@@ -1,4 +1,6 @@
 
+// no #include guard
+
 // Test base and derived classes mixing boost::optional and non- result types.
 
 #include "../aux_/oteststream.hpp"

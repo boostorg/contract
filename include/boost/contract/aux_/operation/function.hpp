@@ -6,7 +6,7 @@
 #include <boost/contract/aux_/condition/check_pre_post.hpp>
 #include <boost/contract/aux_/check_guard.hpp>
 /** @cond */
-#include <boost/shared_ptr.hpp>
+#include <boost/config.hpp>
 #include <exception>
 /** @endcond */
 
@@ -30,7 +30,7 @@ private:
     }
 
 public:
-    ~function() {
+    ~function() BOOST_NOEXCEPT_IF(false) {
         this->assert_guarded();
         if(check_guard::checking()) return;
         check_guard checking;

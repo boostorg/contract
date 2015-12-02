@@ -1,4 +1,6 @@
 
+// no #include guard
+
 // Test error if override func does not actually override (unless PERMISSIVE).
 
 #include <boost/contract/public_function.hpp>

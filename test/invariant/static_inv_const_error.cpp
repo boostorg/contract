@@ -1,3 +1,3 @@
 
-#include "static_inv_const.i"
+#include "static_inv_const.hpp"
 

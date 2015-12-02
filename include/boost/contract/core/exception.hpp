@@ -5,6 +5,7 @@
 /** @file */
 
 /** @cond */
+#include <boost/function.hpp>
 #include <boost/exception/diagnostic_information.hpp>
 #include <boost/config.hpp>
 #include <exception>
@@ -87,7 +88,8 @@ enum from {
     from_function
 };
 
-typedef void (*assertion_failed_handler)(from);
+// Must us boost::function to allow users to pass lambdas, binds, etc.
+typedef boost::function<void (from)> assertion_failed_handler;
 
 namespace exception_ {
     enum failed_key { pre_key, post_key, entry_inv_key, exit_inv_key };
@@ -146,8 +148,8 @@ namespace exception_ {
     /*boost::mutex::scoped_lock lock(exception_::_mutex);*/ \
     exception_::handler(where);
 
-assertion_failed_handler set_precondition_failed(assertion_failed_handler f)
-        BOOST_NOEXCEPT_OR_NOTHROW {
+assertion_failed_handler set_precondition_failed(
+        assertion_failed_handler const& f) BOOST_NOEXCEPT_OR_NOTHROW {
     BOOST_CONTRACT_EXCEPTION_SET_HANDLER_(pre_failed_mutex, pre_failed_handler,
             f)
 }
@@ -161,8 +163,8 @@ void precondition_failed(from where) /* can throw */ {
             where)
 }
 
-assertion_failed_handler set_postcondition_failed(assertion_failed_handler f)
-        BOOST_NOEXCEPT_OR_NOTHROW {
+assertion_failed_handler set_postcondition_failed(
+        assertion_failed_handler const& f) BOOST_NOEXCEPT_OR_NOTHROW {
     BOOST_CONTRACT_EXCEPTION_SET_HANDLER_(post_failed_mutex,
             post_failed_handler, f)
 }
@@ -177,8 +179,8 @@ void postcondition_failed(from where) /* can throw */ {
             post_failed_handler, where)
 }
 
-assertion_failed_handler set_entry_invariant_failed(assertion_failed_handler f)
-        BOOST_NOEXCEPT_OR_NOTHROW {
+assertion_failed_handler set_entry_invariant_failed(
+        assertion_failed_handler const& f) BOOST_NOEXCEPT_OR_NOTHROW {
     BOOST_CONTRACT_EXCEPTION_SET_HANDLER_(entry_inv_failed_mutex,
             entry_inv_failed_handler, f)
 }
@@ -194,8 +196,8 @@ void entry_invariant_failed(from where) /* can throw */ {
             entry_inv_failed_handler, where)
 }
 
-assertion_failed_handler set_exit_invariant_failed(assertion_failed_handler f)
-        BOOST_NOEXCEPT_OR_NOTHROW {
+assertion_failed_handler set_exit_invariant_failed(
+        assertion_failed_handler const& f) BOOST_NOEXCEPT_OR_NOTHROW {
     BOOST_CONTRACT_EXCEPTION_SET_HANDLER_(exit_inv_failed_mutex,
             exit_inv_failed_handler, f)
 }
@@ -210,8 +212,8 @@ void exit_invariant_failed(from where) /* can throw */ {
             exit_inv_failed_handler, where)
 }
 
-void set_invariant_failed(assertion_failed_handler f)
-        BOOST_NOEXCEPT_OR_NOTHROW {
+void set_invariant_failed(
+        assertion_failed_handler const& f) BOOST_NOEXCEPT_OR_NOTHROW {
     set_entry_invariant_failed(f);
     set_exit_invariant_failed(f);
 }

@@ -12,6 +12,7 @@
 #include <boost/function.hpp>
 #include <boost/type_traits/remove_reference.hpp>
 #include <boost/mpl/if.hpp>
+#include <boost/config.hpp>
 /** @endcond */
 
 namespace boost { namespace contract { namespace aux {
@@ -30,7 +31,7 @@ class check_pre_post : public check_base {
 public:
     explicit check_pre_post(boost::contract::from from) : check_base(from) {}
 
-    virtual ~check_pre_post() {}
+    virtual ~check_pre_post() BOOST_NOEXCEPT_IF(false) {}
 
     template<typename F>
     void set_post(F const& f) {
@@ -39,11 +40,12 @@ public:
 
 protected:
     void check_post(r_cref const& r) {
+        if(failed()) return;
         try {
             if(BOOST_CONTRACT_ERROR_postcondition_result_parameter_required) {
                 BOOST_CONTRACT_ERROR_postcondition_result_parameter_required(r);
             }
-        } catch(...) { boost::contract::postcondition_failed(from()); }
+        } catch(...) { fail(&boost::contract::postcondition_failed); }
     }
     
 private:
@@ -65,11 +67,12 @@ public:
 
 protected:
     void check_post(none const&) {
+        if(failed()) return;
         try {
             if(BOOST_CONTRACT_ERROR_postcondition_result_parameter_not_allowed){
   BOOST_CONTRACT_ERROR_postcondition_result_parameter_not_allowed();
             }
-        } catch(...) { boost::contract::postcondition_failed(from()); }
+        } catch(...) { fail(&boost::contract::postcondition_failed); }
     }
     
 private:

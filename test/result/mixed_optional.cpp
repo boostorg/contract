@@ -1,3 +1,3 @@
 
-#include "mixed_optional.i"
+#include "mixed_optional.hpp"
 

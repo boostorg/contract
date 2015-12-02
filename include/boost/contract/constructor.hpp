@@ -7,16 +7,13 @@
 #include <boost/contract/core/set_old_postcondition.hpp>
 #include <boost/contract/core/exception.hpp>
 #include <boost/contract/aux_/operation/constructor.hpp>
-/** @cond */
-#include <boost/make_shared.hpp>
-/** @endcond */
 
 namespace boost { namespace contract {
 
 template<class C>
 set_old_postcondition<> constructor(C* obj) {
-    return set_old_postcondition<>(boost::make_shared<
-            boost::contract::aux::constructor<C> >(obj));
+    return set_old_postcondition<>(
+            new boost::contract::aux::constructor<C>(obj));
 }
 
 // Uses C tparam to avoid multiple inheritance from same type.

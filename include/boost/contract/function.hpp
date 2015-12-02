@@ -6,15 +6,12 @@
 
 #include <boost/contract/core/set_precondition_old_postcondition.hpp>
 #include <boost/contract/aux_/operation/function.hpp>
-/** @cond */
-#include <boost/make_shared.hpp>
-/** @endcond */
 
 namespace boost { namespace contract {
 
 set_precondition_old_postcondition<> function() {
-    return set_precondition_old_postcondition<>(boost::make_shared<
-            boost::contract::aux::function>());
+    return set_precondition_old_postcondition<>(
+            new boost::contract::aux::function());
 }
 
 } } // namespace

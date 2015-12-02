@@ -61,6 +61,15 @@ class access {
         C::BOOST_CONTRACT_CONFIG_STATIC_INVARIANT();
     }
 
+    template<class C>
+    class static_invariant_addr { // Tpl instead of func to pass it as tparam.
+        typedef void (*func_ptr)();
+    public:
+        static func_ptr apply() {
+            return &C::BOOST_CONTRACT_CONFIG_STATIC_INVARIANT;
+        }
+    };
+
     BOOST_CONTRACT_AUX_INTROSPECTION_HAS_MEMBER_FUNCTION(
             has_invariant_f, BOOST_CONTRACT_CONFIG_INVARIANT)
     

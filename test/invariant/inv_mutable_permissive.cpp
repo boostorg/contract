@@ -1,4 +1,4 @@
 
 #define BOOST_CONTRACT_CONFIG_PERMISSIVE
-#include "inv_mutable.i"
+#include "inv_mutable.hpp"
 

@@ -6,7 +6,7 @@
 #include <boost/contract/aux_/config.hpp>
 /** @endcond */
 
-// Usually, never #defined (and debug assertions always on in the code).
+// Usually, never #defined (and debug assertions always in the code).
 #ifdef BOOST_CONTRACT_AUX_CONFIG_NDEBUG
 #   define BOOST_CONTRACT_AUX_DEBUG(cond)
 #else

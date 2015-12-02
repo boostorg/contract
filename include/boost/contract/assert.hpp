@@ -11,11 +11,11 @@
 
 /* PUBLIC */
 
+// Must use ternary operator expr here (instead of if-statement) so this macro
+// can always be used with if-statements and all other C++ constructs.
 #define BOOST_CONTRACT_ASSERT(condition) \
-    if(!(condition)) { \
-        throw boost::contract::assertion_failure(__FILE__, __LINE__, \
-                BOOST_PP_STRINGIZE(condition)); \
-    }
+    ((condition) ? (void*)0 : throw boost::contract::assertion_failure( \
+            __FILE__, __LINE__, BOOST_PP_STRINGIZE(condition)))
 
 #endif // #include guard
 

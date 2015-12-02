@@ -1,0 +1,36 @@
+
+// Test no precondition.
+
+#include "../aux_/oteststream.hpp"
+#include <boost/contract/function.hpp>
+#include <boost/contract/guard.hpp>
+#include <boost/detail/lightweight_test.hpp>
+#include <sstream>
+
+boost::contract::aux::test::oteststream out;
+
+void f() {
+    boost::contract::guard c = boost::contract::function()
+        // No `.precondition(...)` here.
+        .old([] { out << "f::old" << std::endl; })
+        .postcondition([] { out << "f::post" << std::endl; })
+    ;
+    out << "f::body" << std::endl;
+}
+
+
+int main() {
+    std::ostringstream ok;
+
+    out.str("");
+    f();
+    ok.str(""); ok // Did not check pre, but did not fail contract.
+        << "f::old" << std::endl
+        << "f::body" << std::endl
+        << "f::post" << std::endl
+    ;
+    BOOST_TEST(out.eq(ok.str()));
+
+    return boost::report_errors();
+}
+

@@ -4,5 +4,5 @@
 #define BOOST_CONTRACT_AUX_TEST_STATIC_INV
 #undef BOOST_CONTRACT_AUX_TEST_CV_INV
 #undef BOOST_CONTRACT_AUX_TEST_CONST_INV
-#include "combinations.i"
+#include "combinations.hpp"
 

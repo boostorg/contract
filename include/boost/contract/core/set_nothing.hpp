@@ -5,9 +5,7 @@
 /** @file */
 
 #include <boost/contract/aux_/condition/check_base.hpp>
-/** @cond */
-#include <boost/shared_ptr.hpp>
-/** @endcond */
+#include <boost/contract/aux_/debug.hpp>
 
 namespace boost {
     namespace contract {
@@ -24,15 +22,14 @@ namespace boost {
     
 namespace boost { namespace contract {
 
-// TODO: Do I need to store contracts as shared_ptr or unique_ptr is sufficient? Actually, double check all shared_ptr used in the lib anywhere (also in old_ptr, etc.) and see if unique_ptr would be sufficient there.
-
 class set_nothing { // Copyable as shared * (OK also for RAII).
 public:
     // No set member functions here.
 
 private:
-    typedef boost::shared_ptr<boost::contract::aux::check_base> check_ptr;
-    explicit set_nothing(check_ptr check): check_(check) {}
+    typedef boost::contract::aux::check_base* check_ptr;
+    explicit set_nothing(check_ptr check) :
+            check_(check) { BOOST_CONTRACT_AUX_DEBUG(check); }
     check_ptr check_;
 
     // Friendship used to limit library's public API.

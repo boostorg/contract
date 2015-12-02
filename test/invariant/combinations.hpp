@@ -1,4 +1,6 @@
 
+// no #include guard
+
 // Test all invariants combinations (static/cv/const-only) for all operations.
 
 #include "../aux_/oteststream.hpp"

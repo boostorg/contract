@@ -1,11 +1,13 @@
 
-// Test error if non-static inv declared mutable (unless PERMISSIVE #defined).
+// no #include guard
+
+// Test error if static inv declared const (unless PERMISSIVE #defined).
 
 #include <boost/contract/public_function.hpp>
 #include <boost/contract/guard.hpp>
 
 struct a {
-    void invariant() {}
+    void static_invariant() const {}
 
     void f() {
         // Same for ctor and dtor (because they all use check_pre_post_inv).

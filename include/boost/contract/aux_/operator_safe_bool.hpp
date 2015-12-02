@@ -31,6 +31,8 @@
 
 #elif defined(_MANAGED)
 
+// TODO: All code below should use BOOST_CONTRACT_AUX_NAME(...) instead of boost_contract_aux_...
+
 #define BOOST_CONTRACT_AUX_OPERATOR_SAFE_BOOL(this_type, bool_expr) \
     static void boost_contract_aux_operator_safe_bool_func(this_type***) {} \
     typedef void (*boost_contract_aux_operator_safe_bool_type)(this_type***); \

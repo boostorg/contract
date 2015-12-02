@@ -21,7 +21,8 @@ namespace boost {
 
 namespace boost { namespace contract {
 
-class virtual_ : private boost::noncopyable { // Non copyable (no queue copy).
+class virtual_ :
+        private boost::noncopyable { // To void queue, stack, etc, copies.
     // No public API (so users cannot use it directly).
 private:
     enum action_enum {
@@ -38,8 +39,8 @@ private:
         pop_old_init = check_post // These must be the same value.
     };
 
-    explicit virtual_(action_enum a) : action_(a), result_ptr_(),
-            result_optional_() {}
+    explicit virtual_(action_enum a) : action_(a), result_type_name_(),
+            result_optional_(), failed_(false) {}
 
     action_enum action_;
     
@@ -49,6 +50,8 @@ private:
     boost::any result_ptr_;
     char const* result_type_name_;
     bool result_optional_;
+
+    bool failed_;
 
     // Friendship used to limit library's public API.
     friend bool copy_old(virtual_*);

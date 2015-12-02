@@ -17,11 +17,10 @@ test-suite destructor :
 
 test-suite public_function :
     [ subdir-run public_function : bases ]
-    [ subdir-run public_function : bases_pre ]
     [ subdir-run public_function : bases_virtual ]
     [ subdir-run public_function : bases_branch ]
     [ subdir-run public_function : bases_sparse ]
-
+    
     [ subdir-run public_function : body_throw ]
     [ subdir-run public_function : access ]
 
@@ -30,10 +29,41 @@ test-suite public_function :
 
     [ subdir-compile-fail public_function : override_error ]
     [ subdir-run public_function : override_permissive ]
+    
+    [ subdir-run public_function : decl_pre_all ]
+    [ subdir-run public_function : decl_pre_sides ]
+    [ subdir-run public_function : decl_pre_middle ]
+    [ subdir-run public_function : decl_pre_none ]
+
+    [ subdir-run public_function : decl_post_all ]
+    [ subdir-run public_function : decl_post_sides ]
+    [ subdir-run public_function : decl_post_middle ]
+    [ subdir-run public_function : decl_post_none ]
+    
+    [ subdir-run public_function : decl_entry_static_inv_all ]
+    [ subdir-run public_function : decl_entry_static_inv_sides ]
+    [ subdir-run public_function : decl_entry_static_inv_middle ]
+    [ subdir-run public_function : decl_entry_static_inv_none ]
+    
+    [ subdir-run public_function : decl_exit_static_inv_all ]
+    [ subdir-run public_function : decl_exit_static_inv_sides ]
+    [ subdir-run public_function : decl_exit_static_inv_middle ]
+    [ subdir-run public_function : decl_exit_static_inv_none ]
+    
+    [ subdir-run public_function : decl_entry_inv_all ]
+    [ subdir-run public_function : decl_entry_inv_sides ]
+    [ subdir-run public_function : decl_entry_inv_middle ]
+    [ subdir-run public_function : decl_entry_inv_none ]
+    
+    [ subdir-run public_function : decl_exit_inv_all ]
+    [ subdir-run public_function : decl_exit_inv_sides ]
+    [ subdir-run public_function : decl_exit_inv_middle ]
+    [ subdir-run public_function : decl_exit_inv_none ]
 ;
 
 test-suite function :
-    [ subdir-run function : pre_post ]
+    [ subdir-run function : func ]
+    [ subdir-run function : decl_pre_none ]
     [ subdir-run function : body_throw ]
 ;
 

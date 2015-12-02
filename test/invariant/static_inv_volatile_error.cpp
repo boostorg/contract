@@ -1,3 +1,3 @@
 
-#include "static_inv_volatile.i"
+#include "static_inv_volatile.hpp"
 

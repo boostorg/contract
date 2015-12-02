@@ -10,10 +10,16 @@
 #include <boost/utility/enable_if.hpp>
 #include <boost/function_types/property_tags.hpp>
 #include <boost/type_traits/is_volatile.hpp>
+#include <boost/type_traits/add_pointer.hpp>
+#include <boost/mpl/for_each.hpp>
+#include <boost/mpl/copy_if.hpp>
+#include <boost/mpl/transform.hpp>
 #include <boost/mpl/vector.hpp>
 #include <boost/mpl/and.hpp>
 #include <boost/mpl/not.hpp>
+#include <boost/mpl/placeholders.hpp>
 #include <boost/static_assert.hpp>
+#include <boost/config.hpp>
 /** @endcond */
 
 namespace boost { namespace contract { namespace aux {
@@ -71,7 +77,7 @@ public:
     explicit check_pre_post_inv(boost::contract::from from, C* obj) :
             check_pre_post<R>(from), obj_(obj) {}
     
-    virtual ~check_pre_post_inv() {}
+    virtual ~check_pre_post_inv() BOOST_NOEXCEPT_IF(false) {}
 
 protected:
     void check_exit_inv() { check_inv(false, false); }
@@ -84,6 +90,7 @@ protected:
 
 private:
     void check_inv(bool on_entry, bool static_inv_only) {
+        if(this->failed()) return;
         try {
             // Static members only check static inv.
             check_static_inv<C>();
@@ -94,22 +101,27 @@ private:
                 check_const_inv<C>();
             }
         } catch(...) {
-            if(on_entry) boost::contract::entry_invariant_failed(from());
-            else boost::contract::exit_invariant_failed(from());
+            if(on_entry) this->fail(&boost::contract::entry_invariant_failed);
+            else this->fail(&boost::contract::exit_invariant_failed);
         }
     }
-
 
     template<class C_>
     typename boost::enable_if<
             boost::contract::access::has_static_invariant<C_> >::type
-    check_static_inv() { boost::contract::access::static_invariant<C_>(); }
+    check_static_inv() {
+        // SFINAE HAS_STATIC_... returns true even when member is inherited so
+        // need extra run-time check here (that's not the case for non static).
+        if(!inherited<boost::contract::access::has_static_invariant,
+                boost::contract::access::static_invariant_addr>::apply()) {
+            boost::contract::access::static_invariant<C_>();
+        }
+    }
 
     template<class C_>
     typename boost::disable_if<
             boost::contract::access::has_static_invariant<C_> >::type
     check_static_inv() {}
-
 
     template<class C_>
     typename boost::enable_if<
@@ -138,11 +150,51 @@ private:
     template<class C_>
     typename boost::disable_if<call_const_inv<C_> >::type
     check_const_inv() {}
+    
+    // Check is class's func is inherited from its base types or not.
+    template<template<class> class HasFunc, template<class> class FuncAddr>
+    struct inherited {
+        static bool apply() {
+            try {
+                boost::mpl::for_each<
+                    // For now, no reason to deeply search inheritance tree (as
+                    // SFINAE HAS_STATIC_... already fails in that case).
+                    typename boost::mpl::transform<
+                        typename boost::mpl::copy_if<
+                            typename boost::mpl::eval_if<boost::contract::
+                                    access::has_base_types<C>,
+                                typename boost::contract::access::
+                                        base_types_of<C>
+                            ,
+                                boost::mpl::vector<>
+                            >::type,
+                            HasFunc<boost::mpl::_1>
+                        >::type,
+                        boost::add_pointer<boost::mpl::_1>
+                    >::type
+                >(compare_func_addr());
+            } catch(signal_equal const&) { return true; }
+            return false;
+        }
+
+    private:
+        struct signal_equal {}; // Exception to stop for_each as soon as found.
+
+        struct compare_func_addr {
+            template<typename B>
+            void operator()(B*) {
+                // Inherited func has same addr as in its base.
+                if(FuncAddr<C>::apply() == FuncAddr<B>::apply()) {
+                    throw signal_equal();
+                }
+            }
+        };
+    };
 
     C* obj_;
 };
 
-} } }
+} } } // namespace
 
 #endif // #include guard
 

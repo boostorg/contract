@@ -26,7 +26,7 @@
             class BOOST_CONTRACT_AUX_NAME1(B), \
             class BOOST_CONTRACT_AUX_NAME1(C) \
         > \
-        static void BOOST_CONTRACT_AUX_NAME1(base_call)( \
+        static void BOOST_CONTRACT_AUX_NAME1(call_base)( \
             BOOST_CONTRACT_AUX_NAME1(C)* BOOST_CONTRACT_AUX_NAME1(obj), \
             boost::contract::aux::none&, \
             boost::contract::aux::none&, \
@@ -42,7 +42,7 @@
             class BOOST_CONTRACT_AUX_NAME1(C), \
             typename BOOST_CONTRACT_AUX_NAME1(A0) \
         > \
-        static void BOOST_CONTRACT_AUX_NAME1(base_call)( \
+        static void BOOST_CONTRACT_AUX_NAME1(call_base)( \
             BOOST_CONTRACT_AUX_NAME1(C)* BOOST_CONTRACT_AUX_NAME1(obj), \
             BOOST_CONTRACT_AUX_NAME1(A0)& BOOST_CONTRACT_AUX_NAME1(a0), \
             boost::contract::aux::none&, \
@@ -60,7 +60,7 @@
             typename BOOST_CONTRACT_AUX_NAME1(A0), \
             typename BOOST_CONTRACT_AUX_NAME1(A1) \
         > \
-        static void BOOST_CONTRACT_AUX_NAME1(base_call)( \
+        static void BOOST_CONTRACT_AUX_NAME1(call_base)( \
             BOOST_CONTRACT_AUX_NAME1(C)* BOOST_CONTRACT_AUX_NAME1(obj), \
             BOOST_CONTRACT_AUX_NAME1(A0)& BOOST_CONTRACT_AUX_NAME1(a0), \
             BOOST_CONTRACT_AUX_NAME1(A1)& BOOST_CONTRACT_AUX_NAME1(a1), \

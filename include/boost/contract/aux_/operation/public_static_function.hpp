@@ -8,7 +8,7 @@
 #include <boost/contract/aux_/check_guard.hpp>
 #include <boost/contract/aux_/none.hpp>
 /** @cond */
-#include <boost/shared_ptr.hpp>
+#include <boost/config.hpp>
 #include <exception>
 /** @endcond */
 
@@ -35,7 +35,7 @@ private:
     }
 
 public:
-    ~public_static_function() {
+    ~public_static_function() BOOST_NOEXCEPT_IF(false) {
         this->assert_guarded();
         if(check_guard::checking()) return;
         check_guard checking;

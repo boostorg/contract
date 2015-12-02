@@ -1,3 +1,3 @@
 
-#include "static_inv_cv.i"
+#include "static_inv_cv.hpp"
 
