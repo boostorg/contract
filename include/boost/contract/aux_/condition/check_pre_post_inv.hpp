@@ -19,7 +19,6 @@
 #include <boost/mpl/not.hpp>
 #include <boost/mpl/placeholders.hpp>
 #include <boost/static_assert.hpp>
-#include <boost/config.hpp>
 /** @endcond */
 
 namespace boost { namespace contract { namespace aux {
@@ -77,8 +76,6 @@ public:
     explicit check_pre_post_inv(boost::contract::from from, C* obj) :
             check_pre_post<R>(from), obj_(obj) {}
     
-    virtual ~check_pre_post_inv() BOOST_NOEXCEPT_IF(false) {}
-
 protected:
     void check_exit_inv() { check_inv(false, false); }
     void check_entry_inv() { check_inv(true, false); }

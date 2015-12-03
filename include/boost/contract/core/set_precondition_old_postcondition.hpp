@@ -9,7 +9,11 @@
 #include <boost/contract/core/set_nothing.hpp>
 #include <boost/contract/aux_/condition/check_pre_post.hpp>
 #include <boost/contract/aux_/none.hpp>
+#include <boost/contract/aux_/auto_ptr.hpp>
 #include <boost/contract/aux_/debug.hpp>
+/** @cond */
+#include <boost/config.hpp>
+/** @endcond */
 
 namespace boost {
     namespace contract {
@@ -20,32 +24,37 @@ namespace boost {
 namespace boost { namespace contract {
     
 template<typename R = void>
-class set_precondition_old_postcondition { // Copy as shared * (OK for RAII).
+class set_precondition_old_postcondition { // Copy as * (OK for RAII).
 public:
+    ~set_precondition_old_postcondition() BOOST_NOEXCEPT_IF(false) {}
+    
     template<typename F>
     set_old_postcondition<R> precondition(F const& f) {
+        BOOST_CONTRACT_AUX_DEBUG(check_);
         check_->set_pre(f);
-        return set_old_postcondition<R>(check_);
+        return set_old_postcondition<R>(check_.release());
     }
 
     template<typename F>
     set_postcondition_only<R> old(F const& f) {
+        BOOST_CONTRACT_AUX_DEBUG(check_);
         check_->set_old(f);
-        return set_postcondition_only<R>(check_);
+        return set_postcondition_only<R>(check_.release());
     }
 
     template<typename F>
     set_nothing postcondition(F const& f) {
+        BOOST_CONTRACT_AUX_DEBUG(check_);
         check_->set_post(f);
-        return set_nothing(check_);
+        return set_nothing(check_.release());
     }
 
 private:
     typedef boost::contract::aux::check_pre_post<
-            typename boost::contract::aux::none_if_void<R>::type>* check_ptr;
-    explicit set_precondition_old_postcondition(check_ptr check) :
-            check_(check) { BOOST_CONTRACT_AUX_DEBUG(check_); }
-    check_ptr check_;
+            typename boost::contract::aux::none_if_void<R>::type> check_type;
+    explicit set_precondition_old_postcondition(check_type* check) :
+            check_(check) {}
+    boost::contract::aux::auto_ptr<check_type> check_;
 
     // Friendship used to limit library's public API.
     friend class guard;

@@ -12,7 +12,6 @@
 #include <boost/function.hpp>
 #include <boost/type_traits/remove_reference.hpp>
 #include <boost/mpl/if.hpp>
-#include <boost/config.hpp>
 /** @endcond */
 
 namespace boost { namespace contract { namespace aux {
@@ -30,8 +29,6 @@ class check_pre_post : public check_base {
 
 public:
     explicit check_pre_post(boost::contract::from from) : check_base(from) {}
-
-    virtual ~check_pre_post() BOOST_NOEXCEPT_IF(false) {}
 
     template<typename F>
     void set_post(F const& f) {
@@ -57,8 +54,6 @@ template<>
 class check_pre_post<none> : public check_base {
 public:
     explicit check_pre_post(boost::contract::from from) : check_base(from) {}
-
-    virtual ~check_pre_post() {}
 
     template<typename F>
     void set_post(F const& f) {

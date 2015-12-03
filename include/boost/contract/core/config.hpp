@@ -36,5 +36,22 @@
 
 // BOOST_CONTRACT_CONFIG_PERMISSING (#undef by default).
 
+// Type of exception to throw is `guard c = ...` is missing. This is a
+// programming error so by default this library calls abort. If this macro is
+// #defined however, this library will throw the exception specified by the
+// macro value instead of calling abort. When #defined, this macro must be a
+// default constructible type.
+// Code instruction(s) to execute when contracts are missing `guard c = ...`.
+// In general, this is #undefined and this library calls `assert(false)` when
+// contract guards are missing. Missing a contract guard is a logic error in
+// the program (similar to dereferencing a null pointer) so terminating the
+// program via `abort` or `assert` as this library does by default is the only
+// safe thing to do. Therefore, it is recommended to never #define this macro.
+// However, this macro can be defined to throw an exception, call a function,
+// a no-op, or any other user code in case users truly need to handle missing
+// contract guard logic errors without terminating the program, for example:
+//  #define BOOST_CONFIG_ON_MISSING_GUARD { throw my_logic_error(); }
+// BOOST_CONTRACT_CONFIG_ON_MISSING_GUARD
+
 #endif // #include guard
 

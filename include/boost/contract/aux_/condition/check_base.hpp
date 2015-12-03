@@ -2,13 +2,18 @@
 #ifndef BOOST_CONTRACT_AUX_CHECK_BASE_HPP_
 #define BOOST_CONTRACT_AUX_CHECK_BASE_HPP_
 
+#include <boost/contract/core/config.hpp>
 #include <boost/contract/core/exception.hpp>
 /** @cond */
 // TODO: Can I reduce boost.function overhead? Check also everywhere else boost.function is used.
 #include <boost/function.hpp>
 #include <boost/config.hpp>
-#include <cassert>
+#ifndef BOOST_CONTRACT_CONFIG_ON_MISSING_GUARD
+#   include <cassert>
+#endif
 /** @endcond */
+
+// TODO: Document all BOOST_CONTRACT_ERROR_... and BOOST_STATIC_ASSERT_MSG errors (in an annex...).
 
 namespace boost { namespace contract { namespace aux {
 
@@ -17,19 +22,28 @@ public:
     explicit check_base(boost::contract::from from) :
         BOOST_CONTRACT_ERROR_missing_guard_declaration(false),
         from_(from),
-        failed_(false)
+        failed_(false),
+        guard_asserted_(false)
     {}
+    
+    virtual ~check_base() BOOST_NOEXCEPT_IF(false) { // So contracts can throw.
+        if(!guard_asserted_) assert_guarded();
+    }
 
+    void assert_guarded() { // Derived dtors must assert this at entry.
+        guard_asserted_ = true;
+#ifdef BOOST_CONTRACT_CONFIG_ON_MISSING_GUARD
+        if(!BOOST_CONTRACT_ERROR_missing_guard_declaration) {
+            BOOST_CONTRACT_CONFIG_ON_MISSING_GUARD;
+        }
+#else
+        assert(BOOST_CONTRACT_ERROR_missing_guard_declaration);
+#endif
+    }
+    
     void guard() { // Must be called by contract guard ctor.
         BOOST_CONTRACT_ERROR_missing_guard_declaration = true;
         this->init(); // All inits (pre, old, post) done after guard decl.
-    }
-
-    // Assert in case derived don't.
-    virtual ~check_base() BOOST_NOEXCEPT_IF(false) { assert_guarded(); }
-        
-    void assert_guarded() { // Derived dtors should call this (earlier errors).
-        assert(BOOST_CONTRACT_ERROR_missing_guard_declaration);
     }
     
     template<typename F>
@@ -39,7 +53,7 @@ public:
     void set_old(F const& f) { old_ = f; }
 
 protected:
-    virtual void init() {}
+    virtual void init() = 0;
     
     bool check_pre(bool throw_on_failure = false) {
         if(!pre_) return false;
@@ -76,6 +90,7 @@ private:
     boost::function<void ()> pre_;
     boost::function<void ()> old_;
     bool failed_;
+    bool guard_asserted_; // Avoid throwing twice from dtors (undef behavior).
 };
 
 } } } // namespace
