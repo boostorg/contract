@@ -4,14 +4,13 @@
 #define BOOST_CONTRACT_AUX_TEST_NO_A_POST
 #define BOOST_CONTRACT_AUX_TEST_NO_B_POST
 #define BOOST_CONTRACT_AUX_TEST_NO_C_POST
-#include "./decl.hpp"
+#include "decl.hpp"
 
-#include "../aux_/oteststream.hpp"
 #include <boost/detail/lightweight_test.hpp>
 #include <sstream>
 
 int main() {
-    std::ostringstream ok; ok
+    std::ostringstream ok; ok // Test nothing fails.
         << "c::static_inv" << std::endl
         << "c::inv" << std::endl
         << "b::static_inv" << std::endl
@@ -34,12 +33,19 @@ int main() {
         << "a::static_inv" << std::endl
         << "a::inv" << std::endl
         
-        // Test no postconditions.
+        // No postconditions.
         << "c::f::old" << std::endl
         << "b::f::old" << std::endl
     ;
 
     a aa;
+    
+    a_post = true;
+    b_post = true;
+    c_post = true;
+    out.str("");
+    aa.f();
+    BOOST_TEST(out.eq(ok.str()));
 
     a_post = false;
     b_post = true;

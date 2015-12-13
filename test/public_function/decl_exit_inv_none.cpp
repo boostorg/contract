@@ -4,16 +4,15 @@
 #define BOOST_CONTRACT_AUX_TEST_NO_A_INV
 #define BOOST_CONTRACT_AUX_TEST_NO_B_INV
 #define BOOST_CONTRACT_AUX_TEST_NO_C_INV
-#include "./decl.hpp"
+#include "decl.hpp"
 
-#include "../aux_/oteststream.hpp"
 #include <boost/detail/lightweight_test.hpp>
 #include <sstream>
 
 int main() {
     std::ostringstream ok;
-    ok.str(""); ok
-        // Test no invariants.
+    ok.str(""); ok // Test nothing fails.
+        // No invariants.
         << "c::static_inv" << std::endl
         << "b::static_inv" << std::endl
         << "a::static_inv" << std::endl
@@ -42,36 +41,44 @@ int main() {
             [] (boost::contract::from) { throw err(); });
 
     a aa;
+    
+    a_exit_inv = true;
+    b_exit_inv = true;
+    c_exit_inv = true;
+    a_entering_inv = b_entering_inv = c_entering_inv = true;
+    out.str("");
+    aa.f();
+    BOOST_TEST(out.eq(ok.str()));
 
     a_exit_inv = false;
     b_exit_inv = true;
     c_exit_inv = true;
-    out.str("");
     a_entering_inv = b_entering_inv = c_entering_inv = true;
+    out.str("");
     aa.f();
     BOOST_TEST(out.eq(ok.str()));
     
     a_exit_inv = true;
     b_exit_inv = false;
     c_exit_inv = true;
-    out.str("");
     a_entering_inv = b_entering_inv = c_entering_inv = true;
+    out.str("");
     aa.f();
     BOOST_TEST(out.eq(ok.str()));
     
     a_exit_inv = true;
     b_exit_inv = true;
     c_exit_inv = false;
-    out.str("");
     a_entering_inv = b_entering_inv = c_entering_inv = true;
+    out.str("");
     aa.f();
     BOOST_TEST(out.eq(ok.str()));
     
     a_exit_inv = false;
     b_exit_inv = false;
     c_exit_inv = false;
-    out.str("");
     a_entering_inv = b_entering_inv = c_entering_inv = true;
+    out.str("");
     aa.f();
     BOOST_TEST(out.eq(ok.str()));
 

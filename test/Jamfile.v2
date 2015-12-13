@@ -1,13 +1,64 @@
 
 test-suite constructor :
+    [ subdir-run constructor : decl_pre_all ]
+    [ subdir-run constructor : decl_pre_sides ]
+    [ subdir-run constructor : decl_pre_middle ]
+    [ subdir-run constructor : decl_pre_none ]
+    
+    [ subdir-run constructor : decl_post_all ]
+    [ subdir-run constructor : decl_post_sides ]
+    [ subdir-run constructor : decl_post_middle ]
+    [ subdir-run constructor : decl_post_none ]
+    
+    [ subdir-run constructor : decl_entry_static_inv_all ]
+    [ subdir-run constructor : decl_entry_static_inv_sides ]
+    [ subdir-run constructor : decl_entry_static_inv_middle ]
+    [ subdir-run constructor : decl_entry_static_inv_none ]
+    
+    [ subdir-run constructor : decl_exit_static_inv_all ]
+    [ subdir-run constructor : decl_exit_static_inv_sides ]
+    [ subdir-run constructor : decl_exit_static_inv_middle ]
+    [ subdir-run constructor : decl_exit_static_inv_none ]
+    
+    # No decl_entry_static_inv_... for constructors.
+
+    [ subdir-run constructor : decl_exit_inv_all ]
+    [ subdir-run constructor : decl_exit_inv_sides ]
+    [ subdir-run constructor : decl_exit_inv_middle ]
+    [ subdir-run constructor : decl_exit_inv_none ]
+    
     [ subdir-run constructor : bases ]
     [ subdir-run constructor : body_throw ]
     [ subdir-run constructor : access ]
-
+    
     [ subdir-compile-fail constructor : pre_error ]
 ;
 
 test-suite destructor :
+    # No decl_pre_... for destructors.
+    
+    [ subdir-run destructor : decl_post_all ]
+    [ subdir-run destructor : decl_post_sides ]
+    [ subdir-run destructor : decl_post_middle ]
+    [ subdir-run destructor : decl_post_none ]
+    
+    [ subdir-run destructor : decl_entry_static_inv_all ]
+    [ subdir-run destructor : decl_entry_static_inv_sides ]
+    [ subdir-run destructor : decl_entry_static_inv_middle ]
+    [ subdir-run destructor : decl_entry_static_inv_none ]
+    
+    [ subdir-run destructor : decl_exit_static_inv_all ]
+    [ subdir-run destructor : decl_exit_static_inv_sides ]
+    [ subdir-run destructor : decl_exit_static_inv_middle ]
+    [ subdir-run destructor : decl_exit_static_inv_none ]
+    
+    [ subdir-run destructor : decl_entry_inv_all ]
+    [ subdir-run destructor : decl_entry_inv_sides ]
+    [ subdir-run destructor : decl_entry_inv_middle ]
+    [ subdir-run destructor : decl_entry_inv_none ]
+
+    # No decl_exit_inv_... for destructors.
+
     [ subdir-run destructor : bases ]
     [ subdir-run destructor : body_throw ]
     [ subdir-run destructor : access ]
@@ -16,20 +67,6 @@ test-suite destructor :
 ;
 
 test-suite public_function :
-    [ subdir-run public_function : bases ]
-    [ subdir-run public_function : bases_virtual ]
-    [ subdir-run public_function : bases_branch ]
-    [ subdir-run public_function : bases_sparse ]
-    
-    [ subdir-run public_function : body_throw ]
-    [ subdir-run public_function : access ]
-
-    [ subdir-run public_function : static ]
-    [ subdir-run public_function : static_body_throw ]
-
-    [ subdir-compile-fail public_function : override_error ]
-    [ subdir-run public_function : override_permissive ]
-    
     [ subdir-run public_function : decl_pre_all ]
     [ subdir-run public_function : decl_pre_sides ]
     [ subdir-run public_function : decl_pre_middle ]
@@ -59,11 +96,30 @@ test-suite public_function :
     [ subdir-run public_function : decl_exit_inv_sides ]
     [ subdir-run public_function : decl_exit_inv_middle ]
     [ subdir-run public_function : decl_exit_inv_none ]
+    
+    [ subdir-run public_function : bases ]
+    [ subdir-run public_function : bases_virtual ]
+    [ subdir-run public_function : bases_branch ]
+    [ subdir-run public_function : bases_sparse ]
+    
+    [ subdir-run public_function : body_throw ]
+    [ subdir-run public_function : access ]
+
+    [ subdir-run public_function : static ]
+    [ subdir-run public_function : static_body_throw ]
+
+    [ subdir-compile-fail public_function : override_error ]
+    [ subdir-run public_function : override_permissive ]
 ;
 
 test-suite function :
-    [ subdir-run function : func ]
+    [ subdir-run function : decl_pre_all ]
     [ subdir-run function : decl_pre_none ]
+    
+    [ subdir-run function : decl_post_all ]
+    [ subdir-run function : decl_post_none ]
+    
+    [ subdir-run function : func ]
     [ subdir-run function : body_throw ]
 ;
 
@@ -127,6 +183,8 @@ test-suite set :
     [ subdir-run set : only_old ]
     [ subdir-run set : only_post ]
     [ subdir-run set : nothing ]
+    
+    [ subdir-run set : no_guard ]
 
     [ subdir-compile-fail set : old_pre_error ]
     [ subdir-compile-fail set : post_old_error ]

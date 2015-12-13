@@ -4,21 +4,55 @@
 #undef BOOST_CONTRACT_AUX_TEST_NO_A_POST
 #define BOOST_CONTRACT_AUX_TEST_NO_B_POST
 #undef BOOST_CONTRACT_AUX_TEST_NO_C_POST
-#include "./decl.hpp"
+#include "decl.hpp"
 
-#include "../aux_/oteststream.hpp"
 #include <boost/detail/lightweight_test.hpp>
 #include <sstream>
 
 int main() {
     std::ostringstream ok;
     
+    a aa;
+    
+    a_post = true;
+    b_post = true;
+    c_post = true;
+    out.str("");
+    aa.f();
+    ok.str(""); ok // Test nothing failed.
+        << "c::static_inv" << std::endl
+        << "c::inv" << std::endl
+        << "b::static_inv" << std::endl
+        << "b::inv" << std::endl
+        << "a::static_inv" << std::endl
+        << "a::inv" << std::endl
+        
+        << "c::f::pre" << std::endl
+        
+        << "c::f::old" << std::endl
+        << "b::f::old" << std::endl
+        << "a::f::old" << std::endl
+        
+        << "a::f::body" << std::endl
+        
+        << "c::static_inv" << std::endl
+        << "c::inv" << std::endl
+        << "b::static_inv" << std::endl
+        << "b::inv" << std::endl
+        << "a::static_inv" << std::endl
+        << "a::inv" << std::endl
+        
+        << "c::f::old" << std::endl
+        << "c::f::post" << std::endl
+        << "b::f::old" << std::endl
+        << "a::f::post" << std::endl
+    ;
+    BOOST_TEST(out.eq(ok.str()));
+    
     struct err {};
     boost::contract::set_postcondition_failed(
             [] (boost::contract::from) { throw err(); });
 
-    a aa;
-    
     a_post = false;
     b_post = true;
     c_post = true;
@@ -90,6 +124,7 @@ int main() {
             << "c::f::old" << std::endl
             << "c::f::post" << std::endl
             << "b::f::old" << std::endl
+            // Test no failure here.
             << "a::f::post" << std::endl
         ;
         BOOST_TEST(out.eq(ok.str()));
