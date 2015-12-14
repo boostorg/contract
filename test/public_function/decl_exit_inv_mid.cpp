@@ -1,5 +1,5 @@
 
-// Test only middle base class has exit invariants.
+// Test only middle base class with exit invariants.
 
 #define BOOST_CONTRACT_AUX_TEST_NO_A_INV
 #undef BOOST_CONTRACT_AUX_TEST_NO_B_INV

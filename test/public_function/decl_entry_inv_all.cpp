@@ -1,5 +1,5 @@
 
-// Test derived and base classes all with entry invariants.
+// Test all derived and base classes with entry invariants.
 
 #undef BOOST_CONTRACT_AUX_TEST_NO_A_INV
 #undef BOOST_CONTRACT_AUX_TEST_NO_B_INV

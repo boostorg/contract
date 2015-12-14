@@ -1,5 +1,5 @@
 
-// Test derived and base classes all with exit static invariants.
+// Test all derived and base classes with exit static invariants.
 
 #undef BOOST_CONTRACT_AUX_TEST_NO_A_STATIC_INV
 #undef BOOST_CONTRACT_AUX_TEST_NO_B_STATIC_INV

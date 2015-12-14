@@ -1,30 +1,30 @@
 
 test-suite constructor :
     [ subdir-run constructor : decl_pre_all ]
-    [ subdir-run constructor : decl_pre_sides ]
-    [ subdir-run constructor : decl_pre_middle ]
+    [ subdir-run constructor : decl_pre_ends ]
+    [ subdir-run constructor : decl_pre_mid ]
     [ subdir-run constructor : decl_pre_none ]
     
     [ subdir-run constructor : decl_post_all ]
-    [ subdir-run constructor : decl_post_sides ]
-    [ subdir-run constructor : decl_post_middle ]
+    [ subdir-run constructor : decl_post_ends ]
+    [ subdir-run constructor : decl_post_mid ]
     [ subdir-run constructor : decl_post_none ]
     
     [ subdir-run constructor : decl_entry_static_inv_all ]
-    [ subdir-run constructor : decl_entry_static_inv_sides ]
-    [ subdir-run constructor : decl_entry_static_inv_middle ]
+    [ subdir-run constructor : decl_entry_static_inv_ends ]
+    [ subdir-run constructor : decl_entry_static_inv_mid ]
     [ subdir-run constructor : decl_entry_static_inv_none ]
     
     [ subdir-run constructor : decl_exit_static_inv_all ]
-    [ subdir-run constructor : decl_exit_static_inv_sides ]
-    [ subdir-run constructor : decl_exit_static_inv_middle ]
+    [ subdir-run constructor : decl_exit_static_inv_ends ]
+    [ subdir-run constructor : decl_exit_static_inv_mid ]
     [ subdir-run constructor : decl_exit_static_inv_none ]
     
     # No decl_entry_static_inv_... for constructors.
 
     [ subdir-run constructor : decl_exit_inv_all ]
-    [ subdir-run constructor : decl_exit_inv_sides ]
-    [ subdir-run constructor : decl_exit_inv_middle ]
+    [ subdir-run constructor : decl_exit_inv_ends ]
+    [ subdir-run constructor : decl_exit_inv_mid ]
     [ subdir-run constructor : decl_exit_inv_none ]
     
     [ subdir-run constructor : bases ]
@@ -38,23 +38,23 @@ test-suite destructor :
     # No decl_pre_... for destructors.
     
     [ subdir-run destructor : decl_post_all ]
-    [ subdir-run destructor : decl_post_sides ]
-    [ subdir-run destructor : decl_post_middle ]
+    [ subdir-run destructor : decl_post_ends ]
+    [ subdir-run destructor : decl_post_mid ]
     [ subdir-run destructor : decl_post_none ]
     
     [ subdir-run destructor : decl_entry_static_inv_all ]
-    [ subdir-run destructor : decl_entry_static_inv_sides ]
-    [ subdir-run destructor : decl_entry_static_inv_middle ]
+    [ subdir-run destructor : decl_entry_static_inv_ends ]
+    [ subdir-run destructor : decl_entry_static_inv_mid ]
     [ subdir-run destructor : decl_entry_static_inv_none ]
     
     [ subdir-run destructor : decl_exit_static_inv_all ]
-    [ subdir-run destructor : decl_exit_static_inv_sides ]
-    [ subdir-run destructor : decl_exit_static_inv_middle ]
+    [ subdir-run destructor : decl_exit_static_inv_ends ]
+    [ subdir-run destructor : decl_exit_static_inv_mid ]
     [ subdir-run destructor : decl_exit_static_inv_none ]
     
     [ subdir-run destructor : decl_entry_inv_all ]
-    [ subdir-run destructor : decl_entry_inv_sides ]
-    [ subdir-run destructor : decl_entry_inv_middle ]
+    [ subdir-run destructor : decl_entry_inv_ends ]
+    [ subdir-run destructor : decl_entry_inv_mid ]
     [ subdir-run destructor : decl_entry_inv_none ]
 
     # No decl_exit_inv_... for destructors.
@@ -68,33 +68,33 @@ test-suite destructor :
 
 test-suite public_function :
     [ subdir-run public_function : decl_pre_all ]
-    [ subdir-run public_function : decl_pre_sides ]
-    [ subdir-run public_function : decl_pre_middle ]
+    [ subdir-run public_function : decl_pre_ends ]
+    [ subdir-run public_function : decl_pre_mid ]
     [ subdir-run public_function : decl_pre_none ]
 
     [ subdir-run public_function : decl_post_all ]
-    [ subdir-run public_function : decl_post_sides ]
-    [ subdir-run public_function : decl_post_middle ]
+    [ subdir-run public_function : decl_post_ends ]
+    [ subdir-run public_function : decl_post_mid ]
     [ subdir-run public_function : decl_post_none ]
     
     [ subdir-run public_function : decl_entry_static_inv_all ]
-    [ subdir-run public_function : decl_entry_static_inv_sides ]
-    [ subdir-run public_function : decl_entry_static_inv_middle ]
+    [ subdir-run public_function : decl_entry_static_inv_ends ]
+    [ subdir-run public_function : decl_entry_static_inv_mid ]
     [ subdir-run public_function : decl_entry_static_inv_none ]
     
     [ subdir-run public_function : decl_exit_static_inv_all ]
-    [ subdir-run public_function : decl_exit_static_inv_sides ]
-    [ subdir-run public_function : decl_exit_static_inv_middle ]
+    [ subdir-run public_function : decl_exit_static_inv_ends ]
+    [ subdir-run public_function : decl_exit_static_inv_mid ]
     [ subdir-run public_function : decl_exit_static_inv_none ]
     
     [ subdir-run public_function : decl_entry_inv_all ]
-    [ subdir-run public_function : decl_entry_inv_sides ]
-    [ subdir-run public_function : decl_entry_inv_middle ]
+    [ subdir-run public_function : decl_entry_inv_ends ]
+    [ subdir-run public_function : decl_entry_inv_mid ]
     [ subdir-run public_function : decl_entry_inv_none ]
     
     [ subdir-run public_function : decl_exit_inv_all ]
-    [ subdir-run public_function : decl_exit_inv_sides ]
-    [ subdir-run public_function : decl_exit_inv_middle ]
+    [ subdir-run public_function : decl_exit_inv_ends ]
+    [ subdir-run public_function : decl_exit_inv_mid ]
     [ subdir-run public_function : decl_exit_inv_none ]
     
     [ subdir-run public_function : bases ]

@@ -1,5 +1,5 @@
 
-// Test derived and grandparent classes (sides) both with exit invariants.
+// Test all derived and grandparent classes (ends) with exit invariants.
 
 #define BOOST_CONTRACT_AUX_TEST_NO_A_INV
 #define BOOST_CONTRACT_AUX_TEST_NO_B_INV

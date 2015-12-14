@@ -1,5 +1,5 @@
 
-// Test derived and base classes all without exit invariants.
+// Test all derived and base classes without exit invariants.
 
 #define BOOST_CONTRACT_AUX_TEST_NO_A_INV
 #define BOOST_CONTRACT_AUX_TEST_NO_B_INV

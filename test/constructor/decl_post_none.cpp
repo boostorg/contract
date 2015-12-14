@@ -1,5 +1,5 @@
 
-// Test only middle base class has postconditions.
+// Test only middle base class with postconditions.
 
 #define BOOST_CONTRACT_AUX_TEST_NO_A_POST
 #define BOOST_CONTRACT_AUX_TEST_NO_B_POST

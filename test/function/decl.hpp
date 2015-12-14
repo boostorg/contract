@@ -2,7 +2,7 @@
 #ifndef BOOST_CONTRACT_TEST_FUNCTION_DECL_HPP_
 #define BOOST_CONTRACT_TEST_FUNCTION_DECL_HPP_
 
-// Test with and without pre and post.
+// Test with and without pre and post declarations.
 
 #include "../aux_/oteststream.hpp"
 #include <boost/contract/function.hpp>

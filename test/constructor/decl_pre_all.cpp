@@ -1,5 +1,5 @@
 
-// Test derived and base classes all with preconditions.
+// Test all derived and base classes with preconditions.
 
 #undef BOOST_CONTRACT_AUX_TEST_NO_A_PRE
 #undef BOOST_CONTRACT_AUX_TEST_NO_B_PRE

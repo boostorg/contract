@@ -1,5 +1,5 @@
 
-// Test derived and grandparent classes (sides) have postconditions.
+// Test only derived and grandparent classes (ends) with postconditions.
 
 #undef BOOST_CONTRACT_AUX_TEST_NO_A_POST
 #define BOOST_CONTRACT_AUX_TEST_NO_B_POST

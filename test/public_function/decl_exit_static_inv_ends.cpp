@@ -1,5 +1,5 @@
 
-// Test only derived and grandparent classes (sides) have entry static inv.
+// Test only derived and grandparent classes (ends) with exit static invariants.
 
 #undef BOOST_CONTRACT_AUX_TEST_NO_A_STATIC_INV
 #define BOOST_CONTRACT_AUX_TEST_NO_B_STATIC_INV
@@ -13,14 +13,14 @@ int main() {
     std::ostringstream ok;
     
     a aa;
-
-    a_entry_static_inv = true;
-    b_entry_static_inv = true;
-    c_entry_static_inv = true;
+    
+    a_exit_static_inv = true;
+    b_exit_static_inv = true;
+    c_exit_static_inv = true;
     a_entering_static_inv = b_entering_static_inv = c_entering_static_inv =true;
     out.str("");
     aa.f();
-    ok.str(""); ok
+    ok.str(""); ok // Test nothing failed.
         << "c::static_inv" << std::endl
         << "c::inv" << std::endl
         << "b::inv" << std::endl
@@ -50,12 +50,12 @@ int main() {
     BOOST_TEST(out.eq(ok.str()));
     
     struct err {};
-    boost::contract::set_entry_invariant_failed(
+    boost::contract::set_exit_invariant_failed(
             [] (boost::contract::from) { throw err(); });
 
-    a_entry_static_inv = false;
-    b_entry_static_inv = true;
-    c_entry_static_inv = true;
+    a_exit_static_inv = false;
+    b_exit_static_inv = true;
+    c_exit_static_inv = true;
     a_entering_static_inv = b_entering_static_inv = c_entering_static_inv =true;
     out.str("");
     try {
@@ -66,14 +66,28 @@ int main() {
             << "c::static_inv" << std::endl
             << "c::inv" << std::endl
             << "b::inv" << std::endl
+            << "a::static_inv" << std::endl
+            << "a::inv" << std::endl
+
+            << "c::f::pre" << std::endl
+            
+            << "c::f::old" << std::endl
+            << "b::f::old" << std::endl
+            << "a::f::old" << std::endl
+            
+            << "a::f::body" << std::endl
+            
+            << "c::static_inv" << std::endl
+            << "c::inv" << std::endl
+            << "b::inv" << std::endl
             << "a::static_inv" << std::endl // Test this failed.
         ;
         BOOST_TEST(out.eq(ok.str()));
     } catch(...) { BOOST_TEST(false); }
     
-    a_entry_static_inv = true;
-    b_entry_static_inv = false;
-    c_entry_static_inv = true;
+    a_exit_static_inv = true;
+    b_exit_static_inv = false;
+    c_exit_static_inv = true;
     a_entering_static_inv = b_entering_static_inv = c_entering_static_inv =true;
     out.str("");
     try {
@@ -95,6 +109,7 @@ int main() {
             
             << "c::static_inv" << std::endl
             << "c::inv" << std::endl
+            // Test no failure here.
             << "b::inv" << std::endl
             << "a::static_inv" << std::endl
             << "a::inv" << std::endl
@@ -108,9 +123,9 @@ int main() {
         BOOST_TEST(out.eq(ok.str()));
     } catch(...) { BOOST_TEST(false); }
     
-    a_entry_static_inv = true;
-    b_entry_static_inv = true;
-    c_entry_static_inv = false;
+    a_exit_static_inv = true;
+    b_exit_static_inv = true;
+    c_exit_static_inv = false;
     a_entering_static_inv = b_entering_static_inv = c_entering_static_inv =true;
     out.str("");
     try {
@@ -118,14 +133,28 @@ int main() {
         BOOST_TEST(false);
     } catch(err const&) {
         ok.str(""); ok
+            << "c::static_inv" << std::endl
+            << "c::inv" << std::endl
+            << "b::inv" << std::endl
+            << "a::static_inv" << std::endl
+            << "a::inv" << std::endl
+
+            << "c::f::pre" << std::endl
+            
+            << "c::f::old" << std::endl
+            << "b::f::old" << std::endl
+            << "a::f::old" << std::endl
+            
+            << "a::f::body" << std::endl
+            
             << "c::static_inv" << std::endl // Test this failed.
         ;
         BOOST_TEST(out.eq(ok.str()));
     } catch(...) { BOOST_TEST(false); }
     
-    a_entry_static_inv = false;
-    b_entry_static_inv = false;
-    c_entry_static_inv = false;
+    a_exit_static_inv = false;
+    b_exit_static_inv = false;
+    c_exit_static_inv = false;
     a_entering_static_inv = b_entering_static_inv = c_entering_static_inv =true;
     out.str("");
     try {
@@ -133,11 +162,25 @@ int main() {
         BOOST_TEST(false);
     } catch(err const&) {
         ok.str(""); ok
+            << "c::static_inv" << std::endl
+            << "c::inv" << std::endl
+            << "b::inv" << std::endl
+            << "a::static_inv" << std::endl
+            << "a::inv" << std::endl
+
+            << "c::f::pre" << std::endl
+            
+            << "c::f::old" << std::endl
+            << "b::f::old" << std::endl
+            << "a::f::old" << std::endl
+            
+            << "a::f::body" << std::endl
+            
             << "c::static_inv" << std::endl // Test this failed (as all did).
         ;
         BOOST_TEST(out.eq(ok.str()));
     } catch(...) { BOOST_TEST(false); }
-    
+
     return boost::report_errors();
 }
 

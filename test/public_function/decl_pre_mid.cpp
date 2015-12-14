@@ -1,9 +1,9 @@
 
-// Test only derived and grandparent classes (sides) have preconditions.
+// Test only middle base class with preconditions.
 
-#undef BOOST_CONTRACT_AUX_TEST_NO_A_PRE
-#define BOOST_CONTRACT_AUX_TEST_NO_B_PRE
-#undef BOOST_CONTRACT_AUX_TEST_NO_C_PRE
+#define BOOST_CONTRACT_AUX_TEST_NO_A_PRE
+#undef BOOST_CONTRACT_AUX_TEST_NO_B_PRE
+#define BOOST_CONTRACT_AUX_TEST_NO_C_PRE
 #include "decl.hpp"
 
 #include <boost/detail/lightweight_test.hpp>
@@ -27,45 +27,7 @@ int main() {
         << "a::static_inv" << std::endl
         << "a::inv" << std::endl
         
-        << "c::f::pre" << std::endl // Test only c pre checked.
-        
-        << "c::f::old" << std::endl
-        << "b::f::old" << std::endl
-        << "a::f::old" << std::endl
-        
-        << "a::f::body" << std::endl
-        
-        << "c::static_inv" << std::endl
-        << "c::inv" << std::endl
-        << "b::static_inv" << std::endl
-        << "b::inv" << std::endl
-        << "a::static_inv" << std::endl
-        << "a::inv" << std::endl
-        
-        << "c::f::old" << std::endl
-        << "c::f::post" << std::endl
-        << "b::f::old" << std::endl
-        << "b::f::post" << std::endl
-        << "a::f::post" << std::endl
-    ;
-    BOOST_TEST(out.eq(ok.str()));
-    
-    a_pre = true;
-    b_pre = false;
-    c_pre = false;
-    out.str("");
-    aa.f();
-    ok.str(""); ok
-        << "c::static_inv" << std::endl
-        << "c::inv" << std::endl
-        << "b::static_inv" << std::endl
-        << "b::inv" << std::endl
-        << "a::static_inv" << std::endl
-        << "a::inv" << std::endl
-        
-        << "c::f::pre" << std::endl
-        // Test b's pre not checked.
-        << "a::f::pre" << std::endl
+        << "b::f::pre" << std::endl
         
         << "c::f::old" << std::endl
         << "b::f::old" << std::endl
@@ -89,8 +51,8 @@ int main() {
     BOOST_TEST(out.eq(ok.str()));
     
     a_pre = false;
-    b_pre = false;
-    c_pre = true;
+    b_pre = true;
+    c_pre = false;
     out.str("");
     aa.f();
     ok.str(""); ok
@@ -101,7 +63,7 @@ int main() {
         << "a::static_inv" << std::endl
         << "a::inv" << std::endl
         
-        << "c::f::pre" << std::endl // Test only c pre checked.
+        << "b::f::pre" << std::endl // Test only middle pre checked and no fail.
         
         << "c::f::old" << std::endl
         << "b::f::old" << std::endl
@@ -136,13 +98,23 @@ int main() {
         << "a::static_inv" << std::endl
         << "a::inv" << std::endl
 
-        << "c::f::pre" << std::endl
-        << "a::f::pre" << std::endl // Only first/last pre checked and failed.
+        << "b::f::pre" << std::endl // Test only middle pre checked and failed.
     ;
     
-    a_pre = false;
-    b_pre = true;
+    a_pre = true;
+    b_pre = false;
     c_pre = false;
+    out.str("");
+    try {
+        aa.f();
+        BOOST_TEST(false);
+    } catch(err const&) {
+        BOOST_TEST(out.eq(ok.str()));
+    } catch(...) { BOOST_TEST(false); }
+    
+    a_pre = false;
+    b_pre = false;
+    c_pre = true;
     out.str("");
     try {
         aa.f();

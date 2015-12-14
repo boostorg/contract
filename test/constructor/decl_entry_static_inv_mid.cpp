@@ -1,5 +1,5 @@
 
-// Test middle base classes with exit static invariants.
+// Test only middle base class with entry static invariants.
 
 #define BOOST_CONTRACT_AUX_TEST_NO_A_STATIC_INV
 #undef BOOST_CONTRACT_AUX_TEST_NO_B_STATIC_INV
@@ -12,9 +12,9 @@
 int main() {
     std::ostringstream ok;
     
-    a_exit_static_inv = true;
-    b_exit_static_inv = true;
-    c_exit_static_inv = true;
+    a_entry_static_inv = true;
+    b_entry_static_inv = true;
+    c_entry_static_inv = true;
     a_entering_static_inv = b_entering_static_inv = c_entering_static_inv =true;
     out.str("");
     {
@@ -45,15 +45,15 @@ int main() {
     }
     
     struct err {};
-    boost::contract::set_exit_invariant_failed(
+    boost::contract::set_entry_invariant_failed(
             [] (boost::contract::from) { throw err(); });
 
-    a_exit_static_inv = false;
-    b_exit_static_inv = true;
-    c_exit_static_inv = true;
+    a_entry_static_inv = false;
+    b_entry_static_inv = true;
+    c_entry_static_inv = true;
     a_entering_static_inv = b_entering_static_inv = c_entering_static_inv =true;
     out.str("");
-    try {
+    {
         a aa;
         ok.str(""); ok
             << "a::ctor::pre" << std::endl
@@ -72,18 +72,18 @@ int main() {
             << "b::inv" << std::endl
             << "b::ctor::post" << std::endl
 
+            // Test no failure here.
             << "a::ctor::old" << std::endl
             << "a::ctor::body" << std::endl
-            // Test no failure here.
             << "a::inv" << std::endl
             << "a::ctor::post" << std::endl
         ;
         BOOST_TEST(out.eq(ok.str()));
-    } catch(...) { BOOST_TEST(false); }
-    
-    a_exit_static_inv = true;
-    b_exit_static_inv = false;
-    c_exit_static_inv = true;
+    }
+
+    a_entry_static_inv = true;
+    b_entry_static_inv = false;
+    c_entry_static_inv = true;
     a_entering_static_inv = b_entering_static_inv = c_entering_static_inv =true;
     out.str("");
     try {
@@ -100,29 +100,26 @@ int main() {
             << "c::inv" << std::endl
             << "c::ctor::post" << std::endl
             
-            << "b::static_inv" << std::endl
-            << "b::ctor::old" << std::endl
-            << "b::ctor::body" << std::endl
             << "b::static_inv" << std::endl // Test this failed.
         ;
         BOOST_TEST(out.eq(ok.str()));
     } catch(...) { BOOST_TEST(false); }
     
-    a_exit_static_inv = true;
-    b_exit_static_inv = true;
-    c_exit_static_inv = false;
+    a_entry_static_inv = true;
+    b_entry_static_inv = true;
+    c_entry_static_inv = false;
     a_entering_static_inv = b_entering_static_inv = c_entering_static_inv =true;
     out.str("");
-    try {
+    {
         a aa;
         ok.str(""); ok
             << "a::ctor::pre" << std::endl
             << "b::ctor::pre" << std::endl
             << "c::ctor::pre" << std::endl
             
+            // Test no failure here.
             << "c::ctor::old" << std::endl
             << "c::ctor::body" << std::endl
-            // Test no failure here.
             << "c::inv" << std::endl
             << "c::ctor::post" << std::endl
             
@@ -139,11 +136,11 @@ int main() {
             << "a::ctor::post" << std::endl
         ;
         BOOST_TEST(out.eq(ok.str()));
-    } catch(...) { BOOST_TEST(false); }
+    }
     
-    a_exit_static_inv = false;
-    b_exit_static_inv = false;
-    c_exit_static_inv = false;
+    a_entry_static_inv = false;
+    b_entry_static_inv = false;
+    c_entry_static_inv = false;
     a_entering_static_inv = b_entering_static_inv = c_entering_static_inv =true;
     out.str("");
     try {
@@ -160,10 +157,7 @@ int main() {
             << "c::inv" << std::endl
             << "c::ctor::post" << std::endl
             
-            << "b::static_inv" << std::endl
-            << "b::ctor::old" << std::endl
-            << "b::ctor::body" << std::endl
-            << "b::static_inv" << std::endl // Test this failed.
+            << "b::static_inv" << std::endl // Test this failed (as all did).
         ;
         BOOST_TEST(out.eq(ok.str()));
     } catch(...) { BOOST_TEST(false); }

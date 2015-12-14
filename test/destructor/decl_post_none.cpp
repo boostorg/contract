@@ -1,5 +1,5 @@
 
-// Test derived and base classes all without postconditions.
+// Test all derived and base classes without postconditions.
 
 #define BOOST_CONTRACT_AUX_TEST_NO_A_POST
 #define BOOST_CONTRACT_AUX_TEST_NO_B_POST
