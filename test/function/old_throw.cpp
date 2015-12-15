@@ -1,5 +1,5 @@
 
-// Test throw from free function body.
+// Test throw from free function .old().
 
 #include "../aux_/oteststream.hpp"
 #include <boost/contract/function.hpp>
@@ -14,15 +14,20 @@ struct err {};
 void f() {
     boost::contract::guard c = boost::contract::function()
         .precondition([&] { out << "f::pre" << std::endl; })
-        .old([&] { out << "f::old" << std::endl; })
+        .old([&] {
+            out << "f::old" << std::endl;
+            throw err(); // Test .old() throws.
+        })
         .postcondition([&] { out << "f::post" << std::endl; })
     ;
     out << "f::body" << std::endl;
-    throw err(); // Test body throws.
 }
 
 int main() {
     std::ostringstream ok;
+
+    boost::contract::set_postcondition_failed(
+            [] (boost::contract::from) { throw; });
 
     try {
         out.str("");
@@ -31,8 +36,7 @@ int main() {
     } catch(err const&) {
         ok.str(""); ok
             << "f::pre" << std::endl
-            << "f::old" << std::endl
-            << "f::body" << std::endl // Test this threw.
+            << "f::old" << std::endl // Test this threw.
         ;
         BOOST_TEST(out.eq(ok.str()));
     } catch(...) { BOOST_TEST(false); }

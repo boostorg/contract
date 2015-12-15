@@ -1,5 +1,5 @@
 
-// Test throw from destructor body (in middle branch of inheritance tree).
+// Test throw from destructor .old() (in middle branch of inheritance tree).
 
 #include "../aux_/oteststream.hpp"
 #include <boost/contract/destructor.hpp>
@@ -39,11 +39,13 @@ struct b
 
     ~b() BOOST_NOEXCEPT_IF(false) {
         boost::contract::guard c = boost::contract::destructor(this)
-            .old([&] { out << "b::dtor::old" << std::endl; })
+            .old([&] {
+                out << "b::dtor::old" << std::endl;
+                throw b::err(); // Test .old() throw (from mid branch).
+            })
             .postcondition([] { out << "b::dtor::post" << std::endl; })
         ;
         out << "b::dtor::body" << std::endl;
-        throw b::err(); // Test body throw (from inheritance mid branch).
     }
 };
 
@@ -70,6 +72,9 @@ struct a
 int main() {
     std::ostringstream ok;
 
+    boost::contract::set_postcondition_failed(
+            [] (boost::contract::from) { throw; });
+
     try {
         {
             a aa;
@@ -88,13 +93,8 @@ int main() {
 
             << "b::static_inv" << std::endl
             << "b::inv" << std::endl
-            << "b::dtor::old" << std::endl
-            << "b::dtor::body" << std::endl // Test this threw.
+            << "b::dtor::old" << std::endl // Test this threw.
 
-            // Test b not destructed (so both static_inv and inv, but no post).
-            << "b::static_inv" << std::endl
-            << "b::inv" << std::endl
-            
             << "c::static_inv" << std::endl
             << "c::inv" << std::endl
             << "c::dtor::old" << std::endl

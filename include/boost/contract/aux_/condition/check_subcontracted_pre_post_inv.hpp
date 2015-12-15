@@ -238,8 +238,6 @@ private:
         check_post_r<R>(r);
     }
 
-    // TODO: See if these and other enable_if can be replaced using template specializations and a base class for template where to put common code (that might be faster to compile... not sure...).
-    
     template<typename R_, typename Result>
     typename boost::enable_if<is_optional<R_> >::type
     check_post_r(Result const& r) { this->check_post(r); }

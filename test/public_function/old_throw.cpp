@@ -1,5 +1,5 @@
 
-// Test from public function (derived) body.
+// Test from public function (derived and bases) .old().
 
 #include "../aux_/oteststream.hpp"
 #include <boost/contract/public_function.hpp>
@@ -24,11 +24,13 @@ struct c {
                 out << "c::f::pre" << std::endl;
                 BOOST_CONTRACT_ASSERT(false); // To check derived pre.
             })
-            .old([&] { out << "c::f::old" << std::endl; })
+            .old([&] {
+                out << "c::f::old" << std::endl;
+                throw c::err(); // Test .old() throws.
+            })
             .postcondition([&] { out << "c::f::post" << std::endl; })
         ;
         out << "c::f::body" << std::endl;
-        throw c::err(); // Test body throws.
     }
 };
 
@@ -51,11 +53,13 @@ struct b
                 out << "b::f::pre" << std::endl;
                 BOOST_CONTRACT_ASSERT(false); // To check derived pre.
             })
-            .old([&] { out << "b::f::old" << std::endl; })
+            .old([&] {
+                out << "b::f::old" << std::endl;
+                throw b::err(); // Test .old() throws.
+            })
             .postcondition([&] { out << "b::f::post" << std::endl; })
         ;
         out << "b::f::body" << std::endl;
-        throw b::err(); // Test body throws.
     }
     BOOST_CONTRACT_OVERRIDE(f)
 };
@@ -76,17 +80,22 @@ struct a
         boost::contract::guard c = boost::contract::public_function<override_f>(
                 v, &a::f, this)
             .precondition([&] { out << "a::f::pre" << std::endl; })
-            .old([&] { out << "a::f::old" << std::endl; })
+            .old([&] {
+                out << "a::f::old" << std::endl;
+                throw a::err(); // Test .old() throws.
+            })
             .postcondition([&] { out << "a::f::post" << std::endl; })
         ;
         out << "a::f::body" << std::endl;
-        throw a::err(); // Test body throws.
     }
     BOOST_CONTRACT_OVERRIDE(f)
 };
 
 int main() {
     std::ostringstream ok;
+
+    boost::contract::set_postcondition_failed(
+            [] (boost::contract::from) { throw; });
     
     a aa;
     b& ba = aa; // Test as virtual call via polymorphism.
@@ -94,7 +103,7 @@ int main() {
         out.str("");
         ba.f();
         BOOST_TEST(false);
-    } catch(a::err const&) {
+    } catch(c::err const&) {
         ok.str(""); ok
             << "c::static_inv" << std::endl
             << "c::inv" << std::endl
@@ -107,19 +116,7 @@ int main() {
             << "b::f::pre" << std::endl
             << "a::f::pre" << std::endl
             
-            << "c::f::old" << std::endl
-            << "b::f::old" << std::endl
-            << "a::f::old" << std::endl
-
-            << "a::f::body" << std::endl // Test this threw.
-            
-            // Test no post (but still subcontracted inv) because body threw.
-            << "c::static_inv" << std::endl
-            << "c::inv" << std::endl
-            << "b::static_inv" << std::endl
-            << "b::inv" << std::endl
-            << "a::static_inv" << std::endl
-            << "a::inv" << std::endl
+            << "c::f::old" << std::endl // Test this threw.
         ;
         BOOST_TEST(out.eq(ok.str()));
     } catch(...) { BOOST_TEST(false); }

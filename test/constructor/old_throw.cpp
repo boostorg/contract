@@ -1,5 +1,5 @@
 
-// Test throw form constructor body (in middle branch of inheritance tree).
+// Test throw form constructor .old() (in middle branch of inheritance tree).
 
 #include "../aux_/oteststream.hpp"
 #include <boost/contract/constructor.hpp>
@@ -52,11 +52,13 @@ struct b
         })
     {
         boost::contract::guard c = boost::contract::constructor(this)
-            .old([&] { out << "b::ctor::old" << std::endl; })
+            .old([&] {
+                out << "b::ctor::old" << std::endl;
+                throw b::err(); // Test .old() throws (from mid branch).
+            })
             .postcondition([&] { out << "b::ctor::post" << std::endl; })
         ;
         out << "b::ctor::body" << std::endl;
-        throw b::err(); // Test body throws (from inheritance mid branch).
     }
 };
 
@@ -86,6 +88,9 @@ struct a
 
 int main() {
     std::ostringstream ok;
+
+    boost::contract::set_postcondition_failed(
+            [] (boost::contract::from) { throw; });
     
     try {
         out.str("");
@@ -105,9 +110,7 @@ int main() {
             << "c::ctor::post" << std::endl
             
             << "b::static_inv" << std::endl
-            << "b::ctor::old" << std::endl
-            << "b::ctor::body" << std::endl // Test this threw...
-            << "b::static_inv" << std::endl // ... so check only this after.
+            << "b::ctor::old" << std::endl // Test this threw.
         ;
         BOOST_TEST(out.eq(ok.str()));
     } catch(...) { BOOST_TEST(false); }

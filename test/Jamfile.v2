@@ -28,8 +28,10 @@ test-suite constructor :
     [ subdir-run constructor : decl_exit_inv_none ]
     
     [ subdir-run constructor : bases ]
-    [ subdir-run constructor : body_throw ]
     [ subdir-run constructor : access ]
+
+    [ subdir-run constructor : body_throw ]
+    [ subdir-run constructor : old_throw ]
     
     [ subdir-compile-fail constructor : pre_error ]
 ;
@@ -60,8 +62,10 @@ test-suite destructor :
     # No decl_exit_inv_... for destructors.
 
     [ subdir-run destructor : bases ]
-    [ subdir-run destructor : body_throw ]
     [ subdir-run destructor : access ]
+
+    [ subdir-run destructor : body_throw ]
+    [ subdir-run destructor : old_throw ]
 
     [ subdir-compile-fail destructor : pre_error ]
 ;
@@ -102,8 +106,10 @@ test-suite public_function :
     [ subdir-run public_function : bases_branch ]
     [ subdir-run public_function : bases_sparse ]
     
-    [ subdir-run public_function : body_throw ]
     [ subdir-run public_function : access ]
+    
+    [ subdir-run public_function : body_throw ]
+    [ subdir-run public_function : old_throw ]
 
     [ subdir-run public_function : static ]
     [ subdir-run public_function : static_body_throw ]
@@ -120,7 +126,9 @@ test-suite function :
     [ subdir-run function : decl_post_none ]
     
     [ subdir-run function : func ]
+
     [ subdir-run function : body_throw ]
+    [ subdir-run function : old_throw ]
 ;
 
 test-suite invariant :
