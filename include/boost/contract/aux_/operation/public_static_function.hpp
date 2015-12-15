@@ -16,7 +16,8 @@ namespace boost { namespace contract { namespace aux {
 
 // No subcontracting because static so no obj and no substitution principle.
 template<class C>
-class public_static_function : public check_pre_post_inv</* R = */ none, C> {
+class public_static_function :
+        public check_pre_post_inv</* R = */ none, C> { // Non-copyable base.
 public:
     explicit public_static_function() :
         check_pre_post_inv</* R = */ none, C>(boost::contract::from_function,

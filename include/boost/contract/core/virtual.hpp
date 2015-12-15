@@ -22,7 +22,8 @@ namespace boost {
 namespace boost { namespace contract {
 
 class virtual_ :
-        private boost::noncopyable { // To void queue, stack, etc, copies.
+    private boost::noncopyable // Avoid copying queue, stack, etc.
+{
     // No public API (so users cannot use it directly).
 private:
     enum action_enum {

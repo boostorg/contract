@@ -50,8 +50,8 @@ namespace check_subcontracted_pre_post_inv_ {
 
 // O, R, F, and A-i can be none types (but C cannot).
 template<class O, typename R, typename F, class C, typename A0, typename A1>
-class check_subcontracted_pre_post_inv : // Copyable (as * and &).
-        public check_pre_post_inv<R, C> {
+class check_subcontracted_pre_post_inv :
+        public check_pre_post_inv<R, C> { // Non-copyable base.
     template<class Class, typename Result = boost::mpl::vector<> >
     class overridden_bases_of {
         struct search_bases {

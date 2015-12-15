@@ -6,6 +6,7 @@
 #include <boost/contract/core/exception.hpp>
 /** @cond */
 #include <boost/function.hpp>
+#include <boost/noncopyable.hpp>
 #include <boost/config.hpp>
 #ifndef BOOST_CONTRACT_CONFIG_ON_MISSING_GUARD
 #   include <cassert>
@@ -16,7 +17,9 @@
 
 namespace boost { namespace contract { namespace aux {
 
-class check_base { // Base to hold all contract objects for RAII.
+class check_base : // Base to hold all contract objects for RAII.
+    private boost::noncopyable // Avoid copying possible user's ftor captures.
+{
 public:
     explicit check_base(boost::contract::from from) :
         BOOST_CONTRACT_ERROR_missing_guard_declaration(false),

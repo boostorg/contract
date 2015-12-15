@@ -16,9 +16,11 @@ set_old_postcondition<> constructor(C* obj) {
             new boost::contract::aux::constructor<C>(obj));
 }
 
+// TODO: Decl all classes (but TMP) using class and not struct (for easier/consistent fwd decl...).
+
 // Uses C tparam to avoid multiple inheritance from same type.
 template<class C>
-struct constructor_precondition {
+struct constructor_precondition { // Copyable (no data).
     constructor_precondition() {} // For user ctor overloads with no pre.
 
     template<typename F>
@@ -26,6 +28,8 @@ struct constructor_precondition {
         try { f(); }
         catch(...) { precondition_failed(from_constructor); }
     }
+
+    // Default copy operations (so user's derived classes can also be copyable).
 };
 
 } } // namespace

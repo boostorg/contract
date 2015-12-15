@@ -16,10 +16,8 @@
 
 namespace boost { namespace contract { namespace aux {
 
-// TODO: Does this need to be copied? Copying function<> could copy captures (if function is a lambda) and it could be expensive... check all classes that MUST be copyable, make sure their copies are efficient, make all other classes noncopyable. Same consideration for all other classes, make noncopyable all classes that do not have to be necessarily copyable.
-
 template<typename R>
-class check_pre_post : public check_base {
+class check_pre_post : public check_base { // Non-copyable base.
     typedef typename boost::mpl::if_<is_optional<R>,
         boost::optional<typename boost::remove_reference<
                 typename optional_value_type<R>::type>::type const&> const&
@@ -51,7 +49,7 @@ private:
 };
 
 template<>
-class check_pre_post<none> : public check_base {
+class check_pre_post<none> : public check_base { // Non-copyable base.
 public:
     explicit check_pre_post(boost::contract::from from) : check_base(from) {}
 

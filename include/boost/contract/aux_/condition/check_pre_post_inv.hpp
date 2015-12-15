@@ -24,7 +24,7 @@
 namespace boost { namespace contract { namespace aux {
 
 template<typename R, class C>
-class check_pre_post_inv : public check_pre_post<R> { // Copyable (as *).
+class check_pre_post_inv : public check_pre_post<R> { // Non-copyable base.
 public:
 #ifndef BOOST_CONTRACT_CONFIG_PERMISSIVE
     BOOST_STATIC_ASSERT_MSG(

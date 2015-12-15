@@ -8,12 +8,6 @@
 
 // This code is inspired by "boost/shared_ptr/detail/operator_bool.hpp".
     
-/* PRIVATE */
-
-// operator! is redundant, but some compilers need it.
-#define BOOST_CONTRACT_OPERATOR_SAFE_BOOL_NOT_(bool_expr) \
-    bool operator!() const BOOST_NOEXCEPT { return !(bool_expr); }
-
 /* PUBLIC */
 
 #if !defined(BOOST_NO_CXX11_EXPLICIT_CONVERSION_OPERATORS) && \
@@ -72,6 +66,12 @@
     BOOST_CONTRACT_OPERATOR_SAFE_BOOL_NOT_(bool_expr)
 
 #endif
+
+/* PRIVATE */
+
+// operator! is redundant, but some compilers need it.
+#define BOOST_CONTRACT_OPERATOR_SAFE_BOOL_NOT_(bool_expr) \
+    bool operator!() const BOOST_NOEXCEPT { return !(bool_expr); }
 
 #endif // #include guard
 

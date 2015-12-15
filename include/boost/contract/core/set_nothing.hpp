@@ -26,7 +26,7 @@ namespace boost {
     
 namespace boost { namespace contract {
 
-class set_nothing { // Copyable as * (OK also for RAII).
+class set_nothing { // Copyable (as *).
 public:
     ~set_nothing() BOOST_NOEXCEPT_IF(false) {}
     
@@ -34,10 +34,13 @@ public:
 
 private:
     typedef boost::contract::aux::check_base check_type;
+    
     explicit set_nothing(check_type* check) : check_(check) {}
+    
     boost::contract::aux::auto_ptr<check_type> check_;
 
     // Friendship used to limit library's public API.
+
     friend class guard;
 
     template<typename>

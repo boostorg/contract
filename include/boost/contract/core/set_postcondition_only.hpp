@@ -26,7 +26,7 @@ namespace boost {
 namespace boost { namespace contract {
     
 template<typename R = void>
-class set_postcondition_only { // Copyable as * (OK also for RAII).
+class set_postcondition_only { // Copyable (as *).
 public:
     ~set_postcondition_only() BOOST_NOEXCEPT_IF(false) {}
 
@@ -40,10 +40,13 @@ public:
 private:
     typedef boost::contract::aux::check_pre_post<
             typename boost::contract::aux::none_if_void<R>::type> check_type;
+
     explicit set_postcondition_only(check_type* check) : check_(check) {}
+
     boost::contract::aux::auto_ptr<check_type> check_;
 
     // Friendship used to limit library's public API.
+
     friend class guard;
     friend class set_precondition_old_postcondition<R>;
     friend class set_old_postcondition<R>;

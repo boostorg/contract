@@ -18,11 +18,11 @@ namespace boost { namespace contract {
 
 // Placeholder base class to group all this lib exceptions.
 // IMPORTANT: Must not inherit from std::exception as derived exceptions will.
-struct exception {};
+class exception {};
 
 // Rationale: boost::bad_any_cast exception does not print from/to type names,
 // so throw custom exception.
-class bad_virtual_result_cast :
+class bad_virtual_result_cast : // Copyable (as string, etc.).
         public std::bad_cast, public boost::contract::exception {
 public:
     explicit bad_virtual_result_cast(char const* from_type_name,
@@ -42,7 +42,7 @@ private:
     std::string what_;
 };
 
-class assertion_failure :
+class assertion_failure : // Copyable (as string, etc.).
         public std::exception, public boost::contract::exception {
 public:
     explicit assertion_failure(char const* const file = "",
@@ -87,6 +87,8 @@ enum from {
     from_destructor,
     from_function
 };
+
+// TODO: Even if it might be confused with assertion_failure (which is an exception and not a function), all these function names are more readable as ..._failure instead of ..._failed (so they should be renamed that way).
 
 // Use Boost.Function to handle also lambdas, binds, etc,
 typedef boost::function<void (from)> assertion_failed_handler;

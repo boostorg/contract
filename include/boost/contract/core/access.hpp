@@ -37,7 +37,7 @@ namespace boost { namespace contract {
 // reported but invariants and subcontracting checking will be silently skipped
 // at run-time. Therefore programmers must make sure to either declare contract
 // members public or to make this class a friend.
-class access {
+class access { // Copyable (as shell with no data member).
     BOOST_CONTRACT_AUX_INTROSPECTION_HAS_TYPE(has_base_types,
             BOOST_CONTRACT_CONFIG_BASE_TYPES)
 

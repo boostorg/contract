@@ -76,6 +76,7 @@ namespace boost {
     namespace contract {
         class unconvertible_old;
     }
+
     template<>
     struct is_copy_constructible<contract::unconvertible_old> : true_type {};
 }
@@ -102,24 +103,6 @@ private:
 
     friend class convertible_old;
 };
-
-bool copy_old() {
-#if BOOST_CONTRACT_CONFIG_NO_POSTCONDITIONS
-    return false; // Post checking disabled, so never copy old values.
-#else
-    return !boost::contract::aux::check_guard::checking();
-#endif
-}
-
-bool copy_old(virtual_* v) {
-#if BOOST_CONTRACT_CONFIG_NO_POSTCONDITIONS
-    return false; // Post checking disabled, so never copy old values.
-#else
-    if(!v) return !boost::contract::aux::check_guard::checking();
-    return v->action_ == boost::contract::virtual_::push_old_init ||
-            v->action_ == boost::contract::virtual_::push_old_copy;
-#endif
-}
 
 class unconvertible_old { // Copyable (as *). 
 public:
@@ -214,6 +197,24 @@ convertible_old make_old(unconvertible_old const& old) {
 
 convertible_old make_old(virtual_* v, unconvertible_old const& old) {
     return convertible_old(v, old);
+}
+
+bool copy_old() {
+#if BOOST_CONTRACT_CONFIG_NO_POSTCONDITIONS
+    return false; // Post checking disabled, so never copy old values.
+#else
+    return !boost::contract::aux::check_guard::checking();
+#endif
+}
+
+bool copy_old(virtual_* v) {
+#if BOOST_CONTRACT_CONFIG_NO_POSTCONDITIONS
+    return false; // Post checking disabled, so never copy old values.
+#else
+    if(!v) return !boost::contract::aux::check_guard::checking();
+    return v->action_ == boost::contract::virtual_::push_old_init ||
+            v->action_ == boost::contract::virtual_::push_old_copy;
+#endif
 }
 
 } } // namespace

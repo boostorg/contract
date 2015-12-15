@@ -2,11 +2,15 @@
 #ifndef BOOST_CONTRACT_CALL_IF_HPP_
 #define BOOST_CONTRACT_CALL_IF_HPP_
 
+// TODO: Check all #includes for all files... and make sure that #include not of this library are within @cond ... @endcond.
+
 #include <boost/contract/aux_/none.hpp>
+/** @cond */
 #include <boost/make_shared.hpp>
 #include <boost/shared_ptr.hpp>
 #include <boost/utility/result_of.hpp>
 #include <boost/config.hpp>
+/** @endcond */
 
 /* PRIVATE */
 
@@ -24,7 +28,7 @@
 namespace boost { namespace contract {
 
 template<bool Cond, typename Then, typename R = boost::contract::aux::none>
-struct call_if_statement {}; // Empty so cannot be used.
+struct call_if_statement {}; // Empty so cannot be used (but copyable).
 
 // Dispatch true condition (then) between non-void and void calls.
 // IMPORTANT: result_of<Then()> can be evaluated only when condition is already
@@ -32,7 +36,7 @@ struct call_if_statement {}; // Empty so cannot be used.
 // this extra level of dispatching is necessary to avoid compiler errors.
 template<typename Then>
 struct call_if_statement<true, Then, boost::contract::aux::none> :
-    call_if_statement<true, Then,
+    call_if_statement<true, Then, // Copyable (as its base).
             BOOST_CONTRACT_CALL_IF_ENABLE_IF_UNARY_RESULT_OF_(Then)>
 {
     explicit call_if_statement(Then f) : call_if_statement<true, Then,
@@ -41,7 +45,7 @@ struct call_if_statement<true, Then, boost::contract::aux::none> :
 
 // True condition (then) for non-void call.
 template<typename Then, typename R>
-struct call_if_statement<true, Then, R> { // Copyable as *.
+struct call_if_statement<true, Then, R> { // Copyable (as *).
     explicit call_if_statement(Then f) : r_(boost::make_shared<R>(f())) {}
 
     operator R() const { return *r_; }
@@ -65,7 +69,7 @@ private:
 
 // True condition (then) for void call.
 template<typename Then>
-struct call_if_statement<true, Then, void> {
+struct call_if_statement<true, Then, void> { // Copyable (no data).
     explicit call_if_statement(Then f) { f(); }
     
     // Cannot provide `operator R()` here, because R is void.
@@ -85,7 +89,7 @@ struct call_if_statement<true, Then, void> {
 };
 
 // False condition (else) for both non-void and void calls.
-template<typename Then>
+template<typename Then> // Copyable (no data).
 struct call_if_statement<false, Then, boost::contract::aux::none> {
     explicit call_if_statement(Then const&) {}
 

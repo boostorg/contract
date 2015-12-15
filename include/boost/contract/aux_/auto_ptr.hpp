@@ -13,7 +13,7 @@ namespace boost { namespace contract { namespace aux {
 // Using this instead of std::auto_ptr because std::auto_ptr will be removed in
 // C++17 (this library always uses release() to avoid ownership issues).
 template<typename T>
-class auto_ptr {
+class auto_ptr { // Copyable (using default copy operations).
 public:
     explicit auto_ptr(T* ptr = 0) : ptr_(ptr) {}
 

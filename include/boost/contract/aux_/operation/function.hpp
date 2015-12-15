@@ -13,7 +13,8 @@
 namespace boost { namespace contract { namespace aux {
 
 // Used for free function, private and protected member functions.
-class function : public check_pre_post</* R = */ none> {
+class function :
+        public check_pre_post</* R = */ none> { // Non-copyable base.
 public:
     explicit function() :
         check_pre_post</* R = */ none>(boost::contract::from_function)

@@ -12,12 +12,12 @@
 #include <boost/contract/aux_/auto_ptr.hpp>
 #include <boost/contract/aux_/debug.hpp>
 /** @cond */
-#include <boost/noncopyable.hpp>
 #include <boost/config.hpp>
 /** @endcond */
 
 /* PRIVATE */
 
+// Following implicit to allow syntax `guard c = ...`.
 #define BOOST_CONTRACT_GUARD_CTOR_(contract_type) \
     /* implicit */ guard(contract_type const& contract) : \
             check_(const_cast<contract_type&>(contract).check_.release()) { \
@@ -29,10 +29,13 @@
 
 namespace boost { namespace contract {
 
-class guard { // Copyable as * (OK also for RAII).
+class guard { // Non-copyable (but copy ctor ~= move via ptr release).
 public:
-    // Following all implicit to allow syntax `guard c = ...`.
+    // Following copy and implicit type conversion ctors to allow `guard = ...`.
     
+    guard(guard const& other) : 
+            check_(const_cast<guard&>(other).check_.release()) {}
+
     template<typename R>
     BOOST_CONTRACT_GUARD_CTOR_(set_precondition_old_postcondition<R>)
     
@@ -44,9 +47,11 @@ public:
     
     BOOST_CONTRACT_GUARD_CTOR_(set_nothing)
 
-    ~guard() BOOST_NOEXCEPT_IF(false) {}
+    ~guard() BOOST_NOEXCEPT_IF(false) {} // Allow auto_ptr dtor to throw.
 
 private:
+    guard& operator=(guard const&); // This type is not meant to be copied.
+
     boost::contract::aux::auto_ptr<boost::contract::aux::check_base> check_;
 };
 

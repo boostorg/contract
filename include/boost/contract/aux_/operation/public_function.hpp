@@ -15,7 +15,9 @@ namespace boost { namespace contract { namespace aux {
 
 template<class O, typename R, typename F, class C, typename A0, typename A1>
 class public_function :
-        public check_subcontracted_pre_post_inv<O, R, F, C, A0, A1> {
+    // Non-copyable base.
+    public check_subcontracted_pre_post_inv<O, R, F, C, A0, A1>
+{
 public:
     explicit public_function(boost::contract::virtual_* v, C* obj, R& r,
             A0& a0, A1& a1) :

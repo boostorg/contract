@@ -15,7 +15,8 @@ namespace boost { namespace contract { namespace aux {
 
 // Ctor subcontracting impl via C++ obj construction mechanism.
 template<class C>
-class constructor : public check_pre_post_inv</* R = */ none, C> {
+class constructor :
+        public check_pre_post_inv</* R = */ none, C> { // Non-copyable base.
 public:
     explicit constructor(C* obj) :
         check_pre_post_inv</* R = */ none, C>(boost::contract::from_constructor,
