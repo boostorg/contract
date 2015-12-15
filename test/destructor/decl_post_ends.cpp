@@ -148,7 +148,7 @@ int main() {
         }
         BOOST_TEST(false);
     } catch(err const&) {
-        ok; // ... then exec other dtors and check inv on throw (as dtor threw).
+        // ... then exec other dtors and check inv on throw (as dtor threw).
         BOOST_TEST(out.eq(ok.str()));
     } catch(...) { BOOST_TEST(false); }
     

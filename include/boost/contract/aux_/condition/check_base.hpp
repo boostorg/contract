@@ -5,7 +5,6 @@
 #include <boost/contract/core/config.hpp>
 #include <boost/contract/core/exception.hpp>
 /** @cond */
-// TODO: Can I reduce boost.function overhead? Check also everywhere else boost.function is used.
 #include <boost/function.hpp>
 #include <boost/config.hpp>
 #ifndef BOOST_CONTRACT_CONFIG_ON_MISSING_GUARD
@@ -87,8 +86,8 @@ protected:
 private:
     bool BOOST_CONTRACT_ERROR_missing_guard_declaration;
     boost::contract::from from_;
-    boost::function<void ()> pre_;
-    boost::function<void ()> old_;
+    boost::function<void ()> pre_; // Use Boost.Function to handle also
+    boost::function<void ()> old_; // lambdas, binds, etc.
     bool failed_;
     bool guard_asserted_; // Avoid throwing twice from dtors (undef behavior).
 };

@@ -46,7 +46,7 @@ protected:
     }
     
 private:
-    boost::function<void (r_cref)>
+    boost::function<void (r_cref)> // Use Boost.Function for lambdas, etc.
             BOOST_CONTRACT_ERROR_postcondition_result_parameter_required;
 };
 
@@ -71,7 +71,7 @@ protected:
     }
     
 private:
-    boost::function<void ()>
+    boost::function<void ()> // Use Boost.Function for lambdas, etc.
             BOOST_CONTRACT_ERROR_postcondition_result_parameter_not_allowed;
 };
 

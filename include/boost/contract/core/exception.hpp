@@ -88,7 +88,7 @@ enum from {
     from_function
 };
 
-// Must us boost::function to allow users to pass lambdas, binds, etc.
+// Use Boost.Function to handle also lambdas, binds, etc,
 typedef boost::function<void (from)> assertion_failed_handler;
 
 namespace exception_ {

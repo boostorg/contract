@@ -26,8 +26,6 @@
 
 // TODO: Test failure handlers, throw on contract failure, and throw user-defined exceptions: (1) Add a test for throwing exception handlers (somewhat similar to stroustrup97/string.cpp but more comprehensive); (2) Test what happens if bodies throw (e.g., public function should still check inv, dtor too, but ctor should not, etc.)... test all contract types when bodies throw; (3) Test what happens if old expression copies throw (with OLDOF and with .old()).
 
-// TODO: Test subcontracting when overridden function/class missing pre and/or post and/or inv.
-
 // TODO: Test contract assertion disabled while checking assertions adding a test to disable/ similar to n1962/factorial.cpp, where contract recursively calls the function itself in the assertions.
 
 // TODO: Test overloading for all contract types. Also test subcontracting of overloaded virtual functions (overload both overridden and overriding functions).

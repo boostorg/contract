@@ -2,6 +2,7 @@
 #ifndef BOOST_CONTRACT_AUX_OPERATOR_SAFE_BOOL_HPP_
 #define BOOST_CONTRACT_AUX_OPERATOR_SAFE_BOOL_HPP_
 
+#include <boost/contract/aux_/name.hpp>
 #include <boost/config.hpp>
 #include <boost/detail/workaround.hpp>
 
@@ -31,14 +32,15 @@
 
 #elif defined(_MANAGED)
 
-// TODO: All code below should use BOOST_CONTRACT_AUX_NAME(...) instead of boost_contract_aux_...
-
 #define BOOST_CONTRACT_AUX_OPERATOR_SAFE_BOOL(this_type, bool_expr) \
-    static void boost_contract_aux_operator_safe_bool_func(this_type***) {} \
-    typedef void (*boost_contract_aux_operator_safe_bool_type)(this_type***); \
-    operator boost_contract_aux_operator_safe_bool_type() \
+    static void BOOST_CONTRACT_AUX_NAME(operator_safe_bool_func)( \
+            this_type***) {} \
+    typedef void (*BOOST_CONTRACT_AUX_NAME(operator_safe_bool_type))( \
+            this_type***); \
+    operator BOOST_CONTRACT_AUX_NANE(operator_safe_bool_type)() \
             const BOOST_NOEXCEPT { \
-        return (bool_expr) ? &boost_contract_aux_operator_safe_bool_func : 0; \
+        return (bool_expr) ? \
+                &BOOST_CONTRACT_AUX_NAME(operator_safe_bool_func) : 0; \
     } \
     BOOST_CONTRACT_OPERATOR_SAFE_BOOL_NOT_(bool_expr)
 
@@ -47,25 +49,25 @@
         (defined(__SUNPRO_CC) && BOOST_WORKAROUND(__SUNPRO_CC, <= 0x590))
 
 #define BOOST_CONTRACT_AUX_OPERATOR_SAFE_BOOL(this_type, bool_expr) \
-    void boost_contract_aux_operator_safe_bool_func() const {} \
-    typedef void (this_type::*boost_contract_aux_operator_safe_bool_type)() \
-            const; \
-    operator boost_contract_aux_operator_safe_bool_type() \
+    void BOOST_CONTRACT_AUX_NAME(operator_safe_bool_func)() const {} \
+    typedef void (this_type:: \
+            *BOOST_CONTRACT_AUX_NAME(operator_safe_bool_type))() const; \
+    operator BOOST_CONTRACT_AUX_NAME(operator_safe_bool_type)() \
             const BOOST_NOEXCEPT { \
-        return (bool_expr) ? \
-                &this_type::boost_contract_aux_operator_safe_bool_func : 0; \
+        return (bool_expr) ? &this_type:: \
+                BOOST_CONTRACT_AUX_NAME(operator_safe_bool_func) : 0; \
     } \
     BOOST_CONTRACT_OPERATOR_SAFE_BOOL_NOT_(bool_expr)
 
 #else
 
 #define BOOST_CONTRACT_AUX_OPERATOR_SAFE_BOOL(this_type, bool_expr) \
-    void* boost_contract_aux_operator_safe_bool_data; \
-    typedef void* this_type::*boost_contract_aux_operator_safe_bool_type; \
-    operator boost_contract_aux_operator_safe_bool_type() \
+    void* BOOST_CONTRACT_AUX_NAME(operator_safe_bool_data); \
+    typedef void* this_type::*BOOST_CONTRACT_AUX_NAME(operator_safe_bool_type);\
+    operator BOOST_CONTRACT_AUX_NAME(operator_safe_bool_type)() \
             const BOOST_NOEXCEPT { \
-        return (bool_expr) ? \
-                &this_type::boost_contract_aux_operator_safe_bool_data : 0; \
+        return (bool_expr) ? &this_type:: \
+                BOOST_CONTRACT_AUX_NAME(operator_safe_bool_data) : 0; \
     } \
     BOOST_CONTRACT_OPERATOR_SAFE_BOOL_NOT_(bool_expr)
 
