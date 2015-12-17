@@ -26,7 +26,7 @@ void f() {
 int main() {
     std::ostringstream ok;
 
-    boost::contract::set_postcondition_failed(
+    boost::contract::set_postcondition_failure(
             [] (boost::contract::from) { throw; });
 
     try {

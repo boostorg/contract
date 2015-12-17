@@ -98,8 +98,8 @@ private:
                 check_const_inv<C>();
             }
         } catch(...) {
-            if(on_entry) this->fail(&boost::contract::entry_invariant_failed);
-            else this->fail(&boost::contract::exit_invariant_failed);
+            if(on_entry) this->fail(&boost::contract::entry_invariant_failure);
+            else this->fail(&boost::contract::exit_invariant_failure);
         }
     }
 
@@ -175,7 +175,7 @@ private:
         }
 
     private:
-        struct signal_equal {}; // Exception to stop for_each as soon as found.
+        class signal_equal {}; // Exception to stop for_each as soon as found.
 
         struct compare_func_addr {
             template<typename B>

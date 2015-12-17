@@ -42,7 +42,7 @@ int main() {
     BOOST_TEST(out.eq(ok.str()));
     
     struct err {};
-    boost::contract::set_postcondition_failed([&ok] (boost::contract::from) {
+    boost::contract::set_postcondition_failure([&ok] (boost::contract::from) {
         BOOST_TEST(out.eq(ok.str())); // Must check before dtor throws...
         throw err(); // ... for testing (as dtors should never throw anyways).
     });

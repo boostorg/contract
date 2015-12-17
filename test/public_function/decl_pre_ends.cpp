@@ -125,7 +125,7 @@ int main() {
     BOOST_TEST(out.eq(ok.str()));
     
     struct err {};
-    boost::contract::set_precondition_failed(
+    boost::contract::set_precondition_failure(
             [] (boost::contract::from) { throw err(); });
 
     ok.str(""); ok

@@ -46,7 +46,7 @@ int main() {
     }
 
     struct err {};
-    boost::contract::set_precondition_failed(
+    boost::contract::set_precondition_failure(
             [] (boost::contract::from) { throw err(); });
 
     a_pre = false;

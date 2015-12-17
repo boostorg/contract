@@ -22,7 +22,7 @@ int main() {
     BOOST_TEST(out.eq(ok.str()));
 
     struct err {};
-    boost::contract::set_postcondition_failed(
+    boost::contract::set_postcondition_failure(
             [] (boost::contract::from) { throw err(); });
 
     f_post = false;

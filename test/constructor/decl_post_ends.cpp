@@ -47,7 +47,7 @@ int main() {
     }
     
     struct err {};
-    boost::contract::set_postcondition_failed(
+    boost::contract::set_postcondition_failure(
             [] (boost::contract::from) { throw err(); });
 
     a_post = false;

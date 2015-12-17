@@ -28,24 +28,26 @@
 namespace boost { namespace contract {
 
 template<bool Cond, typename Then, typename R = boost::contract::aux::none>
-struct call_if_statement {}; // Empty so cannot be used (but copyable).
+class call_if_statement {}; // Empty so cannot be used (but copyable).
 
 // Dispatch true condition (then) between non-void and void calls.
 // IMPORTANT: result_of<Then()> can be evaluated only when condition is already
 // checked to be true (as Then() is required to be valid only in that case) so
 // this extra level of dispatching is necessary to avoid compiler errors.
 template<typename Then>
-struct call_if_statement<true, Then, boost::contract::aux::none> :
-    call_if_statement<true, Then, // Copyable (as its base).
+class call_if_statement<true, Then, boost::contract::aux::none> :
+    public call_if_statement<true, Then, // Copyable (as its base).
             BOOST_CONTRACT_CALL_IF_ENABLE_IF_UNARY_RESULT_OF_(Then)>
 {
+public:
     explicit call_if_statement(Then f) : call_if_statement<true, Then,
             BOOST_CONTRACT_CALL_IF_ENABLE_IF_UNARY_RESULT_OF_(Then)>(f) {}
 };
 
 // True condition (then) for non-void call.
 template<typename Then, typename R>
-struct call_if_statement<true, Then, R> { // Copyable (as *).
+class call_if_statement<true, Then, R> { // Copyable (as *).
+public:
     explicit call_if_statement(Then f) : r_(boost::make_shared<R>(f())) {}
 
     operator R() const { return *r_; }
@@ -69,7 +71,8 @@ private:
 
 // True condition (then) for void call.
 template<typename Then>
-struct call_if_statement<true, Then, void> { // Copyable (no data).
+class call_if_statement<true, Then, void> { // Copyable (no data).
+public:
     explicit call_if_statement(Then f) { f(); }
     
     // Cannot provide `operator R()` here, because R is void.
@@ -90,7 +93,8 @@ struct call_if_statement<true, Then, void> { // Copyable (no data).
 
 // False condition (else) for both non-void and void calls.
 template<typename Then> // Copyable (no data).
-struct call_if_statement<false, Then, boost::contract::aux::none> {
+class call_if_statement<false, Then, boost::contract::aux::none> {
+public:
     explicit call_if_statement(Then const&) {}
 
     // Do not provide `operator result_type()` here, require else_ instead.

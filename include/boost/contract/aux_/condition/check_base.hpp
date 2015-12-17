@@ -65,7 +65,7 @@ protected:
             // Subcontracted pre must throw on failure (instead of
             // calling failure handler) so to be checked in logic-or.
             if(throw_on_failure) throw;
-            fail(&boost::contract::precondition_failed);
+            fail(&boost::contract::precondition_failure);
         }
         return true;
     }
@@ -74,7 +74,7 @@ protected:
         if(failed()) return;
         // TODO: Document that when old copies throw, using .old() calls post failure handler (more correct), while using = OLDOF makes enclosing user function throw (less correct). Plus of course using .old() makes old copies after inv and pre are checked, while using = OLDOF makes old copies before inv and pre checking (this is less correct in theory, but it should not really matter in most practical cases unless the old copy are programmed assuming inv and pre are satisfied).
         try { if(old_) old_(); }
-        catch(...) { fail(&boost::contract::postcondition_failed); }
+        catch(...) { fail(&boost::contract::postcondition_failure); }
     }
     
     void fail(void (*h)(boost::contract::from)) {

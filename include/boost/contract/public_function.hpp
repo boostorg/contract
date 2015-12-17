@@ -47,7 +47,7 @@
             typename boost::remove_reference<typename boost::function_types:: \
                     result_type<F>::type>::type, \
             typename boost::contract::public_function_:: \
-                    remove_optional<R>::type \
+                    remove_optional_ref<R>::type \
         >::value, \
         "mismatching result type for specified function" \
     );
@@ -65,10 +65,10 @@ namespace boost { namespace contract {
 
 namespace public_function_ {
     template<typename R>
-    struct remove_optional { typedef R type; };
+    struct remove_optional_ref { typedef R type; };
 
     template<typename R>
-    struct remove_optional<boost::optional<R> > {
+    struct remove_optional_ref<boost::optional<R> > {
         typedef typename boost::remove_reference<R>::type type;
     };
 }

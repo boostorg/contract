@@ -4,11 +4,10 @@
 
 namespace boost { namespace contract { namespace aux {
 
-struct none { // Tag for "no type".
-    // Empty so trivially constructible, copyable, cannot used by mistake, etc.
-};
+// Tag for "no type".
+class none {}; // Empty so trivial ctor, copy, etc. but cannot use by mistake.
 
-// Transform `void` to `none` type.
+// Transform `void` to `none` type (for convenience, instead of using MPL).
 template<typename T> struct none_if_void { typedef T type; };
 template<> struct none_if_void<void> { typedef none type; };
 

@@ -50,7 +50,7 @@ int main() {
     BOOST_TEST(out.eq(ok.str()));
     
     struct err {};
-    boost::contract::set_entry_invariant_failed(
+    boost::contract::set_entry_invariant_failure(
             [] (boost::contract::from) { throw err(); });
 
     a_entry_inv = false;

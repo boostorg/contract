@@ -95,10 +95,10 @@
 
 namespace boost { namespace contract { namespace aux { namespace introspection {
 
-typedef struct {} yes;
+typedef class {} yes;
 typedef yes no[2];
 
-template<typename F, F> struct check_function;
+template<typename F, F> class check_function;
 
 } } } } // namespace
 

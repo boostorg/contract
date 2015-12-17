@@ -40,7 +40,7 @@ protected:
             if(BOOST_CONTRACT_ERROR_postcondition_result_parameter_required) {
                 BOOST_CONTRACT_ERROR_postcondition_result_parameter_required(r);
             }
-        } catch(...) { fail(&boost::contract::postcondition_failed); }
+        } catch(...) { fail(&boost::contract::postcondition_failure); }
     }
     
 private:
@@ -65,7 +65,7 @@ protected:
             if(BOOST_CONTRACT_ERROR_postcondition_result_parameter_not_allowed){
   BOOST_CONTRACT_ERROR_postcondition_result_parameter_not_allowed();
             }
-        } catch(...) { fail(&boost::contract::postcondition_failed); }
+        } catch(...) { fail(&boost::contract::postcondition_failure); }
     }
     
 private:

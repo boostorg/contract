@@ -8,18 +8,6 @@
 
 // TODO: Add a config macro PRECONDITIONS_DISABLE_NOTHING to avoid disabling contract assertions within assertions checking for preconditions (to avoid passing unchecked arguments to function body...). This is what N1962 does... but this macro should be #undef by default.
 
-#ifndef BOOST_CONTRACT_CONFIG_NO_PRECONDITIONS
-#   define BOOST_CONTRACT_CONFIG_NO_PRECONDITIONS 0
-#endif
-
-#ifndef BOOST_CONTRACT_CONFIG_NO_POSTCONDITIONS
-#   define BOOST_CONTRACT_CONFIG_NO_POSTCONDITIONS 0
-#endif
-
-#ifndef BOOST_CONTRACT_CONFIG_NO_INVARIANTS
-#   define BOOST_CONTRACT_CONFIG_NO_INVARIANTS 0
-#endif
-
 #ifndef BOOST_CONTRACT_CONFIG_BASE_TYPES
 #   define BOOST_CONTRACT_CONFIG_BASE_TYPES base_types
 #endif
@@ -34,7 +22,7 @@
 #   define BOOST_CONTRACT_CONFIG_STATIC_INVARIANT static_invariant
 #endif
 
-// BOOST_CONTRACT_CONFIG_PERMISSING (#undef by default).
+// BOOST_CONTRACT_CONFIG_PERMISSIVE (#undef by default).
 
 // Type of exception to throw is `guard c = ...` is missing. This is a
 // programming error so by default this library calls abort. If this macro is
@@ -50,8 +38,53 @@
 // However, this macro can be defined to throw an exception, call a function,
 // a no-op, or any other user code in case users truly need to handle missing
 // contract guard logic errors without terminating the program, for example:
-//  #define BOOST_CONFIG_ON_MISSING_GUARD { throw my_logic_error(); }
+//  #define BOOST_CONTRACT_CONFIG_ON_MISSING_GUARD { throw my_logic_error(); }
 // BOOST_CONTRACT_CONFIG_ON_MISSING_GUARD
+
+// BOOST_CONTRACT_CONFIG_NO_PRECONDITIONS
+// BOOST_CONTRACT_CONFIG_NO_POSTCONDITIONS
+// BOOST_CONTRACT_CONFIG_NO_ENTRY_INVARIANTS
+// BOOST_CONTRACT_CONFIG_NO_EXIT_INVARIANTS
+// BOOST_CONTRACT_CONFIG_NO_INVARIANTS
+
+#ifdef BOOST_CONTRACT_CONFIG_NO_PRECONDITIONS
+#   define BOOST_CONTRACT_NO_PRECONDITIONS 1
+#else
+#   define BOOST_CONTRACT_NO_PRECONDITIONS 0
+#endif
+
+#ifdef BOOST_CONTRACT_CONFIG_NO_POSTCONDITIONS
+#   define BOOST_CONTRACT_NO_POSTCONDITIONS 1
+#else
+#   define BOOST_CONTRACT_NO_POSTCONDITIONS 0
+#endif
+
+#if defined(BOOST_CONTRACT_CONFIG_NO_ENTRY_INVARIANTS) || \
+        defined (BOOST_CONTRACT_CONFIG_NO_INVARIANTS)
+#   define BOOST_CONTRACT_NO_ENTRY_INVARIANTS 1
+#else
+#   define BOOST_CONTRACT_NO_ENTRY_INVARIANTS 0
+#endif
+
+#if defined(BOOST_CONTRACT_CONFIG_NO_EXIT_INVARIANTS) || \
+        defined (BOOST_CONTRACT_CONFIG_NO_INVARIANTS)
+#   define BOOST_CONTRACT_NO_EXIT_INVARIANTS 1
+#else
+#   define BOOST_CONTRACT_NO_EXIT_INVARIANTS 0
+#endif
+
+#if BOOST_CONTRACT_NO_ENTRY_INVARIANTS && BOOST_CONTRACT_NO_EXIT_INVARIANTS
+#   define BOOST_CONTRACT_NO_INVARIANTS 1
+#else
+#   define BOOST_CONTRACT_NO_INVARIANTS 1
+#endif
+
+#if BOOST_CONTRACT_NO_PRECONDITONS && BOOST_CONTRACT_NO_POSTCONDITIONS && \
+        BOOST_CONTRACT_NO_INVARIANTS
+#   define BOOST_CONTRACT_NO_CONTRACTS 1
+#else
+#   define BOOST_CONTRACT_NO_CONTRACTS 0
+#endif
 
 #endif // #include guard
 

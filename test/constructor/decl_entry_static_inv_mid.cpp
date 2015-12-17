@@ -45,7 +45,7 @@ int main() {
     }
     
     struct err {};
-    boost::contract::set_entry_invariant_failed(
+    boost::contract::set_entry_invariant_failure(
             [] (boost::contract::from) { throw err(); });
 
     a_entry_static_inv = false;

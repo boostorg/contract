@@ -47,7 +47,7 @@ int main() {
     }
     
     struct err {};
-    boost::contract::set_exit_invariant_failed(
+    boost::contract::set_exit_invariant_failure(
             [] (boost::contract::from) { throw err(); });
 
     a_exit_inv = false;

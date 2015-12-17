@@ -44,8 +44,8 @@ namespace boost { namespace contract { namespace aux {
 
 namespace check_subcontracted_pre_post_inv_ {
     // Exception signals (must not inherit).
-    struct signal_no_error {};
-    struct signal_not_checked {};
+    class signal_no_error {};
+    class signal_not_checked {};
 }
 
 // O, R, F, and A-i can be none types (but C cannot).
@@ -152,7 +152,7 @@ protected:
         exec_or(
             boost::contract::virtual_::check_pre,
             &check_subcontracted_pre_post_inv::check_pre,
-            &boost::contract::precondition_failed
+            &boost::contract::precondition_failure
         );
     }
 
@@ -219,7 +219,7 @@ private:
                         throw boost::contract::bad_virtual_result_cast(
                                 v_->result_type_name_, typeid(r_type).name());
                     } catch(...) {
-                        this->fail(&boost::contract::postcondition_failed);
+                        this->fail(&boost::contract::postcondition_failure);
                     }
                 }
             }
@@ -231,7 +231,7 @@ private:
                     throw boost::contract::bad_virtual_result_cast(
                             v_->result_type_name_, typeid(r_type).name());
                 } catch(...) {
-                    this->fail(&boost::contract::postcondition_failed);
+                    this->fail(&boost::contract::postcondition_failure);
                 }
             }
         }
@@ -249,7 +249,7 @@ private:
         this->check_post(*r);
     }
     
-    void exec_and(
+    void exec_and( // Execute action in short-circuit logic-and with bases.
         boost::contract::virtual_::action_enum a,
         void (check_subcontracted_pre_post_inv::* f)() = 0
     ) {
@@ -266,7 +266,7 @@ private:
         }
     }
 
-    void exec_or(
+    void exec_or( // Execute action in short-circuit logic-or with bases.
         boost::contract::virtual_::action_enum a,
         bool (check_subcontracted_pre_post_inv::* f)(bool) = 0,
         void (*h)(boost::contract::from) = 0
