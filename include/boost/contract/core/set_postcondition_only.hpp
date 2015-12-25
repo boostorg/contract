@@ -4,11 +4,14 @@
 
 /** @file */
 
+#include <boost/contract/core/config.hpp>
 #include <boost/contract/core/set_nothing.hpp>
 #include <boost/contract/aux_/condition/check_pre_post.hpp>
 #include <boost/contract/aux_/none.hpp>
 #include <boost/contract/aux_/auto_ptr.hpp>
-#include <boost/contract/aux_/debug.hpp>
+#if BOOST_CONTRACT_POSTCONDITIONS
+#   include <boost/contract/aux_/debug.hpp>
+#endif
 /** @cond */
 #include <boost/config.hpp>
 /** @endcond */
@@ -32,8 +35,10 @@ public:
 
     template<typename F>
     set_nothing postcondition(F const& f) {
-        BOOST_CONTRACT_AUX_DEBUG(check_);
-        check_->set_post(f);
+        #if BOOST_CONTRACT_POSTCONDITIONS
+            BOOST_CONTRACT_AUX_DEBUG(check_);
+            check_->set_post(f);
+        #endif
         return set_nothing(check_.release());
     }
 

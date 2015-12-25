@@ -33,6 +33,8 @@ BOOST_CONTRACT_ERROR_macro_OLDOF_requires_variadic_macros_otherwise_manually_pro
 
 /* PUBLIC */
 
+// NOTE: Leave this #defined the same regardless of
+// BOOST_CONTRACT_POSTCONDITIONS (impl of expanded func will change instead).
 #define BOOST_CONTRACT_OLDOF(...) \
     BOOST_PP_CAT( /* CAT(..., EMTPY()) required on MSVC */ \
         BOOST_PP_OVERLOAD( \
@@ -89,8 +91,10 @@ template<typename T>
 class old_ptr { // Copyable (as *).
 public:
     explicit old_ptr() {}
+
+    // Only const access (because contracts should not change program state).
     
-    T const& operator*() const { return ptr_.operator*(); }
+    T const& operator*() const { BOOST_CONTRACT_AUX_DEBUG(ptr_); return *ptr_; }
 
     T const* operator->() const { return ptr_.operator->(); }
 
@@ -112,13 +116,17 @@ public:
     /* implicit */ unconvertible_old(
         T const& old_value,
         typename boost::enable_if<boost::is_copy_constructible<T> >::type* = 0
-    ) : ptr_(boost::make_shared<T>(old_value)) {} // The one single copy of T.
+    )
+    #if BOOST_CONTRACT_POSTCONDITIONS
+        : ptr_(boost::make_shared<T>(old_value)) // The one single copy of T.
+    #endif // Else, null ptr_ (so not copy of T).
+    {}
     
     template<typename T>
     /* implicit */ unconvertible_old(
         T const&,
         typename boost::disable_if<boost::is_copy_constructible<T> >::type* = 0
-    ) : ptr_() {} // Null ptr, no copy of T.
+    ) {} // Null ptr_ (so no copy of T).
 
 private:
     explicit unconvertible_old() {}
@@ -134,53 +142,58 @@ public:
     // Implicitly called by constructor init `old_ptr<T> old_x = ...`.
     template<typename T>
     /* implicit */ operator old_ptr<T>() {
-        if(!boost::is_copy_constructible<T>::value) {
-            BOOST_CONTRACT_AUX_DEBUG(!ptr_); // Non-copyable so no old...
-            return old_ptr<T>(); // ...and return null.
-        } else if(!v_ && boost::contract::aux::check_guard::checking()) {
-            // Return null shared ptr (see after if statement).
-        } else if(!v_) {
-            BOOST_CONTRACT_AUX_DEBUG(ptr_);
-            boost::shared_ptr<T const> old =
-                    boost::static_pointer_cast<T const>(ptr_);
-            BOOST_CONTRACT_AUX_DEBUG(old);
-            return old_ptr<T>(old);
-        } else if(v_->action_ == boost::contract::virtual_::push_old_init ||
-                v_->action_ == boost::contract::virtual_::push_old_copy) {
-            BOOST_CONTRACT_AUX_DEBUG(ptr_);
-            if(v_->action_ == boost::contract::virtual_::push_old_init) {
-                v_->old_inits_.push(ptr_);
-            } else {
-                v_->old_copies_.push(ptr_);
+        #if BOOST_CONTRACT_POSTCONDITIONS
+            if(!boost::is_copy_constructible<T>::value) {
+                BOOST_CONTRACT_AUX_DEBUG(!ptr_); // Non-copyable so no old...
+                return old_ptr<T>(); // ...and return null.
+            } else if(!v_ && boost::contract::aux::check_guard::checking()) {
+                // Return null shared ptr (see after if statement).
+            } else if(!v_) {
+                BOOST_CONTRACT_AUX_DEBUG(ptr_);
+                boost::shared_ptr<T const> old =
+                        boost::static_pointer_cast<T const>(ptr_);
+                BOOST_CONTRACT_AUX_DEBUG(old);
+                return old_ptr<T>(old);
+            } else if(v_->action_ == boost::contract::virtual_::push_old_init ||
+                    v_->action_ == boost::contract::virtual_::push_old_copy) {
+                BOOST_CONTRACT_AUX_DEBUG(ptr_);
+                if(v_->action_ == boost::contract::virtual_::push_old_init) {
+                    v_->old_inits_.push(ptr_);
+                } else {
+                    v_->old_copies_.push(ptr_);
+                }
+                return old_ptr<T>();
+            } else if(v_->action_ == boost::contract::virtual_::pop_old_init ||
+                    v_->action_ == boost::contract::virtual_::pop_old_copy) {
+                BOOST_CONTRACT_AUX_DEBUG(!ptr_);
+                boost::shared_ptr<void> ptr;
+                if(v_->action_ == boost::contract::virtual_::pop_old_init) {
+                    ptr = v_->old_inits_.front();
+                } else {
+                    ptr = v_->old_copies_.top();
+                }
+                BOOST_CONTRACT_AUX_DEBUG(ptr);
+                if(v_->action_ == boost::contract::virtual_::pop_old_init) {
+                    v_->old_inits_.pop();
+                } else {
+                    v_->old_copies_.pop();
+                }
+                boost::shared_ptr<T const> old =
+                        boost::static_pointer_cast<T const>(ptr);
+                BOOST_CONTRACT_AUX_DEBUG(old);
+                return old_ptr<T>(old);
             }
-            return old_ptr<T>();
-        } else if(v_->action_ == boost::contract::virtual_::pop_old_init ||
-                v_->action_ == boost::contract::virtual_::pop_old_copy) {
-            BOOST_CONTRACT_AUX_DEBUG(!ptr_);
-            boost::shared_ptr<void> ptr;
-            if(v_->action_ == boost::contract::virtual_::pop_old_init) {
-                ptr = v_->old_inits_.front();
-            } else {
-                ptr = v_->old_copies_.top();
-            }
-            BOOST_CONTRACT_AUX_DEBUG(ptr);
-            if(v_->action_ == boost::contract::virtual_::pop_old_init) {
-                v_->old_inits_.pop();
-            } else {
-                v_->old_copies_.pop();
-            }
-            boost::shared_ptr<T const> old =
-                    boost::static_pointer_cast<T const>(ptr);
-            BOOST_CONTRACT_AUX_DEBUG(old);
-            return old_ptr<T>(old);
-        }
+        #endif
         BOOST_CONTRACT_AUX_DEBUG(!ptr_);
         return old_ptr<T>();
     }
 
 private:
-    explicit convertible_old(virtual_* v, unconvertible_old const& old) :
-            v_(v), ptr_(old.ptr_) {}
+    explicit convertible_old(virtual_* v, unconvertible_old const& old)
+    #if BOOST_CONTRACT_POSTCONDITIONS
+        : v_(v), ptr_(old.ptr_)
+    #endif
+    {}
 
     virtual_* v_;
     boost::shared_ptr<void> ptr_;
@@ -200,21 +213,21 @@ convertible_old make_old(virtual_* v, unconvertible_old const& old) {
 }
 
 bool copy_old() {
-#if BOOST_CONTRACT_CONFIG_NO_POSTCONDITIONS
-    return false; // Post checking disabled, so never copy old values.
-#else
-    return !boost::contract::aux::check_guard::checking();
-#endif
+    #if BOOST_CONTRACT_POSTCONDITIONS
+        return !boost::contract::aux::check_guard::checking();
+    #else
+        return false; // Post checking disabled, so never copy old values.
+    #endif
 }
 
 bool copy_old(virtual_* v) {
-#if BOOST_CONTRACT_CONFIG_NO_POSTCONDITIONS
-    return false; // Post checking disabled, so never copy old values.
-#else
-    if(!v) return !boost::contract::aux::check_guard::checking();
-    return v->action_ == boost::contract::virtual_::push_old_init ||
-            v->action_ == boost::contract::virtual_::push_old_copy;
-#endif
+    #if BOOST_CONTRACT_POSTCONDITIONS
+        if(!v) return !boost::contract::aux::check_guard::checking();
+        return v->action_ == boost::contract::virtual_::push_old_init ||
+                v->action_ == boost::contract::virtual_::push_old_copy;
+    #else
+        return false; // Post checking disabled, so never copy old values.
+    #endif
 }
 
 } } // namespace

@@ -21,9 +21,9 @@
 
 /* PRIVATE */
 
-// This check is strictly not necessary because compilation will fail anyways,
+// This check is not strictly necessary because compilation will fail anyways,
 // but it helps limiting cryptic compiler's errors.
-#define BOOST_CONTRACT_PUBLIC_FUNCTION_HAS_ARITY(F, arity) \
+#define BOOST_CONTRACT_PUBLIC_FUNCTION_ASSERT_ARITY_(F, arity) \
     BOOST_STATIC_ASSERT_MSG( \
         /* -2 for both `this` and `virtual_*` extra parameters */ \
         boost::function_types::function_arity<F>::value - 2 == arity, \
@@ -32,16 +32,16 @@
 
 // Always enforce this so base contracts can always specify postconditions with
 // result, without need to change derived contracts.
-#define BOOST_CONTRACT_PUBLIC_FUNCTION_HAS_VOID_RESULT_(F) \
+#define BOOST_CONTRACT_PUBLIC_FUNCTION_ASSERT_NO_RESULT_(F) \
     BOOST_STATIC_ASSERT_MSG( \
         boost::is_same< \
             typename boost::function_types::result_type<F>::type, \
             void \
         >::value, \
-        "missing result argument for non-void function" \
+        "missing 'result' argument for non-void function" \
     );
 
-#define BOOST_CONTRACT_PUBLIC_FUNCTION_HAS_RESULT_(F, R) \
+#define BOOST_CONTRACT_PUBLIC_FUNCTION_ASSERT_RESULT_(F, R) \
     BOOST_STATIC_ASSERT_MSG( \
         boost::is_same< \
             typename boost::remove_reference<typename boost::function_types:: \
@@ -53,10 +53,10 @@
     );
 
 // Always enforce this so this lib can check and enforce override.
-#define BOOST_CONTRACT_PUBLIC_FUNCTION_HAS_BASE_TYPES_(C) \
+#define BOOST_CONTRACT_PUBLIC_FUNCTION_ASSERT_BASE_TYPES_(C) \
     BOOST_STATIC_ASSERT_MSG( \
         boost::contract::access::has_base_types<C>::value, \
-        "enclosing class missing 'base types' typedef" \
+        "enclosing class missing 'base-types' typedef" \
     );
 
 /* CODE */
@@ -146,9 +146,9 @@ set_precondition_old_postcondition<R> public_function(
 // For virtual, overriding, void member functions.
 template<class O, typename F, class C>
 set_precondition_old_postcondition<> public_function(virtual_* v, F, C* obj) {
-    BOOST_CONTRACT_PUBLIC_FUNCTION_HAS_ARITY(F, 0)
-    BOOST_CONTRACT_PUBLIC_FUNCTION_HAS_VOID_RESULT_(F)
-    BOOST_CONTRACT_PUBLIC_FUNCTION_HAS_BASE_TYPES_(C)
+    BOOST_CONTRACT_PUBLIC_FUNCTION_ASSERT_ARITY_(F, 0)
+    BOOST_CONTRACT_PUBLIC_FUNCTION_ASSERT_NO_RESULT_(F)
+    BOOST_CONTRACT_PUBLIC_FUNCTION_ASSERT_BASE_TYPES_(C)
     boost::contract::aux::none n;
     return set_precondition_old_postcondition<>(
         new boost::contract::aux::public_function<
@@ -165,9 +165,9 @@ set_precondition_old_postcondition<> public_function(virtual_* v, F, C* obj) {
 template<class O, typename R, typename F, class C>
 set_precondition_old_postcondition<R> public_function(
         virtual_* v, R& r, F, C* obj) {
-    BOOST_CONTRACT_PUBLIC_FUNCTION_HAS_ARITY(F, 0)
-    BOOST_CONTRACT_PUBLIC_FUNCTION_HAS_RESULT_(F, R)
-    BOOST_CONTRACT_PUBLIC_FUNCTION_HAS_BASE_TYPES_(C)
+    BOOST_CONTRACT_PUBLIC_FUNCTION_ASSERT_ARITY_(F, 0)
+    BOOST_CONTRACT_PUBLIC_FUNCTION_ASSERT_RESULT_(F, R)
+    BOOST_CONTRACT_PUBLIC_FUNCTION_ASSERT_BASE_TYPES_(C)
     boost::contract::aux::none n;
     return set_precondition_old_postcondition<R>(
         new boost::contract::aux::public_function<
@@ -185,9 +185,9 @@ set_precondition_old_postcondition<R> public_function(
 template<class O, typename F, class C, typename A0>
 set_precondition_old_postcondition<> public_function(
         virtual_* v, F, C* obj, A0& a0) {
-    BOOST_CONTRACT_PUBLIC_FUNCTION_HAS_ARITY(F, 1)
-    BOOST_CONTRACT_PUBLIC_FUNCTION_HAS_VOID_RESULT_(F)
-    BOOST_CONTRACT_PUBLIC_FUNCTION_HAS_BASE_TYPES_(C)
+    BOOST_CONTRACT_PUBLIC_FUNCTION_ASSERT_ARITY_(F, 1)
+    BOOST_CONTRACT_PUBLIC_FUNCTION_ASSERT_NO_RESULT_(F)
+    BOOST_CONTRACT_PUBLIC_FUNCTION_ASSERT_BASE_TYPES_(C)
     boost::contract::aux::none n;
     return set_precondition_old_postcondition<>(
         new boost::contract::aux::public_function<
@@ -203,9 +203,9 @@ set_precondition_old_postcondition<> public_function(
 template<class O, typename R, typename F, class C, typename A0>
 set_precondition_old_postcondition<R> public_function(
         virtual_* v, R& r, F, C* obj, A0& a0) {
-    BOOST_CONTRACT_PUBLIC_FUNCTION_HAS_ARITY(F, 1)
-    BOOST_CONTRACT_PUBLIC_FUNCTION_HAS_RESULT_(F, R)
-    BOOST_CONTRACT_PUBLIC_FUNCTION_HAS_BASE_TYPES_(C)
+    BOOST_CONTRACT_PUBLIC_FUNCTION_ASSERT_ARITY_(F, 1)
+    BOOST_CONTRACT_PUBLIC_FUNCTION_ASSERT_RESULT_(F, R)
+    BOOST_CONTRACT_PUBLIC_FUNCTION_ASSERT_BASE_TYPES_(C)
     boost::contract::aux::none n;
     return set_precondition_old_postcondition<R>(
         new boost::contract::aux::public_function<
@@ -223,9 +223,9 @@ set_precondition_old_postcondition<R> public_function(
 template<class O, typename F, class C, typename A0, typename A1>
 set_precondition_old_postcondition<> public_function(
         virtual_* v, F, C* obj, A0& a0, A1& a1) {
-    BOOST_CONTRACT_PUBLIC_FUNCTION_HAS_ARITY(F, 2)
-    BOOST_CONTRACT_PUBLIC_FUNCTION_HAS_VOID_RESULT_(F)
-    BOOST_CONTRACT_PUBLIC_FUNCTION_HAS_BASE_TYPES_(C)
+    BOOST_CONTRACT_PUBLIC_FUNCTION_ASSERT_ARITY_(F, 2)
+    BOOST_CONTRACT_PUBLIC_FUNCTION_ASSERT_NO_RESULT_(F)
+    BOOST_CONTRACT_PUBLIC_FUNCTION_ASSERT_BASE_TYPES_(C)
     boost::contract::aux::none n;
     return set_precondition_old_postcondition<>(
         new boost::contract::aux::public_function<
@@ -241,9 +241,9 @@ set_precondition_old_postcondition<> public_function(
 template<class O, typename R, typename F, class C, typename A0, typename A1>
 set_precondition_old_postcondition<R> public_function(
         virtual_* v, R& r, F, C* obj, A0& a0, A1& a1) {
-    BOOST_CONTRACT_PUBLIC_FUNCTION_HAS_ARITY(F, 2)
-    BOOST_CONTRACT_PUBLIC_FUNCTION_HAS_RESULT_(F, R)
-    BOOST_CONTRACT_PUBLIC_FUNCTION_HAS_BASE_TYPES_(C)
+    BOOST_CONTRACT_PUBLIC_FUNCTION_ASSERT_ARITY_(F, 2)
+    BOOST_CONTRACT_PUBLIC_FUNCTION_ASSERT_RESULT_(F, R)
+    BOOST_CONTRACT_PUBLIC_FUNCTION_ASSERT_BASE_TYPES_(C)
     return set_precondition_old_postcondition<R>(
         new boost::contract::aux::public_function<
             O,

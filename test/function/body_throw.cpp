@@ -30,8 +30,12 @@ int main() {
         BOOST_TEST(false);
     } catch(err const&) {
         ok.str(""); ok
-            << "f::pre" << std::endl
-            << "f::old" << std::endl
+            #if BOOST_CONTRACT_PRECONDITIONS
+                << "f::pre" << std::endl
+            #endif
+            #if BOOST_CONTRACT_POSTCONDITIONS
+                << "f::old" << std::endl
+            #endif
             << "f::body" << std::endl // Test this threw.
         ;
         BOOST_TEST(out.eq(ok.str()));

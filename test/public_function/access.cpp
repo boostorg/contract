@@ -71,28 +71,33 @@ int main() {
     out.str("");
     aa.f('a');
     ok.str(""); ok
-        << "b::static_inv" << std::endl
-        << "b::inv" << std::endl
-        << "a::static_inv" << std::endl
-        << "a::inv" << std::endl
-        
-        << "b::f::pre" << std::endl
-        << "a::f::pre" << std::endl
-        
-        << "b::f::old" << std::endl
-        << "a::f::old" << std::endl
-        
+        #if BOOST_CONTRACT_ENTRY_INVARIANTS
+            << "b::static_inv" << std::endl
+            << "b::inv" << std::endl
+            << "a::static_inv" << std::endl
+            << "a::inv" << std::endl
+        #endif
+        #if BOOST_CONTRACT_PRECONDITIONS
+            << "b::f::pre" << std::endl
+            << "a::f::pre" << std::endl
+        #endif
+        #if BOOST_CONTRACT_POSTCONDITIONS
+            << "b::f::old" << std::endl
+            << "a::f::old" << std::endl
+        #endif
         << "a::f::body" << std::endl
-        
-        << "b::static_inv" << std::endl
-        << "b::inv" << std::endl
-        << "a::static_inv" << std::endl
-        << "a::inv" << std::endl
-        
-        << "b::f::old" << std::endl
-        << "b::f::post" << std::endl
-        // No old call here because not a base object.
-        << "a::f::post" << std::endl
+        #if BOOST_CONTRACT_EXIT_INVARIANTS
+            << "b::static_inv" << std::endl
+            << "b::inv" << std::endl
+            << "a::static_inv" << std::endl
+            << "a::inv" << std::endl
+        #endif
+        #if BOOST_CONTRACT_POSTCONDITIONS
+            << "b::f::old" << std::endl
+            << "b::f::post" << std::endl
+            // No old call here because not a base object.
+            << "a::f::post" << std::endl
+        #endif
     ;
     BOOST_TEST(out.eq(ok.str()));
 
@@ -100,14 +105,24 @@ int main() {
     out.str("");
     bb.f('b');
     ok.str(""); ok
-        << "b::static_inv" << std::endl
-        << "b::inv" << std::endl
-        << "b::f::pre" << std::endl
-        << "b::f::old" << std::endl
+        #if BOOST_CONTRACT_ENTRY_INVARIANTS
+            << "b::static_inv" << std::endl
+            << "b::inv" << std::endl
+        #endif
+        #if BOOST_CONTRACT_PRECONDITIONS
+            << "b::f::pre" << std::endl
+        #endif
+        #if BOOST_CONTRACT_POSTCONDITIONS
+            << "b::f::old" << std::endl
+        #endif
         << "b::f::body" << std::endl
-        << "b::static_inv" << std::endl
-        << "b::inv" << std::endl
-        << "b::f::post" << std::endl
+        #if BOOST_CONTRACT_EXIT_INVARIANTS
+            << "b::static_inv" << std::endl
+            << "b::inv" << std::endl
+        #endif
+        #if BOOST_CONTRACT_POSTCONDITIONS
+            << "b::f::post" << std::endl
+        #endif
     ;
     BOOST_TEST(out.eq(ok.str()));
 

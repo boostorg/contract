@@ -16,9 +16,9 @@ struct b {
 
     static void f() {
         boost::contract::guard c = boost::contract::public_function<b>()
-            .precondition([&] { out << "b::f::pre" << std::endl; })
-            .old([&] { out << "b::f::old" << std::endl; })
-            .postcondition([&] { out << "b::f::post" << std::endl; })
+            .precondition([] { out << "b::f::pre" << std::endl; })
+            .old([] { out << "b::f::old" << std::endl; })
+            .postcondition([] { out << "b::f::post" << std::endl; })
         ;
         out << "b::f::body" << std::endl;
     }
@@ -36,9 +36,9 @@ struct a
 
     static void f() {
         boost::contract::guard c = boost::contract::public_function<a>()
-            .precondition([&] { out << "a::f::pre" << std::endl; })
-            .old([&] { out << "a::f::old" << std::endl; })
-            .postcondition([&] { out << "a::f::post" << std::endl; })
+            .precondition([] { out << "a::f::pre" << std::endl; })
+            .old([] { out << "a::f::old" << std::endl; })
+            .postcondition([] { out << "a::f::post" << std::endl; })
         ;
         out << "a::f::body" << std::endl;
     }
@@ -52,13 +52,23 @@ int main() {
     ok.str(""); ok
         // Static so no object thus only static inv, plus never virtual so subst
         // principle does not apply and no subcontracting.
-        << "a::static_inv" << std::endl
-        << "a::f::pre" << std::endl
-        << "a::f::old" << std::endl
+        #if BOOST_CONTRACT_ENTRY_INVARIANTS
+            << "a::static_inv" << std::endl
+        #endif
+        #if BOOST_CONTRACT_PRECONDITIONS
+            << "a::f::pre" << std::endl
+        #endif
+        #if BOOST_CONTRACT_POSTCONDITIONS
+            << "a::f::old" << std::endl
+        #endif
         << "a::f::body" << std::endl
-        << "a::static_inv" << std::endl
-        // No old call here because not base object.
-        << "a::f::post" << std::endl
+        #if BOOST_CONTRACT_EXIT_INVARIANTS
+            << "a::static_inv" << std::endl
+        #endif
+        #if BOOST_CONTRACT_POSTCONDITIONS
+            // No old call here because not base object.
+            << "a::f::post" << std::endl
+        #endif
     ;
     BOOST_TEST(out.eq(ok.str()));
 

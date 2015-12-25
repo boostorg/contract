@@ -46,9 +46,19 @@ struct oteststream :
                 ", because '" << r[i] << "' != '" << s[i] << "':" << std::endl
             ;
             std::cout << std::endl;
-            std::cout << r.substr(0, std::min(i + 1, r.size())) << std::endl;
+            std::cout
+                << r.substr(0, i)
+                << "(((" << r[i] << ")))"
+                << r.substr(std::min(i + 1, r.size()), r.size())
+                << std::endl
+            ;
             std::cout << std::endl;
-            std::cout << s.substr(0, std::min(i + 1, s.size())) << std::endl;
+            std::cout
+                << s.substr(0, i)
+                << "(((" << s[i] << ")))"
+                << s.substr(std::min(i + 1, s.size()), s.size())
+                << std::endl
+            ;
             std::cout << std::endl;
             return false;
         }

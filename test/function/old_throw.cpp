@@ -32,11 +32,17 @@ int main() {
     try {
         out.str("");
         f();
-        BOOST_TEST(false);
+        #if BOOST_CONTRACT_POSTCONDITIONS
+            BOOST_TEST(false);
+        #endif
     } catch(err const&) {
         ok.str(""); ok
-            << "f::pre" << std::endl
-            << "f::old" << std::endl // Test this threw.
+            #if BOOST_CONTRACT_PRECONDITIONS
+                << "f::pre" << std::endl
+            #endif
+            #if BOOST_CONTRACT_POSTCONDITIONS
+                << "f::old" << std::endl // Test this threw.
+            #endif
         ;
         BOOST_TEST(out.eq(ok.str()));
     } catch(...) { BOOST_TEST(false); }

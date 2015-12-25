@@ -96,30 +96,34 @@ int main() {
         BOOST_TEST(false);
     } catch(a::err const&) {
         ok.str(""); ok
-            << "c::static_inv" << std::endl
-            << "c::inv" << std::endl
-            << "b::static_inv" << std::endl
-            << "b::inv" << std::endl
-            << "a::static_inv" << std::endl
-            << "a::inv" << std::endl
-
-            << "c::f::pre" << std::endl
-            << "b::f::pre" << std::endl
-            << "a::f::pre" << std::endl
-            
-            << "c::f::old" << std::endl
-            << "b::f::old" << std::endl
-            << "a::f::old" << std::endl
-
+            #if BOOST_CONTRACT_ENTRY_INVARIANTS
+                << "c::static_inv" << std::endl
+                << "c::inv" << std::endl
+                << "b::static_inv" << std::endl
+                << "b::inv" << std::endl
+                << "a::static_inv" << std::endl
+                << "a::inv" << std::endl
+            #endif
+            #if BOOST_CONTRACT_PRECONDITIONS
+                << "c::f::pre" << std::endl
+                << "b::f::pre" << std::endl
+                << "a::f::pre" << std::endl
+            #endif
+            #if BOOST_CONTRACT_POSTCONDITIONS
+                << "c::f::old" << std::endl
+                << "b::f::old" << std::endl
+                << "a::f::old" << std::endl
+            #endif
             << "a::f::body" << std::endl // Test this threw.
-            
-            // Test no post (but still subcontracted inv) because body threw.
-            << "c::static_inv" << std::endl
-            << "c::inv" << std::endl
-            << "b::static_inv" << std::endl
-            << "b::inv" << std::endl
-            << "a::static_inv" << std::endl
-            << "a::inv" << std::endl
+            #if BOOST_CONTRACT_EXIT_INVARIANTS
+                // Test no post (but still subcontracted inv) as body threw.
+                << "c::static_inv" << std::endl
+                << "c::inv" << std::endl
+                << "b::static_inv" << std::endl
+                << "b::inv" << std::endl
+                << "a::static_inv" << std::endl
+                << "a::inv" << std::endl
+            #endif
         ;
         BOOST_TEST(out.eq(ok.str()));
     } catch(...) { BOOST_TEST(false); }

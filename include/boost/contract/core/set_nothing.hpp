@@ -6,7 +6,6 @@
 
 #include <boost/contract/aux_/condition/check_base.hpp>
 #include <boost/contract/aux_/auto_ptr.hpp>
-#include <boost/contract/aux_/debug.hpp>
 /** @cond */
 #include <boost/config.hpp>
 /** @endcond */

@@ -4,8 +4,11 @@
 
 /** @file */
 
+#include <boost/contract/core/config.hpp>
+#if BOOST_CONTRACT_PRECONDITIONS
+#   include <boost/contract/core/exception.hpp>
+#endif
 #include <boost/contract/core/set_old_postcondition.hpp>
-#include <boost/contract/core/exception.hpp>
 #include <boost/contract/aux_/operation/constructor.hpp>
 
 namespace boost { namespace contract {
@@ -16,19 +19,20 @@ set_old_postcondition<> constructor(C* obj) {
             new boost::contract::aux::constructor<C>(obj));
 }
 
-// Uses C tparam to avoid multiple inheritance from same type.
-template<class C>
+template<class C> // tparam avoids multiple instance of same base in user code.
 class constructor_precondition { // Copyable (no data).
 public:
     constructor_precondition() {} // For user ctor overloads with no pre.
 
     template<typename F>
     explicit constructor_precondition(F const& f) {
-        try { f(); }
-        catch(...) { precondition_failure(from_constructor); }
+        #if BOOST_CONTRACT_PRECONDITIONS
+            try { f(); }
+            catch(...) { precondition_failure(from_constructor); }
+        #endif
     }
 
-    // Default copy operations (so user's derived classes can also be copyable).
+    // Default copy operations (so user's derived classes can be copied, etc.).
 };
 
 } } // namespace

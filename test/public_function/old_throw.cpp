@@ -1,5 +1,5 @@
 
-// Test from public function (derived and bases) .old().
+// Test throw from public function (derived and bases) .old().
 
 #include "../aux_/oteststream.hpp"
 #include <boost/contract/public_function.hpp>
@@ -20,15 +20,15 @@ struct c {
 
     virtual void f(boost::contract::virtual_* v = 0) {
         boost::contract::guard c = boost::contract::public_function(v, this)
-            .precondition([&] {
+            .precondition([] {
                 out << "c::f::pre" << std::endl;
                 BOOST_CONTRACT_ASSERT(false); // To check derived pre.
             })
-            .old([&] {
+            .old([] {
                 out << "c::f::old" << std::endl;
                 throw c::err(); // Test .old() throws.
             })
-            .postcondition([&] { out << "c::f::post" << std::endl; })
+            .postcondition([] { out << "c::f::post" << std::endl; })
         ;
         out << "c::f::body" << std::endl;
     }
@@ -49,15 +49,15 @@ struct b
     virtual void f(boost::contract::virtual_* v = 0) /* override */ {
         boost::contract::guard c = boost::contract::public_function<override_f>(
                 v, &b::f, this)
-            .precondition([&] {
+            .precondition([] {
                 out << "b::f::pre" << std::endl;
                 BOOST_CONTRACT_ASSERT(false); // To check derived pre.
             })
-            .old([&] {
+            .old([] {
                 out << "b::f::old" << std::endl;
                 throw b::err(); // Test .old() throws.
             })
-            .postcondition([&] { out << "b::f::post" << std::endl; })
+            .postcondition([] { out << "b::f::post" << std::endl; })
         ;
         out << "b::f::body" << std::endl;
     }
@@ -79,12 +79,12 @@ struct a
     void f(boost::contract::virtual_* v = 0) /* override */ {
         boost::contract::guard c = boost::contract::public_function<override_f>(
                 v, &a::f, this)
-            .precondition([&] { out << "a::f::pre" << std::endl; })
-            .old([&] {
+            .precondition([] { out << "a::f::pre" << std::endl; })
+            .old([] {
                 out << "a::f::old" << std::endl;
                 throw a::err(); // Test .old() throws.
             })
-            .postcondition([&] { out << "a::f::post" << std::endl; })
+            .postcondition([] { out << "a::f::post" << std::endl; })
         ;
         out << "a::f::body" << std::endl;
     }
@@ -102,21 +102,37 @@ int main() {
     try {
         out.str("");
         ba.f();
-        BOOST_TEST(false);
-    } catch(c::err const&) {
+        #if BOOST_CONTRACT_POSTCONDITIONS
+                BOOST_TEST(false);
+            } catch(c::err const&) {
+        #endif
         ok.str(""); ok
-            << "c::static_inv" << std::endl
-            << "c::inv" << std::endl
-            << "b::static_inv" << std::endl
-            << "b::inv" << std::endl
-            << "a::static_inv" << std::endl
-            << "a::inv" << std::endl
-
-            << "c::f::pre" << std::endl
-            << "b::f::pre" << std::endl
-            << "a::f::pre" << std::endl
-            
-            << "c::f::old" << std::endl // Test this threw.
+            #if BOOST_CONTRACT_ENTRY_INVARIANTS
+                << "c::static_inv" << std::endl
+                << "c::inv" << std::endl
+                << "b::static_inv" << std::endl
+                << "b::inv" << std::endl
+                << "a::static_inv" << std::endl
+                << "a::inv" << std::endl
+            #endif
+            #if BOOST_CONTRACT_PRECONDITIONS
+                << "c::f::pre" << std::endl
+                << "b::f::pre" << std::endl
+                << "a::f::pre" << std::endl
+            #endif
+            #if BOOST_CONTRACT_POSTCONDITIONS
+                << "c::f::old" << std::endl // Test this threw.
+            #else
+                << "a::f::body" << std::endl
+                #if BOOST_CONTRACT_EXIT_INVARIANTS
+                    << "c::static_inv" << std::endl
+                    << "c::inv" << std::endl
+                    << "b::static_inv" << std::endl
+                    << "b::inv" << std::endl
+                    << "a::static_inv" << std::endl
+                    << "a::inv" << std::endl
+                #endif
+            #endif
         ;
         BOOST_TEST(out.eq(ok.str()));
     } catch(...) { BOOST_TEST(false); }

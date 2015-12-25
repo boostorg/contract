@@ -1,5 +1,5 @@
 
-// Test public static member function throwing.
+// Test throw from public static member function .old().
 
 #include "../aux_/oteststream.hpp"
 #include <boost/contract/public_function.hpp>
@@ -18,22 +18,29 @@ struct a {
     static void f() {
         boost::contract::guard c = boost::contract::public_function<a>()
             .precondition([] { out << "a::f::pre" << std::endl; })
-            .old([] { out << "a::f::old" << std::endl; })
+            .old([] {
+                out << "a::f::old" << std::endl;
+                throw a::err();
+            })
             .postcondition([] { out << "a::f::post" << std::endl; })
         ;
         out << "a::f::body" << std::endl;
-        throw a::err();
     }
 };
 
 int main() {
     std::ostringstream ok;
 
+    boost::contract::set_postcondition_failure(
+            [] (boost::contract::from) { throw; });
+
     try {
         out.str("");
         a::f();
-        BOOST_TEST(false);
-    } catch(a::err const&) {
+        #if BOOST_CONTRACT_POSTCONDITIONS
+                BOOST_TEST(false);
+            } catch(a::err const&) {
+        #endif
         ok.str(""); ok
             #if BOOST_CONTRACT_ENTRY_INVARIANTS
                 << "a::static_inv" << std::endl
@@ -42,12 +49,13 @@ int main() {
                 << "a::f::pre" << std::endl
             #endif
             #if BOOST_CONTRACT_POSTCONDITIONS
-                << "a::f::old" << std::endl
-            #endif
-            << "a::f::body" << std::endl
-            // Test no post (but still static inv) because body threw.
-            #if BOOST_CONTRACT_EXIT_INVARIANTS
-                << "a::static_inv" << std::endl
+                << "a::f::old" << std::endl // Test this threw.
+            #else
+                << "a::f::body" << std::endl
+                // Test no post (but still static inv) because .old() threw.
+                #if BOOST_CONTRACT_EXIT_INVARIANTS
+                    << "a::static_inv" << std::endl
+                #endif
             #endif
         ;
         BOOST_TEST(out.eq(ok.str()));

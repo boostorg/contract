@@ -2,14 +2,13 @@
 #ifndef BOOST_CONTRACT_AUX_PUBLIC_FUNCTION_HPP_
 #define BOOST_CONTRACT_AUX_PUBLIC_FUNCTION_HPP_
 
+#include <boost/contract/core/config.hpp>
 #include <boost/contract/core/virtual.hpp>
 #include <boost/contract/aux_/condition/check_subcontracted_pre_post_inv.hpp>
 #include <boost/contract/aux_/debug.hpp>
 #include <boost/contract/aux_/check_guard.hpp>
-/** @cond */
 #include <boost/config.hpp>
 #include <exception>
-/** @endcond */
 
 namespace boost { namespace contract { namespace aux {
 
@@ -27,33 +26,68 @@ public:
 
 private:
     void init() /* override */ {
-        this->init_subcontracted_old();
+        #if BOOST_CONTRACT_POSTCONDITIONS
+            this->init_subcontracted_old();
+        #endif
         if(!this->base_call()) {
-            if(check_guard::checking()) return;
-            {
-                check_guard checking;
-                this->check_subcontracted_entry_inv();
-                this->check_subcontracted_pre();
-            }
-            this->copy_subcontracted_old();
+            #if BOOST_CONTRACT_ENTRY_INVARIANTS || BOOST_CONTRACT_PRECONDITIONS\
+                    || BOOST_CONTRACT_POSTCONDITIONS
+                if(check_guard::checking()) return;
+                {
+                    check_guard checking;
+                    #if BOOST_CONTRACT_ENTRY_INVARIANTS
+                        this->check_subcontracted_entry_inv();
+                    #endif
+                    #if BOOST_CONTRACT_PRECONDITIONS
+                        this->check_subcontracted_pre();
+                    #endif
+                }
+                #if BOOST_CONTRACT_POSTCONDITIONS
+                    this->copy_subcontracted_old();
+                #endif
+            #endif
         } else {
-            this->check_subcontracted_entry_inv();
-            this->check_subcontracted_pre();
-            this->copy_subcontracted_old();
-            this->check_subcontracted_exit_inv();
-            if(!std::uncaught_exception()) this->check_subcontracted_post();
+            #if BOOST_CONTRACT_INVARIANTS || BOOST_CONTRACT_PRECONDITIONS || \
+                    BOOST_CONTRACT_POSTCONDITIONS
+                #if BOOST_CONTRACT_ENTRY_INVARIANTS
+                    this->check_subcontracted_entry_inv();
+                #endif
+                #if BOOST_CONTRACT_PRECONDITIONS
+                    this->check_subcontracted_pre();
+                #endif
+                #if BOOST_CONTRACT_POSTCONDITIONS
+                    this->copy_subcontracted_old();
+                #endif
+                #if BOOST_CONTRACT_EXIT_INVARIANTS
+                    this->check_subcontracted_exit_inv();
+                #endif
+                #if BOOST_CONTRACT_POSTCONDITIONS
+                    if(!std::uncaught_exception()) {
+                        this->check_subcontracted_post();
+                    }
+                #endif
+            #endif
         }
     }
 
 public:
     ~public_function() BOOST_NOEXCEPT_IF(false) {
         this->assert_guarded();
-        if(!this->base_call()) {
-            if(check_guard::checking()) return;
-            check_guard checking;
-            this->check_subcontracted_exit_inv();
-            if(!std::uncaught_exception()) this->check_subcontracted_post();
-        }
+        #if BOOST_CONTRACT_EXIT_INVARIANTS || BOOST_CONTRACT_POSTCONDITIONS
+            if(!this->base_call()) {
+                if(check_guard::checking()) return;
+                check_guard checking;
+
+                #if BOOST_CONTRACT_EXIT_INVARIANTS
+                    this->check_subcontracted_exit_inv();
+                #endif
+                #if BOOST_CONTRACT_POSTCONDITIONS
+                    if(!std::uncaught_exception()) {
+                        this->check_subcontracted_post();
+                    }
+                #endif
+            }
+        #endif
     }
 };
         

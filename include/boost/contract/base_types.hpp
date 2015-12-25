@@ -4,12 +4,13 @@
 
 /** @file */
 
-/** @cond */
+#include <boost/contract/core/config.hpp>
 #include <boost/preprocessor/config/config.hpp>
-/** @endcond */
 #if !BOOST_PP_VARIADICS
 #   define BOOST_CONTRACT_BASE_TYPES \
 BOOST_CONTRACT_ERROR_macro_BASE_TYPES_requires_variadic_macros_otherwise_manually_program_base_types
+#elif !BOOST_CONTRACT_PUBLIC_FUNCTIONS
+#   define BOOST_CONTRACT_BASE_TYPES(...) void /* dummy type for typedef */
 #else
 
 #include <boost/contract/aux_/preprocessor/keyword/public.hpp>
@@ -141,7 +142,7 @@ BOOST_CONTRACT_ERROR_macro_BASE_TYPES_requires_variadic_macros_otherwise_manuall
         0 \
     )))
 
-#endif // BOOST_PP_VARIADICS
+#endif
 
 #endif // #include guard
 

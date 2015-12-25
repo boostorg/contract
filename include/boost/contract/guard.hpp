@@ -33,7 +33,7 @@ class guard { // Non-copyable (but copy ctor ~= move via ptr release).
 public:
     // Following copy and implicit type conversion ctors to allow `guard = ...`.
     
-    guard(guard const& other) : 
+    guard(guard const& other) : // Copy ctor moves check_ pointer to dest.
             check_(const_cast<guard&>(other).check_.release()) {}
 
     template<typename R>

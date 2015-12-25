@@ -2,14 +2,13 @@
 #ifndef BOOST_CONTRACT_AUX_DESTRUCTOR_HPP_
 #define BOOST_CONTRACT_AUX_DESTRUCTOR_HPP_
 
+#include <boost/contract/core/config.hpp>
 #include <boost/contract/core/exception.hpp>
 #include <boost/contract/aux_/condition/check_pre_post_inv.hpp>
 #include <boost/contract/aux_/check_guard.hpp>
 #include <boost/contract/aux_/none.hpp>
-/** @cond */
 #include <boost/config.hpp>
 #include <exception>
-/** @endcond */
 
 namespace boost { namespace contract { namespace aux {
 
@@ -25,34 +24,46 @@ public:
 
 private:
     void init() /* override */ {
-        if(check_guard::checking()) return;
-        {
-            check_guard checking;
-            // Obj exists (before dtor body) so check static and non-static inv.
-            this->check_entry_inv();
-            // Dtor cannot have pre because it has no parameters.
-        }
-        this->copy_old();
+        #if BOOST_CONTRACT_ENTRY_INVARIANTS || BOOST_CONTRACT_POSTCONDITIONS
+            if(check_guard::checking()) return;
+
+            #if BOOST_CONTRACT_ENTRY_INVARIANTS
+                {
+                    check_guard checking;
+                    // Obj exists (before dtor body), check static and non- inv.
+                    this->check_entry_inv();
+                    // Dtor cannot have pre because it has no parameters.
+                }
+            #endif
+            #if BOOST_CONTRACT_POSTCONDITIONS
+                this->copy_old();
+            #endif
+        #endif
     }
     
 public:
     ~destructor() BOOST_NOEXCEPT_IF(false) {
         this->assert_guarded();
-        if(check_guard::checking()) return;
-        check_guard checking;
-        // If dtor body threw, obj still exists so check subcontracted static
-        // and non-static inv (but no post because of throw). Otherwise, obj
-        // destructed so check static inv and post (even if there is no obj
-        // after dtor body, this library allows dtor post, for example to check
-        // static members for an instance counter class).
-        // NOTE: In theory C++ destructors should not throw, but the language
-        // allows for that so this library must handle such a case.
-        if(std::uncaught_exception()) {
-            this->check_exit_inv();
-        } else {
-            this->check_exit_static_inv();
-            this->check_post(none());
-        }
+        #if BOOST_CONTRACT_EXIT_INVARIANTS || BOOST_CONTRACT_POSTCONDITIONS
+            if(check_guard::checking()) return;
+            check_guard checking;
+            // If dtor body threw, obj still exists so check subcontracted
+            // static and non- inv (but no post because of throw). Otherwise,
+            // obj destructed so check static inv and post (even if there is no
+            // obj after dtor body, this library allows dtor post, for example
+            // to check static members for an instance counter class).
+            // NOTE: In theory C++ destructors should not throw, but the
+            // language allows for that so this library must handle such a case.
+            bool body_threw = std::uncaught_exception();
+            
+            #if BOOST_CONTRACT_EXIT_INVARIANTS
+                if(body_threw) this->check_exit_inv();
+                else this->check_exit_static_inv();
+            #endif
+            #if BOOST_CONTRACT_POSTCONDITIONS
+                if(!body_threw) this->check_post(none());
+            #endif
+        #endif
     }
 };
 

@@ -174,60 +174,65 @@ int main() {
     out.str("");
     aa.f('a');
     ok.str(""); ok
-        << "c::static_inv" << std::endl
-        << "c::inv" << std::endl
-        << "i::static_inv" << std::endl
-        << "i::inv" << std::endl
-        << "e::static_inv" << std::endl
-        << "e::inv" << std::endl
-        << "j::static_inv" << std::endl
-        << "j::inv" << std::endl
-        << "h::static_inv" << std::endl
-        << "h::inv" << std::endl
-        << "a::static_inv" << std::endl
-        << "a::inv" << std::endl
-
-        << "c::f::pre" << std::endl
-        << "i::f::pre" << std::endl
-        << "e::f::pre" << std::endl
-        << "j::f::pre" << std::endl
-        << "h::f::pre" << std::endl
-        << "a::f::pre" << std::endl
-        
-        << "c::f::old" << std::endl
-        << "i::f::old" << std::endl
-        << "e::f::old" << std::endl
-        << "j::f::old" << std::endl
-        << "h::f::old" << std::endl
-        << "a::f::old" << std::endl
-
+        #if BOOST_CONTRACT_ENTRY_INVARIANTS
+            << "c::static_inv" << std::endl
+            << "c::inv" << std::endl
+            << "i::static_inv" << std::endl
+            << "i::inv" << std::endl
+            << "e::static_inv" << std::endl
+            << "e::inv" << std::endl
+            << "j::static_inv" << std::endl
+            << "j::inv" << std::endl
+            << "h::static_inv" << std::endl
+            << "h::inv" << std::endl
+            << "a::static_inv" << std::endl
+            << "a::inv" << std::endl
+        #endif
+        #if BOOST_CONTRACT_PRECONDITIONS
+            << "c::f::pre" << std::endl
+            << "i::f::pre" << std::endl
+            << "e::f::pre" << std::endl
+            << "j::f::pre" << std::endl
+            << "h::f::pre" << std::endl
+            << "a::f::pre" << std::endl
+        #endif
+        #if BOOST_CONTRACT_POSTCONDITIONS
+            << "c::f::old" << std::endl
+            << "i::f::old" << std::endl
+            << "e::f::old" << std::endl
+            << "j::f::old" << std::endl
+            << "h::f::old" << std::endl
+            << "a::f::old" << std::endl
+        #endif
         << "a::f::body" << std::endl
-        
-        << "c::static_inv" << std::endl
-        << "c::inv" << std::endl
-        << "i::static_inv" << std::endl
-        << "i::inv" << std::endl
-        << "e::static_inv" << std::endl
-        << "e::inv" << std::endl
-        << "j::static_inv" << std::endl
-        << "j::inv" << std::endl
-        << "h::static_inv" << std::endl
-        << "h::inv" << std::endl
-        << "a::static_inv" << std::endl
-        << "a::inv" << std::endl
-        
-        << "c::f::old" << std::endl
-        << "c::f::post" << std::endl
-        << "i::f::old" << std::endl
-        << "i::f::post" << std::endl
-        << "e::f::old" << std::endl
-        << "e::f::post" << std::endl
-        << "j::f::old" << std::endl
-        << "j::f::post" << std::endl
-        << "h::f::old" << std::endl
-        << "h::f::post" << std::endl
-        // No old call here because not a base object.
-        << "a::f::post" << std::endl
+        #if BOOST_CONTRACT_EXIT_INVARIANTS
+            << "c::static_inv" << std::endl
+            << "c::inv" << std::endl
+            << "i::static_inv" << std::endl
+            << "i::inv" << std::endl
+            << "e::static_inv" << std::endl
+            << "e::inv" << std::endl
+            << "j::static_inv" << std::endl
+            << "j::inv" << std::endl
+            << "h::static_inv" << std::endl
+            << "h::inv" << std::endl
+            << "a::static_inv" << std::endl
+            << "a::inv" << std::endl
+        #endif
+        #if BOOST_CONTRACT_POSTCONDITIONS
+            << "c::f::old" << std::endl
+            << "c::f::post" << std::endl
+            << "i::f::old" << std::endl
+            << "i::f::post" << std::endl
+            << "e::f::old" << std::endl
+            << "e::f::post" << std::endl
+            << "j::f::old" << std::endl
+            << "j::f::post" << std::endl
+            << "h::f::old" << std::endl
+            << "h::f::post" << std::endl
+            // No old call here because not a base object.
+            << "a::f::post" << std::endl
+        #endif
     ;
     BOOST_TEST(out.eq(ok.str()));
 
@@ -235,15 +240,25 @@ int main() {
     out.str("");
     cc.f('c');
     ok.str(""); ok
-        << "c::static_inv" << std::endl
-        << "c::inv" << std::endl
-        << "c::f::pre" << std::endl
-        << "c::f::old" << std::endl
+        #if BOOST_CONTRACT_ENTRY_INVARIANTS
+            << "c::static_inv" << std::endl
+            << "c::inv" << std::endl
+        #endif
+        #if BOOST_CONTRACT_PRECONDITIONS
+            << "c::f::pre" << std::endl
+        #endif
+        #if BOOST_CONTRACT_POSTCONDITIONS
+            << "c::f::old" << std::endl
+        #endif
         << "c::f::body" << std::endl
-        << "c::static_inv" << std::endl
-        << "c::inv" << std::endl
-        // No old call here because not a base object.
-        << "c::f::post" << std::endl
+        #if BOOST_CONTRACT_EXIT_INVARIANTS
+            << "c::static_inv" << std::endl
+            << "c::inv" << std::endl
+        #endif
+        #if BOOST_CONTRACT_POSTCONDITIONS
+            // No old call here because not a base object.
+            << "c::f::post" << std::endl
+        #endif
     ;
     BOOST_TEST(out.eq(ok.str()));
     
@@ -251,15 +266,25 @@ int main() {
     out.str("");
     dd.f('i'); // d's f inherited from i.
     ok.str(""); ok
-        << "i::static_inv" << std::endl
-        << "i::inv" << std::endl
-        << "i::f::pre" << std::endl
-        << "i::f::old" << std::endl
+        #if BOOST_CONTRACT_ENTRY_INVARIANTS
+            << "i::static_inv" << std::endl
+            << "i::inv" << std::endl
+        #endif
+        #if BOOST_CONTRACT_PRECONDITIONS
+            << "i::f::pre" << std::endl
+        #endif
+        #if BOOST_CONTRACT_POSTCONDITIONS
+            << "i::f::old" << std::endl
+        #endif
         << "i::f::body" << std::endl
-        << "i::static_inv" << std::endl
-        << "i::inv" << std::endl
-        // No old call here because not a base object.
-        << "i::f::post" << std::endl
+        #if BOOST_CONTRACT_EXIT_INVARIANTS
+            << "i::static_inv" << std::endl
+            << "i::inv" << std::endl
+        #endif
+        #if BOOST_CONTRACT_POSTCONDITIONS
+            // No old call here because not a base object.
+            << "i::f::post" << std::endl
+        #endif
     ;
     BOOST_TEST(out.eq(ok.str()));
 
@@ -267,28 +292,33 @@ int main() {
     out.str("");
     ee.f('e');
     ok.str(""); ok
-        << "i::static_inv" << std::endl
-        << "i::inv" << std::endl
-        << "e::static_inv" << std::endl
-        << "e::inv" << std::endl
-
-        << "i::f::pre" << std::endl
-        << "e::f::pre" << std::endl
-        
-        << "i::f::old" << std::endl
-        << "e::f::old" << std::endl
-        
+        #if BOOST_CONTRACT_ENTRY_INVARIANTS
+            << "i::static_inv" << std::endl
+            << "i::inv" << std::endl
+            << "e::static_inv" << std::endl
+            << "e::inv" << std::endl
+        #endif
+        #if BOOST_CONTRACT_PRECONDITIONS
+            << "i::f::pre" << std::endl
+            << "e::f::pre" << std::endl
+        #endif
+        #if BOOST_CONTRACT_POSTCONDITIONS
+            << "i::f::old" << std::endl
+            << "e::f::old" << std::endl
+        #endif
         << "e::f::body" << std::endl
-        
-        << "i::static_inv" << std::endl
-        << "i::inv" << std::endl
-        << "e::static_inv" << std::endl
-        << "e::inv" << std::endl
-        
-        << "i::f::old" << std::endl
-        << "i::f::post" << std::endl
-        // No old call here because not a base object.
-        << "e::f::post" << std::endl
+        #if BOOST_CONTRACT_EXIT_INVARIANTS
+            << "i::static_inv" << std::endl
+            << "i::inv" << std::endl
+            << "e::static_inv" << std::endl
+            << "e::inv" << std::endl
+        #endif
+        #if BOOST_CONTRACT_POSTCONDITIONS
+            << "i::f::old" << std::endl
+            << "i::f::post" << std::endl
+            // No old call here because not a base object.
+            << "e::f::post" << std::endl
+        #endif
     ;
     BOOST_TEST(out.eq(ok.str()));
 
@@ -296,15 +326,25 @@ int main() {
     out.str("");
     ii.f('i');
     ok.str(""); ok
-        << "i::static_inv" << std::endl
-        << "i::inv" << std::endl
-        << "i::f::pre" << std::endl
-        << "i::f::old" << std::endl
+        #if BOOST_CONTRACT_ENTRY_INVARIANTS
+            << "i::static_inv" << std::endl
+            << "i::inv" << std::endl
+        #endif
+        #if BOOST_CONTRACT_PRECONDITIONS
+            << "i::f::pre" << std::endl
+        #endif
+        #if BOOST_CONTRACT_POSTCONDITIONS
+            << "i::f::old" << std::endl
+        #endif
         << "i::f::body" << std::endl
-        << "i::static_inv" << std::endl
-        << "i::inv" << std::endl
-        // No old call here because not a base object.
-        << "i::f::post" << std::endl
+        #if BOOST_CONTRACT_EXIT_INVARIANTS
+            << "i::static_inv" << std::endl
+            << "i::inv" << std::endl
+        #endif
+        #if BOOST_CONTRACT_POSTCONDITIONS
+            // No old call here because not a base object.
+            << "i::f::post" << std::endl
+        #endif
     ;
     BOOST_TEST(out.eq(ok.str()));
 
@@ -312,28 +352,33 @@ int main() {
     out.str("");
     hh.f('h');
     ok.str(""); ok
-        << "j::static_inv" << std::endl
-        << "j::inv" << std::endl
-        << "h::static_inv" << std::endl
-        << "h::inv" << std::endl
-        
-        << "j::f::pre" << std::endl
-        << "h::f::pre" << std::endl
-        
-        << "j::f::old" << std::endl
-        << "h::f::old" << std::endl
-        
+        #if BOOST_CONTRACT_ENTRY_INVARIANTS
+            << "j::static_inv" << std::endl
+            << "j::inv" << std::endl
+            << "h::static_inv" << std::endl
+            << "h::inv" << std::endl
+        #endif
+        #if BOOST_CONTRACT_PRECONDITIONS
+            << "j::f::pre" << std::endl
+            << "h::f::pre" << std::endl
+        #endif
+        #if BOOST_CONTRACT_POSTCONDITIONS
+            << "j::f::old" << std::endl
+            << "h::f::old" << std::endl
+        #endif
         << "h::f::body" << std::endl
-        
-        << "j::static_inv" << std::endl
-        << "j::inv" << std::endl
-        << "h::static_inv" << std::endl
-        << "h::inv" << std::endl
-        
-        << "j::f::old" << std::endl
-        << "j::f::post" << std::endl
-        // No old call here because not a base object.
-        << "h::f::post" << std::endl
+        #if BOOST_CONTRACT_EXIT_INVARIANTS
+            << "j::static_inv" << std::endl
+            << "j::inv" << std::endl
+            << "h::static_inv" << std::endl
+            << "h::inv" << std::endl
+        #endif
+        #if BOOST_CONTRACT_POSTCONDITIONS
+            << "j::f::old" << std::endl
+            << "j::f::post" << std::endl
+            // No old call here because not a base object.
+            << "h::f::post" << std::endl
+        #endif
     ;
     BOOST_TEST(out.eq(ok.str()));
 
@@ -341,15 +386,25 @@ int main() {
     out.str("");
     jj.f('j');
     ok.str(""); ok
-        << "j::static_inv" << std::endl
-        << "j::inv" << std::endl
-        << "j::f::pre" << std::endl
-        << "j::f::old" << std::endl
+        #if BOOST_CONTRACT_ENTRY_INVARIANTS
+            << "j::static_inv" << std::endl
+            << "j::inv" << std::endl
+        #endif
+        #if BOOST_CONTRACT_PRECONDITIONS
+            << "j::f::pre" << std::endl
+        #endif
+        #if BOOST_CONTRACT_POSTCONDITIONS
+            << "j::f::old" << std::endl
+        #endif
         << "j::f::body" << std::endl
-        << "j::static_inv" << std::endl
-        << "j::inv" << std::endl
-        // No old call here because not a base object.
-        << "j::f::post" << std::endl
+        #if BOOST_CONTRACT_EXIT_INVARIANTS
+            << "j::static_inv" << std::endl
+            << "j::inv" << std::endl
+        #endif
+        #if BOOST_CONTRACT_POSTCONDITIONS
+            // No old call here because not a base object.
+            << "j::f::post" << std::endl
+        #endif
     ;
     BOOST_TEST(out.eq(ok.str()));
 

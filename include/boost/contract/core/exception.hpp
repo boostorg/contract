@@ -4,6 +4,7 @@
 
 /** @file */
 
+#include <boost/contract/core/config.hpp>
 /** @cond */
 #include <boost/function.hpp>
 #include <boost/exception/diagnostic_information.hpp>
@@ -17,7 +18,7 @@
 /* PRIVATE */
 
 #define BOOST_CONTRACT_EXCEPTION_HANDLER_SCOPED_LOCK_(_mutex) \
-    /*boost::mutex::scoped_lock lock(_mutex);*/ \
+    /*boost::mutex::scoped_lock lock(_mutex);*/
 
 #define BOOST_CONTRACT_EXCEPTION_HANDLER_SET_(_mutex, handler, f) \
     BOOST_CONTRACT_EXCEPTION_HANDLER_SCOPED_LOCK_(_mutex); \
@@ -138,6 +139,7 @@ namespace exception_ {
     }
 
     // TODO: These (and some of the related def code) should be moved in a .cpp.
+
     //boost::mutex pre_failure_mutex;
     assertion_failure_handler pre_failure_handler =
             &default_handler<pre_key>;
@@ -155,6 +157,8 @@ namespace exception_ {
             &default_handler<exit_inv_key>;
 }
 
+// Contract compilation on/off cannot change following set/get.
+
 assertion_failure_handler set_precondition_failure(
         assertion_failure_handler const& f) BOOST_NOEXCEPT_OR_NOTHROW {
     BOOST_CONTRACT_EXCEPTION_HANDLER_SET_(exception_::pre_failure_mutex,
@@ -168,8 +172,10 @@ assertion_failure_handler get_precondition_failure()
 }
 
 void precondition_failure(from where) /* can throw */ {
-    BOOST_CONTRACT_EXCEPTION_HANDLER_(exception_::pre_failure_mutex,
-            exception_::pre_failure_handler, where)
+    #if BOOST_CONTRACT_PRECONDITIONS
+        BOOST_CONTRACT_EXCEPTION_HANDLER_(exception_::pre_failure_mutex,
+                exception_::pre_failure_handler, where)
+    #endif
 }
 
 assertion_failure_handler set_postcondition_failure(
@@ -185,14 +191,16 @@ assertion_failure_handler get_postcondition_failure()
 }
 
 void postcondition_failure(from where) /* can throw */ {
-    BOOST_CONTRACT_EXCEPTION_HANDLER_(exception_::post_failure_mutex,
-            exception_::post_failure_handler, where);
+    #if BOOST_CONTRACT_POSTCONDITIONS
+        BOOST_CONTRACT_EXCEPTION_HANDLER_(exception_::post_failure_mutex,
+                exception_::post_failure_handler, where);
+    #endif
 }
 
 assertion_failure_handler set_entry_invariant_failure(
         assertion_failure_handler const& f) BOOST_NOEXCEPT_OR_NOTHROW {
     BOOST_CONTRACT_EXCEPTION_HANDLER_SET_(exception_::entry_inv_failure_mutex,
-            exception_::entry_inv_failure_handler, f);
+        exception_::entry_inv_failure_handler, f);
 }
 
 assertion_failure_handler get_entry_invariant_failure()
@@ -202,14 +210,16 @@ assertion_failure_handler get_entry_invariant_failure()
 }
 
 void entry_invariant_failure(from where) /* can throw */ {
-    BOOST_CONTRACT_EXCEPTION_HANDLER_(exception_::entry_inv_failure_mutex,
-            exception_::entry_inv_failure_handler, where);
+    #if BOOST_CONTRACT_ENTRY_INVARIANTS
+        BOOST_CONTRACT_EXCEPTION_HANDLER_(exception_::entry_inv_failure_mutex,
+                exception_::entry_inv_failure_handler, where);
+    #endif
 }
 
 assertion_failure_handler set_exit_invariant_failure(
         assertion_failure_handler const& f) BOOST_NOEXCEPT_OR_NOTHROW {
     BOOST_CONTRACT_EXCEPTION_HANDLER_SET_(exception_::exit_inv_failure_mutex,
-            exception_::exit_inv_failure_handler, f);
+        exception_::exit_inv_failure_handler, f);
 }
 
 assertion_failure_handler get_exit_invariant_failure()
@@ -219,12 +229,14 @@ assertion_failure_handler get_exit_invariant_failure()
 }
 
 void exit_invariant_failure(from where) /* can throw */ {
-    BOOST_CONTRACT_EXCEPTION_HANDLER_(exception_::exit_inv_failure_mutex,
-            exception_::exit_inv_failure_handler, where);
+    #if BOOST_CONTRACT_EXIT_INVARIANTS
+        BOOST_CONTRACT_EXCEPTION_HANDLER_(exception_::exit_inv_failure_mutex,
+                exception_::exit_inv_failure_handler, where);
+    #endif
 }
 
-void set_invariant_failure(
-        assertion_failure_handler const& f) BOOST_NOEXCEPT_OR_NOTHROW {
+void set_invariant_failure(assertion_failure_handler const& f)
+        BOOST_NOEXCEPT_OR_NOTHROW {
     set_entry_invariant_failure(f);
     set_exit_invariant_failure(f);
 }

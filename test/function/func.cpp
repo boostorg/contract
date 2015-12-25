@@ -7,6 +7,7 @@
 #include <boost/contract/old.hpp>
 #include <boost/contract/assert.hpp>
 #include <boost/contract/guard.hpp>
+#include <boost/preprocessor/control/iif.hpp>
 #include <boost/detail/lightweight_test.hpp>
 #include <sstream>
 
@@ -55,10 +56,16 @@ int main() {
         out.str("");
         bool r = swap(x, y);
         ok.str(""); ok
-            << "swap::pre" << std::endl
-            << "swap::old" << std::endl
+            #if BOOST_CONTRACT_PRECONDITIONS
+                << "swap::pre" << std::endl
+            #endif
+            #if BOOST_CONTRACT_POSTCONDITIONS
+                << "swap::old" << std::endl
+            #endif
             << "swap::body" << std::endl
-            << "swap::post" << std::endl
+            #if BOOST_CONTRACT_POSTCONDITIONS
+                << "swap::post" << std::endl
+            #endif
         ;
         BOOST_TEST(out.eq(ok.str()));
         
@@ -67,12 +74,16 @@ int main() {
         BOOST_TEST_EQ(y.value, 123);
     }
 
-    BOOST_TEST_EQ(x_type::copies(), 1);
-    BOOST_TEST_EQ(x_type::evals(), 1);
+    BOOST_TEST_EQ(x_type::copies(),
+            BOOST_PP_IIF(BOOST_CONTRACT_POSTCONDITIONS, 1, 0));
+    BOOST_TEST_EQ(x_type::evals(),
+            BOOST_PP_IIF(BOOST_CONTRACT_POSTCONDITIONS, 1, 0));
     BOOST_TEST_EQ(x_type::ctors(), x_type::dtors()); // No leak.
     
-    BOOST_TEST_EQ(y_type::copies(), 1);
-    BOOST_TEST_EQ(y_type::evals(), 1);
+    BOOST_TEST_EQ(y_type::copies(),
+        BOOST_PP_IIF(BOOST_CONTRACT_POSTCONDITIONS, 1, 0));
+    BOOST_TEST_EQ(y_type::evals(),
+        BOOST_PP_IIF(BOOST_CONTRACT_POSTCONDITIONS, 1, 0));
     BOOST_TEST_EQ(y_type::ctors(), y_type::dtors()); // No leak.
 
     return boost::report_errors();

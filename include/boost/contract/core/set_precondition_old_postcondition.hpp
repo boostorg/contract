@@ -4,13 +4,16 @@
 
 /** @file */
 
+#include <boost/contract/core/config.hpp>
 #include <boost/contract/core/set_old_postcondition.hpp>
 #include <boost/contract/core/set_postcondition_only.hpp>
 #include <boost/contract/core/set_nothing.hpp>
 #include <boost/contract/aux_/condition/check_pre_post.hpp>
 #include <boost/contract/aux_/none.hpp>
 #include <boost/contract/aux_/auto_ptr.hpp>
-#include <boost/contract/aux_/debug.hpp>
+#if BOOST_CONTRACT_PRECONDITIONS || BOOST_CONTRACT_POSTCONDITIONS
+#   include <boost/contract/aux_/debug.hpp>
+#endif
 /** @cond */
 #include <boost/config.hpp>
 /** @endcond */
@@ -30,22 +33,28 @@ public:
     
     template<typename F>
     set_old_postcondition<R> precondition(F const& f) {
-        BOOST_CONTRACT_AUX_DEBUG(check_);
-        check_->set_pre(f);
+        #if BOOST_CONTRACT_PRECONDITIONS
+            BOOST_CONTRACT_AUX_DEBUG(check_);
+            check_->set_pre(f);
+        #endif
         return set_old_postcondition<R>(check_.release());
     }
 
     template<typename F>
     set_postcondition_only<R> old(F const& f) {
-        BOOST_CONTRACT_AUX_DEBUG(check_);
-        check_->set_old(f);
+        #if BOOST_CONTRACT_POSTCONDITIONS
+            BOOST_CONTRACT_AUX_DEBUG(check_);
+            check_->set_old(f);
+        #endif
         return set_postcondition_only<R>(check_.release());
     }
 
     template<typename F>
     set_nothing postcondition(F const& f) {
-        BOOST_CONTRACT_AUX_DEBUG(check_);
-        check_->set_post(f);
+        #if BOOST_CONTRACT_POSTCONDITIONS
+            BOOST_CONTRACT_AUX_DEBUG(check_);
+            check_->set_post(f);
+        #endif
         return set_nothing(check_.release());
     }
 

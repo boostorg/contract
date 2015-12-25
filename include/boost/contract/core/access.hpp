@@ -38,63 +38,67 @@ namespace boost { namespace contract {
 // at run-time. Therefore programmers must make sure to either declare contract
 // members public or to make this class a friend.
 class access { // Copyable (as shell with no data member).
-    BOOST_CONTRACT_AUX_INTROSPECTION_HAS_TYPE(has_base_types,
-            BOOST_CONTRACT_CONFIG_BASE_TYPES)
+    #if BOOST_CONTRACT_PUBLIC_FUNCTIONS
+        BOOST_CONTRACT_AUX_INTROSPECTION_HAS_TYPE(has_base_types,
+                BOOST_CONTRACT_CONFIG_BASE_TYPES)
 
-    template<class C>
-    struct base_types_of {
-        typedef typename C::BOOST_CONTRACT_CONFIG_BASE_TYPES type;
-    };
+        template<class C>
+        struct base_types_of {
+            typedef typename C::BOOST_CONTRACT_CONFIG_BASE_TYPES type;
+        };
+    #endif
     
-    BOOST_CONTRACT_AUX_INTROSPECTION_HAS_MEMBER_FUNCTION(
-            has_static_invariant_f, BOOST_CONTRACT_CONFIG_STATIC_INVARIANT)
-    
-    BOOST_CONTRACT_AUX_INTROSPECTION_HAS_STATIC_MEMBER_FUNCTION(
-            has_static_invariant_s, BOOST_CONTRACT_CONFIG_STATIC_INVARIANT)
+    #if BOOST_CONTRACT_INVARIANTS
+        BOOST_CONTRACT_AUX_INTROSPECTION_HAS_MEMBER_FUNCTION(
+                has_static_invariant_f, BOOST_CONTRACT_CONFIG_STATIC_INVARIANT)
+        
+        BOOST_CONTRACT_AUX_INTROSPECTION_HAS_STATIC_MEMBER_FUNCTION(
+                has_static_invariant_s, BOOST_CONTRACT_CONFIG_STATIC_INVARIANT)
 
-    template<class C>
-    struct has_static_invariant : has_static_invariant_s<C, void,
-            boost::mpl::vector<> > {};
+        template<class C>
+        struct has_static_invariant : has_static_invariant_s<C, void,
+                boost::mpl::vector<> > {};
 
-    template<class C>
-    static void static_invariant() {
-        C::BOOST_CONTRACT_CONFIG_STATIC_INVARIANT();
-    }
-
-    template<class C>
-    class static_invariant_addr { // Tpl instead of func to pass it as tparam.
-        typedef void (*func_ptr)();
-    public:
-        static func_ptr apply() {
-            return &C::BOOST_CONTRACT_CONFIG_STATIC_INVARIANT;
+        template<class C>
+        static void static_invariant() {
+            C::BOOST_CONTRACT_CONFIG_STATIC_INVARIANT();
         }
-    };
 
-    BOOST_CONTRACT_AUX_INTROSPECTION_HAS_MEMBER_FUNCTION(
-            has_invariant_f, BOOST_CONTRACT_CONFIG_INVARIANT)
-    
-    BOOST_CONTRACT_AUX_INTROSPECTION_HAS_STATIC_MEMBER_FUNCTION(
-            has_invariant_s, BOOST_CONTRACT_CONFIG_INVARIANT)
+        template<class C>
+        class static_invariant_addr { // Class so to pass it as tparam.
+            typedef void (*func_ptr)();
+        public:
+            static func_ptr apply() {
+                return &C::BOOST_CONTRACT_CONFIG_STATIC_INVARIANT;
+            }
+        };
 
-    template<class C>
-    struct has_cv_invariant : has_invariant_f<C, void, boost::mpl::vector<>,
-            boost::function_types::cv_qualified> {};
-    
-    template<class C>
-    struct has_const_invariant : has_invariant_f<C, void, boost::mpl::vector<>,
-            boost::function_types::const_qualified> {};
+        BOOST_CONTRACT_AUX_INTROSPECTION_HAS_MEMBER_FUNCTION(
+                has_invariant_f, BOOST_CONTRACT_CONFIG_INVARIANT)
+        
+        BOOST_CONTRACT_AUX_INTROSPECTION_HAS_STATIC_MEMBER_FUNCTION(
+                has_invariant_s, BOOST_CONTRACT_CONFIG_INVARIANT)
 
-    template<class C>
-    static void cv_invariant(C const volatile* obj) {
-        BOOST_CONTRACT_AUX_DEBUG(obj);
-        obj->BOOST_CONTRACT_CONFIG_INVARIANT();
-    }
-    
-    template<class C>
-    static void const_invariant(C const* obj) {
-        BOOST_CONTRACT_AUX_DEBUG(obj);
-        obj->BOOST_CONTRACT_CONFIG_INVARIANT();
-    }
+        template<class C>
+        struct has_cv_invariant : has_invariant_f<C, void, boost::mpl::vector<>,
+                boost::function_types::cv_qualified> {};
+        
+        template<class C>
+        struct has_const_invariant : has_invariant_f<C, void, boost::mpl::
+                vector<>, boost::function_types::const_qualified> {};
+
+        template<class C>
+        static void cv_invariant(C const volatile* obj) {
+            BOOST_CONTRACT_AUX_DEBUG(obj);
+            obj->BOOST_CONTRACT_CONFIG_INVARIANT();
+        }
+        
+        template<class C>
+        static void const_invariant(C const* obj) {
+            BOOST_CONTRACT_AUX_DEBUG(obj);
+            obj->BOOST_CONTRACT_CONFIG_INVARIANT();
+        }
+    #endif
     
     // Friendship used to limit library's public API.
 

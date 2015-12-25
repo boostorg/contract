@@ -9,9 +9,13 @@
 
 int main() {
     std::ostringstream ok; ok // Test nothing fails.
-        << "f::old" << std::endl
+        #if BOOST_CONTRACT_POSTCONDITIONS
+            << "f::old" << std::endl
+        #endif
         << "f::body" << std::endl
-        << "f::post" << std::endl
+        #if BOOST_CONTRACT_POSTCONDITIONS
+            << "f::post" << std::endl
+        #endif
     ;
 
     f_pre = true;

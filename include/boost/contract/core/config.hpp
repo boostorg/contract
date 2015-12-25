@@ -4,22 +4,26 @@
 
 /** @file */
 
+// IMPORTANT: This header MUST NOT #include any other header. That way users
+// can #include this header and not #include any of this lib headers after that
+// depending on the contract 0/1 macros below ensuring no compilation overhead.
+
 // TODO: Disable pre, post, and/or entry/exit inv (all combinations). Can I compile lib1 with some contract enabled/disable settings, lib2 with other settings and then link the two together?
 
 // TODO: Add a config macro PRECONDITIONS_DISABLE_NOTHING to avoid disabling contract assertions within assertions checking for preconditions (to avoid passing unchecked arguments to function body...). This is what N1962 does... but this macro should be #undef by default.
 
 #ifndef BOOST_CONTRACT_CONFIG_BASE_TYPES
-#   define BOOST_CONTRACT_CONFIG_BASE_TYPES base_types
+    #define BOOST_CONTRACT_CONFIG_BASE_TYPES base_types
 #endif
 
 #ifndef BOOST_CONTRACT_CONFIG_INVARIANT
-#   define BOOST_CONTRACT_CONFIG_INVARIANT invariant
+    #define BOOST_CONTRACT_CONFIG_INVARIANT invariant
 #endif
 
 // C++ does not allow to overload member functions based on static classifier,
 // so a name different from the non-static class invariant member must be used.
 #ifndef BOOST_CONTRACT_CONFIG_STATIC_INVARIANT
-#   define BOOST_CONTRACT_CONFIG_STATIC_INVARIANT static_invariant
+    #define BOOST_CONTRACT_CONFIG_STATIC_INVARIANT static_invariant
 #endif
 
 // BOOST_CONTRACT_CONFIG_PERMISSIVE (#undef by default).
@@ -47,43 +51,91 @@
 // BOOST_CONTRACT_CONFIG_NO_EXIT_INVARIANTS
 // BOOST_CONTRACT_CONFIG_NO_INVARIANTS
 
-#ifdef BOOST_CONTRACT_CONFIG_NO_PRECONDITIONS
-#   define BOOST_CONTRACT_NO_PRECONDITIONS 1
+// Following are NOT configuration macros.
+
+#if defined(BOOST_CONTRACT_PRECONDITIONS)
+    #error "define/undef ..._CONFIG_NO_PRECONDITIONS instead"
+#elif defined(BOOST_CONTRACT_CONFIG_NO_PRECONDITIONS)
+    #define BOOST_CONTRACT_PRECONDITIONS 0
 #else
-#   define BOOST_CONTRACT_NO_PRECONDITIONS 0
+    #define BOOST_CONTRACT_PRECONDITIONS 1
 #endif
 
-#ifdef BOOST_CONTRACT_CONFIG_NO_POSTCONDITIONS
-#   define BOOST_CONTRACT_NO_POSTCONDITIONS 1
+#if defined(BOOST_CONTRACT_POSTCONDITIONS)
+    #error "define/undef ..._CONFIG_NO_POSTCONDITIONS instead"
+#elif defined(BOOST_CONTRACT_CONFIG_NO_POSTCONDITIONS)
+    #define BOOST_CONTRACT_POSTCONDITIONS 0
 #else
-#   define BOOST_CONTRACT_NO_POSTCONDITIONS 0
+    #define BOOST_CONTRACT_POSTCONDITIONS 1
 #endif
 
-#if defined(BOOST_CONTRACT_CONFIG_NO_ENTRY_INVARIANTS) || \
+#if defined(BOOST_CONTRACT_ENTRY_INVARIANTS)
+    #error "define/undef ..._CONFIG_NO[_ENTRY]_INVARIANTS instead"
+#elif defined(BOOST_CONTRACT_CONFIG_NO_ENTRY_INVARIANTS) || \
         defined (BOOST_CONTRACT_CONFIG_NO_INVARIANTS)
-#   define BOOST_CONTRACT_NO_ENTRY_INVARIANTS 1
+    #define BOOST_CONTRACT_ENTRY_INVARIANTS 0
 #else
-#   define BOOST_CONTRACT_NO_ENTRY_INVARIANTS 0
+    #define BOOST_CONTRACT_ENTRY_INVARIANTS 1
 #endif
 
-#if defined(BOOST_CONTRACT_CONFIG_NO_EXIT_INVARIANTS) || \
+#if defined(BOOST_CONTRACT_EXIT_INVARIANTS)
+    #error "define/undef ..._CONFIG_NO[_EXIT]_INVARIANTS instead"
+#elif defined(BOOST_CONTRACT_CONFIG_NO_EXIT_INVARIANTS) || \
         defined (BOOST_CONTRACT_CONFIG_NO_INVARIANTS)
-#   define BOOST_CONTRACT_NO_EXIT_INVARIANTS 1
+    #define BOOST_CONTRACT_EXIT_INVARIANTS 0
 #else
-#   define BOOST_CONTRACT_NO_EXIT_INVARIANTS 0
+    #define BOOST_CONTRACT_EXIT_INVARIANTS 1
 #endif
 
-#if BOOST_CONTRACT_NO_ENTRY_INVARIANTS && BOOST_CONTRACT_NO_EXIT_INVARIANTS
-#   define BOOST_CONTRACT_NO_INVARIANTS 1
+#if defined(BOOST_CONTRACT_INVARIANTS)
+    #error "define/undef ..._CONFIG_NO[_ENTRY/_EXIT]_INVARIANTS instead"
+#elif BOOST_CONTRACT_NO_ENTRY_INVARIANTS && BOOST_CONTRACT_NO_EXIT_INVARIANTS
+    #define BOOST_CONTRACT_INVARIANTS 0
 #else
-#   define BOOST_CONTRACT_NO_INVARIANTS 1
+    #define BOOST_CONTRACT_INVARIANTS 1
 #endif
 
-#if BOOST_CONTRACT_NO_PRECONDITONS && BOOST_CONTRACT_NO_POSTCONDITIONS && \
-        BOOST_CONTRACT_NO_INVARIANTS
-#   define BOOST_CONTRACT_NO_CONTRACTS 1
+#if defined(BOOST_CONTRACT_FUNCTIONS)
+    #error "define/undef ..._CONFIG_NO_... instead"
+#elif !BOOST_CONTRACT_PRECONDITIONS && !BOOST_CONTRACT_POSTCONDITIONS
+    #define BOOST_CONTRACT_FUNCTIONS 0
 #else
-#   define BOOST_CONTRACT_NO_CONTRACTS 0
+    #define BOOST_CONTRACT_FUNCTIONS 1
+#endif
+
+#if defined(BOOST_CONTRACT_CONSTRUCTORS)
+    #error "define/undef ..._CONFIG_NO_... instead"
+// Ctor pre checked separately and outside guard so not part of this if cond.
+#elif !BOOST_CONTRACT_POSTCONDITIONS && !BOOST_CONTRACT_INVARIANTS
+    #define BOOST_CONTRACT_CONSTRUCTORS 0
+#else
+    #define BOOST_CONTRACT_CONSTRUCTORS 1
+#endif
+
+#if defined(BOOST_CONTRACT_DESTRUCTORS)
+    #error "define/undef ..._CONFIG_NO_... instead"
+#elif !BOOST_CONTRACT_POSTCONDITIONS && !BOOST_CONTRACT_INVARIANTS
+    #define BOOST_CONTRACT_DESTRUCTORS 0
+#else
+    #define BOOST_CONTRACT_DESTRUCTORS 1
+#endif
+
+#if defined(BOOST_CONTRACT_PUBLIC_FUNCTIONS)
+    #error "define/undef ..._CONFIG_NO_... instead"
+#elif !BOOST_CONTRACT_PRECONDITONS && !BOOST_CONTRACT_POSTCONDITIONS && \
+        !BOOST_CONTRACT_INVARIANTS
+    #define BOOST_CONTRACT_PUBLIC_FUNCTIONS 0
+#else
+    #define BOOST_CONTRACT_PUBLIC_FUNCTIONS 1
+#endif
+
+#if defined(BOOST_CONTRACT_CLASSES)
+    #error "define/undef ..._CONFIG_NO_... instead"
+#elif !BOOST_CONTRACT_CONSTRUCTORS && !BOOST_CONTRACT_DESTRUCTORS && \
+        !BOOST_CONTRACT_PUBLIC_FUNCTIONS
+    #define BOOST_CONTRACT_CLASSES 0
+#else
+    #define BOOST_CONTRACT_CLASSES 1
 #endif
 
 #endif // #include guard
