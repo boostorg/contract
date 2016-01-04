@@ -8,6 +8,57 @@
 
 #include <boost/detail/lightweight_test.hpp>
 #include <sstream>
+#include <string>
+
+std::string ok_after() {
+    std::ostringstream ok; ok
+        #if BOOST_CONTRACT_ENTRY_INVARIANTS
+            << "c::static_inv" << std::endl
+        #endif
+        #if BOOST_CONTRACT_POSTCONDITIONS
+            << "c::ctor::old" << std::endl
+        #endif
+        << "c::ctor::body" << std::endl
+        #if BOOST_CONTRACT_EXIT_INVARIANTS
+            << "c::static_inv" << std::endl
+            << "c::inv" << std::endl
+        #endif
+        #if BOOST_CONTRACT_POSTCONDITIONS
+            << "c::ctor::post" << std::endl
+        #endif
+            
+        #if BOOST_CONTRACT_ENTRY_INVARIANTS
+            << "b::static_inv" << std::endl
+        #endif
+        #if BOOST_CONTRACT_POSTCONDITIONS
+            << "b::ctor::old" << std::endl
+        #endif
+        << "b::ctor::body" << std::endl
+        #if BOOST_CONTRACT_EXIT_INVARIANTS
+            << "b::static_inv" << std::endl
+            << "b::inv" << std::endl
+        #endif
+        #if BOOST_CONTRACT_POSTCONDITIONS
+            << "b::ctor::post" << std::endl
+        #endif
+
+        #if BOOST_CONTRACT_ENTRY_INVARIANTS
+            << "a::static_inv" << std::endl
+        #endif
+        #if BOOST_CONTRACT_POSTCONDITIONS
+            << "a::ctor::old" << std::endl
+        #endif
+        << "a::ctor::body" << std::endl
+        #if BOOST_CONTRACT_EXIT_INVARIANTS
+            << "a::static_inv" << std::endl
+            << "a::inv" << std::endl
+        #endif
+        #if BOOST_CONTRACT_POSTCONDITIONS
+            << "a::ctor::post" << std::endl
+        #endif
+    ;
+    return ok.str();
+}
 
 int main() {
     std::ostringstream ok;
@@ -15,32 +66,14 @@ int main() {
     a_pre = true;
     b_pre = true;
     c_pre = true;
-    out.str("");
     {
+        out.str("");
         a aa;
         ok.str(""); ok // Test nothing failed.
-            << "b::ctor::pre" << std::endl
-
-            << "c::static_inv" << std::endl
-            << "c::ctor::old" << std::endl
-            << "c::ctor::body" << std::endl
-            << "c::static_inv" << std::endl
-            << "c::inv" << std::endl
-            << "c::ctor::post" << std::endl
-            
-            << "b::static_inv" << std::endl
-            << "b::ctor::old" << std::endl
-            << "b::ctor::body" << std::endl
-            << "b::static_inv" << std::endl
-            << "b::inv" << std::endl
-            << "b::ctor::post" << std::endl
-
-            << "a::static_inv" << std::endl
-            << "a::ctor::old" << std::endl
-            << "a::ctor::body" << std::endl
-            << "a::static_inv" << std::endl
-            << "a::inv" << std::endl
-            << "a::ctor::post" << std::endl
+            #if BOOST_CONTRACT_PRECONDITIONS
+                << "b::ctor::pre" << std::endl
+            #endif
+            << ok_after()
         ;
         BOOST_TEST(out.eq(ok.str()));
     }
@@ -52,32 +85,14 @@ int main() {
     a_pre = false;
     b_pre = true;
     c_pre = true;
-    out.str("");
     {
+        out.str("");
         a aa;
         ok.str(""); ok
-            << "b::ctor::pre" << std::endl // Test no failure here.
-
-            << "c::static_inv" << std::endl
-            << "c::ctor::old" << std::endl
-            << "c::ctor::body" << std::endl
-            << "c::static_inv" << std::endl
-            << "c::inv" << std::endl
-            << "c::ctor::post" << std::endl
-            
-            << "b::static_inv" << std::endl
-            << "b::ctor::old" << std::endl
-            << "b::ctor::body" << std::endl
-            << "b::static_inv" << std::endl
-            << "b::inv" << std::endl
-            << "b::ctor::post" << std::endl
-
-            << "a::static_inv" << std::endl
-            << "a::ctor::old" << std::endl
-            << "a::ctor::body" << std::endl
-            << "a::static_inv" << std::endl
-            << "a::inv" << std::endl
-            << "a::ctor::post" << std::endl
+            #if BOOST_CONTRACT_PRECONDITIONS
+                << "b::ctor::pre" << std::endl // Test no failure here.
+            #endif
+            << ok_after()
         ;
         BOOST_TEST(out.eq(ok.str()));
     }
@@ -85,13 +100,19 @@ int main() {
     a_pre = true;
     b_pre = false;
     c_pre = true;
-    out.str("");
     try {
+        out.str("");
         a aa;
-        BOOST_TEST(false);
-    } catch(err const&) {
+        #if BOOST_CONTRACT_PRECONDITIONS
+                BOOST_TEST(false);
+            } catch(err const&) {
+        #endif
         ok.str(""); ok
-            << "b::ctor::pre" << std::endl // Test this failed.
+            #if BOOST_CONTRACT_PRECONDITIONS
+                << "b::ctor::pre" << std::endl // Test this failed.
+            #else
+                << ok_after()
+            #endif
         ;
         BOOST_TEST(out.eq(ok.str()));
     } catch(...) { BOOST_TEST(false); }
@@ -100,32 +121,14 @@ int main() {
     a_pre = true;
     b_pre = true;
     c_pre = false;
-    out.str("");
     {
+        out.str("");
         a aa;
         ok.str(""); ok
-            << "b::ctor::pre" << std::endl // Test no failure here.
-
-            << "c::static_inv" << std::endl
-            << "c::ctor::old" << std::endl
-            << "c::ctor::body" << std::endl
-            << "c::static_inv" << std::endl
-            << "c::inv" << std::endl
-            << "c::ctor::post" << std::endl
-            
-            << "b::static_inv" << std::endl
-            << "b::ctor::old" << std::endl
-            << "b::ctor::body" << std::endl
-            << "b::static_inv" << std::endl
-            << "b::inv" << std::endl
-            << "b::ctor::post" << std::endl
-
-            << "a::static_inv" << std::endl
-            << "a::ctor::old" << std::endl
-            << "a::ctor::body" << std::endl
-            << "a::static_inv" << std::endl
-            << "a::inv" << std::endl
-            << "a::ctor::post" << std::endl
+            #if BOOST_CONTRACT_PRECONDITIONS
+                << "b::ctor::pre" << std::endl // Test no failure here.
+            #endif
+            << ok_after()
         ;
         BOOST_TEST(out.eq(ok.str()));
     }
@@ -133,13 +136,19 @@ int main() {
     a_pre = false;
     b_pre = false;
     c_pre = false;
-    out.str("");
     try {
+        out.str("");
         a aa;
-        BOOST_TEST(false);
-    } catch(err const&) {
+        #if BOOST_CONTRACT_PRECONDITIONS
+                BOOST_TEST(false);
+            } catch(err const&) {
+        #endif
         ok.str(""); ok
-            << "b::ctor::pre" << std::endl // Test this failed (as all did).
+            #if BOOST_CONTRACT_PRECONDITIONS
+                << "b::ctor::pre" << std::endl // Test this failed (as all did).
+            #else
+                << ok_after()
+            #endif
         ;
         BOOST_TEST(out.eq(ok.str()));
     } catch(...) { BOOST_TEST(false); }

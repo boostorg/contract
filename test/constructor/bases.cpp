@@ -10,6 +10,7 @@
 #include <boost/contract/guard.hpp>
 #include <boost/bind.hpp>
 #include <boost/ref.hpp>
+#include <boost/preprocessor/control/iif.hpp>
 #include <boost/detail/lightweight_test.hpp>
 #include <sstream>
 
@@ -228,110 +229,192 @@ int main() {
         a aa(x, y, dz, pz, qz, ez);
         ok.str(""); ok
             // Test all constructor pre checked first.
-            << "a::ctor::pre" << std::endl
-
-            << "c::ctor::pre" << std::endl
+            #if BOOST_CONTRACT_PRECONDITIONS
+                << "a::ctor::pre" << std::endl
+                << "c::ctor::pre" << std::endl
+            #endif
 
             // Test static inv, but not const inv, checked before ctor body.
-            << "d::ctor::pre" << std::endl
-            << "d::static_inv" << std::endl
-            << "d::ctor::old" << std::endl
+            #if BOOST_CONTRACT_PRECONDITIONS
+                << "d::ctor::pre" << std::endl
+            #endif
+            #if BOOST_CONTRACT_ENTRY_INVARIANTS
+                << "d::static_inv" << std::endl
+            #endif
+            #if BOOST_CONTRACT_POSTCONDITIONS
+                << "d::ctor::old" << std::endl
+            #endif
             << "d::ctor::body" << std::endl
-            << "d::static_inv" << std::endl
-            << "d::inv" << std::endl
-            << "d::ctor::post" << std::endl
+            #if BOOST_CONTRACT_EXIT_INVARIANTS
+                << "d::static_inv" << std::endl
+                << "d::inv" << std::endl
+            #endif
+            #if BOOST_CONTRACT_POSTCONDITIONS
+                << "d::ctor::post" << std::endl
+            #endif
             
             // Test check also protected bases (because part of C++ constr.).
-            << "p::ctor::pre" << std::endl
-            << "p::static_inv" << std::endl
-            << "p::ctor::old" << std::endl
+            #if BOOST_CONTRACT_PRECONDITIONS
+                << "p::ctor::pre" << std::endl
+            #endif
+            #if BOOST_CONTRACT_ENTRY_INVARIANTS
+                << "p::static_inv" << std::endl
+            #endif
+            #if BOOST_CONTRACT_POSTCONDITIONS
+                << "p::ctor::old" << std::endl
+            #endif
             << "p::ctor::body" << std::endl
-            << "p::static_inv" << std::endl
-            << "p::inv" << std::endl
-            << "p::ctor::post" << std::endl
+            #if BOOST_CONTRACT_EXIT_INVARIANTS
+                << "p::static_inv" << std::endl
+                << "p::inv" << std::endl
+            #endif
+            #if BOOST_CONTRACT_POSTCONDITIONS
+                << "p::ctor::post" << std::endl
+            #endif
             
             // Test check also private bases (because part of C++ constr.).
-            << "q::ctor::pre" << std::endl
-            << "q::static_inv" << std::endl
-            << "q::ctor::old" << std::endl
+            #if BOOST_CONTRACT_PRECONDITIONS
+                << "q::ctor::pre" << std::endl
+            #endif
+            #if BOOST_CONTRACT_ENTRY_INVARIANTS
+                << "q::static_inv" << std::endl
+            #endif
+            #if BOOST_CONTRACT_POSTCONDITIONS
+                << "q::ctor::old" << std::endl
+            #endif
             << "q::ctor::body" << std::endl
-            << "q::static_inv" << std::endl
-            << "q::inv" << std::endl
-            << "q::ctor::post" << std::endl
+            #if BOOST_CONTRACT_EXIT_INVARIANTS
+                << "q::static_inv" << std::endl
+                << "q::inv" << std::endl
+            #endif
+            #if BOOST_CONTRACT_POSTCONDITIONS
+                << "q::ctor::post" << std::endl
+            #endif
 
-            << "e::ctor::pre" << std::endl
-            << "e::static_inv" << std::endl
-            << "e::ctor::old" << std::endl
+            #if BOOST_CONTRACT_PRECONDITIONS
+                << "e::ctor::pre" << std::endl
+            #endif
+            #if BOOST_CONTRACT_ENTRY_INVARIANTS
+                << "e::static_inv" << std::endl
+            #endif
+            #if BOOST_CONTRACT_POSTCONDITIONS
+                << "e::ctor::old" << std::endl
+            #endif
             << "e::ctor::body" << std::endl
-            << "e::static_inv" << std::endl
-            << "e::inv" << std::endl
-            << "e::ctor::post" << std::endl
+            #if BOOST_CONTRACT_EXIT_INVARIANTS
+                << "e::static_inv" << std::endl
+                << "e::inv" << std::endl
+            #endif
+            #if BOOST_CONTRACT_POSTCONDITIONS
+                << "e::ctor::post" << std::endl
+            #endif
 
-            << "c::static_inv" << std::endl
-            << "c::ctor::old" << std::endl
+            #if BOOST_CONTRACT_ENTRY_INVARIANTS
+                << "c::static_inv" << std::endl
+            #endif
+            #if BOOST_CONTRACT_POSTCONDITIONS
+                << "c::ctor::old" << std::endl
+            #endif
             << "c::ctor::body" << std::endl
-            << "c::static_inv" << std::endl
-            << "c::inv" << std::endl
-            << "c::ctor::post" << std::endl
+            #if BOOST_CONTRACT_EXIT_INVARIANTS
+                << "c::static_inv" << std::endl
+                << "c::inv" << std::endl
+            #endif
+            #if BOOST_CONTRACT_POSTCONDITIONS
+                << "c::ctor::post" << std::endl
+            #endif
 
-            << "a::static_inv" << std::endl
-            << "a::ctor::old" << std::endl
+            #if BOOST_CONTRACT_ENTRY_INVARIANTS
+                << "a::static_inv" << std::endl
+            #endif
+            #if BOOST_CONTRACT_POSTCONDITIONS
+                << "a::ctor::old" << std::endl
+            #endif
             << "a::ctor::body" << std::endl
-            << "a::static_inv" << std::endl
-            << "a::inv" << std::endl
-            << "a::ctor::post" << std::endl
+            #if BOOST_CONTRACT_EXIT_INVARIANTS
+                << "a::static_inv" << std::endl
+                << "a::inv" << std::endl
+            #endif
+            #if BOOST_CONTRACT_POSTCONDITIONS
+                << "a::ctor::post" << std::endl
+            #endif
         ;
         BOOST_TEST(out.eq(ok.str()));
     }
 
-    BOOST_TEST_EQ(a::x_type::copies(), 1);
-    BOOST_TEST_EQ(a::x_type::evals(), 1);
+    BOOST_TEST_EQ(a::x_type::copies(),
+            BOOST_PP_IIF(BOOST_CONTRACT_POSTCONDITIONS, 1, 0));
+    BOOST_TEST_EQ(a::x_type::evals(),
+            BOOST_PP_IIF(BOOST_CONTRACT_POSTCONDITIONS, 1, 0));
     BOOST_TEST_EQ(a::x_type::ctors(), a::x_type::dtors()); // No leak.
+    // TODO: I should check these ctors() == dtors() every where cnt_type is used, in all tests.
     
-    BOOST_TEST_EQ(c::y_type::copies(), 1);
-    BOOST_TEST_EQ(c::y_type::evals(), 1);
+    BOOST_TEST_EQ(c::y_type::copies(),
+            BOOST_PP_IIF(BOOST_CONTRACT_POSTCONDITIONS, 1, 0));
+    BOOST_TEST_EQ(c::y_type::evals(),
+            BOOST_PP_IIF(BOOST_CONTRACT_POSTCONDITIONS, 1, 0));
     BOOST_TEST_EQ(c::y_type::ctors(), c::y_type::dtors()); // No leak.
     
-    BOOST_TEST_EQ(t<'d'>::z_type::copies(), 1);
-    BOOST_TEST_EQ(t<'d'>::z_type::evals(), 1);
+    BOOST_TEST_EQ(t<'d'>::z_type::copies(),
+            BOOST_PP_IIF(BOOST_CONTRACT_POSTCONDITIONS, 1, 0));
+    BOOST_TEST_EQ(t<'d'>::z_type::evals(),
+            BOOST_PP_IIF(BOOST_CONTRACT_POSTCONDITIONS, 1, 0));
     BOOST_TEST_EQ(t<'d'>::z_type::ctors(), t<'d'>::z_type::dtors()); // No leak.
     
-    BOOST_TEST_EQ(t<'p'>::z_type::copies(), 1);
-    BOOST_TEST_EQ(t<'p'>::z_type::evals(), 1);
+    BOOST_TEST_EQ(t<'p'>::z_type::copies(),
+            BOOST_PP_IIF(BOOST_CONTRACT_POSTCONDITIONS, 1, 0));
+    BOOST_TEST_EQ(t<'p'>::z_type::evals(),
+            BOOST_PP_IIF(BOOST_CONTRACT_POSTCONDITIONS, 1, 0));
     BOOST_TEST_EQ(t<'p'>::z_type::ctors(), t<'p'>::z_type::dtors()); // No leak.
     
-    BOOST_TEST_EQ(t<'q'>::z_type::copies(), 1);
-    BOOST_TEST_EQ(t<'q'>::z_type::evals(), 1);
+    BOOST_TEST_EQ(t<'q'>::z_type::copies(),
+            BOOST_PP_IIF(BOOST_CONTRACT_POSTCONDITIONS, 1, 0));
+    BOOST_TEST_EQ(t<'q'>::z_type::evals(),
+            BOOST_PP_IIF(BOOST_CONTRACT_POSTCONDITIONS, 1, 0));
     BOOST_TEST_EQ(t<'q'>::z_type::ctors(), t<'q'>::z_type::dtors()); // No leak.
 
-    BOOST_TEST_EQ(t<'e'>::z_type::copies(), 1);
-    BOOST_TEST_EQ(t<'e'>::z_type::evals(), 1);
+    BOOST_TEST_EQ(t<'e'>::z_type::copies(),
+            BOOST_PP_IIF(BOOST_CONTRACT_POSTCONDITIONS, 1, 0));
+    BOOST_TEST_EQ(t<'e'>::z_type::evals(),
+            BOOST_PP_IIF(BOOST_CONTRACT_POSTCONDITIONS, 1, 0));
     BOOST_TEST_EQ(t<'e'>::z_type::ctors(), t<'e'>::z_type::dtors()); // No leak.
 
     // Following destroy only copies (actual objects are static data members).
 
-    BOOST_TEST_EQ(a::n_type::copies(), 1);
-    BOOST_TEST_EQ(a::n_type::evals(), 1);
+    BOOST_TEST_EQ(a::n_type::copies(),
+            BOOST_PP_IIF(BOOST_CONTRACT_POSTCONDITIONS, 1, 0));
+    BOOST_TEST_EQ(a::n_type::evals(),
+            BOOST_PP_IIF(BOOST_CONTRACT_POSTCONDITIONS, 1, 0));
     BOOST_TEST_EQ(a::n_type::copies(), a::n_type::dtors()); // No leak.
     
-    BOOST_TEST_EQ(c::m_type::copies(), 1);
-    BOOST_TEST_EQ(c::m_type::evals(), 1);
+    BOOST_TEST_EQ(c::m_type::copies(),
+            BOOST_PP_IIF(BOOST_CONTRACT_POSTCONDITIONS, 1, 0));
+    BOOST_TEST_EQ(c::m_type::evals(),
+            BOOST_PP_IIF(BOOST_CONTRACT_POSTCONDITIONS, 1, 0));
     BOOST_TEST_EQ(c::m_type::copies(), c::m_type::dtors()); // No leak.
     
-    BOOST_TEST_EQ(t<'d'>::l_type::copies(), 1);
-    BOOST_TEST_EQ(t<'d'>::l_type::evals(), 1);
+    BOOST_TEST_EQ(t<'d'>::l_type::copies(),
+            BOOST_PP_IIF(BOOST_CONTRACT_POSTCONDITIONS, 1, 0));
+    BOOST_TEST_EQ(t<'d'>::l_type::evals(),
+            BOOST_PP_IIF(BOOST_CONTRACT_POSTCONDITIONS, 1, 0));
     BOOST_TEST_EQ(t<'e'>::l_type::copies(), t<'e'>::l_type::dtors()); // No leak
     
-    BOOST_TEST_EQ(t<'p'>::l_type::copies(), 1);
-    BOOST_TEST_EQ(t<'p'>::l_type::evals(), 1);
+    BOOST_TEST_EQ(t<'p'>::l_type::copies(),
+            BOOST_PP_IIF(BOOST_CONTRACT_POSTCONDITIONS, 1, 0));
+    BOOST_TEST_EQ(t<'p'>::l_type::evals(),
+            BOOST_PP_IIF(BOOST_CONTRACT_POSTCONDITIONS, 1, 0));
     BOOST_TEST_EQ(t<'e'>::l_type::copies(), t<'e'>::l_type::dtors()); // No leak
     
-    BOOST_TEST_EQ(t<'q'>::l_type::copies(), 1);
-    BOOST_TEST_EQ(t<'q'>::l_type::evals(), 1);
+    BOOST_TEST_EQ(t<'q'>::l_type::copies(),
+            BOOST_PP_IIF(BOOST_CONTRACT_POSTCONDITIONS, 1, 0));
+    BOOST_TEST_EQ(t<'q'>::l_type::evals(),
+            BOOST_PP_IIF(BOOST_CONTRACT_POSTCONDITIONS, 1, 0));
     BOOST_TEST_EQ(t<'e'>::l_type::copies(), t<'e'>::l_type::dtors()); // No leak
     
-    BOOST_TEST_EQ(t<'e'>::l_type::copies(), 1);
-    BOOST_TEST_EQ(t<'e'>::l_type::evals(), 1);
+    BOOST_TEST_EQ(t<'e'>::l_type::copies(),
+            BOOST_PP_IIF(BOOST_CONTRACT_POSTCONDITIONS, 1, 0));
+    BOOST_TEST_EQ(t<'e'>::l_type::evals(),
+            BOOST_PP_IIF(BOOST_CONTRACT_POSTCONDITIONS, 1, 0));
     BOOST_TEST_EQ(t<'e'>::l_type::copies(), t<'e'>::l_type::dtors()); // No leak
 
     return boost::report_errors();

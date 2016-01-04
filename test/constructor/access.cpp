@@ -66,35 +66,63 @@ int main() {
     out.str("");
     a aa;
     ok.str(""); ok
-        << "a::ctor::pre" << std::endl
+        #if BOOST_CONTRACT_PRECONDITIONS
+            << "a::ctor::pre" << std::endl
+            << "b::ctor::pre" << std::endl
+        #endif
 
-        << "b::ctor::pre" << std::endl
-        << "b::static_inv" << std::endl
-        << "b::ctor::old" << std::endl
+        #if BOOST_CONTRACT_ENTRY_INVARIANTS
+            << "b::static_inv" << std::endl
+        #endif
+        #if BOOST_CONTRACT_POSTCONDITIONS
+            << "b::ctor::old" << std::endl
+        #endif
         << "b::ctor::body" << std::endl
-        << "b::static_inv" << std::endl
-        << "b::inv" << std::endl
-        << "b::ctor::post" << std::endl
+        #if BOOST_CONTRACT_EXIT_INVARIANTS
+            << "b::static_inv" << std::endl
+            << "b::inv" << std::endl
+        #endif
+        #if BOOST_CONTRACT_POSTCONDITIONS
+            << "b::ctor::post" << std::endl
+        #endif
 
-        << "a::static_inv" << std::endl
-        << "a::ctor::old" << std::endl
+        #if BOOST_CONTRACT_ENTRY_INVARIANTS
+            << "a::static_inv" << std::endl
+        #endif
+        #if BOOST_CONTRACT_POSTCONDITIONS
+            << "a::ctor::old" << std::endl
+        #endif
         << "a::ctor::body" << std::endl
-        << "a::static_inv" << std::endl
-        << "a::inv" << std::endl
-        << "a::ctor::post" << std::endl
+        #if BOOST_CONTRACT_EXIT_INVARIANTS
+            << "a::static_inv" << std::endl
+            << "a::inv" << std::endl
+        #endif
+        #if BOOST_CONTRACT_POSTCONDITIONS
+            << "a::ctor::post" << std::endl
+        #endif
     ;
     BOOST_TEST(out.eq(ok.str()));
 
     out.str("");
     b bb;
     ok.str(""); ok
-        << "b::ctor::pre" << std::endl
-        << "b::static_inv" << std::endl
-        << "b::ctor::old" << std::endl
+        #if BOOST_CONTRACT_PRECONDITIONS
+            << "b::ctor::pre" << std::endl
+        #endif
+        #if BOOST_CONTRACT_ENTRY_INVARIANTS
+            << "b::static_inv" << std::endl
+        #endif
+        #if BOOST_CONTRACT_POSTCONDITIONS
+            << "b::ctor::old" << std::endl
+        #endif
         << "b::ctor::body" << std::endl
-        << "b::static_inv" << std::endl
-        << "b::inv" << std::endl
-        << "b::ctor::post" << std::endl
+        #if BOOST_CONTRACT_EXIT_INVARIANTS
+            << "b::static_inv" << std::endl
+            << "b::inv" << std::endl
+        #endif
+        #if BOOST_CONTRACT_POSTCONDITIONS
+            << "b::ctor::post" << std::endl
+        #endif
     ;
     BOOST_TEST(out.eq(ok.str()));
 
