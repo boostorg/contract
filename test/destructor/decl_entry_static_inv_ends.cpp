@@ -6,8 +6,72 @@
 #undef BOOST_CONTRACT_AUX_TEST_NO_C_STATIC_INV
 #include "decl.hpp"
 
+#include <boost/preprocessor/control/iif.hpp>
 #include <boost/detail/lightweight_test.hpp>
 #include <sstream>
+#include <string>
+
+std::string ok_a() {
+    std::ostringstream ok; ok
+        #if BOOST_CONTRACT_ENTRY_INVARIANTS
+            << "a::static_inv" << std::endl
+            << "a::inv" << std::endl
+        #endif
+        #if BOOST_CONTRACT_POSTCONDITIONS
+            << "a::dtor::old" << std::endl
+        #endif
+        << "a::dtor::body" << std::endl
+        #if BOOST_CONTRACT_EXIT_INVARIANTS
+            << "a::static_inv" << std::endl
+        #endif
+        #if BOOST_CONTRACT_POSTCONDITIONS
+            << "a::dtor::post" << std::endl
+        #endif
+    ;
+    return ok.str();
+}
+
+// TODO: Commonize all decl_* programs using threw instead of failure bool param, similar code comments, etc.
+
+std::string ok_b(bool threw = false) {
+    std::ostringstream ok; ok
+        #if BOOST_CONTRACT_ENTRY_INVARIANTS
+            << "b::inv" << std::endl
+        #endif
+        #if BOOST_CONTRACT_POSTCONDITIONS
+            << "b::dtor::old" << std::endl
+        #endif
+        << "b::dtor::body" << std::endl
+        #if BOOST_CONTRACT_EXIT_INVARIANTS
+            << (threw ? "b::inv\n" : "")
+        #endif
+        #if BOOST_CONTRACT_POSTCONDITIONS
+            << (!threw ? "b::dtor::post\n" : "")
+        #endif
+    ;
+    return ok.str();
+}
+
+std::string ok_c(bool threw = false) {
+    std::ostringstream ok; ok
+        #if BOOST_CONTRACT_ENTRY_INVARIANTS
+            << "c::static_inv" << std::endl
+            << "c::inv" << std::endl
+        #endif
+        #if BOOST_CONTRACT_POSTCONDITIONS
+            << "c::dtor::old" << std::endl
+        #endif
+        << "c::dtor::body" << std::endl
+        #if BOOST_CONTRACT_EXIT_INVARIANTS
+            << "c::static_inv" << std::endl
+            << (threw ? "c::inv\n" : "")
+        #endif
+        #if BOOST_CONTRACT_POSTCONDITIONS
+            << (!threw ? "c::dtor::post\n" : "")
+        #endif
+    ;
+    return ok.str();
+}
 
 int main() {
     std::ostringstream ok;
@@ -15,65 +79,49 @@ int main() {
     a_entry_static_inv = true;
     b_entry_static_inv = true;
     c_entry_static_inv = true;
-    a_entering_static_inv = b_entering_static_inv = c_entering_static_inv =true;
+    a_entering_static_inv = b_entering_static_inv = c_entering_static_inv =
+            BOOST_PP_IIF(BOOST_CONTRACT_ENTRY_INVARIANTS, true, false);
     {
         a aa;
         out.str("");
     }
     ok.str(""); ok // Test nothing failed.
-        << "a::static_inv" << std::endl
-        << "a::inv" << std::endl
-        << "a::dtor::old" << std::endl
-        << "a::dtor::body" << std::endl
-        << "a::static_inv" << std::endl
-        << "a::dtor::post" << std::endl
-
-        << "b::inv" << std::endl
-        << "b::dtor::old" << std::endl
-        << "b::dtor::body" << std::endl
-        << "b::dtor::post" << std::endl
-        
-        << "c::static_inv" << std::endl
-        << "c::inv" << std::endl
-        << "c::dtor::old" << std::endl
-        << "c::dtor::body" << std::endl
-        << "c::static_inv" << std::endl
-        << "c::dtor::post" << std::endl
+        << ok_a()
+        << ok_b()
+        << ok_c()
     ;
     BOOST_TEST(out.eq(ok.str()));
     
     struct err {};
     boost::contract::set_entry_invariant_failure([&ok] (boost::contract::from) {
-        BOOST_TEST(out.eq(ok.str())); // Must check before dtor throws...
-        throw err(); // for testing (as dtors should never throw anyways).
+        BOOST_TEST(out.eq(ok.str())); // Must check before dtor throws.
+        throw err(); // For testing only (dtors should never throw otherwise).
     });
 
     a_entry_static_inv = false;
     b_entry_static_inv = true;
     c_entry_static_inv = true;
-    a_entering_static_inv = b_entering_static_inv = c_entering_static_inv =true;
+    a_entering_static_inv = b_entering_static_inv = c_entering_static_inv =
+            BOOST_PP_IIF(BOOST_CONTRACT_ENTRY_INVARIANTS, true, false);
     try {
         {
             a aa;
             ok.str(""); ok
-                << "a::static_inv" << std::endl // Test this failed...
+                #if BOOST_CONTRACT_ENTRY_INVARIANTS
+                    << "a::static_inv" << std::endl // Test this failed...
+                #else
+                    << ok_a()
+                #endif
             ;
             out.str("");
         }
-        BOOST_TEST(false);
-    } catch(err const&) {
-        ok // ... then exec other dtors and check inv on throw (as dtor threw).
-            << "b::inv" << std::endl
-            << "b::dtor::old" << std::endl
-            << "b::dtor::body" << std::endl
-            << "b::inv" << std::endl
-
-            << "c::static_inv" << std::endl
-            << "c::inv" << std::endl
-            << "c::dtor::old" << std::endl
-            << "c::dtor::body" << std::endl
-            << "c::static_inv" << std::endl
-            << "c::inv" << std::endl
+        #if BOOST_CONTRACT_ENTRY_INVARIANTS
+                BOOST_TEST(false);
+            } catch(err const&) {
+        #endif
+        ok // ...then exec other dtors and check inv on throw (as dtor threw).
+            << ok_b(BOOST_CONTRACT_ENTRY_INVARIANTS)
+            << ok_c(BOOST_CONTRACT_ENTRY_INVARIANTS)
         ;
         BOOST_TEST(out.eq(ok.str()));
     } catch(...) { BOOST_TEST(false); }
@@ -81,89 +129,74 @@ int main() {
     a_entry_static_inv = true;
     b_entry_static_inv = false;
     c_entry_static_inv = true;
-    a_entering_static_inv = b_entering_static_inv = c_entering_static_inv =true;
+    a_entering_static_inv = b_entering_static_inv = c_entering_static_inv =
+            BOOST_PP_IIF(BOOST_CONTRACT_ENTRY_INVARIANTS, true, false);
     {
         a aa;
         out.str("");
     }
     ok.str(""); ok
-        << "a::static_inv" << std::endl
-        << "a::inv" << std::endl
-        << "a::dtor::old" << std::endl
-        << "a::dtor::body" << std::endl
-        << "a::static_inv" << std::endl
-        << "a::dtor::post" << std::endl
-
-        // Test no failure here.
-        << "b::inv" << std::endl
-        << "b::dtor::old" << std::endl
-        << "b::dtor::body" << std::endl
-        << "b::dtor::post" << std::endl
-        
-        << "c::static_inv" << std::endl
-        << "c::inv" << std::endl
-        << "c::dtor::old" << std::endl
-        << "c::dtor::body" << std::endl
-        << "c::static_inv" << std::endl
-        << "c::dtor::post" << std::endl
+        << ok_a()
+        << ok_b() // Test no b::static_inv so no failure here.
+        << ok_c()
     ;
     BOOST_TEST(out.eq(ok.str()));
     
     a_entry_static_inv = true;
     b_entry_static_inv = true;
     c_entry_static_inv = false;
-    a_entering_static_inv = b_entering_static_inv = c_entering_static_inv =true;
+    a_entering_static_inv = b_entering_static_inv = c_entering_static_inv =
+            BOOST_PP_IIF(BOOST_CONTRACT_ENTRY_INVARIANTS, true, false);
     try {
         {
             a aa;
             ok.str(""); ok
-                << "a::static_inv" << std::endl
-                << "a::inv" << std::endl
-                << "a::dtor::old" << std::endl
-                << "a::dtor::body" << std::endl
-                << "a::static_inv" << std::endl
-                << "a::dtor::post" << std::endl
-
-                << "b::inv" << std::endl
-                << "b::dtor::old" << std::endl
-                << "b::dtor::body" << std::endl
-                << "b::dtor::post" << std::endl
-                
-                << "c::static_inv" << std::endl // Test this failed...
+                << ok_a()
+                << ok_b()
+                #if BOOST_CONTRACT_ENTRY_INVARIANTS
+                    << "c::static_inv" << std::endl // Test this failed...
+                #else
+                    << ok_c()
+                #endif
             ;
             out.str("");
         }
-        BOOST_TEST(false);
-    } catch(err const&) {
-        // ... then exec other dtors and check inv on throw (as dtor threw).
+        #if BOOST_CONTRACT_ENTRY_INVARIANTS
+                BOOST_TEST(false);
+            } catch(err const&) {
+        #endif
+        // ...then exec other dtors and check inv on throw (as dtor threw).
         BOOST_TEST(out.eq(ok.str()));
     } catch(...) { BOOST_TEST(false); }
     
     boost::contract::set_entry_invariant_failure([] (boost::contract::from) {
         // Testing multiple failures so dtors must not throw multiple
-        // exceptions, just ignore failure and continue test program...
+        // exceptions, just ignore failure and continue test program.
     });
     
     a_entry_static_inv = false;
     b_entry_static_inv = false;
     c_entry_static_inv = false;
-    a_entering_static_inv = b_entering_static_inv = c_entering_static_inv =true;
+    a_entering_static_inv = b_entering_static_inv = c_entering_static_inv =
+            BOOST_PP_IIF(BOOST_CONTRACT_ENTRY_INVARIANTS, true, false);
     {
         a aa;
         out.str("");
     }
     ok.str(""); ok
-        << "a::static_inv" << std::endl // Test this failed (as all did)...
-        << "a::dtor::body" << std::endl
-        
-        // Test no failure here.
-        << "b::inv" << std::endl
-        << "b::dtor::old" << std::endl
-        << "b::dtor::body" << std::endl
-        << "b::dtor::post" << std::endl
-        
-        << "c::static_inv" << std::endl // Test this failed (as all did)...
-        << "c::dtor::body" << std::endl
+        #if BOOST_CONTRACT_ENTRY_INVARIANTS
+            << "a::static_inv" << std::endl // Test this failed (as all did).
+            << "a::dtor::body" << std::endl
+
+            << ok_b() // Test no b::static_inv so no failure here.
+            
+            << "c::static_inv" << std::endl // Test this failed (as all did).
+            << "c::dtor::body" << std::endl
+        #else
+            << ok_a()
+            << ok_b()
+            << ok_c()
+        #endif
     ;
     BOOST_TEST(out.eq(ok.str()));
 

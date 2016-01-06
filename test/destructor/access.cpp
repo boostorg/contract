@@ -58,19 +58,35 @@ int main() {
         out.str("");
     } // Call aa's destructor.
     ok.str(""); ok
-        << "a::static_inv" << std::endl
-        << "a::inv" << std::endl
-        << "a::dtor::old" << std::endl
+        #if BOOST_CONTRACT_ENTRY_INVARIANTS
+            << "a::static_inv" << std::endl
+            << "a::inv" << std::endl
+        #endif
+        #if BOOST_CONTRACT_POSTCONDITIONS
+            << "a::dtor::old" << std::endl
+        #endif
         << "a::dtor::body" << std::endl
-        << "a::static_inv" << std::endl
-        << "a::dtor::post" << std::endl
+        #if BOOST_CONTRACT_EXIT_INVARIANTS
+            << "a::static_inv" << std::endl
+        #endif
+        #if BOOST_CONTRACT_POSTCONDITIONS
+            << "a::dtor::post" << std::endl
+        #endif
 
-        << "b::static_inv" << std::endl
-        << "b::inv" << std::endl
-        << "b::dtor::old" << std::endl
+        #if BOOST_CONTRACT_ENTRY_INVARIANTS
+            << "b::static_inv" << std::endl
+            << "b::inv" << std::endl
+        #endif
+        #if BOOST_CONTRACT_POSTCONDITIONS
+            << "b::dtor::old" << std::endl
+        #endif
         << "b::dtor::body" << std::endl
-        << "b::static_inv" << std::endl
-        << "b::dtor::post" << std::endl
+        #if BOOST_CONTRACT_EXIT_INVARIANTS
+            << "b::static_inv" << std::endl
+        #endif
+        #if BOOST_CONTRACT_POSTCONDITIONS
+            << "b::dtor::post" << std::endl
+        #endif
     ;
     BOOST_TEST(out.eq(ok.str()));
 
@@ -79,12 +95,20 @@ int main() {
         out.str("");
     } // Call bb's destructor.
     ok.str(""); ok
-        << "b::static_inv" << std::endl
-        << "b::inv" << std::endl
-        << "b::dtor::old" << std::endl
+        #if BOOST_CONTRACT_ENTRY_INVARIANTS
+            << "b::static_inv" << std::endl
+            << "b::inv" << std::endl
+        #endif
+        #if BOOST_CONTRACT_POSTCONDITIONS
+            << "b::dtor::old" << std::endl
+        #endif
         << "b::dtor::body" << std::endl
-        << "b::static_inv" << std::endl
-        << "b::dtor::post" << std::endl
+        #if BOOST_CONTRACT_EXIT_INVARIANTS
+            << "b::static_inv" << std::endl
+        #endif
+        #if BOOST_CONTRACT_POSTCONDITIONS
+            << "b::dtor::post" << std::endl
+        #endif
     ;
     BOOST_TEST(out.eq(ok.str()));
 
