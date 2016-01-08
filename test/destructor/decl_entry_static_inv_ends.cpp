@@ -31,8 +31,6 @@ std::string ok_a() {
     return ok.str();
 }
 
-// TODO: Commonize all decl_* programs using threw instead of failure bool param, similar code comments, etc.
-
 std::string ok_b(bool threw = false) {
     std::ostringstream ok; ok
         #if BOOST_CONTRACT_ENTRY_INVARIANTS

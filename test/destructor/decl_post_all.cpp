@@ -30,7 +30,7 @@ std::string ok_a() {
     return ok.str();
 }
 
-std::string ok_b(bool failure = false) {
+std::string ok_b(bool threw = false) {
     std::ostringstream ok; ok
         #if BOOST_CONTRACT_ENTRY_INVARIANTS
             << "b::static_inv" << std::endl
@@ -42,16 +42,16 @@ std::string ok_b(bool failure = false) {
         << "b::dtor::body" << std::endl
         #if BOOST_CONTRACT_EXIT_INVARIANTS
             << "b::static_inv" << std::endl
-            << (failure ? "b::inv\n" : "")
+            << (threw ? "b::inv\n" : "")
         #endif
         #if BOOST_CONTRACT_POSTCONDITIONS
-            << (!failure ? "b::dtor::post\n" : "") // This can fail.
+            << (!threw ? "b::dtor::post\n" : "") // This can fail.
         #endif
     ;
     return ok.str();
 }
 
-std::string ok_c(bool failure = false) {
+std::string ok_c(bool threw = false) {
     std::ostringstream ok; ok
         #if BOOST_CONTRACT_ENTRY_INVARIANTS
             << "c::static_inv" << std::endl
@@ -63,10 +63,10 @@ std::string ok_c(bool failure = false) {
         << "c::dtor::body" << std::endl
         #if BOOST_CONTRACT_EXIT_INVARIANTS
             << "c::static_inv" << std::endl
-            << (failure ? "c::inv\n" : "")
+            << (threw ? "c::inv\n" : "")
         #endif
         #if BOOST_CONTRACT_POSTCONDITIONS
-            << (!failure ? "c::dtor::post\n" : "") // This can fail.
+            << (!threw ? "c::dtor::post\n" : "") // This can fail.
         #endif
     ;
     return ok.str();

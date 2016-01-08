@@ -1,5 +1,5 @@
 
-// Test only old specified (for free func, but same for all contracts).
+// Test both old and post (for free func, but same for all contracts).
 
 #include "../aux_/oteststream.hpp"
 #include <boost/contract/function.hpp>
@@ -12,6 +12,7 @@ boost::contract::aux::test::oteststream out;
 void f() {
     boost::contract::guard c = boost::contract::function()
         .old([] { out << "f::old" << std::endl; })
+        .postcondition([] { out << "f::post" << std::endl; })
     ;
     out << "f::body" << std::endl;
 }
@@ -21,9 +22,15 @@ int main() {
 
     out.str("");
     f();
-    ok.str(""); ok
-        << "f::old" << std::endl
+    ok.str("");
+    ok
+        #if BOOST_CONTRACT_POSTCONDITIONS
+            << "f::old" << std::endl
+        #endif
         << "f::body" << std::endl
+        #if BOOST_CONTRACT_POSTCONDITIONS
+            << "f::post" << std::endl
+        #endif
     ;
     BOOST_TEST(out.eq(ok.str()));
 

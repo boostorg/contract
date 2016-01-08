@@ -8,18 +8,10 @@
 
 #include <boost/detail/lightweight_test.hpp>
 #include <sstream>
+#include <string>        
 
-int main() {
-    std::ostringstream ok;
-    
-    a aa;
-    
-    a_post = true;
-    b_post = true;
-    c_post = true;
-    out.str("");
-    aa.f();
-    ok.str(""); ok // Test nothing failed.
+std::string ok_begin() {
+    std::ostringstream ok; ok
         #if BOOST_CONTRACT_ENTRY_INVARIANTS
             << "c::static_inv" << std::endl
             << "c::inv" << std::endl
@@ -45,6 +37,22 @@ int main() {
             << "a::static_inv" << std::endl
             << "a::inv" << std::endl
         #endif
+    ;
+    return ok.str();
+}
+
+int main() {
+    std::ostringstream ok;
+    
+    a aa;
+    
+    a_post = true;
+    b_post = true;
+    c_post = true;
+    out.str("");
+    aa.f();
+    ok.str(""); ok // Test nothing failed.
+        << ok_begin()
         #if BOOST_CONTRACT_POSTCONDITIONS
             << "c::f::old" << std::endl
             << "b::f::old" << std::endl
@@ -64,31 +72,7 @@ int main() {
     try {
         aa.f();
         ok.str(""); ok
-            #if BOOST_CONTRACT_ENTRY_INVARIANTS
-                << "c::static_inv" << std::endl
-                << "c::inv" << std::endl
-                << "b::static_inv" << std::endl
-                << "b::inv" << std::endl
-                << "a::static_inv" << std::endl
-                << "a::inv" << std::endl
-            #endif
-            #if BOOST_CONTRACT_PRECONDITIONS
-                << "c::f::pre" << std::endl
-            #endif
-            #if BOOST_CONTRACT_POSTCONDITIONS
-                << "c::f::old" << std::endl
-                << "b::f::old" << std::endl
-                << "a::f::old" << std::endl
-            #endif
-            << "a::f::body" << std::endl
-            #if BOOST_CONTRACT_EXIT_INVARIANTS 
-                << "c::static_inv" << std::endl
-                << "c::inv" << std::endl
-                << "b::static_inv" << std::endl
-                << "b::inv" << std::endl
-                << "a::static_inv" << std::endl
-                << "a::inv" << std::endl
-            #endif
+            << ok_begin()
             #if BOOST_CONTRACT_POSTCONDITIONS
                 << "c::f::old" << std::endl
                 << "b::f::old" << std::endl
@@ -110,31 +94,7 @@ int main() {
             } catch(err const&) {
         #endif
         ok.str(""); ok
-            #if BOOST_CONTRACT_ENTRY_INVARIANTS
-                << "c::static_inv" << std::endl
-                << "c::inv" << std::endl
-                << "b::static_inv" << std::endl
-                << "b::inv" << std::endl
-                << "a::static_inv" << std::endl
-                << "a::inv" << std::endl
-            #endif
-            #if BOOST_CONTRACT_PRECONDITIONS
-                << "c::f::pre" << std::endl
-            #endif
-            #if BOOST_CONTRACT_POSTCONDITIONS
-                << "c::f::old" << std::endl
-                << "b::f::old" << std::endl
-                << "a::f::old" << std::endl
-            #endif
-            << "a::f::body" << std::endl
-            #if BOOST_CONTRACT_EXIT_INVARIANTS
-                << "c::static_inv" << std::endl
-                << "c::inv" << std::endl
-                << "b::static_inv" << std::endl
-                << "b::inv" << std::endl
-                << "a::static_inv" << std::endl
-                << "a::inv" << std::endl
-            #endif
+            << ok_begin()
             #if BOOST_CONTRACT_POSTCONDITIONS
                 << "c::f::old" << std::endl
                 << "b::f::old" << std::endl
@@ -151,31 +111,7 @@ int main() {
     try {
         aa.f();
         ok.str(""); ok
-            #if BOOST_CONTRACT_ENTRY_INVARIANTS
-                << "c::static_inv" << std::endl
-                << "c::inv" << std::endl
-                << "b::static_inv" << std::endl
-                << "b::inv" << std::endl
-                << "a::static_inv" << std::endl
-                << "a::inv" << std::endl
-            #endif
-            #if BOOST_CONTRACT_PRECONDITIONS
-                << "c::f::pre" << std::endl
-            #endif
-            #if BOOST_CONTRACT_POSTCONDITIONS
-                << "c::f::old" << std::endl
-                << "b::f::old" << std::endl
-                << "a::f::old" << std::endl
-            #endif
-            << "a::f::body" << std::endl
-            #if BOOST_CONTRACT_EXIT_INVARIANTS
-                << "c::static_inv" << std::endl
-                << "c::inv" << std::endl
-                << "b::static_inv" << std::endl
-                << "b::inv" << std::endl
-                << "a::static_inv" << std::endl
-                << "a::inv" << std::endl
-            #endif
+            << ok_begin()
             #if BOOST_CONTRACT_POSTCONDITIONS
                 << "c::f::old" << std::endl
                 // Test no failure here.
@@ -197,31 +133,7 @@ int main() {
             } catch(err const&) {
         #endif
         ok.str(""); ok
-            #if BOOST_CONTRACT_ENTRY_INVARIANTS
-                << "c::static_inv" << std::endl
-                << "c::inv" << std::endl
-                << "b::static_inv" << std::endl
-                << "b::inv" << std::endl
-                << "a::static_inv" << std::endl
-                << "a::inv" << std::endl
-            #endif
-            #if BOOST_CONTRACT_PRECONDITIONS
-                << "c::f::pre" << std::endl
-            #endif
-            #if BOOST_CONTRACT_POSTCONDITIONS
-                << "c::f::old" << std::endl
-                << "b::f::old" << std::endl
-                << "a::f::old" << std::endl
-            #endif
-            << "a::f::body" << std::endl
-            #if BOOST_CONTRACT_EXIT_INVARIANTS
-                << "c::static_inv" << std::endl
-                << "c::inv" << std::endl
-                << "b::static_inv" << std::endl
-                << "b::inv" << std::endl
-                << "a::static_inv" << std::endl
-                << "a::inv" << std::endl
-            #endif
+            << ok_begin()
             #if BOOST_CONTRACT_POSTCONDITIONS
                 << "c::f::old" << std::endl
                 << "b::f::old" << std::endl

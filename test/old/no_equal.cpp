@@ -40,12 +40,20 @@ int main() {
     equal_skips = 0;
     push_back(vi, 123);
     BOOST_TEST_EQ(equal_skips, 0);
+        
+    unsigned const cnt =
+        #if BOOST_CONTRACT_POSTCONDITIONS
+            1
+        #else
+            0
+        #endif
+    ;
 
     j jj(456);
     std::vector<j> vj;
     equal_skips = 0;
     push_back(vj, jj);
-    BOOST_TEST_EQ(equal_skips, 1);
+    BOOST_TEST_EQ(equal_skips, cnt);
 
     return boost::report_errors();
 }

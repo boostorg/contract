@@ -112,20 +112,34 @@ int main() {
     swap(x, y);
     
     ok.str(""); ok
-        << "swap::pre" << std::endl
-        << "swap::old" << std::endl
+        #if BOOST_CONTRACT_PRECONDITIONS
+            << "swap::pre" << std::endl
+        #endif
+        #if BOOST_CONTRACT_POSTCONDITIONS
+            << "swap::old" << std::endl
+        #endif
         << "swap::body" << std::endl
-        << "swap::post" << std::endl
+        #if BOOST_CONTRACT_POSTCONDITIONS
+            << "swap::post" << std::endl
+        #endif
     ;
     BOOST_TEST(out.eq(ok.str()));
+
+    unsigned const cnt =
+        #if BOOST_CONTRACT_POSTCONDITIONS
+            1
+        #else
+            0
+        #endif
+    ;
     
     BOOST_TEST_EQ(x.value, 'b');
-    BOOST_TEST_EQ(x.copies(), 1);
-    BOOST_TEST_EQ(x.evals(), 1);
+    BOOST_TEST_EQ(x.copies(), cnt);
+    BOOST_TEST_EQ(x.evals(), cnt);
     
     BOOST_TEST_EQ(y.value, 'a');
-    BOOST_TEST_EQ(y.copies(), 1);
-    BOOST_TEST_EQ(y.evals(), 1);
+    BOOST_TEST_EQ(y.copies(), cnt);
+    BOOST_TEST_EQ(y.evals(), cnt);
 
     a aa;
     i_type i; i.value = 1;
@@ -134,21 +148,27 @@ int main() {
     aa.swap(i, j);
     
     ok.str(""); ok
-        << "b::swap::pre" << std::endl
-        << "b::swap::old" << std::endl
+        #if BOOST_CONTRACT_PRECONDITIONS
+            << "b::swap::pre" << std::endl
+        #endif
+        #if BOOST_CONTRACT_POSTCONDITIONS
+            << "b::swap::old" << std::endl
+        #endif
         << "a::swap::body" << std::endl
-        << "b::swap::old" << std::endl
-        << "b::swap::post" << std::endl
+        #if BOOST_CONTRACT_POSTCONDITIONS
+            << "b::swap::old" << std::endl
+            << "b::swap::post" << std::endl
+        #endif
     ;
     BOOST_TEST(out.eq(ok.str()));
     
     BOOST_TEST_EQ(i.value, 2);
-    BOOST_TEST_EQ(i.copies(), 1);
-    BOOST_TEST_EQ(i.evals(), 1);
+    BOOST_TEST_EQ(i.copies(), cnt);
+    BOOST_TEST_EQ(i.evals(), cnt);
     
     BOOST_TEST_EQ(j.value, 1);
-    BOOST_TEST_EQ(j.copies(), 1);
-    BOOST_TEST_EQ(j.evals(), 1);
+    BOOST_TEST_EQ(j.copies(), cnt);
+    BOOST_TEST_EQ(j.evals(), cnt);
 
     return boost::report_errors();
 }

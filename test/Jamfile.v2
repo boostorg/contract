@@ -145,14 +145,14 @@ test-suite function
 
 test-suite invariant
 :
-    [ subdir-run-withno invariant : all_static_cv_const ]
-    [ subdir-run-withno invariant : both_static_cv ]
-    [ subdir-run-withno invariant : both_cv_const ]
-    [ subdir-run-withno invariant : both_static_const ]
-    [ subdir-run-withno invariant : only_static ]
-    [ subdir-run-withno invariant : only_cv ]
-    [ subdir-run-withno invariant : only_const ]
-    [ subdir-run-withno invariant : no_inv ]
+    [ subdir-run-withno invariant : decl_static_cv_const ]
+    [ subdir-run-withno invariant : decl_static_cv ]
+    [ subdir-run-withno invariant : decl_cv_const ]
+    [ subdir-run-withno invariant : decl_static_const ]
+    [ subdir-run-withno invariant : decl_static ]
+    [ subdir-run-withno invariant : decl_cv ]
+    [ subdir-run-withno invariant : decl_const ]
+    [ subdir-run-withno invariant : decl_nothing ]
 
     [ subdir-compile-fail invariant : static_inv_mutable_error ]
     [ subdir-run-withno invariant : static_inv_mutable_permissive ]
@@ -200,13 +200,13 @@ test-suite disable
 
 test-suite set
 :
-    [ subdir-run-withno set : all_pre_old_post ]
-    [ subdir-run-withno set : both_pre_old ]
-    [ subdir-run-withno set : both_old_post ]
-    [ subdir-run-withno set : both_pre_post ]
-    [ subdir-run-withno set : only_pre ]
-    [ subdir-run-withno set : only_old ]
-    [ subdir-run-withno set : only_post ]
+    [ subdir-run-withno set : pre_old_post ]
+    [ subdir-run-withno set : pre_old ]
+    [ subdir-run-withno set : old_post ]
+    [ subdir-run-withno set : pre_post ]
+    [ subdir-run-withno set : pre ]
+    [ subdir-run-withno set : old ]
+    [ subdir-run-withno set : post ]
     [ subdir-run-withno set : nothing ]
     
     [ subdir-run-withno set : no_guard ]

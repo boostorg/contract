@@ -23,7 +23,9 @@ int main() {
     f();
     ok.str(""); ok
         << "f::body" << std::endl
-        << "f::post" << std::endl
+        #if BOOST_CONTRACT_POSTCONDITIONS
+            << "f::post" << std::endl
+        #endif
     ;
     BOOST_TEST(out.eq(ok.str()));
 

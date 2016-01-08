@@ -6,14 +6,10 @@
 
 #include <boost/detail/lightweight_test.hpp>
 #include <sstream>
-
-int main() {
-    std::ostringstream ok;
-
-    f_post = true;
-    out.str("");
-    f();
-    ok.str(""); ok
+#include <string>
+        
+std::string ok_f() {
+    std::ostringstream ok; ok
         #if BOOST_CONTRACT_PRECONDITIONS
             << "f::pre" << std::endl
         #endif
@@ -22,8 +18,20 @@ int main() {
         #endif
         << "f::body" << std::endl
         #if BOOST_CONTRACT_POSTCONDITIONS
-            << "f::post" << std::endl // Test no failure here.
+            << "f::post" << std::endl // This can fail.
         #endif
+    ;
+    return ok.str();
+}
+
+int main() {
+    std::ostringstream ok;
+
+    f_post = true;
+    out.str("");
+    f();
+    ok.str(""); ok // Test nothing failed.
+        << ok_f()
     ;
     BOOST_TEST(out.eq(ok.str()));
 
@@ -40,16 +48,7 @@ int main() {
             } catch(err const&) {
         #endif
         ok.str(""); ok
-            #if BOOST_CONTRACT_PRECONDITIONS
-                << "f::pre" << std::endl
-            #endif
-            #if BOOST_CONTRACT_POSTCONDITIONS
-                << "f::old" << std::endl
-            #endif
-            << "f::body" << std::endl
-            #if BOOST_CONTRACT_POSTCONDITIONS
-                << "f::post" << std::endl // Test this failed.
-            #endif
+            << ok_f() // Test f::post failed.
         ;
         BOOST_TEST(out.eq(ok.str()));
     } catch(...) { BOOST_TEST(false); }

@@ -101,29 +101,45 @@ int main() {
 
     // Test free functions (old values without `v`).
 
+    unsigned cnt =
+        #if BOOST_CONTRACT_POSTCONDITIONS
+            1
+        #else
+            0
+        #endif
+    ;
+
     old_checks = 0;
     next(i);
-    BOOST_TEST_EQ(old_checks, 1);
+    BOOST_TEST_EQ(old_checks, cnt);
     
     old_checks = 0;
     next(c);
-    BOOST_TEST_EQ(old_checks, 1);
+    BOOST_TEST_EQ(old_checks, cnt);
 
     old_checks = 0;
     next(n);
     BOOST_TEST_EQ(old_checks, 0);
 
     // Test virtual functions (old values with `v`).
+    
+    cnt =
+        #if BOOST_CONTRACT_POSTCONDITIONS
+            2
+        #else
+            0
+        #endif
+    ;
 
     a<int> ai;
     old_checks = 0;
     ai.next(i);
-    BOOST_TEST_EQ(old_checks, 2);
+    BOOST_TEST_EQ(old_checks, cnt);
     
     a<cp> ac;
     old_checks = 0;
     ac.next(c);
-    BOOST_TEST_EQ(old_checks, 2);
+    BOOST_TEST_EQ(old_checks, cnt);
 
     a<ncp> an;
     old_checks = 0;

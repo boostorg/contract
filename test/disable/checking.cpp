@@ -72,24 +72,28 @@ int main() {
     out.str("");
     bb.g();
     ok.str(""); ok
-        << "b::static_inv" << std::endl
-        << "b::inv" << std::endl
-        
-        << "b::g::pre" << std::endl
-        // Test only f's body (but not its contract) executed here.
-        << "a::f::body" << std::endl
-
-        << "b::g::old" << std::endl
-
+        #if BOOST_CONTRACT_ENTRY_INVARIANTS
+            << "b::static_inv" << std::endl
+            << "b::inv" << std::endl
+        #endif
+        #if BOOST_CONTRACT_PRECONDITIONS
+            << "b::g::pre" << std::endl
+            // Test call while checking executes body (but no contracts).
+            << "a::f::body" << std::endl
+        #endif
+        #if BOOST_CONTRACT_POSTCONDITIONS
+            << "b::g::old" << std::endl
+        #endif
         << "b::g::body" << std::endl
-        
-        << "b::static_inv" << std::endl
-        << "b::inv" << std::endl
-        
-        // No old call here because not a base object.
-        << "b::g::post" << std::endl
-        // Test only f's body (but not its contract) executed here.
-        << "a::f::body" << std::endl
+        #if BOOST_CONTRACT_EXIT_INVARIANTS    
+            << "b::static_inv" << std::endl
+            << "b::inv" << std::endl
+        #endif 
+        #if BOOST_CONTRACT_POSTCONDITIONS
+            << "b::g::post" << std::endl
+            // Test call while checking executes body (but no contracts).
+            << "a::f::body" << std::endl
+        #endif
     ;
     BOOST_TEST(out.eq(ok.str()));
 
@@ -102,15 +106,24 @@ int main() {
     call_f();
     // Double check a call to f outside another contract checks f's contracts.
     ok.str(""); ok
-        << "a::static_inv" << std::endl
-        << "a::inv" << std::endl
-        << "a::f::pre" << std::endl
-        << "a::f::old" << std::endl
+        #if BOOST_CONTRACT_ENTRY_INVARIANTS
+            << "a::static_inv" << std::endl
+            << "a::inv" << std::endl
+        #endif
+        #if BOOST_CONTRACT_PRECONDITIONS
+            << "a::f::pre" << std::endl
+        #endif
+        #if BOOST_CONTRACT_POSTCONDITIONS
+            << "a::f::old" << std::endl
+        #endif
         << "a::f::body" << std::endl
-        << "a::static_inv" << std::endl
-        << "a::inv" << std::endl
-        // No old call here because not a base object.
-        << "a::f::post" << std::endl
+        #if BOOST_CONTRACT_EXIT_INVARIANTS
+            << "a::static_inv" << std::endl
+            << "a::inv" << std::endl
+        #endif
+        #if BOOST_CONTRACT_POSTCONDITIONS
+            << "a::f::post" << std::endl
+        #endif
     ;
     BOOST_TEST(out.eq(ok.str()));
 
