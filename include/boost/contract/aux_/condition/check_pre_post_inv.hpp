@@ -26,7 +26,8 @@ namespace boost { namespace contract { namespace aux {
 template<typename R, class C>
 class check_pre_post_inv : public check_pre_post<R> { // Non-copyable base.
 public:
-    #ifndef BOOST_CONTRACT_CONFIG_PERMISSIVE
+    #if BOOST_CONTRACT_INVARIANTS && !defined(BOOST_CONTRACT_CONFIG_PERMISSIVE)
+        // TODO: Document all static assert errors.
         BOOST_STATIC_ASSERT_MSG(
             !boost::contract::access::has_static_invariant_f<
                 C, void, boost::mpl:: vector<>
@@ -89,29 +90,15 @@ public:
             check_pre_post<R>(from), obj_(obj) {}
     
 protected:
-    void check_entry_inv() {
-        #if BOOST_CONTRACT_ENTRY_INVARIANTS
-            check_inv(true, false);
-        #endif
-    }
+    #if BOOST_CONTRACT_ENTRY_INVARIANTS
+        void check_entry_inv() { check_inv(true, false); }
+        void check_entry_static_inv() { check_inv(true, true); }
+    #endif
     
-    void check_exit_inv() {
-        #if BOOST_CONTRACT_EXIT_INVARIANTS
-            check_inv(false, false);
-        #endif
-    }
-
-    void check_entry_static_inv() {
-        #if BOOST_CONTRACT_ENTRY_INVARIANTS
-            check_inv(true, true);
-        #endif
-    }
-    
-    void check_exit_static_inv() {
-        #if BOOST_CONTRACT_EXIT_INVARIANTS
-            check_inv(false, true);
-        #endif
-    }
+    #if BOOST_CONTRACT_EXIT_INVARIANTS
+        void check_exit_inv() { check_inv(false, false); }
+        void check_exit_static_inv() { check_inv(false, true); }
+    #endif
 
     C* object() { return obj_; }
 

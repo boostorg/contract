@@ -47,13 +47,16 @@ public:
         #if BOOST_CONTRACT_EXIT_INVARIANTS || BOOST_CONTRACT_POSTCONDITIONS
             if(check_guard::checking()) return;
             check_guard checking;
+
             // If dtor body threw, obj still exists so check subcontracted
             // static and non- inv (but no post because of throw). Otherwise,
             // obj destructed so check static inv and post (even if there is no
             // obj after dtor body, this library allows dtor post, for example
             // to check static members for an instance counter class).
             // NOTE: In theory C++ destructors should not throw, but the
-            // language allows for that so this library must handle such a case.
+            // language allows for that (even if in C++11 dtors declarations are
+            // implicitly noexcept(true) unless specified otherwise) so this
+            // library must handle such a case.
             bool body_threw = std::uncaught_exception();
             
             #if BOOST_CONTRACT_EXIT_INVARIANTS

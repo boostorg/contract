@@ -103,19 +103,19 @@ class check_subcontracted_pre_post_inv :
         ,
             overridden_bases_of<C>
         >::type overridden_bases;
+
+        #ifndef BOOST_CONTRACT_CONFIG_PERMISSIVE
+            BOOST_STATIC_ASSERT_MSG(
+                boost::mpl::or_<
+                    boost::is_same<O, none>,
+                    boost::mpl::not_<boost::mpl::empty<overridden_bases> >
+                >::value,
+                "subcontracting function specified as 'override' but does not "
+                "override any contracted member function"
+            );
+        #endif
     #else
         typedef boost::mpl::vector<> overridden_bases;
-    #endif
-
-    #ifndef BOOST_CONTRACT_CONFIG_PERMISSIVE
-        BOOST_STATIC_ASSERT_MSG(
-            boost::mpl::or_<
-                boost::is_same<O, none>,
-                boost::mpl::not_<boost::mpl::empty<overridden_bases> >
-            >::value,
-            "subcontracting function specified as 'override' but does not "
-            "override any contracted member function"
-        );
     #endif
 
 public:
@@ -146,50 +146,50 @@ public:
     }
 
 protected:
-    void init_subcontracted_old() {
-        #if BOOST_CONTRACT_POSTCONDITIONS
+    #if BOOST_CONTRACT_POSTCONDITIONS
+        void init_subcontracted_old() {
             // Old values of overloaded func on stack (so no `f` param here).
             exec_and(boost::contract::virtual_::push_old_init);
-        #endif
-    }
+        }
+    #endif
     
-    void check_subcontracted_entry_inv() {
-        #if BOOST_CONTRACT_ENTRY_INVARIANTS
+    #if BOOST_CONTRACT_ENTRY_INVARIANTS
+        void check_subcontracted_entry_inv() {
             exec_and(boost::contract::virtual_::check_entry_inv,
                     &check_subcontracted_pre_post_inv::check_entry_inv);
-        #endif
-    }
+        }
+    #endif
     
-    void check_subcontracted_pre() {
-        #if BOOST_CONTRACT_PRECONDITIONS
+    #if BOOST_CONTRACT_PRECONDITIONS
+        void check_subcontracted_pre() {
             exec_or(
                 boost::contract::virtual_::check_pre,
                 &check_subcontracted_pre_post_inv::check_pre,
                 &boost::contract::precondition_failure
             );
-        #endif
-    }
+        }
+    #endif
 
-    void copy_subcontracted_old() {
-        #if BOOST_CONTRACT_POSTCONDITIONS
+    #if BOOST_CONTRACT_POSTCONDITIONS
+        void copy_subcontracted_old() {
             exec_and(boost::contract::virtual_::call_old_copy,
                     &check_subcontracted_pre_post_inv::copy_old_v);
-        #endif
-    }
+        }
+    #endif
 
-    void check_subcontracted_exit_inv() {
-        #if BOOST_CONTRACT_EXIT_INVARIANTS
+    #if BOOST_CONTRACT_EXIT_INVARIANTS
+        void check_subcontracted_exit_inv() {
             exec_and(boost::contract::virtual_::check_exit_inv,
                     &check_subcontracted_pre_post_inv::check_exit_inv);
-        #endif
-    }
+        }
+    #endif
 
-    void check_subcontracted_post() {
-        #if BOOST_CONTRACT_POSTCONDITIONS
+    #if BOOST_CONTRACT_POSTCONDITIONS
+        void check_subcontracted_post() {
             exec_and(boost::contract::virtual_::check_post,
                     &check_subcontracted_pre_post_inv::check_post_v);
-        #endif
-    }
+        }
+    #endif
 
     bool base_call() const { return base_call_; }
 
@@ -270,103 +270,112 @@ private:
             this->check_post(*r);
         }
     #endif
-    
-    void exec_and( // Execute action in short-circuit logic-and with bases.
-        boost::contract::virtual_::action_enum a,
-        void (check_subcontracted_pre_post_inv::* f)() = 0
-    ) {
-        if(failed()) return;
-        if(!base_call_ || v_->action_ == a) {
-            if(!base_call_ && v_) {
-                v_->action_ = a;
-                boost::mpl::for_each<overridden_bases>(call_base(*this));
-            }
-            if(f) (this->*f)();
-            if(base_call_) {
-                throw check_subcontracted_pre_post_inv_::signal_no_error();
+
+    #if BOOST_CONTRACT_INVARIANTS || BOOST_CONTRACT_POSTCONDITIONS
+        void exec_and( // Execute action in short-circuit logic-and with bases.
+            boost::contract::virtual_::action_enum a,
+            void (check_subcontracted_pre_post_inv::* f)() = 0
+        ) {
+            if(failed()) return;
+            if(!base_call_ || v_->action_ == a) {
+                if(!base_call_ && v_) {
+                    v_->action_ = a;
+                    boost::mpl::for_each<overridden_bases>(call_base(*this));
+                }
+                if(f) (this->*f)();
+                if(base_call_) {
+                    throw check_subcontracted_pre_post_inv_::signal_no_error();
+                }
             }
         }
-    }
+    #endif
 
-    void exec_or( // Execute action in short-circuit logic-or with bases.
-        boost::contract::virtual_::action_enum a,
-        bool (check_subcontracted_pre_post_inv::* f)(bool) = 0,
-        void (*h)(boost::contract::from) = 0
-    ) {
-        if(failed()) return;
-        if(!base_call_ || v_->action_ == a) {
-            if(!base_call_ && v_) {
-                v_->action_ = a;
-                try { 
-                    exec_or_bases<overridden_bases>();
-                    return; // At lest one base checked with no error (done).
-                } catch(...) {
-                    bool checked =  f ?
-                            (this->*f)(/* throw_on_failure = */ false) : false;
-                    if(!checked) {
-                        try { throw; } // Report latest exception found.
-                        catch(...) { this->fail(h); }
+    #if BOOST_CONTRACT_PRECONDITIONS
+        void exec_or( // Execute action in short-circuit logic-or with bases.
+            boost::contract::virtual_::action_enum a,
+            bool (check_subcontracted_pre_post_inv::* f)(bool) = 0,
+            void (*h)(boost::contract::from) = 0
+        ) {
+            if(failed()) return;
+            if(!base_call_ || v_->action_ == a) {
+                if(!base_call_ && v_) {
+                    v_->action_ = a;
+                    try { 
+                        exec_or_bases<overridden_bases>();
+                        return; // A base checked with no error (done).
+                    } catch(...) {
+                        bool checked =  f ? (this->*f)(
+                                /* throw_on_failure = */ false) : false;
+                        if(!checked) {
+                            try { throw; } // Report latest exception found.
+                            catch(...) { this->fail(h); }
+                        }
+                        return; // Checked and no exception (done).
                     }
-                    return; // Checked and no exception (done).
                 }
-            }
-            bool checked = f ?
-                    (this->*f)(/* throw_on_failure = */ base_call_) : false;
-            if(base_call_) {
-                if(!checked) {
-                    throw check_subcontracted_pre_post_inv_::
-                            signal_not_checked();
+                bool checked = f ?
+                        (this->*f)(/* throw_on_failure = */ base_call_) : false;
+                if(base_call_) {
+                    if(!checked) {
+                        throw check_subcontracted_pre_post_inv_::
+                                signal_not_checked();
+                    }
+                    throw check_subcontracted_pre_post_inv_::signal_no_error();
                 }
-                throw check_subcontracted_pre_post_inv_::signal_no_error();
             }
         }
-    }
-    
-    template<typename Bases>
-    typename boost::enable_if<boost::mpl::empty<Bases>, bool>::type
-    exec_or_bases() { return false; }
+        
+        template<typename Bases>
+        typename boost::enable_if<boost::mpl::empty<Bases>, bool>::type
+        exec_or_bases() { return false; }
 
-    template<typename Bases>
-    typename boost::disable_if<boost::mpl::empty<Bases>, bool>::type
-    exec_or_bases() {
-        if(boost::mpl::empty<Bases>::value) return false;
-        try {
-            call_base(*this)(typename boost::mpl::front<Bases>::type());
-        } catch(check_subcontracted_pre_post_inv_::signal_not_checked const&) {
-            return exec_or_bases<
-                    typename boost::mpl::pop_front<Bases>::type>();
-        } catch(...) {
-            bool checked = false;
+        template<typename Bases>
+        typename boost::disable_if<boost::mpl::empty<Bases>, bool>::type
+        exec_or_bases() {
+            if(boost::mpl::empty<Bases>::value) return false;
             try {
-                checked = exec_or_bases<
+                call_base(*this)(typename boost::mpl::front<Bases>::type());
+            } catch(check_subcontracted_pre_post_inv_::
+                    signal_not_checked const&) {
+                return exec_or_bases<
                         typename boost::mpl::pop_front<Bases>::type>();
-            } catch(...) { checked = false; }
-            if(!checked) throw;
-        }
-        return true;
-    }
-    
-    class call_base { // Copyable (as &).
-    public:
-        explicit call_base(check_subcontracted_pre_post_inv& me) : me_(me) {}
-
-        template<class B>
-        void operator()(B*) {
-            BOOST_CONTRACT_AUX_DEBUG(me_.object());
-            BOOST_CONTRACT_AUX_DEBUG(me_.v_);
-            BOOST_CONTRACT_AUX_DEBUG(me_.v_->action_ !=
-                    boost::contract::virtual_::no_action);
-            try {
-                O::template BOOST_CONTRACT_AUX_NAME1(call_base)<B>(
-                        me_.object(), me_.a0_, me_.a1_, me_.v_);
-            } catch(check_subcontracted_pre_post_inv_::signal_no_error const&) {
-                // No error (do not throw).
+            } catch(...) {
+                bool checked = false;
+                try {
+                    checked = exec_or_bases<
+                            typename boost::mpl::pop_front<Bases>::type>();
+                } catch(...) { checked = false; }
+                if(!checked) throw;
             }
+            return true;
         }
+    #endif
+    
+    #if BOOST_CONTRACT_PUBLIC_FUNCTIONS
+        class call_base { // Copyable (as &).
+        public:
+            explicit call_base(check_subcontracted_pre_post_inv& me) :
+                    me_(me) {}
 
-    private:
-        check_subcontracted_pre_post_inv& me_;
-    };
+            template<class B>
+            void operator()(B*) {
+                BOOST_CONTRACT_AUX_DEBUG(me_.object());
+                BOOST_CONTRACT_AUX_DEBUG(me_.v_);
+                BOOST_CONTRACT_AUX_DEBUG(me_.v_->action_ !=
+                        boost::contract::virtual_::no_action);
+                try {
+                    O::template BOOST_CONTRACT_AUX_NAME1(call_base)<B>(
+                            me_.object(), me_.a0_, me_.a1_, me_.v_);
+                } catch(check_subcontracted_pre_post_inv_::
+                        signal_no_error const&) {
+                    // No error (do not throw).
+                }
+            }
+
+        private:
+            check_subcontracted_pre_post_inv& me_;
+        };
+    #endif
 
     boost::contract::virtual_* v_;
     bool base_call_;

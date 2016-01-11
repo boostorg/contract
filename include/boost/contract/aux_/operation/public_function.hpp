@@ -26,48 +26,53 @@ public:
 
 private:
     void init() /* override */ {
-        #if BOOST_CONTRACT_POSTCONDITIONS
-            this->init_subcontracted_old();
-        #endif
-        if(!this->base_call()) {
-            #if BOOST_CONTRACT_ENTRY_INVARIANTS || BOOST_CONTRACT_PRECONDITIONS\
-                    || BOOST_CONTRACT_POSTCONDITIONS
-                if(check_guard::checking()) return;
-                {
-                    check_guard checking;
+        #if BOOST_CONTRACT_INVARIANTS || BOOST_CONTRACT_PRECONDITIONS || \
+                BOOST_CONTRACT_POSTCONDITIONS
+            #if BOOST_CONTRACT_POSTCONDITIONS
+                this->init_subcontracted_old();
+            #endif
+            if(!this->base_call()) {
+                #if BOOST_CONTRACT_ENTRY_INVARIANTS || \
+                        BOOST_CONTRACT_PRECONDITIONS || \
+                        BOOST_CONTRACT_POSTCONDITIONS
+                    if(check_guard::checking()) return;
+                    {
+                        check_guard checking;
+                        #if BOOST_CONTRACT_ENTRY_INVARIANTS
+                            this->check_subcontracted_entry_inv();
+                        #endif
+                        #if BOOST_CONTRACT_PRECONDITIONS
+                            this->check_subcontracted_pre();
+                        #endif
+                    }
+                    #if BOOST_CONTRACT_POSTCONDITIONS
+                        this->copy_subcontracted_old();
+                    #endif
+                #endif
+            } else {
+                #if BOOST_CONTRACT_INVARIANTS || \
+                        BOOST_CONTRACT_PRECONDITIONS || \
+                        BOOST_CONTRACT_POSTCONDITIONS
                     #if BOOST_CONTRACT_ENTRY_INVARIANTS
                         this->check_subcontracted_entry_inv();
                     #endif
                     #if BOOST_CONTRACT_PRECONDITIONS
                         this->check_subcontracted_pre();
                     #endif
-                }
-                #if BOOST_CONTRACT_POSTCONDITIONS
-                    this->copy_subcontracted_old();
+                    #if BOOST_CONTRACT_POSTCONDITIONS
+                        this->copy_subcontracted_old();
+                    #endif
+                    #if BOOST_CONTRACT_EXIT_INVARIANTS
+                        this->check_subcontracted_exit_inv();
+                    #endif
+                    #if BOOST_CONTRACT_POSTCONDITIONS
+                        if(!std::uncaught_exception()) {
+                            this->check_subcontracted_post();
+                        }
+                    #endif
                 #endif
-            #endif
-        } else {
-            #if BOOST_CONTRACT_INVARIANTS || BOOST_CONTRACT_PRECONDITIONS || \
-                    BOOST_CONTRACT_POSTCONDITIONS
-                #if BOOST_CONTRACT_ENTRY_INVARIANTS
-                    this->check_subcontracted_entry_inv();
-                #endif
-                #if BOOST_CONTRACT_PRECONDITIONS
-                    this->check_subcontracted_pre();
-                #endif
-                #if BOOST_CONTRACT_POSTCONDITIONS
-                    this->copy_subcontracted_old();
-                #endif
-                #if BOOST_CONTRACT_EXIT_INVARIANTS
-                    this->check_subcontracted_exit_inv();
-                #endif
-                #if BOOST_CONTRACT_POSTCONDITIONS
-                    if(!std::uncaught_exception()) {
-                        this->check_subcontracted_post();
-                    }
-                #endif
-            #endif
-        }
+            }
+        #endif
     }
 
 public:
