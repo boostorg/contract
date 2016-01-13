@@ -87,7 +87,12 @@ public:
 
     // obj can be 0 for static member functions.
     explicit check_pre_post_inv(boost::contract::from from, C* obj) :
-            check_pre_post<R>(from), obj_(obj) {}
+        check_pre_post<R>(from)
+        #if BOOST_CONTRACT_PRECONDITIONS || BOOST_CONTRACT_POSTCONDITIONS || \
+                BOOST_CONTRACT_INVARIANTS
+            , obj_(obj)
+        #endif
+    {}
     
 protected:
     #if BOOST_CONTRACT_ENTRY_INVARIANTS
@@ -100,7 +105,10 @@ protected:
         void check_exit_static_inv() { check_inv(false, true); }
     #endif
 
-    C* object() { return obj_; }
+    #if BOOST_CONTRACT_PRECONDITIONS || BOOST_CONTRACT_POSTCONDITIONS || \
+            BOOST_CONTRACT_INVARIANTS
+        C* object() { return obj_; }
+    #endif
 
 private:
     #if BOOST_CONTRACT_INVARIANTS
@@ -208,7 +216,10 @@ private:
         };
     #endif
 
-    C* obj_;
+    #if BOOST_CONTRACT_PRECONDITIONS || BOOST_CONTRACT_POSTCONDITIONS || \
+            BOOST_CONTRACT_INVARIANTS
+        C* obj_;
+    #endif
 };
 
 } } } // namespace

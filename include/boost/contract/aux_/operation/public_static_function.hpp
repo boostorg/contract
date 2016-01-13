@@ -24,9 +24,9 @@ public:
     {}
 
 private:
-    void init() /* override */ {
-        #if BOOST_CONTRACT_ENTRY_INVARIANTS || BOOST_CONTRACT_PRECONDITIONS || \
-                BOOST_CONTRACT_POSTCONDITIONS
+    #if BOOST_CONTRACT_ENTRY_INVARIANTS || BOOST_CONTRACT_PRECONDITIONS || \
+            BOOST_CONTRACT_POSTCONDITIONS
+        void init() /* override */ {
             if(check_guard::checking()) return;
             #if BOOST_CONTRACT_ENTRY_INVARIANTS || BOOST_CONTRACT_PRECONDITIONS
                 {
@@ -42,13 +42,13 @@ private:
             #if BOOST_CONTRACT_POSTCONDITIONS
                 this->copy_old();
             #endif
-        #endif
-    }
+        }
+    #endif
 
 public:
-    ~public_static_function() BOOST_NOEXCEPT_IF(false) {
-        this->assert_guarded();
-        #if BOOST_CONTRACT_EXIT_INVARIANTS || BOOST_CONTRACT_POSTCONDITIONS
+    #if BOOST_CONTRACT_EXIT_INVARIANTS || BOOST_CONTRACT_POSTCONDITIONS
+        ~public_static_function() BOOST_NOEXCEPT_IF(false) {
+            this->assert_guarded();
             if(check_guard::checking()) return;
             check_guard checking;
 
@@ -58,8 +58,8 @@ public:
             #if BOOST_CONTRACT_POSTCONDITIONS
                 if(!std::uncaught_exception()) this->check_post(none());
             #endif
-        #endif
-    }
+        }
+    #endif
 };
 
 } } } // namespace

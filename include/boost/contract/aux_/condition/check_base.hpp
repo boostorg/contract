@@ -6,12 +6,12 @@
 #include <boost/contract/core/exception.hpp>
 /** @cond */
 #if BOOST_CONTRACT_PRECONDITIONS || BOOST_CONTRACT_POSTCONDITIONS
-#   include <boost/function.hpp>
+    #include <boost/function.hpp>
 #endif
 #include <boost/noncopyable.hpp>
 #include <boost/config.hpp>
 #ifndef BOOST_CONTRACT_CONFIG_ON_MISSING_GUARD
-#   include <cassert>
+    #include <cassert>
 #endif
 /** @endcond */
 
@@ -22,13 +22,17 @@ class check_base : // Base to hold all contract objects for RAII.
 {
 public:
     explicit check_base(boost::contract::from from) :
-        BOOST_CONTRACT_ERROR_missing_guard_declaration(false),
-        from_(from),
-        failed_(false),
-        guard_asserted_(false)
+          BOOST_CONTRACT_ERROR_missing_guard_declaration(false)
+        , guard_asserted_(false)
+        , from_(from)
+        #if BOOST_CONTRACT_PRECONDITIONS || BOOST_CONTRACT_POSTCONDITIONS || \
+                BOOST_CONTRACT_INVARIANTS
+            , failed_(false)
+        #endif
     {}
     
-    virtual ~check_base() BOOST_NOEXCEPT_IF(false) { // So contracts can throw.
+    // Override for checking on exit (but overrides call `assert_guarded()`).
+    virtual ~check_base() BOOST_NOEXCEPT_IF(false) {
         if(!guard_asserted_) assert_guarded();
     }
 
@@ -59,7 +63,7 @@ public:
     #endif
 
 protected:
-    virtual void init() = 0;
+    virtual void init() {} // Override for checking on entry.
     
     // Return true if actually checked calling user ftor.
     #if BOOST_CONTRACT_PRECONDITIONS
@@ -86,27 +90,33 @@ protected:
         }
     #endif
     
-    void fail(void (*h)(boost::contract::from)) {
-        failed(true);
-        if(h) h(from_);
-    }
+    #if BOOST_CONTRACT_PRECONDITIONS || BOOST_CONTRACT_POSTCONDITIONS || \
+            BOOST_CONTRACT_INVARIANTS
+        void fail(void (*h)(boost::contract::from)) {
+            failed(true);
+            if(h) h(from_);
+        }
     
-    // Virtual so overriding public functions can use virtual_::failed_ instead.
-    virtual bool failed() const { return failed_; }
-    virtual void failed(bool value) { failed_ = value; }
+        // Virtual so overriding pub func can use virtual_::failed_ instead.
+        virtual bool failed() const { return failed_; }
+        virtual void failed(bool value) { failed_ = value; }
+    #endif
 
 private:
     // TODO: Document all BOOST_CONTRACT_ERROR_... and BOOST_STATIC_ASSERT_MSG errors (in an annex...).
     bool BOOST_CONTRACT_ERROR_missing_guard_declaration;
+    bool guard_asserted_; // Avoid throwing twice from dtors (undef behavior).
     boost::contract::from from_;
+    #if BOOST_CONTRACT_PRECONDITIONS || BOOST_CONTRACT_POSTCONDITIONS || \
+            BOOST_CONTRACT_INVARIANTS
+        bool failed_;
+    #endif
     #if BOOST_CONTRACT_PRECONDITIONS
         boost::function<void ()> pre_; // Use Boost.Function to also...
     #endif
     #if BOOST_CONTRACT_POSTCONDITIONS
         boost::function<void ()> old_; // ...handle lambdas, binds, etc.
     #endif
-    bool failed_;
-    bool guard_asserted_; // Avoid throwing twice from dtors (undef behavior).
 };
 
 } } } // namespace

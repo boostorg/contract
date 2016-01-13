@@ -19,6 +19,9 @@
 #include <boost/static_assert.hpp>
 /** @endcond */
 
+#if BOOST_CONTRACT_PRECONDITIONS || BOOST_CONTRACT_POSTCONDITIONS || \
+        BOOST_CONTRACT_INVARIANTS
+
 /* PRIVATE */
 
 // This check is not strictly necessary because compilation will fail anyways,
@@ -73,26 +76,38 @@ namespace public_function_ {
     };
 }
 
+#endif
+
 // For static member functions.
 template<class C>
 set_precondition_old_postcondition<> public_function() {
-    return set_precondition_old_postcondition<>(
-        new boost::contract::aux::public_static_function<C>());
+    #if BOOST_CONTRACT_PRECONDITIONS || BOOST_CONTRACT_POSTCONDITIONS || \
+            BOOST_CONTRACT_INVARIANTS
+        return set_precondition_old_postcondition<>(
+            new boost::contract::aux::public_static_function<C>());
+    #else
+        return set_precondition_old_postcondition<>();
+    #endif
 }
 
 // For non-virtual, non-overriding member functions.
 template<class C>
 set_precondition_old_postcondition<> public_function(C* obj) {
-    boost::contract::aux::none n;
-    return set_precondition_old_postcondition<>(
-        new boost::contract::aux::public_function<
-            boost::contract::aux::none,
-            boost::contract::aux::none,
-            boost::contract::aux::none,
-            C,
-            boost::contract::aux::none, boost::contract::aux::none
-        >(static_cast<boost::contract::virtual_*>(0), obj, n, n, n)
-    );
+    #if BOOST_CONTRACT_PRECONDITIONS || BOOST_CONTRACT_POSTCONDITIONS || \
+            BOOST_CONTRACT_INVARIANTS
+        boost::contract::aux::none n;
+        return set_precondition_old_postcondition<>(
+            new boost::contract::aux::public_function<
+                boost::contract::aux::none,
+                boost::contract::aux::none,
+                boost::contract::aux::none,
+                C,
+                boost::contract::aux::none, boost::contract::aux::none
+            >(static_cast<boost::contract::virtual_*>(0), obj, n, n, n)
+        );
+    #else
+        return set_precondition_old_postcondition<>();
+    #endif
 }
 
 // NOTE: O and R (optionally) allowed only when v is present because:
@@ -111,34 +126,44 @@ set_precondition_old_postcondition<> public_function(C* obj) {
 // For virtual, non-overriding, void function.
 template<class C>
 set_precondition_old_postcondition<> public_function(virtual_* v, C* obj) {
-    // NOTE: No F so cannot enforce enclosing function is void (up to user).
-    boost::contract::aux::none n;
-    return set_precondition_old_postcondition<>(
-        new boost::contract::aux::public_function<
-            boost::contract::aux::none,
-            boost::contract::aux::none,
-            boost::contract::aux::none,
-            C,
-            boost::contract::aux::none, boost::contract::aux::none
-        >(v, obj, n, n, n)
-    );
+    #if BOOST_CONTRACT_PRECONDITIONS || BOOST_CONTRACT_POSTCONDITIONS || \
+            BOOST_CONTRACT_INVARIANTS
+        // NOTE: No F so cannot enforce enclosing function is void (up to user).
+        boost::contract::aux::none n;
+        return set_precondition_old_postcondition<>(
+            new boost::contract::aux::public_function<
+                boost::contract::aux::none,
+                boost::contract::aux::none,
+                boost::contract::aux::none,
+                C,
+                boost::contract::aux::none, boost::contract::aux::none
+            >(v, obj, n, n, n)
+        );
+    #else
+        return set_precondition_old_postcondition<>();
+    #endif
 }
 
 // For virtual, non-overriding, non-void member functions.
 template<typename R, class C>
 set_precondition_old_postcondition<R> public_function(
         virtual_* v, R& r, C* obj) {
-    // NOTE: No F so cannot enforce enclosing function returns R (up to user).
-    boost::contract::aux::none n;
-    return set_precondition_old_postcondition<R>(
-        new boost::contract::aux::public_function<
-            boost::contract::aux::none,
-            R,
-            boost::contract::aux::none,
-            C,
-            boost::contract::aux::none, boost::contract::aux::none
-        >(v, obj, r, n, n)
-    );
+    #if BOOST_CONTRACT_PRECONDITIONS || BOOST_CONTRACT_POSTCONDITIONS || \
+            BOOST_CONTRACT_INVARIANTS
+        // NOTE: No F so cannot enforce enclosing func returns R (up to user).
+        boost::contract::aux::none n;
+        return set_precondition_old_postcondition<R>(
+            new boost::contract::aux::public_function<
+                boost::contract::aux::none,
+                R,
+                boost::contract::aux::none,
+                C,
+                boost::contract::aux::none, boost::contract::aux::none
+            >(v, obj, r, n, n)
+        );
+    #else
+        return set_precondition_old_postcondition<R>(
+    #endif
 }
 
 /* Overriding (arity = 0) */
@@ -146,38 +171,48 @@ set_precondition_old_postcondition<R> public_function(
 // For virtual, overriding, void member functions.
 template<class O, typename F, class C>
 set_precondition_old_postcondition<> public_function(virtual_* v, F, C* obj) {
-    BOOST_CONTRACT_PUBLIC_FUNCTION_ASSERT_ARITY_(F, 0)
-    BOOST_CONTRACT_PUBLIC_FUNCTION_ASSERT_NO_RESULT_(F)
-    BOOST_CONTRACT_PUBLIC_FUNCTION_ASSERT_BASE_TYPES_(C)
-    boost::contract::aux::none n;
-    return set_precondition_old_postcondition<>(
-        new boost::contract::aux::public_function<
-            O,
-            boost::contract::aux::none,
-            F,
-            C,
-            boost::contract::aux::none, boost::contract::aux::none
-        >(v, obj, n, n, n)
-    );
+    #if BOOST_CONTRACT_PRECONDITIONS || BOOST_CONTRACT_POSTCONDITIONS || \
+            BOOST_CONTRACT_INVARIANTS
+        BOOST_CONTRACT_PUBLIC_FUNCTION_ASSERT_ARITY_(F, 0)
+        BOOST_CONTRACT_PUBLIC_FUNCTION_ASSERT_NO_RESULT_(F)
+        BOOST_CONTRACT_PUBLIC_FUNCTION_ASSERT_BASE_TYPES_(C)
+        boost::contract::aux::none n;
+        return set_precondition_old_postcondition<>(
+            new boost::contract::aux::public_function<
+                O,
+                boost::contract::aux::none,
+                F,
+                C,
+                boost::contract::aux::none, boost::contract::aux::none
+            >(v, obj, n, n, n)
+        );
+    #else
+        return set_precondition_old_postcondition<>();
+    #endif
 }
 
 // For virtual, overriding, non-void member functions of class with bases.
 template<class O, typename R, typename F, class C>
 set_precondition_old_postcondition<R> public_function(
         virtual_* v, R& r, F, C* obj) {
-    BOOST_CONTRACT_PUBLIC_FUNCTION_ASSERT_ARITY_(F, 0)
-    BOOST_CONTRACT_PUBLIC_FUNCTION_ASSERT_RESULT_(F, R)
-    BOOST_CONTRACT_PUBLIC_FUNCTION_ASSERT_BASE_TYPES_(C)
-    boost::contract::aux::none n;
-    return set_precondition_old_postcondition<R>(
-        new boost::contract::aux::public_function<
-            O,
-            R,
-            F,
-            C,
-            boost::contract::aux::none, boost::contract::aux::none
-        >(v, obj, r, n, n)
-    );
+    #if BOOST_CONTRACT_PRECONDITIONS || BOOST_CONTRACT_POSTCONDITIONS || \
+            BOOST_CONTRACT_INVARIANTS
+        BOOST_CONTRACT_PUBLIC_FUNCTION_ASSERT_ARITY_(F, 0)
+        BOOST_CONTRACT_PUBLIC_FUNCTION_ASSERT_RESULT_(F, R)
+        BOOST_CONTRACT_PUBLIC_FUNCTION_ASSERT_BASE_TYPES_(C)
+        boost::contract::aux::none n;
+        return set_precondition_old_postcondition<R>(
+            new boost::contract::aux::public_function<
+                O,
+                R,
+                F,
+                C,
+                boost::contract::aux::none, boost::contract::aux::none
+            >(v, obj, r, n, n)
+        );
+    #else
+        return set_precondition_old_postcondition<R>();
+    #endif
 }
 
 /* Overriding (arity = 1) */
@@ -185,37 +220,47 @@ set_precondition_old_postcondition<R> public_function(
 template<class O, typename F, class C, typename A0>
 set_precondition_old_postcondition<> public_function(
         virtual_* v, F, C* obj, A0& a0) {
-    BOOST_CONTRACT_PUBLIC_FUNCTION_ASSERT_ARITY_(F, 1)
-    BOOST_CONTRACT_PUBLIC_FUNCTION_ASSERT_NO_RESULT_(F)
-    BOOST_CONTRACT_PUBLIC_FUNCTION_ASSERT_BASE_TYPES_(C)
-    boost::contract::aux::none n;
-    return set_precondition_old_postcondition<>(
-        new boost::contract::aux::public_function<
-            O,
-            boost::contract::aux::none,
-            F,
-            C,
-            A0, boost::contract::aux::none
-        >(v, obj, n, a0, n)
-    );
+    #if BOOST_CONTRACT_PRECONDITIONS || BOOST_CONTRACT_POSTCONDITIONS || \
+            BOOST_CONTRACT_INVARIANTS
+        BOOST_CONTRACT_PUBLIC_FUNCTION_ASSERT_ARITY_(F, 1)
+        BOOST_CONTRACT_PUBLIC_FUNCTION_ASSERT_NO_RESULT_(F)
+        BOOST_CONTRACT_PUBLIC_FUNCTION_ASSERT_BASE_TYPES_(C)
+        boost::contract::aux::none n;
+        return set_precondition_old_postcondition<>(
+            new boost::contract::aux::public_function<
+                O,
+                boost::contract::aux::none,
+                F,
+                C,
+                A0, boost::contract::aux::none
+            >(v, obj, n, a0, n)
+        );
+    #else
+        return set_precondition_old_postcondition<>();
+    #endif
 }
 
 template<class O, typename R, typename F, class C, typename A0>
 set_precondition_old_postcondition<R> public_function(
         virtual_* v, R& r, F, C* obj, A0& a0) {
-    BOOST_CONTRACT_PUBLIC_FUNCTION_ASSERT_ARITY_(F, 1)
-    BOOST_CONTRACT_PUBLIC_FUNCTION_ASSERT_RESULT_(F, R)
-    BOOST_CONTRACT_PUBLIC_FUNCTION_ASSERT_BASE_TYPES_(C)
-    boost::contract::aux::none n;
-    return set_precondition_old_postcondition<R>(
-        new boost::contract::aux::public_function<
-            O,
-            R,
-            F,
-            C,
-            A0, boost::contract::aux::none
-        >(v, obj, r, a0, n)
-    );
+    #if BOOST_CONTRACT_PRECONDITIONS || BOOST_CONTRACT_POSTCONDITIONS || \
+            BOOST_CONTRACT_INVARIANTS
+        BOOST_CONTRACT_PUBLIC_FUNCTION_ASSERT_ARITY_(F, 1)
+        BOOST_CONTRACT_PUBLIC_FUNCTION_ASSERT_RESULT_(F, R)
+        BOOST_CONTRACT_PUBLIC_FUNCTION_ASSERT_BASE_TYPES_(C)
+        boost::contract::aux::none n;
+        return set_precondition_old_postcondition<R>(
+            new boost::contract::aux::public_function<
+                O,
+                R,
+                F,
+                C,
+                A0, boost::contract::aux::none
+            >(v, obj, r, a0, n)
+        );
+    #else
+        return set_precondition_old_postcondition<R>(
+    #endif
 }
 
 /* Overriding (arity = 2) */
@@ -223,36 +268,46 @@ set_precondition_old_postcondition<R> public_function(
 template<class O, typename F, class C, typename A0, typename A1>
 set_precondition_old_postcondition<> public_function(
         virtual_* v, F, C* obj, A0& a0, A1& a1) {
-    BOOST_CONTRACT_PUBLIC_FUNCTION_ASSERT_ARITY_(F, 2)
-    BOOST_CONTRACT_PUBLIC_FUNCTION_ASSERT_NO_RESULT_(F)
-    BOOST_CONTRACT_PUBLIC_FUNCTION_ASSERT_BASE_TYPES_(C)
-    boost::contract::aux::none n;
-    return set_precondition_old_postcondition<>(
-        new boost::contract::aux::public_function<
-            O,
-            boost::contract::aux::none,
-            F,
-            C,
-            A0, A1
-        >(v, obj, n, a0, a1)
-    );
+    #if BOOST_CONTRACT_PRECONDITIONS || BOOST_CONTRACT_POSTCONDITIONS || \
+            BOOST_CONTRACT_INVARIANTS
+        BOOST_CONTRACT_PUBLIC_FUNCTION_ASSERT_ARITY_(F, 2)
+        BOOST_CONTRACT_PUBLIC_FUNCTION_ASSERT_NO_RESULT_(F)
+        BOOST_CONTRACT_PUBLIC_FUNCTION_ASSERT_BASE_TYPES_(C)
+        boost::contract::aux::none n;
+        return set_precondition_old_postcondition<>(
+            new boost::contract::aux::public_function<
+                O,
+                boost::contract::aux::none,
+                F,
+                C,
+                A0, A1
+            >(v, obj, n, a0, a1)
+        );
+    #else
+        return set_precondition_old_postcondition<>(
+    #endif
 }
     
 template<class O, typename R, typename F, class C, typename A0, typename A1>
 set_precondition_old_postcondition<R> public_function(
         virtual_* v, R& r, F, C* obj, A0& a0, A1& a1) {
-    BOOST_CONTRACT_PUBLIC_FUNCTION_ASSERT_ARITY_(F, 2)
-    BOOST_CONTRACT_PUBLIC_FUNCTION_ASSERT_RESULT_(F, R)
-    BOOST_CONTRACT_PUBLIC_FUNCTION_ASSERT_BASE_TYPES_(C)
-    return set_precondition_old_postcondition<R>(
-        new boost::contract::aux::public_function<
-            O,
-            R,
-            F,
-            C,
-            A0, A1
-        >(v, obj, r, a0, a1)
-    );
+    #if BOOST_CONTRACT_PRECONDITIONS || BOOST_CONTRACT_POSTCONDITIONS || \
+            BOOST_CONTRACT_INVARIANTS
+        BOOST_CONTRACT_PUBLIC_FUNCTION_ASSERT_ARITY_(F, 2)
+        BOOST_CONTRACT_PUBLIC_FUNCTION_ASSERT_RESULT_(F, R)
+        BOOST_CONTRACT_PUBLIC_FUNCTION_ASSERT_BASE_TYPES_(C)
+        return set_precondition_old_postcondition<R>(
+            new boost::contract::aux::public_function<
+                O,
+                R,
+                F,
+                C,
+                A0, A1
+            >(v, obj, r, a0, a1)
+        );
+    #else
+        return set_precondition_old_postcondition<R>();
+    #endif
 }
 
 } } // namespace

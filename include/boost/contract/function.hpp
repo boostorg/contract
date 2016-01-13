@@ -10,8 +10,14 @@
 namespace boost { namespace contract {
 
 set_precondition_old_postcondition<> function() {
-    return set_precondition_old_postcondition<>(
-            new boost::contract::aux::function());
+    // Must check ..._INVARIANTS here because set_... is generic.
+    #if BOOST_CONTRACT_PRECONDITIONS || BOOST_CONTRACT_POSTCONDITIONS || \
+            BOOST_CONTRACT_INVARIANTS
+        return set_precondition_old_postcondition<>(
+                new boost::contract::aux::function());
+    #else
+        return set_precondition_old_postcondition<>();
+    #endif
 }
 
 } } // namespace

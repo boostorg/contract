@@ -29,7 +29,10 @@ class virtual_ :
 private:
     enum action_enum {
         // virtual_ always hold/passed by ptr so null ptr used for user call.
-        no_action,
+        #if BOOST_CONTRACT_PRECONDITIONS || BOOST_CONTRACT_POSTCONDITIONS || \
+                BOOST_CONTRACT_INVARIANTS
+            no_action,
+        #endif
         #if BOOST_CONTRACT_POSTCONDITIONS
             push_old_init,
         #endif
@@ -53,17 +56,23 @@ private:
         #endif
     };
 
-    explicit virtual_(action_enum a) :
-        action_(a),
-        #if BOOST_CONTRACT_POSTCONDITIONS
-            result_type_name_(),
-            result_optional_(),
-        #endif
-        failed_(false)
-    {}
+    #if BOOST_CONTRACT_PRECONDITIONS || BOOST_CONTRACT_POSTCONDITIONS || \
+            BOOST_CONTRACT_INVARIANTS
+        explicit virtual_(action_enum a) :
+              action_(a)
+            , failed_(false)
+            #if BOOST_CONTRACT_POSTCONDITIONS
+                , result_type_name_()
+                , result_optional_()
+            #endif
+        {}
+    #endif
 
-    action_enum action_;
-    
+    #if BOOST_CONTRACT_PRECONDITIONS || BOOST_CONTRACT_POSTCONDITIONS || \
+            BOOST_CONTRACT_INVARIANTS
+        action_enum action_;
+        bool failed_;
+    #endif
     #if BOOST_CONTRACT_POSTCONDITIONS
         std::queue<boost::shared_ptr<void> > old_inits_;
         std::stack<boost::shared_ptr<void> > old_copies_;
@@ -72,8 +81,6 @@ private:
         char const* result_type_name_;
         bool result_optional_;
     #endif
-
-    bool failed_;
 
     // Friendship used to limit library's public API.
     friend bool copy_old(virtual_*);

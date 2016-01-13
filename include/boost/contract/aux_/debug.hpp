@@ -2,16 +2,14 @@
 #ifndef BOOST_CONTRACT_AUX_DEBUG_HPP_
 #define BOOST_CONTRACT_AUX_DEBUG_HPP_
 
-#include <boost/contract/aux_/config.hpp>
-
-// Usually, never #defined (and debug assertions always in the code).
+// Usually, never #defined (so "debug" assertions always in code).
 #ifdef BOOST_CONTRACT_AUX_CONFIG_NDEBUG
-#   define BOOST_CONTRACT_AUX_DEBUG(cond)
+    #define BOOST_CONTRACT_AUX_DEBUG(cond)
 #else
 /** @cond */
-#   include <cassert>
+    #include <cassert>
 /** @endcond */
-#   define BOOST_CONTRACT_AUX_DEBUG(cond) (assert(cond))
+    #define BOOST_CONTRACT_AUX_DEBUG(cond) (assert(cond))
 #endif
 
 #endif // #include guard

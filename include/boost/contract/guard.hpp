@@ -19,11 +19,20 @@
 
 // Following implicit to allow syntax `guard c = ...`.
 #define BOOST_CONTRACT_GUARD_CTOR_(contract_type) \
-    /* implicit */ guard(contract_type const& contract) : \
-            check_(const_cast<contract_type&>(contract).check_.release()) { \
-        BOOST_CONTRACT_AUX_DEBUG(check_); \
-        check_->guard(); \
-    }
+    /* implicit */ guard(contract_type const& contract) \
+    BOOST_CONTRACT_GUARD_CTOR_DEF_(contract_type)
+
+#if BOOST_CONTRACT_PRECONDITIONS || BOOST_CONTRACT_POSTCONDITIONS || \
+        BOOST_CONTRACT_INVARIANTS
+    #define BOOST_CONTRACT_GUARD_CTOR_DEF_(contract_type) \
+            : check_(const_cast<contract_type&>(contract).check_.release()) \
+        { \
+            BOOST_CONTRACT_AUX_DEBUG(check_); \
+            check_->guard(); \
+        }
+#else
+    #define BOOST_CONTRACT_GUARD_CTOR_DEF_(contract_type) {}
+#endif
 
 /* CODE */
 
@@ -33,8 +42,12 @@ class guard { // Non-copyable (but copy ctor ~= move via ptr release).
 public:
     // Following copy and implicit type conversion ctors to allow `guard = ...`.
     
-    guard(guard const& other) : // Copy ctor moves check_ pointer to dest.
-            check_(const_cast<guard&>(other).check_.release()) {}
+    guard(guard const& other) // Copy ctor moves check_ pointer to dest.
+        #if BOOST_CONTRACT_PRECONDITIONS || BOOST_CONTRACT_POSTCONDITIONS || \
+                BOOST_CONTRACT_INVARIANTS
+            : check_(const_cast<guard&>(other).check_.release())
+        #endif
+    {}
 
     template<typename R>
     BOOST_CONTRACT_GUARD_CTOR_(set_precondition_old_postcondition<R>)
@@ -52,7 +65,10 @@ public:
 private:
     guard& operator=(guard const&); // This type is not meant to be copied.
 
-    boost::contract::aux::auto_ptr<boost::contract::aux::check_base> check_;
+    #if BOOST_CONTRACT_PRECONDITIONS || BOOST_CONTRACT_POSTCONDITIONS || \
+            BOOST_CONTRACT_INVARIANTS
+        boost::contract::aux::auto_ptr<boost::contract::aux::check_base> check_;
+    #endif
 };
 
 } } // namespace

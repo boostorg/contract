@@ -6,7 +6,7 @@
 
 #include <boost/contract/core/config.hpp>
 #if BOOST_CONTRACT_PRECONDITIONS
-#   include <boost/contract/core/exception.hpp>
+    #include <boost/contract/core/exception.hpp>
 #endif
 #include <boost/contract/core/set_old_postcondition.hpp>
 #include <boost/contract/aux_/operation/constructor.hpp>
@@ -15,8 +15,14 @@ namespace boost { namespace contract {
 
 template<class C>
 set_old_postcondition<> constructor(C* obj) {
-    return set_old_postcondition<>(
+    // Must check ..._PRECONDITIONS here because of set_... is generic.
+    #if BOOST_CONTRACT_PRECONDITIONS || BOOST_CONTRACT_POSTCONDITIONS || \
+            BOOST_CONTRACT_INVARIANTS
+        return set_old_postcondition<>(
             new boost::contract::aux::constructor<C>(obj));
+    #else
+        return set_old_postcondition<>();
+    #endif
 }
 
 template<class C> // tparam avoids multiple instance of same base in user code.

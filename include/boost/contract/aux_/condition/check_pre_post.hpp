@@ -5,14 +5,14 @@
 // TODO: Fix all header files.
 #include <boost/contract/core/config.hpp>
 #if BOOST_CONTRACT_POSTCONDITIONS
-#   include <boost/contract/core/exception.hpp>
+    #include <boost/contract/core/exception.hpp>
 #endif
 #include <boost/contract/aux_/condition/check_base.hpp>
 #include <boost/contract/aux_/type_traits/optional.hpp>
 #include <boost/contract/aux_/none.hpp>
 #include <boost/optional.hpp>
 #if BOOST_CONTRACT_POSTCONDITIONS
-#   include <boost/function.hpp>
+    #include <boost/function.hpp>
 #endif
 #include <boost/type_traits/remove_reference.hpp>
 #include <boost/mpl/if.hpp>
@@ -46,22 +46,22 @@ public:
     explicit check_pre_post(boost::contract::from from) : check_base(from) {}
     
     #if BOOST_CONTRACT_POSTCONDITIONS
-        private:
-            typedef typename boost::mpl::if_<is_optional<R>,
-                boost::optional<typename boost::remove_reference<typename
-                        optional_value_type<R>::type>::type const&> const&
-            ,
-                R const&
-            >::type r_type;
+private:
+        typedef typename boost::mpl::if_<is_optional<R>,
+            boost::optional<typename boost::remove_reference<typename
+                    optional_value_type<R>::type>::type const&> const&
+        ,
+            R const&
+        >::type r_type;
 
-            BOOST_CONTRACT_AUX_CHECK_PRE_POST_DEF_(
-                r_type,
-                r,
-                void (r_type),
-                // Won't raise this error if NO_POST (for optimization).
-                BOOST_CONTRACT_ERROR_postcondition_result_parameter_required,
-                BOOST_CONTRACT_ERROR_postcondition_result_parameter_required(r)
-            )
+        BOOST_CONTRACT_AUX_CHECK_PRE_POST_DEF_(
+            r_type,
+            r,
+            void (r_type),
+            // Won't raise this error if NO_POST (for optimization).
+            BOOST_CONTRACT_ERROR_postcondition_result_parameter_required,
+            BOOST_CONTRACT_ERROR_postcondition_result_parameter_required(r)
+        )
     #endif
 };
 

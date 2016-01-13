@@ -3,9 +3,9 @@
 #define BOOST_CONTRACT_AUX_CONSTRUCTOR_HPP_
 
 #include <boost/contract/core/config.hpp>
-#if BOOST_CONTRACT_INVARIANTS || BOOST_CONTRACT_POSTCONDITIONS
-#   include <boost/contract/aux_/check_guard.hpp>
-#   include <exception>
+#if BOOST_CONTRACT_POSTCONDITIONS || BOOST_CONTRACT_INVARIANTS
+    #include <boost/contract/aux_/check_guard.hpp>
+    #include <exception>
 #endif
 #include <boost/contract/core/exception.hpp>
 #include <boost/contract/aux_/condition/check_pre_post_inv.hpp>
@@ -19,14 +19,12 @@ template<class C>
 class constructor :
         public check_pre_post_inv</* R = */ none, C> { // Non-copyable base.
 public:
-    explicit constructor(C* obj) :
-        check_pre_post_inv</* R = */ none, C>(
-                boost::contract::from_constructor, obj)
-    {}
+    explicit constructor(C* obj) : check_pre_post_inv</* R = */ none, C>(
+            boost::contract::from_constructor, obj) {}
 
 private:
-    void init() /* override */ {
-        #if BOOST_CONTRACT_ENTRY_INVARIANTS || BOOST_CONTRACT_POSTCONDITIONS
+    #if BOOST_CONTRACT_ENTRY_INVARIANTS || BOOST_CONTRACT_POSTCONDITIONS
+        void init() /* override */ {
             if(check_guard::checking()) return;
 
             #if BOOST_CONTRACT_ENTRY_INVARIANTS
@@ -40,13 +38,13 @@ private:
             #if BOOST_CONTRACT_POSTCONDITIONS
                 this->copy_old();
             #endif
-        #endif
-    }
+        }
+    #endif
 
 public:
-    ~constructor() BOOST_NOEXCEPT_IF(false) {
-        this->assert_guarded();
-        #if BOOST_CONTRACT_EXIT_INVARIANTS || BOOST_CONTRACT_POSTCONDITIONS
+    #if BOOST_CONTRACT_EXIT_INVARIANTS || BOOST_CONTRACT_POSTCONDITIONS
+        ~constructor() BOOST_NOEXCEPT_IF(false) {
+            this->assert_guarded();
             if(check_guard::checking()) return;
             check_guard checking;
             // If ctor body threw, no obj so check only static inv. Otherwise,
@@ -60,8 +58,8 @@ public:
             #if BOOST_CONTRACT_POSTCONDITIONS
                 if(!body_threw) this->check_post(none());
             #endif
-        #endif
-    }
+        }
+    #endif
 };
 
 } } } // namespace

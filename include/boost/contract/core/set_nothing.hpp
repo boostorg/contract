@@ -32,11 +32,14 @@ public:
     // No set member functions here.
 
 private:
-    typedef boost::contract::aux::check_base check_type;
-    
-    explicit set_nothing(check_type* check) : check_(check) {}
-    
-    boost::contract::aux::auto_ptr<check_type> check_;
+    #if BOOST_CONTRACT_PRECONDITIONS || BOOST_CONTRACT_POSTCONDITIONS || \
+            BOOST_CONTRACT_INVARIANTS
+        typedef boost::contract::aux::check_base check_type;
+        
+        explicit set_nothing(check_type* check) : check_(check) {}
+
+        boost::contract::aux::auto_ptr<check_type> check_;
+    #endif
 
     // Friendship used to limit library's public API.
 

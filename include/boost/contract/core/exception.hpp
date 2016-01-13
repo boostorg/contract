@@ -15,6 +15,12 @@
 #include <iostream>
 /** @endcond */
 
+// NOTE: This code should not change (not even its impl) based on the
+// CONFIG_NO_... macros. For example, preconditions_failure() should still call
+// the set precondition failure handler even when CONFIG_NO_PRECONDITIONS is
+// #defined, because user code might explicitly call precondition_failure() (for
+// whatever reason...). Otherwise, the public API of this lib will change.
+
 /* PRIVATE */
 
 #define BOOST_CONTRACT_EXCEPTION_HANDLER_SCOPED_LOCK_(_mutex) \
@@ -172,10 +178,8 @@ assertion_failure_handler get_precondition_failure()
 }
 
 void precondition_failure(from where) /* can throw */ {
-    #if BOOST_CONTRACT_PRECONDITIONS
-        BOOST_CONTRACT_EXCEPTION_HANDLER_(exception_::pre_failure_mutex,
-                exception_::pre_failure_handler, where)
-    #endif
+    BOOST_CONTRACT_EXCEPTION_HANDLER_(exception_::pre_failure_mutex,
+            exception_::pre_failure_handler, where)
 }
 
 assertion_failure_handler set_postcondition_failure(
@@ -191,10 +195,8 @@ assertion_failure_handler get_postcondition_failure()
 }
 
 void postcondition_failure(from where) /* can throw */ {
-    #if BOOST_CONTRACT_POSTCONDITIONS
-        BOOST_CONTRACT_EXCEPTION_HANDLER_(exception_::post_failure_mutex,
-                exception_::post_failure_handler, where);
-    #endif
+    BOOST_CONTRACT_EXCEPTION_HANDLER_(exception_::post_failure_mutex,
+            exception_::post_failure_handler, where);
 }
 
 assertion_failure_handler set_entry_invariant_failure(
@@ -210,10 +212,8 @@ assertion_failure_handler get_entry_invariant_failure()
 }
 
 void entry_invariant_failure(from where) /* can throw */ {
-    #if BOOST_CONTRACT_ENTRY_INVARIANTS
-        BOOST_CONTRACT_EXCEPTION_HANDLER_(exception_::entry_inv_failure_mutex,
-                exception_::entry_inv_failure_handler, where);
-    #endif
+    BOOST_CONTRACT_EXCEPTION_HANDLER_(exception_::entry_inv_failure_mutex,
+            exception_::entry_inv_failure_handler, where);
 }
 
 assertion_failure_handler set_exit_invariant_failure(
@@ -229,10 +229,8 @@ assertion_failure_handler get_exit_invariant_failure()
 }
 
 void exit_invariant_failure(from where) /* can throw */ {
-    #if BOOST_CONTRACT_EXIT_INVARIANTS
-        BOOST_CONTRACT_EXCEPTION_HANDLER_(exception_::exit_inv_failure_mutex,
-                exception_::exit_inv_failure_handler, where);
-    #endif
+    BOOST_CONTRACT_EXCEPTION_HANDLER_(exception_::exit_inv_failure_mutex,
+            exception_::exit_inv_failure_handler, where);
 }
 
 void set_invariant_failure(assertion_failure_handler const& f)

@@ -15,12 +15,12 @@ namespace boost { namespace contract { namespace aux {
 class function :
         public check_pre_post</* R = */ none> { // Non-copyable base.
 public:
-    explicit function() :
-            check_pre_post</* R = */ none>(boost::contract::from_function) {}
+    explicit function() : check_pre_post</* R = */ none>(
+            boost::contract::from_function) {}
 
 private:
-    void init() /* override */ {
-        #if BOOST_CONTRACT_PRECONDITIONS || BOOST_CONTRACT_POSTCONDITIONS
+    #if BOOST_CONTRACT_PRECONDITIONS || BOOST_CONTRACT_POSTCONDITIONS
+        void init() /* override */ {
             if(check_guard::checking()) return;
 
             #if BOOST_CONTRACT_PRECONDITIONS
@@ -32,19 +32,19 @@ private:
             #if BOOST_CONTRACT_POSTCONDITIONS
                 this->copy_old();
             #endif
-        #endif
-    }
+        }
+    #endif
 
 public:
-    ~function() BOOST_NOEXCEPT_IF(false) {
-        this->assert_guarded();
-        #if BOOST_CONTRACT_POSTCONDITIONS
+    #if BOOST_CONTRACT_POSTCONDITIONS
+        ~function() BOOST_NOEXCEPT_IF(false) {
+            this->assert_guarded();
             if(check_guard::checking()) return;
             check_guard checking;
             
             if(!std::uncaught_exception()) this->check_post(none());
-        #endif
-    }
+        }
+    #endif
 };
 
 } } } // namespace

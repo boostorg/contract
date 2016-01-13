@@ -88,7 +88,7 @@
 #endif
 
 #if defined(BOOST_CONTRACT_INVARIANTS)
-    #error "define/undef ..._CONFIG_NO[_ENTRY/_EXIT]_INVARIANTS instead"
+    #error "define/undef ..._CONFIG_NO[_ENTRY|_EXIT]_INVARIANTS instead"
 #elif BOOST_CONTRACT_NO_ENTRY_INVARIANTS && BOOST_CONTRACT_NO_EXIT_INVARIANTS
     #define BOOST_CONTRACT_INVARIANTS 0
 #else

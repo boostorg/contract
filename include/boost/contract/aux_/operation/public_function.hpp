@@ -25,16 +25,16 @@ public:
     {}
 
 private:
-    void init() /* override */ {
-        #if BOOST_CONTRACT_INVARIANTS || BOOST_CONTRACT_PRECONDITIONS || \
-                BOOST_CONTRACT_POSTCONDITIONS
+    #if BOOST_CONTRACT_PRECONDITIONS || BOOST_CONTRACT_POSTCONDITIONS || \
+            BOOST_CONTRACT_INVARIANTS
+        void init() /* override */ {
             #if BOOST_CONTRACT_POSTCONDITIONS
                 this->init_subcontracted_old();
             #endif
             if(!this->base_call()) {
-                #if BOOST_CONTRACT_ENTRY_INVARIANTS || \
-                        BOOST_CONTRACT_PRECONDITIONS || \
-                        BOOST_CONTRACT_POSTCONDITIONS
+                #if     BOOST_CONTRACT_PRECONDITIONS || \
+                        BOOST_CONTRACT_POSTCONDITIONS || \
+                        BOOST_CONTRACT_INVARIANTS
                     if(check_guard::checking()) return;
                     {
                         check_guard checking;
@@ -50,9 +50,9 @@ private:
                     #endif
                 #endif
             } else {
-                #if BOOST_CONTRACT_INVARIANTS || \
-                        BOOST_CONTRACT_PRECONDITIONS || \
-                        BOOST_CONTRACT_POSTCONDITIONS
+                #if     BOOST_CONTRACT_PRECONDITIONS || \
+                        BOOST_CONTRACT_POSTCONDITIONS || \
+                        BOOST_CONTRACT_INVARIANTS
                     #if BOOST_CONTRACT_ENTRY_INVARIANTS
                         this->check_subcontracted_entry_inv();
                     #endif
@@ -72,13 +72,13 @@ private:
                     #endif
                 #endif
             }
-        #endif
-    }
+        }
+    #endif
 
 public:
-    ~public_function() BOOST_NOEXCEPT_IF(false) {
-        this->assert_guarded();
-        #if BOOST_CONTRACT_EXIT_INVARIANTS || BOOST_CONTRACT_POSTCONDITIONS
+    #if BOOST_CONTRACT_EXIT_INVARIANTS || BOOST_CONTRACT_POSTCONDITIONS
+        ~public_function() BOOST_NOEXCEPT_IF(false) {
+            this->assert_guarded();
             if(!this->base_call()) {
                 if(check_guard::checking()) return;
                 check_guard checking;
@@ -92,10 +92,10 @@ public:
                     }
                 #endif
             }
-        #endif
-    }
+        }
+    #endif
 };
-        
+
 } } } // namespace
 
 #endif // #include guard

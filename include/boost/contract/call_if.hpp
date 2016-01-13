@@ -16,10 +16,10 @@
 
 // Boost.ResultOf not always able to deduce lambda result type (on MSVC).
 #ifndef BOOST_NO_CXX11_DECL_TYPE
-#   define BOOST_CONTRACT_CALL_IF_ENABLE_IF_UNARY_RESULT_OF_(F) \
+    #define BOOST_CONTRACT_CALL_IF_ENABLE_IF_UNARY_RESULT_OF_(F) \
         decltype(boost::declval<F>()())
 #else
-#   define BOOST_CONTRACT_CALL_IF_ENABLE_IF_UNARY_RESULT_OF_(F) \
+    #define BOOST_CONTRACT_CALL_IF_ENABLE_IF_UNARY_RESULT_OF_(F) \
         typename boost::result_of<F()>::type
 #endif
 

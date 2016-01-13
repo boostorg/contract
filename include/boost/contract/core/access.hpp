@@ -38,7 +38,8 @@ namespace boost { namespace contract {
 // at run-time. Therefore programmers must make sure to either declare contract
 // members public or to make this class a friend.
 class access { // Copyable (as shell with no data member).
-    #if BOOST_CONTRACT_PUBLIC_FUNCTIONS
+    #if BOOST_CONTRACT_PRECONDITIONS || BOOST_CONTRACT_POSTCONDITIONS || \
+            BOOST_CONTRACT_INVARIANTS
         BOOST_CONTRACT_AUX_INTROSPECTION_HAS_TYPE(has_base_types,
                 BOOST_CONTRACT_CONFIG_BASE_TYPES)
 

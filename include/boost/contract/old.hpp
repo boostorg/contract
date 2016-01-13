@@ -20,7 +20,7 @@
 #include <boost/preprocessor/config/config.hpp>
 /** @endcond */
 #if !BOOST_PP_VARIADICS
-#   define BOOST_CONTRACT_OLDOF \
+    #define BOOST_CONTRACT_OLDOF \
 BOOST_CONTRACT_ERROR_macro_OLDOF_requires_variadic_macros_otherwise_manually_program_old_values
 #else
 
@@ -33,8 +33,7 @@ BOOST_CONTRACT_ERROR_macro_OLDOF_requires_variadic_macros_otherwise_manually_pro
 
 /* PUBLIC */
 
-// NOTE: Leave this #defined the same regardless of
-// BOOST_CONTRACT_POSTCONDITIONS (impl of expanded func will change instead).
+// NOTE: Leave this #defined the same regardless of ..._POSTCONDITIONS.
 #define BOOST_CONTRACT_OLDOF(...) \
     BOOST_PP_CAT( /* CAT(..., EMTPY()) required on MSVC */ \
         BOOST_PP_OVERLOAD( \
@@ -59,13 +58,13 @@ BOOST_CONTRACT_ERROR_macro_OLDOF_has_invalid_number_of_arguments_, \
     ))
 
 #ifdef BOOST_NO_CXX11_AUTO_DECLARATIONS
-#   define BOOST_CONTRACT_OLDOF_AUTO_TYPEOF_(value) /* nothing */
+    #define BOOST_CONTRACT_OLDOF_AUTO_TYPEOF_(value) /* nothing */
 #else
 /** @cond */
-#   include <boost/typeof/typeof.hpp>
+    #include <boost/typeof/typeof.hpp>
 /** @endcond */
 // Explicitly force shared_ptr<T const> conversion to allow for C++11 auto decl.
-#   define BOOST_CONTRACT_OLDOF_AUTO_TYPEOF_(value) \
+    #define BOOST_CONTRACT_OLDOF_AUTO_TYPEOF_(value) \
         boost::contract::old_ptr<BOOST_TYPEOF(value)>
 #endif
 
@@ -101,7 +100,9 @@ public:
     BOOST_CONTRACT_AUX_OPERATOR_SAFE_BOOL(old_ptr<T>, !!ptr_)
 
 private:
-    explicit old_ptr(boost::shared_ptr<T const> ptr) : ptr_(ptr) {}
+    #if BOOST_CONTRACT_POSTCONDITIONS
+        explicit old_ptr(boost::shared_ptr<T const> ptr) : ptr_(ptr) {}
+    #endif
 
     boost::shared_ptr<T const> ptr_;
 
@@ -130,8 +131,10 @@ public:
 
 private:
     explicit unconvertible_old() {}
-
-    boost::shared_ptr<void> ptr_;
+    
+    #if BOOST_CONTRACT_POSTCONDITIONS
+        boost::shared_ptr<void> ptr_;
+    #endif
 
     friend class convertible_old;
     friend unconvertible_old null_old();
@@ -183,20 +186,22 @@ public:
                 BOOST_CONTRACT_AUX_DEBUG(old);
                 return old_ptr<T>(old);
             }
+            BOOST_CONTRACT_AUX_DEBUG(!ptr_);
         #endif
-        BOOST_CONTRACT_AUX_DEBUG(!ptr_);
         return old_ptr<T>();
     }
 
 private:
     explicit convertible_old(virtual_* v, unconvertible_old const& old)
-    #if BOOST_CONTRACT_POSTCONDITIONS
-        : v_(v), ptr_(old.ptr_)
-    #endif
+        #if BOOST_CONTRACT_POSTCONDITIONS
+            : v_(v), ptr_(old.ptr_)
+        #endif
     {}
 
-    virtual_* v_;
-    boost::shared_ptr<void> ptr_;
+    #if BOOST_CONTRACT_POSTCONDITIONS
+        virtual_* v_;
+        boost::shared_ptr<void> ptr_;
+    #endif
     
     friend convertible_old make_old(unconvertible_old const&);
     friend convertible_old make_old(virtual_*, unconvertible_old const&);

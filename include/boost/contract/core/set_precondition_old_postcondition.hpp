@@ -12,7 +12,7 @@
 #include <boost/contract/aux_/none.hpp>
 #include <boost/contract/aux_/auto_ptr.hpp>
 #if BOOST_CONTRACT_PRECONDITIONS || BOOST_CONTRACT_POSTCONDITIONS
-#   include <boost/contract/aux_/debug.hpp>
+    #include <boost/contract/aux_/debug.hpp>
 #endif
 /** @cond */
 #include <boost/config.hpp>
@@ -37,7 +37,12 @@ public:
             BOOST_CONTRACT_AUX_DEBUG(check_);
             check_->set_pre(f);
         #endif
-        return set_old_postcondition<R>(check_.release());
+        #if BOOST_CONTRACT_PRECONDITIONS || BOOST_CONTRACT_POSTCONDITIONS || \
+                BOOST_CONTRACT_INVARIANTS
+            return set_old_postcondition<R>(check_.release());
+        #else
+            return set_old_postcondition<R>();
+        #endif
     }
 
     template<typename F>
@@ -46,7 +51,12 @@ public:
             BOOST_CONTRACT_AUX_DEBUG(check_);
             check_->set_old(f);
         #endif
-        return set_postcondition_only<R>(check_.release());
+        #if BOOST_CONTRACT_PRECONDITIONS || BOOST_CONTRACT_POSTCONDITIONS || \
+                BOOST_CONTRACT_INVARIANTS
+            return set_postcondition_only<R>(check_.release());
+        #else
+            return set_postcondition_only<R>();
+        #endif
     }
 
     template<typename F>
@@ -55,17 +65,25 @@ public:
             BOOST_CONTRACT_AUX_DEBUG(check_);
             check_->set_post(f);
         #endif
-        return set_nothing(check_.release());
+        #if BOOST_CONTRACT_PRECONDITIONS || BOOST_CONTRACT_POSTCONDITIONS || \
+                BOOST_CONTRACT_INVARIANTS
+            return set_nothing(check_.release());
+        #else
+            return set_nothing();
+        #endif
     }
 
 private:
-    typedef boost::contract::aux::check_pre_post<
-            typename boost::contract::aux::none_if_void<R>::type> check_type;
-    
-    explicit set_precondition_old_postcondition(check_type* check) :
-            check_(check) {}
+    #if BOOST_CONTRACT_PRECONDITIONS || BOOST_CONTRACT_POSTCONDITIONS || \
+            BOOST_CONTRACT_INVARIANTS
+        typedef boost::contract::aux::check_pre_post<typename
+                boost::contract::aux::none_if_void<R>::type> check_type;
+        
+        explicit set_precondition_old_postcondition(check_type* check) :
+                check_(check) {}
 
-    boost::contract::aux::auto_ptr<check_type> check_;
+        boost::contract::aux::auto_ptr<check_type> check_;
+    #endif
 
     // Friendship used to limit library's public API.
 

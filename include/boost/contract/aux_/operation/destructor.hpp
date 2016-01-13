@@ -17,14 +17,12 @@ template<class C>
 class destructor :
         public check_pre_post_inv</* R = */ none, C> { // Non-copyable base.
 public:
-    explicit destructor(C* obj) :
-        check_pre_post_inv</* R = */ none, C>(
-                boost::contract::from_destructor, obj)
-    {}
+    explicit destructor(C* obj) : check_pre_post_inv</* R = */ none, C>(
+            boost::contract::from_destructor, obj) {}
 
 private:
-    void init() /* override */ {
-        #if BOOST_CONTRACT_ENTRY_INVARIANTS || BOOST_CONTRACT_POSTCONDITIONS
+    #if BOOST_CONTRACT_ENTRY_INVARIANTS || BOOST_CONTRACT_POSTCONDITIONS
+        void init() /* override */ {
             if(check_guard::checking()) return;
 
             #if BOOST_CONTRACT_ENTRY_INVARIANTS
@@ -38,13 +36,13 @@ private:
             #if BOOST_CONTRACT_POSTCONDITIONS
                 this->copy_old();
             #endif
-        #endif
-    }
+        }
+    #endif
     
 public:
-    ~destructor() BOOST_NOEXCEPT_IF(false) {
-        this->assert_guarded();
-        #if BOOST_CONTRACT_EXIT_INVARIANTS || BOOST_CONTRACT_POSTCONDITIONS
+    #if BOOST_CONTRACT_EXIT_INVARIANTS || BOOST_CONTRACT_POSTCONDITIONS
+        ~destructor() BOOST_NOEXCEPT_IF(false) {
+            this->assert_guarded();
             if(check_guard::checking()) return;
             check_guard checking;
 
@@ -66,8 +64,8 @@ public:
             #if BOOST_CONTRACT_POSTCONDITIONS
                 if(!body_threw) this->check_post(none());
             #endif
-        #endif
-    }
+        }
+    #endif
 };
 
 } } } // namespace

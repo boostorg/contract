@@ -2,7 +2,6 @@
 #ifndef BOOST_CONTRACT_AUX_MEMBER_FUNCTION_TYPES_HPP_
 #define BOOST_CONTRACT_AUX_MEMBER_FUNCTION_TYPES_HPP_
 
-#include <boost/contract/core/virtual.hpp>
 #include <boost/contract/aux_/none.hpp>
 /** @cond */
 #include <boost/function_types/result_type.hpp>
@@ -18,6 +17,12 @@
 #include <boost/mpl/and.hpp>
 #include <boost/mpl/identity.hpp>
 /** @endcond */
+
+namespace boost {
+    namespace contract {
+        class virtual_;
+    }
+}
 
 namespace boost { namespace contract { namespace aux {
 
