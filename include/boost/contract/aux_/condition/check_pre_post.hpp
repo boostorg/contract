@@ -2,7 +2,6 @@
 #ifndef BOOST_CONTRACT_AUX_CHECK_PRE_POST_HPP_
 #define BOOST_CONTRACT_AUX_CHECK_PRE_POST_HPP_
 
-// TODO: Fix all header files.
 #include <boost/contract/core/config.hpp>
 #if BOOST_CONTRACT_POSTCONDITIONS
     #include <boost/contract/core/exception.hpp>

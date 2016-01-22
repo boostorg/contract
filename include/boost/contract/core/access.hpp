@@ -5,12 +5,12 @@
 #include <boost/contract/core/config.hpp>
 // Include instead of fwd decl to avoid warnings on tparam default value redef.
 #include <boost/contract/core/set_precondition_old_postcondition.hpp>
+#include <boost/contract/aux_/decl.hpp>
 #include <boost/contract/aux_/type_traits/introspection.hpp>
 #include <boost/contract/aux_/debug.hpp>
-/** @cond */
 #include <boost/function_types/property_tags.hpp>
 #include <boost/mpl/vector.hpp>
-/** @endcond */
+#include <boost/config.hpp>
 
 // TODO: Try to remove all friendship relations everywhere in the library and see if tests compile any faster by making internal API public instead. If that is the case, I could use AUX_SYMBOL instead of private...
 
@@ -19,10 +19,10 @@ namespace boost {
         class virtual_;
 
         namespace aux {
-            template<class, typename, typename, class, typename, typename>
-            class check_subcontracted_pre_post_inv;
-
-            template<typename, class>
+            BOOST_CONTRACT_AUX_DECL_AUX_CHECK_SUBCONTRACTED_PRE_POST_INV_Z(1,
+                    /* is_friend = */ 0, OO, RR, FF, CC, AArgs);
+            
+            template<typename RR, class CC>
             class check_pre_post_inv;
         }
     }
@@ -103,35 +103,14 @@ class access { // Copyable (as shell with no data member).
     
     // Friendship used to limit library's public API.
 
-    template<class, typename, typename, class, typename, typename>
-    friend class boost::contract::aux::check_subcontracted_pre_post_inv;
+    BOOST_CONTRACT_AUX_DECL_AUX_CHECK_SUBCONTRACTED_PRE_POST_INV_Z(1,
+            /* is_friend = */ 1, OO, RR, FF, CC, AArgs);
             
-    template<typename, class>
+    template<typename RR, class CC>
     friend class boost::contract::aux::check_pre_post_inv;
-
-    template<class O, typename F, class C>
-    friend set_precondition_old_postcondition<> public_function(
-            virtual_*, F, C*);
-    
-    template<class O, typename R, typename F, class C>
-    friend set_precondition_old_postcondition<R> public_function(
-            virtual_*, R&, F, C*);
-
-    template<class O, typename F, class C, typename A0>
-    friend set_precondition_old_postcondition<> public_function(
-            virtual_*, F, C*, A0&);
-
-    template<class O, typename R, typename F, class C, typename A0>
-    friend set_precondition_old_postcondition<R> public_function(
-            virtual_*, R&, F, C*, A0&);
-    
-    template<class O, typename F, class C, typename A0, typename A1>
-    friend set_precondition_old_postcondition<> public_function(
-            virtual_*, F, C*, A0&, A1&);
-
-    template<class O, typename R, typename F, class C, typename A0, typename A1>
-    friend set_precondition_old_postcondition<R> public_function(
-            virtual_*, R&, F, C*, A0&, A1&);
+        
+    BOOST_CONTRACT_AUX_DECL_FRIEND_OVERRIDING_PUBLIC_FUNCTIONS_Z(1,
+            OO, RR, FF, CC, AArgs, vv, rr, ff, oobj, aargs)
 };
 
 } } // namespace

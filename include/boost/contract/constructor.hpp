@@ -15,9 +15,8 @@ namespace boost { namespace contract {
 
 template<class C>
 set_old_postcondition<> constructor(C* obj) {
-    // Must check ..._PRECONDITIONS here because of set_... is generic.
-    #if BOOST_CONTRACT_PRECONDITIONS || BOOST_CONTRACT_POSTCONDITIONS || \
-            BOOST_CONTRACT_INVARIANTS
+    // Must also check ..._PRECONDITIONS here because set_... is generic.
+    #if BOOST_CONTRACT_CONSTRUCTORS || BOOST_CONTRACT_PRECONDITIONS
         return set_old_postcondition<>(
             new boost::contract::aux::constructor<C>(obj));
     #else

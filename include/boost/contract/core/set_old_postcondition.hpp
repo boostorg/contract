@@ -19,7 +19,7 @@
 
 namespace boost {
     namespace contract {
-        template<typename R>
+        template<typename RR>
         class set_precondition_old_postcondition;
     }
 }
@@ -73,13 +73,14 @@ private:
     // Friendship used to limit library's public API.
 
     friend class guard;
+
     friend class set_precondition_old_postcondition<R>;
 
-    template<class C>
-    friend set_old_postcondition constructor(C*);
+    template<class CC>
+    friend set_old_postcondition constructor(CC* oobj);
 
-    template<class C>
-    friend set_old_postcondition destructor(C*);
+    template<class CC>
+    friend set_old_postcondition destructor(CC* oobj);
 };
 
 } } // namespace

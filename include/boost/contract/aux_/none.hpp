@@ -5,7 +5,14 @@
 namespace boost { namespace contract { namespace aux {
 
 // Tag for "no type".
-class none {}; // Empty so trivial ctor, copy, etc. but cannot use by mistake.
+class none {
+public:
+    // Some lib code uses this to avoid unused local var warnings with #if, etc.
+    static none& value() {
+        static none none_value;
+        return none_value;
+    }
+};
 
 // Transform `void` to `none` type (for convenience, instead of using MPL).
 template<typename T> struct none_if_void { typedef T type; };

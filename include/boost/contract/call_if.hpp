@@ -2,8 +2,6 @@
 #ifndef BOOST_CONTRACT_CALL_IF_HPP_
 #define BOOST_CONTRACT_CALL_IF_HPP_
 
-// TODO: Check all #includes for all files... and make sure that #include not of this library are within @cond ... @endcond.
-
 #include <boost/contract/aux_/none.hpp>
 /** @cond */
 #include <boost/make_shared.hpp>

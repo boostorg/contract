@@ -118,14 +118,23 @@ test-suite public_function
     
     [ subdir-run-withno public_function : body_throw ]
     [ subdir-run-withno public_function : old_throw ]
+    
+    [ subdir-run-withno public_function : max_args0 ]
+    [ subdir-run-withno public_function : max_args0_no_tva ]
+    [ subdir-run-withno public_function : max_args1 ]
+    [ subdir-run-withno public_function : max_args1_no_tva ]
+    [ subdir-run-withno public_function : max_args2 ]
+    [ subdir-run-withno public_function : max_args2_no_tva ]
+    [ subdir-run-withno public_function : max_args ]
+    [ subdir-run-withno public_function : max_args_no_tva ]
 
+    [ subdir-compile-fail public_function : override_error ]
+    [ subdir-run-withno public_function : override_permissive ]
+    
     [ subdir-run-withno public_function : static ]
     [ subdir-run-withno public_function : static_body_throw ]
     [ subdir-run-withno public_function : static_old_throw ]
     [ subdir-run-withno public_function : static_no_contracts ]
-
-    [ subdir-compile-fail public_function : override_error ]
-    [ subdir-run-withno public_function : override_permissive ]
 ;
 
 test-suite function

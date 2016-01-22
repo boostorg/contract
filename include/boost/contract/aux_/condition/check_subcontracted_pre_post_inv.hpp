@@ -7,10 +7,11 @@
 #include <boost/contract/core/virtual.hpp>
 #include <boost/contract/core/exception.hpp>
 #include <boost/contract/aux_/condition/check_pre_post_inv.hpp>
+#include <boost/contract/aux_/decl.hpp>
 #include <boost/contract/aux_/type_traits/member_function_types.hpp>
 #include <boost/contract/aux_/type_traits/optional.hpp>
+#include <boost/contract/aux_/tvariadic.hpp>
 #include <boost/contract/aux_/debug.hpp>
-/** @cond */
 #include <boost/optional.hpp>
 #include <boost/any.hpp>
 #include <boost/function_types/result_type.hpp>
@@ -35,10 +36,10 @@
 #include <boost/mpl/placeholders.hpp>
 #include <boost/static_assert.hpp>
 #include <boost/utility/enable_if.hpp>
+#include <boost/preprocessor/punctuation/comma_if.hpp>
 #include <boost/config.hpp>
 #include <sstream>
 #include <typeinfo>
-/** @endcond */
 
 namespace boost { namespace contract { namespace aux {
 
@@ -48,10 +49,11 @@ namespace check_subcontracted_pre_post_inv_ {
     class signal_not_checked {};
 }
 
-// O, R, F, and A-i can be none types (but C cannot).
-template<class O, typename R, typename F, class C, typename A0, typename A1>
-class check_subcontracted_pre_post_inv :
-        public check_pre_post_inv<R, C> { // Non-copyable base.
+// O, R, F, and Args-i can be none types (but C cannot).
+BOOST_CONTRACT_AUX_DECL_AUX_CHECK_SUBCONTRACTED_PRE_POST_INV_Z(1,
+        /* is_friend = */ 0, O, R, F, C, Args) : // Non-copyable base.
+    public check_pre_post_inv<R, C>
+{
     #if BOOST_CONTRACT_PRECONDITIONS || BOOST_CONTRACT_POSTCONDITIONS || \
             BOOST_CONTRACT_INVARIANTS
         template<class Class, typename Result = boost::mpl::vector<> >
@@ -120,16 +122,24 @@ class check_subcontracted_pre_post_inv :
     #endif
 
 public:
-    explicit check_subcontracted_pre_post_inv(boost::contract::from from,
-            boost::contract::virtual_* v, C* obj, R& r, A0& a0, A1& a1) :
+    explicit check_subcontracted_pre_post_inv(
+        boost::contract::from from,
+        boost::contract::virtual_* v,
+        C* obj,
+        R& r
+        BOOST_CONTRACT_AUX_TVARIADIC_COMMA(BOOST_CONTRACT_CONFIG_MAX_ARGS)
+        BOOST_CONTRACT_AUX_TVARIADIC_FPARAMS_Z(1, \
+                BOOST_CONTRACT_CONFIG_MAX_ARGS, Args, &, args)
+    ) :
         check_pre_post_inv<R, C>(from, obj)
         #if BOOST_CONTRACT_POSTCONDITIONS
             , r_(r)
         #endif
         #if BOOST_CONTRACT_PRECONDITIONS || BOOST_CONTRACT_POSTCONDITIONS || \
                 BOOST_CONTRACT_INVARIANTS
-            , a0_(a0)
-            , a1_(a1)
+            BOOST_CONTRACT_AUX_TVARIADIC_COMMA(BOOST_CONTRACT_CONFIG_MAX_ARGS)
+            BOOST_CONTRACT_AUX_TVARIADIC_TUPLE_INIT_Z(1,
+                    BOOST_CONTRACT_CONFIG_MAX_ARGS, args_, args)
         #endif
     {
         #if BOOST_CONTRACT_PRECONDITIONS || BOOST_CONTRACT_POSTCONDITIONS || \
@@ -384,8 +394,8 @@ private:
                 BOOST_CONTRACT_AUX_DEBUG(me_.v_->action_ !=
                         boost::contract::virtual_::no_action);
                 try {
-                    O::template BOOST_CONTRACT_AUX_NAME1(call_base)<B>(
-                            me_.object(), me_.a0_, me_.a1_, me_.v_);
+                    call<B>(BOOST_CONTRACT_AUX_TVARIADIC_TUPLE_INDEXES_OF(
+                            Args));
                 } catch(check_subcontracted_pre_post_inv_::
                         signal_no_error const&) {
                     // No error (do not throw).
@@ -393,6 +403,24 @@ private:
             }
 
         private:
+            template<
+                class B
+                // Can't used TVARIADIC_COMMA here.
+                BOOST_PP_COMMA_IF(BOOST_CONTRACT_AUX_TVARIADIC)
+                BOOST_CONTRACT_AUX_TVARIADIC_TUPLE_INDEXES_TPARAM(I)
+            >
+            void call(
+                    BOOST_CONTRACT_AUX_TVARIADIC_TUPLE_INDEXES_FPARAM(I)) {
+                O::template BOOST_CONTRACT_AUX_NAME1(call_base)<B>(
+                    me_.v_,
+                    me_.object()
+                    BOOST_CONTRACT_AUX_TVARIADIC_COMMA(
+                            BOOST_CONTRACT_CONFIG_MAX_ARGS)
+                    BOOST_CONTRACT_AUX_TVARIADIC_TUPLE_ELEMS_Z(1,
+                            BOOST_CONTRACT_CONFIG_MAX_ARGS, I, me_.args_)
+                );
+            }
+            
             check_subcontracted_pre_post_inv& me_;
         };
     #endif
@@ -404,9 +432,8 @@ private:
             BOOST_CONTRACT_INVARIANTS
         boost::contract::virtual_* v_;
         bool base_call_;
-        // TODO: Support configurable func arity (using both C++11 variadic templates and boost.preprocessor when C++11 variadic template are not supported).
-        A0& a0_;
-        A1& a1_;
+        BOOST_CONTRACT_AUX_TVARIADIC_TUPLE_Z(1, BOOST_CONTRACT_CONFIG_MAX_ARGS,
+                Args, &, args_)
     #endif
 };
 

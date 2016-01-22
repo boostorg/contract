@@ -3,19 +3,19 @@
 #define BOOST_CONTRACT_VIRTUAL_HPP_
 
 #include <boost/contract/core/config.hpp>
-/** @cond */
+#include <boost/contract/aux_/decl.hpp>
 #include <boost/any.hpp>
 #include <boost/shared_ptr.hpp>
 #include <boost/noncopyable.hpp>
+#include <boost/config.hpp>
 #include <queue>
 #include <stack>
-/** @endcond */
 
 namespace boost {
     namespace contract {
         namespace aux {
-            template<class, typename, typename, class, typename, typename>
-            class check_subcontracted_pre_post_inv;
+            BOOST_CONTRACT_AUX_DECL_AUX_CHECK_SUBCONTRACTED_PRE_POST_INV_Z(1,
+                    /* is_friend = */ 0, OO, RR, FF, CC, AArgs);
         }
     }
 }
@@ -83,11 +83,13 @@ private:
     #endif
 
     // Friendship used to limit library's public API.
+
     friend bool copy_old(virtual_*);
+    
     friend class convertible_old;
 
-    template<class, typename, typename, class, typename, typename>
-    friend class boost::contract::aux::check_subcontracted_pre_post_inv;
+    BOOST_CONTRACT_AUX_DECL_AUX_CHECK_SUBCONTRACTED_PRE_POST_INV_Z(1,
+            /* is_friend = */ 1, OO, RR, FF, CC, AArgs);
 };
 
 } } // namespace

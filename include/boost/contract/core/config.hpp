@@ -8,9 +8,13 @@
 // can #include this header and not #include any of this lib headers after that
 // depending on the contract 0/1 macros below ensuring no compilation overhead.
 
-// TODO: Disable pre, post, and/or entry/exit inv (all combinations). Can I compile lib1 with some contract enabled/disable settings, lib2 with other settings and then link the two together?
+// TODO: Can I compile lib1 with some contract on/off, lib2 with other contracts on/off and then link the two together?
 
 // TODO: Add a config macro PRECONDITIONS_DISABLE_NOTHING to avoid disabling contract assertions within assertions checking for preconditions (to avoid passing unchecked arguments to function body...). This is what N1962 does... but this macro should be #undef by default.
+
+#ifndef BOOST_CONTRACT_CONFIG_MAX_ARGS
+#   define BOOST_CONTRACT_CONFIG_MAX_ARGS 10
+#endif
 
 #ifndef BOOST_CONTRACT_CONFIG_BASE_TYPES
     #define BOOST_CONTRACT_CONFIG_BASE_TYPES base_types

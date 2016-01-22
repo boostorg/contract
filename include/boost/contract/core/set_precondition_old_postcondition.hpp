@@ -9,14 +9,13 @@
 #include <boost/contract/core/set_postcondition_only.hpp>
 #include <boost/contract/core/set_nothing.hpp>
 #include <boost/contract/aux_/condition/check_pre_post.hpp>
+#include <boost/contract/aux_/decl.hpp>
 #include <boost/contract/aux_/none.hpp>
 #include <boost/contract/aux_/auto_ptr.hpp>
 #if BOOST_CONTRACT_PRECONDITIONS || BOOST_CONTRACT_POSTCONDITIONS
     #include <boost/contract/aux_/debug.hpp>
 #endif
-/** @cond */
 #include <boost/config.hpp>
-/** @endcond */
 
 namespace boost {
     namespace contract {
@@ -91,49 +90,22 @@ private:
 
     friend set_precondition_old_postcondition<> function();
 
-    template<class C>
+    template<class CC>
     friend set_precondition_old_postcondition<> public_function();
 
-    template<class C>
-    friend set_precondition_old_postcondition<> public_function(C*);
+    template<class CC>
+    friend set_precondition_old_postcondition<> public_function(CC* oobj);
     
-    template<class C>
-    friend set_precondition_old_postcondition<> public_function(virtual_*, C*);
-
-    template<typename R_, class C>
-    friend set_precondition_old_postcondition<R_> public_function(
-            virtual_*, R_&, C*);
-
-    /* arity = 0 */
-    
-    template<class O, typename F, class C>
+    template<class CC>
     friend set_precondition_old_postcondition<> public_function(
-            virtual_*, F, C*);
-    
-    template<class O, typename R_, typename F, class C>
-    friend set_precondition_old_postcondition<R_> public_function(
-            virtual_*, R_&, F, C*);
+            virtual_* vv, CC* oobj);
 
-    /* arity = 1 */
-    
-    template<class O, typename F, class C, typename A0>
-    friend set_precondition_old_postcondition<> public_function(
-            virtual_*, F, C*, A0&);
+    template<typename RR, class CC>
+    friend set_precondition_old_postcondition<RR> public_function(
+            virtual_* vv, RR& rr, CC* oobj);
 
-    template<class O, typename R_, typename F, class C, typename A0>
-    friend set_precondition_old_postcondition<R_> public_function(
-            virtual_*, R_&, F, C*, A0&);
-    
-    /* arity = 2 */
-    
-    template<class O, typename F, class C, typename A0, typename A1>
-    friend set_precondition_old_postcondition<> public_function(
-            virtual_*, F, C*, A0&, A1&);
-
-    template<class O, typename R_, typename F, class C,
-            typename A0, typename A1>
-    friend set_precondition_old_postcondition<R_> public_function(
-            virtual_*, R_&, F, C*, A0&, A1&);
+    BOOST_CONTRACT_AUX_DECL_FRIEND_OVERRIDING_PUBLIC_FUNCTIONS_Z(1,
+            OO, RR, FF, CC, AArgs, vv, rr, ff, oobj, aargs)
 };
 
 } } // namespace

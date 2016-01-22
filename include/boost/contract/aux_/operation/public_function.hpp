@@ -5,23 +5,46 @@
 #include <boost/contract/core/config.hpp>
 #include <boost/contract/core/virtual.hpp>
 #include <boost/contract/aux_/condition/check_subcontracted_pre_post_inv.hpp>
-#include <boost/contract/aux_/debug.hpp>
 #include <boost/contract/aux_/check_guard.hpp>
+#include <boost/contract/aux_/tvariadic.hpp>
+#include <boost/contract/aux_/debug.hpp>
 #include <boost/config.hpp>
 #include <exception>
 
 namespace boost { namespace contract { namespace aux {
 
-template<class O, typename R, typename F, class C, typename A0, typename A1>
-class public_function :
-    // Non-copyable base.
-    public check_subcontracted_pre_post_inv<O, R, F, C, A0, A1>
+template<
+    class O, typename R, typename F, class C
+    BOOST_CONTRACT_AUX_TVARIADIC_COMMA(BOOST_CONTRACT_CONFIG_MAX_ARGS)
+    BOOST_CONTRACT_AUX_TVARIADIC_TPARAMS_Z(1, BOOST_CONTRACT_CONFIG_MAX_ARGS,
+            Args)
+>
+class public_function : // Non-copyable base.
+    public check_subcontracted_pre_post_inv<
+        O, R, F, C
+        BOOST_CONTRACT_AUX_TVARIADIC_COMMA(BOOST_CONTRACT_CONFIG_MAX_ARGS)
+        BOOST_CONTRACT_AUX_TVARIADIC_ARGS_Z(1, BOOST_CONTRACT_CONFIG_MAX_ARGS,
+                Args)
+    >
 {
 public:
-    explicit public_function(boost::contract::virtual_* v, C* obj, R& r,
-            A0& a0, A1& a1) :
-        check_subcontracted_pre_post_inv<O, R, F, C, A0, A1>(
-                boost::contract::from_function, v, obj, r, a0, a1)
+    explicit public_function(
+        boost::contract::virtual_* v, C* obj, R& r
+        BOOST_CONTRACT_AUX_TVARIADIC_COMMA(BOOST_CONTRACT_CONFIG_MAX_ARGS)
+        BOOST_CONTRACT_AUX_TVARIADIC_FPARAMS_Z(1,
+                BOOST_CONTRACT_CONFIG_MAX_ARGS, Args, &, args)
+    ) :
+        check_subcontracted_pre_post_inv<
+            O, R, F, C
+            BOOST_CONTRACT_AUX_TVARIADIC_COMMA(BOOST_CONTRACT_CONFIG_MAX_ARGS)
+            BOOST_CONTRACT_AUX_TVARIADIC_ARGS_Z(1,
+                    BOOST_CONTRACT_CONFIG_MAX_ARGS, Args)
+        >(
+            boost::contract::from_function, v, obj, r
+            BOOST_CONTRACT_AUX_TVARIADIC_COMMA(BOOST_CONTRACT_CONFIG_MAX_ARGS)
+            BOOST_CONTRACT_AUX_TVARIADIC_ARGS_Z(1,
+                    BOOST_CONTRACT_CONFIG_MAX_ARGS, args)
+        )
     {}
 
 private:

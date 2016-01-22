@@ -137,6 +137,7 @@ private:
     #endif
 
     friend class convertible_old;
+
     friend unconvertible_old null_old();
 };
 
@@ -204,6 +205,7 @@ private:
     #endif
     
     friend convertible_old make_old(unconvertible_old const&);
+
     friend convertible_old make_old(virtual_*, unconvertible_old const&);
 };
     

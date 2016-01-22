@@ -12,13 +12,13 @@
 
 namespace boost {
     namespace contract {
-        template<typename>
+        template<typename RR>
         class set_precondition_old_postcondition;
         
-        template<typename>
+        template<typename RR>
         class set_old_postcondition;
         
-        template<typename>
+        template<typename RR>
         class set_postcondition_only;
     }
 }
@@ -45,13 +45,13 @@ private:
 
     friend class guard;
 
-    template<typename>
+    template<typename RR>
     friend class set_precondition_old_postcondition;
     
-    template<typename>
+    template<typename RR>
     friend class set_old_postcondition;
 
-    template<typename>
+    template<typename RR>
     friend class set_postcondition_only;
 };
 
