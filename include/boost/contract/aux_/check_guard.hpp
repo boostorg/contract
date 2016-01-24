@@ -23,7 +23,7 @@ private:
     static bool checking_;
 };
 
-// TODO: This and all other lib states must go into a .cpp with dyn linking (DLL). Also move as much as code as possible to .cpp files (and try to minimize template is not strictly necessary) so to speed up compilation.
+// TODO: This and all other lib states (failure handler functors from exception.hpp, etc.) must go into a .cpp with dyn linking (DLL). Also move as much as code as possible to .cpp files (and try to minimize template is not strictly necessary) so to speed up compilation.
 bool check_guard::checking_ = false;
 
 } } } // namespace

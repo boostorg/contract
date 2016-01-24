@@ -2,7 +2,9 @@
 #ifndef BOOST_CONTRACT_PUBLIC_FUNCTION_HPP_
 #define BOOST_CONTRACT_PUBLIC_FUNCTION_HPP_
 
-// TODO: Check all #includes for all files... and make sure that #include not of this library are within @cond ... @endcond. Also disable #include when not needed based on BOOST_CONTRACT_PRECONDITIONS, etc.
+// TODO: See if by reimplementing a few Boost.MPL constructs (vector, for_each, etc.) using variadic template, I can support truly any number of function arguments on C++11.
+
+// TODO: Check all #includes for all files... and make sure that #include not of this library are within @cond ... @endcond. Also disable #include when not needed based on BOOST_CONTRACT_PRECONDITIONS, etc. Also all public header files should include *all* core/*.hpp so users never have to (I could use a aux_/all_core_headers.hpp that includes all core/*.hpp and always #include aux_/core.hpp in all public headers instead of including core/... directly from public headers).
 
 #include <boost/contract/core/config.hpp>
 #include <boost/contract/core/access.hpp>

@@ -144,8 +144,6 @@ namespace exception_ {
         std::terminate(); // Default handlers log and call terminate.
     }
 
-    // TODO: These (and some of the related def code) should be moved in a .cpp.
-
     //boost::mutex pre_failure_mutex;
     assertion_failure_handler pre_failure_handler =
             &default_handler<pre_key>;

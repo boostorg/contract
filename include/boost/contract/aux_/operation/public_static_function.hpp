@@ -29,15 +29,23 @@ private:
         void init() /* override */ {
             if(check_guard::checking()) return;
             #if BOOST_CONTRACT_ENTRY_INVARIANTS || BOOST_CONTRACT_PRECONDITIONS
-                {
+                { // Acquire check guard.
                     check_guard checking;
                     #if BOOST_CONTRACT_ENTRY_INVARIANTS
                         this->check_entry_static_inv();
                     #endif
                     #if BOOST_CONTRACT_PRECONDITIONS
-                        this->check_pre();
+                        #ifndef \
+  BOOST_CONTRACT_CONFIG_PRECONDITIONS_DISABLE_NOTHING
+                                this->check_pre();
+                            } // Release check guard.
+                        #else
+                            } // Release check guard.
+                            this->check_pre();
+                        #endif
+                    #else
+                        } // Release check guard
                     #endif
-                }
             #endif
             #if BOOST_CONTRACT_POSTCONDITIONS
                 this->copy_old();

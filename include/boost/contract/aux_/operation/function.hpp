@@ -22,10 +22,11 @@ private:
     #if BOOST_CONTRACT_PRECONDITIONS || BOOST_CONTRACT_POSTCONDITIONS
         void init() /* override */ {
             if(check_guard::checking()) return;
-
             #if BOOST_CONTRACT_PRECONDITIONS
                 {
-                    check_guard checking;
+                    #ifndef BOOST_CONTRACT_CONFIG_PRECONDITIONS_DISABLE_NOTHING
+                        check_guard checking;
+                    #endif
                     this->check_pre();
                 }
             #endif

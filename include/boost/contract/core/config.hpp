@@ -10,8 +10,6 @@
 
 // TODO: Can I compile lib1 with some contract on/off, lib2 with other contracts on/off and then link the two together?
 
-// TODO: Add a config macro PRECONDITIONS_DISABLE_NOTHING to avoid disabling contract assertions within assertions checking for preconditions (to avoid passing unchecked arguments to function body...). This is what N1962 does... but this macro should be #undef by default.
-
 #ifndef BOOST_CONTRACT_CONFIG_MAX_ARGS
 #   define BOOST_CONTRACT_CONFIG_MAX_ARGS 10
 #endif
@@ -48,6 +46,15 @@
 // contract guard logic errors without terminating the program, for example:
 //  #define BOOST_CONTRACT_CONFIG_ON_MISSING_GUARD { throw my_logic_error(); }
 // BOOST_CONTRACT_CONFIG_ON_MISSING_GUARD
+
+// Contract checking is not disable while checking preconditions.
+// This is what N1962 does by default. N1962 authors indicated it can be shown
+// that unchecked arguments are passed to function bodies if contract checking
+// is disable within precondition checking).
+// However, not disabling contract checking while checking preconditions can
+// lead to infinite recursive call in user code so by default this macro is
+// not defined.
+// BOOST_CONTRACT_CONFIG_PRECONDITIONS_DISABLE_NOTHING
 
 // BOOST_CONTRACT_CONFIG_NO_PRECONDITIONS
 // BOOST_CONTRACT_CONFIG_NO_POSTCONDITIONS

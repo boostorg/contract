@@ -112,6 +112,8 @@ test-suite public_function
     [ subdir-run-withno public_function : bases_virtual ]
     [ subdir-run-withno public_function : bases_branch ]
     [ subdir-run-withno public_function : bases_sparse ]
+    [ subdir-run-withno public_function : bases_protected ]
+    [ subdir-compile-fail public_function : bases_protected_error ]
     
     [ subdir-run-withno public_function : access ]
     [ subdir-run-withno public_function : no_contracts ]
@@ -127,6 +129,9 @@ test-suite public_function
     [ subdir-run-withno public_function : max_args2_no_tva ]
     [ subdir-run-withno public_function : max_args ]
     [ subdir-run-withno public_function : max_args_no_tva ]
+    
+    [ subdir-run-withno public_function : overload ]
+    [ subdir-run-withno public_function : overload_no_tva ]
 
     [ subdir-compile-fail public_function : override_error ]
     [ subdir-run-withno public_function : override_permissive ]
@@ -205,6 +210,7 @@ test-suite old
 test-suite disable
 :
     [ subdir-run-withno disable : checking ]
+    [ subdir-run-withno disable : checking_pre_disable_nothing ]
 ;
 
 test-suite set

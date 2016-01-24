@@ -59,15 +59,23 @@ private:
                         BOOST_CONTRACT_POSTCONDITIONS || \
                         BOOST_CONTRACT_INVARIANTS
                     if(check_guard::checking()) return;
-                    {
+                    { // Acquire check guard.
                         check_guard checking;
                         #if BOOST_CONTRACT_ENTRY_INVARIANTS
                             this->check_subcontracted_entry_inv();
                         #endif
                         #if BOOST_CONTRACT_PRECONDITIONS
-                            this->check_subcontracted_pre();
+                            #ifndef \
+  BOOST_CONTRACT_CONFIG_PRECONDITIONS_DISABLE_NOTHING
+                                    this->check_subcontracted_pre();
+                                } // Release check guard.
+                            #else
+                                } // Release check guard.
+                                this->check_subcontracted_pre();
+                            #endif
+                        #else
+                            } // Release check guard.
                         #endif
-                    }
                     #if BOOST_CONTRACT_POSTCONDITIONS
                         this->copy_subcontracted_old();
                     #endif
