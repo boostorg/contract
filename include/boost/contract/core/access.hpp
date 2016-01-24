@@ -12,7 +12,7 @@
 #include <boost/mpl/vector.hpp>
 #include <boost/config.hpp>
 
-// TODO: Try to remove all friendship relations everywhere in the library and see if tests compile any faster by making internal API public instead. If that is the case, I could use AUX_SYMBOL instead of private...
+// TODO: Document (in a rationale) that using friend to limit lib's public API does not increase compilation times at all. I compiled with friends. Then I removed all friends, made related APIs all public and the compilation times of all test/public_function/* where exactly the same for all compilers (msvc 37 min, gcc 70 min, clang 46 min). So there is not reason at all to not use friends (plus not using friend will complicate the internal APIs because contractor names cannot be wrapped using AUX_NAME so they will still be made private and accessed via some sort of static AUX_NAME(make) member function...).
 
 namespace boost {
     namespace contract {
