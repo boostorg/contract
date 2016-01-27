@@ -7,7 +7,7 @@
 #include <boost/detail/lightweight_test.hpp>
 #include <sstream>
 
-boost::contract::aux::test::oteststream out;
+boost::contract::test::aux::oteststream out;
 
 void f() {
     boost::contract::guard c = boost::contract::function();

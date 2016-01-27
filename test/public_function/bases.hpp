@@ -1,6 +1,6 @@
 
-#ifndef BASES_HPP_
-#define BASES_HPP_
+#ifndef BOOST_CONTRACT_TEST_PUBLIC_FUNCTION_BASES_HPP_
+#define BOOST_CONTRACT_TEST_PUBLIC_FUNCTION_BASES_HPP_
 
 // Test public member function subcontracting (also with old and return values).
 
@@ -14,10 +14,10 @@
 #include <boost/contract/override.hpp>
 #include <string>
 
-boost::contract::aux::test::oteststream out;
+boost::contract::test::aux::oteststream out;
 
 struct s_tag;
-typedef boost::contract::aux::test::counter<s_tag, std::string> s_type;
+typedef boost::contract::test::aux::counter<s_tag, std::string> s_type;
 
 struct result_type {
     std::string value;
@@ -40,7 +40,7 @@ struct t {
     }
 
     struct z_tag;
-    typedef boost::contract::aux::test::counter<z_tag, std::string> z_type;
+    typedef boost::contract::test::aux::counter<z_tag, std::string> z_type;
     z_type z;
 
     t() { z.value.push_back(Id); }
@@ -93,7 +93,7 @@ struct c
     }
 
     struct y_tag;
-    typedef boost::contract::aux::test::counter<y_tag, std::string> y_type;
+    typedef boost::contract::test::aux::counter<y_tag, std::string> y_type;
     y_type y;
 
     c() { y.value = "c"; }
@@ -175,7 +175,7 @@ struct a
     }
 
     struct x_tag;
-    typedef boost::contract::aux::test::counter<x_tag, std::string> x_type;
+    typedef boost::contract::test::aux::counter<x_tag, std::string> x_type;
     x_type x;
 
     a() { x.value = "a"; }

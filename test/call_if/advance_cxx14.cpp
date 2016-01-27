@@ -11,7 +11,7 @@
 #include <list>
 #include <sstream>
 
-boost::contract::aux::test::oteststream out;
+boost::contract::test::aux::oteststream out;
 
 template<typename Iter>
 struct is_random_access_iterator : std::is_same<

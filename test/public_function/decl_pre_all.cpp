@@ -1,9 +1,9 @@
 
 // Test all derived and base classes with preconditions.
 
-#undef BOOST_CONTRACT_AUX_TEST_NO_A_PRE
-#undef BOOST_CONTRACT_AUX_TEST_NO_B_PRE
-#undef BOOST_CONTRACT_AUX_TEST_NO_C_PRE
+#undef BOOST_CONTRACT_TEST_NO_A_PRE
+#undef BOOST_CONTRACT_TEST_NO_B_PRE
+#undef BOOST_CONTRACT_TEST_NO_C_PRE
 #include "decl.hpp"
 
 #include <boost/detail/lightweight_test.hpp>

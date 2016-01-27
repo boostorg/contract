@@ -10,7 +10,7 @@
 #include <boost/detail/lightweight_test.hpp>
 #include <sstream>
 
-boost::contract::aux::test::oteststream out;
+boost::contract::test::aux::oteststream out;
 
 struct j {
     static void static_invariant() { out << "j::static_inv" << std::endl; }

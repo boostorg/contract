@@ -2,7 +2,9 @@
 #ifndef BOOST_CONTRACT_PUBLIC_FUNCTION_HPP_
 #define BOOST_CONTRACT_PUBLIC_FUNCTION_HPP_
 
-// TODO: See if by reimplementing a few Boost.MPL constructs (vector, for_each, etc.) using variadic template, I can support truly any number of function arguments on C++11.
+// TODO: Document that even with variadic templates there's a hard limit to function max args (18 works, but MAX_ARGS=19 does not). This limit comes from Boost.MPL (vector, push_back, etc.), Boost.FunctionTypes, and other Boost algorithm that do not currently have a variadic template implementation. However, re-impl all these Boost alg would be too much work for this lib, plus the 19 max args limit seems high enough, and it would eventually be removed if Boost.MPL, Boost.FunctionTypes are ever ported to impl that use variadic templates.
+
+// TODO: Document that not using variadic templates (i.e., using pp meta-programming impl instead) does not increase compilation times (I measured this with the max_arg test program).
 
 // TODO: Check all #includes for all files... and make sure that #include not of this library are within @cond ... @endcond. Also disable #include when not needed based on BOOST_CONTRACT_PRECONDITIONS, etc. Also all public header files should include *all* core/*.hpp so users never have to (I could use a aux_/all_core_headers.hpp that includes all core/*.hpp and always #include aux_/core.hpp in all public headers instead of including core/... directly from public headers).
 

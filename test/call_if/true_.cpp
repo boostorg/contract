@@ -8,7 +8,7 @@
 #include <boost/detail/lightweight_test.hpp>
 #include <sstream>
 
-boost::contract::aux::test::oteststream out;
+boost::contract::test::aux::oteststream out;
 
 struct eq {
     typedef bool result_type; // Test non-void result type.

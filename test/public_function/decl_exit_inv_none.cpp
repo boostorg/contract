@@ -1,9 +1,9 @@
 
 // Test all derived and base classes without exit invariants.
 
-#define BOOST_CONTRACT_AUX_TEST_NO_A_INV
-#define BOOST_CONTRACT_AUX_TEST_NO_B_INV
-#define BOOST_CONTRACT_AUX_TEST_NO_C_INV
+#define BOOST_CONTRACT_TEST_NO_A_INV
+#define BOOST_CONTRACT_TEST_NO_B_INV
+#define BOOST_CONTRACT_TEST_NO_C_INV
 #include "decl.hpp"
 
 #include <boost/preprocessor/control/iif.hpp>

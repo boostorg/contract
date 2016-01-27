@@ -32,11 +32,11 @@ public:
 
     template<typename F>
     explicit constructor_precondition(F const& f) {
-        if(check_guard::checking()) return;
+        if(boost::contract::aux::check_guard::checking()) return;
         #if BOOST_CONTRACT_PRECONDITIONS
             try {
                 #ifndef BOOST_CONTRACT_CONFIG_PRECONDITIONS_DISABLE_NOTHING
-                    check_guard checking;
+                    boost::contract::aux::check_guard checking;
                 #endif
                 f();
             } catch(...) { precondition_failure(from_constructor); }

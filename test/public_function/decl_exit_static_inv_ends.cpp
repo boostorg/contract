@@ -1,9 +1,9 @@
 
 // Test only derived and grandparent classes (ends) with exit static invariants.
 
-#undef BOOST_CONTRACT_AUX_TEST_NO_A_STATIC_INV
-#define BOOST_CONTRACT_AUX_TEST_NO_B_STATIC_INV
-#undef BOOST_CONTRACT_AUX_TEST_NO_C_STATIC_INV
+#undef BOOST_CONTRACT_TEST_NO_A_STATIC_INV
+#define BOOST_CONTRACT_TEST_NO_B_STATIC_INV
+#undef BOOST_CONTRACT_TEST_NO_C_STATIC_INV
 #include "decl.hpp"
 
 #include <boost/preprocessor/control/iif.hpp>

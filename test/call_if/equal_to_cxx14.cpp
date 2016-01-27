@@ -8,7 +8,7 @@
 #include <functional> // std::bind for generic lambdas.
 #include <sstream>
 
-boost::contract::aux::test::oteststream out;
+boost::contract::test::aux::oteststream out;
 
 struct x {}; // Does not have operator==.
 

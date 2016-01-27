@@ -1,6 +1,6 @@
 
-#ifndef BOOST_CONTRACT_AUX_TEST_OTESTSTREAM_HPP_
-#define BOOST_CONTRACT_AUX_TEST_OTESTSTREAM_HPP_
+#ifndef BOOST_CONTRACT_TEST_AUX_OTESTSTREAM_HPP_
+#define BOOST_CONTRACT_TEST_AUX_OTESTSTREAM_HPP_
 
 #include <boost/iostreams/tee.hpp>
 #include <boost/iostreams/stream.hpp>
@@ -8,7 +8,7 @@
 #include <sstream>
 #include <iostream>
 
-namespace boost { namespace contract { namespace aux { namespace test {
+namespace boost { namespace contract { namespace test { namespace aux {
 
 namespace oteststream_ {
     struct oss_base { // Wrap oss data member for proper initialization order.

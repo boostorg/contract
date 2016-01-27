@@ -1,7 +1,7 @@
 
 // Test with preconditions.
 
-#undef BOOST_CONTRACT_AUX_TEST_NO_F_PRE
+#undef BOOST_CONTRACT_TEST_NO_F_PRE
 #include "decl.hpp"
 
 #include <boost/detail/lightweight_test.hpp>

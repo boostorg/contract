@@ -13,10 +13,10 @@
 #include <boost/detail/lightweight_test.hpp>
 #include <cassert>
 
-boost::contract::aux::test::oteststream out;
+boost::contract::test::aux::oteststream out;
 
-struct i_tag; typedef boost::contract::aux::test::counter<i_tag, int> i_type;
-struct j_tag; typedef boost::contract::aux::test::counter<j_tag, int> j_type;
+struct i_tag; typedef boost::contract::test::aux::counter<i_tag, int> i_type;
+struct j_tag; typedef boost::contract::test::aux::counter<j_tag, int> j_type;
 
 struct b {
     virtual void swap(i_type& i, j_type& j, boost::contract::virtual_* v = 0);
@@ -69,8 +69,8 @@ struct a
     BOOST_CONTRACT_OVERRIDE(swap)
 };
 
-struct x_tag; typedef boost::contract::aux::test::counter<x_tag, char> x_type;
-struct y_tag; typedef boost::contract::aux::test::counter<y_tag, char> y_type;
+struct x_tag; typedef boost::contract::test::aux::counter<x_tag, char> x_type;
+struct y_tag; typedef boost::contract::test::aux::counter<y_tag, char> y_type;
 
 void swap(x_type& x, y_type& y) {
     boost::contract::old_ptr<x_type> old_x = boost::contract::make_old(
@@ -136,10 +136,12 @@ int main() {
     BOOST_TEST_EQ(x.value, 'b');
     BOOST_TEST_EQ(x.copies(), cnt);
     BOOST_TEST_EQ(x.evals(), cnt);
+    BOOST_TEST_EQ(x.ctors(), x.dtors() + 1); // 1 for local var.
     
     BOOST_TEST_EQ(y.value, 'a');
     BOOST_TEST_EQ(y.copies(), cnt);
     BOOST_TEST_EQ(y.evals(), cnt);
+    BOOST_TEST_EQ(y.ctors(), y.dtors() + 1); // 1 for local var.
 
     a aa;
     i_type i; i.value = 1;
@@ -165,10 +167,12 @@ int main() {
     BOOST_TEST_EQ(i.value, 2);
     BOOST_TEST_EQ(i.copies(), cnt);
     BOOST_TEST_EQ(i.evals(), cnt);
+    BOOST_TEST_EQ(i.ctors(), i.dtors() + 1); // 1 for local var.
     
     BOOST_TEST_EQ(j.value, 1);
     BOOST_TEST_EQ(j.copies(), cnt);
     BOOST_TEST_EQ(j.evals(), cnt);
+    BOOST_TEST_EQ(j.ctors(), j.dtors() + 1); // 1 for local var.
 
     return boost::report_errors();
 }

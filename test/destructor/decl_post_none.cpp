@@ -1,9 +1,9 @@
 
 // Test all derived and base classes without postconditions.
 
-#define BOOST_CONTRACT_AUX_TEST_NO_A_POST
-#define BOOST_CONTRACT_AUX_TEST_NO_B_POST
-#define BOOST_CONTRACT_AUX_TEST_NO_C_POST
+#define BOOST_CONTRACT_TEST_NO_A_POST
+#define BOOST_CONTRACT_TEST_NO_B_POST
+#define BOOST_CONTRACT_TEST_NO_C_POST
 #include "decl.hpp"
 
 #include <boost/detail/lightweight_test.hpp>

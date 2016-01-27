@@ -1,7 +1,7 @@
 
 // Test with postconditions.
 
-#undef BOOST_CONTRACT_AUX_TEST_NO_F_POST
+#undef BOOST_CONTRACT_TEST_NO_F_POST
 #include "decl.hpp"
 
 #include <boost/detail/lightweight_test.hpp>

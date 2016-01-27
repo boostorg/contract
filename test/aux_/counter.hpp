@@ -1,8 +1,8 @@
 
-#ifndef BOOST_CONTRACT_AUX_TEST_COUNTER_HPP_
-#define BOOST_CONTRACT_AUX_TEST_COUNTER_HPP_
+#ifndef BOOST_CONTRACT_TEST_AUX_COUNTER_HPP_
+#define BOOST_CONTRACT_TEST_AUX_COUNTER_HPP_
 
-namespace boost { namespace contract { namespace aux { namespace test {
+namespace boost { namespace contract { namespace test { namespace aux {
 
 // Helper to count copies and evaluations of type (e.g., for old values).
 template<class Tag, typename T>

@@ -130,6 +130,8 @@ test-suite public_function
     [ subdir-run-withno public_function : max_args ]
     [ subdir-run-withno public_function : max_args_no_tva ]
     
+    [ subdir-run-withno public_function : max_bases ]
+    
     [ subdir-run-withno public_function : overload ]
     [ subdir-run-withno public_function : overload_no_tva ]
 

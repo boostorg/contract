@@ -11,8 +11,8 @@ namespace boost { namespace contract {
 
 template<class C>
 set_old_postcondition<> destructor(C* obj) {
-    // Must check ..._PRECONDITIONS here because set_... is generic.
-    #if BOOST_CONTRACT_DESTRUCTURS
+    // Must #if also on ..._PRECONDITIONS here because set_... is generic.
+    #if BOOST_CONTRACT_DESTRUCTORS || BOOST_CONTRACT_PRECONDITIONS
         return set_old_postcondition<>(
                 new boost::contract::aux::destructor<C>(obj));
     #else

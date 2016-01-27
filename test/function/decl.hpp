@@ -9,19 +9,19 @@
 #include <boost/contract/guard.hpp>
 #include <boost/contract/assert.hpp>
 
-boost::contract::aux::test::oteststream out;
+boost::contract::test::aux::oteststream out;
 
 bool f_pre = true, f_post = true;
 void f() {
     boost::contract::guard c = boost::contract::function()
-        #ifndef BOOST_CONTRACT_AUX_TEST_NO_F_PRE
+        #ifndef BOOST_CONTRACT_TEST_NO_F_PRE
             .precondition([&] {
                 out << "f::pre" << std::endl;
                 BOOST_CONTRACT_ASSERT(f_pre);
             })
         #endif
         .old([] { out << "f::old" << std::endl; })
-        #ifndef BOOST_CONTRACT_AUX_TEST_NO_F_POST
+        #ifndef BOOST_CONTRACT_TEST_NO_F_POST
             .postcondition([] {
                 out << "f::post" << std::endl;
                 BOOST_CONTRACT_ASSERT(f_post);

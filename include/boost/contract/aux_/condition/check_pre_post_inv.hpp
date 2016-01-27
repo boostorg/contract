@@ -27,7 +27,6 @@ template<typename R, class C>
 class check_pre_post_inv : public check_pre_post<R> { // Non-copyable base.
 public:
     #if BOOST_CONTRACT_INVARIANTS && !defined(BOOST_CONTRACT_CONFIG_PERMISSIVE)
-        // TODO: Document all static assert errors.
         BOOST_STATIC_ASSERT_MSG(
             !boost::contract::access::has_static_invariant_f<
                 C, void, boost::mpl:: vector<>

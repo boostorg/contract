@@ -1,9 +1,9 @@
 
 // Test all derived and base classes with entry static invariants.
 
-#undef BOOST_CONTRACT_AUX_TEST_NO_A_INV
-#undef BOOST_CONTRACT_AUX_TEST_NO_B_INV
-#undef BOOST_CONTRACT_AUX_TEST_NO_C_INV
+#undef BOOST_CONTRACT_TEST_NO_A_INV
+#undef BOOST_CONTRACT_TEST_NO_B_INV
+#undef BOOST_CONTRACT_TEST_NO_C_INV
 #include "decl.hpp"
 
 #include <boost/detail/lightweight_test.hpp>

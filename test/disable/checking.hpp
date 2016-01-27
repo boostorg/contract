@@ -10,14 +10,14 @@
 #include <boost/detail/lightweight_test.hpp>
 #include <sstream>
 
-boost::contract::aux::test::oteststream out;
+boost::contract::test::aux::oteststream out;
 
 struct a {
     static void static_invariant() { out << "a::static_inv" << std::endl; }
     void invariant() const { out << "a::inv" << std::endl; }
 
     struct x_tag;
-    typedef boost::contract::aux::test::counter<x_tag, int> x_type;
+    typedef boost::contract::test::aux::counter<x_tag, int> x_type;
 
     int f(x_type& x) {
         int result;
@@ -128,6 +128,7 @@ int main() {
     ;
     BOOST_TEST_EQ(a::x_type::copies(), cnt);
     BOOST_TEST_EQ(a::x_type::evals(), cnt);
+    BOOST_TEST_EQ(a::x_type::ctors(), a::x_type::dtors());
 
     out << std::endl;
 

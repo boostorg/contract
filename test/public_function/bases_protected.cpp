@@ -9,7 +9,7 @@
 #include <boost/detail/lightweight_test.hpp>
 #include <sstream>
 
-boost::contract::aux::test::oteststream out;
+boost::contract::test::aux::oteststream out;
 
 // NOTE: This is the correct way of programming contracts for base protected
 // and public overriding function.

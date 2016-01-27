@@ -11,10 +11,10 @@
 #include <boost/detail/lightweight_test.hpp>
 #include <sstream>
 
-boost::contract::aux::test::oteststream out;
+boost::contract::test::aux::oteststream out;
 
-struct x_tag; typedef boost::contract::aux::test::counter<x_tag, int> x_type;
-struct y_tag; typedef boost::contract::aux::test::counter<y_tag, int> y_type;
+struct x_tag; typedef boost::contract::test::aux::counter<x_tag, int> x_type;
+struct y_tag; typedef boost::contract::test::aux::counter<y_tag, int> y_type;
 
 bool swap(x_type& x, y_type& y) {
     bool result;

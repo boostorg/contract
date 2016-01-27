@@ -16,18 +16,20 @@
 #include <sstream>
 #include <cassert>
 
-boost::contract::aux::test::oteststream out;
+boost::contract::test::aux::oteststream out;
 
 struct ch_tag;
-typedef boost::contract::aux::test::counter<ch_tag, char> ch_type;
+typedef boost::contract::test::aux::counter<ch_tag, char> ch_type;
 
-#ifdef BOOST_CONTRACT_AUX_TEST_ref // Test with result types by reference.
-    #define BOOST_CONTRACT_AUX_TEST_ch_type ch_type&
-    #define BOOST_CONTRACT_AUX_TEST_ch_init = ch_init
+#ifdef BOOST_CONTRACT_TEST_REF // Test with result types by reference.
+    #define BOOST_CONTRACT_TEST_CH_TYPE ch_type&
+    #define BOOST_CONTRACT_TEST_CH_INIT = ch_init
     ch_type ch_init;
+    unsigned const ch_extras = 2; // 1 local and 1 global var.
 #else // Test with result types by value.
-    #define BOOST_CONTRACT_AUX_TEST_ch_type ch_type
-    #define BOOST_CONTRACT_AUX_TEST_ch_init /* nothing */
+    #define BOOST_CONTRACT_TEST_CH_TYPE ch_type
+    #define BOOST_CONTRACT_TEST_CH_INIT /* nothing */
+    unsigned const ch_extras = 1; // Only 1 local (no global) var.
 #endif
 
 bool tested_d_copies = false;
@@ -35,10 +37,10 @@ struct d {
     static void static_invariant() { out << "d::static_inv" << std::endl; }
     void invariant() const { out << "d::inv" << std::endl; }
     
-    virtual BOOST_CONTRACT_AUX_TEST_ch_type f(
+    virtual BOOST_CONTRACT_TEST_CH_TYPE f(
             ch_type& ch, boost::contract::virtual_* v = 0) {
         unsigned const old_ch_copies = ch_type::copies();
-        boost::optional<BOOST_CONTRACT_AUX_TEST_ch_type> result;
+        boost::optional<BOOST_CONTRACT_TEST_CH_TYPE> result;
         boost::contract::guard c = boost::contract::public_function(
                 v, result, this)
             .precondition([&] {
@@ -70,10 +72,10 @@ struct c
     static void static_invariant() { out << "c::static_inv" << std::endl; }
     void invariant() const { out << "c::inv" << std::endl; }
     
-    virtual BOOST_CONTRACT_AUX_TEST_ch_type f(
+    virtual BOOST_CONTRACT_TEST_CH_TYPE f(
             ch_type& ch, boost::contract::virtual_* v = 0) /* override */ {
         unsigned const old_ch_copies = ch_type::copies();
-        boost::optional<BOOST_CONTRACT_AUX_TEST_ch_type> result;
+        boost::optional<BOOST_CONTRACT_TEST_CH_TYPE> result;
         boost::contract::guard c = boost::contract::public_function<override_f>(
                 v, result, &c::f, this, ch)
             .precondition([&] {
@@ -106,10 +108,10 @@ struct b
     static void static_invariant() { out << "b::static_inv" << std::endl; }
     void invariant() const { out << "b::inv" << std::endl; }
 
-    virtual BOOST_CONTRACT_AUX_TEST_ch_type f(
+    virtual BOOST_CONTRACT_TEST_CH_TYPE f(
             ch_type& ch, boost::contract::virtual_* v = 0) /* override */ {
         unsigned const old_ch_copies = ch_type::copies();
-        BOOST_CONTRACT_AUX_TEST_ch_type result BOOST_CONTRACT_AUX_TEST_ch_init;
+        BOOST_CONTRACT_TEST_CH_TYPE result BOOST_CONTRACT_TEST_CH_INIT;
         boost::contract::guard c = boost::contract::public_function<override_f>(
                 v, result, &b::f, this, ch)
             .precondition([&] {
@@ -142,10 +144,10 @@ struct a
     static void static_invariant() { out << "a::static_inv" << std::endl; }
     void invariant() const { out << "a::inv" << std::endl; }
 
-    virtual BOOST_CONTRACT_AUX_TEST_ch_type f(
+    virtual BOOST_CONTRACT_TEST_CH_TYPE f(
             ch_type& ch, boost::contract::virtual_* v = 0) /* override */ {
         unsigned const old_ch_copies = ch_type::copies();
-        boost::optional<BOOST_CONTRACT_AUX_TEST_ch_type> result;
+        boost::optional<BOOST_CONTRACT_TEST_CH_TYPE> result;
         boost::contract::guard c = boost::contract::public_function<override_f>(
                 v, result, &a::f, this, ch)
             .precondition([&] {
@@ -178,10 +180,10 @@ struct e
     static void static_invariant() { out << "e::static_inv" << std::endl; }
     void invariant() const { out << "e::inv" << std::endl; }
 
-    virtual BOOST_CONTRACT_AUX_TEST_ch_type f(
+    virtual BOOST_CONTRACT_TEST_CH_TYPE f(
             ch_type& ch, boost::contract::virtual_* v = 0) /* override */ {
         unsigned const old_ch_copies = ch_type::copies();
-        BOOST_CONTRACT_AUX_TEST_ch_type result BOOST_CONTRACT_AUX_TEST_ch_init;
+        BOOST_CONTRACT_TEST_CH_TYPE result BOOST_CONTRACT_TEST_CH_INIT;
         boost::contract::guard c = boost::contract::public_function<override_f>(
                 v, result, &e::f, this, ch)
             .precondition([&] {
@@ -206,7 +208,7 @@ struct e
 int main() {
     std::ostringstream ok;
     ch_type ch;
-    #ifdef BOOST_CONTRACT_AUX_TEST_ref
+    #ifdef BOOST_CONTRACT_TEST_REF
         ch_init.value = '\0';
     #endif
 
@@ -261,6 +263,7 @@ int main() {
     ;
     BOOST_TEST(out.eq(ok.str()));
     BOOST_TEST(tested_a_copies);
+    BOOST_TEST_EQ(ch_type::ctors(), ch_type::dtors() + ch_extras);
 
     // Test non-optional in overriding b::f and optional in overridden c::f.
     b bb;
@@ -305,6 +308,7 @@ int main() {
     ;
     BOOST_TEST(out.eq(ok.str()));
     BOOST_TEST(tested_b_copies);
+    BOOST_TEST_EQ(ch_type::ctors(), ch_type::dtors() + ch_extras);
     
     // Test optional in both overriding c::f and overridden d::f.
     c cc;
@@ -341,6 +345,7 @@ int main() {
     ;
     BOOST_TEST(out.eq(ok.str()));
     BOOST_TEST(tested_c_copies);
+    BOOST_TEST_EQ(ch_type::ctors(), ch_type::dtors() + ch_extras);
     
     // Test non-optional in both overriding c::f and overridden d::f.
     e ee;
@@ -393,11 +398,8 @@ int main() {
     ;
     BOOST_TEST(out.eq(ok.str()));
     BOOST_TEST(tested_e_copies);
+    BOOST_TEST_EQ(ch_type::ctors(), ch_type::dtors() + ch_extras);
 
     return boost::report_errors();
 }
-
-#undef BOOST_CONTRACT_AUX_TEST_ref
-#undef BOOST_CONTRACT_AUX_TEST_ch_type
-#undef BOOST_CONTRACT_AUX_TEST_ch_init
 

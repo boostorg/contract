@@ -67,30 +67,35 @@ int main() {
             BOOST_PP_IIF(BOOST_CONTRACT_POSTCONDITIONS, 4, 0));
     BOOST_TEST_EQ(s.evals(),
             BOOST_PP_IIF(BOOST_CONTRACT_POSTCONDITIONS, 4, 0));
+    BOOST_TEST_EQ(s.ctors(), s.dtors());
 
     BOOST_TEST_EQ(aa.x.value, "aA");
     BOOST_TEST_EQ(aa.x.copies(),
             BOOST_PP_IIF(BOOST_CONTRACT_POSTCONDITIONS, 1, 0));
     BOOST_TEST_EQ(aa.x.evals(),
             BOOST_PP_IIF(BOOST_CONTRACT_POSTCONDITIONS, 1, 0));
+    BOOST_TEST_EQ(aa.x.ctors(), aa.x.dtors());
 
     BOOST_TEST_EQ(aa.y.value, "cA");
     BOOST_TEST_EQ(aa.y.copies(),
             BOOST_PP_IIF(BOOST_CONTRACT_POSTCONDITIONS, 1, 0));
     BOOST_TEST_EQ(aa.y.evals(),
             BOOST_PP_IIF(BOOST_CONTRACT_POSTCONDITIONS, 1, 0));
+    BOOST_TEST_EQ(aa.y.ctors(), aa.y.dtors());
     
     BOOST_TEST_EQ(aa.t<'d'>::z.value, "dA");
     BOOST_TEST_EQ(aa.t<'d'>::z.copies(),
             BOOST_PP_IIF(BOOST_CONTRACT_POSTCONDITIONS, 1, 0));
     BOOST_TEST_EQ(aa.t<'d'>::z.evals(),
             BOOST_PP_IIF(BOOST_CONTRACT_POSTCONDITIONS, 1, 0));
+    BOOST_TEST_EQ(aa.t<'d'>::z.ctors(), aa.t<'d'>::z.dtors());
 
     BOOST_TEST_EQ(aa.t<'e'>::z.value, "eA");
     BOOST_TEST_EQ(aa.t<'e'>::z.copies(),
             BOOST_PP_IIF(BOOST_CONTRACT_POSTCONDITIONS, 1, 0));
     BOOST_TEST_EQ(aa.t<'e'>::z.evals(),
             BOOST_PP_IIF(BOOST_CONTRACT_POSTCONDITIONS, 1, 0));
+    BOOST_TEST_EQ(aa.t<'e'>::z.ctors(), aa.t<'e'>::z.dtors());
 
     return boost::report_errors();
 }

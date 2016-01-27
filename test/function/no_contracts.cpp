@@ -11,7 +11,7 @@
 #include <boost/detail/lightweight_test.hpp>
 #include <sstream>
 
-boost::contract::aux::test::oteststream out;
+boost::contract::test::aux::oteststream out;
 
 void f(int x) {
     #if BOOST_CONTRACT_POSTCONDITIONS

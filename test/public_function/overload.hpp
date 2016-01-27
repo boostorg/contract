@@ -10,7 +10,7 @@
 #include <sstream>
 #include <string>
 
-boost::contract::aux::test::oteststream out;
+boost::contract::test::aux::oteststream out;
 
 struct b {
     static void static_invariant() { out << "b::static_inv" << std::endl; }

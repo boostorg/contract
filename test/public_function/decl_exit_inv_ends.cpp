@@ -1,9 +1,9 @@
 
 // Test only derived and grandparent classes (ends) with exit invariants.
 
-#undef BOOST_CONTRACT_AUX_TEST_NO_A_INV
-#define BOOST_CONTRACT_AUX_TEST_NO_B_INV
-#undef BOOST_CONTRACT_AUX_TEST_NO_C_INV
+#undef BOOST_CONTRACT_TEST_NO_A_INV
+#define BOOST_CONTRACT_TEST_NO_B_INV
+#undef BOOST_CONTRACT_TEST_NO_C_INV
 #include "decl.hpp"
 
 #include <boost/preprocessor/control/iif.hpp>

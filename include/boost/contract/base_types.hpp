@@ -2,6 +2,8 @@
 #ifndef BOOST_CONTRACT_BASE_TYPES_HPP_
 #define BOOST_CONTRACT_BASE_TYPES_HPP_
 
+// TODO: Document the max number of bases in 20 because of Boost.MPL vector limit. If Boost.MPL vector and related alg impl was to change to use variadic templates in the future there will be not limit to max bases (but for now this high limit is better than the extra complexity of reimpl all Boost.MPL vector, etc. within this lib with variadic templates).
+
 /** @file */
 
 #include <boost/contract/core/config.hpp>

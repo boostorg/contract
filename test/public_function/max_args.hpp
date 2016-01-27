@@ -14,8 +14,7 @@
 #include <boost/detail/lightweight_test.hpp>
 #include <sstream>
 
-// TODO: I should rename this test::aux (and not aux::text) and same for macros and counter class...
-boost::contract::aux::test::oteststream out;
+boost::contract::test::aux::oteststream out;
         
 #define BOOST_CONTRACT_TEST_MAX_ARGS_PARAM_COMMA_(z, n, unused) \
     int BOOST_PP_CAT(a, n) ,
