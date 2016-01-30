@@ -1,0 +1,4 @@
+
+lib boost_contract : ../src/contract.cpp :
+        <link>shared:<define>BOOST_CONTRACT_DYN_LINK ;
+

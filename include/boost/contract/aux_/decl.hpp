@@ -11,8 +11,22 @@
     #include <boost/preprocessor/repetition/repeat.hpp>
     #include <boost/preprocessor/tuple/elem.hpp>
 #endif
+#include <boost/config.hpp>
 
 /* PUBLIC */
+
+// IMPORTANT: In general, this library should always and only be compiled and
+// used as a shared library. Otherwise, lib's state won't be shared among
+// different user programs and user libraries.
+#if defined(BOOST_ALL_DYN_LINK) || defined(BOOST_CONTRACT_DYN_LINK)
+    #ifdef BOOST_CONTRACT_AUX_CONFIG_SOURCE
+        #define BOOST_CONTRACT_AUX_DECL BOOST_SYMBOL_EXPORT
+    #else
+        #define BOOST_CONTRACT_AUX_DECL BOOST_SYMBOL_IMPORT
+    #endif
+#else
+    #define BOOST_CONTRACT_AUX_DECL /* nothing */
+#endif
 
 #define BOOST_CONTRACT_AUX_DECL_OVERRIDING_PUBLIC_FUNCTION_Z(z, \
     arity, is_friend, has_result, \

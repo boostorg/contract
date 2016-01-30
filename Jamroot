@@ -1,12 +1,13 @@
 
 import testing ;
 import os ;
+import feature ;
 
 if ! [ os.environ BOOST_ROOT ] {
-    exit "error: set BOOST_ROOT environment variable to Boost root directory" ;
+    exit "Error: set BOOST_ROOT environment variable to Boost root directory" ;
 }
 local BOOST_ROOT = [ os.environ BOOST_ROOT ] ;
-echo "using: Boost libraries from \"$(BOOST_ROOT)\" (see $BOOST_ROOT)" ;
+echo "Using Boost libraries from \"$(BOOST_ROOT)\" (see $BOOST_ROOT)" ;
 use-project boost : $(BOOST_ROOT) ;
 
 project
@@ -20,15 +21,28 @@ project
 ;
 
 rule subdir-usage ( ) {
-    echo ;
-    echo "usage: [time] bjam [-aq toolset=msvc,gcc,clang] DIR_NAME[-FILE_NAME[-no_...]] [--clean] [; echo $?]" ;
-    echo "where: -no_... = -no[_entryinv][_pre][_exitinv][_post] | -no_all | n/a" ;
-    echo ;
+    echo "
+Usage: [time] bjam [-aq] [OPTION]... DIR[-CPP_FILE_NAME] [--clean] [; echo $?]
+Build and run Boost.Contract tests and examples.
+
+Options:
+  toolset=msvc,gcc,clang                use different compilers
+  boost_contract-link=shared,static,    compile Boost.Contract lib as shared,
+                      header            static, or header-only
+  boost_contract-no=all_on,entryinv,    selectively turn off contract checking
+                    pre,exitinv,post,
+                    entryinv_pre,entryinv_exitinv,entryinv_post,pre_exitinv,
+                    pre_post,exitinv_post,pre_exitinv_post,
+                    entryinv_exitinv_post,entryinv_pre_post,
+                    entryinv_pre_exitinv,entryinv_pre_exitinv_post
+" ;
 }
 
 rule subdir-compile-fail ( subdir : cpp_fname : requirements * ) {
     compile-fail $(subdir)/$(cpp_fname).cpp
     :
+        <link>shared:<library>../build//boost_contract
+        <link>static:<library>../build//boost_contract
         <include>$(subdir)
         $(requirements)
     :
@@ -39,6 +53,8 @@ rule subdir-compile-fail ( subdir : cpp_fname : requirements * ) {
 rule subdir-run ( subdir : cpp_fname : requirements * ) {
     run $(subdir)/$(cpp_fname).cpp : :
     :
+        <link>shared:<library>../build//boost_contract
+        <link>static:<library>../build//boost_contract
         <include>$(subdir)
         $(requirements)
     :
@@ -46,170 +62,110 @@ rule subdir-run ( subdir : cpp_fname : requirements * ) {
     ;
 }
 
-rule subdir-run-withno ( subdir : cpp_fname : requirements * ) {
-    subdir-run $(subdir) : $(cpp_fname) : $(requirements) ;
-    # Compilation of 1 contract off. 
-    run $(subdir)/$(cpp_fname).cpp : :
+rule subdir-lib ( subdir : cpp_fname : requirements * ) {
+    lib $(subdir)-$(cpp_fname) : $(subdir)/$(cpp_fname).cpp
     :
-        <define>BOOST_CONTRACT_CONFIG_NO_ENTRY_INVARIANTS
-        <include>$(subdir)
+        <link>shared:<library>../build//boost_contract
+        <link>static:<library>../build//boost_contract
         $(requirements)
-    :
-        $(subdir)-$(cpp_fname)-no_entryinv
-    ;
-    run $(subdir)/$(cpp_fname).cpp : :
-    :
-        <define>BOOST_CONTRACT_CONFIG_NO_PRECONDITIONS
-        <include>$(subdir)
-        $(requirements)
-    :
-        $(subdir)-$(cpp_fname)-no_pre
-    ;
-    run $(subdir)/$(cpp_fname).cpp : :
-    :
-        <define>BOOST_CONTRACT_CONFIG_NO_EXIT_INVARIANTS
-        <include>$(subdir)
-        $(requirements)
-    :
-        $(subdir)-$(cpp_fname)-no_exitinv
-    ;
-    run $(subdir)/$(cpp_fname).cpp : :
-    :
-        <define>BOOST_CONTRACT_CONFIG_NO_POSTCONDITIONS
-        <include>$(subdir)
-        $(requirements)
-    :
-        $(subdir)-$(cpp_fname)-no_post
-    ;
-    # Compilation of 2 contracts off.
-    run $(subdir)/$(cpp_fname).cpp : :
-    :
-        <define>BOOST_CONTRACT_CONFIG_NO_ENTRY_INVARIANTS
-        <define>BOOST_CONTRACT_CONFIG_NO_PRECONDITIONS
-        <include>$(subdir)
-        $(requirements)
-    :
-        $(subdir)-$(cpp_fname)-no_entryinv_pre
-    ;
-    run $(subdir)/$(cpp_fname).cpp : :
-    :
-        <define>BOOST_CONTRACT_CONFIG_NO_ENTRY_INVARIANTS
-        <define>BOOST_CONTRACT_CONFIG_NO_EXIT_INVARIANTS
-        <include>$(subdir)
-        $(requirements)
-    :
-        $(subdir)-$(cpp_fname)-no_entryinv_exitinv
-    ;
-    run $(subdir)/$(cpp_fname).cpp : :
-    :
-        <define>BOOST_CONTRACT_CONFIG_NO_ENTRY_INVARIANTS
-        <define>BOOST_CONTRACT_CONFIG_NO_POSTCONDITIONS
-        <include>$(subdir)
-        $(requirements)
-    :
-        $(subdir)-$(cpp_fname)-no_entryinv_post
-    ;
-    run $(subdir)/$(cpp_fname).cpp : :
-    :
-        <define>BOOST_CONTRACT_CONFIG_NO_PRECONDITIONS
-        <define>BOOST_CONTRACT_CONFIG_NO_EXIT_INVARIANTS
-        <include>$(subdir)
-        $(requirements)
-    :
-        $(subdir)-$(cpp_fname)-no_pre_exitinv
-    ;
-    run $(subdir)/$(cpp_fname).cpp : :
-    :
-        <define>BOOST_CONTRACT_CONFIG_NO_PRECONDITIONS
-        <define>BOOST_CONTRACT_CONFIG_NO_POSTCONDITIONS
-        <include>$(subdir)
-        $(requirements)
-    :
-        $(subdir)-$(cpp_fname)-no_pre_post
-    ;
-    run $(subdir)/$(cpp_fname).cpp : :
-    :
-        <define>BOOST_CONTRACT_CONFIG_NO_EXIT_INVARIANTS
-        <define>BOOST_CONTRACT_CONFIG_NO_POSTCONDITIONS
-        <include>$(subdir)
-        $(requirements)
-    :
-        $(subdir)-$(cpp_fname)-no_exitinv_post
-    ;
-    # Compilation of 3 contracts off.
-    run $(subdir)/$(cpp_fname).cpp : :
-    :
-        <define>BOOST_CONTRACT_CONFIG_NO_PRECONDITIONS
-        <define>BOOST_CONTRACT_CONFIG_NO_EXIT_INVARIANTS
-        <define>BOOST_CONTRACT_CONFIG_NO_POSTCONDITIONS
-        <include>$(subdir)
-        $(requirements)
-    :
-        $(subdir)-$(cpp_fname)-no_pre_exitinv_post
-    ;
-    run $(subdir)/$(cpp_fname).cpp : :
-    :
-        <define>BOOST_CONTRACT_CONFIG_NO_ENTRY_INVARIANTS
-        <define>BOOST_CONTRACT_CONFIG_NO_EXIT_INVARIANTS
-        <define>BOOST_CONTRACT_CONFIG_NO_POSTCONDITIONS
-        <include>$(subdir)
-        $(requirements)
-    :
-        $(subdir)-$(cpp_fname)-no_entryinv_exitinv_post
-    ;
-    run $(subdir)/$(cpp_fname).cpp : :
-    :
-        <define>BOOST_CONTRACT_CONFIG_NO_ENTRY_INVARIANTS
-        <define>BOOST_CONTRACT_CONFIG_NO_PRECONDITIONS
-        <define>BOOST_CONTRACT_CONFIG_NO_POSTCONDITIONS
-        <include>$(subdir)
-        $(requirements)
-    :
-        $(subdir)-$(cpp_fname)-no_entryinv_pre_post
-    ;
-    run $(subdir)/$(cpp_fname).cpp : :
-    :
-        <define>BOOST_CONTRACT_CONFIG_NO_ENTRY_INVARIANTS
-        <define>BOOST_CONTRACT_CONFIG_NO_PRECONDITIONS
-        <define>BOOST_CONTRACT_CONFIG_NO_EXIT_INVARIANTS
-        <include>$(subdir)
-        $(requirements)
-    :
-        $(subdir)-$(cpp_fname)-no_entryinv_pre_exitinv
-    ;
-    # Compilation of all 4 contracts off.
-    run $(subdir)/$(cpp_fname).cpp : :
-    :
-        <define>BOOST_CONTRACT_CONFIG_NO_ENTRY_INVARIANTS
-        <define>BOOST_CONTRACT_CONFIG_NO_PRECONDITIONS
-        <define>BOOST_CONTRACT_CONFIG_NO_EXIT_INVARIANTS
-        <define>BOOST_CONTRACT_CONFIG_NO_POSTCONDITIONS
-        <include>$(subdir)
-        $(requirements)
-    :
-        $(subdir)-$(cpp_fname)-no_entryinv_pre_exitinv_post
-    ;
-    # Group all compilation off targets.
-    test-suite $(subdir)-$(cpp_fname)-no_all
-    :
-        $(subdir)-$(cpp_fname)-no_entryinv
-        $(subdir)-$(cpp_fname)-no_pre
-        $(subdir)-$(cpp_fname)-no_exitinv
-        $(subdir)-$(cpp_fname)-no_post
-        
-        $(subdir)-$(cpp_fname)-no_entryinv_pre
-        $(subdir)-$(cpp_fname)-no_entryinv_exitinv
-        $(subdir)-$(cpp_fname)-no_entryinv_post
-        $(subdir)-$(cpp_fname)-no_pre_exitinv
-        $(subdir)-$(cpp_fname)-no_pre_post
-        $(subdir)-$(cpp_fname)-no_exitinv_post
-        
-        $(subdir)-$(cpp_fname)-no_pre_exitinv_post
-        $(subdir)-$(cpp_fname)-no_entryinv_exitinv_post
-        $(subdir)-$(cpp_fname)-no_entryinv_pre_post
-        $(subdir)-$(cpp_fname)-no_entryinv_pre_exitinv
-        
-        $(subdir)-$(cpp_fname)-no_entryinv_pre_exitinv_post
     ;
 }
+
+feature.feature boost_contract-link : shared static header :
+        composite propagated link-incompatible ;
+feature.compose <boost_contract-link>shared : <link>shared ;
+feature.compose <boost_contract-link>static : <link>static ;
+feature.compose <boost_contract-link>header :
+        <define>BOOST_CONTRACT_HEADER_ONLY ;
+
+feature.feature boost_contract-no
+: 
+    all_on entryinv pre exitinv post entryinv_pre entryinv_exitinv
+    entryinv_post pre_exitinv pre_post exitinv_post pre_exitinv_post
+    entryinv_exitinv_post entryinv_pre_post entryinv_pre_exitinv
+    entryinv_pre_exitinv_post
+:
+    composite propagated link-incompatible
+;
+# 1 contract off.
+feature.compose <boost_contract-no>entryinv
+:
+    <define>BOOST_CONTRACT_CONFIG_NO_ENTRY_INVARIANTS
+;
+feature.compose <boost_contract-no>pre
+:
+    <define>BOOST_CONTRACT_CONFIG_NO_PRECONDITIONS
+;
+feature.compose <boost_contract-no>exitinv
+:
+    <define>BOOST_CONTRACT_CONFIG_NO_EXIT_INVARIANTS
+;
+feature.compose <boost_contract-no>post
+:
+    <define>BOOST_CONTRACT_CONFIG_NO_POSTCONDITIONS
+;
+# 2 contracts off.
+feature.compose <boost_contract-no>entryinv_pre
+:
+    <define>BOOST_CONTRACT_CONFIG_NO_ENTRY_INVARIANTS
+    <define>BOOST_CONTRACT_CONFIG_NO_PRECONDITIONS
+;
+feature.compose <boost_contract-no>entryinv_exitinv
+:
+    <define>BOOST_CONTRACT_CONFIG_NO_ENTRY_INVARIANTS
+    <define>BOOST_CONTRACT_CONFIG_NO_EXIT_INVARIANTS
+;
+feature.compose <boost_contract-no>entryinv_post
+:
+    <define>BOOST_CONTRACT_CONFIG_NO_ENTRY_INVARIANTS
+    <define>BOOST_CONTRACT_CONFIG_NO_POSTCONDITIONS
+;
+feature.compose <boost_contract-no>pre_exitinv
+:
+    <define>BOOST_CONTRACT_CONFIG_NO_PRECONDITIONS
+    <define>BOOST_CONTRACT_CONFIG_NO_EXIT_INVARIANTS
+;
+feature.compose <boost_contract-no>pre_post
+:
+    <define>BOOST_CONTRACT_CONFIG_NO_PRECONDITIONS
+    <define>BOOST_CONTRACT_CONFIG_NO_POSTCONDITIONS
+;
+feature.compose <boost_contract-no>exitinv_post
+:
+    <define>BOOST_CONTRACT_CONFIG_NO_EXIT_INVARIANTS
+    <define>BOOST_CONTRACT_CONFIG_NO_POSTCONDITIONS
+;
+# 3 contracts off.
+feature.compose <boost_contract-no>pre_exitinv_post
+:
+    <define>BOOST_CONTRACT_CONFIG_NO_PRECONDITIONS
+    <define>BOOST_CONTRACT_CONFIG_NO_EXIT_INVARIANTS
+    <define>BOOST_CONTRACT_CONFIG_NO_POSTCONDITIONS
+;
+feature.compose <boost_contract-no>entryinv_exitinv_post
+:
+    <define>BOOST_CONTRACT_CONFIG_NO_ENTRY_INVARIANTS
+    <define>BOOST_CONTRACT_CONFIG_NO_EXIT_INVARIANTS
+    <define>BOOST_CONTRACT_CONFIG_NO_POSTCONDITIONS
+;
+feature.compose <boost_contract-no>entryinv_pre_post
+:
+    <define>BOOST_CONTRACT_CONFIG_NO_ENTRY_INVARIANTS
+    <define>BOOST_CONTRACT_CONFIG_NO_PRECONDITIONS
+    <define>BOOST_CONTRACT_CONFIG_NO_POSTCONDITIONS
+;
+feature.compose <boost_contract-no>entryinv_pre_exitinv
+:
+    <define>BOOST_CONTRACT_CONFIG_NO_ENTRY_INVARIANTS
+    <define>BOOST_CONTRACT_CONFIG_NO_PRECONDITIONS
+    <define>BOOST_CONTRACT_CONFIG_NO_EXIT_INVARIANTS
+;
+# All 4 contracts oof.
+feature.compose <boost_contract-no>entryinv_pre_exitinv_post
+:
+    <define>BOOST_CONTRACT_CONFIG_NO_ENTRY_INVARIANTS
+    <define>BOOST_CONTRACT_CONFIG_NO_PRECONDITIONS
+    <define>BOOST_CONTRACT_CONFIG_NO_EXIT_INVARIANTS
+    <define>BOOST_CONTRACT_CONFIG_NO_POSTCONDITIONS
+;
 

@@ -4,11 +4,18 @@
 
 /** @file */
 
-// IMPORTANT: This header MUST NOT #include any other header. That way users
-// can #include this header and not #include any of this lib headers after that
-// depending on the contract 0/1 macros below ensuring no compilation overhead.
+// IMPORTANT: This header MUST NOT #include any other header of this lib.
+// That way users can #include this header and not #include any of this lib
+// headers after that depending on the contract 0/1 macros below ensuring no
+// compilation overhead.
 
 // TODO: Can I compile lib1 with some contract on/off, lib2 with other contracts on/off and then link the two together?
+
+// TODO: To be consistent... should I use CONFIG only for staff below that has a default #define, but for PREMISSIVE, etc. do not use CONFIG?
+// BOOST_CONTRACT_DYN_LINK
+// BOOST_CONTRACT_HEADER_ONLY
+
+// BOOST_CONTRACT_THREAD_DISABLE
 
 #ifndef BOOST_CONTRACT_CONFIG_MAX_ARGS
 #   define BOOST_CONTRACT_CONFIG_MAX_ARGS 10

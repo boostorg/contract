@@ -347,7 +347,6 @@ int main() {
     BOOST_TEST_EQ(a::x_type::evals(),
             BOOST_PP_IIF(BOOST_CONTRACT_POSTCONDITIONS, 1, 0));
     BOOST_TEST_EQ(a::x_type::ctors(), a::x_type::dtors()); // No leak.
-    // TODO: I should check these ctors() == dtors() every where cnt_type is used, in all tests.
     
     BOOST_TEST_EQ(c::y_type::copies(),
             BOOST_PP_IIF(BOOST_CONTRACT_POSTCONDITIONS, 1, 0));

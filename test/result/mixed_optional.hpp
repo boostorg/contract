@@ -29,7 +29,7 @@ typedef boost::contract::test::aux::counter<ch_tag, char> ch_type;
 #else // Test with result types by value.
     #define BOOST_CONTRACT_TEST_CH_TYPE ch_type
     #define BOOST_CONTRACT_TEST_CH_INIT /* nothing */
-    unsigned const ch_extras = 1; // Only 1 local (no global) var.
+    unsigned const ch_extras = 1; // 1 for local var (no global var).
 #endif
 
 bool tested_d_copies = false;

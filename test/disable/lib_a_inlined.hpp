@@ -1,0 +1,81 @@
+
+#ifndef BOOST_TEST_LIB_A_INLINED_HPP_
+#define BOOST_TEST_LIB_A_INLINED_HPP_
+
+// Test other contract checking disabled within contract checking [among libs].
+
+#include "lib_a.hpp"
+#include "../aux_/oteststream.hpp"
+#include <boost/contract/public_function.hpp>
+#include <boost/contract/old.hpp>
+#include <boost/contract/guard.hpp>
+#include <boost/contract/assert.hpp>
+
+std::string out_;
+
+void out(std::string const& text) {
+    if(text == "") out_ = "";
+    else {
+        out_ = out_ + text;
+        std::clog << text;
+    }
+}
+
+bool out_eq(std::string const& text) {
+    return boost::contract::test::aux::oteststream::eq(out_, text);
+}
+
+void a::static_invariant() { out("a::static_inv\n"); }
+void a::invariant() const { out("a::inv\n"); }
+
+int a::f(x_type& x) {
+    int result;
+    boost::contract::old_ptr<x_type> old_x = BOOST_CONTRACT_OLDOF(
+            x_type::eval(x));
+    boost::contract::guard c = boost::contract::public_function(this)
+        .precondition([&] { out("a::f::pre\n"); })
+        .old([&] { out("a::f::old\n"); })
+        .postcondition([&] {
+            out("a::f::post\n");
+            BOOST_CONTRACT_ASSERT(x.value == -old_x->value);
+            BOOST_CONTRACT_ASSERT(result == old_x->value);
+        })
+    ;
+    out("a::f::body\n");
+    result = x.value;
+    x.value = -x.value;
+    return result;
+}
+
+void a::disable_pre_failure() {
+    boost::contract::set_precondition_failure([] (boost::contract::from)
+            { out("a::pre_failure"); });
+}
+
+void a::disable_post_failure() {
+    boost::contract::set_postcondition_failure([] (boost::contract::from)
+            { out("a::post_failure"); });
+}
+
+void a::disable_entry_inv_failure() {
+    boost::contract::set_entry_invariant_failure([] (boost::contract::from)
+            { out("a::entry_inv_failure"); });
+}
+
+void a::disable_exit_inv_failure() {
+    boost::contract::set_exit_invariant_failure([] (boost::contract::from)
+            { out("a::exit_inv_failure"); });
+}
+
+void a::disable_inv_failure() {
+    boost::contract::set_invariant_failure([] (boost::contract::from)
+            { out("a::inv_failure"); });
+}
+
+void a::disable_failure() {
+    boost::contract::set_failure([] (boost::contract::from)
+            { out("a::failure"); });
+}
+
+#endif // #include guard
+
