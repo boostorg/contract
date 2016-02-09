@@ -2,9 +2,13 @@
 #ifndef BOOST_CONTRACT_AUX_CHECK_BASE_HPP_
 #define BOOST_CONTRACT_AUX_CHECK_BASE_HPP_
 
-#include <boost/contract/core/config.hpp>
+// Copyright (C) 2008-2016 Lorenzo Caminiti
+// Distributed under the Boost Software License, Version 1.0 (see accompanying
+// file LICENSE_1_0.txt or a copy at http://www.boost.org/LICENSE_1_0.txt).
+// See: http://www.boost.org/doc/libs/release/libs/contract/doc/html/index.html
+
 #include <boost/contract/core/exception.hpp>
-/** @cond */
+#include <boost/contract/core/config.hpp>
 #if BOOST_CONTRACT_PRECONDITIONS || BOOST_CONTRACT_POSTCONDITIONS
     #include <boost/function.hpp>
 #endif
@@ -13,7 +17,6 @@
 #ifndef BOOST_CONTRACT_CONFIG_ON_MISSING_GUARD
     #include <cassert>
 #endif
-/** @endcond */
 
 namespace boost { namespace contract { namespace aux {
 

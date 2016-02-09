@@ -8,6 +8,31 @@
 #include <sstream>
 #include <iostream>
 
+// Convenience to declare test string functions across shared libs.
+#define BOOST_CONTRACT_TEST_AUX_OTESTSTREAM_STR_DECL(declspec, func) \
+    std::string declspec func(); \
+    void declspec func(std::string const& text);
+
+#define BOOST_CONTRACT_TEST_AUX_OTESTSTREAM_STR_DEF(func) \
+    namespace boost { namespace contract { namespace test { namespace aux { \
+            namespace oteststream_ { \
+        std::string func; \
+    } } } } } \
+    \
+    std::string func() { \
+        return boost::contract::test::aux::oteststream_::func; \
+    } \
+    \
+    void func(std::string const& text) { \
+        if(text == "") boost::contract::test::aux::oteststream_::func = ""; \
+        else { \
+            boost::contract::test::aux::oteststream_::func = \
+                    boost::contract::test::aux::oteststream_::func + text; \
+            std::clog << text; \
+            std::clog.flush(); \
+        } \
+    }
+
 namespace boost { namespace contract { namespace test { namespace aux {
 
 namespace oteststream_ {

@@ -5,25 +5,13 @@
 // Test other contract checking disabled within contract checking [among libs].
 
 #include "lib_a.hpp"
-#include "../aux_/oteststream.hpp"
 #include <boost/contract/public_function.hpp>
 #include <boost/contract/old.hpp>
 #include <boost/contract/guard.hpp>
 #include <boost/contract/assert.hpp>
+#include <iostream>
 
-std::string out_;
-
-void out(std::string const& text) {
-    if(text == "") out_ = "";
-    else {
-        out_ = out_ + text;
-        std::clog << text;
-    }
-}
-
-bool out_eq(std::string const& text) {
-    return boost::contract::test::aux::oteststream::eq(out_, text);
-}
+BOOST_CONTRACT_TEST_AUX_OTESTSTREAM_STR_DEF(out)
 
 void a::static_invariant() { out("a::static_inv\n"); }
 void a::invariant() const { out("a::inv\n"); }

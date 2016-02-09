@@ -2,19 +2,24 @@
 #ifndef BOOST_CONTRACT_HPP_
 #define BOOST_CONTRACT_HPP_
 
+// Copyright (C) 2008-2016 Lorenzo Caminiti
+// Distributed under the Boost Software License, Version 1.0 (see accompanying
+// file LICENSE_1_0.txt or a copy at http://www.boost.org/LICENSE_1_0.txt).
+// See: http://www.boost.org/doc/libs/release/libs/contract/doc/html/index.html
+
 /** @file */
 
-#include <boost/contract/public_function.hpp>
-#include <boost/contract/function.hpp>
-#include <boost/contract/destructor.hpp>
-#include <boost/contract/constructor.hpp>
-#include <boost/contract/guard.hpp>
-#include <boost/contract/override.hpp>
-#include <boost/contract/base_types.hpp>
-#include <boost/contract/old.hpp>
+// Include all and only public headers as users would (not core headers, etc.).
 #include <boost/contract/assert.hpp>
+#include <boost/contract/base_types.hpp>
 #include <boost/contract/call_if.hpp>
-#include <boost/contract/config.hpp>
+#include <boost/contract/constructor.hpp>
+#include <boost/contract/destructor.hpp>
+#include <boost/contract/function.hpp>
+#include <boost/contract/guard.hpp>
+#include <boost/contract/old.hpp>
+#include <boost/contract/override.hpp>
+#include <boost/contract/public_function.hpp>
 
 // TODO: Add all copyright and licencing info (to all files, etc.).
 

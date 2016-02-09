@@ -218,8 +218,26 @@ test-suite disable
             <link>shared:<define>BOOST_CONTRACT_TEST_LIB_A_DYN_LINK ]
     [ subdir-lib disable : lib_b : <library>disable-lib_a
             <link>shared:<define>BOOST_CONTRACT_TEST_LIB_B_DYN_LINK ]
-    [ subdir-run disable : libs :
+    [ subdir-run disable : lib_ab :
             <library>disable-lib_a <library>disable-lib_b ]
+    
+    [
+        subdir-lib disable : lib_x
+        :
+            <link>shared:<define>BOOST_CONTRACT_TEST_LIB_X_DYN_LINK
+            # Test contracts in .cpp so never post (as NO_POST here).
+            <define>BOOST_CONTRACT_CONFIG_NO_POSTCONDITIONS
+    ]
+    [
+        subdir-lib disable : lib_y
+        :
+            <library>disable-lib_x
+            <link>shared:<define>BOOST_CONTRACT_TEST_LIB_Y_DYN_LINK
+            # Test contracts in .hpp so can have post (even if NO_POST here).
+            <define>BOOST_CONTRACT_CONFIG_NO_POSTCONDITIONS
+    ]
+    [ subdir-run disable : lib_xy :
+            <library>disable-lib_x <library>disable-lib_y ]
 ;
 
 test-suite set

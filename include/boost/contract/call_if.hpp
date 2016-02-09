@@ -2,21 +2,26 @@
 #ifndef BOOST_CONTRACT_CALL_IF_HPP_
 #define BOOST_CONTRACT_CALL_IF_HPP_
 
+// Copyright (C) 2008-2016 Lorenzo Caminiti
+// Distributed under the Boost Software License, Version 1.0 (see accompanying
+// file LICENSE_1_0.txt or a copy at http://www.boost.org/LICENSE_1_0.txt).
+// See: http://www.boost.org/doc/libs/release/libs/contract/doc/html/index.html
+
+// Do not include all_core_headers here (call_if is essentially standalone).
 #include <boost/contract/aux_/none.hpp>
-/** @cond */
 #include <boost/make_shared.hpp>
 #include <boost/shared_ptr.hpp>
-#include <boost/utility/result_of.hpp>
 #include <boost/config.hpp>
-/** @endcond */
 
 /* PRIVATE */
 
 // Boost.ResultOf not always able to deduce lambda result type (on MSVC).
 #ifndef BOOST_NO_CXX11_DECL_TYPE
+    #include <boost/utility/declval.hpp>
     #define BOOST_CONTRACT_CALL_IF_ENABLE_IF_UNARY_RESULT_OF_(F) \
         decltype(boost::declval<F>()())
 #else
+    #include <boost/utility/result_of.hpp>
     #define BOOST_CONTRACT_CALL_IF_ENABLE_IF_UNARY_RESULT_OF_(F) \
         typename boost::result_of<F()>::type
 #endif

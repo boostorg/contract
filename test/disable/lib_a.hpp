@@ -2,6 +2,7 @@
 #ifndef BOOST_CONTRACT_TEST_LIB_A_HPP_
 #define BOOST_CONTRACT_TEST_LIB_A_HPP_
 
+#include "../aux_/oteststream.hpp"
 #include "../aux_/counter.hpp"
 #include <boost/config.hpp>
 #include <string>
@@ -18,8 +19,8 @@
     #define BOOST_CONTRACT_TEST_LIB_A_DECL /* nothing */
 #endif
 
-void BOOST_CONTRACT_TEST_LIB_A_DECL out(std::string const& text);
-bool BOOST_CONTRACT_TEST_LIB_A_DECL out_eq(std::string const& text);
+BOOST_CONTRACT_TEST_AUX_OTESTSTREAM_STR_DECL(
+        BOOST_CONTRACT_TEST_LIB_A_DECL, out)
 
 struct BOOST_CONTRACT_TEST_LIB_A_DECL a {
     static void static_invariant();

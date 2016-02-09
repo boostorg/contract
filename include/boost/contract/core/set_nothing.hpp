@@ -2,13 +2,20 @@
 #ifndef BOOST_CONTRACT_SET_NOTHING_HPP_
 #define BOOST_CONTRACT_SET_NOTHING_HPP_
 
+// Copyright (C) 2008-2016 Lorenzo Caminiti
+// Distributed under the Boost Software License, Version 1.0 (see accompanying
+// file LICENSE_1_0.txt or a copy at http://www.boost.org/LICENSE_1_0.txt).
+// See: http://www.boost.org/doc/libs/release/libs/contract/doc/html/index.html
+
 /** @file */
 
-#include <boost/contract/aux_/condition/check_base.hpp>
-#include <boost/contract/aux_/auto_ptr.hpp>
-/** @cond */
+#include <boost/contract/core/config.hpp>
+#if BOOST_CONTRACT_PRECONDITIONS || BOOST_CONTRACT_POSTCONDITIONS || \
+        BOOST_CONTRACT_INVARIANTS
+    #include <boost/contract/aux_/condition/check_base.hpp>
+    #include <boost/contract/aux_/auto_ptr.hpp>
+#endif
 #include <boost/config.hpp>
-/** @endcond */
 
 namespace boost {
     namespace contract {
@@ -35,13 +42,13 @@ private:
     #if BOOST_CONTRACT_PRECONDITIONS || BOOST_CONTRACT_POSTCONDITIONS || \
             BOOST_CONTRACT_INVARIANTS
         typedef boost::contract::aux::check_base check_type;
-        
-        explicit set_nothing(check_type* check) : check_(check) {}
 
+        explicit set_nothing(check_type* check) : check_(check) {}
+        
         boost::contract::aux::auto_ptr<check_type> check_;
     #endif
 
-    // Friendship used to limit library's public API.
+    // Friends (used to limit library's public API).
 
     friend class guard;
 

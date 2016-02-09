@@ -2,21 +2,24 @@
 #ifndef BOOST_CONTRACT_AUX_MEMBER_FUNCTION_TYPES_HPP_
 #define BOOST_CONTRACT_AUX_MEMBER_FUNCTION_TYPES_HPP_
 
+// Copyright (C) 2008-2016 Lorenzo Caminiti
+// Distributed under the Boost Software License, Version 1.0 (see accompanying
+// file LICENSE_1_0.txt or a copy at http://www.boost.org/LICENSE_1_0.txt).
+// See: http://www.boost.org/doc/libs/release/libs/contract/doc/html/index.html
+
 #include <boost/contract/aux_/none.hpp>
-/** @cond */
-#include <boost/function_types/result_type.hpp>
 #include <boost/function_types/parameter_types.hpp>
+#include <boost/function_types/result_type.hpp>
 #include <boost/function_types/property_tags.hpp>
-#include <boost/type_traits/is_same.hpp>
 #include <boost/type_traits/is_const.hpp>
 #include <boost/type_traits/is_volatile.hpp>
+#include <boost/type_traits/is_same.hpp>
 #include <boost/mpl/pop_front.hpp>
-#include <boost/mpl/back.hpp>
 #include <boost/mpl/push_back.hpp>
-#include <boost/mpl/if.hpp>
+#include <boost/mpl/back.hpp>
 #include <boost/mpl/and.hpp>
+#include <boost/mpl/if.hpp>
 #include <boost/mpl/identity.hpp>
-/** @endcond */
 
 namespace boost {
     namespace contract {

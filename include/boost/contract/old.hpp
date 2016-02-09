@@ -2,54 +2,45 @@
 #ifndef BOOST_CONTRACT_OLD_HPP_
 #define BOOST_CONTRACT_OLD_HPP_
 
+// Copyright (C) 2008-2016 Lorenzo Caminiti
+// Distributed under the Boost Software License, Version 1.0 (see accompanying
+// file LICENSE_1_0.txt or a copy at http://www.boost.org/LICENSE_1_0.txt).
+// See: http://www.boost.org/doc/libs/release/libs/contract/doc/html/index.html
+
 /** @file */
 
-#include <boost/contract/core/config.hpp>
-#include <boost/contract/core/virtual.hpp>
+#include <boost/contract/aux_/all_core_headers.hpp>
 #include <boost/contract/aux_/check_guard.hpp>
 #include <boost/contract/aux_/operator_safe_bool.hpp>
 #include <boost/contract/aux_/debug.hpp>
-/** @cond */
 #include <boost/make_shared.hpp>
 #include <boost/shared_ptr.hpp>
 #include <boost/type_traits/is_copy_constructible.hpp>
 #include <boost/utility/enable_if.hpp>
-/** @endcond */
-
-/** @cond */
 #include <boost/preprocessor/config/config.hpp>
-/** @endcond */
-#if !BOOST_PP_VARIADICS
-    #define BOOST_CONTRACT_OLDOF \
-BOOST_CONTRACT_ERROR_macro_OLDOF_requires_variadic_macros_otherwise_manually_program_old_values
-#else
 
-/** @cond */
-#include <boost/config.hpp>
+#if !BOOST_PP_VARIADICS
+
+#define BOOST_CONTRACT_OLDOF \
+BOOST_CONTRACT_ERROR_macro_OLDOF_requires_variadic_macros_otherwise_manually_program_old_values
+
+#else // variadics
+
 #include <boost/preprocessor/facilities/overload.hpp>
 #include <boost/preprocessor/facilities/empty.hpp>
 #include <boost/preprocessor/cat.hpp>
-/** @endcond */
-
-/* PUBLIC */
-
-// NOTE: Leave this #defined the same regardless of ..._POSTCONDITIONS.
-#define BOOST_CONTRACT_OLDOF(...) \
-    BOOST_PP_CAT( /* CAT(..., EMTPY()) required on MSVC */ \
-        BOOST_PP_OVERLOAD( \
-BOOST_CONTRACT_ERROR_macro_OLDOF_has_invalid_number_of_arguments_, \
-            __VA_ARGS__ \
-        )(__VA_ARGS__), \
-        BOOST_PP_EMPTY() \
-    )
+#include <boost/config.hpp>
 
 /* PRIVATE */
 
-#define BOOST_CONTRACT_ERROR_macro_OLDOF_has_invalid_number_of_arguments_1( \
-        value) \
-    BOOST_CONTRACT_OLDOF_AUTO_TYPEOF_(value)(boost::contract::make_old( \
-        boost::contract::copy_old() ? (value) : boost::contract::null_old() \
-    ))
+#ifdef BOOST_NO_CXX11_AUTO_DECLARATIONS
+    #define BOOST_CONTRACT_OLDOF_AUTO_TYPEOF_(value) /* nothing */
+#else
+    #include <boost/typeof/typeof.hpp>
+    // Explicitly force old_ptr<...> conversion to allow for C++11 auto decl.
+    #define BOOST_CONTRACT_OLDOF_AUTO_TYPEOF_(value) \
+        boost::contract::old_ptr<BOOST_TYPEOF(value)>
+#endif
 
 #define BOOST_CONTRACT_ERROR_macro_OLDOF_has_invalid_number_of_arguments_2( \
         v, value) \
@@ -57,18 +48,25 @@ BOOST_CONTRACT_ERROR_macro_OLDOF_has_invalid_number_of_arguments_, \
         boost::contract::copy_old(v) ? (value) : boost::contract::null_old() \
     ))
 
-#ifdef BOOST_NO_CXX11_AUTO_DECLARATIONS
-    #define BOOST_CONTRACT_OLDOF_AUTO_TYPEOF_(value) /* nothing */
-#else
-/** @cond */
-    #include <boost/typeof/typeof.hpp>
-/** @endcond */
-// Explicitly force shared_ptr<T const> conversion to allow for C++11 auto decl.
-    #define BOOST_CONTRACT_OLDOF_AUTO_TYPEOF_(value) \
-        boost::contract::old_ptr<BOOST_TYPEOF(value)>
-#endif
+#define BOOST_CONTRACT_ERROR_macro_OLDOF_has_invalid_number_of_arguments_1( \
+        value) \
+    BOOST_CONTRACT_OLDOF_AUTO_TYPEOF_(value)(boost::contract::make_old( \
+        boost::contract::copy_old() ? (value) : boost::contract::null_old() \
+    ))
 
-#endif // VARIADICS
+/* PUBLIC */
+
+// NOTE: Leave this #defined the same regardless of ..._POSTCONDITIONS.
+#define BOOST_CONTRACT_OLDOF(...) \
+    BOOST_PP_CAT( /* CAT(..., EMTPY()) required on MSVC */ \
+        BOOST_PP_OVERLOAD( \
+  BOOST_CONTRACT_ERROR_macro_OLDOF_has_invalid_number_of_arguments_, \
+            __VA_ARGS__ \
+        )(__VA_ARGS__), \
+        BOOST_PP_EMPTY() \
+    )
+
+#endif // variadics
 
 /* CODE */
 
@@ -118,9 +116,9 @@ public:
         T const& old_value,
         typename boost::enable_if<boost::is_copy_constructible<T> >::type* = 0
     )
-    #if BOOST_CONTRACT_POSTCONDITIONS
-        : ptr_(boost::make_shared<T>(old_value)) // The one single copy of T.
-    #endif // Else, null ptr_ (so not copy of T).
+        #if BOOST_CONTRACT_POSTCONDITIONS
+            : ptr_(boost::make_shared<T>(old_value)) // The one single T's copy.
+        #endif // Else, null ptr_ (so not copy of T).
     {}
     
     template<typename T>
@@ -209,17 +207,17 @@ private:
     friend convertible_old make_old(virtual_*, unconvertible_old const&);
 };
     
-unconvertible_old null_old() { return unconvertible_old(); }
+inline unconvertible_old null_old() { return unconvertible_old(); }
 
-convertible_old make_old(unconvertible_old const& old) {
+inline convertible_old make_old(unconvertible_old const& old) {
     return convertible_old(0, old);
 }
 
-convertible_old make_old(virtual_* v, unconvertible_old const& old) {
+inline convertible_old make_old(virtual_* v, unconvertible_old const& old) {
     return convertible_old(v, old);
 }
 
-bool copy_old() {
+inline bool copy_old() {
     #if BOOST_CONTRACT_POSTCONDITIONS
         return !boost::contract::aux::check_guard::checking();
     #else
@@ -227,7 +225,7 @@ bool copy_old() {
     #endif
 }
 
-bool copy_old(virtual_* v) {
+inline bool copy_old(virtual_* v) {
     #if BOOST_CONTRACT_POSTCONDITIONS
         if(!v) return !boost::contract::aux::check_guard::checking();
         return v->action_ == boost::contract::virtual_::push_old_init ||

@@ -1,5 +1,5 @@
 
 // Test other contract checking disabled within contract checking among libs.
 
-#include "libs.hpp"
+#include "lib_ab.hpp"
 

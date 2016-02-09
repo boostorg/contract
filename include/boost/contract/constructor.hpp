@@ -2,15 +2,20 @@
 #ifndef BOOST_CONTRACT_CONSTRUCTOR_HPP_
 #define BOOST_CONTRACT_CONSTRUCTOR_HPP_
 
+// Copyright (C) 2008-2016 Lorenzo Caminiti
+// Distributed under the Boost Software License, Version 1.0 (see accompanying
+// file LICENSE_1_0.txt or a copy at http://www.boost.org/LICENSE_1_0.txt).
+// See: http://www.boost.org/doc/libs/release/libs/contract/doc/html/index.html
+
 /** @file */
 
-#include <boost/contract/core/config.hpp>
-#if BOOST_CONTRACT_PRECONDITIONS
-    #include <boost/contract/core/exception.hpp>
+#include <boost/contract/aux_/all_core_headers.hpp>
+#if BOOST_CONTRACT_CONSTRUCTORS || BOOST_CONTRACT_PRECONDITIONS
+    #include <boost/contract/aux_/operation/constructor.hpp>
 #endif
-#include <boost/contract/core/set_old_postcondition.hpp>
-#include <boost/contract/aux_/operation/constructor.hpp>
-#include <boost/contract/aux_/check_guard.hpp>
+#if BOOST_CONTRACT_PRECONDITIONS
+    #include <boost/contract/aux_/check_guard.hpp>
+#endif
 
 namespace boost { namespace contract {
 
@@ -19,7 +24,7 @@ set_old_postcondition<> constructor(C* obj) {
     // Must #if also on ..._PRECONDITIONS here because set_... is generic.
     #if BOOST_CONTRACT_CONSTRUCTORS || BOOST_CONTRACT_PRECONDITIONS
         return set_old_postcondition<>(
-            new boost::contract::aux::constructor<C>(obj));
+                new boost::contract::aux::constructor<C>(obj));
     #else
         return set_old_postcondition<>();
     #endif
@@ -32,8 +37,8 @@ public:
 
     template<typename F>
     explicit constructor_precondition(F const& f) {
-        if(boost::contract::aux::check_guard::checking()) return;
         #if BOOST_CONTRACT_PRECONDITIONS
+            if(boost::contract::aux::check_guard::checking()) return;
             try {
                 #ifndef BOOST_CONTRACT_CONFIG_PRECONDITIONS_DISABLE_NOTHING
                     boost::contract::aux::check_guard checking;

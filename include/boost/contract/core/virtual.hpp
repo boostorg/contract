@@ -2,14 +2,20 @@
 #ifndef BOOST_CONTRACT_VIRTUAL_HPP_
 #define BOOST_CONTRACT_VIRTUAL_HPP_
 
+// Copyright (C) 2008-2016 Lorenzo Caminiti
+// Distributed under the Boost Software License, Version 1.0 (see accompanying
+// file LICENSE_1_0.txt or a copy at http://www.boost.org/LICENSE_1_0.txt).
+// See: http://www.boost.org/doc/libs/release/libs/contract/doc/html/index.html
+
 #include <boost/contract/core/config.hpp>
 #include <boost/contract/aux_/decl.hpp>
-#include <boost/any.hpp>
-#include <boost/shared_ptr.hpp>
 #include <boost/noncopyable.hpp>
-#include <boost/config.hpp>
-#include <queue>
-#include <stack>
+#if BOOST_CONTRACT_POSTCONDITIONS
+    #include <boost/any.hpp>
+    #include <boost/shared_ptr.hpp>
+    #include <queue>
+    #include <stack>
+#endif
 
 namespace boost {
     namespace contract {
@@ -22,11 +28,9 @@ namespace boost {
 
 namespace boost { namespace contract {
 
-class virtual_ :
-    private boost::noncopyable // Avoid copying queue, stack, etc.
-{
-    // No public API (so users cannot use it directly).
-private:
+class virtual_ : private boost::noncopyable { // Avoid copy queue, stack, etc.
+    // No public API (so users cannot use it directly by mistake).
+
     enum action_enum {
         // virtual_ always hold/passed by ptr so null ptr used for user call.
         #if BOOST_CONTRACT_PRECONDITIONS || BOOST_CONTRACT_POSTCONDITIONS || \
@@ -82,7 +86,7 @@ private:
         bool result_optional_;
     #endif
 
-    // Friendship used to limit library's public API.
+    // Friends (used to limit library's public API).
 
     friend bool copy_old(virtual_*);
     

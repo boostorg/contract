@@ -2,15 +2,24 @@
 #ifndef BOOST_CONTRACT_ACCESS_HPP_
 #define BOOST_CONTRACT_ACCESS_HPP_
 
+// Copyright (C) 2008-2016 Lorenzo Caminiti
+// Distributed under the Boost Software License, Version 1.0 (see accompanying
+// file LICENSE_1_0.txt or a copy at http://www.boost.org/LICENSE_1_0.txt).
+// See: http://www.boost.org/doc/libs/release/libs/contract/doc/html/index.html
+
 #include <boost/contract/core/config.hpp>
-// Include instead of fwd decl to avoid warnings on tparam default value redef.
-#include <boost/contract/core/set_precondition_old_postcondition.hpp>
 #include <boost/contract/aux_/decl.hpp>
-#include <boost/contract/aux_/type_traits/introspection.hpp>
-#include <boost/contract/aux_/debug.hpp>
-#include <boost/function_types/property_tags.hpp>
-#include <boost/mpl/vector.hpp>
-#include <boost/config.hpp>
+#if BOOST_CONTRACT_PRECONDITIONS || BOOST_CONTRACT_POSTCONDITIONS || \
+        BOOST_CONTRACT_INVARIANTS
+    #include <boost/contract/aux_/type_traits/introspection.hpp>
+#endif
+#if BOOST_CONTRACT_INVARIANTS
+    #include <boost/contract/aux_/debug.hpp>
+    #include <boost/function_types/property_tags.hpp>
+    #include <boost/mpl/vector.hpp>
+#endif
+
+// TODO: Review all warnings for examples, tests, and also lib compilation...
 
 // TODO: Document (in a rationale) that using friend to limit lib's public API does not increase compilation times at all. I compiled with friends. Then I removed all friends, made related APIs all public and the compilation times of all test/public_function/* where exactly the same for all compilers (msvc 37 min, gcc 70 min, clang 46 min). So there is not reason at all to not use friends (plus not using friend will complicate the internal APIs because contractor names cannot be wrapped using AUX_NAME so they will still be made private and accessed via some sort of static AUX_NAME(make) member function...).
 
@@ -38,6 +47,8 @@ namespace boost { namespace contract {
 // at run-time. Therefore programmers must make sure to either declare contract
 // members public or to make this class a friend.
 class access { // Copyable (as shell with no data member).
+    // No public APIs (so users cannot use it directly by mistake).
+
     #if BOOST_CONTRACT_PRECONDITIONS || BOOST_CONTRACT_POSTCONDITIONS || \
             BOOST_CONTRACT_INVARIANTS
         BOOST_CONTRACT_AUX_INTROSPECTION_HAS_TYPE(has_base_types,
@@ -101,7 +112,7 @@ class access { // Copyable (as shell with no data member).
         }
     #endif
     
-    // Friendship used to limit library's public API.
+    // Friends (used to limit library's public API).
 
     BOOST_CONTRACT_AUX_DECL_AUX_CHECK_SUBCONTRACTED_PRE_POST_INV_Z(1,
             /* is_friend = */ 1, OO, RR, FF, CC, AArgs);

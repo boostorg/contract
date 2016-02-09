@@ -2,9 +2,14 @@
 #ifndef BOOST_CONTRACT_ASSERT_HPP_
 #define BOOST_CONTRACT_ASSERT_HPP_
 
+// Copyright (C) 2008-2016 Lorenzo Caminiti
+// Distributed under the Boost Software License, Version 1.0 (see accompanying
+// file LICENSE_1_0.txt or a copy at http://www.boost.org/LICENSE_1_0.txt).
+// See: http://www.boost.org/doc/libs/release/libs/contract/doc/html/index.html
+
 /** @file */
 
-#include <boost/contract/core/config.hpp>
+#include <boost/contract/aux_/all_core_headers.hpp>
 
 /* PUBLIC */
 
@@ -12,7 +17,6 @@
 // can always be used with if-statements and all other C++ constructs.
 #if BOOST_CONTRACT_PRECONDITIONS || BOOST_CONTRACT_POSTCONDITIONS || \
         BOOST_CONTRACT_INVARIANTS
-    #include <boost/contract/core/exception.hpp>
     #include <boost/preprocessor/stringize.hpp>
     #define BOOST_CONTRACT_ASSERT(condition) \
         ((condition) ? (void*)0 : throw boost::contract::assertion_failure( \

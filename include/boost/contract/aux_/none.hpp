@@ -2,16 +2,18 @@
 #ifndef BOOST_CONTRACT_AUX_NONE_HPP_
 #define BOOST_CONTRACT_AUX_NONE_HPP_
 
+// Copyright (C) 2008-2016 Lorenzo Caminiti
+// Distributed under the Boost Software License, Version 1.0 (see accompanying
+// file LICENSE_1_0.txt or a copy at http://www.boost.org/LICENSE_1_0.txt).
+// See: http://www.boost.org/doc/libs/release/libs/contract/doc/html/index.html
+
 namespace boost { namespace contract { namespace aux {
 
 // Tag for "no type".
 class none {
 public:
-    // Some lib code uses this to avoid unused local var warnings with #if, etc.
-    static none& value() {
-        static none none_value;
-        return none_value;
-    }
+    // Some lib code use this to avoid unused local var warnings on #if, etc.
+    static none& value() { static none none_value; return none_value; }
 };
 
 // Transform `void` to `none` type (for convenience, instead of using MPL).

@@ -2,15 +2,23 @@
 #ifndef BOOST_CONTRACT_AUX_DECL_HPP_
 #define BOOST_CONTRACT_AUX_DECL_HPP_
 
-#include <boost/contract/core/config.hpp>
+// Copyright (C) 2008-2016 Lorenzo Caminiti
+// Distributed under the Boost Software License, Version 1.0 (see accompanying
+// file LICENSE_1_0.txt or a copy at http://www.boost.org/LICENSE_1_0.txt).
+// See: http://www.boost.org/doc/libs/release/libs/contract/doc/html/index.html
+
+#include <boost/contract/core/set_precondition_old_postcondition.hpp>
+#include <boost/contract/core/virtual.hpp>
 #include <boost/contract/aux_/tvariadic.hpp>
-#include <boost/preprocessor/control/iif.hpp>
-#include <boost/preprocessor/control/expr_iif.hpp>
-#include <boost/preprocessor/punctuation/comma_if.hpp>
-#if BOOST_CONTRACT_AUX_TVARIADIC
+#if !BOOST_CONTRACT_AUX_TVARIADIC
+    #include <boost/contract/core/config.hpp>
     #include <boost/preprocessor/repetition/repeat.hpp>
     #include <boost/preprocessor/tuple/elem.hpp>
+    #include <boost/preprocessor/arithmetic/inc.hpp>
 #endif
+#include <boost/preprocessor/control/expr_iif.hpp>
+#include <boost/preprocessor/control/iif.hpp>
+#include <boost/preprocessor/punctuation/comma_if.hpp>
 #include <boost/config.hpp>
 
 /* PUBLIC */
@@ -43,9 +51,11 @@
         BOOST_CONTRACT_AUX_TVARIADIC_TPARAMS_Z(z, arity, Args) \
     > \
     BOOST_PP_EXPR_IIF(is_friend, friend) \
-    set_precondition_old_postcondition<BOOST_PP_EXPR_IIF(has_result, R)> \
+    boost::contract::set_precondition_old_postcondition< \
+            BOOST_PP_EXPR_IIF(has_result, R)> \
+    BOOST_PP_EXPR_IIF(is_friend, boost::contract::) \
     public_function( \
-        virtual_* v \
+        boost::contract::virtual_* v \
         BOOST_PP_COMMA_IF(has_result) \
         BOOST_PP_EXPR_IIF(has_result, R& r) \
         , F f \
@@ -68,6 +78,26 @@
             O, R, F, C, Args, v, r, f, obj, args \
         );
 #else
+    /* PRIVATE */
+    #define BOOST_CONTRACT_AUX_DECL_FRIEND_OVERRIDING_PUBLIC_FUNCTION_( \
+            z, n, result_O_R_F_C_Args_v_r_f_obj_args) \
+        BOOST_CONTRACT_AUX_DECL_OVERRIDING_PUBLIC_FUNCTION_Z(z, \
+            /* arity = */ n, \
+            /* is_friend = */ 1, \
+            BOOST_PP_TUPLE_ELEM(11, 0, result_O_R_F_C_Args_v_r_f_obj_args), \
+            BOOST_PP_TUPLE_ELEM(11, 1, result_O_R_F_C_Args_v_r_f_obj_args), \
+            BOOST_PP_TUPLE_ELEM(11, 2, result_O_R_F_C_Args_v_r_f_obj_args), \
+            BOOST_PP_TUPLE_ELEM(11, 3, result_O_R_F_C_Args_v_r_f_obj_args), \
+            BOOST_PP_TUPLE_ELEM(11, 4, result_O_R_F_C_Args_v_r_f_obj_args), \
+            BOOST_PP_TUPLE_ELEM(11, 5, result_O_R_F_C_Args_v_r_f_obj_args), \
+            BOOST_PP_TUPLE_ELEM(11, 6, result_O_R_F_C_Args_v_r_f_obj_args), \
+            BOOST_PP_TUPLE_ELEM(11, 7, result_O_R_F_C_Args_v_r_f_obj_args), \
+            BOOST_PP_TUPLE_ELEM(11, 8, result_O_R_F_C_Args_v_r_f_obj_args), \
+            BOOST_PP_TUPLE_ELEM(11, 9, result_O_R_F_C_Args_v_r_f_obj_args), \
+            BOOST_PP_TUPLE_ELEM(11, 10, result_O_R_F_C_Args_v_r_f_obj_args) \
+        );
+
+    /* PUBLIC */
     #define BOOST_CONTRACT_AUX_DECL_FRIEND_OVERRIDING_PUBLIC_FUNCTIONS_Z(z, \
         O, R, F, C, Args, \
         v, r, f, obj, args \
@@ -99,27 +129,5 @@
     ) \
     check_subcontracted_pre_post_inv
     
-/* PRIVATE */
-
-#if !BOOST_CONTRACT_AUX_TVARIADIC
-    #define BOOST_CONTRACT_AUX_DECL_FRIEND_OVERRIDING_PUBLIC_FUNCTION_( \
-            z, n, result_O_R_F_C_Args_v_r_f_obj_args) \
-        BOOST_CONTRACT_AUX_DECL_OVERRIDING_PUBLIC_FUNCTION_Z(z, \
-            /* arity = */ n, \
-            /* is_friend = */ 1, \
-            BOOST_PP_TUPLE_ELEM(11, 0, result_O_R_F_C_Args_v_r_f_obj_args), \
-            BOOST_PP_TUPLE_ELEM(11, 1, result_O_R_F_C_Args_v_r_f_obj_args), \
-            BOOST_PP_TUPLE_ELEM(11, 2, result_O_R_F_C_Args_v_r_f_obj_args), \
-            BOOST_PP_TUPLE_ELEM(11, 3, result_O_R_F_C_Args_v_r_f_obj_args), \
-            BOOST_PP_TUPLE_ELEM(11, 4, result_O_R_F_C_Args_v_r_f_obj_args), \
-            BOOST_PP_TUPLE_ELEM(11, 5, result_O_R_F_C_Args_v_r_f_obj_args), \
-            BOOST_PP_TUPLE_ELEM(11, 6, result_O_R_F_C_Args_v_r_f_obj_args), \
-            BOOST_PP_TUPLE_ELEM(11, 7, result_O_R_F_C_Args_v_r_f_obj_args), \
-            BOOST_PP_TUPLE_ELEM(11, 8, result_O_R_F_C_Args_v_r_f_obj_args), \
-            BOOST_PP_TUPLE_ELEM(11, 9, result_O_R_F_C_Args_v_r_f_obj_args), \
-            BOOST_PP_TUPLE_ELEM(11, 10, result_O_R_F_C_Args_v_r_f_obj_args) \
-        );
-#endif
-
 #endif // #include guard
 

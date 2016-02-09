@@ -2,6 +2,11 @@
 #ifndef BOOST_CONTRACT_EXCEPTION_HPP_
 #define BOOST_CONTRACT_EXCEPTION_HPP_
 
+// Copyright (C) 2008-2016 Lorenzo Caminiti
+// Distributed under the Boost Software License, Version 1.0 (see accompanying
+// file LICENSE_1_0.txt or a copy at http://www.boost.org/LICENSE_1_0.txt).
+// See: http://www.boost.org/doc/libs/release/libs/contract/doc/html/index.html
+
 /** @file */
 
 #include <boost/contract/aux_/decl.hpp>
@@ -27,8 +32,7 @@ public:
 
 // Rationale: boost::bad_any_cast exception does not print from/to type names,
 // so throw custom exception.
-// Copyable (as string, etc.).
-class BOOST_CONTRACT_AUX_DECL bad_virtual_result_cast :
+class BOOST_CONTRACT_AUX_DECL bad_virtual_result_cast : // Copyable (as str).
         public std::bad_cast, public boost::contract::exception {
 public:
     explicit bad_virtual_result_cast(char const* from_type_name,
@@ -41,8 +45,7 @@ private:
     std::string what_;
 };
 
-// Copyable (as string, etc.).
-class BOOST_CONTRACT_AUX_DECL assertion_failure :
+class BOOST_CONTRACT_AUX_DECL assertion_failure : // Copyable (as str, etc.).
         public std::exception, public boost::contract::exception {
 public:
     explicit assertion_failure(char const* const file = "",

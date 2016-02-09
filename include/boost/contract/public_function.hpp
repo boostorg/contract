@@ -2,91 +2,41 @@
 #ifndef BOOST_CONTRACT_PUBLIC_FUNCTION_HPP_
 #define BOOST_CONTRACT_PUBLIC_FUNCTION_HPP_
 
+// Copyright (C) 2008-2016 Lorenzo Caminiti
+// Distributed under the Boost Software License, Version 1.0 (see accompanying
+// file LICENSE_1_0.txt or a copy at http://www.boost.org/LICENSE_1_0.txt).
+// See: http://www.boost.org/doc/libs/release/libs/contract/doc/html/index.html
+
 // TODO: Document that even with variadic templates there's a hard limit to function max args (18 works, but MAX_ARGS=19 does not). This limit comes from Boost.MPL (vector, push_back, etc.), Boost.FunctionTypes, and other Boost algorithm that do not currently have a variadic template implementation. However, re-impl all these Boost alg would be too much work for this lib, plus the 19 max args limit seems high enough, and it would eventually be removed if Boost.MPL, Boost.FunctionTypes are ever ported to impl that use variadic templates.
 
 // TODO: Document that not using variadic templates (i.e., using pp meta-programming impl instead) does not increase compilation times (I measured this with the max_arg test program).
 
-// TODO: Check all #includes for all files... and make sure that #include not of this library are within @cond ... @endcond. Also disable #include when not needed based on BOOST_CONTRACT_PRECONDITIONS, etc. Also all public header files should include *all* core/*.hpp so users never have to (I could use a aux_/all_core_headers.hpp that includes all core/*.hpp and always #include aux_/core.hpp in all public headers instead of including core/... directly from public headers).
-
-#include <boost/contract/core/config.hpp>
-#include <boost/contract/core/access.hpp>
-#include <boost/contract/core/set_precondition_old_postcondition.hpp>
-#include <boost/contract/core/virtual.hpp>
-#include <boost/contract/aux_/operation/public_function.hpp>
-#include <boost/contract/aux_/operation/public_static_function.hpp>
+#include <boost/contract/aux_/all_core_headers.hpp>
 #include <boost/contract/aux_/decl.hpp>
 #include <boost/contract/aux_/tvariadic.hpp>
-#include <boost/contract/aux_/none.hpp>
-#include <boost/optional.hpp>
-#include <boost/function_types/result_type.hpp>
-#include <boost/function_types/function_arity.hpp>
-#include <boost/type_traits/is_same.hpp>
-#include <boost/type_traits/remove_reference.hpp>
-#include <boost/static_assert.hpp>
-#include <boost/preprocessor/logical/or.hpp>
-#include <boost/preprocessor/logical/compl.hpp>
-#include <boost/preprocessor/control/iif.hpp>
-#include <boost/preprocessor/control/if.hpp>
-#include <boost/preprocessor/punctuation/comma_if.hpp>
-#include <boost/config.hpp>
-    
-/* PRIVATE */
-
 #if BOOST_CONTRACT_PUBLIC_FUNCTIONS
-    // This check is not strictly necessary because compilation will fail
-    // anyways, but it helps limiting cryptic compiler's errors.
-    #define BOOST_CONTRACT_PUBLIC_FUNCTION_ASSERT_ARITY_(F, arity) \
-        BOOST_STATIC_ASSERT_MSG( \
-            /* -2 for both `this` and `virtual_*` extra parameters */ \
-            boost::function_types::function_arity<F>::value - 2 == arity, \
-            "missing one or more arguments for specified function" \
-        );
-
-    // Always enforce this so base contracts can always specify postconditions
-    // with result, without need to change derived contracts.
-    #define BOOST_CONTRACT_PUBLIC_FUNCTION_ASSERT_NO_RESULT_(F) \
-        BOOST_STATIC_ASSERT_MSG( \
-            boost::is_same< \
-                typename boost::function_types::result_type<F>::type, \
-                void \
-            >::value, \
-            "missing 'result' argument for non-void function" \
-        );
-
-    #define BOOST_CONTRACT_PUBLIC_FUNCTION_ASSERT_RESULT_(F, R) \
-        BOOST_STATIC_ASSERT_MSG( \
-            boost::is_same< \
-                typename boost::remove_reference<typename \
-                        boost::function_types::result_type<F>::type>::type, \
-                typename boost::contract::public_function_:: \
-                        remove_optional_ref<R>::type \
-            >::value, \
-            "mismatching result type for specified function" \
-        );
-
-    // Always enforce this so this lib can check and enforce override.
-    #define BOOST_CONTRACT_PUBLIC_FUNCTION_ASSERT_BASE_TYPES_(C) \
-        BOOST_STATIC_ASSERT_MSG( \
-            boost::contract::access::has_base_types<C>::value, \
-            "enclosing class missing 'base-types' typedef" \
-        );
+    #include <boost/contract/aux_/operation/public_static_function.hpp>
+    #include <boost/contract/aux_/operation/public_function.hpp>
+    #include <boost/cotnract/aux_/type_traits/optional.hpp>
+    #include <boost/contract/aux_/none.hpp>
+    #include <boost/function_types/result_type.hpp>
+    #include <boost/function_types/function_arity.hpp>
+    #include <boost/optional.hpp>
+    #include <boost/type_traits/remove_reference.hpp>
+    #include <boost/type_traits/is_same.hpp>
+    #include <boost/static_assert.hpp>
+    #include <boost/preprocessor/tuple/eat.hpp>
 #endif
-
-/* CODE */
+#if !BOOST_CONTRACT_AUX_TVARIADIC
+    #include <boost/preprocessor/repetition/repeat.hpp>
+    #include <boost/preprocessor/arithmetic/sub.hpp>
+    #include <boost/preprocessor/arithmetic/inc.hpp>
+#endif
+#include <boost/preprocessor/control/expr_iif.hpp>
+#include <boost/preprocessor/control/iif.hpp>
+#include <boost/preprocessor/punctuation/comma_if.hpp>
 
 namespace boost { namespace contract {
-
-#if BOOST_CONTRACT_PUBLIC_FUNCTIONS
-    namespace public_function_ {
-        template<typename R>
-        struct remove_optional_ref { typedef R type; };
-
-        template<typename R>
-        struct remove_optional_ref<boost::optional<R> > {
-            typedef typename boost::remove_reference<R>::type type;
-        };
-    }
-#endif
 
 // NOTE: O and (optionally) R allowed only when v is present because:
 // * An overriding func must override a base func declared virtual so with
@@ -101,7 +51,7 @@ namespace boost { namespace contract {
 //   However, R is never specified, not even for virtual functions, when the
 //   return type is void (i.e., R always optional).
 
-// For static public member functions.
+// For static public functions.
 template<class C>
 set_precondition_old_postcondition<> public_function() {
     #if BOOST_CONTRACT_PUBLIC_FUNCTIONS
@@ -112,7 +62,7 @@ set_precondition_old_postcondition<> public_function() {
     #endif
 }
 
-// For non-static, non-virtual, and non-overriding public member functions.
+// For non-static, non-virtual, and non-overriding public functions.
 template<class C>
 set_precondition_old_postcondition<> public_function(C* obj) {
     #if BOOST_CONTRACT_PUBLIC_FUNCTIONS
@@ -145,8 +95,9 @@ set_precondition_old_postcondition<> public_function(C* obj) {
     #endif
 }
 
-// For non-static, virtual, and non-overriding public member functions.
-#define BOOST_CONTRACT_PUBLIC_FUNCTION_VIRTUAL_NOOVERRIDE_(has_result) \
+// TODO: Document no F here so cannot check consistency between R and actual func's result type... up to user to pass the right R...
+// For non-static, virtual, and non-overriding public functions (PRIVATE macro).
+#define BOOST_CONTRACT_PUBLIC_FUNCTION_VIRTUAL_NO_OVERRIDE_(has_result) \
     template< \
         BOOST_PP_EXPR_IIF(has_result, typename R) \
         BOOST_PP_COMMA_IF(has_result) \
@@ -160,7 +111,7 @@ set_precondition_old_postcondition<> public_function(C* obj) {
         , C* obj \
     ) { \
         BOOST_PP_IIF(BOOST_CONTRACT_PUBLIC_FUNCTIONS, \
-            /* NOTE: No F so cannot enforce contracted f ret R (up to user) */ \
+            /* no F... so cannot enforce contracted F ret R (up to user) */ \
             return (set_precondition_old_postcondition< \
                     BOOST_PP_EXPR_IIF(has_result, R)>( \
                 new boost::contract::aux::public_function< \
@@ -196,10 +147,10 @@ set_precondition_old_postcondition<> public_function(C* obj) {
         ) \
     }
 
-BOOST_CONTRACT_PUBLIC_FUNCTION_VIRTUAL_NOOVERRIDE_(/* has_result = */ 0)
-BOOST_CONTRACT_PUBLIC_FUNCTION_VIRTUAL_NOOVERRIDE_(/* has_result = */ 1)
+BOOST_CONTRACT_PUBLIC_FUNCTION_VIRTUAL_NO_OVERRIDE_(/* has_result = */ 0)
+BOOST_CONTRACT_PUBLIC_FUNCTION_VIRTUAL_NO_OVERRIDE_(/* has_result = */ 1)
 
-// For non-static, virtual, and overriding public member functions.
+// For non-static, virtual, and overriding public functions (PRIVATE macro).
 #define BOOST_CONTRACT_PUBLIC_FUNCTION_VIRTUAL_OVERRIDE_Z_( \
         z, arity, arity_compl, has_result) \
     BOOST_CONTRACT_AUX_DECL_OVERRIDING_PUBLIC_FUNCTION_Z(z, \
@@ -208,14 +159,32 @@ BOOST_CONTRACT_PUBLIC_FUNCTION_VIRTUAL_NOOVERRIDE_(/* has_result = */ 1)
         v, r, f, obj, args \
     ) { \
         BOOST_PP_IIF(BOOST_CONTRACT_PUBLIC_FUNCTIONS, \
-            BOOST_CONTRACT_PUBLIC_FUNCTION_ASSERT_ARITY_(F, \
-                    BOOST_CONTRACT_AUX_TVARIADIC_SIZEOF(arity, Args)) \
+            /* this assert not strictly necessary as compilation will fail */ \
+            /* anyways, but helps limiting cryptic compiler's errors */ \
+            BOOST_STATIC_ASSERT_MSG( \
+                /* -2 for both `this` and `virtual_*` extra parameters */ \
+                boost::function_types::function_arity<F>::value - 2 == arity, \
+                "missing one or more arguments for specified function" \
+            ); \
+            /* assert consistency of F's result type and R (if has_result) */ \
             BOOST_PP_IIF(has_result, \
-                BOOST_CONTRACT_PUBLIC_FUNCTION_ASSERT_RESULT_ \
+                BOOST_STATIC_ASSERT_MSG \
             , \
                 BOOST_PP_TUPLE_EAT(2) \
-            )(F, R) \
-            BOOST_CONTRACT_PUBLIC_FUNCTION_ASSERT_BASE_TYPES_(C) \
+            )( \
+                (boost::is_same< \
+                    typename boost::remove_reference<typename boost:: \
+                            function_types::result_type<F>::type>::type, \
+                    typename boost::contract::aux:: \
+                            remove_value_reference_if_optional<R>::type \
+                >::value), \
+                "mismatching result type for specified function" \
+            ); \
+            /* assert this so lib can check and enforce override */ \
+            BOOST_STATIC_ASSERT_MSG( \
+                boost::contract::access::has_base_types<C>::value, \
+                "enclosing class missing 'base-types' typedef" \
+            ); \
             return (set_precondition_old_postcondition< \
                     BOOST_PP_EXPR_IIF(has_result, R)>( \
                 new boost::contract::aux::public_function< \
@@ -255,6 +224,8 @@ BOOST_CONTRACT_PUBLIC_FUNCTION_VIRTUAL_NOOVERRIDE_(/* has_result = */ 1)
     BOOST_CONTRACT_PUBLIC_FUNCTION_VIRTUAL_OVERRIDE_Z_(1,
             /* arity = */ ~, /* arity_compl = */ ~, /* has_result = */ 1)
 #else
+    /* PRIVATE */
+
     #define BOOST_CONTRACT_PUBLIC_FUNCTION_VIRTUAL_OVERRIDE_ARITY_( \
             z, arity, unused) \
         BOOST_CONTRACT_PUBLIC_FUNCTION_VIRTUAL_OVERRIDES_(z, arity, \
@@ -266,7 +237,9 @@ BOOST_CONTRACT_PUBLIC_FUNCTION_VIRTUAL_NOOVERRIDE_(/* has_result = */ 1)
                 arity, arity_compl, /* has_result = */ 0) \
         BOOST_CONTRACT_PUBLIC_FUNCTION_VIRTUAL_OVERRIDE_Z_(z, \
                 arity, arity_compl, /* has_result = */ 1)
-    
+
+    /* CODE */
+
     BOOST_PP_REPEAT(BOOST_PP_INC(BOOST_CONTRACT_CONFIG_MAX_ARGS),
             BOOST_CONTRACT_PUBLIC_FUNCTION_VIRTUAL_OVERRIDE_ARITY_, ~)
 #endif

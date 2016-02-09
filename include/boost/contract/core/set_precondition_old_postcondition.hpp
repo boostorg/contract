@@ -2,16 +2,24 @@
 #ifndef BOOST_CONTRACT_SET_PRECONDITION_OLD_POSTCONDITION_HPP_
 #define BOOST_CONTRACT_SET_PRECONDITION_OLD_POSTCONDITION_HPP_
 
+// Copyright (C) 2008-2016 Lorenzo Caminiti
+// Distributed under the Boost Software License, Version 1.0 (see accompanying
+// file LICENSE_1_0.txt or a copy at http://www.boost.org/LICENSE_1_0.txt).
+// See: http://www.boost.org/doc/libs/release/libs/contract/doc/html/index.html
+
 /** @file */
 
-#include <boost/contract/core/config.hpp>
 #include <boost/contract/core/set_old_postcondition.hpp>
 #include <boost/contract/core/set_postcondition_only.hpp>
 #include <boost/contract/core/set_nothing.hpp>
-#include <boost/contract/aux_/condition/check_pre_post.hpp>
+#include <boost/contract/core/config.hpp>
 #include <boost/contract/aux_/decl.hpp>
-#include <boost/contract/aux_/none.hpp>
-#include <boost/contract/aux_/auto_ptr.hpp>
+#if BOOST_CONTRACT_PRECONDITIONS || BOOST_CONTRACT_POSTCONDITIONS || \
+        BOOST_CONTRACT_INVARIANTS
+    #include <boost/contract/aux_/condition/check_pre_post.hpp>
+    #include <boost/contract/aux_/auto_ptr.hpp>
+    #include <boost/contract/aux_/none.hpp>
+#endif
 #if BOOST_CONTRACT_PRECONDITIONS || BOOST_CONTRACT_POSTCONDITIONS
     #include <boost/contract/aux_/debug.hpp>
 #endif
@@ -77,14 +85,14 @@ private:
             BOOST_CONTRACT_INVARIANTS
         typedef boost::contract::aux::check_pre_post<typename
                 boost::contract::aux::none_if_void<R>::type> check_type;
-        
+
         explicit set_precondition_old_postcondition(check_type* check) :
                 check_(check) {}
 
         boost::contract::aux::auto_ptr<check_type> check_;
     #endif
 
-    // Friendship used to limit library's public API.
+    // Friends (used to limit library's public API).
 
     friend class guard;
 

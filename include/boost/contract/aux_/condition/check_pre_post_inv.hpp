@@ -2,30 +2,37 @@
 #ifndef BOOST_CONTRACT_AUX_CHECK_PRE_POST_INV_HPP_
 #define BOOST_CONTRACT_AUX_CHECK_PRE_POST_INV_HPP_
 
-#include <boost/contract/core/config.hpp>
-#include <boost/contract/core/access.hpp>
+// Copyright (C) 2008-2016 Lorenzo Caminiti
+// Distributed under the Boost Software License, Version 1.0 (see accompanying
+// file LICENSE_1_0.txt or a copy at http://www.boost.org/LICENSE_1_0.txt).
+// See: http://www.boost.org/doc/libs/release/libs/contract/doc/html/index.html
+
 #include <boost/contract/core/exception.hpp>
+#include <boost/contract/core/config.hpp>
 #include <boost/contract/aux_/condition/check_pre_post.hpp>
-/** @cond */
-#include <boost/utility/enable_if.hpp>
-#include <boost/function_types/property_tags.hpp>
-#include <boost/type_traits/is_volatile.hpp>
-#include <boost/type_traits/add_pointer.hpp>
-#include <boost/mpl/for_each.hpp>
-#include <boost/mpl/copy_if.hpp>
-#include <boost/mpl/transform.hpp>
-#include <boost/mpl/vector.hpp>
-#include <boost/mpl/and.hpp>
-#include <boost/mpl/not.hpp>
-#include <boost/mpl/placeholders.hpp>
-#include <boost/static_assert.hpp>
-/** @endcond */
+#if BOOST_CONTRACT_INVARIANTS
+    #include <boost/contract/core/access.hpp>
+    #include <boost/type_traits/add_pointer.hpp>
+    #include <boost/type_traits/is_volatile.hpp>
+    #include <boost/mpl/vector.hpp>
+    #include <boost/mpl/transform.hpp>
+    #include <boost/mpl/for_each.hpp>
+    #include <boost/mpl/copy_if.hpp>
+    #include <boost/mpl/eval_if.hpp>
+    #include <boost/mpl/not.hpp>
+    #include <boost/mpl/and.hpp>
+    #include <boost/mpl/placeholders.hpp>
+    #include <boost/utility/enable_if.hpp>
+    #ifndef BOOST_CONTRACT_CONFIG_PERMISSIVE
+        #include <boost/function_types/property_tags.hpp>
+        #include <boost/static_assert.hpp>
+    #endif
+#endif
 
 namespace boost { namespace contract { namespace aux {
 
 template<typename R, class C>
 class check_pre_post_inv : public check_pre_post<R> { // Non-copyable base.
-public:
     #if BOOST_CONTRACT_INVARIANTS && !defined(BOOST_CONTRACT_CONFIG_PERMISSIVE)
         BOOST_STATIC_ASSERT_MSG(
             !boost::contract::access::has_static_invariant_f<
@@ -84,6 +91,7 @@ public:
         );
     #endif
 
+public:
     // obj can be 0 for static member functions.
     explicit check_pre_post_inv(boost::contract::from from, C* obj) :
         check_pre_post<R>(from)

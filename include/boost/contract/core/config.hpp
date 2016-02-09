@@ -2,6 +2,11 @@
 #ifndef BOOST_CONTRACT_CONFIG_HPP_
 #define BOOST_CONTRACT_CONFIG_HPP_
 
+// Copyright (C) 2008-2016 Lorenzo Caminiti
+// Distributed under the Boost Software License, Version 1.0 (see accompanying
+// file LICENSE_1_0.txt or a copy at http://www.boost.org/LICENSE_1_0.txt).
+// See: http://www.boost.org/doc/libs/release/libs/contract/doc/html/index.html
+
 /** @file */
 
 // IMPORTANT: This header MUST NOT #include any other header of this lib.
@@ -9,13 +14,12 @@
 // headers after that depending on the contract 0/1 macros below ensuring no
 // compilation overhead.
 
-// TODO: Can I compile lib1 with some contract on/off, lib2 with other contracts on/off and then link the two together?
+// TODO: Document that when contracts are programmed in .cpp and all these lib headers are #include only from within .cpp, then a given lib can be compiled for example without inv/post, only with pre. The code that will link to that lib will not be able to enable inv/post, or disable the pre. However, if contracts are programmed in .hpp and this lib headers are #included in .hpp that are shipped to users with a given lib, users of that lib can turn on/off all contracts for the shipped lib as well.
 
-// TODO: To be consistent... should I use CONFIG only for staff below that has a default #define, but for PREMISSIVE, etc. do not use CONFIG?
+// TODO: Document in rationale following config macro do not have CONFIG infix to be consistent with convention from other Boost libs (e.g., Boost.Chrono). also following all require re-building this library (THREAD_DISABLE included), while other CONFIG only require re-building user's code.
 // BOOST_CONTRACT_DYN_LINK
 // BOOST_CONTRACT_HEADER_ONLY
-
-// BOOST_CONTRACT_THREAD_DISABLE
+// BOOST_CONTRACT_THREAD_DISABLED
 
 #ifndef BOOST_CONTRACT_CONFIG_MAX_ARGS
 #   define BOOST_CONTRACT_CONFIG_MAX_ARGS 10

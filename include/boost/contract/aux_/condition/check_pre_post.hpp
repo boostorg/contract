@@ -2,20 +2,22 @@
 #ifndef BOOST_CONTRACT_AUX_CHECK_PRE_POST_HPP_
 #define BOOST_CONTRACT_AUX_CHECK_PRE_POST_HPP_
 
+// Copyright (C) 2008-2016 Lorenzo Caminiti
+// Distributed under the Boost Software License, Version 1.0 (see accompanying
+// file LICENSE_1_0.txt or a copy at http://www.boost.org/LICENSE_1_0.txt).
+// See: http://www.boost.org/doc/libs/release/libs/contract/doc/html/index.html
+
+#include <boost/contract/core/exception.hpp>
 #include <boost/contract/core/config.hpp>
-#if BOOST_CONTRACT_POSTCONDITIONS
-    #include <boost/contract/core/exception.hpp>
-#endif
 #include <boost/contract/aux_/condition/check_base.hpp>
-#include <boost/contract/aux_/type_traits/optional.hpp>
 #include <boost/contract/aux_/none.hpp>
-#include <boost/optional.hpp>
 #if BOOST_CONTRACT_POSTCONDITIONS
+    #include <boost/contract/aux_/type_traits/optional.hpp>
+    #include <boost/optional.hpp>
     #include <boost/function.hpp>
+    #include <boost/type_traits/remove_reference.hpp>
+    #include <boost/mpl/if.hpp>
 #endif
-#include <boost/type_traits/remove_reference.hpp>
-#include <boost/mpl/if.hpp>
-#include <boost/preprocessor/control/expr_iif.hpp>
 
 /* PRIVATE */
 

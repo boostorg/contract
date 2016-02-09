@@ -2,44 +2,59 @@
 #ifndef BOOST_CONTRACT_AUX_CHECK_SUBCONTRACTED_PRE_POST_INV_HPP_
 #define BOOST_CONTRACT_AUX_CHECK_SUBCONTRACTED_PRE_POST_INV_HPP_
 
+// Copyright (C) 2008-2016 Lorenzo Caminiti
+// Distributed under the Boost Software License, Version 1.0 (see accompanying
+// file LICENSE_1_0.txt or a copy at http://www.boost.org/LICENSE_1_0.txt).
+// See: http://www.boost.org/doc/libs/release/libs/contract/doc/html/index.html
+
 #include <boost/contract/core/config.hpp>
-#include <boost/contract/core/access.hpp>
-#include <boost/contract/core/virtual.hpp>
-#include <boost/contract/core/exception.hpp>
+#if BOOST_CONTRACT_PRECONDITIONS || BOOST_CONTRACT_POSTCONDITIONS
+    #include <boost/contract/core/exception.hpp>
+#endif
 #include <boost/contract/aux_/condition/check_pre_post_inv.hpp>
 #include <boost/contract/aux_/decl.hpp>
-#include <boost/contract/aux_/type_traits/member_function_types.hpp>
-#include <boost/contract/aux_/type_traits/optional.hpp>
 #include <boost/contract/aux_/tvariadic.hpp>
-#include <boost/contract/aux_/debug.hpp>
-#include <boost/optional.hpp>
-#include <boost/any.hpp>
-#include <boost/function_types/result_type.hpp>
-#include <boost/function_types/parameter_types.hpp>
-#include <boost/function_types/member_function_pointer.hpp>
-#include <boost/function_types/property_tags.hpp>
-#include <boost/type_traits/add_pointer.hpp>
-#include <boost/type_traits/remove_reference.hpp>
-#include <boost/type_traits/is_same.hpp>
+#if BOOST_CONTRACT_PRECONDITIONS || BOOST_CONTRACT_POSTCONDITIONS || \
+        BOOST_CONTRACT_INVARIANTS
+    #include <boost/contract/core/virtual.hpp>
+    #include <boost/contract/core/access.hpp>
+    #include <boost/contract/aux_/type_traits/optional.hpp>
+    #include <boost/contract/aux_/type_traits/member_function_types.hpp>
+    #include <boost/contract/aux_/debug.hpp>
+    #include <boost/contract/aux_/none.hpp>
+    #include <boost/contract/aux_/name.hpp>
+    #include <boost/type_traits/add_pointer.hpp>
+    #include <boost/mpl/fold.hpp>
+    #include <boost/mpl/contains.hpp>
+    #include <boost/mpl/empty.hpp>
+    #include <boost/mpl/push_back.hpp>
+    #include <boost/mpl/eval_if.hpp>
+    #include <boost/mpl/identity.hpp>
+    #include <boost/mpl/placeholders.hpp>
+    #ifndef BOOST_CONTRACT_CONFIG_PERMISSIVE
+        #include <boost/type_traits/is_same.hpp>
+        #include <boost/mpl/or.hpp>
+        #include <boost/mpl/not.hpp>
+        #include <boost/static_assert.hpp>
+    #endif
+    #include <boost/preprocessor/punctuation/comma_if.hpp>
+    #include <boost/config.hpp>
+#endif
 #include <boost/mpl/vector.hpp>
-#include <boost/mpl/for_each.hpp>
-#include <boost/mpl/fold.hpp>
-#include <boost/mpl/front.hpp>
-#include <boost/mpl/push_back.hpp>
-#include <boost/mpl/pop_front.hpp>
-#include <boost/mpl/contains.hpp>
-#include <boost/mpl/empty.hpp>
-#include <boost/mpl/identity.hpp>
-#include <boost/mpl/or.hpp>
-#include <boost/mpl/not.hpp>
-#include <boost/mpl/eval_if.hpp>
-#include <boost/mpl/placeholders.hpp>
-#include <boost/static_assert.hpp>
-#include <boost/utility/enable_if.hpp>
-#include <boost/preprocessor/punctuation/comma_if.hpp>
-#include <boost/config.hpp>
-#include <sstream>
-#include <typeinfo>
+#if BOOST_CONTRACT_POSTCONDITIONS || BOOST_CONTRACT_INVARIANTS
+    #include <boost/mpl/for_each.hpp>
+#endif
+#if BOOST_CONTRACT_PRECONDITIONS
+    #include <boost/mpl/pop_front.hpp>
+    #include <boost/mpl/front.hpp>
+#endif
+#if BOOST_CONTRACT_POSTCONDITIONS
+    #include <boost/any.hpp>
+    #include <boost/optional.hpp>
+    #include <boost/type_traits/remove_reference.hpp>
+    #include <boost/utility/enable_if.hpp>
+    #include <typeinfo>
+#endif
 
 namespace boost { namespace contract { namespace aux {
 
@@ -215,7 +230,6 @@ protected:
                     &check_subcontracted_pre_post_inv::check_post_v);
         }
     #endif
-
 
     #if BOOST_CONTRACT_PRECONDITIONS || BOOST_CONTRACT_POSTCONDITIONS || \
             BOOST_CONTRACT_INVARIANTS
@@ -405,7 +419,7 @@ private:
         private:
             template<
                 class B
-                // Can't used TVARIADIC_COMMA here.
+                // Can't use TVARIADIC_COMMA here.
                 BOOST_PP_COMMA_IF(BOOST_CONTRACT_AUX_TVARIADIC)
                 BOOST_CONTRACT_AUX_TVARIADIC_TUPLE_INDEXES_TPARAM(I)
             >
