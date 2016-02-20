@@ -8,17 +8,17 @@
 
 #ifdef BOOST_CONTRACT_TEST_LIB_B_DYN_LINK
     #ifdef BOOST_CONTRACT_TEST_LIB_B_SOURCE
-        #define BOOST_CONTRACT_TEST_LIB_B_DECL BOOST_SYMBOL_EXPORT
+        #define BOOST_CONTRACT_TEST_LIB_B_DECLSPEC BOOST_SYMBOL_EXPORT
     #else
-        #define BOOST_CONTRACT_TEST_LIB_B_DECL BOOST_SYMBOL_IMPORT
+        #define BOOST_CONTRACT_TEST_LIB_B_DECLSPEC BOOST_SYMBOL_IMPORT
     #endif
 #else
-    #define BOOST_CONTRACT_TEST_LIB_B_DECL /* nothing */
+    #define BOOST_CONTRACT_TEST_LIB_B_DECLSPEC /* nothing */
 #endif
 
-bool BOOST_CONTRACT_TEST_LIB_B_DECL call_f();
+bool BOOST_CONTRACT_TEST_LIB_B_DECLSPEC call_f();
 
-struct BOOST_CONTRACT_TEST_LIB_B_DECL b {
+struct BOOST_CONTRACT_TEST_LIB_B_DECLSPEC b {
     static void static_invariant();
     void invariant() const;
 

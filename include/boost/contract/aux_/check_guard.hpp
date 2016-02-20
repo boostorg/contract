@@ -7,7 +7,7 @@
 // file LICENSE_1_0.txt or a copy at http://www.boost.org/LICENSE_1_0.txt).
 // See: http://www.boost.org/doc/libs/release/libs/contract/doc/html/index.html
 
-#include <boost/contract/aux_/decl.hpp>
+#include <boost/contract/aux_/declspec.hpp>
 #ifndef BOOST_CONTRACT_THREAD_DISABLED
     #include <boost/thread/mutex.hpp>
 #endif
@@ -15,7 +15,7 @@
 
 namespace boost { namespace contract { namespace aux {
 
-class BOOST_CONTRACT_AUX_DECL check_guard :
+class BOOST_CONTRACT_AUX_DECLSPEC check_guard :
     private boost::noncopyable // Non-copyable resource (might use mutex, etc.).
 {
 public:

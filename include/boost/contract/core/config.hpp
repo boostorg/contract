@@ -19,6 +19,8 @@
 // TODO: Document in rationale following config macro do not have CONFIG infix to be consistent with convention from other Boost libs (e.g., Boost.Chrono). also following all require re-building this library (THREAD_DISABLE included), while other CONFIG only require re-building user's code.
 // BOOST_CONTRACT_DYN_LINK
 // BOOST_CONTRACT_HEADER_ONLY
+
+// TODO: I got this name from Boost.Chrono... but I think other libs use BOOST_SP_DISABLE_THREADS and BOOST_ASIO_DISABLE_THREADS, also there might be an overall BOOST_DISABLE_THREADS... double check the best name for this.
 // BOOST_CONTRACT_THREAD_DISABLED
 
 #ifndef BOOST_CONTRACT_CONFIG_MAX_ARGS
@@ -66,6 +68,8 @@
 // lead to infinite recursive call in user code so by default this macro is
 // not defined.
 // BOOST_CONTRACT_CONFIG_PRECONDITIONS_DISABLE_NOTHING
+
+// TODO: Remove CONFIG from macros that do not use the #ifndef ... #define pattern (even if these macro change the lib (all macros do one way or another) they are not config macros).
 
 // BOOST_CONTRACT_CONFIG_NO_PRECONDITIONS
 // BOOST_CONTRACT_CONFIG_NO_POSTCONDITIONS

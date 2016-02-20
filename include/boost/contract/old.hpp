@@ -207,17 +207,17 @@ private:
     friend convertible_old make_old(virtual_*, unconvertible_old const&);
 };
     
-inline unconvertible_old null_old() { return unconvertible_old(); }
+unconvertible_old null_old() { return unconvertible_old(); }
 
-inline convertible_old make_old(unconvertible_old const& old) {
+convertible_old make_old(unconvertible_old const& old) {
     return convertible_old(0, old);
 }
 
-inline convertible_old make_old(virtual_* v, unconvertible_old const& old) {
+convertible_old make_old(virtual_* v, unconvertible_old const& old) {
     return convertible_old(v, old);
 }
 
-inline bool copy_old() {
+bool copy_old() {
     #if BOOST_CONTRACT_POSTCONDITIONS
         return !boost::contract::aux::check_guard::checking();
     #else
@@ -225,7 +225,7 @@ inline bool copy_old() {
     #endif
 }
 
-inline bool copy_old(virtual_* v) {
+bool copy_old(virtual_* v) {
     #if BOOST_CONTRACT_POSTCONDITIONS
         if(!v) return !boost::contract::aux::check_guard::checking();
         return v->action_ == boost::contract::virtual_::push_old_init ||

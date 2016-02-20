@@ -11,16 +11,16 @@
 
 #ifdef BOOST_CONTRACT_TEST_LIB_Y_DYN_LINK
     #ifdef BOOST_CONTRACT_TEST_LIB_Y_SOURCE
-        #define BOOST_CONTRACT_TEST_LIB_Y_DECL BOOST_SYMBOL_EXPORT
+        #define BOOST_CONTRACT_TEST_LIB_Y_DECLSPEC BOOST_SYMBOL_EXPORT
     #else
-        #define BOOST_CONTRACT_TEST_LIB_Y_DECL BOOST_SYMBOL_IMPORT
+        #define BOOST_CONTRACT_TEST_LIB_Y_DECLSPEC BOOST_SYMBOL_IMPORT
     #endif
 #else
-    #define BOOST_CONTRACT_TEST_LIB_Y_DECL /* nothing */
+    #define BOOST_CONTRACT_TEST_LIB_Y_DECLSPEC /* nothing */
 #endif
 
 namespace lib_y_ { // Internal namepsace.
-    void BOOST_CONTRACT_TEST_LIB_Y_DECL y_body();
+    void BOOST_CONTRACT_TEST_LIB_Y_DECLSPEC y_body();
 }
 
 inline void y() {

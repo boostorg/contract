@@ -17,7 +17,7 @@
 #if BOOST_CONTRACT_PUBLIC_FUNCTIONS
     #include <boost/contract/aux_/operation/public_static_function.hpp>
     #include <boost/contract/aux_/operation/public_function.hpp>
-    #include <boost/cotnract/aux_/type_traits/optional.hpp>
+    #include <boost/contract/aux_/type_traits/optional.hpp>
     #include <boost/contract/aux_/none.hpp>
     #include <boost/function_types/result_type.hpp>
     #include <boost/function_types/function_arity.hpp>
@@ -163,7 +163,8 @@ BOOST_CONTRACT_PUBLIC_FUNCTION_VIRTUAL_NO_OVERRIDE_(/* has_result = */ 1)
             /* anyways, but helps limiting cryptic compiler's errors */ \
             BOOST_STATIC_ASSERT_MSG( \
                 /* -2 for both `this` and `virtual_*` extra parameters */ \
-                boost::function_types::function_arity<F>::value - 2 == arity, \
+                boost::function_types::function_arity<F>::value - 2 == \
+                        BOOST_CONTRACT_AUX_TVARIADIC_SIZEOF(arity, Args), \
                 "missing one or more arguments for specified function" \
             ); \
             /* assert consistency of F's result type and R (if has_result) */ \

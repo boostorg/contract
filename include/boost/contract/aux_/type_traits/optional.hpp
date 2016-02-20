@@ -24,7 +24,7 @@ template<typename T>
 struct optional_value_type<boost::optional<T> > { typedef T type; };
 
 template<typename T>
-struct remove_valute_reference_if_optional { typedef T type; };
+struct remove_value_reference_if_optional { typedef T type; };
 template<typename T>
 struct remove_value_reference_if_optional<boost::optional<T> >
         { typedef typename boost::remove_reference<T>::type type; };

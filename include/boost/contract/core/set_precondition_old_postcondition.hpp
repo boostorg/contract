@@ -33,7 +33,7 @@ namespace boost {
 
 namespace boost { namespace contract {
     
-template<typename R = void>
+template<typename R /* = void (already in fwd decl from decl.hpp) */>
 class set_precondition_old_postcondition { // Copyable (as *).
 public:
     ~set_precondition_old_postcondition() BOOST_NOEXCEPT_IF(false) {}

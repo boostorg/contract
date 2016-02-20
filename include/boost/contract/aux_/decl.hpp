@@ -7,8 +7,7 @@
 // file LICENSE_1_0.txt or a copy at http://www.boost.org/LICENSE_1_0.txt).
 // See: http://www.boost.org/doc/libs/release/libs/contract/doc/html/index.html
 
-#include <boost/contract/core/set_precondition_old_postcondition.hpp>
-#include <boost/contract/core/virtual.hpp>
+// Cannot include core/*.hpp other than config.hpp here (avoid circular incl).
 #include <boost/contract/aux_/tvariadic.hpp>
 #if !BOOST_CONTRACT_AUX_TVARIADIC
     #include <boost/contract/core/config.hpp>
@@ -19,22 +18,8 @@
 #include <boost/preprocessor/control/expr_iif.hpp>
 #include <boost/preprocessor/control/iif.hpp>
 #include <boost/preprocessor/punctuation/comma_if.hpp>
-#include <boost/config.hpp>
 
 /* PUBLIC */
-
-// IMPORTANT: In general, this library should always and only be compiled and
-// used as a shared library. Otherwise, lib's state won't be shared among
-// different user programs and user libraries.
-#if defined(BOOST_ALL_DYN_LINK) || defined(BOOST_CONTRACT_DYN_LINK)
-    #ifdef BOOST_CONTRACT_AUX_CONFIG_SOURCE
-        #define BOOST_CONTRACT_AUX_DECL BOOST_SYMBOL_EXPORT
-    #else
-        #define BOOST_CONTRACT_AUX_DECL BOOST_SYMBOL_IMPORT
-    #endif
-#else
-    #define BOOST_CONTRACT_AUX_DECL /* nothing */
-#endif
 
 #define BOOST_CONTRACT_AUX_DECL_OVERRIDING_PUBLIC_FUNCTION_Z(z, \
     arity, is_friend, has_result, \
@@ -53,7 +38,7 @@
     BOOST_PP_EXPR_IIF(is_friend, friend) \
     boost::contract::set_precondition_old_postcondition< \
             BOOST_PP_EXPR_IIF(has_result, R)> \
-    BOOST_PP_EXPR_IIF(is_friend, boost::contract::) \
+    /* no boost::contract:: here for friends (otherwise need fwd decl) */ \
     public_function( \
         boost::contract::virtual_* v \
         BOOST_PP_COMMA_IF(has_result) \
@@ -128,6 +113,17 @@
         class \
     ) \
     check_subcontracted_pre_post_inv
+
+/* CODE */
+
+namespace boost {
+    namespace contract {
+        class virtual_;
+
+        template<typename R = void>
+        class set_precondition_old_postcondition;
+    }
+}
     
 #endif // #include guard
 

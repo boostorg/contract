@@ -135,94 +135,93 @@ namespace exception_ {
     #ifndef BOOST_CONTRACT_THREAD_DISABLED
         boost::mutex entry_inv_failure_mutex;
     #endif
-    assertion_failure_handlee entry_inv_failure_handler =
+    assertion_failure_handler entry_inv_failure_handler =
             &default_handler<entry_inv_key>;
     
     #ifndef BOOST_CONTRACT_THREAD_DISABLED
         boost::mutex exit_inv_failure_mutex;
     #endif
-    assertion_failure_handlee xit_inv_failure_handler =
+    assertion_failure_handler exit_inv_failure_handler =
             &default_handler<exit_inv_key>;
 }
 
-// Contract compilation on/off cannot change following set/get impl.
+// IMPORTANT: Following func cannot be declared inline (on GCC, Clang, etc.) and
+// their definition code cannot be changed by contract on/off macros.
 
-inline assertion_failure_handler set_precondition_failure(
+assertion_failure_handler set_precondition_failure(
         assertion_failure_handler const& f) BOOST_NOEXCEPT_OR_NOTHROW {
     BOOST_CONTRACT_EXCEPTION_HANDLER_SET_(exception_::pre_failure_mutex,
             exception_::pre_failure_handler, f);
 }
 
-inline assertion_failure_handler get_precondition_failure()
-        BOOST_NOEXCEPT_OR_NOTHROW {
+assertion_failure_handler get_precondition_failure() BOOST_NOEXCEPT_OR_NOTHROW {
     BOOST_CONTRACT_EXCEPTION_HANDLER_GET_(exception_::pre_failure_mutex,
             exception_::pre_failure_handler);
 }
 
-inline void precondition_failure(from where) /* can throw */ {
+void precondition_failure(from where) /* can throw */ {
     BOOST_CONTRACT_EXCEPTION_HANDLER_(exception_::pre_failure_mutex,
             exception_::pre_failure_handler, where)
 }
 
-inline assertion_failure_handler set_postcondition_failure(
+assertion_failure_handler set_postcondition_failure(
         assertion_failure_handler const& f) BOOST_NOEXCEPT_OR_NOTHROW {
     BOOST_CONTRACT_EXCEPTION_HANDLER_SET_(exception_::post_failure_mutex,
             exception_::post_failure_handler, f);
 }
 
-inline assertion_failure_handler get_postcondition_failure()
+assertion_failure_handler get_postcondition_failure()
         BOOST_NOEXCEPT_OR_NOTHROW {
     BOOST_CONTRACT_EXCEPTION_HANDLER_GET_(exception_::post_failure_mutex,
             exception_::post_failure_handler);
 }
 
-inline void postcondition_failure(from where) /* can throw */ {
+void postcondition_failure(from where) /* can throw */ {
     BOOST_CONTRACT_EXCEPTION_HANDLER_(exception_::post_failure_mutex,
             exception_::post_failure_handler, where);
 }
 
-inline assertion_failure_handler set_entry_invariant_failure(
+assertion_failure_handler set_entry_invariant_failure(
         assertion_failure_handler const& f) BOOST_NOEXCEPT_OR_NOTHROW {
     BOOST_CONTRACT_EXCEPTION_HANDLER_SET_(exception_::entry_inv_failure_mutex,
         exception_::entry_inv_failure_handler, f);
 }
 
-inline assertion_failure_handler get_entry_invariant_failure()
+assertion_failure_handler get_entry_invariant_failure()
         BOOST_NOEXCEPT_OR_NOTHROW {
     BOOST_CONTRACT_EXCEPTION_HANDLER_GET_(exception_::entry_inv_failure_mutex,
             exception_::entry_inv_failure_handler);
 }
 
-inline void entry_invariant_failure(from where) /* can throw */ {
+void entry_invariant_failure(from where) /* can throw */ {
     BOOST_CONTRACT_EXCEPTION_HANDLER_(exception_::entry_inv_failure_mutex,
             exception_::entry_inv_failure_handler, where);
 }
 
-inline assertion_failure_handler set_exit_invariant_failure(
+assertion_failure_handler set_exit_invariant_failure(
         assertion_failure_handler const& f) BOOST_NOEXCEPT_OR_NOTHROW {
     BOOST_CONTRACT_EXCEPTION_HANDLER_SET_(exception_::exit_inv_failure_mutex,
         exception_::exit_inv_failure_handler, f);
 }
 
-inline assertion_failure_handler get_exit_invariant_failure()
+assertion_failure_handler get_exit_invariant_failure()
         BOOST_NOEXCEPT_OR_NOTHROW {
     BOOST_CONTRACT_EXCEPTION_HANDLER_GET_(exception_::exit_inv_failure_mutex,
             exception_::exit_inv_failure_handler);
 }
 
-inline void exit_invariant_failure(from where) /* can throw */ {
+void exit_invariant_failure(from where) /* can throw */ {
     BOOST_CONTRACT_EXCEPTION_HANDLER_(exception_::exit_inv_failure_mutex,
             exception_::exit_inv_failure_handler, where);
 }
 
-inline void set_invariant_failure(assertion_failure_handler const& f)
+void set_invariant_failure(assertion_failure_handler const& f)
         BOOST_NOEXCEPT_OR_NOTHROW {
     set_entry_invariant_failure(f);
     set_exit_invariant_failure(f);
 }
 
-inline void set_failure(assertion_failure_handler const& f)
-        BOOST_NOEXCEPT_OR_NOTHROW {
+void set_failure(assertion_failure_handler const& f) BOOST_NOEXCEPT_OR_NOTHROW {
     set_precondition_failure(f);
     set_postcondition_failure(f);
     set_invariant_failure(f);

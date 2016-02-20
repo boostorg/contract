@@ -68,7 +68,7 @@ int main() {
             BOOST_PP_IIF(BOOST_CONTRACT_POSTCONDITIONS, 4, 0));
     BOOST_TEST_EQ(s.evals(),
             BOOST_PP_IIF(BOOST_CONTRACT_POSTCONDITIONS, 4, 0));
-    BOOST_TEST_EQ(s.ctors(), s.dtors());
+    BOOST_TEST_EQ(s.ctors(), s.dtors() + 1); // 1 local var.
 
     // Cannot access x via ca, but only via aa.
     BOOST_TEST_EQ(aa.x.value, "aA");
@@ -76,28 +76,28 @@ int main() {
             BOOST_PP_IIF(BOOST_CONTRACT_POSTCONDITIONS, 1, 0));
     BOOST_TEST_EQ(aa.x.evals(),
             BOOST_PP_IIF(BOOST_CONTRACT_POSTCONDITIONS, 1, 0));
-    BOOST_TEST_EQ(aa.x.ctors(), aa.x.dtors());
+    BOOST_TEST_EQ(aa.x.ctors(), aa.x.dtors() + 1); // 1 data member.
 
     BOOST_TEST_EQ(ca.y.value, "cA");
     BOOST_TEST_EQ(ca.y.copies(),
             BOOST_PP_IIF(BOOST_CONTRACT_POSTCONDITIONS, 1, 0));
     BOOST_TEST_EQ(ca.y.evals(),
             BOOST_PP_IIF(BOOST_CONTRACT_POSTCONDITIONS, 1, 0));
-    BOOST_TEST_EQ(ca.y.ctors(), ca.y.dtors());
+    BOOST_TEST_EQ(ca.y.ctors(), ca.y.dtors() + 1); // 1 data member.
     
     BOOST_TEST_EQ(ca.t<'d'>::z.value, "dA");
     BOOST_TEST_EQ(ca.t<'d'>::z.copies(),
             BOOST_PP_IIF(BOOST_CONTRACT_POSTCONDITIONS, 1, 0));
     BOOST_TEST_EQ(ca.t<'d'>::z.evals(),
             BOOST_PP_IIF(BOOST_CONTRACT_POSTCONDITIONS, 1, 0));
-    BOOST_TEST_EQ(ca.t<'d'>.ctors(), ca.t<'d'>.dtors());
+    BOOST_TEST_EQ(ca.t<'d'>::z.ctors(), ca.t<'d'>::z.dtors() + 1); // 1 member.
 
     BOOST_TEST_EQ(ca.t<'e'>::z.value, "eA");
     BOOST_TEST_EQ(ca.t<'e'>::z.copies(),
             BOOST_PP_IIF(BOOST_CONTRACT_POSTCONDITIONS, 1, 0));
     BOOST_TEST_EQ(ca.t<'e'>::z.evals(),
             BOOST_PP_IIF(BOOST_CONTRACT_POSTCONDITIONS, 1, 0));
-    BOOST_TEST_EQ(ca.t<'e'>.ctors(), ca.t<'e'>.dtors());
+    BOOST_TEST_EQ(ca.t<'e'>::z.ctors(), ca.t<'e'>::z.dtors() + 1); // 1 member.
 
     return boost::report_errors();
 }

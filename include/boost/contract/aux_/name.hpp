@@ -7,11 +7,8 @@
 // file LICENSE_1_0.txt or a copy at http://www.boost.org/LICENSE_1_0.txt).
 // See: http://www.boost.org/doc/libs/release/libs/contract/doc/html/index.html
 
+#include <boost/contract/aux_/config.hpp>
 #include <boost/preprocessor/cat.hpp>
-
-/* PRIVATE */
-
-#define BOOST_CONTRACT_AUX_NAME_PREFIX_ boost_contract_auxX
 
 /* PUBLIC */
 
@@ -19,7 +16,7 @@
 // (instead of using ..._SEQ_CAT or similar) for optimal speed and reentrancy.
 
 #define BOOST_CONTRACT_AUX_NAME1(name1) \
-    BOOST_PP_CAT(BOOST_CONTRACT_AUX_NAME_PREFIX_, name1)
+    BOOST_PP_CAT(BOOST_CONTRACT_AUX_CONFIG_NAME_PREFIX, name1)
        
 #endif // #include guard
 
