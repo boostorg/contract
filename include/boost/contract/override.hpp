@@ -12,7 +12,7 @@
 
 /* PRIVATE */
     
-#if BOOST_CONTRACT_PUBLIC_FUNCTIONS
+#ifndef BOOST_CONTRACT_NO_PUBLIC_FUNCTIONS
     #include <boost/contract/aux_/type_traits/introspection.hpp>
     #include <boost/contract/aux_/none.hpp>
     #include <boost/contract/aux_/tvariadic.hpp>
@@ -56,12 +56,12 @@
         #include <boost/preprocessor/arithmetic/sub.hpp>
 
         #define BOOST_CONTRACT_OVERRIDE_CALL_BASE_DECL_(f) \
-            BOOST_PP_REPEAT(BOOST_PP_INC(BOOST_CONTRACT_CONFIG_MAX_ARGS), \
+            BOOST_PP_REPEAT(BOOST_PP_INC(BOOST_CONTRACT_MAX_ARGS), \
                     BOOST_CONTRACT_OVERRIDE_CALL_BASE_ARITY_, f) \
         
         #define BOOST_CONTRACT_OVERRIDE_CALL_BASE_ARITY_(z, arity, f) \
             BOOST_CONTRACT_OVERRIDE_CALL_BASE_(z, arity, \
-                    BOOST_PP_SUB(BOOST_CONTRACT_CONFIG_MAX_ARGS, arity), f)
+                    BOOST_PP_SUB(BOOST_CONTRACT_MAX_ARGS, arity), f)
     #endif
 
 /* PUBLIC */

@@ -11,14 +11,16 @@
 #include <boost/contract/core/config.hpp>
 #include <boost/contract/aux_/condition/check_pre_post_inv.hpp>
 #include <boost/contract/aux_/none.hpp>
-#if  BOOST_CONTRACT_PRECONDITIONS || BOOST_CONTRACT_POSTCONDITIONS || \
-        BOOST_CONTRACT_INVARIANTS
+#if !defined(BOOST_CONTRACT_NO_PRECONDITIONS) || \
+        !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
+        !defined(OOST_CONTRACT_NO_INVARIANTS)
     #include <boost/contract/aux_/check_guard.hpp>
 #endif
-#if BOOST_CONTRACT_EXIT_INVARIANTS || BOOST_CONTRACT_POSTCONDITIONS
+#if !defined(BOOST_CONTRACT_NO_EXIT_INVARIANTS) || \
+        !defined(BOOST_CONTRACT_NO_POSTCONDITIONS)
     #include <boost/config.hpp>
 #endif
-#if BOOST_CONTRACT_POSTCONDITIONS
+#ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
     #include <exception>
 #endif
 
@@ -35,19 +37,20 @@ public:
     {}
 
 private:
-    #if BOOST_CONTRACT_ENTRY_INVARIANTS || BOOST_CONTRACT_PRECONDITIONS || \
-            BOOST_CONTRACT_POSTCONDITIONS
+    #if !defined(BOOST_CONTRACT_NO_ENTRY_INVARIANTS) || \
+            !defined(BOOST_CONTRACT_NO_PRECONDITIONS) || \
+            !defined(BOOST_CONTRACT_NO_POSTCONDITIONS)
         void init() /* override */ {
             if(check_guard::checking()) return;
-            #if BOOST_CONTRACT_ENTRY_INVARIANTS || BOOST_CONTRACT_PRECONDITIONS
+            #if !defined(BOOST_CONTRACT_NO_ENTRY_INVARIANTS) || \
+                    !defined(BOOST_CONTRACT_NO_PRECONDITIONS)
                 { // Acquire check guard.
                     check_guard checking;
-                    #if BOOST_CONTRACT_ENTRY_INVARIANTS
+                    #ifndef BOOST_CONTRACT_NO_ENTRY_INVARIANTS
                         this->check_entry_static_inv();
                     #endif
-                    #if BOOST_CONTRACT_PRECONDITIONS
-                        #ifndef \
-  BOOST_CONTRACT_CONFIG_PRECONDITIONS_DISABLE_NOTHING
+                    #ifndef BOOST_CONTRACT_NO_PRECONDITIONS
+                        #ifndef BOOST_CONTRACT_PRECONDITIONS_DISABLE_NOTHING
                                 this->check_pre();
                             } // Release check guard.
                         #else
@@ -58,23 +61,24 @@ private:
                         } // Release check guard
                     #endif
             #endif
-            #if BOOST_CONTRACT_POSTCONDITIONS
+            #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
                 this->copy_old();
             #endif
         }
     #endif
 
 public:
-    #if BOOST_CONTRACT_EXIT_INVARIANTS || BOOST_CONTRACT_POSTCONDITIONS
+    #if !defined(BOOST_CONTRACT_NO_EXIT_INVARIANTS) || \
+            !defined(BOOST_CONTRACT_NO_POSTCONDITIONS)
         ~public_static_function() BOOST_NOEXCEPT_IF(false) {
             this->assert_guarded();
             if(check_guard::checking()) return;
             check_guard checking;
 
-            #if BOOST_CONTRACT_EXIT_INVARIANTS
+            #ifndef BOOST_CONTRACT_NO_EXIT_INVARIANTS
                 this->check_exit_static_inv();
             #endif
-            #if BOOST_CONTRACT_POSTCONDITIONS
+            #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
                 if(!std::uncaught_exception()) this->check_post(none());
             #endif
         }

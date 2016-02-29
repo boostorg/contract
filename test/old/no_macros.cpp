@@ -112,21 +112,21 @@ int main() {
     swap(x, y);
     
     ok.str(""); ok
-        #if BOOST_CONTRACT_PRECONDITIONS
+        #ifndef BOOST_CONTRACT_NO_PRECONDITIONS
             << "swap::pre" << std::endl
         #endif
-        #if BOOST_CONTRACT_POSTCONDITIONS
+        #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
             << "swap::old" << std::endl
         #endif
         << "swap::body" << std::endl
-        #if BOOST_CONTRACT_POSTCONDITIONS
+        #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
             << "swap::post" << std::endl
         #endif
     ;
     BOOST_TEST(out.eq(ok.str()));
 
     unsigned const cnt =
-        #if BOOST_CONTRACT_POSTCONDITIONS
+        #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
             1
         #else
             0
@@ -150,14 +150,14 @@ int main() {
     aa.swap(i, j);
     
     ok.str(""); ok
-        #if BOOST_CONTRACT_PRECONDITIONS
+        #ifndef BOOST_CONTRACT_NO_PRECONDITIONS
             << "b::swap::pre" << std::endl
         #endif
-        #if BOOST_CONTRACT_POSTCONDITIONS
+        #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
             << "b::swap::old" << std::endl
         #endif
         << "a::swap::body" << std::endl
-        #if BOOST_CONTRACT_POSTCONDITIONS
+        #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
             << "b::swap::old" << std::endl
             << "b::swap::post" << std::endl
         #endif

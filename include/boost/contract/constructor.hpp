@@ -10,10 +10,11 @@
 /** @file */
 
 #include <boost/contract/aux_/all_core_headers.hpp>
-#if BOOST_CONTRACT_CONSTRUCTORS || BOOST_CONTRACT_PRECONDITIONS
+#if !defined(BOOST_CONTRACT_NO_CONSTRUCTORS) || \
+        !defined(BOOST_CONTRACT_NO_PRECONDITIONS)
     #include <boost/contract/aux_/operation/constructor.hpp>
 #endif
-#if BOOST_CONTRACT_PRECONDITIONS
+#if !defined(BOOST_CONTRACT_NO_PRECONDITIONS)
     #include <boost/contract/aux_/check_guard.hpp>
 #endif
 
@@ -22,7 +23,8 @@ namespace boost { namespace contract {
 template<class C>
 set_old_postcondition<> constructor(C* obj) {
     // Must #if also on ..._PRECONDITIONS here because set_... is generic.
-    #if BOOST_CONTRACT_CONSTRUCTORS || BOOST_CONTRACT_PRECONDITIONS
+    #if !defined(BOOST_CONTRACT_NO_CONSTRUCTORS) || \
+            !defined(BOOST_CONTRACT_NO_PRECONDITIONS)
         return set_old_postcondition<>(
                 new boost::contract::aux::constructor<C>(obj));
     #else
@@ -37,10 +39,10 @@ public:
 
     template<typename F>
     explicit constructor_precondition(F const& f) {
-        #if BOOST_CONTRACT_PRECONDITIONS
+        #ifndef BOOST_CONTRACT_NO_PRECONDITIONS
             if(boost::contract::aux::check_guard::checking()) return;
             try {
-                #ifndef BOOST_CONTRACT_CONFIG_PRECONDITIONS_DISABLE_NOTHING
+                #ifndef BOOST_CONTRACT_PRECONDITIONS_DISABLE_NOTHING
                     boost::contract::aux::check_guard checking;
                 #endif
                 f();

@@ -10,8 +10,9 @@
 /** @file */
 
 #include <boost/contract/core/config.hpp>
-#if BOOST_CONTRACT_PRECONDITIONS || BOOST_CONTRACT_POSTCONDITIONS || \
-        BOOST_CONTRACT_INVARIANTS
+#if !defined(BOOST_CONTRACT_NO_PRECONDITIONS) || \
+        !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
+        !defined(BOOST_CONTRACT_NO_INVARIANTS)
     #include <boost/contract/aux_/condition/check_base.hpp>
     #include <boost/contract/aux_/auto_ptr.hpp>
 #endif
@@ -39,8 +40,9 @@ public:
     // No set member functions here.
 
 private:
-    #if BOOST_CONTRACT_PRECONDITIONS || BOOST_CONTRACT_POSTCONDITIONS || \
-            BOOST_CONTRACT_INVARIANTS
+    #if !defined(BOOST_CONTRACT_NO_PRECONDITIONS) || \
+            !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
+            !defined(BOOST_CONTRACT_NO_INVARIANTS)
         typedef boost::contract::aux::check_base check_type;
 
         explicit set_nothing(check_type* check) : check_(check) {}

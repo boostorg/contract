@@ -9,7 +9,6 @@
 #include <boost/contract/old.hpp>
 #include <boost/contract/guard.hpp>
 #include <boost/contract/assert.hpp>
-#include <iostream>
 
 BOOST_CONTRACT_TEST_AUX_OTESTSTREAM_STR_DEF(out)
 

@@ -35,18 +35,18 @@ int main() {
         BOOST_TEST(false);
     } catch(a::err const&) {
         ok.str(""); ok
-            #if BOOST_CONTRACT_ENTRY_INVARIANTS
+            #ifndef BOOST_CONTRACT_NO_ENTRY_INVARIANTS
                 << "a::static_inv" << std::endl
             #endif
-            #if BOOST_CONTRACT_PRECONDITIONS
+            #ifndef BOOST_CONTRACT_NO_PRECONDITIONS
                 << "a::f::pre" << std::endl
             #endif
-            #if BOOST_CONTRACT_POSTCONDITIONS
+            #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
                 << "a::f::old" << std::endl
             #endif
             << "a::f::body" << std::endl
             // Test no post (but still static inv) because body threw.
-            #if BOOST_CONTRACT_EXIT_INVARIANTS
+            #ifndef BOOST_CONTRACT_NO_EXIT_INVARIANTS
                 << "a::static_inv" << std::endl
             #endif
         ;

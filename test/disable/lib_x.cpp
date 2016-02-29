@@ -5,7 +5,6 @@
 #include "lib_x.hpp"
 #include <boost/contract/function.hpp>
 #include <boost/contract/guard.hpp>
-#include <iostream>
 
 BOOST_CONTRACT_TEST_AUX_OTESTSTREAM_STR_DEF(out)
 

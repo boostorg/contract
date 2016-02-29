@@ -2,8 +2,8 @@
 // Test missing contract guard gives run-time error.
 
 struct err {};
+#define BOOST_CONTRACT_ON_MISSING_GUARD { throw err(); }
 
-#define BOOST_CONTRACT_CONFIG_ON_MISSING_GUARD throw err();
 #include <boost/contract/function.hpp>
 #include <boost/contract/guard.hpp>
 

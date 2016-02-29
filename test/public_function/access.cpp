@@ -71,28 +71,28 @@ int main() {
     out.str("");
     aa.f('a');
     ok.str(""); ok
-        #if BOOST_CONTRACT_ENTRY_INVARIANTS
+        #ifndef BOOST_CONTRACT_NO_ENTRY_INVARIANTS
             << "b::static_inv" << std::endl
             << "b::inv" << std::endl
             << "a::static_inv" << std::endl
             << "a::inv" << std::endl
         #endif
-        #if BOOST_CONTRACT_PRECONDITIONS
+        #ifndef BOOST_CONTRACT_NO_PRECONDITIONS
             << "b::f::pre" << std::endl
             << "a::f::pre" << std::endl
         #endif
-        #if BOOST_CONTRACT_POSTCONDITIONS
+        #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
             << "b::f::old" << std::endl
             << "a::f::old" << std::endl
         #endif
         << "a::f::body" << std::endl
-        #if BOOST_CONTRACT_EXIT_INVARIANTS
+        #ifndef BOOST_CONTRACT_NO_EXIT_INVARIANTS
             << "b::static_inv" << std::endl
             << "b::inv" << std::endl
             << "a::static_inv" << std::endl
             << "a::inv" << std::endl
         #endif
-        #if BOOST_CONTRACT_POSTCONDITIONS
+        #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
             << "b::f::old" << std::endl
             << "b::f::post" << std::endl
             // No old call here because not a base object.
@@ -105,22 +105,22 @@ int main() {
     out.str("");
     bb.f('b');
     ok.str(""); ok
-        #if BOOST_CONTRACT_ENTRY_INVARIANTS
+        #ifndef BOOST_CONTRACT_NO_ENTRY_INVARIANTS
             << "b::static_inv" << std::endl
             << "b::inv" << std::endl
         #endif
-        #if BOOST_CONTRACT_PRECONDITIONS
+        #ifndef BOOST_CONTRACT_NO_PRECONDITIONS
             << "b::f::pre" << std::endl
         #endif
-        #if BOOST_CONTRACT_POSTCONDITIONS
+        #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
             << "b::f::old" << std::endl
         #endif
         << "b::f::body" << std::endl
-        #if BOOST_CONTRACT_EXIT_INVARIANTS
+        #ifndef BOOST_CONTRACT_NO_EXIT_INVARIANTS
             << "b::static_inv" << std::endl
             << "b::inv" << std::endl
         #endif
-        #if BOOST_CONTRACT_POSTCONDITIONS
+        #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
             << "b::f::post" << std::endl
         #endif
     ;

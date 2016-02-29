@@ -11,7 +11,7 @@
 #include <boost/contract/core/config.hpp>
 #include <boost/contract/aux_/condition/check_base.hpp>
 #include <boost/contract/aux_/none.hpp>
-#if BOOST_CONTRACT_POSTCONDITIONS
+#ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
     #include <boost/contract/aux_/type_traits/optional.hpp>
     #include <boost/optional.hpp>
     #include <boost/function.hpp>
@@ -46,7 +46,7 @@ class check_pre_post : public check_base { // Non-copyable base.
 public:
     explicit check_pre_post(boost::contract::from from) : check_base(from) {}
     
-    #if BOOST_CONTRACT_POSTCONDITIONS
+    #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
 private:
         typedef typename boost::mpl::if_<is_optional<R>,
             boost::optional<typename boost::remove_reference<typename
@@ -71,7 +71,7 @@ class check_pre_post<none> : public check_base { // Non-copyable base.
 public:
     explicit check_pre_post(boost::contract::from from) : check_base(from) {}
     
-    #if BOOST_CONTRACT_POSTCONDITIONS
+    #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
         BOOST_CONTRACT_AUX_CHECK_PRE_POST_DEF_(
             none,
             unused,

@@ -17,9 +17,9 @@
 
 // NOTE: This code should not change (not even its impl) based on the
 // CONFIG_NO_... macros. For example, preconditions_failure() should still call
-// the set precondition failure handler even when CONFIG_NO_PRECONDITIONS is
-// #defined, because user code might explicitly call precondition_failure() (for
-// whatever reason...). Otherwise, the public API of this lib will change.
+// the set precondition failure handler even when NO_PRECONDITIONS is #defined,
+// because user code might explicitly call precondition_failure() (for whatever
+// reason...). Otherwise, the public API of this lib will change.
 
 namespace boost { namespace contract {
 

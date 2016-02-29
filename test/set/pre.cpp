@@ -22,7 +22,7 @@ int main() {
     out.str("");
     f();
     ok.str(""); ok
-        #if BOOST_CONTRACT_PRECONDITIONS
+        #ifndef BOOST_CONTRACT_NO_PRECONDITIONS
             << "f::pre" << std::endl
         #endif
         << "f::body" << std::endl

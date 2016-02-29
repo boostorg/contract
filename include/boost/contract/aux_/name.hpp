@@ -16,7 +16,7 @@
 // (instead of using ..._SEQ_CAT or similar) for optimal speed and reentrancy.
 
 #define BOOST_CONTRACT_AUX_NAME1(name1) \
-    BOOST_PP_CAT(BOOST_CONTRACT_AUX_CONFIG_NAME_PREFIX, name1)
+    BOOST_PP_CAT(BOOST_CONTRACT_AUX_NAME_PREFIX, name1)
        
 #endif // #include guard
 

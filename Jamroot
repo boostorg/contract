@@ -145,82 +145,82 @@ feature.feature boost_contract-no
 # 1 contract off.
 feature.compose <boost_contract-no>entryinv
 :
-    <define>BOOST_CONTRACT_CONFIG_NO_ENTRY_INVARIANTS
+    <define>BOOST_CONTRACT_NO_ENTRY_INVARIANTS
 ;
 feature.compose <boost_contract-no>pre
 :
-    <define>BOOST_CONTRACT_CONFIG_NO_PRECONDITIONS
+    <define>BOOST_CONTRACT_NO_PRECONDITIONS
 ;
 feature.compose <boost_contract-no>exitinv
 :
-    <define>BOOST_CONTRACT_CONFIG_NO_EXIT_INVARIANTS
+    <define>BOOST_CONTRACT_NO_EXIT_INVARIANTS
 ;
 feature.compose <boost_contract-no>post
 :
-    <define>BOOST_CONTRACT_CONFIG_NO_POSTCONDITIONS
+    <define>BOOST_CONTRACT_NO_POSTCONDITIONS
 ;
 # 2 contracts off.
 feature.compose <boost_contract-no>entryinv_pre
 :
-    <define>BOOST_CONTRACT_CONFIG_NO_ENTRY_INVARIANTS
-    <define>BOOST_CONTRACT_CONFIG_NO_PRECONDITIONS
+    <define>BOOST_CONTRACT_NO_ENTRY_INVARIANTS
+    <define>BOOST_CONTRACT_NO_PRECONDITIONS
 ;
 feature.compose <boost_contract-no>entryinv_exitinv
 :
-    <define>BOOST_CONTRACT_CONFIG_NO_ENTRY_INVARIANTS
-    <define>BOOST_CONTRACT_CONFIG_NO_EXIT_INVARIANTS
+    <define>BOOST_CONTRACT_NO_ENTRY_INVARIANTS
+    <define>BOOST_CONTRACT_NO_EXIT_INVARIANTS
 ;
 feature.compose <boost_contract-no>entryinv_post
 :
-    <define>BOOST_CONTRACT_CONFIG_NO_ENTRY_INVARIANTS
-    <define>BOOST_CONTRACT_CONFIG_NO_POSTCONDITIONS
+    <define>BOOST_CONTRACT_NO_ENTRY_INVARIANTS
+    <define>BOOST_CONTRACT_NO_POSTCONDITIONS
 ;
 feature.compose <boost_contract-no>pre_exitinv
 :
-    <define>BOOST_CONTRACT_CONFIG_NO_PRECONDITIONS
-    <define>BOOST_CONTRACT_CONFIG_NO_EXIT_INVARIANTS
+    <define>BOOST_CONTRACT_NO_PRECONDITIONS
+    <define>BOOST_CONTRACT_NO_EXIT_INVARIANTS
 ;
 feature.compose <boost_contract-no>pre_post
 :
-    <define>BOOST_CONTRACT_CONFIG_NO_PRECONDITIONS
-    <define>BOOST_CONTRACT_CONFIG_NO_POSTCONDITIONS
+    <define>BOOST_CONTRACT_NO_PRECONDITIONS
+    <define>BOOST_CONTRACT_NO_POSTCONDITIONS
 ;
 feature.compose <boost_contract-no>exitinv_post
 :
-    <define>BOOST_CONTRACT_CONFIG_NO_EXIT_INVARIANTS
-    <define>BOOST_CONTRACT_CONFIG_NO_POSTCONDITIONS
+    <define>BOOST_CONTRACT_NO_EXIT_INVARIANTS
+    <define>BOOST_CONTRACT_NO_POSTCONDITIONS
 ;
 # 3 contracts off.
 feature.compose <boost_contract-no>pre_exitinv_post
 :
-    <define>BOOST_CONTRACT_CONFIG_NO_PRECONDITIONS
-    <define>BOOST_CONTRACT_CONFIG_NO_EXIT_INVARIANTS
-    <define>BOOST_CONTRACT_CONFIG_NO_POSTCONDITIONS
+    <define>BOOST_CONTRACT_NO_PRECONDITIONS
+    <define>BOOST_CONTRACT_NO_EXIT_INVARIANTS
+    <define>BOOST_CONTRACT_NO_POSTCONDITIONS
 ;
 feature.compose <boost_contract-no>entryinv_exitinv_post
 :
-    <define>BOOST_CONTRACT_CONFIG_NO_ENTRY_INVARIANTS
-    <define>BOOST_CONTRACT_CONFIG_NO_EXIT_INVARIANTS
-    <define>BOOST_CONTRACT_CONFIG_NO_POSTCONDITIONS
+    <define>BOOST_CONTRACT_NO_ENTRY_INVARIANTS
+    <define>BOOST_CONTRACT_NO_EXIT_INVARIANTS
+    <define>BOOST_CONTRACT_NO_POSTCONDITIONS
 ;
 feature.compose <boost_contract-no>entryinv_pre_post
 :
-    <define>BOOST_CONTRACT_CONFIG_NO_ENTRY_INVARIANTS
-    <define>BOOST_CONTRACT_CONFIG_NO_PRECONDITIONS
-    <define>BOOST_CONTRACT_CONFIG_NO_POSTCONDITIONS
+    <define>BOOST_CONTRACT_NO_ENTRY_INVARIANTS
+    <define>BOOST_CONTRACT_NO_PRECONDITIONS
+    <define>BOOST_CONTRACT_NO_POSTCONDITIONS
 ;
 feature.compose <boost_contract-no>entryinv_pre_exitinv
 :
-    <define>BOOST_CONTRACT_CONFIG_NO_ENTRY_INVARIANTS
-    <define>BOOST_CONTRACT_CONFIG_NO_PRECONDITIONS
-    <define>BOOST_CONTRACT_CONFIG_NO_EXIT_INVARIANTS
+    <define>BOOST_CONTRACT_NO_ENTRY_INVARIANTS
+    <define>BOOST_CONTRACT_NO_PRECONDITIONS
+    <define>BOOST_CONTRACT_NO_EXIT_INVARIANTS
 ;
 # All 4 contracts oof.
 feature.compose <boost_contract-no>entryinv_pre_exitinv_post
 :
-    <define>BOOST_CONTRACT_CONFIG_NO_ENTRY_INVARIANTS
-    <define>BOOST_CONTRACT_CONFIG_NO_PRECONDITIONS
-    <define>BOOST_CONTRACT_CONFIG_NO_EXIT_INVARIANTS
-    <define>BOOST_CONTRACT_CONFIG_NO_POSTCONDITIONS
+    <define>BOOST_CONTRACT_NO_ENTRY_INVARIANTS
+    <define>BOOST_CONTRACT_NO_PRECONDITIONS
+    <define>BOOST_CONTRACT_NO_EXIT_INVARIANTS
+    <define>BOOST_CONTRACT_NO_POSTCONDITIONS
 ;
 

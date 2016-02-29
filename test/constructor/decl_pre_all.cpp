@@ -12,48 +12,48 @@
 
 std::string ok_after() {
     std::ostringstream ok; ok
-        #if BOOST_CONTRACT_ENTRY_INVARIANTS
+        #ifndef BOOST_CONTRACT_NO_ENTRY_INVARIANTS
             << "c::static_inv" << std::endl
         #endif
-        #if BOOST_CONTRACT_POSTCONDITIONS
+        #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
             << "c::ctor::old" << std::endl
         #endif
         << "c::ctor::body" << std::endl
-        #if BOOST_CONTRACT_EXIT_INVARIANTS
+        #ifndef BOOST_CONTRACT_NO_EXIT_INVARIANTS
             << "c::static_inv" << std::endl
             << "c::inv" << std::endl
         #endif
-        #if BOOST_CONTRACT_POSTCONDITIONS
+        #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
             << "c::ctor::post" << std::endl
         #endif
 
-        #if BOOST_CONTRACT_ENTRY_INVARIANTS
+        #ifndef BOOST_CONTRACT_NO_ENTRY_INVARIANTS
             << "b::static_inv" << std::endl
         #endif
-        #if BOOST_CONTRACT_POSTCONDITIONS
+        #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
             << "b::ctor::old" << std::endl
         #endif
         << "b::ctor::body" << std::endl
-        #if BOOST_CONTRACT_EXIT_INVARIANTS
+        #ifndef BOOST_CONTRACT_NO_EXIT_INVARIANTS
             << "b::static_inv" << std::endl
             << "b::inv" << std::endl
         #endif
-        #if BOOST_CONTRACT_POSTCONDITIONS
+        #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
             << "b::ctor::post" << std::endl
         #endif
         
-        #if BOOST_CONTRACT_ENTRY_INVARIANTS
+        #ifndef BOOST_CONTRACT_NO_ENTRY_INVARIANTS
             << "a::static_inv" << std::endl
         #endif
-        #if BOOST_CONTRACT_POSTCONDITIONS
+        #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
             << "a::ctor::old" << std::endl
         #endif
         << "a::ctor::body" << std::endl
-        #if BOOST_CONTRACT_EXIT_INVARIANTS
+        #ifndef BOOST_CONTRACT_NO_EXIT_INVARIANTS
             << "a::static_inv" << std::endl
             << "a::inv" << std::endl
         #endif
-        #if BOOST_CONTRACT_POSTCONDITIONS
+        #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
             << "a::ctor::post" << std::endl
         #endif
     ;
@@ -70,7 +70,7 @@ int main() {
         out.str("");
         a aa;
         ok.str(""); ok // Test nothing failed.
-            #if BOOST_CONTRACT_PRECONDITIONS
+            #ifndef BOOST_CONTRACT_NO_PRECONDITIONS
                 << "a::ctor::pre" << std::endl
                 << "b::ctor::pre" << std::endl
                 << "c::ctor::pre" << std::endl
@@ -90,12 +90,12 @@ int main() {
     try {
         out.str("");
         a aa;
-        #if BOOST_CONTRACT_PRECONDITIONS
+        #ifndef BOOST_CONTRACT_NO_PRECONDITIONS
                 BOOST_TEST(false);
             } catch(err const&) {
         #endif
         ok.str(""); ok
-            #if BOOST_CONTRACT_PRECONDITIONS
+            #ifndef BOOST_CONTRACT_NO_PRECONDITIONS
                 << "a::ctor::pre" << std::endl // Test this failed.
             #else
                 << ok_after()
@@ -110,12 +110,12 @@ int main() {
     try {
         out.str("");
         a aa;
-        #if BOOST_CONTRACT_PRECONDITIONS
+        #ifndef BOOST_CONTRACT_NO_PRECONDITIONS
                 BOOST_TEST(false);
             } catch(err const&) {
         #endif
         ok.str(""); ok
-            #if BOOST_CONTRACT_PRECONDITIONS
+            #ifndef BOOST_CONTRACT_NO_PRECONDITIONS
                 << "a::ctor::pre" << std::endl
                 << "b::ctor::pre" << std::endl // Test this failed.
             #else
@@ -131,12 +131,12 @@ int main() {
     try {
         out.str("");
         a aa;
-        #if BOOST_CONTRACT_PRECONDITIONS
+        #ifndef BOOST_CONTRACT_NO_PRECONDITIONS
                 BOOST_TEST(false);
             } catch(err const&) {
         #endif
         ok.str(""); ok
-            #if BOOST_CONTRACT_PRECONDITIONS
+            #ifndef BOOST_CONTRACT_NO_PRECONDITIONS
                 << "a::ctor::pre" << std::endl
                 << "b::ctor::pre" << std::endl
                 << "c::ctor::pre" << std::endl // Test this failed.
@@ -153,12 +153,12 @@ int main() {
     try {
         out.str("");
         a aa;
-        #if BOOST_CONTRACT_PRECONDITIONS
+        #ifndef BOOST_CONTRACT_NO_PRECONDITIONS
                 BOOST_TEST(false);
             } catch(err const&) {
         #endif
         ok.str(""); ok
-            #if BOOST_CONTRACT_PRECONDITIONS
+            #ifndef BOOST_CONTRACT_NO_PRECONDITIONS
                 << "a::ctor::pre" << std::endl // Test this failed (as all did).
             #else
                 << ok_after()

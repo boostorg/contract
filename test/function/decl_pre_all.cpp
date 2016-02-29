@@ -10,16 +10,16 @@
 
 std::string ok_f(bool failed = false) {
     std::ostringstream ok; ok
-        #if BOOST_CONTRACT_PRECONDITIONS
+        #ifndef BOOST_CONTRACT_NO_PRECONDITIONS
             << "f::pre" << std::endl // Test no failure here.
         #endif
     ;
     if(!failed) ok
-        #if BOOST_CONTRACT_POSTCONDITIONS
+        #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
             << "f::old" << std::endl
         #endif
         << "f::body" << std::endl
-        #if BOOST_CONTRACT_POSTCONDITIONS
+        #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
             << "f::post" << std::endl
         #endif
     ;
@@ -37,6 +37,12 @@ int main() {
     ;
     BOOST_TEST(out.eq(ok.str()));
 
+    #ifdef BOOST_CONTRACT_NO_PRECONDITIONS
+        #define BOOST_CONTRACT_TEST_pre 0
+    #else
+        #define BOOST_CONTRACT_TEST_pre 1
+    #endif
+
     struct err {};
     boost::contract::set_precondition_failure(
             [] (boost::contract::from) { throw err(); });
@@ -45,16 +51,17 @@ int main() {
     out.str("");
     try {
         f();
-        #if BOOST_CONTRACT_PRECONDITIONS
+        #ifndef BOOST_CONTRACT_NO_PRECONDITIONS
                 BOOST_TEST(false);
             } catch(err const&) {
         #endif
         ok.str(""); ok
-            << ok_f(BOOST_CONTRACT_PRECONDITIONS)
+            << ok_f(BOOST_CONTRACT_TEST_pre)
         ;
         BOOST_TEST(out.eq(ok.str()));
     } catch(...) { BOOST_TEST(false); }
 
+    #undef BOOST_CONTRACT_TEST_pre
     return boost::report_errors();
 }
 

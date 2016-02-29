@@ -11,13 +11,14 @@
 
 #include <boost/contract/core/set_nothing.hpp>
 #include <boost/contract/core/config.hpp>
-#if BOOST_CONTRACT_PRECONDITIONS || BOOST_CONTRACT_POSTCONDITIONS || \
-        BOOST_CONTRACT_INVARIANTS
+#if !defined(BOOST_CONTRACT_NO_PRECONDITIONS) || \
+        !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
+        !defined(BOOST_CONTRACT_NO_INVARIANTS)
     #include <boost/contract/aux_/condition/check_pre_post.hpp>
     #include <boost/contract/aux_/auto_ptr.hpp>
     #include <boost/contract/aux_/none.hpp>
 #endif
-#if BOOST_CONTRACT_POSTCONDITIONS
+#ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
     #include <boost/contract/aux_/debug.hpp>
 #endif
 #include <boost/config.hpp>
@@ -41,12 +42,13 @@ public:
 
     template<typename F>
     set_nothing postcondition(F const& f) {
-        #if BOOST_CONTRACT_POSTCONDITIONS
+        #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
             BOOST_CONTRACT_AUX_DEBUG(check_);
             check_->set_post(f);
         #endif
-        #if BOOST_CONTRACT_PRECONDITIONS || BOOST_CONTRACT_POSTCONDITIONS || \
-                BOOST_CONTRACT_INVARIANTS
+        #if !defined(BOOST_CONTRACT_NO_PRECONDITIONS) || \
+                !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
+                !defined(BOOST_CONTRACT_NO_INVARIANTS)
             return set_nothing(check_.release());
         #else
             return set_nothing();
@@ -54,8 +56,9 @@ public:
     }
 
 private:
-    #if BOOST_CONTRACT_PRECONDITIONS || BOOST_CONTRACT_POSTCONDITIONS || \
-            BOOST_CONTRACT_INVARIANTS
+    #if !defined(BOOST_CONTRACT_NO_PRECONDITIONS) || \
+            !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
+            !defined(BOOST_CONTRACT_NO_INVARIANTS)
         typedef boost::contract::aux::check_pre_post<typename
                 boost::contract::aux::none_if_void<R>::type> check_type;
 

@@ -220,27 +220,27 @@ void g(int) {}
         
 std::string ok_args(std::string const& args) {
     std::ostringstream ok; ok
-        #if BOOST_CONTRACT_ENTRY_INVARIANTS
+        #ifndef BOOST_CONTRACT_NO_ENTRY_INVARIANTS
             << "b::static_inv" << std::endl
             << "b::inv" << std::endl
             << "a::static_inv" << std::endl
             << "a::inv" << std::endl
         #endif
-        #if BOOST_CONTRACT_PRECONDITIONS
+        #ifndef BOOST_CONTRACT_NO_PRECONDITIONS
             << "b::f(" << args << ")::pre" << std::endl
         #endif
-        #if BOOST_CONTRACT_POSTCONDITIONS
+        #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
             << "b::f(" << args << ")::old" << std::endl
             << "a::f(" << args << ")::old" << std::endl
         #endif
         << "a::f(" << args << ")::body" << std::endl
-        #if BOOST_CONTRACT_EXIT_INVARIANTS
+        #ifndef BOOST_CONTRACT_NO_EXIT_INVARIANTS
             << "b::static_inv" << std::endl
             << "b::inv" << std::endl
             << "a::static_inv" << std::endl
             << "a::inv" << std::endl
         #endif
-        #if BOOST_CONTRACT_POSTCONDITIONS
+        #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
             << "b::f(" << args << ")::old" << std::endl
             << "b::f(" << args << ")::post" << std::endl
             << "a::f(" << args << ")::post" << std::endl
@@ -272,22 +272,22 @@ int main() {
     struct {} zz;
     aa.f(zz); // Call template (so no override because no virtual).
     ok.str(""); ok
-        #if BOOST_CONTRACT_ENTRY_INVARIANTS
+        #ifndef BOOST_CONTRACT_NO_ENTRY_INVARIANTS
             << "a::static_inv" << std::endl
             << "a::inv" << std::endl
         #endif
-        #if BOOST_CONTRACT_PRECONDITIONS
+        #ifndef BOOST_CONTRACT_NO_PRECONDITIONS
             << "a::f(T)::pre" << std::endl
         #endif
-        #if BOOST_CONTRACT_POSTCONDITIONS
+        #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
             << "a::f(T)::old" << std::endl
         #endif
         << "a::f(T)::body" << std::endl
-        #if BOOST_CONTRACT_EXIT_INVARIANTS
+        #ifndef BOOST_CONTRACT_NO_EXIT_INVARIANTS
             << "a::static_inv" << std::endl
             << "a::inv" << std::endl
         #endif
-        #if BOOST_CONTRACT_POSTCONDITIONS
+        #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
             << "a::f(T)::post" << std::endl
         #endif
     ;
@@ -301,22 +301,22 @@ int main() {
     out.str("");
     aa.f(true); // This does not override (public_function ambiguity testing).
     ok.str(""); ok
-        #if BOOST_CONTRACT_ENTRY_INVARIANTS
+        #ifndef BOOST_CONTRACT_NO_ENTRY_INVARIANTS
             << "a::static_inv" << std::endl
             << "a::inv" << std::endl
         #endif
-        #if BOOST_CONTRACT_PRECONDITIONS
+        #ifndef BOOST_CONTRACT_NO_PRECONDITIONS
             << "a::f(bool)::pre" << std::endl
         #endif
-        #if BOOST_CONTRACT_POSTCONDITIONS
+        #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
             << "a::f(bool)::old" << std::endl
         #endif
         << "a::f(bool)::body" << std::endl
-        #if BOOST_CONTRACT_EXIT_INVARIANTS
+        #ifndef BOOST_CONTRACT_NO_EXIT_INVARIANTS
             << "a::static_inv" << std::endl
             << "a::inv" << std::endl
         #endif
-        #if BOOST_CONTRACT_POSTCONDITIONS
+        #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
             << "a::f(bool)::post" << std::endl
         #endif
     ;

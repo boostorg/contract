@@ -218,7 +218,7 @@ int main() {
     out.str("");
     aa.f(ch);
     ok.str(""); ok
-        #if BOOST_CONTRACT_ENTRY_INVARIANTS
+        #ifndef BOOST_CONTRACT_NO_ENTRY_INVARIANTS
             << "d::static_inv" << std::endl
             << "d::inv" << std::endl
             << "c::static_inv" << std::endl
@@ -228,20 +228,20 @@ int main() {
             << "a::static_inv" << std::endl
             << "a::inv" << std::endl
         #endif
-        #if BOOST_CONTRACT_PRECONDITIONS
+        #ifndef BOOST_CONTRACT_NO_PRECONDITIONS
             << "d::f::pre" << std::endl
             << "c::f::pre" << std::endl
             << "b::f::pre" << std::endl
             << "a::f::pre" << std::endl
         #endif
-        #if BOOST_CONTRACT_POSTCONDITIONS
+        #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
             << "d::f::old" << std::endl
             << "c::f::old" << std::endl
             << "b::f::old" << std::endl
             << "a::f::old" << std::endl
         #endif
         << "a::f::body" << std::endl
-        #if BOOST_CONTRACT_EXIT_INVARIANTS
+        #ifndef BOOST_CONTRACT_NO_EXIT_INVARIANTS
             << "d::static_inv" << std::endl
             << "d::inv" << std::endl
             << "c::static_inv" << std::endl
@@ -251,7 +251,7 @@ int main() {
             << "a::static_inv" << std::endl
             << "a::inv" << std::endl
         #endif
-        #if BOOST_CONTRACT_POSTCONDITIONS
+        #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
             << "d::f::old" << std::endl
             << "d::f::post" << std::endl
             << "c::f::old" << std::endl
@@ -271,7 +271,7 @@ int main() {
     out.str("");
     bb.f(ch);
     ok.str(""); ok
-        #if BOOST_CONTRACT_ENTRY_INVARIANTS
+        #ifndef BOOST_CONTRACT_NO_ENTRY_INVARIANTS
             << "d::static_inv" << std::endl
             << "d::inv" << std::endl
             << "c::static_inv" << std::endl
@@ -279,18 +279,18 @@ int main() {
             << "b::static_inv" << std::endl
             << "b::inv" << std::endl
         #endif
-        #if BOOST_CONTRACT_PRECONDITIONS
+        #ifndef BOOST_CONTRACT_NO_PRECONDITIONS
             << "d::f::pre" << std::endl
             << "c::f::pre" << std::endl
             << "b::f::pre" << std::endl
         #endif
-        #if BOOST_CONTRACT_POSTCONDITIONS
+        #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
             << "d::f::old" << std::endl
             << "c::f::old" << std::endl
             << "b::f::old" << std::endl
         #endif
         << "b::f::body" << std::endl
-        #if BOOST_CONTRACT_EXIT_INVARIANTS
+        #ifndef BOOST_CONTRACT_NO_EXIT_INVARIANTS
             << "d::static_inv" << std::endl
             << "d::inv" << std::endl
             << "c::static_inv" << std::endl
@@ -298,7 +298,7 @@ int main() {
             << "b::static_inv" << std::endl
             << "b::inv" << std::endl
         #endif
-        #if BOOST_CONTRACT_POSTCONDITIONS
+        #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
             << "d::f::old" << std::endl
             << "d::f::post" << std::endl
             << "c::f::old" << std::endl
@@ -316,28 +316,28 @@ int main() {
     out.str("");
     cc.f(ch);
     ok.str(""); ok
-        #if BOOST_CONTRACT_ENTRY_INVARIANTS
+        #ifndef BOOST_CONTRACT_NO_ENTRY_INVARIANTS
             << "d::static_inv" << std::endl
             << "d::inv" << std::endl
             << "c::static_inv" << std::endl
             << "c::inv" << std::endl
         #endif
-        #if BOOST_CONTRACT_PRECONDITIONS
+        #ifndef BOOST_CONTRACT_NO_PRECONDITIONS
             << "d::f::pre" << std::endl
             << "c::f::pre" << std::endl
         #endif
-        #if BOOST_CONTRACT_POSTCONDITIONS
+        #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
             << "d::f::old" << std::endl
             << "c::f::old" << std::endl
         #endif
         << "c::f::body" << std::endl
-        #if BOOST_CONTRACT_EXIT_INVARIANTS
+        #ifndef BOOST_CONTRACT_NO_EXIT_INVARIANTS
             << "d::static_inv" << std::endl
             << "d::inv" << std::endl
             << "c::static_inv" << std::endl
             << "c::inv" << std::endl
         #endif
-        #if BOOST_CONTRACT_POSTCONDITIONS
+        #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
             << "d::f::old" << std::endl
             << "d::f::post" << std::endl
             << "c::f::post" << std::endl
@@ -353,7 +353,7 @@ int main() {
     out.str("");
     ee.f(ch);
     ok.str(""); ok
-        #if BOOST_CONTRACT_ENTRY_INVARIANTS
+        #ifndef BOOST_CONTRACT_NO_ENTRY_INVARIANTS
             << "d::static_inv" << std::endl
             << "d::inv" << std::endl
             << "c::static_inv" << std::endl
@@ -363,20 +363,20 @@ int main() {
             << "e::static_inv" << std::endl
             << "e::inv" << std::endl
         #endif
-        #if BOOST_CONTRACT_PRECONDITIONS
+        #ifndef BOOST_CONTRACT_NO_PRECONDITIONS
             << "d::f::pre" << std::endl
             << "c::f::pre" << std::endl
             << "b::f::pre" << std::endl
             << "e::f::pre" << std::endl
         #endif
-        #if BOOST_CONTRACT_POSTCONDITIONS
+        #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
             << "d::f::old" << std::endl
             << "c::f::old" << std::endl
             << "b::f::old" << std::endl
             << "e::f::old" << std::endl
         #endif
         << "e::f::body" << std::endl
-        #if BOOST_CONTRACT_EXIT_INVARIANTS
+        #ifndef BOOST_CONTRACT_NO_EXIT_INVARIANTS
             << "d::static_inv" << std::endl
             << "d::inv" << std::endl
             << "c::static_inv" << std::endl
@@ -386,7 +386,7 @@ int main() {
             << "e::static_inv" << std::endl
             << "e::inv" << std::endl
         #endif
-        #if BOOST_CONTRACT_POSTCONDITIONS
+        #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
             << "d::f::old" << std::endl
             << "d::f::post" << std::endl
             << "c::f::old" << std::endl

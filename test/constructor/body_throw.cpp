@@ -93,35 +93,35 @@ int main() {
         BOOST_TEST(false);
     } catch(b::err const&) { 
         ok.str(""); ok
-            #if BOOST_CONTRACT_PRECONDITIONS
+            #ifndef BOOST_CONTRACT_NO_PRECONDITIONS
                 << "a::ctor::pre" << std::endl
                 << "b::ctor::pre" << std::endl
                 << "c::ctor::pre" << std::endl
             #endif
 
-            #if BOOST_CONTRACT_ENTRY_INVARIANTS
+            #ifndef BOOST_CONTRACT_NO_ENTRY_INVARIANTS
                 << "c::static_inv" << std::endl
             #endif
-            #if BOOST_CONTRACT_POSTCONDITIONS
+            #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
                 << "c::ctor::old" << std::endl
             #endif
             << "c::ctor::body" << std::endl
-            #if BOOST_CONTRACT_EXIT_INVARIANTS
+            #ifndef BOOST_CONTRACT_NO_EXIT_INVARIANTS
                 << "c::static_inv" << std::endl
                 << "c::inv" << std::endl
             #endif
-            #if BOOST_CONTRACT_POSTCONDITIONS
+            #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
                 << "c::ctor::post" << std::endl
             #endif
 
-            #if BOOST_CONTRACT_ENTRY_INVARIANTS
+            #ifndef BOOST_CONTRACT_NO_ENTRY_INVARIANTS
                 << "b::static_inv" << std::endl
             #endif
-            #if BOOST_CONTRACT_POSTCONDITIONS
+            #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
                 << "b::ctor::old" << std::endl
             #endif
             << "b::ctor::body" << std::endl // Test this threw...
-            #if BOOST_CONTRACT_EXIT_INVARIANTS
+            #ifndef BOOST_CONTRACT_NO_EXIT_INVARIANTS
                 << "b::static_inv" << std::endl // ... so check only this after.
             #endif
         ;

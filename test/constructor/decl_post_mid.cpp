@@ -12,36 +12,36 @@
 
 std::string ok_cb() {
     std::ostringstream ok; ok
-        #if BOOST_CONTRACT_PRECONDITIONS
+        #ifndef BOOST_CONTRACT_NO_PRECONDITIONS
             << "a::ctor::pre" << std::endl
             << "b::ctor::pre" << std::endl
             << "c::ctor::pre" << std::endl
         #endif
 
-        #if BOOST_CONTRACT_ENTRY_INVARIANTS
+        #ifndef BOOST_CONTRACT_NO_ENTRY_INVARIANTS
             << "c::static_inv" << std::endl
         #endif
-        #if BOOST_CONTRACT_POSTCONDITIONS
+        #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
             << "c::ctor::old" << std::endl
         #endif
         << "c::ctor::body" << std::endl
-        #if BOOST_CONTRACT_EXIT_INVARIANTS
+        #ifndef BOOST_CONTRACT_NO_EXIT_INVARIANTS
             << "c::static_inv" << std::endl
             << "c::inv" << std::endl
         #endif
             
-        #if BOOST_CONTRACT_ENTRY_INVARIANTS
+        #ifndef BOOST_CONTRACT_NO_ENTRY_INVARIANTS
             << "b::static_inv" << std::endl
         #endif
-        #if BOOST_CONTRACT_POSTCONDITIONS
+        #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
             << "b::ctor::old" << std::endl
         #endif
         << "b::ctor::body" << std::endl
-        #if BOOST_CONTRACT_EXIT_INVARIANTS
+        #ifndef BOOST_CONTRACT_NO_EXIT_INVARIANTS
             << "b::static_inv" << std::endl
             << "b::inv" << std::endl
         #endif
-        #if BOOST_CONTRACT_POSTCONDITIONS
+        #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
             << "b::ctor::post" << std::endl
         #endif
     ;
@@ -50,14 +50,14 @@ std::string ok_cb() {
 
 std::string ok_a() {
     std::ostringstream ok; ok
-        #if BOOST_CONTRACT_ENTRY_INVARIANTS
+        #ifndef BOOST_CONTRACT_NO_ENTRY_INVARIANTS
             << "a::static_inv" << std::endl
         #endif
-        #if BOOST_CONTRACT_POSTCONDITIONS
+        #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
             << "a::ctor::old" << std::endl
         #endif
         << "a::ctor::body" << std::endl
-        #if BOOST_CONTRACT_EXIT_INVARIANTS
+        #ifndef BOOST_CONTRACT_NO_EXIT_INVARIANTS
             << "a::static_inv" << std::endl
             << "a::inv" << std::endl
         #endif
@@ -104,13 +104,13 @@ int main() {
     try {
         out.str("");
         a aa;
-        #if BOOST_CONTRACT_POSTCONDITIONS
+        #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
                 BOOST_TEST(false);
             } catch(err const&) {
         #endif
         ok.str(""); ok
             << ok_cb() // Test b::ctor::post failed.
-            #if !BOOST_CONTRACT_POSTCONDITIONS
+            #ifdef BOOST_CONTRACT_NO_POSTCONDITIONS
                 << ok_a()
             #endif
         ;
@@ -136,13 +136,13 @@ int main() {
     try {
         out.str("");
         a aa;
-        #if BOOST_CONTRACT_POSTCONDITIONS
+        #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
                 BOOST_TEST(false);
             } catch(err const&) {
         #endif
         ok.str(""); ok
             << ok_cb() // Test b::ctor::post failed (as all did).
-            #if !BOOST_CONTRACT_POSTCONDITIONS
+            #ifdef BOOST_CONTRACT_NO_POSTCONDITIONS
                 << ok_a()
             #endif
         ;

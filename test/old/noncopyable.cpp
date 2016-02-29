@@ -102,7 +102,7 @@ int main() {
     // Test free functions (old values without `v`).
 
     unsigned cnt =
-        #if BOOST_CONTRACT_POSTCONDITIONS
+        #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
             1
         #else
             0
@@ -124,7 +124,7 @@ int main() {
     // Test virtual functions (old values with `v`).
     
     cnt =
-        #if BOOST_CONTRACT_POSTCONDITIONS
+        #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
             2
         #else
             0

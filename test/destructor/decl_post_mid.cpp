@@ -12,15 +12,15 @@
 
 std::string ok_a() {
     std::ostringstream ok; ok
-        #if BOOST_CONTRACT_ENTRY_INVARIANTS
+        #ifndef BOOST_CONTRACT_NO_ENTRY_INVARIANTS
             << "a::static_inv" << std::endl
             << "a::inv" << std::endl
         #endif
-        #if BOOST_CONTRACT_POSTCONDITIONS
+        #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
             << "a::dtor::old" << std::endl
         #endif
         << "a::dtor::body" << std::endl
-        #if BOOST_CONTRACT_EXIT_INVARIANTS
+        #ifndef BOOST_CONTRACT_NO_EXIT_INVARIANTS
             << "a::static_inv" << std::endl
         #endif
     ;
@@ -29,18 +29,18 @@ std::string ok_a() {
 
 std::string ok_b() {
     std::ostringstream ok; ok
-        #if BOOST_CONTRACT_ENTRY_INVARIANTS
+        #ifndef BOOST_CONTRACT_NO_ENTRY_INVARIANTS
             << "b::static_inv" << std::endl
             << "b::inv" << std::endl
         #endif
-        #if BOOST_CONTRACT_POSTCONDITIONS
+        #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
             << "b::dtor::old" << std::endl
         #endif
         << "b::dtor::body" << std::endl
-        #if BOOST_CONTRACT_EXIT_INVARIANTS
+        #ifndef BOOST_CONTRACT_NO_EXIT_INVARIANTS
             << "b::static_inv" << std::endl
         #endif
-        #if BOOST_CONTRACT_POSTCONDITIONS
+        #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
             << "b::dtor::post" << std::endl // This can fail.
         #endif
     ;
@@ -49,15 +49,15 @@ std::string ok_b() {
 
 std::string ok_c(bool threw = false) {
     std::ostringstream ok; ok
-        #if BOOST_CONTRACT_ENTRY_INVARIANTS
+        #ifndef BOOST_CONTRACT_NO_ENTRY_INVARIANTS
             << "c::static_inv" << std::endl
             << "c::inv" << std::endl
         #endif
-        #if BOOST_CONTRACT_POSTCONDITIONS
+        #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
             << "c::dtor::old" << std::endl
         #endif
         << "c::dtor::body" << std::endl
-        #if BOOST_CONTRACT_EXIT_INVARIANTS
+        #ifndef BOOST_CONTRACT_NO_EXIT_INVARIANTS
             << "c::static_inv" << std::endl
             << (threw ? "c::inv\n" : "")
         #endif
@@ -103,6 +103,12 @@ int main() {
         ;
         BOOST_TEST(out.eq(ok.str()));
     } catch(...) { BOOST_TEST(false); }
+
+    #ifdef BOOST_CONTRACT_NO_POSTCONDITIONS
+        #define BOOST_CONTRACT_TEST_post 0
+    #else
+        #define BOOST_CONTRACT_TEST_post 1
+    #endif
     
     a_post = true;
     b_post = false;
@@ -116,12 +122,12 @@ int main() {
             ;
             out.str("");
         }
-        #if BOOST_CONTRACT_POSTCONDITIONS
+        #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
                 BOOST_TEST(false);
             } catch(err const&) {
         #endif
         ok // ... then exec other dtors and check inv on throw (as dtor threw).
-            << ok_c(BOOST_CONTRACT_POSTCONDITIONS)
+            << ok_c(BOOST_CONTRACT_TEST_post)
         ;
         BOOST_TEST(out.eq(ok.str()));
     } catch(...) { BOOST_TEST(false); }
@@ -154,16 +160,17 @@ int main() {
             ;
             out.str("");
         }
-        #if BOOST_CONTRACT_POSTCONDITIONS
+        #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
                 BOOST_TEST(false);
             } catch(err const&) {
         #endif
         ok // ... then exec other dtors and check inv on throw (as dtor threw).
-            << ok_c(BOOST_CONTRACT_POSTCONDITIONS)
+            << ok_c(BOOST_CONTRACT_TEST_post)
         ;
         BOOST_TEST(out.eq(ok.str()));
     } catch(...) { BOOST_TEST(false); }
 
+    #undef BOOST_CONTRACT_TEST_post
     return boost::report_errors();
 }
 

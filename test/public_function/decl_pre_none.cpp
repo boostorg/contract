@@ -11,7 +11,7 @@
 
 int main() {
     std::ostringstream ok; ok // Test nothing fails.
-        #if BOOST_CONTRACT_ENTRY_INVARIANTS
+        #ifndef BOOST_CONTRACT_NO_ENTRY_INVARIANTS
             << "c::static_inv" << std::endl
             << "c::inv" << std::endl
             << "b::static_inv" << std::endl
@@ -20,13 +20,13 @@ int main() {
             << "a::inv" << std::endl
         #endif
         // No preconditions here.
-        #if BOOST_CONTRACT_POSTCONDITIONS
+        #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
             << "c::f::old" << std::endl
             << "b::f::old" << std::endl
             << "a::f::old" << std::endl
         #endif
         << "a::f::body" << std::endl
-        #if BOOST_CONTRACT_EXIT_INVARIANTS
+        #ifndef BOOST_CONTRACT_NO_EXIT_INVARIANTS
             << "c::static_inv" << std::endl
             << "c::inv" << std::endl
             << "b::static_inv" << std::endl
@@ -34,7 +34,7 @@ int main() {
             << "a::static_inv" << std::endl
             << "a::inv" << std::endl
         #endif
-        #if BOOST_CONTRACT_POSTCONDITIONS
+        #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
             << "c::f::old" << std::endl
             << "c::f::post" << std::endl
             << "b::f::old" << std::endl

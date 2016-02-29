@@ -12,7 +12,7 @@
 
 std::string ok_begin() {
     std::ostringstream ok; ok
-        #if BOOST_CONTRACT_ENTRY_INVARIANTS
+        #ifndef BOOST_CONTRACT_NO_ENTRY_INVARIANTS
             << "c::static_inv" << std::endl
             << "c::inv" << std::endl
             << "b::static_inv" << std::endl
@@ -26,13 +26,13 @@ std::string ok_begin() {
         
 std::string ok_end() {
     std::ostringstream ok; ok
-        #if BOOST_CONTRACT_POSTCONDITIONS
+        #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
             << "c::f::old" << std::endl
             << "b::f::old" << std::endl
             << "a::f::old" << std::endl
         #endif
         << "a::f::body" << std::endl
-        #if BOOST_CONTRACT_EXIT_INVARIANTS
+        #ifndef BOOST_CONTRACT_NO_EXIT_INVARIANTS
             << "c::static_inv" << std::endl
             << "c::inv" << std::endl
             << "b::static_inv" << std::endl
@@ -40,7 +40,7 @@ std::string ok_end() {
             << "a::static_inv" << std::endl
             << "a::inv" << std::endl
         #endif
-        #if BOOST_CONTRACT_POSTCONDITIONS
+        #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
             << "c::f::old" << std::endl
             << "c::f::post" << std::endl
             << "b::f::old" << std::endl
@@ -63,7 +63,7 @@ int main() {
     aa.f();
     ok.str(""); ok
         << ok_begin()
-        #if BOOST_CONTRACT_PRECONDITIONS
+        #ifndef BOOST_CONTRACT_NO_PRECONDITIONS
             << "c::f::pre" << std::endl // Test only c::f::pre checked.
         #endif
         << ok_end()
@@ -77,7 +77,7 @@ int main() {
     aa.f();
     ok.str(""); ok
         << ok_begin()
-        #if BOOST_CONTRACT_PRECONDITIONS
+        #ifndef BOOST_CONTRACT_NO_PRECONDITIONS
             << "c::f::pre" << std::endl
             << "b::f::pre" << std::endl
             << "a::f::pre" << std::endl // Test all pre checked.
@@ -93,7 +93,7 @@ int main() {
     aa.f();
     ok.str(""); ok
         << ok_begin()
-        #if BOOST_CONTRACT_PRECONDITIONS
+        #ifndef BOOST_CONTRACT_NO_PRECONDITIONS
             << "c::f::pre" << std::endl
             << "b::f::pre" << std::endl
             // Test only a::f::pre not checked.
@@ -109,7 +109,7 @@ int main() {
     aa.f();
     ok.str(""); ok
         << ok_begin()
-        #if BOOST_CONTRACT_PRECONDITIONS
+        #ifndef BOOST_CONTRACT_NO_PRECONDITIONS
             << "c::f::pre" << std::endl // Test only c::f::pre checked.
         #endif
         << ok_end()
@@ -126,13 +126,13 @@ int main() {
     out.str("");
     try {
         aa.f();
-        #if BOOST_CONTRACT_PRECONDITIONS
+        #ifndef BOOST_CONTRACT_NO_PRECONDITIONS
                     BOOST_TEST(false);
             } catch(err const&) {
         #endif
         ok.str(""); ok
             << ok_begin()
-            #if BOOST_CONTRACT_PRECONDITIONS
+            #ifndef BOOST_CONTRACT_NO_PRECONDITIONS
                 << "c::f::pre" << std::endl
                 << "b::f::pre" << std::endl
                 << "a::f::pre" << std::endl // Test all pre checked and failed.

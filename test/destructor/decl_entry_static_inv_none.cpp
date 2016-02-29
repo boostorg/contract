@@ -12,45 +12,51 @@
 
 int main() {
     std::ostringstream ok; ok // Test nothing fails.
-        #if BOOST_CONTRACT_ENTRY_INVARIANTS
+        #ifndef BOOST_CONTRACT_NO_ENTRY_INVARIANTS
             << "a::inv" << std::endl
         #endif
-        #if BOOST_CONTRACT_POSTCONDITIONS
+        #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
             << "a::dtor::old" << std::endl
         #endif
         << "a::dtor::body" << std::endl
-        #if BOOST_CONTRACT_POSTCONDITIONS
+        #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
             << "a::dtor::post" << std::endl
         #endif
 
-        #if BOOST_CONTRACT_ENTRY_INVARIANTS
+        #ifndef BOOST_CONTRACT_NO_ENTRY_INVARIANTS
             << "b::inv" << std::endl
         #endif
-        #if BOOST_CONTRACT_POSTCONDITIONS
+        #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
             << "b::dtor::old" << std::endl
         #endif
         << "b::dtor::body" << std::endl
-        #if BOOST_CONTRACT_POSTCONDITIONS
+        #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
             << "b::dtor::post" << std::endl
         #endif
             
-        #if BOOST_CONTRACT_ENTRY_INVARIANTS
+        #ifndef BOOST_CONTRACT_NO_ENTRY_INVARIANTS
             << "c::inv" << std::endl
         #endif
-        #if BOOST_CONTRACT_POSTCONDITIONS
+        #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
             << "c::dtor::old" << std::endl
         #endif
         << "c::dtor::body" << std::endl
-        #if BOOST_CONTRACT_POSTCONDITIONS
+        #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
             << "c::dtor::post" << std::endl
         #endif
     ;
+
+    #ifdef BOOST_CONTRACT_NO_ENTRY_INVARIANTS
+        #define BOOST_CONTRACT_TEST_entry_inv 0
+    #else
+        #define BOOST_CONTRACT_TEST_entry_inv 1
+    #endif
     
     a_entry_static_inv = true;
     b_entry_static_inv = true;
     c_entry_static_inv = true;
     a_entering_static_inv = b_entering_static_inv = c_entering_static_inv =
-            BOOST_PP_IIF(BOOST_CONTRACT_ENTRY_INVARIANTS, true, false);
+            BOOST_PP_IIF(BOOST_CONTRACT_TEST_entry_inv, true, false);
     {
         a aa;
         out.str("");
@@ -61,7 +67,7 @@ int main() {
     b_entry_static_inv = true;
     c_entry_static_inv = true;
     a_entering_static_inv = b_entering_static_inv = c_entering_static_inv =
-            BOOST_PP_IIF(BOOST_CONTRACT_ENTRY_INVARIANTS, true, false);
+            BOOST_PP_IIF(BOOST_CONTRACT_TEST_entry_inv, true, false);
     {
         a aa;
         out.str("");
@@ -72,7 +78,7 @@ int main() {
     b_entry_static_inv = false;
     c_entry_static_inv = true;
     a_entering_static_inv = b_entering_static_inv = c_entering_static_inv =
-            BOOST_PP_IIF(BOOST_CONTRACT_ENTRY_INVARIANTS, true, false);
+            BOOST_PP_IIF(BOOST_CONTRACT_TEST_entry_inv, true, false);
     {
         a aa;
         out.str("");
@@ -83,7 +89,7 @@ int main() {
     b_entry_static_inv = true;
     c_entry_static_inv = false;
     a_entering_static_inv = b_entering_static_inv = c_entering_static_inv =
-            BOOST_PP_IIF(BOOST_CONTRACT_ENTRY_INVARIANTS, true, false);
+            BOOST_PP_IIF(BOOST_CONTRACT_TEST_entry_inv, true, false);
     {
         a aa;
         out.str("");
@@ -94,13 +100,14 @@ int main() {
     b_entry_static_inv = false;
     c_entry_static_inv = false;
     a_entering_static_inv = b_entering_static_inv = c_entering_static_inv =
-            BOOST_PP_IIF(BOOST_CONTRACT_ENTRY_INVARIANTS, true, false);
+            BOOST_PP_IIF(BOOST_CONTRACT_TEST_entry_inv, true, false);
     {
         a aa;
         out.str("");
     }
     BOOST_TEST(out.eq(ok.str()));
 
+    #undef BOOST_CONTRACT_TEST_entry_inv
     return boost::report_errors();
 }
 

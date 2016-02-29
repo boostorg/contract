@@ -23,7 +23,7 @@ int main() {
     f();
     ok.str(""); ok
         << "f::body" << std::endl
-        #if BOOST_CONTRACT_POSTCONDITIONS
+        #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
             << "f::post" << std::endl
         #endif
     ;

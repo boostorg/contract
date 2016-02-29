@@ -88,12 +88,12 @@
         v, r, f, obj, args \
     ) \
         BOOST_PP_REPEAT_ ## z( \
-            BOOST_PP_INC(BOOST_CONTRACT_CONFIG_MAX_ARGS), \
+            BOOST_PP_INC(BOOST_CONTRACT_MAX_ARGS), \
             BOOST_CONTRACT_AUX_DECL_FRIEND_OVERRIDING_PUBLIC_FUNCTION_, \
             (/* has_result = */ 0, O, R, F, C, Args, v, r, f, obj, args) \
         ) \
         BOOST_PP_REPEAT_ ## z( \
-            BOOST_PP_INC(BOOST_CONTRACT_CONFIG_MAX_ARGS), \
+            BOOST_PP_INC(BOOST_CONTRACT_MAX_ARGS), \
             BOOST_CONTRACT_AUX_DECL_FRIEND_OVERRIDING_PUBLIC_FUNCTION_, \
             (/* has_result = */ 1, O, R, F, C, Args, v, r, f, obj, args) \
         )
@@ -103,9 +103,9 @@
         z, is_friend, O, R, F, C, Args) \
     template< \
         class O, typename R, typename F, class C \
-        BOOST_CONTRACT_AUX_TVARIADIC_COMMA(BOOST_CONTRACT_CONFIG_MAX_ARGS) \
+        BOOST_CONTRACT_AUX_TVARIADIC_COMMA(BOOST_CONTRACT_MAX_ARGS) \
         BOOST_CONTRACT_AUX_TVARIADIC_TPARAMS_Z(z, \
-                BOOST_CONTRACT_CONFIG_MAX_ARGS, Args) \
+                BOOST_CONTRACT_MAX_ARGS, Args) \
     > \
     BOOST_PP_IIF(is_friend, \
         friend class boost::contract::aux:: \

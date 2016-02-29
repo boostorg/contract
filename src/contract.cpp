@@ -10,7 +10,7 @@
 // (Plus, as always in C++, they cannot contain template code because these
 // headers will be linked and not #included by user code.)
 
-#define BOOST_CONTRACT_AUX_CONFIG_SOURCE
+#define BOOST_CONTRACT_AUX_SOURCE
 #include <boost/contract/aux_/inlined/core/exception.hpp>
 #include <boost/contract/aux_/inlined/aux_/check_guard.hpp>
 

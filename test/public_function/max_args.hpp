@@ -56,7 +56,7 @@ struct b {
             return result; \
         }
 
-    BOOST_PP_REPEAT(BOOST_PP_INC(BOOST_CONTRACT_CONFIG_MAX_ARGS),
+    BOOST_PP_REPEAT(BOOST_PP_INC(BOOST_CONTRACT_MAX_ARGS),
             BOOST_CONTRACT_TEST_MAX_ARGS_B_F_, ~)
 };
 
@@ -103,43 +103,64 @@ struct a
         } \
         BOOST_CONTRACT_OVERRIDE(BOOST_PP_CAT(f, n))
 
-    BOOST_PP_REPEAT(BOOST_PP_INC(BOOST_CONTRACT_CONFIG_MAX_ARGS),
+    BOOST_PP_REPEAT(BOOST_PP_INC(BOOST_CONTRACT_MAX_ARGS),
             BOOST_CONTRACT_TEST_MAX_ARGS_A_F_, ~)
 };
 
 int main() {
     std::ostringstream ok;
     a aa;
+
+    #ifdef BOOST_CONTRACT_NO_ENTRY_INVARIANTS
+        #define BOOST_CONTRACT_TEST_entry_inv 0
+    #else
+        #define BOOST_CONTRACT_TEST_entry_inv 1
+    #endif
+    #ifdef BOOST_CONTRACT_NO_PRECONDITIONS
+        #define BOOST_CONTRACT_TEST_pre 0
+    #else
+        #define BOOST_CONTRACT_TEST_pre 1
+    #endif
+    #ifdef BOOST_CONTRACT_NO_EXIT_INVARIANTS
+        #define BOOST_CONTRACT_TEST_exit_inv 0
+    #else
+        #define BOOST_CONTRACT_TEST_exit_inv 1
+    #endif
+    #ifdef BOOST_CONTRACT_NO_POSTCONDITIONS
+        #define BOOST_CONTRACT_TEST_post 0
+    #else
+        #define BOOST_CONTRACT_TEST_post 1
+    #endif
     
     #define BOOST_CONTRACT_TEST_MAX_ARGS_TEST_(z, n, unused) \
         out.str(""); \
         aa.BOOST_PP_CAT(f, n)(BOOST_PP_ENUM_ ## z( \
                 n, BOOST_CONTRACT_TEST_MAX_ARGS_N_, ~)); \
         ok.str(""); ok \
-            BOOST_PP_EXPR_IIF(BOOST_CONTRACT_ENTRY_INVARIANTS, \
+            BOOST_PP_EXPR_IIF(BOOST_CONTRACT_TEST_entry_inv, \
                 << "b::static_inv\n" \
                 << "b::inv\n"\
                 << "a::static_inv\n" \
                 << "a::inv\n" \
             ) \
-            BOOST_PP_EXPR_IIF(BOOST_CONTRACT_PRECONDITIONS, \
+            BOOST_PP_EXPR_IIF(BOOST_CONTRACT_TEST_pre, \
                 << "b::" << BOOST_PP_STRINGIZE(BOOST_PP_CAT(f, n)) << \
                         "::pre\n" \
             ) \
-            BOOST_PP_EXPR_IIF(BOOST_CONTRACT_POSTCONDITIONS, \
+            BOOST_PP_EXPR_IIF(BOOST_CONTRACT_TEST_post, \
                 << "b::" << BOOST_PP_STRINGIZE(BOOST_PP_CAT(f, n)) << \
                         "::old\n" \
                 << "a::" << BOOST_PP_STRINGIZE(BOOST_PP_CAT(f, n)) << \
                         "::old\n" \
             ) \
             << "a::" << BOOST_PP_STRINGIZE(BOOST_PP_CAT(f, n)) << "::body\n" \
-            BOOST_PP_EXPR_IIF(BOOST_CONTRACT_EXIT_INVARIANTS, \
+            BOOST_PP_EXPR_IIF(BOOST_CONTRACT_TEST_exit_inv, \
                 << "b::static_inv\n" \
                 << "b::inv\n"\
                 << "a::static_inv\n" \
                 << "a::inv\n" \
             ) \
-            BOOST_PP_EXPR_IIF(BOOST_CONTRACT_POSTCONDITIONS, \
+            BOOST_PP_EXPR_IIF(BOOST_CONTRACT_TEST_post, \
                 << "b::" << BOOST_PP_STRINGIZE(BOOST_PP_CAT(f, n)) << \
                         "::old\n" \
                 << "b::" << BOOST_PP_STRINGIZE(BOOST_PP_CAT(f, n)) << \
@@ -150,9 +171,13 @@ int main() {
         ; \
         BOOST_TEST(out.eq(ok.str()));
     
-    BOOST_PP_REPEAT(BOOST_PP_INC(BOOST_CONTRACT_CONFIG_MAX_ARGS),
+    BOOST_PP_REPEAT(BOOST_PP_INC(BOOST_CONTRACT_MAX_ARGS),
             BOOST_CONTRACT_TEST_MAX_ARGS_TEST_, ~)
     
+    #undef BOOST_CONTRACT_TEST_entry_inv
+    #undef BOOST_CONTRACT_TEST_pre
+    #undef BOOST_CONTRACT_TEST_exit_inv
+    #undef BOOST_CONTRACT_TEST_post
     return boost::report_errors();
 }
 

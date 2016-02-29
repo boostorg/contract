@@ -8,7 +8,7 @@
 // See: http://www.boost.org/doc/libs/release/libs/contract/doc/html/index.html
 
 #include <boost/contract/core/exception.hpp>
-#ifndef BOOST_CONTRACT_THREAD_DISABLED
+#ifndef BOOST_CONTRACT_DISABLE_THREADS
     #include <boost/thread/lock_guard.hpp>
     #include <boost/thread/mutex.hpp>
 #endif
@@ -20,7 +20,7 @@
 
 /* PRIVATE */
 
-#ifndef BOOST_CONTRACT_THREAD_DISABLED
+#ifndef BOOST_CONTRACT_DISABLE_THREADS
     #define BOOST_CONTRACT_EXCEPTION_HANDLER_SCOPED_LOCK_(handler_mutex) \
         boost::lock_guard<boost::mutex> lock(handler_mutex);
 #else
@@ -122,23 +122,23 @@ namespace exception_ {
         std::terminate(); // Default handlers log and call terminate.
     }
 
-    #ifndef BOOST_CONTRACT_THREAD_DISABLED
+    #ifndef BOOST_CONTRACT_DISABLE_THREADS
         boost::mutex pre_failure_mutex;
     #endif
     assertion_failure_handler pre_failure_handler = &default_handler<pre_key>;
     
-    #ifndef BOOST_CONTRACT_THREAD_DISABLED
+    #ifndef BOOST_CONTRACT_DISABLE_THREADS
         boost::mutex post_failure_mutex;
     #endif
     assertion_failure_handler post_failure_handler = &default_handler<post_key>;
     
-    #ifndef BOOST_CONTRACT_THREAD_DISABLED
+    #ifndef BOOST_CONTRACT_DISABLE_THREADS
         boost::mutex entry_inv_failure_mutex;
     #endif
     assertion_failure_handler entry_inv_failure_handler =
             &default_handler<entry_inv_key>;
     
-    #ifndef BOOST_CONTRACT_THREAD_DISABLED
+    #ifndef BOOST_CONTRACT_DISABLE_THREADS
         boost::mutex exit_inv_failure_mutex;
     #endif
     assertion_failure_handler exit_inv_failure_handler =

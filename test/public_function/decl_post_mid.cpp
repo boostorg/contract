@@ -12,7 +12,7 @@
 
 std::string ok_begin() {
     std::ostringstream ok; ok
-        #if BOOST_CONTRACT_ENTRY_INVARIANTS
+        #ifndef BOOST_CONTRACT_NO_ENTRY_INVARIANTS
             << "c::static_inv" << std::endl
             << "c::inv" << std::endl
             << "b::static_inv" << std::endl
@@ -20,16 +20,16 @@ std::string ok_begin() {
             << "a::static_inv" << std::endl
             << "a::inv" << std::endl
         #endif
-        #if BOOST_CONTRACT_PRECONDITIONS
+        #ifndef BOOST_CONTRACT_NO_PRECONDITIONS
             << "c::f::pre" << std::endl
         #endif
-        #if BOOST_CONTRACT_POSTCONDITIONS
+        #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
             << "c::f::old" << std::endl
             << "b::f::old" << std::endl
             << "a::f::old" << std::endl
         #endif 
         << "a::f::body" << std::endl
-        #if BOOST_CONTRACT_EXIT_INVARIANTS 
+        #ifndef BOOST_CONTRACT_NO_EXIT_INVARIANTS 
             << "c::static_inv" << std::endl
             << "c::inv" << std::endl
             << "b::static_inv" << std::endl
@@ -53,7 +53,7 @@ int main() {
     aa.f();
     ok.str(""); ok // Test nothing failed.
         << ok_begin()
-        #if BOOST_CONTRACT_POSTCONDITIONS
+        #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
             << "c::f::old" << std::endl
             << "b::f::old" << std::endl
             << "b::f::post" << std::endl
@@ -73,7 +73,7 @@ int main() {
         aa.f();
         ok.str(""); ok
             << ok_begin()
-            #if BOOST_CONTRACT_POSTCONDITIONS
+            #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
                 << "c::f::old" << std::endl
                 << "b::f::old" << std::endl
                 << "b::f::post" << std::endl
@@ -89,13 +89,13 @@ int main() {
     out.str("");
     try {
         aa.f();
-        #if BOOST_CONTRACT_POSTCONDITIONS
+        #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
                 BOOST_TEST(false);
             } catch(err const&) {
         #endif
         ok.str(""); ok
             << ok_begin()
-            #if BOOST_CONTRACT_POSTCONDITIONS
+            #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
                 << "c::f::old" << std::endl
                 << "b::f::old" << std::endl
                 << "b::f::post" << std::endl // Test this failed.
@@ -112,7 +112,7 @@ int main() {
         aa.f();
         ok.str(""); ok
             << ok_begin()
-            #if BOOST_CONTRACT_POSTCONDITIONS
+            #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
                 << "c::f::old" << std::endl
                 // Test no failure here.
                 << "b::f::old" << std::endl
@@ -128,13 +128,13 @@ int main() {
     out.str("");
     try {
         aa.f();
-        #if BOOST_CONTRACT_POSTCONDITIONS
+        #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
                 BOOST_TEST(false);
             } catch(err const&) {
         #endif
         ok.str(""); ok
             << ok_begin()
-            #if BOOST_CONTRACT_POSTCONDITIONS
+            #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
                 << "c::f::old" << std::endl
                 << "b::f::old" << std::endl
                 << "b::f::post" << std::endl // Test this failed (as all did).

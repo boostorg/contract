@@ -80,51 +80,51 @@ int main() {
             a aa;
             out.str("");
         }
-        #if BOOST_CONTRACT_POSTCONDITIONS
+        #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
                 BOOST_TEST(false);
             } catch(b::err const&) {
         #endif
         ok.str(""); ok
-            #if BOOST_CONTRACT_ENTRY_INVARIANTS
+            #ifndef BOOST_CONTRACT_NO_ENTRY_INVARIANTS
                 << "a::static_inv" << std::endl
                 << "a::inv" << std::endl
             #endif
-            #if BOOST_CONTRACT_POSTCONDITIONS
+            #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
                 << "a::dtor::old" << std::endl
             #endif
             << "a::dtor::body" << std::endl
-            #if BOOST_CONTRACT_EXIT_INVARIANTS
+            #ifndef BOOST_CONTRACT_NO_EXIT_INVARIANTS
                 // Test a destructed (so only static_inv and post, but no inv).
                 << "a::static_inv" << std::endl
             #endif
-            #if BOOST_CONTRACT_POSTCONDITIONS
+            #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
                 << "a::dtor::post" << std::endl
             #endif
 
-            #if BOOST_CONTRACT_ENTRY_INVARIANTS
+            #ifndef BOOST_CONTRACT_NO_ENTRY_INVARIANTS
                 << "b::static_inv" << std::endl
                 << "b::inv" << std::endl
             #endif
-            #if BOOST_CONTRACT_POSTCONDITIONS
+            #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
                 << "b::dtor::old" << std::endl // Test this threw.
             #else
                 << "b::dtor::body" << std::endl
-                #if BOOST_CONTRACT_EXIT_INVARIANTS
+                #ifndef BOOST_CONTRACT_NO_EXIT_INVARIANTS
                     << "b::static_inv" << std::endl
                 #endif
             #endif
 
-            #if BOOST_CONTRACT_ENTRY_INVARIANTS
+            #ifndef BOOST_CONTRACT_NO_ENTRY_INVARIANTS
                 << "c::static_inv" << std::endl
                 << "c::inv" << std::endl
             #endif
-            #if BOOST_CONTRACT_POSTCONDITIONS
+            #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
                 << "c::dtor::old" << std::endl
             #endif
             << "c::dtor::body" << std::endl
-            #if BOOST_CONTRACT_EXIT_INVARIANTS
+            #ifndef BOOST_CONTRACT_NO_EXIT_INVARIANTS
                 << "c::static_inv" << std::endl
-                #if BOOST_CONTRACT_POSTCONDITIONS
+                #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
                     // Test c not destructed (so both static_inv and inv).
                     << "c::inv" << std::endl
                 #endif

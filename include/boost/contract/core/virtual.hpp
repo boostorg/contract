@@ -10,7 +10,7 @@
 #include <boost/contract/core/config.hpp>
 #include <boost/contract/aux_/decl.hpp>
 #include <boost/noncopyable.hpp>
-#if BOOST_CONTRACT_POSTCONDITIONS
+#ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
     #include <boost/any.hpp>
     #include <boost/shared_ptr.hpp>
     #include <queue>
@@ -33,51 +33,54 @@ class virtual_ : private boost::noncopyable { // Avoid copy queue, stack, etc.
 
     enum action_enum {
         // virtual_ always hold/passed by ptr so null ptr used for user call.
-        #if BOOST_CONTRACT_PRECONDITIONS || BOOST_CONTRACT_POSTCONDITIONS || \
-                BOOST_CONTRACT_INVARIANTS
+        #if !defined(BOOST_CONTRACT_NO_PRECONDITIONS) || \
+                !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
+                !defined(BOOST_CONTRACT_NO_INVARIANTS)
             no_action,
         #endif
-        #if BOOST_CONTRACT_POSTCONDITIONS
+        #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
             push_old_init,
         #endif
-        #if BOOST_CONTRACT_ENTRY_INVARIANTS
+        #ifndef BOOST_CONTRACT_NO_ENTRY_INVARIANTS
             check_entry_inv,
         #endif
-        #if BOOST_CONTRACT_PRECONDITIONS
+        #ifndef BOOST_CONTRACT_NO_PRECONDITIONS
             check_pre,
         #endif
-        #if BOOST_CONTRACT_POSTCONDITIONS
+        #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
             call_old_copy,
             push_old_copy,
         #endif
-        #if BOOST_CONTRACT_EXIT_INVARIANTS
+        #ifndef BOOST_CONTRACT_NO_EXIT_INVARIANTS
             check_exit_inv,
         #endif
-        #if BOOST_CONTRACT_POSTCONDITIONS
+        #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
             pop_old_copy,
             check_post,
             pop_old_init = check_post // These must be the same value.
         #endif
     };
 
-    #if BOOST_CONTRACT_PRECONDITIONS || BOOST_CONTRACT_POSTCONDITIONS || \
-            BOOST_CONTRACT_INVARIANTS
+    #if !defined(BOOST_CONTRACT_NO_PRECONDITIONS) || \
+            !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
+            !defined(BOOST_CONTRACT_NO_INVARIANTS)
         explicit virtual_(action_enum a) :
               action_(a)
             , failed_(false)
-            #if BOOST_CONTRACT_POSTCONDITIONS
+            #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
                 , result_type_name_()
                 , result_optional_()
             #endif
         {}
     #endif
 
-    #if BOOST_CONTRACT_PRECONDITIONS || BOOST_CONTRACT_POSTCONDITIONS || \
-            BOOST_CONTRACT_INVARIANTS
+    #if !defined(BOOST_CONTRACT_NO_PRECONDITIONS) || \
+            !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
+            !defined(BOOST_CONTRACT_NO_INVARIANTS)
         action_enum action_;
         bool failed_;
     #endif
-    #if BOOST_CONTRACT_POSTCONDITIONS
+    #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
         std::queue<boost::shared_ptr<void> > old_inits_;
         std::stack<boost::shared_ptr<void> > old_copies_;
 

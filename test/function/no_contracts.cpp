@@ -3,7 +3,7 @@
 
 #include "../aux_/oteststream.hpp"
 #include <boost/contract/core/config.hpp>
-#if BOOST_CONTRACT_FUNCTIONS
+#ifndef BOOST_CONTRACT_NO_FUNCTIONS
     #include <boost/contract/function.hpp>
     #include <boost/contract/guard.hpp>
     #include <boost/contract/old.hpp>
@@ -14,15 +14,15 @@
 boost::contract::test::aux::oteststream out;
 
 void f(int x) {
-    #if BOOST_CONTRACT_POSTCONDITIONS
+    #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
         boost::contract::old_ptr<int> old_x = BOOST_CONTRACT_OLDOF(x);
     #endif
-    #if BOOST_CONTRACT_FUNCTIONS
+    #ifndef BOOST_CONTRACT_NO_FUNCTIONS
         boost::contract::guard c = boost::contract::function()
-            #if BOOST_CONTRACT_PRECONDITIONS
+            #ifndef BOOST_CONTRACT_NO_PRECONDITIONS
                 .precondition([] { out << "f::pre" << std::endl; })
             #endif
-            #if BOOST_CONTRACT_POSTCONDITIONS
+            #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
                 .old([] { out << "f::old" << std::endl; })
                 .postcondition([] { out << "f::post" << std::endl; })
             #endif
@@ -36,14 +36,14 @@ int main() {
     out.str("");
     f(123);
     ok.str(""); ok
-        #if BOOST_CONTRACT_PRECONDITIONS
+        #ifndef BOOST_CONTRACT_NO_PRECONDITIONS
             << "f::pre" << std::endl
         #endif
-        #if BOOST_CONTRACT_POSTCONDITIONS
+        #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
             << "f::old" << std::endl
         #endif
         << "f::body" << std::endl
-        #if BOOST_CONTRACT_POSTCONDITIONS
+        #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
             << "f::post" << std::endl
         #endif
     ;

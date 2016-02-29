@@ -11,10 +11,12 @@
 #include <boost/contract/core/config.hpp>
 #include <boost/contract/aux_/condition/check_pre_post_inv.hpp>
 #include <boost/contract/aux_/none.hpp>
-#if BOOST_CONTRACT_INVARIANTS || BOOST_CONTRACT_POSTCONDITIONS
+#if !defined(BOOST_CONTRACT_NO_INVARIANTS) || \
+        !defined(BOOST_CONTRACT_NO_POSTCONDITIONS)
     #include <boost/contract/aux_/check_guard.hpp>
 #endif
-#if BOOST_CONTRACT_EXIT_INVARIANTS || BOOST_CONTRACT_POSTCONDITIONS
+#if !defined(BOOST_CONTRACT_NO_EXIT_INVARIANTS) || \
+        !defined(BOOST_CONTRACT_NO_POSTCONDITIONS)
     #include <boost/config.hpp>
     #include <exception>
 #endif
@@ -30,11 +32,12 @@ public:
             boost::contract::from_destructor, obj) {}
 
 private:
-    #if BOOST_CONTRACT_ENTRY_INVARIANTS || BOOST_CONTRACT_POSTCONDITIONS
+    #if !defined(BOOST_CONTRACT_NO_ENTRY_INVARIANTS) || \
+            !defined(BOOST_CONTRACT_NO_POSTCONDITIONS)
         void init() /* override */ {
             if(check_guard::checking()) return;
 
-            #if BOOST_CONTRACT_ENTRY_INVARIANTS
+            #ifndef BOOST_CONTRACT_NO_ENTRY_INVARIANTS
                 {
                     check_guard checking;
                     // Obj exists (before dtor body), check static and non- inv.
@@ -42,14 +45,15 @@ private:
                     // Dtor cannot have pre because it has no parameters.
                 }
             #endif
-            #if BOOST_CONTRACT_POSTCONDITIONS
+            #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
                 this->copy_old();
             #endif
         }
     #endif
     
 public:
-    #if BOOST_CONTRACT_EXIT_INVARIANTS || BOOST_CONTRACT_POSTCONDITIONS
+    #if !defined(BOOST_CONTRACT_NO_EXIT_INVARIANTS) || \
+            !defined(BOOST_CONTRACT_NO_POSTCONDITIONS)
         ~destructor() BOOST_NOEXCEPT_IF(false) {
             this->assert_guarded();
             if(check_guard::checking()) return;
@@ -66,11 +70,11 @@ public:
             // library must handle such a case.
             bool body_threw = std::uncaught_exception();
             
-            #if BOOST_CONTRACT_EXIT_INVARIANTS
+            #ifndef BOOST_CONTRACT_NO_EXIT_INVARIANTS
                 if(body_threw) this->check_exit_inv();
                 else this->check_exit_static_inv();
             #endif
-            #if BOOST_CONTRACT_POSTCONDITIONS
+            #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
                 if(!body_threw) this->check_post(none());
             #endif
         }

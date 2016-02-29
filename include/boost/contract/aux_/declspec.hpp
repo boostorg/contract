@@ -15,7 +15,7 @@
 // used as a shared library. Otherwise, lib's state won't be shared among
 // different user programs and user libraries.
 #if defined(BOOST_ALL_DYN_LINK) || defined(BOOST_CONTRACT_DYN_LINK)
-    #ifdef BOOST_CONTRACT_AUX_CONFIG_SOURCE
+    #ifdef BOOST_CONTRACT_AUX_SOURCE
         #define BOOST_CONTRACT_AUX_DECLSPEC BOOST_SYMBOL_EXPORT
     #else
         #define BOOST_CONTRACT_AUX_DECLSPEC BOOST_SYMBOL_IMPORT

@@ -17,8 +17,9 @@
 
 /* PRIVATE */
 
-#if BOOST_CONTRACT_PRECONDITIONS || BOOST_CONTRACT_POSTCONDITIONS || \
-        BOOST_CONTRACT_INVARIANTS
+#if !defined(BOOST_CONTRACT_NO_PRECONDITIONS) || \
+        !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
+        !defined(BOOST_CONTRACT_NO_INVARIANTS)
     #define BOOST_CONTRACT_GUARD_CTOR_DEF_(contract_type) \
             : check_(const_cast<contract_type&>(contract).check_.release()) \
         { \
@@ -43,8 +44,9 @@ public:
     // Following copy and implicit type conversion ctors allow `guard c = ...`.
     
     guard(guard const& other) // Copy ctor moves check_ pointer to dest.
-        #if BOOST_CONTRACT_PRECONDITIONS || BOOST_CONTRACT_POSTCONDITIONS || \
-                BOOST_CONTRACT_INVARIANTS
+        #if !defined(BOOST_CONTRACT_NO_PRECONDITIONS) || \
+                !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
+                !defined(BOOST_CONTRACT_NO_INVARIANTS)
             : check_(const_cast<guard&>(other).check_.release())
         #endif
     {}
@@ -65,8 +67,9 @@ public:
 private:
     guard& operator=(guard const&); // Cannot copy outside of `guard c = ...`.
 
-    #if BOOST_CONTRACT_PRECONDITIONS || BOOST_CONTRACT_POSTCONDITIONS || \
-            BOOST_CONTRACT_INVARIANTS
+    #if !defined(BOOST_CONTRACT_NO_PRECONDITIONS) || \
+            !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
+            !defined(BOOST_CONTRACT_NO_INVARIANTS)
         boost::contract::aux::auto_ptr<boost::contract::aux::check_base> check_;
     #endif
 };

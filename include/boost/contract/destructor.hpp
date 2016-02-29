@@ -10,7 +10,8 @@
 /** @file */
 
 #include <boost/contract/aux_/all_core_headers.hpp>
-#if BOOST_CONTRACT_DESTRUCTORS || BOOST_CONTRACT_PRECONDITIONS
+#if !defined(BOOST_CONTRACT_NO_DESTRUCTORS) || \
+        !defined(BOOST_CONTRACT_NO_PRECONDITIONS)
     #include <boost/contract/aux_/operation/destructor.hpp>
 #endif
 
@@ -19,7 +20,8 @@ namespace boost { namespace contract {
 template<class C>
 set_old_postcondition<> destructor(C* obj) {
     // Must #if also on ..._PRECONDITIONS here because set_... is generic.
-    #if BOOST_CONTRACT_DESTRUCTORS || BOOST_CONTRACT_PRECONDITIONS
+    #if !defined(BOOST_CONTRACT_NO_DESTRUCTORS) || \
+            !defined(BOOST_CONTRACT_NO_PRECONDITIONS)
         return set_old_postcondition<>(
                 new boost::contract::aux::destructor<C>(obj));
     #else

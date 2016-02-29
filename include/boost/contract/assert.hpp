@@ -15,8 +15,9 @@
 
 // Must use ternary operator expr here (instead of if-statement) so this macro
 // can always be used with if-statements and all other C++ constructs.
-#if BOOST_CONTRACT_PRECONDITIONS || BOOST_CONTRACT_POSTCONDITIONS || \
-        BOOST_CONTRACT_INVARIANTS
+#if !defined(BOOST_CONTRACT_NO_PRECONDITIONS) || \
+        !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
+        !defined(BOOST_CONTRACT_NO_INVARIANTS)
     #include <boost/preprocessor/stringize.hpp>
     #define BOOST_CONTRACT_ASSERT(condition) \
         ((condition) ? (void*)0 : throw boost::contract::assertion_failure( \

@@ -206,21 +206,21 @@ int main() {
         out.str("");
         a volatile av;
         ok.str(""); ok // Ctors always check const_inv (even if volatile).
-            #if BOOST_CONTRACT_PRECONDITIONS
+            #ifndef BOOST_CONTRACT_NO_PRECONDITIONS
                 << "a::ctor::pre" << std::endl
                 << "b::ctor::pre" << std::endl
             #endif
 
-            #if BOOST_CONTRACT_ENTRY_INVARIANTS
+            #ifndef BOOST_CONTRACT_NO_ENTRY_INVARIANTS
                 #ifdef BOOST_CONTRACT_TEST_STATIC_INV
                     << "b::static_inv" << std::endl
                 #endif
             #endif
-            #if BOOST_CONTRACT_POSTCONDITIONS
+            #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
                 << "b::ctor::old" << std::endl
             #endif
             << "b::ctor::body" << std::endl
-            #if BOOST_CONTRACT_EXIT_INVARIANTS
+            #ifndef BOOST_CONTRACT_NO_EXIT_INVARIANTS
                 #ifdef BOOST_CONTRACT_TEST_STATIC_INV
                     << "b::static_inv" << std::endl
                 #endif
@@ -231,20 +231,20 @@ int main() {
                     << "b::const_inv" << std::endl
                 #endif
             #endif
-            #if BOOST_CONTRACT_POSTCONDITIONS
+            #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
                 << "b::ctor::post" << std::endl
             #endif
 
-            #if BOOST_CONTRACT_ENTRY_INVARIANTS
+            #ifndef BOOST_CONTRACT_NO_ENTRY_INVARIANTS
                 #ifdef BOOST_CONTRACT_TEST_STATIC_INV
                     << "a::static_inv" << std::endl
                 #endif
             #endif
-            #if BOOST_CONTRACT_POSTCONDITIONS
+            #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
                 << "a::ctor::old" << std::endl
             #endif
             << "a::ctor::body" << std::endl
-            #if BOOST_CONTRACT_EXIT_INVARIANTS
+            #ifndef BOOST_CONTRACT_NO_EXIT_INVARIANTS
                 #ifdef BOOST_CONTRACT_TEST_STATIC_INV
                     << "a::static_inv" << std::endl
                 #endif
@@ -255,7 +255,7 @@ int main() {
                     << "a::const_inv" << std::endl
                 #endif
             #endif
-            #if BOOST_CONTRACT_POSTCONDITIONS
+            #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
                 << "a::ctor::post" << std::endl
             #endif
         ;
@@ -264,7 +264,7 @@ int main() {
         out.str("");
         av.f('a');
         ok.str(""); ok // Volatile checks static and cv (but not const) inv.
-            #if BOOST_CONTRACT_ENTRY_INVARIANTS
+            #ifndef BOOST_CONTRACT_NO_ENTRY_INVARIANTS
                 #ifdef BOOST_CONTRACT_TEST_STATIC_INV
                     << "b::static_inv" << std::endl
                 #endif
@@ -278,16 +278,16 @@ int main() {
                     << "a::cv_inv" << std::endl
                 #endif
             #endif
-            #if BOOST_CONTRACT_PRECONDITIONS
+            #ifndef BOOST_CONTRACT_NO_PRECONDITIONS
                 << "b::f::volatile_pre" << std::endl
                 << "a::f::volatile_pre" << std::endl
             #endif
-            #if BOOST_CONTRACT_POSTCONDITIONS
+            #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
                 << "b::f::volatile_old" << std::endl
                 << "a::f::volatile_old" << std::endl
             #endif
             << "a::f::volatile_body" << std::endl
-            #if BOOST_CONTRACT_EXIT_INVARIANTS
+            #ifndef BOOST_CONTRACT_NO_EXIT_INVARIANTS
                 #ifdef BOOST_CONTRACT_TEST_STATIC_INV
                     << "b::static_inv" << std::endl
                 #endif
@@ -301,7 +301,7 @@ int main() {
                     << "a::cv_inv" << std::endl
                 #endif
             #endif
-            #if BOOST_CONTRACT_POSTCONDITIONS
+            #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
                 << "b::f::volatile_old" << std::endl
                 << "b::f::volatile_post" << std::endl
                 << "a::f::volatile_post" << std::endl
@@ -312,24 +312,24 @@ int main() {
         out.str("");
         av.s(); // Test static call.
         ok.str(""); ok
-            #if BOOST_CONTRACT_ENTRY_INVARIANTS
+            #ifndef BOOST_CONTRACT_NO_ENTRY_INVARIANTS
                 #ifdef BOOST_CONTRACT_TEST_STATIC_INV
                     << "a::static_inv" << std::endl
                 #endif
             #endif
-            #if BOOST_CONTRACT_PRECONDITIONS
+            #ifndef BOOST_CONTRACT_NO_PRECONDITIONS
                 << "a::s::pre" << std::endl
             #endif
-            #if BOOST_CONTRACT_POSTCONDITIONS
+            #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
                 << "a::s::old" << std::endl
             #endif
             << "a::s::body" << std::endl
-            #if BOOST_CONTRACT_EXIT_INVARIANTS
+            #ifndef BOOST_CONTRACT_NO_EXIT_INVARIANTS
                 #ifdef BOOST_CONTRACT_TEST_STATIC_INV
                     << "a::static_inv" << std::endl
                 #endif
             #endif
-            #if BOOST_CONTRACT_POSTCONDITIONS
+            #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
                 << "a::s::post" << std::endl
             #endif
         ;
@@ -338,14 +338,14 @@ int main() {
         out.str("");
         av.call_p(); // Test (indirect) protected call.
         ok.str(""); ok
-            #if BOOST_CONTRACT_PRECONDITIONS
+            #ifndef BOOST_CONTRACT_NO_PRECONDITIONS
                 << "a::p::volatile_pre" << std::endl
             #endif
-            #if BOOST_CONTRACT_POSTCONDITIONS
+            #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
                 << "a::p::volatile_old" << std::endl
             #endif
             << "a::p::volatile_body" << std::endl
-            #if BOOST_CONTRACT_POSTCONDITIONS
+            #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
                 << "a::p::volatile_post" << std::endl
             #endif
         ;
@@ -354,14 +354,14 @@ int main() {
         out.str("");
         av.call_q(); // Test (indirect) private call.
         ok.str(""); ok
-            #if BOOST_CONTRACT_PRECONDITIONS
+            #ifndef BOOST_CONTRACT_NO_PRECONDITIONS
                 << "a::q::volatile_pre" << std::endl
             #endif
-            #if BOOST_CONTRACT_POSTCONDITIONS
+            #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
                 << "a::q::volatile_old" << std::endl
             #endif
             << "a::q::volatile_body" << std::endl
-            #if BOOST_CONTRACT_POSTCONDITIONS
+            #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
                 << "a::q::volatile_post" << std::endl
             #endif
         ;
@@ -370,7 +370,7 @@ int main() {
         out.str("");
     } // Call a's destructor.
     ok.str(""); ok // Dtors always check const_inv (even if volatile).
-        #if BOOST_CONTRACT_ENTRY_INVARIANTS
+        #ifndef BOOST_CONTRACT_NO_ENTRY_INVARIANTS
             #ifdef BOOST_CONTRACT_TEST_STATIC_INV
                 << "a::static_inv" << std::endl
             #endif
@@ -381,20 +381,20 @@ int main() {
                 << "a::const_inv" << std::endl
             #endif
         #endif
-        #if BOOST_CONTRACT_POSTCONDITIONS
+        #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
             << "a::dtor::old" << std::endl
         #endif
         << "a::dtor::body" << std::endl
-        #if BOOST_CONTRACT_EXIT_INVARIANTS
+        #ifndef BOOST_CONTRACT_NO_EXIT_INVARIANTS
             #ifdef BOOST_CONTRACT_TEST_STATIC_INV
                 << "a::static_inv" << std::endl
             #endif
         #endif
-        #if BOOST_CONTRACT_POSTCONDITIONS
+        #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
             << "a::dtor::post" << std::endl
         #endif
 
-        #if BOOST_CONTRACT_ENTRY_INVARIANTS
+        #ifndef BOOST_CONTRACT_NO_ENTRY_INVARIANTS
             #ifdef BOOST_CONTRACT_TEST_STATIC_INV
                 << "b::static_inv" << std::endl
             #endif
@@ -405,16 +405,16 @@ int main() {
                 << "b::const_inv" << std::endl
             #endif
         #endif
-        #if BOOST_CONTRACT_POSTCONDITIONS
+        #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
             << "b::dtor::old" << std::endl
         #endif
         << "b::dtor::body" << std::endl
-        #if BOOST_CONTRACT_EXIT_INVARIANTS
+        #ifndef BOOST_CONTRACT_NO_EXIT_INVARIANTS
             #ifdef BOOST_CONTRACT_TEST_STATIC_INV
                 << "b::static_inv" << std::endl
             #endif
         #endif
-        #if BOOST_CONTRACT_POSTCONDITIONS
+        #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
             << "b::dtor::post" << std::endl
         #endif
     ;
@@ -424,21 +424,21 @@ int main() {
         out.str("");
         a aa;
         ok.str(""); ok
-            #if BOOST_CONTRACT_PRECONDITIONS
+            #ifndef BOOST_CONTRACT_NO_PRECONDITIONS
                 << "a::ctor::pre" << std::endl
                 << "b::ctor::pre" << std::endl
             #endif
 
-            #if BOOST_CONTRACT_ENTRY_INVARIANTS
+            #ifndef BOOST_CONTRACT_NO_ENTRY_INVARIANTS
                 #ifdef BOOST_CONTRACT_TEST_STATIC_INV
                     << "b::static_inv" << std::endl
                 #endif
             #endif
-            #if BOOST_CONTRACT_POSTCONDITIONS
+            #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
                 << "b::ctor::old" << std::endl
             #endif
             << "b::ctor::body" << std::endl
-            #if BOOST_CONTRACT_EXIT_INVARIANTS
+            #ifndef BOOST_CONTRACT_NO_EXIT_INVARIANTS
                 #ifdef BOOST_CONTRACT_TEST_STATIC_INV
                     << "b::static_inv" << std::endl
                 #endif
@@ -449,20 +449,20 @@ int main() {
                     << "b::const_inv" << std::endl
                 #endif
             #endif
-            #if BOOST_CONTRACT_POSTCONDITIONS
+            #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
                 << "b::ctor::post" << std::endl
             #endif
 
-            #if BOOST_CONTRACT_ENTRY_INVARIANTS
+            #ifndef BOOST_CONTRACT_NO_ENTRY_INVARIANTS
                 #ifdef BOOST_CONTRACT_TEST_STATIC_INV
                     << "a::static_inv" << std::endl
                 #endif
             #endif
-            #if BOOST_CONTRACT_POSTCONDITIONS
+            #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
                 << "a::ctor::old" << std::endl
             #endif
             << "a::ctor::body" << std::endl
-            #if BOOST_CONTRACT_EXIT_INVARIANTS
+            #ifndef BOOST_CONTRACT_NO_EXIT_INVARIANTS
                 #ifdef BOOST_CONTRACT_TEST_STATIC_INV
                     << "a::static_inv" << std::endl
                 #endif
@@ -473,7 +473,7 @@ int main() {
                     << "a::const_inv" << std::endl
                 #endif
             #endif
-            #if BOOST_CONTRACT_POSTCONDITIONS
+            #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
                 << "a::ctor::post" << std::endl
             #endif
         ;
@@ -482,7 +482,7 @@ int main() {
         out.str("");
         aa.f('a');
         ok.str(""); ok // Mutable checks static, cv, and const-only inv.
-            #if BOOST_CONTRACT_ENTRY_INVARIANTS
+            #ifndef BOOST_CONTRACT_NO_ENTRY_INVARIANTS
                 #ifdef BOOST_CONTRACT_TEST_STATIC_INV
                     << "b::static_inv" << std::endl
                 #endif
@@ -502,16 +502,16 @@ int main() {
                     << "a::const_inv" << std::endl
                 #endif
             #endif
-            #if BOOST_CONTRACT_PRECONDITIONS
+            #ifndef BOOST_CONTRACT_NO_PRECONDITIONS
                 << "b::f::pre" << std::endl
                 << "a::f::pre" << std::endl
             #endif
-            #if BOOST_CONTRACT_POSTCONDITIONS
+            #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
                 << "b::f::old" << std::endl
                 << "a::f::old" << std::endl
             #endif
             << "a::f::body" << std::endl
-            #if BOOST_CONTRACT_EXIT_INVARIANTS
+            #ifndef BOOST_CONTRACT_NO_EXIT_INVARIANTS
                 #ifdef BOOST_CONTRACT_TEST_STATIC_INV
                     << "b::static_inv" << std::endl
                 #endif
@@ -531,7 +531,7 @@ int main() {
                     << "a::const_inv" << std::endl
                 #endif
             #endif
-            #if BOOST_CONTRACT_POSTCONDITIONS
+            #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
                 << "b::f::old" << std::endl
                 << "b::f::post" << std::endl
                 << "a::f::post" << std::endl
@@ -542,24 +542,24 @@ int main() {
         out.str("");
         aa.s(); // Test static call.
         ok.str(""); ok
-            #if BOOST_CONTRACT_ENTRY_INVARIANTS
+            #ifndef BOOST_CONTRACT_NO_ENTRY_INVARIANTS
                 #ifdef BOOST_CONTRACT_TEST_STATIC_INV
                     << "a::static_inv" << std::endl
                 #endif
             #endif
-            #if BOOST_CONTRACT_PRECONDITIONS
+            #ifndef BOOST_CONTRACT_NO_PRECONDITIONS
                 << "a::s::pre" << std::endl
             #endif
-            #if BOOST_CONTRACT_POSTCONDITIONS
+            #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
                 << "a::s::old" << std::endl
             #endif
             << "a::s::body" << std::endl
-            #if BOOST_CONTRACT_EXIT_INVARIANTS
+            #ifndef BOOST_CONTRACT_NO_EXIT_INVARIANTS
                 #ifdef BOOST_CONTRACT_TEST_STATIC_INV
                     << "a::static_inv" << std::endl
                 #endif
             #endif
-            #if BOOST_CONTRACT_POSTCONDITIONS
+            #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
                 << "a::s::post" << std::endl
             #endif
         ;
@@ -568,14 +568,14 @@ int main() {
         out.str("");
         aa.call_p(); // Test (indirect) protected call.
         ok.str(""); ok
-            #if BOOST_CONTRACT_PRECONDITIONS
+            #ifndef BOOST_CONTRACT_NO_PRECONDITIONS
                 << "a::p::pre" << std::endl
             #endif
-            #if BOOST_CONTRACT_POSTCONDITIONS
+            #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
                 << "a::p::old" << std::endl
             #endif
             << "a::p::body" << std::endl
-            #if BOOST_CONTRACT_POSTCONDITIONS
+            #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
                 << "a::p::post" << std::endl
             #endif
         ;
@@ -584,14 +584,14 @@ int main() {
         out.str("");
         aa.call_q(); // Test (indirect) private call.
         ok.str(""); ok
-            #if BOOST_CONTRACT_PRECONDITIONS
+            #ifndef BOOST_CONTRACT_NO_PRECONDITIONS
                 << "a::q::pre" << std::endl
             #endif
-            #if BOOST_CONTRACT_POSTCONDITIONS
+            #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
                 << "a::q::old" << std::endl
             #endif
             << "a::q::body" << std::endl
-            #if BOOST_CONTRACT_POSTCONDITIONS
+            #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
                 << "a::q::post" << std::endl
             #endif
         ;
@@ -600,7 +600,7 @@ int main() {
         out.str("");
     } // Call a's destructor.
     ok.str(""); ok
-        #if BOOST_CONTRACT_ENTRY_INVARIANTS
+        #ifndef BOOST_CONTRACT_NO_ENTRY_INVARIANTS
             #ifdef BOOST_CONTRACT_TEST_STATIC_INV
                 << "a::static_inv" << std::endl
             #endif
@@ -611,20 +611,20 @@ int main() {
                 << "a::const_inv" << std::endl
             #endif
         #endif
-        #if BOOST_CONTRACT_POSTCONDITIONS
+        #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
             << "a::dtor::old" << std::endl
         #endif
         << "a::dtor::body" << std::endl
-        #if BOOST_CONTRACT_EXIT_INVARIANTS
+        #ifndef BOOST_CONTRACT_NO_EXIT_INVARIANTS
             #ifdef BOOST_CONTRACT_TEST_STATIC_INV
                 << "a::static_inv" << std::endl
             #endif
         #endif
-        #if BOOST_CONTRACT_POSTCONDITIONS
+        #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
             << "a::dtor::post" << std::endl
         #endif
 
-        #if BOOST_CONTRACT_ENTRY_INVARIANTS
+        #ifndef BOOST_CONTRACT_NO_ENTRY_INVARIANTS
             #ifdef BOOST_CONTRACT_TEST_STATIC_INV
                 << "b::static_inv" << std::endl
             #endif
@@ -635,16 +635,16 @@ int main() {
                 << "b::const_inv" << std::endl
             #endif
         #endif
-        #if BOOST_CONTRACT_POSTCONDITIONS
+        #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
             << "b::dtor::old" << std::endl
         #endif
         << "b::dtor::body" << std::endl
-        #if BOOST_CONTRACT_EXIT_INVARIANTS
+        #ifndef BOOST_CONTRACT_NO_EXIT_INVARIANTS
             #ifdef BOOST_CONTRACT_TEST_STATIC_INV
                 << "b::static_inv" << std::endl
             #endif
         #endif
-        #if BOOST_CONTRACT_POSTCONDITIONS
+        #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
             << "b::dtor::post" << std::endl
         #endif
     ;
@@ -655,20 +655,20 @@ int main() {
         out.str("");
         b volatile bv;
         ok.str(""); ok // Ctors always check const_inv (even if volatile).
-            #if BOOST_CONTRACT_PRECONDITIONS
+            #ifndef BOOST_CONTRACT_NO_PRECONDITIONS
                 << "b::ctor::pre" << std::endl
             #endif
 
-            #if BOOST_CONTRACT_ENTRY_INVARIANTS
+            #ifndef BOOST_CONTRACT_NO_ENTRY_INVARIANTS
                 #ifdef BOOST_CONTRACT_TEST_STATIC_INV
                     << "b::static_inv" << std::endl
                 #endif
             #endif
-            #if BOOST_CONTRACT_POSTCONDITIONS
+            #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
                 << "b::ctor::old" << std::endl
             #endif
             << "b::ctor::body" << std::endl
-            #if BOOST_CONTRACT_EXIT_INVARIANTS
+            #ifndef BOOST_CONTRACT_NO_EXIT_INVARIANTS
                 #ifdef BOOST_CONTRACT_TEST_STATIC_INV
                     << "b::static_inv" << std::endl
                 #endif
@@ -679,7 +679,7 @@ int main() {
                     << "b::const_inv" << std::endl
                 #endif
             #endif
-            #if BOOST_CONTRACT_POSTCONDITIONS
+            #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
                 << "b::ctor::post" << std::endl
             #endif
         ;
@@ -688,7 +688,7 @@ int main() {
         out.str("");
         bv.f('b');
         ok.str(""); ok // Volatile checks static and cv (but not const) inv.
-            #if BOOST_CONTRACT_ENTRY_INVARIANTS
+            #ifndef BOOST_CONTRACT_NO_ENTRY_INVARIANTS
                 #ifdef BOOST_CONTRACT_TEST_STATIC_INV
                     << "b::static_inv" << std::endl
                 #endif
@@ -696,14 +696,14 @@ int main() {
                     << "b::cv_inv" << std::endl
                 #endif
             #endif
-            #if BOOST_CONTRACT_PRECONDITIONS
+            #ifndef BOOST_CONTRACT_NO_PRECONDITIONS
                 << "b::f::volatile_pre" << std::endl
             #endif
-            #if BOOST_CONTRACT_POSTCONDITIONS
+            #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
                 << "b::f::volatile_old" << std::endl
             #endif
             << "b::f::volatile_body" << std::endl
-            #if BOOST_CONTRACT_EXIT_INVARIANTS
+            #ifndef BOOST_CONTRACT_NO_EXIT_INVARIANTS
                 #ifdef BOOST_CONTRACT_TEST_STATIC_INV
                     << "b::static_inv" << std::endl
                 #endif
@@ -711,7 +711,7 @@ int main() {
                     << "b::cv_inv" << std::endl
                 #endif
             #endif
-            #if BOOST_CONTRACT_POSTCONDITIONS
+            #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
                 << "b::f::volatile_post" << std::endl
             #endif
         ;
@@ -720,7 +720,7 @@ int main() {
         out.str("");
     } // Call b's destructor.
     ok.str(""); ok // Dtors always check const_inv (even if volatile).
-        #if BOOST_CONTRACT_ENTRY_INVARIANTS
+        #ifndef BOOST_CONTRACT_NO_ENTRY_INVARIANTS
             #ifdef BOOST_CONTRACT_TEST_STATIC_INV
                 << "b::static_inv" << std::endl
             #endif
@@ -731,16 +731,16 @@ int main() {
                 << "b::const_inv" << std::endl
             #endif
         #endif
-        #if BOOST_CONTRACT_POSTCONDITIONS
+        #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
             << "b::dtor::old" << std::endl
         #endif
         << "b::dtor::body" << std::endl
-        #if BOOST_CONTRACT_EXIT_INVARIANTS
+        #ifndef BOOST_CONTRACT_NO_EXIT_INVARIANTS
             #ifdef BOOST_CONTRACT_TEST_STATIC_INV
                 << "b::static_inv" << std::endl
             #endif
         #endif
-        #if BOOST_CONTRACT_POSTCONDITIONS
+        #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
             << "b::dtor::post" << std::endl
         #endif
     ;
@@ -750,20 +750,20 @@ int main() {
         out.str("");
         b bb;
         ok.str(""); ok
-            #if BOOST_CONTRACT_PRECONDITIONS
+            #ifndef BOOST_CONTRACT_NO_PRECONDITIONS
                 << "b::ctor::pre" << std::endl
             #endif
             
-            #if BOOST_CONTRACT_ENTRY_INVARIANTS
+            #ifndef BOOST_CONTRACT_NO_ENTRY_INVARIANTS
                 #ifdef BOOST_CONTRACT_TEST_STATIC_INV
                     << "b::static_inv" << std::endl
                 #endif
             #endif
-            #if BOOST_CONTRACT_POSTCONDITIONS
+            #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
                 << "b::ctor::old" << std::endl
             #endif
             << "b::ctor::body" << std::endl
-            #if BOOST_CONTRACT_EXIT_INVARIANTS
+            #ifndef BOOST_CONTRACT_NO_EXIT_INVARIANTS
                 #ifdef BOOST_CONTRACT_TEST_STATIC_INV
                     << "b::static_inv" << std::endl
                 #endif
@@ -774,7 +774,7 @@ int main() {
                     << "b::const_inv" << std::endl
                 #endif
             #endif
-            #if BOOST_CONTRACT_POSTCONDITIONS
+            #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
                 << "b::ctor::post" << std::endl
             #endif
         ;
@@ -783,7 +783,7 @@ int main() {
         out.str("");
         bb.f('b');
         ok.str(""); ok // Mutable checks static, cv, and const-only inv.
-            #if BOOST_CONTRACT_ENTRY_INVARIANTS
+            #ifndef BOOST_CONTRACT_NO_ENTRY_INVARIANTS
                 #ifdef BOOST_CONTRACT_TEST_STATIC_INV
                     << "b::static_inv" << std::endl
                 #endif
@@ -794,14 +794,14 @@ int main() {
                     << "b::const_inv" << std::endl
                 #endif
             #endif
-            #if BOOST_CONTRACT_PRECONDITIONS
+            #ifndef BOOST_CONTRACT_NO_PRECONDITIONS
                 << "b::f::pre" << std::endl
             #endif
-            #if BOOST_CONTRACT_POSTCONDITIONS
+            #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
                 << "b::f::old" << std::endl
             #endif
             << "b::f::body" << std::endl
-            #if BOOST_CONTRACT_EXIT_INVARIANTS
+            #ifndef BOOST_CONTRACT_NO_EXIT_INVARIANTS
                 #ifdef BOOST_CONTRACT_TEST_STATIC_INV
                     << "b::static_inv" << std::endl
                 #endif
@@ -812,7 +812,7 @@ int main() {
                     << "b::const_inv" << std::endl
                 #endif
             #endif
-            #if BOOST_CONTRACT_POSTCONDITIONS
+            #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
                 << "b::f::post" << std::endl
             #endif
         ;
@@ -821,7 +821,7 @@ int main() {
         out.str("");
     } // Call b's destructor.
     ok.str(""); ok
-        #if BOOST_CONTRACT_ENTRY_INVARIANTS
+        #ifndef BOOST_CONTRACT_NO_ENTRY_INVARIANTS
             #ifdef BOOST_CONTRACT_TEST_STATIC_INV
                 << "b::static_inv" << std::endl
             #endif
@@ -832,16 +832,16 @@ int main() {
                 << "b::const_inv" << std::endl
             #endif
         #endif
-        #if BOOST_CONTRACT_POSTCONDITIONS
+        #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
             << "b::dtor::old" << std::endl
         #endif
         << "b::dtor::body" << std::endl
-        #if BOOST_CONTRACT_EXIT_INVARIANTS
+        #ifndef BOOST_CONTRACT_NO_EXIT_INVARIANTS
             #ifdef BOOST_CONTRACT_TEST_STATIC_INV
                 << "b::static_inv" << std::endl
             #endif
         #endif
-        #if BOOST_CONTRACT_POSTCONDITIONS
+        #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
             << "b::dtor::post" << std::endl
         #endif
     ;

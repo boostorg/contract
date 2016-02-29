@@ -226,7 +226,7 @@ test-suite disable
         :
             <link>shared:<define>BOOST_CONTRACT_TEST_LIB_X_DYN_LINK
             # Test contracts in .cpp so never post (as NO_POST here).
-            <define>BOOST_CONTRACT_CONFIG_NO_POSTCONDITIONS
+            <define>BOOST_CONTRACT_NO_POSTCONDITIONS
     ]
     [
         subdir-lib disable : lib_y
@@ -234,7 +234,7 @@ test-suite disable
             <library>disable-lib_x
             <link>shared:<define>BOOST_CONTRACT_TEST_LIB_Y_DYN_LINK
             # Test contracts in .hpp so can have post (even if NO_POST here).
-            <define>BOOST_CONTRACT_CONFIG_NO_POSTCONDITIONS
+            <define>BOOST_CONTRACT_NO_POSTCONDITIONS
     ]
     [ subdir-run-aliased disable : lib_xy :
             <library>disable-lib_x <library>disable-lib_y ]

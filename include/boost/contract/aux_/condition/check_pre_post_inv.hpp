@@ -10,7 +10,7 @@
 #include <boost/contract/core/exception.hpp>
 #include <boost/contract/core/config.hpp>
 #include <boost/contract/aux_/condition/check_pre_post.hpp>
-#if BOOST_CONTRACT_INVARIANTS
+#ifndef BOOST_CONTRACT_NO_INVARIANTS
     #include <boost/contract/core/access.hpp>
     #include <boost/type_traits/add_pointer.hpp>
     #include <boost/type_traits/is_volatile.hpp>
@@ -23,7 +23,7 @@
     #include <boost/mpl/and.hpp>
     #include <boost/mpl/placeholders.hpp>
     #include <boost/utility/enable_if.hpp>
-    #ifndef BOOST_CONTRACT_CONFIG_PERMISSIVE
+    #ifndef BOOST_CONTRACT_PERMISSIVE
         #include <boost/function_types/property_tags.hpp>
         #include <boost/static_assert.hpp>
     #endif
@@ -33,7 +33,8 @@ namespace boost { namespace contract { namespace aux {
 
 template<typename R, class C>
 class check_pre_post_inv : public check_pre_post<R> { // Non-copyable base.
-    #if BOOST_CONTRACT_INVARIANTS && !defined(BOOST_CONTRACT_CONFIG_PERMISSIVE)
+    #if !defined(BOOST_CONTRACT_NO_INVARIANTS) && \
+            !defined(BOOST_CONTRACT_PERMISSIVE)
         BOOST_STATIC_ASSERT_MSG(
             !boost::contract::access::has_static_invariant_f<
                 C, void, boost::mpl:: vector<>
@@ -95,30 +96,32 @@ public:
     // obj can be 0 for static member functions.
     explicit check_pre_post_inv(boost::contract::from from, C* obj) :
         check_pre_post<R>(from)
-        #if BOOST_CONTRACT_PRECONDITIONS || BOOST_CONTRACT_POSTCONDITIONS || \
-                BOOST_CONTRACT_INVARIANTS
+        #if !defined(BOOST_CONTRACT_NO_PRECONDITIONS) || \
+                !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
+                !defined(BOOST_CONTRACT_NO_INVARIANTS)
             , obj_(obj)
         #endif
     {}
     
 protected:
-    #if BOOST_CONTRACT_ENTRY_INVARIANTS
+    #ifndef BOOST_CONTRACT_NO_ENTRY_INVARIANTS
         void check_entry_inv() { check_inv(true, false); }
         void check_entry_static_inv() { check_inv(true, true); }
     #endif
     
-    #if BOOST_CONTRACT_EXIT_INVARIANTS
+    #ifndef BOOST_CONTRACT_NO_EXIT_INVARIANTS
         void check_exit_inv() { check_inv(false, false); }
         void check_exit_static_inv() { check_inv(false, true); }
     #endif
 
-    #if BOOST_CONTRACT_PRECONDITIONS || BOOST_CONTRACT_POSTCONDITIONS || \
-            BOOST_CONTRACT_INVARIANTS
+    #if !defined(BOOST_CONTRACT_NO_PRECONDITIONS) || \
+            !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
+            !defined(BOOST_CONTRACT_NO_INVARIANTS)
         C* object() { return obj_; }
     #endif
 
 private:
-    #if BOOST_CONTRACT_INVARIANTS
+    #ifndef BOOST_CONTRACT_NO_INVARIANTS
         void check_inv(bool on_entry, bool static_inv_only) {
             if(this->failed()) return;
             try {
@@ -223,8 +226,9 @@ private:
         };
     #endif
 
-    #if BOOST_CONTRACT_PRECONDITIONS || BOOST_CONTRACT_POSTCONDITIONS || \
-            BOOST_CONTRACT_INVARIANTS
+    #if !defined(BOOST_CONTRACT_NO_PRECONDITIONS) || \
+            !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
+            !defined(BOOST_CONTRACT_NO_INVARIANTS)
         C* obj_;
     #endif
 };

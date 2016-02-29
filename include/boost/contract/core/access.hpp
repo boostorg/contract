@@ -9,11 +9,12 @@
 
 #include <boost/contract/core/config.hpp>
 #include <boost/contract/aux_/decl.hpp>
-#if BOOST_CONTRACT_PRECONDITIONS || BOOST_CONTRACT_POSTCONDITIONS || \
-        BOOST_CONTRACT_INVARIANTS
+#if !defined(BOOST_CONTRACT_NO_PRECONDITIONS) || \
+        !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
+        !defined(BOOST_CONTRACT_NO_INVARIANTS)
     #include <boost/contract/aux_/type_traits/introspection.hpp>
 #endif
-#if BOOST_CONTRACT_INVARIANTS
+#ifndef BOOST_CONTRACT_NO_INVARIANTS
     #include <boost/contract/aux_/debug.hpp>
     #include <boost/function_types/property_tags.hpp>
     #include <boost/mpl/vector.hpp>
@@ -49,23 +50,24 @@ namespace boost { namespace contract {
 class access { // Copyable (as shell with no data member).
     // No public APIs (so users cannot use it directly by mistake).
 
-    #if BOOST_CONTRACT_PRECONDITIONS || BOOST_CONTRACT_POSTCONDITIONS || \
-            BOOST_CONTRACT_INVARIANTS
+    #if !defined(BOOST_CONTRACT_NO_PRECONDITIONS) || \
+            !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
+            !defined(BOOST_CONTRACT_NO_INVARIANTS)
         BOOST_CONTRACT_AUX_INTROSPECTION_HAS_TYPE(has_base_types,
-                BOOST_CONTRACT_CONFIG_BASE_TYPES)
+                BOOST_CONTRACT_BASE_TYPEDEF)
 
         template<class C>
         struct base_types_of {
-            typedef typename C::BOOST_CONTRACT_CONFIG_BASE_TYPES type;
+            typedef typename C::BOOST_CONTRACT_BASE_TYPEDEF type;
         };
     #endif
     
-    #if BOOST_CONTRACT_INVARIANTS
+    #ifndef BOOST_CONTRACT_NO_INVARIANTS
         BOOST_CONTRACT_AUX_INTROSPECTION_HAS_MEMBER_FUNCTION(
-                has_static_invariant_f, BOOST_CONTRACT_CONFIG_STATIC_INVARIANT)
+                has_static_invariant_f, BOOST_CONTRACT_STATIC_INVARIANT)
         
         BOOST_CONTRACT_AUX_INTROSPECTION_HAS_STATIC_MEMBER_FUNCTION(
-                has_static_invariant_s, BOOST_CONTRACT_CONFIG_STATIC_INVARIANT)
+                has_static_invariant_s, BOOST_CONTRACT_STATIC_INVARIANT)
 
         template<class C>
         struct has_static_invariant : has_static_invariant_s<C, void,
@@ -73,7 +75,7 @@ class access { // Copyable (as shell with no data member).
 
         template<class C>
         static void static_invariant() {
-            C::BOOST_CONTRACT_CONFIG_STATIC_INVARIANT();
+            C::BOOST_CONTRACT_STATIC_INVARIANT();
         }
 
         template<class C>
@@ -81,15 +83,15 @@ class access { // Copyable (as shell with no data member).
             typedef void (*func_ptr)();
         public:
             static func_ptr apply() {
-                return &C::BOOST_CONTRACT_CONFIG_STATIC_INVARIANT;
+                return &C::BOOST_CONTRACT_STATIC_INVARIANT;
             }
         };
 
         BOOST_CONTRACT_AUX_INTROSPECTION_HAS_MEMBER_FUNCTION(
-                has_invariant_f, BOOST_CONTRACT_CONFIG_INVARIANT)
+                has_invariant_f, BOOST_CONTRACT_INVARIANT)
         
         BOOST_CONTRACT_AUX_INTROSPECTION_HAS_STATIC_MEMBER_FUNCTION(
-                has_invariant_s, BOOST_CONTRACT_CONFIG_INVARIANT)
+                has_invariant_s, BOOST_CONTRACT_INVARIANT)
 
         template<class C>
         struct has_cv_invariant : has_invariant_f<C, void, boost::mpl::vector<>,
@@ -102,13 +104,13 @@ class access { // Copyable (as shell with no data member).
         template<class C>
         static void cv_invariant(C const volatile* obj) {
             BOOST_CONTRACT_AUX_DEBUG(obj);
-            obj->BOOST_CONTRACT_CONFIG_INVARIANT();
+            obj->BOOST_CONTRACT_INVARIANT();
         }
         
         template<class C>
         static void const_invariant(C const* obj) {
             BOOST_CONTRACT_AUX_DEBUG(obj);
-            obj->BOOST_CONTRACT_CONFIG_INVARIANT();
+            obj->BOOST_CONTRACT_INVARIANT();
         }
     #endif
     

@@ -42,7 +42,7 @@ int main() {
     BOOST_TEST_EQ(equal_skips, 0);
         
     unsigned const cnt =
-        #if BOOST_CONTRACT_POSTCONDITIONS
+        #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
             1
         #else
             0

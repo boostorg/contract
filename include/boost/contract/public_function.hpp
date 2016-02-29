@@ -14,7 +14,7 @@
 #include <boost/contract/aux_/all_core_headers.hpp>
 #include <boost/contract/aux_/decl.hpp>
 #include <boost/contract/aux_/tvariadic.hpp>
-#if BOOST_CONTRACT_PUBLIC_FUNCTIONS
+#ifndef BOOST_CONTRACT_NO_PUBLIC_FUNCTIONS
     #include <boost/contract/aux_/operation/public_static_function.hpp>
     #include <boost/contract/aux_/operation/public_function.hpp>
     #include <boost/contract/aux_/type_traits/optional.hpp>
@@ -54,7 +54,7 @@ namespace boost { namespace contract {
 // For static public functions.
 template<class C>
 set_precondition_old_postcondition<> public_function() {
-    #if BOOST_CONTRACT_PUBLIC_FUNCTIONS
+    #ifndef BOOST_CONTRACT_NO_PUBLIC_FUNCTIONS
         return set_precondition_old_postcondition<>(
             new boost::contract::aux::public_static_function<C>());
     #else
@@ -65,27 +65,25 @@ set_precondition_old_postcondition<> public_function() {
 // For non-static, non-virtual, and non-overriding public functions.
 template<class C>
 set_precondition_old_postcondition<> public_function(C* obj) {
-    #if BOOST_CONTRACT_PUBLIC_FUNCTIONS
+    #ifndef BOOST_CONTRACT_NO_PUBLIC_FUNCTIONS
         return set_precondition_old_postcondition<>(
             new boost::contract::aux::public_function<
                 boost::contract::aux::none,
                 boost::contract::aux::none,
                 boost::contract::aux::none,
                 C
-                BOOST_CONTRACT_AUX_NO_TVARIADIC_COMMA(
-                        BOOST_CONTRACT_CONFIG_MAX_ARGS)
+                BOOST_CONTRACT_AUX_NO_TVARIADIC_COMMA(BOOST_CONTRACT_MAX_ARGS)
                 BOOST_CONTRACT_AUX_NO_TVARIADIC_ENUM_Z(1,
-                    BOOST_CONTRACT_CONFIG_MAX_ARGS,
+                    BOOST_CONTRACT_MAX_ARGS,
                     boost::contract::aux::none
                 )
             >(
                 static_cast<boost::contract::virtual_*>(0),
                 obj,
                 boost::contract::aux::none::value()
-                BOOST_CONTRACT_AUX_NO_TVARIADIC_COMMA(
-                        BOOST_CONTRACT_CONFIG_MAX_ARGS)
+                BOOST_CONTRACT_AUX_NO_TVARIADIC_COMMA(BOOST_CONTRACT_MAX_ARGS)
                 BOOST_CONTRACT_AUX_NO_TVARIADIC_ENUM_Z(1,
-                    BOOST_CONTRACT_CONFIG_MAX_ARGS,
+                    BOOST_CONTRACT_MAX_ARGS,
                     boost::contract::aux::none::value()
                 )
             )
@@ -94,6 +92,13 @@ set_precondition_old_postcondition<> public_function(C* obj) {
         return set_precondition_old_postcondition<>();
     #endif
 }
+
+// To use within macro expansions instead of defined(...) (PRIVATE macro).
+#ifdef BOOST_CONTRACT_NO_PUBLIC_FUNCTIONS
+    #define BOOST_CONTRACT_PUBLIC_FUNCTIONS_ 0
+#else
+    #define BOOST_CONTRACT_PUBLIC_FUNCTIONS_ 1
+#endif
 
 // TODO: Document no F here so cannot check consistency between R and actual func's result type... up to user to pass the right R...
 // For non-static, virtual, and non-overriding public functions (PRIVATE macro).
@@ -110,7 +115,7 @@ set_precondition_old_postcondition<> public_function(C* obj) {
         BOOST_PP_EXPR_IIF(has_result, R& r) \
         , C* obj \
     ) { \
-        BOOST_PP_IIF(BOOST_CONTRACT_PUBLIC_FUNCTIONS, \
+        BOOST_PP_IIF(BOOST_CONTRACT_PUBLIC_FUNCTIONS_, \
             /* no F... so cannot enforce contracted F ret R (up to user) */ \
             return (set_precondition_old_postcondition< \
                     BOOST_PP_EXPR_IIF(has_result, R)>( \
@@ -120,9 +125,9 @@ set_precondition_old_postcondition<> public_function(C* obj) {
                     boost::contract::aux::none, \
                     C \
                     BOOST_CONTRACT_AUX_NO_TVARIADIC_COMMA( \
-                            BOOST_CONTRACT_CONFIG_MAX_ARGS) \
+                            BOOST_CONTRACT_MAX_ARGS) \
                     BOOST_CONTRACT_AUX_NO_TVARIADIC_ENUM_Z(1, \
-                        BOOST_CONTRACT_CONFIG_MAX_ARGS, \
+                        BOOST_CONTRACT_MAX_ARGS, \
                         boost::contract::aux::none \
                     ) \
                 >( \
@@ -134,9 +139,9 @@ set_precondition_old_postcondition<> public_function(C* obj) {
                         boost::contract::aux::none::value() \
                     ) \
                     BOOST_CONTRACT_AUX_NO_TVARIADIC_COMMA( \
-                            BOOST_CONTRACT_CONFIG_MAX_ARGS) \
+                            BOOST_CONTRACT_MAX_ARGS) \
                     BOOST_CONTRACT_AUX_NO_TVARIADIC_ENUM_Z(1, \
-                        BOOST_CONTRACT_CONFIG_MAX_ARGS, \
+                        BOOST_CONTRACT_MAX_ARGS, \
                         boost::contract::aux::none::value() \
                     ) \
                 ) \
@@ -158,7 +163,7 @@ BOOST_CONTRACT_PUBLIC_FUNCTION_VIRTUAL_NO_OVERRIDE_(/* has_result = */ 1)
         O, R, F, C, Args, \
         v, r, f, obj, args \
     ) { \
-        BOOST_PP_IIF(BOOST_CONTRACT_PUBLIC_FUNCTIONS, \
+        BOOST_PP_IIF(BOOST_CONTRACT_PUBLIC_FUNCTIONS_, \
             /* this assert not strictly necessary as compilation will fail */ \
             /* anyways, but helps limiting cryptic compiler's errors */ \
             BOOST_STATIC_ASSERT_MSG( \
@@ -230,7 +235,7 @@ BOOST_CONTRACT_PUBLIC_FUNCTION_VIRTUAL_NO_OVERRIDE_(/* has_result = */ 1)
     #define BOOST_CONTRACT_PUBLIC_FUNCTION_VIRTUAL_OVERRIDE_ARITY_( \
             z, arity, unused) \
         BOOST_CONTRACT_PUBLIC_FUNCTION_VIRTUAL_OVERRIDES_(z, arity, \
-                BOOST_PP_SUB(BOOST_CONTRACT_CONFIG_MAX_ARGS, arity), ~)
+                BOOST_PP_SUB(BOOST_CONTRACT_MAX_ARGS, arity), ~)
     
     #define BOOST_CONTRACT_PUBLIC_FUNCTION_VIRTUAL_OVERRIDES_(z, \
             arity, arity_compl, unused) \
@@ -241,7 +246,7 @@ BOOST_CONTRACT_PUBLIC_FUNCTION_VIRTUAL_NO_OVERRIDE_(/* has_result = */ 1)
 
     /* CODE */
 
-    BOOST_PP_REPEAT(BOOST_PP_INC(BOOST_CONTRACT_CONFIG_MAX_ARGS),
+    BOOST_PP_REPEAT(BOOST_PP_INC(BOOST_CONTRACT_MAX_ARGS),
             BOOST_CONTRACT_PUBLIC_FUNCTION_VIRTUAL_OVERRIDE_ARITY_, ~)
 #endif
 

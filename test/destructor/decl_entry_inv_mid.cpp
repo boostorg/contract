@@ -12,17 +12,17 @@
         
 std::string ok_a() {
     std::ostringstream ok; ok
-        #if BOOST_CONTRACT_ENTRY_INVARIANTS
+        #ifndef BOOST_CONTRACT_NO_ENTRY_INVARIANTS
             << "a::static_inv" << std::endl
         #endif
-        #if BOOST_CONTRACT_POSTCONDITIONS
+        #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
             << "a::dtor::old" << std::endl
         #endif
         << "a::dtor::body" << std::endl
-        #if BOOST_CONTRACT_EXIT_INVARIANTS
+        #ifndef BOOST_CONTRACT_NO_EXIT_INVARIANTS
             << "a::static_inv" << std::endl
         #endif
-        #if BOOST_CONTRACT_POSTCONDITIONS
+        #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
             << "a::dtor::post" << std::endl
         #endif
     ;
@@ -31,20 +31,20 @@ std::string ok_a() {
 
 std::string ok_b(bool failed = false) {
     std::ostringstream ok; ok
-        #if BOOST_CONTRACT_ENTRY_INVARIANTS
+        #ifndef BOOST_CONTRACT_NO_ENTRY_INVARIANTS
             << "b::static_inv" << std::endl
             << "b::inv" << std::endl // This can fail.
         #endif
     ;
     if(!failed) ok
-        #if BOOST_CONTRACT_POSTCONDITIONS
+        #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
             << "b::dtor::old" << std::endl
         #endif
         << "b::dtor::body" << std::endl
-        #if BOOST_CONTRACT_EXIT_INVARIANTS
+        #ifndef BOOST_CONTRACT_NO_EXIT_INVARIANTS
             << "b::static_inv" << std::endl
         #endif
-        #if BOOST_CONTRACT_POSTCONDITIONS
+        #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
             << "b::dtor::post" << std::endl
         #endif
     ;
@@ -53,18 +53,18 @@ std::string ok_b(bool failed = false) {
         
 std::string ok_c(bool threw = false) {
     std::ostringstream ok; ok
-        #if BOOST_CONTRACT_ENTRY_INVARIANTS
+        #ifndef BOOST_CONTRACT_NO_ENTRY_INVARIANTS
             << "c::static_inv" << std::endl
         #endif
-        #if BOOST_CONTRACT_POSTCONDITIONS
+        #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
             << "c::dtor::old" << std::endl
         #endif
         << "c::dtor::body" << std::endl
-        #if BOOST_CONTRACT_EXIT_INVARIANTS
+        #ifndef BOOST_CONTRACT_NO_EXIT_INVARIANTS
             << "c::static_inv" << std::endl
             // No b::inv here (not even when threw).
         #endif
-        #if BOOST_CONTRACT_POSTCONDITIONS
+        #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
             << (!threw ? "c::dtor::post\n" : "")
         #endif
     ;
@@ -110,6 +110,12 @@ int main() {
         ;
         BOOST_TEST(out.eq(ok.str()));
     } catch(...) { BOOST_TEST(false); }
+
+    #ifdef BOOST_CONTRACT_NO_ENTRY_INVARIANTS
+        #define BOOST_CONTRACT_TEST_entry_inv 0
+    #else
+        #define BOOST_CONTRACT_TEST_entry_inv 2
+    #endif
     
     a_entry_inv = true;
     b_entry_inv = false;
@@ -120,16 +126,16 @@ int main() {
             ok.str(""); ok
                 << ok_a()
                 // Test entry b::inv failed...
-                << ok_b(BOOST_CONTRACT_ENTRY_INVARIANTS)
+                << ok_b(BOOST_CONTRACT_TEST_entry_inv)
             ;
             out.str("");
         }
-        #if BOOST_CONTRACT_ENTRY_INVARIANTS
+        #ifndef BOOST_CONTRACT_NO_ENTRY_INVARIANTS
                 BOOST_TEST(false);
             } catch(err const&) {
         #endif
         ok // ...then exec other dtors and check inv on throw (as dtor threw).
-            << ok_c(BOOST_CONTRACT_ENTRY_INVARIANTS)
+            << ok_c(BOOST_CONTRACT_TEST_entry_inv)
         ;
         BOOST_TEST(out.eq(ok.str()));
     } catch(...) { BOOST_TEST(false); }
@@ -167,8 +173,8 @@ int main() {
         << ok_a() // Test no entry a::inv so no failure here.
         
         // Test entry b::inv failed (as all did).
-        << ok_b(BOOST_CONTRACT_ENTRY_INVARIANTS)
-        #if BOOST_CONTRACT_ENTRY_INVARIANTS
+        << ok_b(BOOST_CONTRACT_TEST_entry_inv)
+        #ifndef BOOST_CONTRACT_NO_ENTRY_INVARIANTS
             << "b::dtor::body" << std::endl
         #endif
         
@@ -176,6 +182,7 @@ int main() {
     ;
     BOOST_TEST(out.eq(ok.str()));
 
+    #undef BOOST_CONTRACT_TEST_entry_inv
     return boost::report_errors();
 }
 

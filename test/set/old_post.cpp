@@ -24,11 +24,11 @@ int main() {
     f();
     ok.str("");
     ok
-        #if BOOST_CONTRACT_POSTCONDITIONS
+        #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
             << "f::old" << std::endl
         #endif
         << "f::body" << std::endl
-        #if BOOST_CONTRACT_POSTCONDITIONS
+        #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
             << "f::post" << std::endl
         #endif
     ;

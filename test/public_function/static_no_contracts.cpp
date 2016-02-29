@@ -3,7 +3,7 @@
 
 #include "../aux_/oteststream.hpp"
 #include <boost/contract/core/config.hpp>
-#if BOOST_CONTRACT_PUBLIC_FUNCTIONS
+#ifndef BOOST_CONTRACT_NO_PUBLIC_FUNCTIONS
     #include <boost/contract/public_function.hpp>
     #include <boost/contract/guard.hpp>
     #include <boost/contract/old.hpp>
@@ -14,21 +14,21 @@
 boost::contract::test::aux::oteststream out;
 
 struct a {
-    #if BOOST_CONTRACT_INVARIANTS
+    #ifndef BOOST_CONTRACT_NO_INVARIANTS
         static void static_invariant() { out << "a::static_inv" << std::endl; }
         void invariant() const { out << "a::inv" << std::endl; }
     #endif
 
     static void f(int x) {
-        #if BOOST_CONTRACT_POSTCONDITIONS
+        #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
             boost::contract::old_ptr<int> old_x = BOOST_CONTRACT_OLDOF(x);
         #endif
-        #if BOOST_CONTRACT_PUBLIC_FUNCTIONS
+        #ifndef BOOST_CONTRACT_NO_PUBLIC_FUNCTIONS
             boost::contract::guard c = boost::contract::public_function<a>()
-                #if BOOST_CONTRACT_PRECONDITIONS
+                #ifndef BOOST_CONTRACT_NO_PRECONDITIONS
                     .precondition([] { out << "a::f::pre" << std::endl; })
                 #endif
-                #if BOOST_CONTRACT_POSTCONDITIONS
+                #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
                     .old([] { out << "a::f::old" << std::endl; })
                     .postcondition([] { out << "a::f::post" << std::endl; })
                 #endif
@@ -44,21 +44,21 @@ int main() {
     out.str("");
     a::f(123);
     ok.str(""); ok
-        #if BOOST_CONTRACT_ENTRY_INVARIANTS
+        #ifndef BOOST_CONTRACT_NO_ENTRY_INVARIANTS
             << "a::static_inv" << std::endl
         #endif
-        #if BOOST_CONTRACT_PRECONDITIONS
+        #ifndef BOOST_CONTRACT_NO_PRECONDITIONS
             << "a::f::pre" << std::endl
         #endif
-        #if BOOST_CONTRACT_POSTCONDITIONS
+        #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
             << "a::f::old" << std::endl
         #endif
         << "a::f::body" << std::endl
         // Test no post (but still static inv) because body threw.
-        #if BOOST_CONTRACT_EXIT_INVARIANTS
+        #ifndef BOOST_CONTRACT_NO_EXIT_INVARIANTS
             << "a::static_inv" << std::endl
         #endif
-        #if BOOST_CONTRACT_POSTCONDITIONS
+        #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
             << "a::f::post" << std::endl
         #endif
     ;

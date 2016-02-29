@@ -10,7 +10,8 @@
 /** @file */
 
 #include <boost/contract/aux_/all_core_headers.hpp>
-#if BOOST_CONTRACT_FUNCTIONS || BOOST_CONTRACT_INVARIANTS
+#if !defined(BOOST_CONTRACT_NO_FUNCTIONS) || \
+        !defined(BOOST_CONTRACT_NO_INVARIANTS)
     #include <boost/contract/aux_/operation/function.hpp>
 #endif
 
@@ -18,7 +19,8 @@ namespace boost { namespace contract {
 
 set_precondition_old_postcondition<> function() {
     // Must #if also on ..._INVARIANTS here because set_... is generic.
-    #if BOOST_CONTRACT_FUNCTIONS || BOOST_CONTRACT_INVARIANTS
+    #if !defined(BOOST_CONTRACT_NO_FUNCTIONS) || \
+            !defined(BOOST_CONTRACT_NO_INVARIANTS)
         return set_precondition_old_postcondition<>(
                 new boost::contract::aux::function());
     #else

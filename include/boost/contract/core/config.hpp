@@ -16,32 +16,33 @@
 
 // TODO: Document that when contracts are programmed in .cpp and all these lib headers are #include only from within .cpp, then a given lib can be compiled for example without inv/post, only with pre. The code that will link to that lib will not be able to enable inv/post, or disable the pre. However, if contracts are programmed in .hpp and this lib headers are #included in .hpp that are shipped to users with a given lib, users of that lib can turn on/off all contracts for the shipped lib as well.
 
-// TODO: Document in rationale following config macro do not have CONFIG infix to be consistent with convention from other Boost libs (e.g., Boost.Chrono). also following all require re-building this library (THREAD_DISABLE included), while other CONFIG only require re-building user's code.
 // BOOST_CONTRACT_DYN_LINK
 // BOOST_CONTRACT_HEADER_ONLY
 
-// TODO: I got this name from Boost.Chrono... but I think other libs use BOOST_SP_DISABLE_THREADS and BOOST_ASIO_DISABLE_THREADS, also there might be an overall BOOST_DISABLE_THREADS... double check the best name for this.
-// BOOST_CONTRACT_THREAD_DISABLED
+// Rationale: Named after BOOST_DISABLE_THREADS, BOOST_ASIO_DISABLE_THREADS, etc.
+// BOOST_CONTRACT_DISABLE_THREADS
 
-#ifndef BOOST_CONTRACT_CONFIG_MAX_ARGS
-#   define BOOST_CONTRACT_CONFIG_MAX_ARGS 10
+// Rationale: Named after BOOST_FUNCTION_MAX_ARGS, etc.
+#ifndef BOOST_CONTRACT_MAX_ARGS
+#   define BOOST_CONTRACT_MAX_ARGS 10
 #endif
 
-#ifndef BOOST_CONTRACT_CONFIG_BASE_TYPES
-    #define BOOST_CONTRACT_CONFIG_BASE_TYPES base_types
+// Rationale: This cannot be called BASE_TYPES because BASE_TYPES(...) is already used as the macro to extract the public bases... so BASE_TYPEDEF seemed a reasonable naming alternative, but don't change base_types default #define because `typedef BASE_TYPES(...) base_types` is usually the best syntax in user's code.
+#ifndef BOOST_CONTRACT_BASE_TYPEDEF
+    #define BOOST_CONTRACT_BASE_TYPEDEF base_types
 #endif
 
-#ifndef BOOST_CONTRACT_CONFIG_INVARIANT
-    #define BOOST_CONTRACT_CONFIG_INVARIANT invariant
+#ifndef BOOST_CONTRACT_INVARIANT
+    #define BOOST_CONTRACT_INVARIANT invariant
 #endif
 
 // C++ does not allow to overload member functions based on static classifier,
 // so a name different from the non-static class invariant member must be used.
-#ifndef BOOST_CONTRACT_CONFIG_STATIC_INVARIANT
-    #define BOOST_CONTRACT_CONFIG_STATIC_INVARIANT static_invariant
+#ifndef BOOST_CONTRACT_STATIC_INVARIANT
+    #define BOOST_CONTRACT_STATIC_INVARIANT static_invariant
 #endif
 
-// BOOST_CONTRACT_CONFIG_PERMISSIVE (#undef by default).
+// BOOST_CONTRACT_PERMISSIVE
 
 // Type of exception to throw is `guard c = ...` is missing. This is a
 // programming error so by default this library calls abort. If this macro is
@@ -57,8 +58,9 @@
 // However, this macro can be defined to throw an exception, call a function,
 // a no-op, or any other user code in case users truly need to handle missing
 // contract guard logic errors without terminating the program, for example:
-//  #define BOOST_CONTRACT_CONFIG_ON_MISSING_GUARD { throw my_logic_error(); }
-// BOOST_CONTRACT_CONFIG_ON_MISSING_GUARD
+//  #define BOOST_CONTRACT_ON_MISSING_GUARD { throw my_logic_error(); }
+// (It can even be defined to expand to nothing.)
+// BOOST_CONTRACT_ON_MISSING_GUARD
 
 // Contract checking is not disable while checking preconditions.
 // This is what N1962 does by default. N1962 authors indicated it can be shown
@@ -67,101 +69,65 @@
 // However, not disabling contract checking while checking preconditions can
 // lead to infinite recursive call in user code so by default this macro is
 // not defined.
-// BOOST_CONTRACT_CONFIG_PRECONDITIONS_DISABLE_NOTHING
+// BOOST_CONTRACT_PRECONDITIONS_DISABLE_NOTHING
 
-// TODO: Remove CONFIG from macros that do not use the #ifndef ... #define pattern (even if these macro change the lib (all macros do one way or another) they are not config macros).
+// BOOST_CONTRACT_NO_PRECONDITIONS
+// BOOST_CONTRACT_NO_POSTCONDITIONS
 
-// BOOST_CONTRACT_CONFIG_NO_PRECONDITIONS
-// BOOST_CONTRACT_CONFIG_NO_POSTCONDITIONS
-// BOOST_CONTRACT_CONFIG_NO_ENTRY_INVARIANTS
-// BOOST_CONTRACT_CONFIG_NO_EXIT_INVARIANTS
-// BOOST_CONTRACT_CONFIG_NO_INVARIANTS
+#if !defined(BOOST_CONTRACT_NO_ENTRY_INVARIANTS) && \
+        defined(BOOST_CONTRACT_NO_INVARIANTS)
+    #define BOOST_CONTRACT_NO_ENTRY_INVARIANTS)
+#endif
+
+#if !defined(BOOST_CONTRACT_NO_EXIT_INVARIANTS) && \
+        defined(BOOST_CONTRACT_NO_INVARIANTS)
+    #define BOOST_CONTRACT_NO_EXIT_INVARIANTS)
+#endif
+
+#if !defined(BOOST_CONTRACT_NO_INVARIANTS) && \
+        defined(BOOST_CONTRACT_NO_ENTRY_INVARIANTS) && \
+        defined(BOOST_CONTRACT_NO_EXIT_INVARIANTS)
+    #define BOOST_CONTRACT_NO_INVARIANTS
+#endif
 
 // Following are NOT configuration macros.
 
-#if defined(BOOST_CONTRACT_PRECONDITIONS)
-    #error "define/undef ..._CONFIG_NO_PRECONDITIONS instead"
-#elif defined(BOOST_CONTRACT_CONFIG_NO_PRECONDITIONS)
-    #define BOOST_CONTRACT_PRECONDITIONS 0
-#else
-    #define BOOST_CONTRACT_PRECONDITIONS 1
+// Ctor pre checked separately and outside guard so not part of this #define.
+#ifdef BOOST_CONTRACT_NO_CONSTRUCTORS
+    #error "define NO_ENTRY_INVARIANTS, NO_EXIT_INVARIANTS, and NO_POSTCONDITIONS instead"
+#elif defined(BOOST_CONTRACT_NO_POSTCONDITIONS) && \
+        defined(BOOST_CONTRACT_NO_INVARIANTS)
+    #define BOOST_CONTRACT_NO_CONSTRUCTORS
 #endif
 
-#if defined(BOOST_CONTRACT_POSTCONDITIONS)
-    #error "define/undef ..._CONFIG_NO_POSTCONDITIONS instead"
-#elif defined(BOOST_CONTRACT_CONFIG_NO_POSTCONDITIONS)
-    #define BOOST_CONTRACT_POSTCONDITIONS 0
-#else
-    #define BOOST_CONTRACT_POSTCONDITIONS 1
+#ifdef BOOST_CONTRACT_NO_DESTRUCTORS
+    #error "define NO_ENTRY_INVARIANTS, NO_EXIT_INVARIANTS, and NO_POSTCONDITIONS instead"
+#elif defined(BOOST_CONTRACT_NO_POSTCONDITIONS) && \
+        defined(BOOST_CONTRACT_NO_INVARIANTS)
+    #define BOOST_CONTRACT_NO_DESTRUCTORS
 #endif
 
-#if defined(BOOST_CONTRACT_ENTRY_INVARIANTS)
-    #error "define/undef ..._CONFIG_NO[_ENTRY]_INVARIANTS instead"
-#elif defined(BOOST_CONTRACT_CONFIG_NO_ENTRY_INVARIANTS) || \
-        defined (BOOST_CONTRACT_CONFIG_NO_INVARIANTS)
-    #define BOOST_CONTRACT_ENTRY_INVARIANTS 0
-#else
-    #define BOOST_CONTRACT_ENTRY_INVARIANTS 1
+#ifdef BOOST_CONTRACT_NO_PUBLIC_FUNCTIONS
+    #error "define NO_ENTRY_INVARIANTS, NO_PRECONDITIONS, NO_EXIT_INVARIANTS, and NO_POSTCONDITIONS instead"
+#elif defined(BOOST_CONTRACT_NO_PRECONDITIONS) && \
+        defined(BOOST_CONTRACT_NO_POSTCONDITIONS) && \
+        defined(BOOST_CONTRACT_NO_INVARIANTS)
+    #define BOOST_CONTRACT_NO_PUBLIC_FUNCTIONS
+#endif
+    
+#ifdef BOOST_CONTRACT_NO_CLASSES
+    #error "define NO_ENTRY_INVARIANTS, NO_PRECONDITIONS, NO_EXIT_INVARIANTS, and NO_POSTCONDITIONS instead"
+#elif defined(BOOST_CONTRACT_NO_CONSTRUCTORS) && \
+        defined(BOOST_CONTRACT_NO_DESTRUCTORS) && \
+        defined(BOOST_CONTRACT_NO_PUBLIC_FUNCTIONS)
+    #define BOOST_CONTRACT_NO_CONSTRUCTORS
 #endif
 
-#if defined(BOOST_CONTRACT_EXIT_INVARIANTS)
-    #error "define/undef ..._CONFIG_NO[_EXIT]_INVARIANTS instead"
-#elif defined(BOOST_CONTRACT_CONFIG_NO_EXIT_INVARIANTS) || \
-        defined (BOOST_CONTRACT_CONFIG_NO_INVARIANTS)
-    #define BOOST_CONTRACT_EXIT_INVARIANTS 0
-#else
-    #define BOOST_CONTRACT_EXIT_INVARIANTS 1
-#endif
-
-#if defined(BOOST_CONTRACT_INVARIANTS)
-    #error "define/undef ..._CONFIG_NO[_ENTRY|_EXIT]_INVARIANTS instead"
-#elif BOOST_CONTRACT_NO_ENTRY_INVARIANTS && BOOST_CONTRACT_NO_EXIT_INVARIANTS
-    #define BOOST_CONTRACT_INVARIANTS 0
-#else
-    #define BOOST_CONTRACT_INVARIANTS 1
-#endif
-
-#if defined(BOOST_CONTRACT_FUNCTIONS)
-    #error "define/undef ..._CONFIG_NO_... instead"
-#elif !BOOST_CONTRACT_PRECONDITIONS && !BOOST_CONTRACT_POSTCONDITIONS
-    #define BOOST_CONTRACT_FUNCTIONS 0
-#else
-    #define BOOST_CONTRACT_FUNCTIONS 1
-#endif
-
-#if defined(BOOST_CONTRACT_CONSTRUCTORS)
-    #error "define/undef ..._CONFIG_NO_... instead"
-// Ctor pre checked separately and outside guard so not part of this if cond.
-#elif !BOOST_CONTRACT_POSTCONDITIONS && !BOOST_CONTRACT_INVARIANTS
-    #define BOOST_CONTRACT_CONSTRUCTORS 0
-#else
-    #define BOOST_CONTRACT_CONSTRUCTORS 1
-#endif
-
-#if defined(BOOST_CONTRACT_DESTRUCTORS)
-    #error "define/undef ..._CONFIG_NO_... instead"
-#elif !BOOST_CONTRACT_POSTCONDITIONS && !BOOST_CONTRACT_INVARIANTS
-    #define BOOST_CONTRACT_DESTRUCTORS 0
-#else
-    #define BOOST_CONTRACT_DESTRUCTORS 1
-#endif
-
-#if defined(BOOST_CONTRACT_PUBLIC_FUNCTIONS)
-    #error "define/undef ..._CONFIG_NO_... instead"
-#elif !BOOST_CONTRACT_PRECONDITONS && !BOOST_CONTRACT_POSTCONDITIONS && \
-        !BOOST_CONTRACT_INVARIANTS
-    #define BOOST_CONTRACT_PUBLIC_FUNCTIONS 0
-#else
-    #define BOOST_CONTRACT_PUBLIC_FUNCTIONS 1
-#endif
-
-#if defined(BOOST_CONTRACT_CLASSES)
-    #error "define/undef ..._CONFIG_NO_... instead"
-#elif !BOOST_CONTRACT_CONSTRUCTORS && !BOOST_CONTRACT_DESTRUCTORS && \
-        !BOOST_CONTRACT_PUBLIC_FUNCTIONS
-    #define BOOST_CONTRACT_CLASSES 0
-#else
-    #define BOOST_CONTRACT_CLASSES 1
+#ifdef BOOST_CONTRACT_NO_FUNCTIONS
+    #error "define NO_PRECONDITIONS and NO_POSTCONDITIONS instead"
+#elif defined(BOOST_CONTRACT_NO_PRECONDITIONS) && \
+        defined(BOOST_CONTRACT_NO_POSTCONDITIONS)
+    #define BOOST_CONTRACT_NO_FUNCTIONS
 #endif
 
 #endif // #include guard

@@ -1,17 +1,15 @@
 
 // Test that OLDOF macro allows to use C++11 auto declarations.
 
-#include <boost/contract/old.hpp>
-#include <boost/type_traits.hpp>
-#include <boost/static_assert.hpp>
 #include <boost/config.hpp>
-#include <iostream>
+#ifndef BOOST_NO_CXX11_AUTO_DECLARATIONS
+    #include <boost/contract/old.hpp>
+    #include <boost/type_traits.hpp>
+    #include <boost/static_assert.hpp>
+#endif
 
 int main() {
-    #ifdef BOOST_NO_CXX11_AUTO_DECLARATIONS
-        std::cout << "No C++11 auto declarations (nothing to test)" <<
-                std::endl;
-    #else
+    #ifndef BOOST_NO_CXX11_AUTO_DECLARATIONS
         int x = 0;
         auto old_x = BOOST_CONTRACT_OLDOF(x);
         BOOST_STATIC_ASSERT(boost::is_same<decltype(old_x),
@@ -22,7 +20,7 @@ int main() {
         auto old_y = BOOST_CONTRACT_OLDOF(v, y);
         BOOST_STATIC_ASSERT(boost::is_same<decltype(old_y),
                 boost::contract::old_ptr<char> >::value);
-    #endif
+    #endif // Else, nothing to test.
     return 0;
 }
 

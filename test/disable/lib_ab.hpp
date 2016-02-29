@@ -6,28 +6,27 @@
 #include <boost/contract/core/exception.hpp>
 #include <boost/contract/core/config.hpp>
 #include <boost/detail/lightweight_test.hpp>
-#include <iostream>
 #include <sstream>
 #include <string>
 
 std::string ok_f() {
     std::ostringstream ok; ok
-        #if BOOST_CONTRACT_ENTRY_INVARIANTS
+        #ifndef BOOST_CONTRACT_NO_ENTRY_INVARIANTS
             << "a::static_inv" << std::endl
             << "a::inv" << std::endl
         #endif
-        #if BOOST_CONTRACT_PRECONDITIONS
+        #ifndef BOOST_CONTRACT_NO_PRECONDITIONS
             << "a::f::pre" << std::endl
         #endif
-        #if BOOST_CONTRACT_POSTCONDITIONS
+        #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
             << "a::f::old" << std::endl
         #endif
         << "a::f::body" << std::endl
-        #if BOOST_CONTRACT_EXIT_INVARIANTS
+        #ifndef BOOST_CONTRACT_NO_EXIT_INVARIANTS
             << "a::static_inv" << std::endl
             << "a::inv" << std::endl
         #endif
-        #if BOOST_CONTRACT_POSTCONDITIONS
+        #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
             << "a::f::post" << std::endl
         #endif
     ;
@@ -41,17 +40,17 @@ int main() {
     out("");
     bb.g();
     ok.str(""); ok
-        #if BOOST_CONTRACT_ENTRY_INVARIANTS
+        #ifndef BOOST_CONTRACT_NO_ENTRY_INVARIANTS
             << "b::static_inv" << std::endl
             << "b::inv" << std::endl
         #endif
-        #if BOOST_CONTRACT_PRECONDITIONS
+        #ifndef BOOST_CONTRACT_NO_PRECONDITIONS
             << "b::g::pre" << std::endl
             #ifdef BOOST_CONTRACT_HEADER_ONLY
                 // Test preconditions have disabled no contract (incorrect, but
                 // only possible behaviour if shared linking not used ad doc).
                 << ok_f()
-            #elif defined(BOOST_CONTRACT_CONFIG_PRECONDITIONS_DISABLE_NOTHING)
+            #elif defined(BOOST_CONTRACT_PRECONDITIONS_DISABLE_NOTHING)
                 // Test preconditions have disabled no contract.
                 << ok_f()
             #else
@@ -59,15 +58,15 @@ int main() {
                 << "a::f::body" << std::endl
             #endif
         #endif
-        #if BOOST_CONTRACT_POSTCONDITIONS
+        #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
             << "b::g::old" << std::endl
         #endif
         << "b::g::body" << std::endl
-        #if BOOST_CONTRACT_EXIT_INVARIANTS    
+        #ifndef BOOST_CONTRACT_NO_EXIT_INVARIANTS    
             << "b::static_inv" << std::endl
             << "b::inv" << std::endl
         #endif 
-        #if BOOST_CONTRACT_POSTCONDITIONS
+        #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
             << "b::g::post" << std::endl
             #ifdef BOOST_CONTRACT_HEADER_ONLY
                 // Test preconditions have disabled no contract (incorrect, but
@@ -83,8 +82,9 @@ int main() {
 
     // Test old values not copied for disabled contracts.
     unsigned const cnt =
-        #if defined(BOOST_CONTRACT_CONFIG_PRECONDITIONS_DISABLE_NOTHING) && \
-                BOOST_CONTRACT_PRECONDITIONS && BOOST_CONTRACT_POSTCONDITIONS
+        #if defined(BOOST_CONTRACT_PRECONDITIONS_DISABLE_NOTHING) && \
+                !defined(BOOST_CONTRACT_NO_PRECONDITIONS) && \
+                !defined(BOOST_CONTRACT_NO_POSTCONDITIONS)
             1
         #else
             0
@@ -152,7 +152,6 @@ int main() {
     boost::contract::exit_invariant_failure(boost::contract::from());
     BOOST_TEST(boost::contract::test::aux::oteststream::eq(out(),
             "a::failure"));
-
 
     // Test setting failure handlers (from a lib using another lib).
 

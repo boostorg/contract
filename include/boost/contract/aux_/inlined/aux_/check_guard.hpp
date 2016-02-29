@@ -8,35 +8,35 @@
 // See: http://www.boost.org/doc/libs/release/libs/contract/doc/html/index.html
 
 #include <boost/contract/aux_/check_guard.hpp>
-#ifndef BOOST_CONTRACT_THREAD_DISABLED
+#ifndef BOOST_CONTRACT_DISABLE_THREADS
     #include <boost/thread/lock_guard.hpp>
 #endif
 
 namespace boost { namespace contract { namespace aux {
 
 check_guard::check_guard() {
-    #ifndef BOOST_CONTRACT_THREAD_DISABLED
+    #ifndef BOOST_CONTRACT_DISABLE_THREADS
         boost::lock_guard<boost::mutex> lock(mutex_);
     #endif
     checking_ = true;
 }
 
 check_guard::~check_guard() {
-    #ifndef BOOST_CONTRACT_THREAD_DISABLED
+    #ifndef BOOST_CONTRACT_DISABLE_THREADS
         boost::lock_guard<boost::mutex> lock(mutex_);
     #endif
     checking_ = false;
 }
 
 bool check_guard::checking() {
-    #ifndef BOOST_CONTRACT_THREAD_DISABLED
+    #ifndef BOOST_CONTRACT_DISABLE_THREADS
         boost::lock_guard<boost::mutex> lock(mutex_);
     #endif
     return checking_;
 }
 
 bool check_guard::checking_ = false;
-#ifndef BOOST_CONTRACT_THREAD_DISABLED
+#ifndef BOOST_CONTRACT_DISABLE_THREADS
     boost::mutex check_guard::mutex_;
 #endif
 

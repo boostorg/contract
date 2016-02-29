@@ -23,14 +23,14 @@ int main() {
     out("");
     f();
     ok.str(""); ok // Test normal (no lib) case.
-        #if BOOST_CONTRACT_PRECONDITIONS
+        #ifndef BOOST_CONTRACT_NO_PRECONDITIONS
             << "f::pre" << std::endl
         #endif
-        #if BOOST_CONTRACT_POSTCONDITIONS
+        #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
             << "f::old" << std::endl
         #endif
         << "f::body" << std::endl
-        #if BOOST_CONTRACT_POSTCONDITIONS
+        #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
             << "f::post" << std::endl
         #endif
     ;
@@ -38,8 +38,8 @@ int main() {
 
     out("");
     x();
-    ok.str(""); ok // Test contracts in .cpp so no post (NO_POST in Jamfile).
-        #if BOOST_CONTRACT_PRECONDITIONS
+    ok.str(""); ok // Test contracts in .cpp so no post (NO_POST in build file).
+        #ifndef BOOST_CONTRACT_NO_PRECONDITIONS
             << "x::pre" << std::endl
         #endif
         << "x::body" << std::endl
@@ -48,15 +48,15 @@ int main() {
     
     out("");
     y();
-    ok.str(""); ok // Test contracts in .hpp so maybe post (NO_POST in Jamfile).
-        #if BOOST_CONTRACT_PRECONDITIONS
+    ok.str(""); ok // Test contracts in .hpp so post (NO_POST in build file).
+        #ifndef BOOST_CONTRACT_NO_PRECONDITIONS
             << "y::pre" << std::endl
         #endif
-        #if BOOST_CONTRACT_POSTCONDITIONS
+        #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
             << "y::old" << std::endl
         #endif
         << "y::body" << std::endl
-        #if BOOST_CONTRACT_POSTCONDITIONS
+        #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
             << "y::post" << std::endl
         #endif
     ;

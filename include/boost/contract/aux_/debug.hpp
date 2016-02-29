@@ -8,7 +8,7 @@
 // See: http://www.boost.org/doc/libs/release/libs/contract/doc/html/index.html
 
 // Usually, never #defined (so "debug" assertions always in code).
-#ifdef BOOST_CONTRACT_AUX_CONFIG_NDEBUG
+#ifdef BOOST_CONTRACT_AUX_NDEBUG
     #define BOOST_CONTRACT_AUX_DEBUG(cond) /* nothing */
 #else
     #include <cassert>
