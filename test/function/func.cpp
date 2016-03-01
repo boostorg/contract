@@ -1,8 +1,8 @@
 
 // Test free function contracts.
 
-#include "../aux_/oteststream.hpp"
-#include "../aux_/counter.hpp"
+#include "../detail/oteststream.hpp"
+#include "../detail/counter.hpp"
 #include <boost/contract/function.hpp>
 #include <boost/contract/old.hpp>
 #include <boost/contract/assert.hpp>
@@ -11,10 +11,10 @@
 #include <boost/detail/lightweight_test.hpp>
 #include <sstream>
 
-boost::contract::test::aux::oteststream out;
+boost::contract::test::detail::oteststream out;
 
-struct x_tag; typedef boost::contract::test::aux::counter<x_tag, int> x_type;
-struct y_tag; typedef boost::contract::test::aux::counter<y_tag, int> y_type;
+struct x_tag; typedef boost::contract::test::detail::counter<x_tag, int> x_type;
+struct y_tag; typedef boost::contract::test::detail::counter<y_tag, int> y_type;
 
 bool swap(x_type& x, y_type& y) {
     bool result;
@@ -74,7 +74,7 @@ int main() {
         BOOST_TEST_EQ(y.value, 123);
     }
 
-    #ifdef BOOST_CONTRACT_POSTCONDITIONS
+    #ifdef BOOST_CONTRACT_NO_POSTCONDITIONS
         #define BOOST_CONTRACT_TEST_post 0
     #else
         #define BOOST_CONTRACT_TEST_post 1

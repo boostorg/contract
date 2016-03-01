@@ -8,7 +8,7 @@
 // See: http://www.boost.org/doc/libs/release/libs/contract/doc/html/index.html
 
 // Do not include all_core_headers here (call_if is essentially standalone).
-#include <boost/contract/aux_/none.hpp>
+#include <boost/contract/detail/none.hpp>
 #include <boost/make_shared.hpp>
 #include <boost/shared_ptr.hpp>
 #include <boost/config.hpp>
@@ -30,7 +30,7 @@
 
 namespace boost { namespace contract {
 
-template<bool Cond, typename Then, typename R = boost::contract::aux::none>
+template<bool Cond, typename Then, typename R = boost::contract::detail::none>
 class call_if_statement {}; // Empty so cannot be used (but copyable).
 
 // Dispatch true condition (then) between non-void and void calls.
@@ -38,7 +38,7 @@ class call_if_statement {}; // Empty so cannot be used (but copyable).
 // checked to be true (as Then() is required to be valid only in that case) so
 // this extra level of dispatching is necessary to avoid compiler errors.
 template<typename Then>
-class call_if_statement<true, Then, boost::contract::aux::none> :
+class call_if_statement<true, Then, boost::contract::detail::none> :
     public call_if_statement<true, Then, // Copyable (as its base).
             BOOST_CONTRACT_CALL_IF_ENABLE_IF_UNARY_RESULT_OF_(Then)>
 {
@@ -96,7 +96,7 @@ public:
 
 // False condition (else) for both non-void and void calls.
 template<typename Then> // Copyable (no data).
-class call_if_statement<false, Then, boost::contract::aux::none> {
+class call_if_statement<false, Then, boost::contract::detail::none> {
 public:
     explicit call_if_statement(Then const&) {}
 

@@ -9,10 +9,10 @@
 
 /** @file */
 
-#include <boost/contract/aux_/all_core_headers.hpp>
+#include <boost/contract/detail/all_core_headers.hpp>
 #if !defined(BOOST_CONTRACT_NO_DESTRUCTORS) || \
         !defined(BOOST_CONTRACT_NO_PRECONDITIONS)
-    #include <boost/contract/aux_/operation/destructor.hpp>
+    #include <boost/contract/detail/operation/destructor.hpp>
 #endif
 
 namespace boost { namespace contract {
@@ -23,7 +23,7 @@ set_old_postcondition<> destructor(C* obj) {
     #if !defined(BOOST_CONTRACT_NO_DESTRUCTORS) || \
             !defined(BOOST_CONTRACT_NO_PRECONDITIONS)
         return set_old_postcondition<>(
-                new boost::contract::aux::destructor<C>(obj));
+                new boost::contract::detail::destructor<C>(obj));
     #else
         return set_old_postcondition<>();
     #endif

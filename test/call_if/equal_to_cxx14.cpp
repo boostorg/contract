@@ -1,14 +1,14 @@
 
 // Test call_if equality check with C++14 generic lambdas.
 
-#include "../aux_/oteststream.hpp"
+#include "../detail/oteststream.hpp"
 #include <boost/contract/call_if.hpp>
 #include <boost/type_traits/has_equal_to.hpp>
 #include <boost/detail/lightweight_test.hpp>
 #include <functional> // std::bind for generic lambdas.
 #include <sstream>
 
-boost::contract::test::aux::oteststream out;
+boost::contract::test::detail::oteststream out;
 
 struct x {}; // Does not have operator==.
 

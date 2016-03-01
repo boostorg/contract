@@ -11,14 +11,14 @@
 
 // TODO: Document that not using variadic templates (i.e., using pp meta-programming impl instead) does not increase compilation times (I measured this with the max_arg test program).
 
-#include <boost/contract/aux_/all_core_headers.hpp>
-#include <boost/contract/aux_/decl.hpp>
-#include <boost/contract/aux_/tvariadic.hpp>
+#include <boost/contract/detail/all_core_headers.hpp>
+#include <boost/contract/detail/decl.hpp>
+#include <boost/contract/detail/tvariadic.hpp>
 #ifndef BOOST_CONTRACT_NO_PUBLIC_FUNCTIONS
-    #include <boost/contract/aux_/operation/public_static_function.hpp>
-    #include <boost/contract/aux_/operation/public_function.hpp>
-    #include <boost/contract/aux_/type_traits/optional.hpp>
-    #include <boost/contract/aux_/none.hpp>
+    #include <boost/contract/detail/operation/public_static_function.hpp>
+    #include <boost/contract/detail/operation/public_function.hpp>
+    #include <boost/contract/detail/type_traits/optional.hpp>
+    #include <boost/contract/detail/none.hpp>
     #include <boost/function_types/result_type.hpp>
     #include <boost/function_types/function_arity.hpp>
     #include <boost/optional.hpp>
@@ -27,7 +27,7 @@
     #include <boost/static_assert.hpp>
     #include <boost/preprocessor/tuple/eat.hpp>
 #endif
-#if !BOOST_CONTRACT_AUX_TVARIADIC
+#if !BOOST_CONTRACT_DETAIL_TVARIADIC
     #include <boost/preprocessor/repetition/repeat.hpp>
     #include <boost/preprocessor/arithmetic/sub.hpp>
     #include <boost/preprocessor/arithmetic/inc.hpp>
@@ -56,7 +56,7 @@ template<class C>
 set_precondition_old_postcondition<> public_function() {
     #ifndef BOOST_CONTRACT_NO_PUBLIC_FUNCTIONS
         return set_precondition_old_postcondition<>(
-            new boost::contract::aux::public_static_function<C>());
+            new boost::contract::detail::public_static_function<C>());
     #else
         return set_precondition_old_postcondition<>();
     #endif
@@ -67,24 +67,26 @@ template<class C>
 set_precondition_old_postcondition<> public_function(C* obj) {
     #ifndef BOOST_CONTRACT_NO_PUBLIC_FUNCTIONS
         return set_precondition_old_postcondition<>(
-            new boost::contract::aux::public_function<
-                boost::contract::aux::none,
-                boost::contract::aux::none,
-                boost::contract::aux::none,
+            new boost::contract::detail::public_function<
+                boost::contract::detail::none,
+                boost::contract::detail::none,
+                boost::contract::detail::none,
                 C
-                BOOST_CONTRACT_AUX_NO_TVARIADIC_COMMA(BOOST_CONTRACT_MAX_ARGS)
-                BOOST_CONTRACT_AUX_NO_TVARIADIC_ENUM_Z(1,
+                BOOST_CONTRACT_DETAIL_NO_TVARIADIC_COMMA(
+                        BOOST_CONTRACT_MAX_ARGS)
+                BOOST_CONTRACT_DETAIL_NO_TVARIADIC_ENUM_Z(1,
                     BOOST_CONTRACT_MAX_ARGS,
-                    boost::contract::aux::none
+                    boost::contract::detail::none
                 )
             >(
                 static_cast<boost::contract::virtual_*>(0),
                 obj,
-                boost::contract::aux::none::value()
-                BOOST_CONTRACT_AUX_NO_TVARIADIC_COMMA(BOOST_CONTRACT_MAX_ARGS)
-                BOOST_CONTRACT_AUX_NO_TVARIADIC_ENUM_Z(1,
+                boost::contract::detail::none::value()
+                BOOST_CONTRACT_DETAIL_NO_TVARIADIC_COMMA(
+                        BOOST_CONTRACT_MAX_ARGS)
+                BOOST_CONTRACT_DETAIL_NO_TVARIADIC_ENUM_Z(1,
                     BOOST_CONTRACT_MAX_ARGS,
-                    boost::contract::aux::none::value()
+                    boost::contract::detail::none::value()
                 )
             )
         );
@@ -119,16 +121,20 @@ set_precondition_old_postcondition<> public_function(C* obj) {
             /* no F... so cannot enforce contracted F ret R (up to user) */ \
             return (set_precondition_old_postcondition< \
                     BOOST_PP_EXPR_IIF(has_result, R)>( \
-                new boost::contract::aux::public_function< \
-                    boost::contract::aux::none, \
-                    BOOST_PP_IIF(has_result, R, boost::contract::aux::none), \
-                    boost::contract::aux::none, \
+                new boost::contract::detail::public_function< \
+                    boost::contract::detail::none, \
+                    BOOST_PP_IIF(has_result, \
+                        R \
+                    , \
+                        boost::contract::detail::none \
+                    ), \
+                    boost::contract::detail::none, \
                     C \
-                    BOOST_CONTRACT_AUX_NO_TVARIADIC_COMMA( \
+                    BOOST_CONTRACT_DETAIL_NO_TVARIADIC_COMMA( \
                             BOOST_CONTRACT_MAX_ARGS) \
-                    BOOST_CONTRACT_AUX_NO_TVARIADIC_ENUM_Z(1, \
+                    BOOST_CONTRACT_DETAIL_NO_TVARIADIC_ENUM_Z(1, \
                         BOOST_CONTRACT_MAX_ARGS, \
-                        boost::contract::aux::none \
+                        boost::contract::detail::none \
                     ) \
                 >( \
                     v, \
@@ -136,13 +142,13 @@ set_precondition_old_postcondition<> public_function(C* obj) {
                     BOOST_PP_IIF(has_result, \
                         r \
                     , \
-                        boost::contract::aux::none::value() \
+                        boost::contract::detail::none::value() \
                     ) \
-                    BOOST_CONTRACT_AUX_NO_TVARIADIC_COMMA( \
+                    BOOST_CONTRACT_DETAIL_NO_TVARIADIC_COMMA( \
                             BOOST_CONTRACT_MAX_ARGS) \
-                    BOOST_CONTRACT_AUX_NO_TVARIADIC_ENUM_Z(1, \
+                    BOOST_CONTRACT_DETAIL_NO_TVARIADIC_ENUM_Z(1, \
                         BOOST_CONTRACT_MAX_ARGS, \
-                        boost::contract::aux::none::value() \
+                        boost::contract::detail::none::value() \
                     ) \
                 ) \
             )); \
@@ -158,7 +164,7 @@ BOOST_CONTRACT_PUBLIC_FUNCTION_VIRTUAL_NO_OVERRIDE_(/* has_result = */ 1)
 // For non-static, virtual, and overriding public functions (PRIVATE macro).
 #define BOOST_CONTRACT_PUBLIC_FUNCTION_VIRTUAL_OVERRIDE_Z_( \
         z, arity, arity_compl, has_result) \
-    BOOST_CONTRACT_AUX_DECL_OVERRIDING_PUBLIC_FUNCTION_Z(z, \
+    BOOST_CONTRACT_DETAIL_DECL_OVERRIDING_PUBLIC_FUNCTION_Z(z, \
         arity, /* is_friend = */ 0, has_result, \
         O, R, F, C, Args, \
         v, r, f, obj, args \
@@ -169,7 +175,7 @@ BOOST_CONTRACT_PUBLIC_FUNCTION_VIRTUAL_NO_OVERRIDE_(/* has_result = */ 1)
             BOOST_STATIC_ASSERT_MSG( \
                 /* -2 for both `this` and `virtual_*` extra parameters */ \
                 boost::function_types::function_arity<F>::value - 2 == \
-                        BOOST_CONTRACT_AUX_TVARIADIC_SIZEOF(arity, Args), \
+                        BOOST_CONTRACT_DETAIL_TVARIADIC_SIZEOF(arity, Args), \
                 "missing one or more arguments for specified function" \
             ); \
             /* assert consistency of F's result type and R (if has_result) */ \
@@ -181,7 +187,7 @@ BOOST_CONTRACT_PUBLIC_FUNCTION_VIRTUAL_NO_OVERRIDE_(/* has_result = */ 1)
                 (boost::is_same< \
                     typename boost::remove_reference<typename boost:: \
                             function_types::result_type<F>::type>::type, \
-                    typename boost::contract::aux:: \
+                    typename boost::contract::detail:: \
                             remove_value_reference_if_optional<R>::type \
                 >::value), \
                 "mismatching result type for specified function" \
@@ -193,29 +199,33 @@ BOOST_CONTRACT_PUBLIC_FUNCTION_VIRTUAL_NO_OVERRIDE_(/* has_result = */ 1)
             ); \
             return (set_precondition_old_postcondition< \
                     BOOST_PP_EXPR_IIF(has_result, R)>( \
-                new boost::contract::aux::public_function< \
+                new boost::contract::detail::public_function< \
                     O, \
-                    BOOST_PP_IIF(has_result, R, boost::contract::aux::none), \
+                    BOOST_PP_IIF(has_result, \
+                        R \
+                    , \
+                        boost::contract::detail::none \
+                    ), \
                     F, \
                     C \
-                    BOOST_CONTRACT_AUX_TVARIADIC_COMMA(arity) \
-                    BOOST_CONTRACT_AUX_TVARIADIC_ARGS_Z(z, arity, Args) \
-                    BOOST_CONTRACT_AUX_NO_TVARIADIC_COMMA(arity_compl) \
-                    BOOST_CONTRACT_AUX_NO_TVARIADIC_ENUM_Z(z, arity_compl, \
-                            boost::contract::aux::none) \
+                    BOOST_CONTRACT_DETAIL_TVARIADIC_COMMA(arity) \
+                    BOOST_CONTRACT_DETAIL_TVARIADIC_ARGS_Z(z, arity, Args) \
+                    BOOST_CONTRACT_DETAIL_NO_TVARIADIC_COMMA(arity_compl) \
+                    BOOST_CONTRACT_DETAIL_NO_TVARIADIC_ENUM_Z(z, arity_compl, \
+                            boost::contract::detail::none) \
                 >( \
                     v, \
                     obj, \
                     BOOST_PP_IIF(has_result, \
                         r \
                     , \
-                        boost::contract::aux::none::value() \
+                        boost::contract::detail::none::value() \
                     ) \
-                    BOOST_CONTRACT_AUX_TVARIADIC_COMMA(arity) \
-                    BOOST_CONTRACT_AUX_TVARIADIC_ARGS_Z(z, arity, args) \
-                    BOOST_CONTRACT_AUX_NO_TVARIADIC_COMMA(arity_compl) \
-                    BOOST_CONTRACT_AUX_NO_TVARIADIC_ENUM_Z(z, arity_compl, \
-                            boost::contract::aux::none::value()) \
+                    BOOST_CONTRACT_DETAIL_TVARIADIC_COMMA(arity) \
+                    BOOST_CONTRACT_DETAIL_TVARIADIC_ARGS_Z(z, arity, args) \
+                    BOOST_CONTRACT_DETAIL_NO_TVARIADIC_COMMA(arity_compl) \
+                    BOOST_CONTRACT_DETAIL_NO_TVARIADIC_ENUM_Z(z, arity_compl, \
+                            boost::contract::detail::none::value()) \
                 ) \
             )); \
         , \
@@ -224,7 +234,7 @@ BOOST_CONTRACT_PUBLIC_FUNCTION_VIRTUAL_NO_OVERRIDE_(/* has_result = */ 1)
         ) \
     }
 
-#if BOOST_CONTRACT_AUX_TVARIADIC
+#if BOOST_CONTRACT_DETAIL_TVARIADIC
     BOOST_CONTRACT_PUBLIC_FUNCTION_VIRTUAL_OVERRIDE_Z_(1,
             /* arity = */ ~, /* arity_compl = */ ~, /* has_result = */ 0)
     BOOST_CONTRACT_PUBLIC_FUNCTION_VIRTUAL_OVERRIDE_Z_(1,

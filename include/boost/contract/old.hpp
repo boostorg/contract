@@ -9,10 +9,10 @@
 
 /** @file */
 
-#include <boost/contract/aux_/all_core_headers.hpp>
-#include <boost/contract/aux_/check_guard.hpp>
-#include <boost/contract/aux_/operator_safe_bool.hpp>
-#include <boost/contract/aux_/debug.hpp>
+#include <boost/contract/detail/all_core_headers.hpp>
+#include <boost/contract/detail/check_guard.hpp>
+#include <boost/contract/detail/operator_safe_bool.hpp>
+#include <boost/contract/detail/debug.hpp>
 #include <boost/make_shared.hpp>
 #include <boost/shared_ptr.hpp>
 #include <boost/type_traits/is_copy_constructible.hpp>
@@ -91,11 +91,14 @@ public:
 
     // Only const access (because contracts should not change program state).
     
-    T const& operator*() const { BOOST_CONTRACT_AUX_DEBUG(ptr_); return *ptr_; }
+    T const& operator*() const {
+        BOOST_CONTRACT_DETAIL_DEBUG(ptr_);
+        return *ptr_;
+    }
 
     T const* operator->() const { return ptr_.operator->(); }
 
-    BOOST_CONTRACT_AUX_OPERATOR_SAFE_BOOL(old_ptr<T>, !!ptr_)
+    BOOST_CONTRACT_DETAIL_OPERATOR_SAFE_BOOL(old_ptr<T>, !!ptr_)
 
 private:
     #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
@@ -146,19 +149,19 @@ public:
     /* implicit */ operator old_ptr<T>() {
         #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
             if(!boost::is_copy_constructible<T>::value) {
-                BOOST_CONTRACT_AUX_DEBUG(!ptr_); // Non-copyable so no old...
+                BOOST_CONTRACT_DETAIL_DEBUG(!ptr_); // Non-copyable so no old...
                 return old_ptr<T>(); // ...and return null.
-            } else if(!v_ && boost::contract::aux::check_guard::checking()) {
+            } else if(!v_ && boost::contract::detail::check_guard::checking()) {
                 // Return null shared ptr (see after if statement).
             } else if(!v_) {
-                BOOST_CONTRACT_AUX_DEBUG(ptr_);
+                BOOST_CONTRACT_DETAIL_DEBUG(ptr_);
                 boost::shared_ptr<T const> old =
                         boost::static_pointer_cast<T const>(ptr_);
-                BOOST_CONTRACT_AUX_DEBUG(old);
+                BOOST_CONTRACT_DETAIL_DEBUG(old);
                 return old_ptr<T>(old);
             } else if(v_->action_ == boost::contract::virtual_::push_old_init ||
                     v_->action_ == boost::contract::virtual_::push_old_copy) {
-                BOOST_CONTRACT_AUX_DEBUG(ptr_);
+                BOOST_CONTRACT_DETAIL_DEBUG(ptr_);
                 if(v_->action_ == boost::contract::virtual_::push_old_init) {
                     v_->old_inits_.push(ptr_);
                 } else {
@@ -167,14 +170,14 @@ public:
                 return old_ptr<T>();
             } else if(v_->action_ == boost::contract::virtual_::pop_old_init ||
                     v_->action_ == boost::contract::virtual_::pop_old_copy) {
-                BOOST_CONTRACT_AUX_DEBUG(!ptr_);
+                BOOST_CONTRACT_DETAIL_DEBUG(!ptr_);
                 boost::shared_ptr<void> ptr;
                 if(v_->action_ == boost::contract::virtual_::pop_old_init) {
                     ptr = v_->old_inits_.front();
                 } else {
                     ptr = v_->old_copies_.top();
                 }
-                BOOST_CONTRACT_AUX_DEBUG(ptr);
+                BOOST_CONTRACT_DETAIL_DEBUG(ptr);
                 if(v_->action_ == boost::contract::virtual_::pop_old_init) {
                     v_->old_inits_.pop();
                 } else {
@@ -182,10 +185,10 @@ public:
                 }
                 boost::shared_ptr<T const> old =
                         boost::static_pointer_cast<T const>(ptr);
-                BOOST_CONTRACT_AUX_DEBUG(old);
+                BOOST_CONTRACT_DETAIL_DEBUG(old);
                 return old_ptr<T>(old);
             }
-            BOOST_CONTRACT_AUX_DEBUG(!ptr_);
+            BOOST_CONTRACT_DETAIL_DEBUG(!ptr_);
         #endif
         return old_ptr<T>();
     }
@@ -219,7 +222,7 @@ convertible_old make_old(virtual_* v, unconvertible_old const& old) {
 
 bool copy_old() {
     #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
-        return !boost::contract::aux::check_guard::checking();
+        return !boost::contract::detail::check_guard::checking();
     #else
         return false; // Post checking disabled, so never copy old values.
     #endif
@@ -227,7 +230,7 @@ bool copy_old() {
 
 bool copy_old(virtual_* v) {
     #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
-        if(!v) return !boost::contract::aux::check_guard::checking();
+        if(!v) return !boost::contract::detail::check_guard::checking();
         return v->action_ == boost::contract::virtual_::push_old_init ||
                 v->action_ == boost::contract::virtual_::push_old_copy;
     #else

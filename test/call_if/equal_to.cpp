@@ -1,7 +1,7 @@
 
 // Test STL equal_to with call_if.
 
-#include "../aux_/oteststream.hpp"
+#include "../detail/oteststream.hpp"
 #include <boost/contract/call_if.hpp>
 #include <boost/bind.hpp>
 #include <boost/type_traits/has_equal_to.hpp>
@@ -9,7 +9,7 @@
 #include <functional>
 #include <sstream>
 
-boost::contract::test::aux::oteststream out;
+boost::contract::test::detail::oteststream out;
 
 template<typename T>
 struct void_equal_to {

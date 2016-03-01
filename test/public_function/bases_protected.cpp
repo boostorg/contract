@@ -1,7 +1,7 @@
 
 // Test overriding function never overrides protected function contract.
 
-#include "../aux_/oteststream.hpp"
+#include "../detail/oteststream.hpp"
 #include <boost/contract/function.hpp>
 #include <boost/contract/public_function.hpp>
 #include <boost/contract/base_types.hpp>
@@ -9,7 +9,7 @@
 #include <boost/detail/lightweight_test.hpp>
 #include <sstream>
 
-boost::contract::test::aux::oteststream out;
+boost::contract::test::detail::oteststream out;
 
 // NOTE: This is the correct way of programming contracts for base protected
 // and public overriding function.

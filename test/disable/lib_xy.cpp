@@ -34,7 +34,7 @@ int main() {
             << "f::post" << std::endl
         #endif
     ;
-    BOOST_TEST(boost::contract::test::aux::oteststream::eq(out(), ok.str()));
+    BOOST_TEST(boost::contract::test::detail::oteststream::eq(out(), ok.str()));
 
     out("");
     x();
@@ -44,7 +44,7 @@ int main() {
         #endif
         << "x::body" << std::endl
     ;
-    BOOST_TEST(boost::contract::test::aux::oteststream::eq(out(), ok.str()));
+    BOOST_TEST(boost::contract::test::detail::oteststream::eq(out(), ok.str()));
     
     out("");
     y();
@@ -60,7 +60,7 @@ int main() {
             << "y::post" << std::endl
         #endif
     ;
-    BOOST_TEST(boost::contract::test::aux::oteststream::eq(out(), ok.str()));
+    BOOST_TEST(boost::contract::test::detail::oteststream::eq(out(), ok.str()));
     
     return boost::report_errors();
 }

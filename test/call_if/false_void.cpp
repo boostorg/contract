@@ -1,14 +1,14 @@
 
 // Test call_if with false condition and void result type.
 
-#include "../aux_/oteststream.hpp"
+#include "../detail/oteststream.hpp"
 #include <boost/contract/call_if.hpp>
 #include <boost/bind.hpp>
 #include <boost/type_traits/has_equal_to.hpp>
 #include <boost/detail/lightweight_test.hpp>
 #include <sstream>
 
-boost::contract::test::aux::oteststream out;
+boost::contract::test::detail::oteststream out;
 
 struct eq {
     typedef void result_type; // Test void result type.

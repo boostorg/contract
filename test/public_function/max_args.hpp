@@ -1,7 +1,7 @@
 
 // Test max argument number for public function (with and without result).
 
-#include "../aux_/oteststream.hpp"
+#include "../detail/oteststream.hpp"
 #include <boost/contract/public_function.hpp>
 #include <boost/contract/guard.hpp>
 #include <boost/contract/base_types.hpp>
@@ -14,7 +14,7 @@
 #include <boost/detail/lightweight_test.hpp>
 #include <sstream>
 
-boost::contract::test::aux::oteststream out;
+boost::contract::test::detail::oteststream out;
         
 #define BOOST_CONTRACT_TEST_MAX_ARGS_PARAM_COMMA_(z, n, unused) \
     int BOOST_PP_CAT(a, n) ,

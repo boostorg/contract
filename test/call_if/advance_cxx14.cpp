@@ -1,7 +1,7 @@
 
 // Test possible impl. advance() in single function with C++14 generic lambdas.
 
-#include "../aux_/oteststream.hpp"
+#include "../detail/oteststream.hpp"
 #include <boost/contract/call_if.hpp>
 #include <boost/detail/lightweight_test.hpp>
 #include <type_traits>
@@ -11,7 +11,7 @@
 #include <list>
 #include <sstream>
 
-boost::contract::test::aux::oteststream out;
+boost::contract::test::detail::oteststream out;
 
 template<typename Iter>
 struct is_random_access_iterator : std::is_same<

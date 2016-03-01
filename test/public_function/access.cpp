@@ -1,7 +1,7 @@
 
 // Test making all contract extra declarations (base types, inv, etc.) private.
 
-#include "../aux_/oteststream.hpp"
+#include "../detail/oteststream.hpp"
 #include <boost/contract/base_types.hpp>
 #include <boost/contract/override.hpp>
 #include <boost/contract/public_function.hpp>
@@ -10,7 +10,7 @@
 #include <boost/detail/lightweight_test.hpp>
 #include <sstream>
 
-boost::contract::test::aux::oteststream out;
+boost::contract::test::detail::oteststream out;
 
 class b {
     friend class boost::contract::access;

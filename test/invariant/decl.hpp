@@ -3,7 +3,7 @@
 
 // Test with and without all invariants (static/cv/const-only) declarations.
 
-#include "../aux_/oteststream.hpp"
+#include "../detail/oteststream.hpp"
 #include <boost/contract/base_types.hpp>
 #include <boost/contract/constructor.hpp>
 #include <boost/contract/destructor.hpp>
@@ -14,7 +14,7 @@
 #include <boost/contract/assert.hpp>
 #include <boost/detail/lightweight_test.hpp>
 
-boost::contract::test::aux::oteststream out;
+boost::contract::test::detail::oteststream out;
 
 struct b : private boost::contract::constructor_precondition<b> {
     // Test also with no base_types.

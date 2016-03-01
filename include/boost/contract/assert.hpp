@@ -9,7 +9,7 @@
 
 /** @file */
 
-#include <boost/contract/aux_/all_core_headers.hpp>
+#include <boost/contract/detail/all_core_headers.hpp>
 
 /* PUBLIC */
 

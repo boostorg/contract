@@ -9,10 +9,10 @@
 
 /** @file */
 
-#include <boost/contract/aux_/all_core_headers.hpp>
+#include <boost/contract/detail/all_core_headers.hpp>
 #if !defined(BOOST_CONTRACT_NO_FUNCTIONS) || \
         !defined(BOOST_CONTRACT_NO_INVARIANTS)
-    #include <boost/contract/aux_/operation/function.hpp>
+    #include <boost/contract/detail/operation/function.hpp>
 #endif
 
 namespace boost { namespace contract {
@@ -22,7 +22,7 @@ set_precondition_old_postcondition<> function() {
     #if !defined(BOOST_CONTRACT_NO_FUNCTIONS) || \
             !defined(BOOST_CONTRACT_NO_INVARIANTS)
         return set_precondition_old_postcondition<>(
-                new boost::contract::aux::function());
+                new boost::contract::detail::function());
     #else
         return set_precondition_old_postcondition<>();
     #endif

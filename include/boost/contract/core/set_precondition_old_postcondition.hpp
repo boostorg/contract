@@ -13,17 +13,17 @@
 #include <boost/contract/core/set_postcondition_only.hpp>
 #include <boost/contract/core/set_nothing.hpp>
 #include <boost/contract/core/config.hpp>
-#include <boost/contract/aux_/decl.hpp>
+#include <boost/contract/detail/decl.hpp>
 #if !defined(BOOST_CONTRACT_NO_PRECONDITIONS) || \
         !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
         !defined(BOOST_CONTRACT_NO_INVARIANTS)
-    #include <boost/contract/aux_/condition/check_pre_post.hpp>
-    #include <boost/contract/aux_/auto_ptr.hpp>
-    #include <boost/contract/aux_/none.hpp>
+    #include <boost/contract/detail/condition/check_pre_post.hpp>
+    #include <boost/contract/detail/auto_ptr.hpp>
+    #include <boost/contract/detail/none.hpp>
 #endif
 #if !defined(BOOST_CONTRACT_NO_PRECONDITIONS) || \
         !defined(BOOST_CONTRACT_NO_POSTCONDITIONS)
-    #include <boost/contract/aux_/debug.hpp>
+    #include <boost/contract/detail/debug.hpp>
 #endif
 #include <boost/config.hpp>
 
@@ -43,7 +43,7 @@ public:
     template<typename F>
     set_old_postcondition<R> precondition(F const& f) {
         #ifndef BOOST_CONTRACT_NO_PRECONDITIONS
-            BOOST_CONTRACT_AUX_DEBUG(check_);
+            BOOST_CONTRACT_DETAIL_DEBUG(check_);
             check_->set_pre(f);
         #endif
         #if !defined(BOOST_CONTRACT_NO_PRECONDITIONS) || \
@@ -58,7 +58,7 @@ public:
     template<typename F>
     set_postcondition_only<R> old(F const& f) {
         #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
-            BOOST_CONTRACT_AUX_DEBUG(check_);
+            BOOST_CONTRACT_DETAIL_DEBUG(check_);
             check_->set_old(f);
         #endif
         #if !defined(BOOST_CONTRACT_NO_PRECONDITIONS) || \
@@ -73,7 +73,7 @@ public:
     template<typename F>
     set_nothing postcondition(F const& f) {
         #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
-            BOOST_CONTRACT_AUX_DEBUG(check_);
+            BOOST_CONTRACT_DETAIL_DEBUG(check_);
             check_->set_post(f);
         #endif
         #if !defined(BOOST_CONTRACT_NO_PRECONDITIONS) || \
@@ -89,13 +89,13 @@ private:
     #if !defined(BOOST_CONTRACT_NO_PRECONDITIONS) || \
             !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
             !defined(BOOST_CONTRACT_NO_INVARIANTS)
-        typedef boost::contract::aux::check_pre_post<typename
-                boost::contract::aux::none_if_void<R>::type> check_type;
+        typedef boost::contract::detail::check_pre_post<typename
+                boost::contract::detail::none_if_void<R>::type> check_type;
 
         explicit set_precondition_old_postcondition(check_type* check) :
                 check_(check) {}
 
-        boost::contract::aux::auto_ptr<check_type> check_;
+        boost::contract::detail::auto_ptr<check_type> check_;
     #endif
 
     // Friends (used to limit library's public API).
@@ -118,7 +118,7 @@ private:
     friend set_precondition_old_postcondition<RR> public_function(
             virtual_* vv, RR& rr, CC* oobj);
 
-    BOOST_CONTRACT_AUX_DECL_FRIEND_OVERRIDING_PUBLIC_FUNCTIONS_Z(1,
+    BOOST_CONTRACT_DETAIL_DECL_FRIEND_OVERRIDING_PUBLIC_FUNCTIONS_Z(1,
             OO, RR, FF, CC, AArgs, vv, rr, ff, oobj, aargs)
 };
 

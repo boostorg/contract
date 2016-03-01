@@ -4,13 +4,13 @@
 
 // Test with and without pre, post, and inv declarations.
 
-#include "../aux_/oteststream.hpp"
+#include "../detail/oteststream.hpp"
 #include <boost/contract/constructor.hpp>
 #include <boost/contract/base_types.hpp>
 #include <boost/contract/guard.hpp>
 #include <boost/contract/assert.hpp>
 
-boost::contract::test::aux::oteststream out;
+boost::contract::test::detail::oteststream out;
 
 bool c_pre = true, c_post = true;
 bool c_entering_static_inv = true, c_entry_static_inv = true,

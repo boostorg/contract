@@ -10,7 +10,7 @@
 #include <boost/contract/guard.hpp>
 #include <boost/contract/assert.hpp>
 
-BOOST_CONTRACT_TEST_AUX_OTESTSTREAM_STR_DEF(out)
+BOOST_CONTRACT_TEST_DETAIL_OTESTSTREAM_STR_DEF(out)
 
 void a::static_invariant() { out("a::static_inv\n"); }
 void a::invariant() const { out("a::inv\n"); }

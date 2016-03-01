@@ -1,7 +1,7 @@
 
 // Test from public function (derived) body.
 
-#include "../aux_/oteststream.hpp"
+#include "../detail/oteststream.hpp"
 #include <boost/contract/public_function.hpp>
 #include <boost/contract/assert.hpp>
 #include <boost/contract/base_types.hpp>
@@ -10,7 +10,7 @@
 #include <boost/detail/lightweight_test.hpp>
 #include <sstream>
 
-boost::contract::test::aux::oteststream out;
+boost::contract::test::detail::oteststream out;
 
 struct c {
     static void static_invariant() { out << "c::static_inv" << std::endl; }

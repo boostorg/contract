@@ -1,7 +1,7 @@
 
 // Test public function overloads.
 
-#include "../aux_/oteststream.hpp"
+#include "../detail/oteststream.hpp"
 #include <boost/contract/public_function.hpp>
 #include <boost/contract/base_types.hpp>
 #include <boost/contract/override.hpp>
@@ -10,7 +10,7 @@
 #include <sstream>
 #include <string>
 
-boost::contract::test::aux::oteststream out;
+boost::contract::test::detail::oteststream out;
 
 struct b {
     static void static_invariant() { out << "b::static_inv" << std::endl; }

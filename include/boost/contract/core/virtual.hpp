@@ -8,7 +8,7 @@
 // See: http://www.boost.org/doc/libs/release/libs/contract/doc/html/index.html
 
 #include <boost/contract/core/config.hpp>
-#include <boost/contract/aux_/decl.hpp>
+#include <boost/contract/detail/decl.hpp>
 #include <boost/noncopyable.hpp>
 #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
     #include <boost/any.hpp>
@@ -19,8 +19,8 @@
 
 namespace boost {
     namespace contract {
-        namespace aux {
-            BOOST_CONTRACT_AUX_DECL_AUX_CHECK_SUBCONTRACTED_PRE_POST_INV_Z(1,
+        namespace detail {
+  BOOST_CONTRACT_DETAIL_DECL_DETAIL_CHECK_SUBCONTRACTED_PRE_POST_INV_Z(1,
                     /* is_friend = */ 0, OO, RR, FF, CC, AArgs);
         }
     }
@@ -95,7 +95,7 @@ class virtual_ : private boost::noncopyable { // Avoid copy queue, stack, etc.
     
     friend class convertible_old;
 
-    BOOST_CONTRACT_AUX_DECL_AUX_CHECK_SUBCONTRACTED_PRE_POST_INV_Z(1,
+    BOOST_CONTRACT_DETAIL_DECL_DETAIL_CHECK_SUBCONTRACTED_PRE_POST_INV_Z(1,
             /* is_friend = */ 1, OO, RR, FF, CC, AArgs);
 };
 

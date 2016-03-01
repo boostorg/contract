@@ -1,8 +1,8 @@
 
 // Test old values without BOOST_CONTRACT_OLDOF macro.
 
-#include "../aux_/oteststream.hpp"
-#include "../aux_/counter.hpp"
+#include "../detail/oteststream.hpp"
+#include "../detail/counter.hpp"
 #include <boost/contract/function.hpp>
 #include <boost/contract/public_function.hpp>
 #include <boost/contract/base_types.hpp>
@@ -13,10 +13,10 @@
 #include <boost/detail/lightweight_test.hpp>
 #include <cassert>
 
-boost::contract::test::aux::oteststream out;
+boost::contract::test::detail::oteststream out;
 
-struct i_tag; typedef boost::contract::test::aux::counter<i_tag, int> i_type;
-struct j_tag; typedef boost::contract::test::aux::counter<j_tag, int> j_type;
+struct i_tag; typedef boost::contract::test::detail::counter<i_tag, int> i_type;
+struct j_tag; typedef boost::contract::test::detail::counter<j_tag, int> j_type;
 
 struct b {
     virtual void swap(i_type& i, j_type& j, boost::contract::virtual_* v = 0);
@@ -69,8 +69,11 @@ struct a
     BOOST_CONTRACT_OVERRIDE(swap)
 };
 
-struct x_tag; typedef boost::contract::test::aux::counter<x_tag, char> x_type;
-struct y_tag; typedef boost::contract::test::aux::counter<y_tag, char> y_type;
+struct x_tag;
+typedef boost::contract::test::detail::counter<x_tag, char> x_type;
+
+struct y_tag;
+typedef boost::contract::test::detail::counter<y_tag, char> y_type;
 
 void swap(x_type& x, y_type& y) {
     boost::contract::old_ptr<x_type> old_x = boost::contract::make_old(

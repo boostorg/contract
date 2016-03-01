@@ -4,7 +4,7 @@
 
 // Test contracts in .cpp so never has post (because NO_POST in its Jamfile).
 
-#include "../aux_/oteststream.hpp"
+#include "../detail/oteststream.hpp"
 #include <boost/config.hpp>
 #include <string>
 
@@ -18,7 +18,7 @@
     #define BOOST_CONTRACT_TEST_LIB_X_DECLSPEC /* nothing */
 #endif
 
-BOOST_CONTRACT_TEST_AUX_OTESTSTREAM_STR_DECL(
+BOOST_CONTRACT_TEST_DETAIL_OTESTSTREAM_STR_DECL(
         BOOST_CONTRACT_TEST_LIB_X_DECLSPEC, out)
 
 void BOOST_CONTRACT_TEST_LIB_X_DECLSPEC x();

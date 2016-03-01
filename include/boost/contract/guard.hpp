@@ -9,10 +9,10 @@
 
 /** @file */
 
-#include <boost/contract/aux_/all_core_headers.hpp>
-#include <boost/contract/aux_/condition/check_base.hpp>
-#include <boost/contract/aux_/auto_ptr.hpp>
-#include <boost/contract/aux_/debug.hpp>
+#include <boost/contract/detail/all_core_headers.hpp>
+#include <boost/contract/detail/condition/check_base.hpp>
+#include <boost/contract/detail/auto_ptr.hpp>
+#include <boost/contract/detail/debug.hpp>
 #include <boost/config.hpp>
 
 /* PRIVATE */
@@ -23,7 +23,7 @@
     #define BOOST_CONTRACT_GUARD_CTOR_DEF_(contract_type) \
             : check_(const_cast<contract_type&>(contract).check_.release()) \
         { \
-            BOOST_CONTRACT_AUX_DEBUG(check_); \
+            BOOST_CONTRACT_DETAIL_DEBUG(check_); \
             check_->guard(); \
         }
 #else
@@ -70,7 +70,8 @@ private:
     #if !defined(BOOST_CONTRACT_NO_PRECONDITIONS) || \
             !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
             !defined(BOOST_CONTRACT_NO_INVARIANTS)
-        boost::contract::aux::auto_ptr<boost::contract::aux::check_base> check_;
+        boost::contract::detail::auto_ptr<boost::contract::detail::check_base>
+                check_;
     #endif
 };
 

@@ -11,7 +11,7 @@
 
 /** @file */
 
-#include <boost/contract/aux_/all_core_headers.hpp>
+#include <boost/contract/detail/all_core_headers.hpp>
 #include <boost/preprocessor/config/config.hpp>
 
 #if !BOOST_PP_VARIADICS
@@ -26,10 +26,10 @@ BOOST_CONTRACT_ERROR_macro_BASE_TYPES_requires_variadic_macros_otherwise_manuall
 #else // contracts on
 
 #include <boost/mpl/vector.hpp>
-#include <boost/contract/aux_/preprocessor/keyword/virtual.hpp>
-#include <boost/contract/aux_/preprocessor/keyword/public.hpp>
-#include <boost/contract/aux_/preprocessor/keyword/protected.hpp>
-#include <boost/contract/aux_/preprocessor/keyword/private.hpp>
+#include <boost/contract/detail/preprocessor/keyword/virtual.hpp>
+#include <boost/contract/detail/preprocessor/keyword/public.hpp>
+#include <boost/contract/detail/preprocessor/keyword/protected.hpp>
+#include <boost/contract/detail/preprocessor/keyword/private.hpp>
 #include <boost/preprocessor/variadic/to_seq.hpp>
 #include <boost/preprocessor/seq/fold_left.hpp>
 #include <boost/preprocessor/seq/enum.hpp>
@@ -47,8 +47,8 @@ BOOST_CONTRACT_ERROR_macro_BASE_TYPES_requires_variadic_macros_otherwise_manuall
 
 #define BOOST_CONTRACT_BASE_TYPES_REMOVE_VIRTUAL_(base) \
     BOOST_PP_EXPAND( \
-        BOOST_PP_IIF(BOOST_CONTRACT_AUX_PP_KEYWORD_IS_VIRTUAL(base), \
-            BOOST_CONTRACT_AUX_PP_KEYWORD_REMOVE_VIRTUAL \
+        BOOST_PP_IIF(BOOST_CONTRACT_DETAIL_PP_KEYWORD_IS_VIRTUAL(base), \
+            BOOST_CONTRACT_DETAIL_PP_KEYWORD_REMOVE_VIRTUAL \
         , \
             BOOST_PP_TUPLE_REM(1) \
         )(base) \
@@ -75,16 +75,16 @@ BOOST_CONTRACT_ERROR_macro_BASE_TYPES_requires_variadic_macros_otherwise_manuall
         1, \
         BOOST_PP_SEQ_PUSH_BACK(types_nilseq, \
             BOOST_CONTRACT_BASE_TYPES_REMOVE_VIRTUAL_( \
-                    BOOST_CONTRACT_AUX_PP_KEYWORD_REMOVE_PUBLIC(base)) \
+                    BOOST_CONTRACT_DETAIL_PP_KEYWORD_REMOVE_PUBLIC(base)) \
         ) \
     )
 
 #define BOOST_CONTRACT_BASE_TYPES_ACCESS_(is_public, types_nilseq, base) \
-    BOOST_PP_IIF(BOOST_CONTRACT_AUX_PP_KEYWORD_IS_PUBLIC(base), \
+    BOOST_PP_IIF(BOOST_CONTRACT_DETAIL_PP_KEYWORD_IS_PUBLIC(base), \
         BOOST_CONTRACT_BASE_TYPES_PUSH_BACK_PUBLIC_ \
-    , BOOST_PP_IIF(BOOST_CONTRACT_AUX_PP_KEYWORD_IS_PROTECTED(base), \
+    , BOOST_PP_IIF(BOOST_CONTRACT_DETAIL_PP_KEYWORD_IS_PROTECTED(base), \
         BOOST_CONTRACT_BASE_TYPES_SKIP_NOT_PUBLIC_ \
-    , BOOST_PP_IIF(BOOST_CONTRACT_AUX_PP_KEYWORD_IS_PRIVATE(base), \
+    , BOOST_PP_IIF(BOOST_CONTRACT_DETAIL_PP_KEYWORD_IS_PRIVATE(base), \
         BOOST_CONTRACT_BASE_TYPES_SKIP_NOT_PUBLIC_ \
     , \
         BOOST_CONTRACT_BASE_TYPES_PUSH_BACK_IF_ \
@@ -122,11 +122,11 @@ BOOST_CONTRACT_ERROR_macro_BASE_TYPES_requires_variadic_macros_otherwise_manuall
     BOOST_CONTRACT_ERROR_all_bases_must_explicitly_specify_public_protected_or_private base_tuple
 
 #define BOOST_CONTRACT_BASE_TYPES_IS_ACCESS_(base) \
-    BOOST_PP_IIF(BOOST_CONTRACT_AUX_PP_KEYWORD_IS_PUBLIC(base), \
+    BOOST_PP_IIF(BOOST_CONTRACT_DETAIL_PP_KEYWORD_IS_PUBLIC(base), \
         1 \
-    , BOOST_PP_IIF(BOOST_CONTRACT_AUX_PP_KEYWORD_IS_PROTECTED(base), \
+    , BOOST_PP_IIF(BOOST_CONTRACT_DETAIL_PP_KEYWORD_IS_PROTECTED(base), \
         1 \
-    , BOOST_PP_IIF(BOOST_CONTRACT_AUX_PP_KEYWORD_IS_PRIVATE(base), \
+    , BOOST_PP_IIF(BOOST_CONTRACT_DETAIL_PP_KEYWORD_IS_PRIVATE(base), \
         1 \
     , \
         0 \

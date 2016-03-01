@@ -6,7 +6,7 @@
 #include <boost/contract/function.hpp>
 #include <boost/contract/guard.hpp>
 
-BOOST_CONTRACT_TEST_AUX_OTESTSTREAM_STR_DEF(out)
+BOOST_CONTRACT_TEST_DETAIL_OTESTSTREAM_STR_DEF(out)
 
 void x() {
     boost::contract::guard c = boost::contract::function()

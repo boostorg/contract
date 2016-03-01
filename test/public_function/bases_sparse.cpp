@@ -1,7 +1,7 @@
 
 // Test subcontracting with sparse and complex inheritance graph.
 
-#include "../aux_/oteststream.hpp"
+#include "../detail/oteststream.hpp"
 #include <boost/contract/public_function.hpp>
 #include <boost/contract/assert.hpp>
 #include <boost/contract/guard.hpp>
@@ -10,7 +10,7 @@
 #include <boost/detail/lightweight_test.hpp>
 #include <sstream>
 
-boost::contract::test::aux::oteststream out;
+boost::contract::test::detail::oteststream out;
 
 struct j {
     static void static_invariant() { out << "j::static_inv" << std::endl; }

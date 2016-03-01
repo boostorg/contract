@@ -3,8 +3,8 @@
 
 // Test base and derived classes mixing boost::optional and non- result types.
 
-#include "../aux_/oteststream.hpp"
-#include "../aux_/counter.hpp"
+#include "../detail/oteststream.hpp"
+#include "../detail/counter.hpp"
 #include <boost/contract/base_types.hpp>
 #include <boost/contract/public_function.hpp>
 #include <boost/contract/override.hpp>
@@ -16,10 +16,10 @@
 #include <sstream>
 #include <cassert>
 
-boost::contract::test::aux::oteststream out;
+boost::contract::test::detail::oteststream out;
 
 struct ch_tag;
-typedef boost::contract::test::aux::counter<ch_tag, char> ch_type;
+typedef boost::contract::test::detail::counter<ch_tag, char> ch_type;
 
 #ifdef BOOST_CONTRACT_TEST_REF // Test with result types by reference.
     #define BOOST_CONTRACT_TEST_CH_TYPE ch_type&

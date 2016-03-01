@@ -9,13 +9,13 @@
 
 /** @file */
 
-#include <boost/contract/aux_/all_core_headers.hpp>
+#include <boost/contract/detail/all_core_headers.hpp>
 #if !defined(BOOST_CONTRACT_NO_CONSTRUCTORS) || \
         !defined(BOOST_CONTRACT_NO_PRECONDITIONS)
-    #include <boost/contract/aux_/operation/constructor.hpp>
+    #include <boost/contract/detail/operation/constructor.hpp>
 #endif
 #if !defined(BOOST_CONTRACT_NO_PRECONDITIONS)
-    #include <boost/contract/aux_/check_guard.hpp>
+    #include <boost/contract/detail/check_guard.hpp>
 #endif
 
 namespace boost { namespace contract {
@@ -26,7 +26,7 @@ set_old_postcondition<> constructor(C* obj) {
     #if !defined(BOOST_CONTRACT_NO_CONSTRUCTORS) || \
             !defined(BOOST_CONTRACT_NO_PRECONDITIONS)
         return set_old_postcondition<>(
-                new boost::contract::aux::constructor<C>(obj));
+                new boost::contract::detail::constructor<C>(obj));
     #else
         return set_old_postcondition<>();
     #endif
@@ -40,10 +40,10 @@ public:
     template<typename F>
     explicit constructor_precondition(F const& f) {
         #ifndef BOOST_CONTRACT_NO_PRECONDITIONS
-            if(boost::contract::aux::check_guard::checking()) return;
+            if(boost::contract::detail::check_guard::checking()) return;
             try {
                 #ifndef BOOST_CONTRACT_PRECONDITIONS_DISABLE_NOTHING
-                    boost::contract::aux::check_guard checking;
+                    boost::contract::detail::check_guard checking;
                 #endif
                 f();
             } catch(...) { precondition_failure(from_constructor); }

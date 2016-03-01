@@ -1,7 +1,7 @@
 
 // Test contract compilation on/off.
 
-#include "../aux_/oteststream.hpp"
+#include "../detail/oteststream.hpp"
 #include <boost/contract/core/config.hpp>
 #include <boost/contract/constructor.hpp> // Outside #if below for ctor pre.
 #ifndef BOOST_CONTRACT_NO_CONSTRUCTORS
@@ -11,7 +11,7 @@
 #include <boost/detail/lightweight_test.hpp>
 #include <sstream>
 
-boost::contract::test::aux::oteststream out;
+boost::contract::test::detail::oteststream out;
 
 struct b
     #ifndef BOOST_CONTRACT_NO_PRECONDITIONS

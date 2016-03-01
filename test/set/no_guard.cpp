@@ -6,6 +6,7 @@ struct err {};
 
 #include <boost/contract/function.hpp>
 #include <boost/contract/guard.hpp>
+#include <boost/detail/lightweight_test.hpp>
 
 int main() {
     boost::contract::guard c = boost::contract::function() // Test this is OK.
@@ -20,9 +21,16 @@ int main() {
             .old([] {})
             .postcondition([] {})
         ;
-        return 1;
-    } catch(err const&) { return 0; } // Test missing guard threw.
-    catch(...) { return 2; }
-    return 3;
+        #if !defined(BOOST_CONTRACT_NO_PRECONDITIONS) || \
+                !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
+                !defined(BOOST_CONTRACT_NO_INVARIANTS)
+            BOOST_TEST(false); // Error, must throw.
+        #endif
+    } catch(err const&) {
+        // OK, threw as expected.
+    } catch(...) {
+        BOOST_TEST(false); // Error, unexpected throw.
+    }
+    return boost::report_errors();
 }
 

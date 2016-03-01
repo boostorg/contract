@@ -13,8 +13,8 @@
 #if !defined(BOOST_CONTRACT_NO_PRECONDITIONS) || \
         !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
         !defined(BOOST_CONTRACT_NO_INVARIANTS)
-    #include <boost/contract/aux_/condition/check_base.hpp>
-    #include <boost/contract/aux_/auto_ptr.hpp>
+    #include <boost/contract/detail/condition/check_base.hpp>
+    #include <boost/contract/detail/auto_ptr.hpp>
 #endif
 #include <boost/config.hpp>
 
@@ -43,11 +43,11 @@ private:
     #if !defined(BOOST_CONTRACT_NO_PRECONDITIONS) || \
             !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
             !defined(BOOST_CONTRACT_NO_INVARIANTS)
-        typedef boost::contract::aux::check_base check_type;
+        typedef boost::contract::detail::check_base check_type;
 
         explicit set_nothing(check_type* check) : check_(check) {}
         
-        boost::contract::aux::auto_ptr<check_type> check_;
+        boost::contract::detail::auto_ptr<check_type> check_;
     #endif
 
     // Friends (used to limit library's public API).

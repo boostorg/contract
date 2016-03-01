@@ -1,8 +1,8 @@
 
 // Test destructor subcontracting.
 
-#include "../aux_/oteststream.hpp"
-#include "../aux_/counter.hpp"
+#include "../detail/oteststream.hpp"
+#include "../detail/counter.hpp"
 #include <boost/contract/destructor.hpp>
 #include <boost/contract/base_types.hpp>
 #include <boost/contract/assert.hpp>
@@ -12,7 +12,7 @@
 #include <boost/detail/lightweight_test.hpp>
 #include <sstream>
 
-boost::contract::test::aux::oteststream out;
+boost::contract::test::detail::oteststream out;
 
 template<char Id>
 struct t {
@@ -27,7 +27,7 @@ struct t {
     }
 
     struct l_tag;
-    typedef boost::contract::test::aux::counter<l_tag, int> l_type;
+    typedef boost::contract::test::detail::counter<l_tag, int> l_type;
     static l_type l;
 
     explicit t() : k_(-1) { ++l.value; }
@@ -75,7 +75,7 @@ struct c
     }
     
     struct m_tag;
-    typedef boost::contract::test::aux::counter<m_tag, int> m_type;
+    typedef boost::contract::test::detail::counter<m_tag, int> m_type;
     static m_type m;
 
     explicit c() : j_(-1) { ++m.value; }
@@ -130,7 +130,7 @@ struct a
     }
     
     struct n_tag;
-    typedef boost::contract::test::aux::counter<n_tag, int> n_type;
+    typedef boost::contract::test::detail::counter<n_tag, int> n_type;
     static n_type n;
 
     explicit a() : i_(-1) { ++n.value; }

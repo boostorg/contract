@@ -2,8 +2,8 @@
 #ifndef BOOST_CONTRACT_TEST_LIB_A_HPP_
 #define BOOST_CONTRACT_TEST_LIB_A_HPP_
 
-#include "../aux_/oteststream.hpp"
-#include "../aux_/counter.hpp"
+#include "../detail/oteststream.hpp"
+#include "../detail/counter.hpp"
 #include <boost/config.hpp>
 #include <string>
 
@@ -19,7 +19,7 @@
     #define BOOST_CONTRACT_TEST_LIB_A_DECLSPEC /* nothing */
 #endif
 
-BOOST_CONTRACT_TEST_AUX_OTESTSTREAM_STR_DECL(
+BOOST_CONTRACT_TEST_DETAIL_OTESTSTREAM_STR_DECL(
         BOOST_CONTRACT_TEST_LIB_A_DECLSPEC, out)
 
 struct BOOST_CONTRACT_TEST_LIB_A_DECLSPEC a {
@@ -27,7 +27,7 @@ struct BOOST_CONTRACT_TEST_LIB_A_DECLSPEC a {
     void invariant() const;
 
     struct x_tag;
-    typedef boost::contract::test::aux::counter<x_tag, int> x_type;
+    typedef boost::contract::test::detail::counter<x_tag, int> x_type;
 
     int f(x_type& x);
 

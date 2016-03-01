@@ -4,12 +4,12 @@
 
 // Test with and without pre and post declarations.
 
-#include "../aux_/oteststream.hpp"
+#include "../detail/oteststream.hpp"
 #include <boost/contract/function.hpp>
 #include <boost/contract/guard.hpp>
 #include <boost/contract/assert.hpp>
 
-boost::contract::test::aux::oteststream out;
+boost::contract::test::detail::oteststream out;
 
 bool f_pre = true, f_post = true;
 void f() {
