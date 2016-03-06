@@ -30,9 +30,9 @@ test-suite constructor
     [ subdir-run-aliased constructor : decl_exit_inv_mid ]
     [ subdir-run-aliased constructor : decl_exit_inv_none ]
     
-    [ subdir-run-aliased constructor : bases ]
+    [ subdir-run-aliased constructor : contracts ]
     [ subdir-run-aliased constructor : access ]
-    [ subdir-run-aliased constructor : no_contracts ]
+    [ subdir-run-aliased constructor : ifdef_contracts ]
 
     [ subdir-run-aliased constructor : body_throw ]
     [ subdir-run-aliased constructor : old_throw ]
@@ -66,9 +66,9 @@ test-suite destructor
 
     # No decl_exit_inv_... for destructors.
 
-    [ subdir-run-aliased destructor : bases ]
+    [ subdir-run-aliased destructor : contracts ]
     [ subdir-run-aliased destructor : access ]
-    [ subdir-run-aliased destructor : no_contracts ]
+    [ subdir-run-aliased destructor : ifdef_contracts ]
 
     [ subdir-run-aliased destructor : body_throw ]
     [ subdir-run-aliased destructor : old_throw ]
@@ -108,15 +108,17 @@ test-suite public_function
     [ subdir-run-aliased public_function : decl_exit_inv_mid ]
     [ subdir-run-aliased public_function : decl_exit_inv_none ]
     
-    [ subdir-run-aliased public_function : bases ]
-    [ subdir-run-aliased public_function : bases_virtual ]
-    [ subdir-run-aliased public_function : bases_branch ]
-    [ subdir-run-aliased public_function : bases_sparse ]
-    [ subdir-run-aliased public_function : bases_protected ]
-    [ subdir-compile-fail public_function : bases_protected_error ]
+    [ subdir-run-aliased public_function : contracts ]
+
+    [ subdir-run-aliased public_function : virtual ]
+    [ subdir-run-aliased public_function : virtual_branch ]
+    [ subdir-run-aliased public_function : virtual_sparse ]
+
+    [ subdir-run-aliased public_function : protected ]
+    [ subdir-compile-fail public_function : protected_error ]
     
     [ subdir-run-aliased public_function : access ]
-    [ subdir-run-aliased public_function : no_contracts ]
+    [ subdir-run-aliased public_function : ifdef_contracts ]
     
     [ subdir-run-aliased public_function : body_throw ]
     [ subdir-run-aliased public_function : old_throw ]
@@ -143,6 +145,11 @@ test-suite public_function
     [ subdir-run-aliased public_function : static_old_throw ]
     [ subdir-run-aliased public_function : static_no_contracts ]
 ;
+    
+test-suite union
+:
+    [ subdir-run-aliased union : contracts ]
+;
 
 test-suite invariant
 :
@@ -155,21 +162,21 @@ test-suite invariant
     [ subdir-run-aliased invariant : decl_const ]
     [ subdir-run-aliased invariant : decl_nothing ]
 
-    [ subdir-compile-fail invariant : static_inv_mutable_error ]
-    [ subdir-run-aliased invariant : static_inv_mutable_permissive ]
-    [ subdir-compile-fail invariant : static_inv_const_error ]
-    [ subdir-run-aliased invariant : static_inv_const_permissive ]
-    [ subdir-compile-fail invariant : static_inv_volatile_error ]
-    [ subdir-run-aliased invariant : static_inv_volatile_permissive ]
-    [ subdir-compile-fail invariant : static_inv_cv_error ]
-    [ subdir-run-aliased invariant : static_inv_cv_permissive ]
+    [ subdir-compile-fail invariant : static_mutable_error ]
+    [ subdir-run-aliased invariant : static_mutable_permissive ]
+    [ subdir-compile-fail invariant : static_const_error ]
+    [ subdir-run-aliased invariant : static_const_permissive ]
+    [ subdir-compile-fail invariant : static_volatile_error ]
+    [ subdir-run-aliased invariant : static_volatile_permissive ]
+    [ subdir-compile-fail invariant : static_cv_error ]
+    [ subdir-run-aliased invariant : static_cv_permissive ]
     
-    [ subdir-compile-fail invariant : inv_static_error ]
-    [ subdir-run-aliased invariant : inv_static_permissive ]
-    [ subdir-compile-fail invariant : inv_mutable_error ]
-    [ subdir-run-aliased invariant : inv_mutable_permissive ]
-    [ subdir-compile-fail invariant : inv_volatile_error ]
-    [ subdir-run-aliased invariant : inv_volatile_permissive ]
+    [ subdir-compile-fail invariant : static_error ]
+    [ subdir-run-aliased invariant : static_permissive ]
+    [ subdir-compile-fail invariant : mutable_error ]
+    [ subdir-run-aliased invariant : mutable_permissive ]
+    [ subdir-compile-fail invariant : volatile_error ]
+    [ subdir-run-aliased invariant : volatile_permissive ]
 ;
 
 test-suite function
@@ -180,8 +187,8 @@ test-suite function
     [ subdir-run-aliased function : decl_post_all ]
     [ subdir-run-aliased function : decl_post_none ]
     
-    [ subdir-run-aliased function : func ]
-    [ subdir-run-aliased function : no_contracts ]
+    [ subdir-run-aliased function : contracts ]
+    [ subdir-run-aliased function : ifdef_contracts ]
 
     [ subdir-run-aliased function : body_throw ]
     [ subdir-run-aliased function : old_throw ]

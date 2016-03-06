@@ -32,6 +32,7 @@ set_old_postcondition<> constructor(C* obj) {
     #endif
 }
 
+// TODO: Document that constructor_precondition for unions must be called at the very beginning of ctor body before `boost::contract::guard c = ...` (because unions cannot have base classes, not even in C++11).
 template<class C> // tparam avoids multiple instance of same base in user code.
 class constructor_precondition { // Copyable (no data).
 public:
