@@ -146,11 +146,6 @@ test-suite public_function
     [ subdir-run-aliased public_function : static_no_contracts ]
 ;
     
-test-suite union
-:
-    [ subdir-run-aliased union : contracts ]
-;
-
 test-suite invariant
 :
     [ subdir-run-aliased invariant : decl_static_cv_const ]
@@ -214,6 +209,16 @@ test-suite old
     
     [ subdir-run-aliased old : no_equal ]
     [ subdir-compile-fail old : no_equal_error ]
+;
+
+test-suite union
+:
+    [ subdir-run-aliased union : contracts ]
+;
+
+test-suite move
+:
+    [ subdir-run-aliased move : contracts ]
 ;
 
 test-suite disable

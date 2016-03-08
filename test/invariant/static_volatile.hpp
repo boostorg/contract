@@ -1,4 +1,6 @@
 
+// no #include guard
+
 // Test error if static inv declared volatile (unless PERMISSIVE #defined).
 
 #include <boost/contract/public_function.hpp>
