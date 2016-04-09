@@ -1,0 +1,143 @@
+
+[/ Copyright (C) 2008-2012 Lorenzo Caminiti ]
+[/ Distributed under the Boost Software License, Version 1.0 ]
+[/ (see accompanying file LICENSE_1_0.txt or a copy at ]
+[/ http://www.boost.org/LICENSE_1_0.txt) ]
+[/ Home at http://sourceforge.net/projects/contractpp ]
+
+[section Getting Started]
+
+This section explains how to get oriented to start using this library.
+
+[section This Documentation]
+
+Programmers should be able to start using this library after reading the __Introduction__, __Getting_Started__, and __Tutorial__ sections.
+The other sections of this documentation can be consulted at a later point to gain a more in-depth knowledge of the library.
+
+Some footnotes are marked by the word "*Rationale*".
+These explain reasons behind decisions made during the design and implementation of this library.
+
+[endsect]
+
+[section Compilers and Platforms]
+
+In general, this library requires a C++ compiler with sound support of SFINAE and other template meta-programming techniques included in the C++03 standard.
+This library requires Boost (Boost.Optional, Boost.Thread, Boost.FunctionTypes, Boost.Traits, Boost.MPL, etc.).
+
+It is possible to use this library without C++11 lambda functions but a large amount of boiler-plate code is required to manually program separate functions to specify preconditions and postconditions (so using this library without C++11 lambda functions is not recommended, see __No_Lambda_Functions__).
+It is also possible to use this library without C++11 (or C++99) variadic macros by manually programming a small amount of boiler-plate code (see __No_Macros__).
+
+Some parts of this documentation use an operator [^['typeof](...)].
+This is just to indicate an operator equivalent to C++11 `decltype` in this documentation.
+Internally this library does not actually use type deduction in these cases (because the library already knows the type in question) so C++11 `decltype` and other type-of implementations are not required to compile this library.
+
+This library has been developed and tested with:
+
+* Visual Studio 2015 on Windows (MSVC =cl= version 19.00.23506).
+* GCC version 4.9.3 on Cygwin (with C++11 features enabled =-std=c++11=).
+* Clang version 3.5.2 on Cygwin (with C++11 features enabled =-std=c++11=).
+* Boost C++ libraries version 1.60.0.
+
+[endsect]
+
+[section Code Organization]
+
+Let [^['lib-root]] be the directory under which this library source files have been installed.
+This library flies are organized as follows:
+
+[pre
+['lib-root/]                   # Directory where this library files were installed.
+    build/                  # Build files (using Boost.Jam).
+    doc/                    # Documentation (using Boost.QuickBook).
+        html/               # This documentation (HTML).
+    example/                # Examples (including those listed in this documentation).
+    include/
+        boost/
+            contract.hpp    # Include all headers at once.
+            contract/       # Header files to be included one-by-one.
+                core/       # Fundamental headers (usually indirectly included by other headers).
+                detail/     # Implementation code (should never be included or used directly).
+    src/                    # Library source code to be compiled.
+    test/                   # Tests.
+]
+
+All headers required by this library can be included at once by:
+
+    #include <boost/contract.hpp>
+
+Alternatively, all =boost/contract/*.hpp= headers are independent from one another and they can be selectively included one-by-one based on the specific functionality of this library being used (this might reduce compilation time).
+The =boost/contract/core/*.hpp= headers are not independent from other headers and they do not need to be directly included in user code when one or more =boost/contract/*.hpp= header is included already.
+
+Files in =boost/contract/detail/=, names in the `boost::contract::detail` namespace, names and macros starting with `boost_contract_detail...` and `BOOST_CONTRACT_DETAIL...` (in any namespace, including user's namespaces) are part of this library implementation and should never be used directly in user code.
+
+Names starting with `BOOST_CONTRACT_ERROR...` are used by this library to report compile-time errors (so spotting these names in error messages reported by the compiler might help troubleshooting).
+
+[endsect]
+
+[section Installation and Compilation]
+
+Let [^['lib-root]] be the directory under which this library source files have been installed.
+Let [^['boost-root]] be the directory under which Boost source code has been installed and compiled following Boost's documentation (if pre-compiled Boost distributions are used instead, the [^['lib-boost]\/include] and [^['lib-boost]\/stage\/lib] directories below might be replaced by =/usr/include= and =/usr/lib= or similar directories depending on the specific Boost distribution, OS, etc.).
+
+The following steps show how to compile this library as a shared library (a.k.a., Dynamically Linked Library (DLL)) and then compile and run a user program that uses this library (the [@../../example/features/introduction.cpp =introduction.cpp=] program shown in __Introduction__ is used as an example).
+
+Using MSVC on Windows (from a developer command prompt that automatically invokes the correct =vcvarsall.bat=):
+
+[pre
+> cd ['lib-root]\build
+> cl ['lib-root]\src\contract.cpp \/MDd \/EHs -DBOOST_CONTRACT_DYN_LINK -I ['lib-root]\include -I ['boost-root] /link /DLL /LIBPATH:['boost-root]\stage\lib /out:boost_contract.dll 
+]
+
+[pre
+> cd ['lib-root]\example\features
+> cl introduction.cpp \/MDd \/EHs -I ['lib-root]\include -I ['boost-root] /link /LIBPATH:['boost-root]\stage\lib ['lib-root]\build\boost_contract.lib
+]
+
+[pre
+> set PATH=%PATH%;['lib-root]\build
+> introduction
+]
+
+Using GCC on Cygwin (and some Linux-like OS):
+
+[pre
+$ cd ['lib-root]\/build
+$ g++ ['lib-root]\/src\/contract.cpp -std=c++11 -shared -DBOOST_CONTRACT_DYN_LINK -I ['lib-root]\/include -I ['boost-root] ['boost-root]\/stage\/lib\/libboost_system.a -o boost_contract.dll
+]
+
+[pre
+$ cd ['lib-root]\/example\/features
+$ g++ introduction.cpp -std=c++11 -I ['lib-root]\/include -I ['boost-root] ['lib-root]\/build\/boost_contract.dll -o introduction
+]
+
+[pre
+$ export PATH=$PATH:['lib-root]\/build
+$ .\/introduction
+]
+
+The above steps also work for Clang using =clang++= instead of =g++=.
+
+Following a convention common to many Boost libraries, this library provides the [macroref BOOST_CONTACT_DYN_LINK] macro to be defined when compiling this library as a shared library instead.
+If this macro is not defined, this library will be compiled as a statically linked library.
+There is also a [macroref BOOST_CONTRACT_HEADER_ONLY] macro that can be defined when compiling user programs instead of pre-compiling this library separately as either a static or shared library (because this library will then be composed only of header files so it no longer needs to be compiled separately).
+
+[important
+When a program is composed of different libraries that in turn use this library, this library will not properly work at run-time unless it is compiled and linked as a shared library defining the [macroref BOOST_CONTRACT_DYN_LINK] macro as shown above.
+[footnote
+Specifically, this library will not correctly disable contracts while checking other contracts and call the correct user-defined contract failure handlers unless it is compiled as a shared library when it is being used by different libraries part of the same program.
+]
+]
+
+It should be simple enough for programmers to setup their build environments (BJam, Make, CMake, MSBuild, etc.) to compile this library source code into a shared library and then compile and link user code against it (if that is preferred instead of manually running the compiler as indicated by the steps above).
+For example, this library source comes with a set of Boost.Build (BJam) files that can be used to build the library and build and run its tests and examples assuming: Boost was built from source, an environment variable named `BOOST_ROOT` is set to the [^['boost-root]] directory path, and the `bjam` program can be found in the `PATH` environment variable.
+The following uses BJam to build and run the [@../../example/features/introduction.cpp =introduction.cpp=] program and also to automatically build this library when necessary:
+
+[pre
+> cd ['lib-root]\example
+> bjam features-introduction
+]
+
+[endsect]
+
+[endsect]
+

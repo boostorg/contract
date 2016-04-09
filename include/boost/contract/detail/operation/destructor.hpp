@@ -41,7 +41,7 @@ private:
                 {
                     check_guard checking;
                     // Obj exists (before dtor body), check static and non- inv.
-                    this->check_entry_inv();
+                    this->check_entry_all_inv();
                     // Dtor cannot have pre because it has no parameters.
                 }
             #endif
@@ -71,7 +71,7 @@ public:
             bool body_threw = std::uncaught_exception();
             
             #ifndef BOOST_CONTRACT_NO_EXIT_INVARIANTS
-                if(body_threw) this->check_exit_inv();
+                if(body_threw) this->check_exit_all_inv();
                 else this->check_exit_static_inv();
             #endif
             #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS

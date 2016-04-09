@@ -4,13 +4,13 @@
 [:['["It is absurd to make elaborate security checks on debugging runs, when no trust is put in the results, and then remove them in production runs, when an erroneous result could be expensive or disastrous. What would we think of a sailing enthusiast who wears his life-jacket when training on dry land but takes it off as soon as he goes to sea?]]]
 [:['-- Charles Antony Richard Hoare (see __Hoare73__)]]
 
-This section gives an overview of Contract Programming (see __Meyer97__, __Mitchell02__, and __N1613__ for a detailed introduction to Contract Programming).
-Readers that already have a basic understanding of Contract Programming can skip this section and come back to it after reading the __Tutorial__ section.
+This section gives an overview of Contract Programming (see __Meyer97__, __Mitchell02__, and __N1613__ for a more detailed introduction to Contract Programming).
+Readers that already have a basic understanding of Contract Programming can skip this section and come back to it after reading the __Tutorial__.
 
 [note
 The objective of this library is /not/ to convince programmers to use Contract Programming.
 It is assumed that programmes understand the benefits and trade-offs associated with Contract Programming and they have already decided to use this methodology to code program specifications.
-Then, this library aims to be the best Contract Programming library for C++.
+Then, this library aims to be the best and more complete Contract Programming library for C++.
 ]
 
 [section Assertions]
@@ -20,9 +20,9 @@ Contract Programming is characterized by the following assertion mechanisms:
 # Preconditions: These are logical conditions that programmers expect to be true when the function is called (e.g., to check constraints on the function arguments).
 # Postconditions: These are logical conditions that programmers expect to be true when the function exits without throwing an exception (e.g., to check the result and any side effect that a function might have).
 Postconditions can usually access the function return value (for non-void functions) and /old values/ that expressions had before the function body was executed.
-# Class invariants: These are logical conditions that programmers expect to be true after the constructor exits without throwing an exception, before and after the execution of every public non-static member function (even if they throw exceptions), before the destructor is executed and if the destructor throws an exception (e.g, class invariants can define valid states for all objects of a class).
-It is possible to specify a different set of class invariants for volatile member functions, but these /volatile class invariants/ are assumed to be the same as class invariants unless differently specified.
-It is also possible to specify /static class invariants/ which are excepted to be true before and after the execution of any public member function (even if static), of constructors, and of the destructor (even when the destructor does not throw an exception).
+# Class invariants: These are logical conditions that programmers expect to be true after the constructor exits without throwing an exception, before and after the execution of every public non-static member function (even if they throw exceptions), before the destructor is executed and if the destructor throws an exception (e.g, class invariants can define valid states for all objects of a given class).
+It is possible to specify a different set of class invariants for volatile member functions, namely /volatile class invariants/.
+It is also possible to specify /static class invariants/ which are excepted to be true before and after the execution of any constructor, destructor (even if it does not throw an exception), and public member function (even if static).
 [footnote
 *Rationale.*
 Static and volatile class invariants were first introduced by this library to reflect the fact that C++ supports both static and volatile member functions.
@@ -30,25 +30,27 @@ Static and volatile class invariants are not part of __N1962__.
 ]
 # Subcontracting: Subcontracting is defined according to the __substitution_principle__ and it indicates that preconditions cannot be strengthen, while postconditions and class invariants cannot be weaken.
 
-Furthermore, it is a common requirement for Contract Programming to automatically disable other contracts while a contract assertions is being checked (in order to avoid infinite recursion while checking contract assertions).
+Furthermore, it is a common requirement for Contract Programming to automatically disable other contracts while a contract assertions is already being checked (in order to avoid infinite recursion while checking contract assertions).
 
 [note
-This library implements this requirement but it should be noted that, in order to globally disable assertions while checking another assertion, some type of global variable needs to be used.
-In multi-threaded programs, the [macroref BOOST_CONTRACT_CONFIG_THREAD_SAFE] configuration macro can be defined to protect such a global variable from race conditions, but this will effectively introduce a global lock in the program.
+This library implements this requirement but it should be noted that, in order to globally disable assertions while checking another assertion, some type of global variable needs to be used by the library implementation.
+This library will automatically protect such a global variable from race conditions in multi-threated programs, but this will effectively introduce a global lock in the program (the [macroref BOOST_CONTRACT_DISABLE_THREADS] macro can be defined to disable this global lock but at the risk of incurring in race conditions).
 ]
 
 In general, it is recommended to specify different contract conditions using separate assertion statements and not to group them together into a single condition using logical operators (`&&`, `||`, etc.).
 This is because if contract conditions are programmed together using a single assertion then it will not be clear which condition actually failed in case the assertion is evaluated to be false at run-time.
 
 A limited form of Contract Programming is the use of the C-style `assert` macro.
-Using `assert` is common practice for many programmers but it suffers of the following limitations (that are instead overcome by Contract Programming):
+Using `assert` is common practice for many programmers but it suffers of the following limitations:
 
 * `assert` does not distinguish between preconditions and postconditions.
-In well-tested production code, postconditions can usually be disabled trusting the correctness of the implementation while preconditions might still need to remain enabled because of possible changes in the calling code.
+In well-tested production code, postconditions can usually be disabled trusting the correctness of the implementation while preconditions might still need to remain enabled because of possible changes in the calling code (e.g., postconditions of a given library could be disabled after testing while its preconditions can be kept enabled given the library cannot predict the evolution of user code that will be calling it).
 Using `assert` it is not possible to selectively disable only postconditions and all assertions must be disabled at once.
 * `assert` requires to manually program extra code to check class invariants (e.g., extra member functions and try blocks).
 * `assert` does not support subcontracting.
-* `assert` calls are usually scattered throughout the implementation thus the asserted conditions are not immediately visible in their entirety to programmers.
+* `assert` calls are usually scattered throughout the implementation thus the asserted conditions are not immediately visible in their entirety by programmers.
+
+These limitation do not apply to Contract Programming instead.
 
 [endsect]
 
@@ -59,20 +61,20 @@ Using `assert` it is not possible to selectively disable only postconditions and
 The main use of Contract Programming is to improve software quality.
 __Meyer97__ discusses how Contract Programming can be used as the basic tool to write ["correct] software.
 __Stroustrup97__ discusses the key importance of class invariants plus advantages and disadvantages of preconditions and postconditions.
-The following is a short summary of the benefits associated with Contract Programming mainly taken from __N1613__:
+The following is a short summary of the benefits associated with Contract Programming inspired mainly by __N1613__:
 
 # Preconditions and postconditions:
 Using function preconditions and postconditions, programmers can give a precise semantic description of what a function requires at its entry and what it ensures under its exit (if it does not throw an exception).
 In particular, using postcondition old values, Contract Programming provides a mechanism that allows programmers to compare values of an expression before and after the function body execution.
-This mechanism is powerful enough to enable programmers to express many constraints within the code, constraints that would otherwise have to be captured at best only informally in the documentation.
+This mechanism is powerful enough to enable programmers to express many correctness constraints within the code itself, constraints that would otherwise have to be captured at best only informally by documentation.
 # Class invariants:
 Using class invariants, programmers can describe what to expect from a class and the logic dependencies between the class members.
 It is the job of the constructor to ensure that the class invariants are satisfied when the object is first created.
 Then the implementation of the member functions can be largely simplified as they can be written knowing that the class invariants are satisfied because Contract Programing checks them before and after the execution of every public member function. 
-Finally, the destructor makes sure that the class invariants hold for the entire life of the object, checking the class invariants one last time before the object is destructed.
+Finally, the destructor makes sure that the class invariants held for the entire life of the object checking the class invariants one last time before the object is destructed.
 # Self-documenting code:
 Contracts are part of the source code, they are checked at run-time so they are always up-to-date with the code itself.
-Therefore the specifications, as documented by the contracts, can be trusted to always be up-to-date with the implementation.
+Therefore program specifications, as documented by the contracts, can be trusted to always be up-to-date with the implementation.
 # Easier debugging:
 Contract Programming can provide a powerful debugging facility because, if contracts are well written, bugs will cause contract assertions to fail exactly where the problem first occurs instead than at some later stage of the program execution in an apparently unrelated manner.
 Note that a precondition failure points to a bug in the function caller, a postcondition failure points instead to a bug in the function implementation. 
@@ -83,15 +85,15 @@ For example, consider the validation of a result in postconditions.
 Validating the return value might seem redundant, but in this case we actually want that redundancy.
 When programmers write a function, there is a certain probability that they make a mistake in implementing the function body.
 When programmers specify the result of the function in the postconditions, there is also a certain probability that they make a mistake in writing the contract. 
-However, the probability that programmers make a mistake twice (in both the body /and/ the contract) is lower than the probability that the mistake is made just once (in either the body or the contract).
+However, the probability that programmers make a mistake twice (in both the body /and/ the contract) is in general lower than the probability that the mistake is made just once (in either the body or the contract).
 ]
 # Easier testing:
 Contract Programming facilitates testing because a contract naturally specifies what a test should check.
 For example, preconditions of a function state which inputs cause the function to fail and postconditions state which outputs are produced by the function on successful exit.
-Obviously, Contract Programming should be seen as a tool to complement (and not to replace) testing.
+(That said, Contract Programming should be seen as a tool to complement (and obviously not to replace) testing.)
 # Formal design:
 Contract Programming can serve to reduce the gap between designers and programmers by providing a precise and unambiguous specification language.
-Moreover, contracts can make code reviews easier.
+Moreover, contracts can make code reviews easier by clarifying some of the semantics and usage of the code.
 # Formalized inheritance:
 Contract Programming formalizes the virtual function overriding mechanism using subcontracting as justified by the __substitution_principle__.
 This keeps the base class programmers in control as overriding functions always have to fully satisfy the base class contracts.
@@ -100,25 +102,25 @@ Contract Programming assertions can replace [@http://en.wikipedia.org/wiki/Defen
 
 [heading Costs]
 
-In general, Contract Programming benefits come to the cost of performance as discussed in detail by both __Stroustrup97__ and __Meyer97__.
-However, while performance trade-offs should be carefully considered depending on the specific application domain, software quality cannot be sacrificed: It is difficult to see value in software that quickly and efficiently provides the incorrect result.
+In general, Contract Programming benefits come at the cost of performance as discussed in detail by both __Stroustrup97__ and __Meyer97__.
+However, while performance trade-offs should be carefully considered depending on the specific application domain, software quality cannot be sacrificed: it is difficult to see value in software that quickly and efficiently provides incorrect results.
 
 The run-time performances are negatively impacted by Contract Programming mainly because of extra time require to:
 
 # Check the asserted conditions.
 # Call additional functions that specify preconditions, postconditions, class invariants, etc.
-# Copy old values and return values when these are used in postconditions.
+# Copy old and return values when these are used in postconditions.
 
 To mitigate the run-time performance impact, programmers can selectively disable run-time checking of some of the contract assertions.
 Programmers will have to decide based on the performance trade-offs required by their applications, but a reasonable approach often is to:
 
 * Always write contracts to clarify the semantics of the design embedding the specifications directly in the code and making the code self-documenting.
-* Enable precondition, postcondition, and class invariant checking during initial testing.
-* Enable only precondition (and possibly class invariant) checking during release testing and for the final release (see also [macroref BOOST_CONTRACT_CONFIG_NO_PRECONDITIONS], [macroref BOOST_CONTRACT_CONFIG_NO_POSTCONDITIONS], and [macroref BOOST_CONTRACT_CONFIG_NO_INVARIANTS]).
+* Enable preconditions, postconditions, and class invariants checking during initial testing.
+* Enable only preconditions (and possibly class invariants) checking during release testing and for the final release (see __Disable_Contract_Checking__).
 
-This approach is usually reasonable because in well-tested production code, validating the function body implementation using postconditions and class invariants is rarely needed since the function has shown itself to be ["correct] during testing.
+This approach is usually reasonable because in well-tested production code, validating the function body implementation using postconditions (and often class invariants) is rarely needed since the function has shown itself to be ["correct] during testing.
 On the other hand, checking function arguments using preconditions is always needed because of changes that can be made to the calling code (without having to necessarily re-test and re-released to called code).
-Furthermore, postconditions are usually computationally more expensive to check (see the __Assertion_Complexity__ section for a mechanism to selectively tag and disable assertions based on their computational complexity).
+Furthermore, postconditions are usually computationally more expensive to check than preconditions and class invariants.
 
 [endsect]
 
@@ -126,7 +128,7 @@ Furthermore, postconditions are usually computationally more expensive to check 
 
 [heading Free Functions]
 
-A call to a /free function/ (i.e., a function that is not a member function) with contracts executes the following steps (see also [funcref boost::contract::function]):
+A call to a non-member function with contracts executes the following steps (see also [funcref boost::contract::function]):
 
 # Check function preconditions.
 # Execute the function body.
@@ -135,9 +137,9 @@ A call to a /free function/ (i.e., a function that is not a member function) wit
 [heading Private and Protected Member Functions]
 
 In Contract Programming, Private and protected member functions do not have to satisfy the class invariants (because these functions are considered part of the implementation of the class).
-Furthermore, the __substitution_principle__ does not apply to private and protected member functions (because these functions are not accessible to the user at calling site where the __substitution_principle__ applies).
+Furthermore, the __substitution_principle__ does not apply to private and protected member functions (because these functions are not accessible to the user at the calling site where the __substitution_principle__ applies).
 
-Therefore, calls to private and protected member functions with contracts execute the same steps the ones indicated for free functions above (checking only preconditions and postconditions, but without checking class invariants and without subcontracting).
+Therefore, calls to private and protected member functions with contracts execute the same steps as the ones indicated for non-member functions above (checking only preconditions and postconditions, but without checking class invariants and without subcontracting).
 
 [endsect]
 
@@ -146,31 +148,31 @@ Therefore, calls to private and protected member functions with contracts execut
 [heading Overriding Public Member Functions]
 
 Let's consider a public member function in a derived class that is overriding public virtual functions declared in a number of its base classes (because of multiple inheritance, the function could override from more than one base class).
-We refer to the function in the derived class as the /overriding/ function, and to the functions being overridden in the different base classes as the /overridden/ functions.
+We refer to the function in the derived class as the /overriding function/, and to the functions being overridden in the different base classes as the /overridden functions/.
 
 Then a call to the overriding public member function with contracts executes the following steps (see also [funcref boost::contract::public_function]):
 
 # Check static class invariants __AND__ non-static class invariants for all overridden bases, __AND__ then check the derived class static __AND__ non-static invariants.
 # Check preconditions of overridden public member functions from all overridden bases in __OR__ with each other, __OR__ else check the overriding function preconditions in the derived class.
-# Executed the function body.
+# Executed the overriding function body.
 # Check static class invariants __AND__ non-static class invariants for all overridden bases, __AND__ then check the derived class static __AND__ non-static invariants (even if the body threw an exception).
 # If the body did not throw an exception, check postconditions of overridden public member functions from all overridden bases in __AND__ with each other, __AND__ then check the overriding function postconditions in the derived class.
 
-Volatile member functions check static class invariants __AND__ non-static /volatile/ class invariants instead.
+Volatile member functions check static class invariants __AND__ volatile class invariants instead.
 Preconditions and postconditions of volatile member functions and volatile class invariants access the object as `volatile`.
 
 [note
-[#logic_and_anchor] [#logic_or_anchor]
+[#and_anchor] [#or_anchor]
 In this documentation __AND__ and __OR__ indicate the logic /and/ and /or/ operations evaluated in /short-circuit/.
 For example: `p` __AND__ `q` is true if and only if both `p` and `q` are true, but `q` is never evaluated when `p` is false; `p` __OR__ `q` is true if and only if either `p` or `q` are true, but `q` is never evaluated when `p` is true.
 ]
 
-When subcontracting, overridden functions are searched deeply in the public branches of the inheritance tree (i.e., not just the derived class's direct public parents are inspected, but also all its public grandparents, etc.).
-In case of multiple inheritance this search extends widely to all multiple public base classes following their order of declaration in the derived class inheritance list (as usual in C++, this search could result in overriding multiple base functions and therefore in subcontracting from multiple public base classes).
+When subcontracting, overridden functions are searched (at compile-time) deeply in the public branches of the inheritance tree (i.e., not just the derived class's direct public parents are inspected, but also all its public grandparents, etc.).
+In case of multiple inheritance this search extends widely to all multiple public base classes following their order of declaration in the derived class inheritance list (as usual in C++, this search could result in multiple overridden functions and therefore in subcontracting from multiple public base classes).
 Note that only public base classes are considered for subcontracting (because private and protected base classes are not accessible to the user at the calling site where the __substitution_principle__ applies).
 
-Class invariants are checked before preconditions and postconditions so that programming of precondition and postcondition assertions can be simplified by assuming that class invariants are satisfied (e.g., if class invariants assert that a pointer cannot be null then preconditions and postconditions can safety dereference that pointer without additional checking).
-Similarly, subcontracting checks contracts of public base classes before checking the derived class contracts so that programming of derived class contract assertions can be simplified by assuming that public base class contracts are satisfied.
+Class invariants are checked before preconditions and postconditions so programming of precondition and postcondition assertions can be simplified by assuming that class invariants are satisfied already (e.g., if class invariants assert that a pointer cannot be null then preconditions and postconditions can safety dereference that pointer without additional checking).
+Similarly, subcontracting checks contracts of public base classes before checking the derived class contracts so programming derived class contract assertions can be simplified by assuming that public base class contracts are satisfied already.
 
 [heading Non-Overriding Public Member Functions]
 
@@ -182,7 +184,7 @@ A call to a public non-static member function with contracts but that is not ove
 # Check the class static __AND__ non-static invariants (even if the body threw an exception, but none of the invariants from base classes).
 # If the body did not throw an exception, check function postconditions (but none of the postconditions from functions in base classes).
 
-Volatile member functions check static class invariants __AND__ non-static /volatile/ class invariants instead.
+Volatile member functions check static class invariants __AND__ volatile class invariants instead.
 Preconditions and postconditions of volatile member functions and volatile class invariants access the object as `volatile`.
 
 Class invariants are checked because this function is part of the class public API.
@@ -192,38 +194,36 @@ However, none of the contracts of the base classes are checked because this func
 
 A call to a public static member function with contracts executes the following steps (see also [funcref boost::contract::public_function]):
 
-# Check static class invariants (but not the non-static invariants and none of the invariants base classes).
+# Check static class invariants (but not the non-static invariants and none of the invariants from base classes).
 # Check function preconditions (but none of the preconditions from function in base classes).
 # Executed the function body.
 # Check static class invariants (even if the body threw an exception, but not the non-static invariants and none of the invariants from base classes).
 # If the body did not throw an exception, check function postconditions (but none of the postconditions from functions in base classes).
 
 Class invariants are checked because this function is part of the class public API, but only static class invariants can be checked (because this is a static function so it cannot access the object that would instead be required to check non-static class invariants).
-Furthermore, static functions cannot override any function so the __substitution_principle__ does not apply to them and they do not subcontract.
+Furthermore, static functions cannot override any function so the __substitution_principle__ does not apply and they do not subcontract.
 
-Preconditions and postconditions of static member functions and static class invariants cannot access the object (because static member functions cannot access the object).
+Preconditions, postconditions, and class invariants of static member functions cannot access the object (because they are `static` members).
 
 [endsect]
 
 [section Constructor Calls]
 
-A call to a constructor with contracts executes the following steps (see also [funcref boost::contract::constructor] and [classref boost::contract::constructor_precondition]):
+A call to a constructor with contracts executes the following steps (see also [classref boost::contract::constructor_precondition] and [funcref boost::contract::constructor]):
 
-# Check the constructor preconditions (but these cannot access the object because the object is not constructed yet).
+# Check constructor preconditions (but these cannot access the object because the object is not constructed yet).
 # Execute the constructor member initialization list (if present).
     # Construct any base class (public or not) according with C++ construction mechanism and also check the contracts of these base constructors (according with steps similar to the ones listed here).
-# Check the static class invariants (but not the non-static class invariants, because the object is not constructed yet).
+# Check static class invariants (but not the non-static or volatile class invariants, because the object is not constructed yet).
 # Execute the constructor body.
-# Check the static class invariants (even if the body threw an exception).
+# Check static class invariants (even if the body threw an exception).
 # If the body did not throw an exception:
-    # Check the non-static class invariants (because the object is now successfully constructed).
-    # Check the constructor postconditions (but these cannot access the object old value because there was no object before the execution of the constructor body).
+    # Check non-static __AND__ volatile class invariants (because the object is now successfully constructed).
+    # Check constructor postconditions (but these cannot access the object old value because there was no object before the execution of the constructor body).
 
-The object is never volatile within constructors so constructors do not check volatile class invariants.
+Constructor preconditions are checked before executing the member initialization list so that programming these initializations can be simplified assuming the constructor preconditions are satisfied (e.g., constructor arguments can be validated by the constructor preconditions before they are used to initialize bases and data members).
 
-Constructor preconditions are checked before executing the member initialization list so that programming of these initializations can be simplified by assuming the constructor preconditions are satisfied (e.g., constructor arguments can be validated by the constructor preconditions before they are used to initialize bases and data members).
-
-As indicated in the steps above, C++ object construction mechanism will automatically check base class contracts when these bases are initialized.
+As indicated in the steps above, C++ object construction mechanism will automatically check base class contracts when these bases are initialized (no explicit subcontracting behaviour is required).
 
 [endsect]
 
@@ -231,25 +231,23 @@ As indicated in the steps above, C++ object construction mechanism will automati
 
 A call to a destructor with contracts executes the following steps (see also [funcref boost::contract::destructor]):
 
-# Check static class invariants __AND__ non-static class invariants.
+# Check static class invariants __AND__ non-static __AND__ volatile class invariants.
 # Execute the destructor body (destructors have no parameters and they can be called at any time after object construction so they have no preconditions).
-# Check the static class invariants (even if the body threw an exception).
-# If the body threw an exception, check the non-static class invariants (because the object was not successfully destructed so it still exists and should satisfy its invariants).
+# Check static class invariants (even if the body threw an exception).
+# If the body threw an exception, check non-static class invariants (because the object was not successfully destructed so it still exists and should satisfy its invariants).
 # If the body did not throw an exception:
-    # Check the destructor postconditions (but these can only access the class' static members because there is no object after successful execution of the destructor body).
+    # Check destructor postconditions (but these can only access the class static members because there is no object after successful execution of the destructor body).
 [footnote
-None of the Contract Programming references that the authors have studied propose postconditions for destructor (neither __N1962__ nor __Meyer97__, but __Eiffel__ has no static data member).
-However, in principle there could be uses cases for destructor postconditions (e.g., a class that counts object instances could use destructor postconditions to assert that an instance counter stored in a static data member is decreased of `1` because the object has been destructed) so this library support postconditions for destructors.
-Of course, after destructor body execution there is no object anymore so destructor postconditions should only be allowed to access the class' static members.
+None of the Contract Programming references that the authors have studied propose postconditions for destructor (neither __N1962__ nor __Meyer97__ (but Eiffel does not support static data members also)).
+However, in principle there could be uses cases for destructor postconditions (e.g., a class that counts object instances could use destructor postconditions to assert that an instance counter stored in a static data member is decreased by `1` because the object has been destructed) so this library supports postconditions for destructors.
+Of course, after destructor body execution there is no object anymore so destructor postconditions should only access the class' static members.
 ]
     # Destroy any base class (public or not) according with C++ destruction mechanism and also check the contracts of these base destructors (according with steps similar to the ones listed here).
 
-The object is never volatile within destructors so destructors do not check volatile class invariants.
-
-As indicated in the steps above, C++ object destruction mechanism will automatically check base class contracts when the destructor exits without throwing an exception.
+As indicated in the steps above, C++ object destruction mechanism will automatically check base class contracts when the destructor exits without throwing an exception (no explicit subcontracting behaviour is required).
 
 [note
-Given that C++ allows destructors to throw, this library handles the cases when destructor bodies throw exceptions.
+Given that C++ allows destructors to throw, this library handles the cases when destructor bodies throw exceptions as indicated above.
 However, in order to comply with STL exception safety guarantees and good C++ programming practices, users should program destructor bodies to never throw.
 ]
 
@@ -260,11 +258,11 @@ However, in order to comply with STL exception safety guarantees and good C++ pr
 Contracts are only responsible to check the program state in oder to ensure its compliance with the specifications.
 Therefore, contracts should only have access to the object, function arguments, function return value, old values, and all other program variables in `const` context (via `const&`, `const* const`, etc.).
 
-Whenever possible (e.g., class invariants and postcondition old values), this library enforces this constant-correctness constraint at compile-time.
-However, this library cannot automatically enforce this constraint at compile-time for all contract assertions.
-It is the responsibility of the users to program assertions that do /not/ change program variables (the same limitation exists with the C-style `assert` mechanism).
+Whenever possible (e.g., class invariants and postcondition old values), this library automatically enforces this constant-correctness constraint at compile-time using `const`.
+However, this library cannot automatically enforce this constraint in all cases (e.g., for preconditions and postconditions of mutable member functions, for global variables, etc.).
+Ultimately, it is the responsibility of the users to program assertions that do /not/ change program variables (the same limitation exists with the C-style `assert` mechanism).
 
-See the __Constant_Correct_Functors__ section for information on how to use this library to always enforce the constant-correctness constraint at compile-time (but these methods require a significant amount of boiler-plate code, so they are not recommended).
+See __No_Lambda_Functions__ for information on how to use this library to always enforce the constant-correctness constraint at compile-time (but these methods require a significant amount of boiler-plate code to be programmed manually so they are not recommended).
 
 [endsect]
 
@@ -274,25 +272,25 @@ Contracts are part of the program specification and not of its implementation.
 Therefore, contracts should ideally be programmed within C++ declarations, and not within definitions.
 
 In general, this library cannot satisfy this requirement but even when the contracts are programmed together with the body in the function definition, it is still very easy for users to identify and read just the contract portion of the function definition (because that must always appear at the very top of the function code).
-See the __Separating_Body_Implementation__ section for information on how to separate contract specification from body implementation at the cost of programming one extra function (for applications were this is truly important).
+See __Separate_Body_Implementation__ for information on how to separate contract specification from body implementation at the cost of programming an extra function (for applications were this requirement is truly important).
 
-Furthermore, contracts are most useful when they assert conditions only using public members. In most cases, the need of using non-public members to check contracts indicates an error in the design of the class.
+Furthermore, contracts are most useful when they assert conditions only using public members (in most cases, the need of using non-public members to check contracts indicates an error in the design of the class).
 
-For example, the caller of a public member function cannot in general make sure that the function preconditions are satisfied if these preconditions use private members that are not accessible by the caller (therefore, a failure in the preconditions will not necessarily indicate a bug in the caller given that the caller was not able to fully check the preconditions before calling the member function).
-However, given that C++ provides programmers ways around access level restrictions (`friend`, function pointers, etc.), this library leaves it up to the programmers to make sure that only public members are used in contract assertions (__N1962__ follows the same approach not forcing contracts to only use public members, __Eiffel__ instead generates a compiler error if preconditions use non-public members).
+For example, the caller of a public member function cannot in general make sure that the function preconditions are satisfied if the precondition assertions use private members that are not callable by the caller (therefore, a failure in the preconditions will not necessarily indicate a bug in the caller given that the caller was made unable to fully check the preconditions in the first place).
+However, given that C++ provides programmers ways around access level restrictions (`friend`, function pointers, etc.), this library leaves it up to the programmers to make sure that only public members are used in contract assertions (__N1962__ follows the same approach not restricting contracts to only use public members, Eiffel instead generates a compiler error if precondition assertions use non-public members).
 [footnote
 *Rationale.*
-In theory, if C++ [@http://www.open-std.org/jtc1/sc22/wg21/docs/cwg_defects.html#45 defect 45] did not get fixed, this library could have been used in a way that generated a compile-time error for preconditions that use non-public members (but even in that case at the expense of programmers writing extra boiler-plate code).
+In theory, if C++ [@http://www.open-std.org/jtc1/sc22/wg21/docs/cwg_defects.html#45 defect 45] did not get fixed, this library could have been implemented in a way that generates a compile-time error when precondition assertions use non-public members (but still at the expense of programmers writing extra boiler-plate code).
 ]
 
 [endsect]
 
 [section On Contract Failure]
 
-If preconditions, postconditions, or class invariants throw an exception or their assertions are checked to be false at run-time then special failure handler functions are automatically called by this library.
+If either preconditions, postconditions, or class invariants throw exceptions or their assertions are checked to be false at run-time then specific failure handler functions are automatically invoked by this library.
 
-By default, these failure handler functions print a text message to the standard error `std::cerr` (with detailed information about the failure) and they terminate the program calling `std::terminate`.
-However, user-defined failure handlers can be programmed to take any other action (throw an exception, exit the program with an error code, etc.) using [funcref boost::contract::set_precondition_failed], [funcref boost::contract::set_postcondition_failed], [funcref boost::contract::set_invariant_failed], etc. (see the __Contract_Failure_Handlers__ section for an example).
+By default, these failure handler functions print a text message to the standard error `std::cerr` (with detailed information about the failure) and then terminate the program calling `std::terminate`.
+However, using [funcref boost::contract::set_precondition_failure], [funcref boost::contract::set_postcondition_failure], [funcref boost::contract::set_invariant_failure], etc. programmers can define their own failure handler functions that can take any desired action (throw an exception, exit the program with an error code, etc., see __Throw_on_Failure__).
 [footnote
 *Rationale.*
 This customizable failure handling mechanism is similar to the one used by `std::terminate` and also proposed by __N1962__.
@@ -302,13 +300,13 @@ This customizable failure handling mechanism is similar to the one used by `std:
 
 [section Features]
 
-The Contract Programming features supported by this library are largely based on __N1962__ and on the __Eiffel__ programming language (see __Meyer97__).
+The Contract Programming features supported by this library are largely based on __N1962__ and on the Eiffel programming language.
 The following table compares this library features with the __N1962__ proposal for adding Contract Programming to the C++ standard,
 [footnote
-The __N1962__ was unfortunately rejected because the standard committee did not considered important to add Contract Programming to the core language (the __N1962__ proposal itself is sound).
+The __N1962__ was unfortunately rejected because the standard committee did not considered important to add Contract Programming to the core language (but the __N1962__ proposal itself is sound).
 In any case, this library will allow C++ programmers to still use Contract Programming even if the standard committee never decides to add it as a language feature.
 ]
-the __Eiffel__ programming language (see __Meyer97__), and the __D__ programming language (see __Bright04__).
+the Eiffel programming language (see __Meyer97__), and the D programming language (see __Bright04__).
 
 [table
 [
@@ -322,21 +320,21 @@ the __Eiffel__ programming language (see __Meyer97__), and the __D__ programming
     [
 Specifiers: `precondition`, `postcondition`, `invariant`, `static_invariant`, and `base_types`.
     
-(These last 3 specifiers appear in user-defined classes so their names can be changed using [macroref BOOST_CONTRACT_CONFIG_INVARIANT], [macroref BOOST_CONTRACT_CONFIG_STATIC_INVARIANT], and [macroref BOOST_CONTRACT_CONFIG_BASE_TYPES] respectively to avoid name clashes in user code.)
+(The last three specifiers appear in user code so their names can be changed using [macroref BOOST_CONTRACT_INVARIANT], [macroref BOOST_CONTRACT_STATIC_INVARIANT], and [macroref BOOST_CONTRACT_BASE_TYPEDEF] macros respectively to avoid name clashes in user code.)
     ]
     [Keywords: `precondition`, `postcondition`, `oldof`, and `invariant`.]
     [Keywords: =require=, =require else=, =ensure=, =ensure then=, =old=, =result=, =do=, and =invariant=.]
     [Keywords: =in=, =out=, =assert=, and =invariant=.]
 ][
     [['On contract failure]]
-    [Call `std::terminate` (but can be customized to throw exceptions, exit with an error code, etc.).]
+    [Print an error to `std::cerr` and call `std::terminate` (but can be customized to throw exceptions, exit with an error code, etc.).]
     [Call `std::terminate` (but can be customized to throw exceptions, exit with an error code, etc.).]
     [Throw exceptions.]
     [Throw exceptions.]
 ][
     [['Result value in postconditions]]
     [Yes, captured by or passed as a parameter to (for virtual functions) the postcondition functor.]
-    [Yes, `postcondition (`[^['result-variable-name]]`)`.]
+    [Yes, `postcondition(`[^['result-variable-name]]`)`.]
     [Yes, =result= keyword.]
     [No.]
 ][
@@ -348,21 +346,21 @@ Specifiers: `precondition`, `postcondition`, `invariant`, `static_invariant`, an
 ][
     [['Class invariants]]
     [
-Checked at constructor exit, at destructor entry, and at public member function entry, exit, and throw.
+Checked at constructor exit, at destructor entry and throw, and at public member function entry, exit, and throw.
 Same for volatile class invariants.
 Static class invariants checked at entry and exit of constructor, destructor, and any (also `static`) public member function.
     ]
     [
-Checked at constructor exit, at destructor entry, and at public member function entry, exit, and throw.
+Checked at constructor exit, at destructor entry and throw, and at public member function entry, exit, and throw.
 Volatile and static class invariants not supported.
 ]
     [
 Checked at constructor exit, and around public member functions.
-Volatile and static class invariants do not apply to __Eiffel__.
+(Volatile and static class invariants do not apply to Eiffel.)
     ]
     [
 Checked at constructor exit, at destructor entry, and around public member functions.
-Volatile and static class invariants not supported (`volatile` was deprecated all together from __D__).
+Volatile and static class invariants not supported (`volatile` was deprecated all together in D).
     ]
 ][
     [['Subcontracting]]
@@ -374,9 +372,9 @@ Yes, also support subcontracting for multiple inheritance. Only base classes can
 [footnote
 *Rationale.*
 The authors of __N1962__ decided to forbid derived classes from subcontracting preconditions because they found such a feature rarely if ever used (see [@http://lists.boost.org/Archives/boost/2010/04/164862.php Re: \[boost\] \[contract\] diff n1962]).
-Still, it should be noted that even in __N1962__ if a derived class overrides two functions with preconditions coming from two different base classes via multiple inheritance, the overriding function contract will check preconditions from its two base function in __OR__ (so even in __N1962__ preconditions can actually be subcontracted by the derived class when multiple inheritance is used).
+Still, it should be noted that even in __N1962__ if a derived class overrides two functions with preconditions coming from two different base classes via multiple inheritance, the overriding function contract will check preconditions from its two base function in __OR__ (so even in __N1962__ preconditions can indirectly be subcontracted by the derived class when multiple inheritance is used).
 The authors of this library found that confusing about __N1962__.
-Furthermore, subcontracting preconditions is soundly defined by the __substitution_principle__ and it is supported by __Eiffel__ so this library allows to subcontract preconditions (users can alway avoid using such a feature if they have no need for it).
+Furthermore, subcontracting preconditions is soundly defined by the __substitution_principle__ so this library allows to subcontract preconditions as Eiffel does (users can alway avoid using such a feature if they have no need for it).
 (This is essentially the only feature on which this library deliberately differ from __N1962__.)
 ]
     ]
@@ -390,34 +388,35 @@ Furthermore, subcontracting preconditions is soundly defined by the __substituti
     [No (but planned).]
 ][
     [['Arbitrary code in contracts]]
-    [Yes (but users are generally recommended to only program assertions using [macroref BOOST_CONTRACT_ASSERT] and if-guard statements within contracts, so to avoid introducing bugs and expensive code in contracts, and also to only use public functions to program preconditions).]
+    [Yes (but users are generally recommended to only program assertions using [macroref BOOST_CONTRACT_ASSERT] and if-guard statements within contracts to avoid introducing bugs and expensive code in contracts, and also to only use public functions to program preconditions).]
     [No, assertions only.]
     [No, assertions only. In addition only public members can be used in preconditions.]
     [Yes.]
 ][
     [['Constant-correctness]]
-    [Enforced only for class invariants and old values (making also preconditions and postconditions constant-correct is possible but requires users to program a fare amount of boiler-plate code, see also the __Constant_Correct_Functors__ section).]
+    [Enforced only for class invariants and old values (making also preconditions and postconditions constant-correct is possible but requires users to program a fare amount of boiler-plate code, see __No_Lambda_Functions__).]
     [Yes.]
     [Yes.]
     [No.]
 ][
     [['Function code ordering]]
-    [Preconditions and postconditions in any order, but always before body.]
+    [Preconditions, postconditions, body.]
     [Preconditions, postconditions, body.]
     [Preconditions, body, postconditions.]
     [Preconditions, postconditions, body.]
 ][
     [['Disable assertion checking within assertions checking (to avoid infinite recursion when checking contracts)]]
     [
-Yes (but use [macroref BOOST_CONTRACT_CONFIG_PRECONDITIONS_DISABLE_NO_ASSERTION] to disable no assertion while checking preconditions).
+Yes, but use [macroref BOOST_CONTRACT_PRECONDITIONS_DISABLE_NO_ASSERTION] to disable no assertion while checking preconditions.
 [footnote
 *Rationale.*
 Theoretically, it can be shown that an incorrect argument might be passed to the function body when assertion checking is disabled while checking preconditions (see [@http://lists.boost.org/Archives/boost/2010/04/164862.php Re: \[boost\] \[contract\] diff n1962]).
 Therefore, __N1962__ does not disable any assertion while checking preconditions.
-However, that makes it possible to have infinite recursion while checking preconditions, plus __Eiffel__ disables assertion checking also while checking preconditions.
-Therefore, this library by default disables assertion checking also while checking preconditions, but it also provides the [macroref BOOST_CONTRACT_CONFIG_PRECONDITIONS_DISABLE_NO_ASSERTION] configuration macro so users can change that behaviour if they need to.
+However, that makes it possible to have infinite recursion while checking preconditions, plus Eiffel disables assertion checking also while checking preconditions.
+Therefore, this library by default disables assertion checking also while checking preconditions, but it also provides the [macroref BOOST_CONTRACT_PRECONDITIONS_DISABLE_NO_ASSERTION] configuration macro so users can change this behaviour if needed.
+]
+(In multi-threaded programs this introduces a global lock, see also the [macroref BOOST_CONTRACT_DISABLE_THREADS] macro.)
     ]
-    Use [macroref BOOST_CONTRACT_CONFIG_THREAD_SAFE] to make the implementation of this feature thread-safe in multi-threaded programs (but this will introduce a global lock).]
     [Yes for class invariants and postconditions, but preconditions disable no assertion.]
     [Yes.]
     [No.]
@@ -427,8 +426,8 @@ Therefore, this library by default disables assertion checking also while checki
 Disable nothing.
 [footnote
 *Rationale.*
-Older versions of this library defined a data member in the user class that was automatically used to disable checking of class invariants within nested member function calls (similarly to __Eiffel__).
-However, this feature was required by older revisions of __N1962__ but it is no longer required by __N1962__.
+Older versions of this library defined a data member in the user class that was automatically used to disable checking of class invariants within nested member function calls (similarly to Eiffel).
+This feature was also required by older revisions of __N1962__ but it is no longer required by __N1962__.
 Furthermore, in multi-threaded programs this feature would introduce a lock that synchronizes all member functions calls for a given object.
 Therefore, this feature was removed in the current revision of this library.
 ]
@@ -439,8 +438,8 @@ Therefore, this feature was removed in the current revision of this library.
 ][
     [['Disable contract checking]]
     [
-Yes, contract checking can be skipped at run-time by defining any combination of the macros [macroref BOOST_CONTRACT_CONFIG_NO_PRECONDITIONS], [macroref BOOST_CONTRACT_CONFIG_NO_POSTCONDITIONS], and [macroref BOOST_CONTRACT_CONFIG_NO_INVARIANTS].
-(Also removing contract code from compiled object code is possible but requires users to program a fare amount of boiler-plate code, see also the __Smaller_Object_Code__ section.)
+Yes, contract checking can be skipped at run-time by defining combinations of the [macroref BOOST_CONTRACT_NO_PRECONDITIONS], [macroref BOOST_CONTRACT_NO_POSTCONDITIONS], [macroref BOOST_CONTRACT_NO_INVARIANTS], [macroref BOOST_CONTRACT_NO_ENTRY_INVARIATS], and [macroref BOOST_CONTRACT_NO_EXIT_INVARIANTS] macros.
+(Also removing contract code from compiled object code is possible but requires users to program a fare amount of boiler-plate code, see __Disable_Contract_Checking__.)
 ]
     [Yes (contract code also removed from compiled object code).]
     [Yes, but only predefined combinations of preconditions, postconditions, and class invariants can be disabled (contract code also removed from compiled object code).]
@@ -448,7 +447,7 @@ Yes, contract checking can be skipped at run-time by defining any combination of
 ]
 ]
 
-The authors of this library also consulted the following references that implement Contract Programming for C++ (but usually for a somewhat limited subset of the features above) or for other languages (see the __Bibliography__ section for a complete list of all the references consulted in the design and development of this library):
+The authors of this library also consulted the following references that implement Contract Programming for C++ (but usually for a somewhat limited subset of the features above) or for other languages (see __Bibliography__ for a complete list of all the references consulted in the design and development of this library):
 
 [table
 [ [Reference] [Language] [Notes] ]
@@ -456,20 +455,20 @@ The authors of this library also consulted the following references that impleme
 The Digital Mars C++ compiler extends C++ adding Contract Programming language support (among many other features).
 ] ]
 [ [__Lindrud04__] [C++] [
-This supports class invariants and old values but it does not support subcontracting (plus contracts are specified within definitions instead of declarations and assertions are not constant-correct).
+This supports class invariants and old values but it does not support subcontracting (contracts are specified within definitions instead of declarations and assertions are not constant-correct).
 ] ]
 [ [__Tandin04__] [C++] [
-Interestingly, these contract macros automatically generate __Doxygen__ documentation
+Interestingly, these contract macros automatically generate Doxygen documentation
 [footnote
 *Rationale.*
-Older versions of this library used to automatically generate __Doxygen__ documentation from contract definition macros.
-This functionality was abandoned for a number of reasons: This library no longer uses macros to program contracts; The used macros became too complex and the __Doxygen__ preprocessor was no longer able to expand them; The __Doxygen__ documentation was just a repeat of the contract code (so programmers could directly look at contracts in the source code); __Doxygen__ might not necessarily be the C++ documentation tool used by all programmers.
+Older versions of this library used to automatically generate Doxygen documentation from contract definition macros.
+This functionality was abandoned for a number of reasons: this library no longer uses macros to program contracts; even before that, this library macros became too complex and the Doxygen preprocessor was no longer able to expand them; the Doxygen documentation was just a repeat of the contract code (so programmers could directly look at contracts in the source code); Doxygen might not necessarily be the documentation tool used by all C++ programmers.
 ]
 but old values, class invariants, and subcontracting are not supported (plus contracts are specified within definitions instead of declarations and assertions are not constant-correct).
 ] ]
 [ [__Maley99__] [C++] [
-This supports Contract Programming including subcontracting but with some limitations (e.g., programmers need to manually build an inheritance tree using artificial template parameters), it does not use macros but programmers are required to write by hand a significant amount of boiler-plate code.
-(The authors have found this work very inspiring when developing the first revisions of this library especially for the attempt to support subcontracting.)
+This supports Contract Programming including subcontracting but with limitations (e.g., programmers need to manually build an inheritance tree using artificial template parameters), it does not use macros but programmers are required to write by hand a significant amount of boiler-plate code.
+(The authors have found this work very inspiring when developing initial revisions of this library especially for the attempt to support subcontracting.)
 ] ]
 [ [__C2__] [C++] [
 This uses an external preprocessing tool (the authors could no longer find this project's code to evaluate it).
@@ -495,14 +494,14 @@ This is an Ada-like programming language with support for Contract Programming.
 ]
 
 Typically, preprocessing tools external to the language work by transforming specially formatted code comments into contract code that is then checked at run-time.
-One of this library primary goals was to support Contract Programming entirely /within C++/ and without using any tool external to the standard language.
+One of this library primary goals was to support Contract Programming entirely /within C++/ and without using any tool external to the standard language itself.
 
 To the authors' knowledge, this the only library that fully supports all Contract Programming features for C++.
 [footnote
-Generally speaking, implementing preconditions and postconditions in C++ is not difficult (e.g., using some type of __RAII__ object).
+Generally speaking, implementing preconditions and postconditions in C++ is not difficult (e.g., using some type of RAII object).
 Implementing postcondition old values is also not too difficult (usually requiring users to copy old values into local variables, but it is somewhat more difficult to ensure such copies are not performed when postconditions are disable).
-Most libraries stop here because implementing class invariants already becomes complex.
-Then implementing subcontracting requires a significant amount of complexity and it seems to not be properly supported by any other library (especially with multiple inheritance, continuing to correctly copying postcondition old values across all overridden contracts, and reporting correct the result value to the postconditions overridden virtual functions).
+Most Contract Programming libraries for C++ stop here because implementing class invariants is already somewhat more involved even if still doable (especially without requiring users to manually invoke an extra function to check invariants).
+After that, implementing subcontracting requires a significant amount of complexity and it seems to not be properly supported by any library other than this one (especially including multiple inheritance, correctly copying postcondition old values across all overridden contracts deep in the inheritance tree, and correctly reporting the return value to the postconditions of the overridden virtual functions).
 This library supports all of these features instead.
 ]
 

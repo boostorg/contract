@@ -12,7 +12,7 @@ It is possible to use `boost::optional` to handle the return value when programm
 ]
 For example (see also [@../../example/features/optional_result.cpp =optional_result.cpp=]):
 
-[import ../../example/features/optional_result.cpp]
+[import ../example/features/optional_result.cpp]
 [optional_result]
 
 In this example the return type `surface` does not have a default constructor that can be used to initialize `result` when it is first declared.
@@ -37,7 +37,7 @@ Similarly, `boost::optional` can be used for return values passed to virtual and
 
 TODO
 
-[import ../../example/features/old.cpp]
+[import ../example/features/old.cpp]
 [old]
 
 [endsect]
@@ -50,7 +50,7 @@ However, in this case contracts are always programmed out-of-line, in the defaul
 
 For example, note how the following `shape::area` default implementation (which is used to program the contract) must be defined out-of-line and therefore outside the `shape` class declaration (see also [@../../example/features/pure_virtual.cpp =pure_virtual.cpp=]):
 
-[import ../../example/features/pure_virtual.cpp]
+[import ../example/features/pure_virtual.cpp]
 [pure_virtual]
 
 This library will never actually execute the pure virtual function body while it is calling the pure virtual function default implementation to check its contract for subcontracting.
@@ -59,74 +59,6 @@ Finally, in this example, the pure virtual function does not have enough informa
 
 As already discussed in __Private_and_Protected_Functions__, private and protected member functions do not check class invariants and do not subcontract (not even when they are virtual or pure virtual).
 Therefore, no contract is ever programmed for a private or protected pure virtual function (because that contract would never be checked during subcontracting anyway).
-
-[endsect]
-
-[section Static Public Functions]
-
-Contracts for static public member functions are programmed using the [funcref boost::contract::public_function] function.
-However, in this case [funcref boost::contract::public_function] takes the enclosing class type as an explicit template parameter instead of taking the object `this` as a function parameter (because there is no object `this` in static member functions):
-
-    auto c = boost::contract::public_function<``[^['class-type]]``>()
-        ... // Preconditions and postconditions.
-    ;
-
-For example (see also [@../../example/features/static.cpp =static.cpp=]):
-
-[import ../../example/features/static.cpp]
-[static]
-
-Even if they are not present in this example, it is possible to specify both preconditions and postconditions for static public member functions (see also __Preconditions__ and __Postconditions__).
-[funcref boost::contract::public_function] takes the class type as a template parameter because static public member functions check static class invariants (but it does not take the object `this` and obviously static public member functions do not check non-static class invariants, see also __Class_Invariants__).
-
-[funcref boost::contract::public_function] returns an RAII object (that can be assigned to a local variable of explicit type [classref boost::contract::guard] when programmers are not using C++11 auto declarations).
-The static public member function body is programmed right after the declaration of this RAII object.
-At construction, this RAII object does the following:
-
-# Check static class invariants, by calling [^['class-type]]`::static_invariant()` (but never non-static class invariants).
-# Check preconditions, by calling the functor [^['f]]`()` passed to `.precondition(`[^['f]]`)`.
-
-At destruction instead:
-
-# Check static class invariants, by calling [^['class-type]]`::static_invariant()` (even if the function body threw and exception, but never non-static class invariants).
-# If the function body did not throw an exception:
-    # Check postconditions, by calling the functor [^['g]]`()` passed to `.postcondition(`[^['g]]`)`.
-
-This ensures that static public member function contracts are correctly checked at run-time (note that static public member functions do not subcontract, see also __Public_Function_Calls__).
-
-[note
-A static public member function can avoid calling [funcref boost::contract::public_function] for efficiency but only when it has no precondition and no postconditions, and its class has not static invariant (its class can still have non-static invariants or base classes instead).
-]
-
-As already discussed in __Private_and_Protected_Functions__, private and protected member functions never check static or non-static class invariants (not even when they are static member functions).
-Therefore, [funcref boost::contract::function] is always used for private and protected member functions, also whey they are static member functions.
-
-[heading Static Class Invariants]
-
-As shown by the example above, when static class invariants are specified, the re programmed in a public `static` member function named `static_invariant` taking no argument and returning `void` (this library will generate a compile-time error if the `static` classifier is missing, unless [macroref BOOST_CONTRACT_CONFIG_PERMISSIVE] is set).
-Classes that do not static class invariants, simply do not declare a `static_invariant` member function.
-[footnote
-This library uses template meta-programming (SFINAE-based introspection techniques) to check static invariants only for classes that declare a member function named `static_invariant`.
-]
-
-Any code can be programmed in the `static_invariant` function, but it is recommended to keep this code simple using mainly assertions and if-statements (to avoid programming complex static invariants that might be buggy and slow to execute at run-time).
-It is also recommended to use the [macroref BOOST_CONTRACT_ASSERT] macro to program the assertions because it enables this library to print very informative error messages when the asserted conditions are evaluated to be false at run-time (this is not a variadic macro, but see also __No_Macros__):
-    
-    BOOST_CONTRACT_ASSERT(``/boolean-condition/``)
-    // Or, if condition has commas `,` not already within parenthesis `(...)`.
-    BOOST_CONTRACT_ASSERT((``/boolean-condition/``))
-
-This library will automatically call [funcref boost::contract::entry_invariant_failed] or [funcref boost::contract::exit_invariant_failed] if any of the [macroref BOOST_CONTRACT_ASSERT] macro conditions are `false` and also if the `static_invariant` function throws an exception (by default, this terminates the program calling `std::terminate`, but see __Throw_on_Failure__ to throw exceptions, exit the program with an error code, etc.).
-
-See __Access__ to avoid making `static_invariant` a public member function (e.g., in cases when all public members of a class must be controlled exactly).
-Set the [macroref BOOST_CONTRACT_CONFIG_STATIC_INVARIANT] configuration macro to use a name different from `static_invariant` (e.g., because `static_invariant` clashes with other names in the user-defined class).
-[footnote
-*Rationale.*
-It is not possible to overload a member function in C++ based on the `static` classifier.
-Therefore, different function names have to be used for member functions checking static and non-static class invariants (e.g., `invariant` and `static_invariant`).
-]
-
-Furthermore, see __Class_Invariants__ and __Volatile_Public_Functions__ for programming non-static and volatile class invariants respectively.
 
 [endsect]
 
@@ -142,7 +74,7 @@ Calls to [funcref boost::contract::public_function] from different overloaded fu
 Therefore, [macroref BOOST_CONTRACT_OVERRIDE][^(['function-name])] is used only once in a given class even when [^['function-name]] is overloaded.
 For example (see also [@../../example/features/override_overload.cpp =override_overload.cpp=]):
 
-[import ../../example/features/override_overload.cpp]
+[import ../example/features/override_overload.cpp]
 [override_overload]
 
 Note that the function name passed to [macroref BOOST_CONTRACT_OVERRIDE] should never start with an underscore to avoid generating names containing double underscores `override__...` that are reserved by the C++ standard.
@@ -158,7 +90,7 @@ It is best to use a different macro name [macroref BOOST_CONTRACT_NAMED_OVERRIDE
 This second macro can be used for function names that start with an underscore `_...`, when the name `override_`[^['function-name]] clashes with another name the user class, or in any other case when programmers need to generate a name different than `override_...`.
 For example (see also [@../../example/features/named_override.cpp =named_override.cpp=]):
 
-[import ../../example/features/named_override.cpp]
+[import ../example/features/named_override.cpp]
 [named_override]
 
 [endsect]
@@ -179,12 +111,12 @@ At the cost of programmers writing an extra function declaration for the body fu
 
 For example, the following header file only contains function declarations and contract code (see also [@../../example/features/separate_body.hpp =separate_body.hpp=]):
 
-[import ../../example/features/separate_body.hpp]
+[import ../example/features/separate_body.hpp]
 [separate_body_hpp]
 
 Instead, the code implementing the function bodies is programmed in a separate source file (see also [@../../example/features/separate_body.cpp =separate_body.cpp=]):
 
-[import ../../example/features/separate_body.cpp]
+[import ../example/features/separate_body.cpp]
 [separate_body_cpp]
 
 The same technique can be used for free, private, and protected functions.
@@ -211,7 +143,7 @@ In theory, using C++14 generic lambdas, the [macroref BOOST_CONTRACT_OVERRIDE] m
 `invariant`, `static_invariant`, and `base_types` normally need to be `public`, but programmers can declare them in a `private` (or `protected`) section of the class as long as they also declare the [classref boost::contract::access] class as `friend`.
 For example (see also [@../../example/features/access.cpp =access.cpp=]):
 
-[import ../../example/features/access.cpp]
+[import ../example/features/access.cpp]
 [access]
 
 This technique is not used in most examples of this documentation only for brevity, but programmers are encouraged to use it in real code.
@@ -222,7 +154,7 @@ See also __Base_Types__, __Class_Invariant__, and __Overloads_and_Named_Override
 
 [section Throw on Failure]
 
-[import ../../example/features/throw_on_failure.cpp]
+[import ../example/features/throw_on_failure.cpp]
 
 If a condition checked using [macroref BOOST_CONTRACT_ASSERT] is `false` or if code specified in preconditions, postconditions, and class invariants throw any exception, this library calls the /contract failure handler/ functions [funcref boost::contract::precondition_failed], [funcref boost::contract::postcondition_failed], [funcref boost::contract::entry_invariant_failed], or [funcref boost::contract::exit_invariant_failed] respectively (in fact, [macroref BOOST_CONTRACT_ASSERT] simply expand to code that throw [classref boost::contract::assertion_failure], see also __No_Macros__).
 
@@ -253,6 +185,12 @@ For example (see also [@../../example/features/throw_on_failure.cpp =throw_on_fa
 
 [endsect]
 
+[section Disable Contract Checking]
+
+TODO
+
+[endsect]
+
 [section Assertion Requirements (Call-If)]
 
 In general, assertions can introduce a new set of requirements on the types used by the program: Some of the type requirements might be necessary only to program the assertions and they would not be required by the program otherwise.
@@ -268,7 +206,7 @@ However, the full contracts of the `vector<T>::push_back(value)` member function
 Programmers can specify this postcondition as-is an let the program fail to compile when users instantiate this template with a type `T` that does not provide an equality operator `==`.
 Otherwise, programmers can specify this postcondition using [funcref boost::contract::call_if] so to check the assertion only for types `T` that have an equality operator `==`, and trivially check `true` otherwise (see also [@../../example/features/call_if.cpp =call_if.cpp=]):
 
-[import ../../example/features/call_if.cpp]
+[import ../example/features/call_if.cpp]
 [call_if]
 
 [funcref boost::contract::call_if] takes a condition template parameter as a boolean meta-function.
@@ -300,7 +238,7 @@ TODO
 [funcref boost::contract::call_if] is a general-purpose facility and it can be used together with C++14 generic lambdas to implement statements similar to `static if` (at least at function scope, see also [@http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2013/n3613.pdf N3613]).
 For example, consider the following implementation of `std::advance` that uses `static if`-like statements implemented via [funcref boost::contract::call_if] (see also [@../../example/features/static_if_cxx14.cpp =static_if_cxx14.cpp=]):
 
-[import ../../example/features/static_if_cxx14.cpp]
+[import ../example/features/static_if_cxx14.cpp]
 [static_if_cxx14]
 
 This implementation is much more concise, easy to read and maintain than the usual implementation of `std::advance` that uses tag dispatching.
@@ -312,7 +250,7 @@ This implementation is much more concise, easy to read and maintain than the usu
 
 [section No Macros (No C++11)]
 
-[import ../../example/features/no_macros.cpp]
+[import ../example/features/no_macros.cpp]
 
 This section illustrates how to write contracts without using this library macros and programming the related code manually instead (a part from [macroref BOOST_CONTRACT_OVERRIDE] and [macroref BOOST_CONTRACT_NAMED_OVERRIDE] that cannot be programmed manually).
 
@@ -399,10 +337,10 @@ However, not using C++11 lambda functions comes to the significant cost of havin
 
 For example (see also [@../../example/features/no_lambdas.hpp =no_lambdas.hpp=] and [@../../example/features/no_lambdas.cpp =no_lambdas.cpp=]):
 
-[import ../../example/features/no_lambdas.hpp]
+[import ../example/features/no_lambdas.hpp]
 [no_lambdas_hpp]
 
-[import ../../example/features/no_lambdas.cpp]
+[import ../example/features/no_lambdas.cpp]
 [no_lambdas_cpp]
 
 If programmers also want to fully enforce all contract programming constant-correctness requirements at compile-time, they should follow these rules when programming the contract functions (see also __Constant_Correctness__):

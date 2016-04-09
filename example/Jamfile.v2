@@ -1,4 +1,16 @@
 
+subdir-usage ;
+
+test-suite features :
+    [ subdir-run features : introduction ]
+    [ subdir-run features : function_comments ]
+    [ subdir-run features : function ]
+    [ subdir-run features : base_types ]
+    [ subdir-run features : public ]
+    [ subdir-run features : static_public ]
+    [ subdir-run features : private_protected ]
+;
+
 test-suite meyer97 :
     [ subdir-run meyer97 : stack4_main ]
     [ subdir-run meyer97 : stack3 ]
@@ -33,9 +45,5 @@ test-suite n1962 :
 
 test-suite stroustrup97 :
     [ subdir-run stroustrup97 : string ]
-;
-
-test-suite doc :
-    [ subdir-run doc : push_back ]
 ;
 

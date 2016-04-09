@@ -87,10 +87,10 @@ private:
     friend class set_precondition_old_postcondition<R>;
 
     template<class CC>
-    friend set_old_postcondition constructor(CC* oobj);
+    friend set_old_postcondition<> constructor(CC* oobj);
 
     template<class CC>
-    friend set_old_postcondition destructor(CC* oobj);
+    friend set_old_postcondition<> destructor(CC* oobj);
 };
 
 } } // namespace

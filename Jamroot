@@ -13,15 +13,13 @@ use-project boost : $(BOOST_ROOT) ;
 project
 :
     requirements
-
-    <include>"./include"
     <toolset>gcc:<cxxflags>-std=c++11
     <toolset>clang:<cxxflags>-std=c++11
+    
+    <include>"./include"
 
     <include>$(BOOST_ROOT)
-    <toolset>msvc:<library-path>$(BOOST_ROOT)/stage.msvc/lib
-    <toolset>gcc:<library-path>$(BOOST_ROOT)/stage.gcc/lib
-    <toolset>clang:<library-path>$(BOOST_ROOT)/stage.clang/lib
+    <library-path>$(BOOST_ROOT)/stage/lib
     <toolset>gcc:<library>/boost/system//boost_system
     <toolset>clang:<library>/boost/system//boost_system
 ;
@@ -68,7 +66,7 @@ rule subdir-run ( subdir : cpp_fname : requirements * ) {
     ;
 }
 
-rule subdir-run-aliased ( subdir : cpp_fname : requirements * ) {
+rule subdir-run-with-no ( subdir : cpp_fname : requirements * ) {
     # Aliases explicitly built or implicitly when building all tests...
     alias $(subdir)-$(cpp_fname)-no_entryinv : $(subdir)-$(cpp_fname) :
             <boost_contract-no>entryinv ;

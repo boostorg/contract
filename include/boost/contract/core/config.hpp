@@ -69,6 +69,7 @@
 // However, not disabling contract checking while checking preconditions can
 // lead to infinite recursive call in user code so by default this macro is
 // not defined.
+// TODO: Rename this BOOST_CONTRACT_PRECONDITIONS_DISABLE_NO_ASSERTIONS
 // BOOST_CONTRACT_PRECONDITIONS_DISABLE_NOTHING
 
 // BOOST_CONTRACT_NO_PRECONDITIONS

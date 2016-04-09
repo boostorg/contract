@@ -1,16 +1,14 @@
 
+#include <boost/contract.hpp>
+#include <limits>
+#include <cassert>
+
 //[private_protected
-template<typename T = int>
-class countdwon {
-public:
-    explicit countdown(T n) : n_(n) {}
-
-    /* ... */
-
+class counter {
 protected:
-    T get() const { // Protected function (like free functions).
+    int get() const { // Protected function (like non-member functions).
         int result;
-        auto c = boost::contract::function()
+        boost::contract::guard c = boost::contract::function()
             .postcondition([&] {
                 BOOST_CONTRACT_ASSERT(result == n_);
             })
@@ -20,11 +18,11 @@ protected:
     }
 
 private:
-    void dec() { // Private function (like free functions).
-        auto old_n = BOOST_CONTRACT_OLDOF(n_);
-        auto c = boost::contract::function()
+    void dec() { // Private function (like non-member functions).
+        boost::contract::old_ptr<int> old_n = BOOST_CONTRACT_OLDOF(n_);
+        boost::contract::guard c = boost::contract::function()
             .precondition([&] {
-                BOOST_CONTRACT_ASSERT(n_ > std::numeric_limit<T>::min());
+                BOOST_CONTRACT_ASSERT(n_ > std::numeric_limits<int>::min());
             })
             .postcondition([&] {
                 BOOST_CONTRACT_ASSERT(n_ == *old_n - 1);
@@ -34,7 +32,27 @@ private:
         --n_; // Function body.
     }
 
-    T n_;
-};
+    int n_;
+    
+    /* ... */
 //]
+
+    friend struct test_counter;
+public:
+    counter() : n_(0) {}
+};
+
+struct test_counter {
+    static void run() {
+        counter cnt;
+        assert(cnt.get() == 0);
+        cnt.dec();
+        assert(cnt.get() == -1);
+    }
+};
+
+int main() {
+    test_counter::run();
+    return 0;
+}
 

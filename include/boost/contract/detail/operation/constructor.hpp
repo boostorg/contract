@@ -64,7 +64,7 @@ public:
 
             #ifndef BOOST_CONTRACT_NO_EXIT_INVARIANTS
                 if(body_threw) this->check_exit_static_inv();
-                else this->check_exit_inv();
+                else this->check_exit_all_inv();
             #endif
             #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
                 if(!body_threw) this->check_post(none());

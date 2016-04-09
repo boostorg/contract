@@ -105,13 +105,15 @@ public:
     
 protected:
     #ifndef BOOST_CONTRACT_NO_ENTRY_INVARIANTS
-        void check_entry_inv() { check_inv(true, false); }
-        void check_entry_static_inv() { check_inv(true, true); }
+        void check_entry_inv() { check_inv(true, false, false); }
+        void check_entry_static_inv() { check_inv(true, true, false); }
+        void check_entry_all_inv() { check_inv(true, false, true); }
     #endif
     
     #ifndef BOOST_CONTRACT_NO_EXIT_INVARIANTS
-        void check_exit_inv() { check_inv(false, false); }
-        void check_exit_static_inv() { check_inv(false, true); }
+        void check_exit_inv() { check_inv(false, false, false); }
+        void check_exit_static_inv() { check_inv(false, true, false); }
+        void check_exit_all_inv() { check_inv(false, false, true); }
     #endif
 
     #if !defined(BOOST_CONTRACT_NO_PRECONDITIONS) || \
@@ -122,16 +124,20 @@ protected:
 
 private:
     #ifndef BOOST_CONTRACT_NO_INVARIANTS
-        void check_inv(bool on_entry, bool static_inv_only) {
+        void check_inv(bool on_entry, bool static_only, bool both_const_cv) {
             if(this->failed()) return;
             try {
                 // Static members only check static inv.
                 check_static_inv<C>();
-                if(!static_inv_only) {
-                    // Volatile (const or not) members check static and cv inv.
-                    check_cv_inv<C>();
-                    // Other members (const or not) check static, cv, and const.
-                    check_const_inv<C>();
+                if(!static_only) {
+                    if(both_const_cv) {
+                        check_cv_inv<C>();
+                        check_const_inv<C>();
+                    } else if(boost::is_volatile<C>::value) {
+                        check_cv_inv<C>();
+                    } else {
+                        check_const_inv<C>();
+                    }
                 }
             } catch(...) {
                 if(on_entry) {
@@ -139,7 +145,32 @@ private:
                 } else this->fail(&boost::contract::exit_invariant_failure);
             }
         }
+        
+        template<class C_>
+        typename boost::disable_if<
+                boost::contract::access::has_const_invariant<C_> >::type
+        check_const_inv() {}
+        
+        template<class C_>
+        typename boost::enable_if<
+                boost::contract::access::has_const_invariant<C_> >::type
+        check_const_inv() { boost::contract::access::const_invariant(obj_); }
+        
+        template<class C_>
+        typename boost::disable_if<
+                boost::contract::access::has_cv_invariant<C_> >::type
+        check_cv_inv() {}
 
+        template<class C_>
+        typename boost::enable_if<
+                boost::contract::access::has_cv_invariant<C_> >::type
+        check_cv_inv() { boost::contract::access::cv_invariant(obj_); }
+        
+        template<class C_>
+        typename boost::disable_if<
+                boost::contract::access::has_static_invariant<C_> >::type
+        check_static_inv() {}
+        
         template<class C_>
         typename boost::enable_if<
                 boost::contract::access::has_static_invariant<C_> >::type
@@ -152,39 +183,6 @@ private:
             }
         }
 
-        template<class C_>
-        typename boost::disable_if<
-                boost::contract::access::has_static_invariant<C_> >::type
-        check_static_inv() {}
-
-        template<class C_>
-        typename boost::enable_if<
-                boost::contract::access::has_cv_invariant<C_> >::type
-        check_cv_inv() { boost::contract::access::cv_invariant(obj_); }
-        
-        template<class C_>
-        typename boost::disable_if<
-                boost::contract::access::has_cv_invariant<C_> >::type
-        check_cv_inv() {}
-
-        template<class C_>
-        struct call_const_inv :
-            boost::mpl::and_<
-                boost::contract::access::has_const_invariant<C_>,
-                // Volatile (like const) cannot be stripped so [const] volatile
-                // members only check cv invariant, and cannot check const inv.
-                boost::mpl::not_<boost::is_volatile<C_> >
-            >
-        {};
-        
-        template<class C_>
-        typename boost::enable_if<call_const_inv<C_> >::type
-        check_const_inv() { boost::contract::access::const_invariant(obj_); }
-
-        template<class C_>
-        typename boost::disable_if<call_const_inv<C_> >::type
-        check_const_inv() {}
-        
         // Check is class's func is inherited from its base types or not.
         template<template<class> class HasFunc, template<class> class FuncAddr>
         struct inherited {
