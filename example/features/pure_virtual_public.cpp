@@ -4,14 +4,14 @@
 #include <cassert>
 
 class surface {
-public:
-    explicit surface(int area) : area_(area) {}
-    int area() const { return area_; }
-pirvate:
-    int area_;
+    int area;
+    int perimeter;
+
+    // No default constructor.
+    surface(int area, int perimeter) : area(area), perimeter(perimeter) {}
 };
 
-//[pure_virtual
+//[pure_virtual_public
 class shape {
 public:
     virtual surface area(boost::contract::virtual_* v = 0) const = 0;
@@ -20,9 +20,10 @@ public:
 // Pure-virtual function definitions (so also contracts) out-of-line in C++.
 surface shape::area(boost::contract::virtual_* v) const {
     boost::optional<surface> result;
-    auto c = boost::contract::public_function(v, result, this)
+    boost::contract::guard c = boost::contract::public_function(v, result, this)
         .postcondition([&] (boost::optional<surface> const& result) {
-            BOOST_CONTRACT_ASSERT(result->area() > 0);
+            BOOST_CONTRACT_ASSERT(result.area > 0);
+            BOOST_CONTRACT_ASSERT(result.perimeter > 0);
         })
     ;
 
@@ -42,14 +43,15 @@ public:
 
     surface area(boost::contract::virtual_* v = 0) const /* override */ {
         boost::optional<surface> result;
-        auto c = boost::contract::public_function<override_area>(
-                v, result, &square::area, this)
+        boost::contract::guard c = boost::contract::public_function<
+                override_area>(v, result, &square::area, this)
             .postcondition([&] (boost::optional<surface> const& result) {
-                BOOST_CONTRACT_ASSERT(result->area() == edge() * edge());
+                BOOST_CONTRACT_ASSERT(result->area == edge() * edge());
+                BOOST_CONTRACT_ASSERT(result->perimeter == edge() * 4);
             })
         ;
 
-        return *(result = surface(edge() * edge())); // Function body.
+        return *(result = surface(edge() * edge(), edge() * 4));
     }
     BOOST_CONTRACT_OVERRIDE(area)
 
@@ -62,11 +64,18 @@ public:
         }),
         edge_(edge)
     {
-        auto c = boost::contract::constructor(this); // Check invariants.
+        // Check invariants.
+        boost::contract::guard c = boost::contract::constructor(this);
+    }
+
+    virtual ~square() {
+        // Check invariants.
+        boost::contract::guard c = boost::contract::destructor(this);
     }
 
     int edge() const {
-        auto c = boost::contract::public_function(this); // Check invariants.
+        // Check invariants.
+        boost::contract::guard c = boost::contract::public_function(this);
         return edge_;
     }
     
@@ -77,4 +86,9 @@ public:
 private:
     int edge_;
 };
+
+int main() {
+
+    return 0;
+}
 

@@ -2,15 +2,11 @@
 #include <boost/contract.hpp>
 #include <cassert>
 
-// Vector of unique integer numbers.
 //[public_constructor
-// An identifier can be pushed only once in this container.
 class unique_identifiers
     : private boost::contract::constructor_precondition<unique_identifiers>
 {
 public:
-
-    // Create this container with all identifiers in range [from, to]. 
     unique_identifiers(int from, int to) :
         boost::contract::constructor_precondition<unique_identifiers>([&] {
             BOOST_CONTRACT_ASSERT(from <= to);
@@ -30,7 +26,6 @@ public:
 //]
     
     //[public_destructor
-    // Destroy this container.
     virtual ~unique_identifiers() {
         // Following contract checks invariants.
         boost::contract::guard c = boost::contract::destructor(this);
@@ -46,7 +41,6 @@ public:
     }
 
     //[public_function
-    // Check if specified identifier is in container.
     bool find(int id) const {
         bool result;
         boost::contract::guard c = boost::contract::public_function(this)
@@ -96,7 +90,6 @@ private:
 };
 
 //[public_function_override
-// Can push same identifier multiple times in container (but with no effect).
 class identifiers
     #define BASES public unique_identifiers
     : BASES

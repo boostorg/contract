@@ -17,6 +17,7 @@
 [def __Getting_Started__ [link boost_contract.getting_started Getting Started]]
 
 [def __Contract_Programming_Overview__ [link boost_contract.contract_programming_overview Contract Programming Overview]]
+[def __Benefits_and_Costs__ [link boost_contract.contract_programming_overview.benefits_and_costs Benefits and Costs]]
 [def __Function_Calls__ [link boost_contract.contract_programming_overview.function_calls Function Calls]]
 [def __Public_Function_Calls__ [link boost_contract.contract_programming_overview.public_function_calls Public Function Calls]]
 [def __Constructor_Calls__ [link boost_contract.contract_programming_overview.constructor_calls Constructor Calls]]
@@ -42,6 +43,7 @@
 
 [def __Advanced_Topics__ [link boost_contract.advanced_topics Advanced Topics]]
 [def __Optional_Return_Value__ [link boost_contract.advanced_topics.optional_return_value Optional Return Value]]
+[def __Pure_Virtual_Public_Functions__ [link boost_contract.advanced_topics.pure_virtual_public_functions Pure Virtual Public Functions]]
 [def __Old_Values_at_Body__ [link boost_contract.advanced_topics.old_values_at_body Old Values at Body]]
 [def __Static_Public_Functions__ [link boost_contract.advanced_topics.static_public_functions Static Public Functions]]
 [def __Volatile_Public_Functions__ [link boost_contract.advanced_topics.volatile_public_functions Volatile Public Functions]]

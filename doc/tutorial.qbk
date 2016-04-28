@@ -1,9 +1,7 @@
 
-[import ../example/features/public.cpp]
-
 [section Tutorial]
 
-This section gives an introduction on how to program contracts using this library.
+This section illustrates basic uses of this library.
 
 [section Non-Member Functions]
 
@@ -211,7 +209,6 @@ For example:
         ...
     };
 
-
 This member function must be `const` because contracts should not modify the object state (see also __Constant_Correctness__).
 This library will generate a compile-time error if the `const` qualifier is missing (unless the [macroref BOOST_CONTRACT_PERMISSIVE] macro is defined).
 
@@ -288,6 +285,7 @@ See __Volatile_Public_Functions__ for programming volatile class invariants.
 Contracts for constructors are programmed using the [funcref boost::contract::constructor] function and the [classref boost::contract::constructor_precondition] base class.
 For example (see also [@../../example/features/public.cpp =public.cpp=]):
 
+[import ../example/features/public.cpp]
 [public_constructor]
 
 It is not possible to specify preconditions using `.precondition(...)` for constructors (the library will generate a compile-time error if `.precondition(...)` is used on the object returned by [funcref boost::contract::constructor]).

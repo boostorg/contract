@@ -1,11 +1,11 @@
 
 [section Advanced Topics]
 
-This section explains advanced usages of this library.
+This section illustrates more advanced uses of this library.
 
 [section Optional Return Value]
 
-It is possible to use `boost::optional` to handle the return value when programmers cannot construct the result variable at its point of declaration before the contract (e.g., because an appropriate constructor for the return type is not available at that point, or just because it is too expensive to execute an extra initialization of the result value at run-time).
+It is possible to use `boost::optional` to handle the return value when programmers cannot construct the result variable at its point of declaration before the contract (e.g., because an appropriate constructor for the return type is not available at that point, or just because it would be too expensive to execute an extra initialization of the result value at run-time).
 [footnote
 *Rationale.*
 `boost::optional` was used instead of `std::optional` because this library is designed to work well with Boost and because `std::optional` is not part of the C++ standard yet.
@@ -16,29 +16,20 @@ For example (see also [@../../example/features/optional_result.cpp =optional_res
 [optional_result]
 
 In this example the return type `surface` does not have a default constructor that can be used to initialize `result` when it is first declared.
-`surface` non-default constructor cannot be used to initialize `result` by passing it `edge * edge` because such an operation is the responsibility of the body (in fact, it makes logical sense to do such multiplication only after `edge` has been checked to be positive by the preconditions).
-Therefore, instead of initializing `result` with some useless `area` value, `boost::optional` was used in this example to not initialize `result` with a return value when it is declared before the contract.
-`result` is instead initialized only later in the body when the function body is about to return and directly using the correct return value `surface(edge * edge)`.
+The `surface` non-default constructor should not be used to initialize `result` by passing it `edge * edge` and `edge * 4` because such operations are logically the responsibility of the function body (in fact, it makes logical sense to do such multiplications only after `edge` has been checked to be positive by the preconditions).
+Therefore, instead of initializing `result` with some arbitrary `area` and `perimeter` values (e.g., `0` and `0`, or `-1` and `-1`), `boost::optional` is used in this example to not initialize `result` with a return value when it is first declared before the contract.
+`result` is initialized later in the function body when the function is about to return and directly using the correct return value `result = surface(edge * edge, edge * 4)`.
 
-When this technique is used, programmers have to make sure that each return statement in the function is of the following form:
+When this technique is used, programmers have to make sure that each return statement in the function is of the form:
     
     boost::optional<...> result;
     ...
     return *(result = ...);
 
-This ensures that `result` is always set to the return value before the postconditions are checked.
+This also ensures that `result` is always set to the return value before the postconditions are checked.
 Therefore, programmers can always dereference `result` in postconditions to access the return value (using `operator*` and `operator->` as usual with `boost::optional`, and without having to explicitly check if `result` is an empty `boost::optional` object).
 
-Similarly, `boost::optional` can be used for return values passed to virtual and overriding functions (see also __Pure_Virtual_Functions__).
-
-[endsect]
-
-[section Old Values at Body]
-
-TODO
-
-[import ../example/features/old.cpp]
-[old]
+Similarly, `boost::optional` can be used for return values passed to virtual and overriding functions (see __Pure_Virtual_Public_Functions__ for an example).
 
 [endsect]
 
@@ -59,12 +50,6 @@ Finally, in this example, the pure virtual function does not have enough informa
 
 As already discussed in __Private_and_Protected_Functions__, private and protected member functions do not check class invariants and do not subcontract (not even when they are virtual or pure virtual).
 Therefore, no contract is ever programmed for a private or protected pure virtual function (because that contract would never be checked during subcontracting anyway).
-
-[endsect]
-
-[section Volatile Public Functions]
-
-TODO
 
 [endsect]
 
@@ -95,103 +80,22 @@ For example (see also [@../../example/features/named_override.cpp =named_overrid
 
 [endsect]
 
-[section Separate Body Implementation]
-
-Contracts are part of the program specification and not of its implementation (see also __Specification_and_Implementation__).
-However, this library uses function definitions to program the contracts so contract code will normally appear together with the function implementation code.
-Contract code programmed with this library must always appear at the very top of the function definition so programmers will easily be able to distinguish it from the rest of function implementation in any case (so it is not a real problem in practise).
-
-In some cases, it might be desirable to completely separate the contract code from the code that implements the function body implementation code.
-For example, this could be necessary for software that ships only header files and pre-compiled source code to its users (notably, that cannot be done for template code in C++).
-If the contracts are programmed in the function definitions that are pre-compiled with the source code, users will not be able to inspect the contract code to understand semantics and usage of the functions (again, this might not be a real problem in practice for example if contract code is already being extracted from the source code and presented as part of the documentation of the shipped software).
-
-In such cases, the function implementation can be programmed in an extra /body function/ (e.g., named `..._body`) that is defined in the source code.
-The original function definition remains in the header file instead, it programs the contract and simply calls the extra body function.
-At the cost of programmers writing an extra function declaration for the body function, this technique allows to keep the contract code in header files while separating the body implementation code to source files (with the limitation that constructor member initialization lists must still be programmed in the header files because that is where the originally constructors are actually defined).
-
-For example, the following header file only contains function declarations and contract code (see also [@../../example/features/separate_body.hpp =separate_body.hpp=]):
-
-[import ../example/features/separate_body.hpp]
-[separate_body_hpp]
-
-Instead, the code implementing the function bodies is programmed in a separate source file (see also [@../../example/features/separate_body.cpp =separate_body.cpp=]):
-
-[import ../example/features/separate_body.cpp]
-[separate_body_cpp]
-
-The same technique can be used for free, private, and protected functions.
-
-[endsect]
-
-[section Access]
-
-As we have seen, this library requires programmers to augment their classes declaring special members that are internally used to implement contracts:
-
-* The `invariant` and `static_invariant` member functions (used by this library to check class invariants).
-* The `base_types` member type (used by this library to implement subcontracting).
-* The `override_`[^['function-name]] member type (used by this library to implement subcontracting for overriding functions).
-
-Normally, some of these members must be public in order to be accessible by this library.
-However, in some cases programmers might need to exactly control the public members of their classes in order to prevent users from incorrectly accessing encapsulated members (this might be especially true in large projects).
-
-`override_`[^['function-name]] never needs to be `public` and programmers can always declare it using [macroref BOOST_CONTRACT_OVERRIDE] in a `private` (or `protected`) section of the class.
-[footnote
-*Rationale.*
-The internals of the `override_...` type generated by [macroref BOOST_CONTRACT_OVERRIDE] use names reserved by this library to users are not able to actually use such a type even when it is defined as a `public` member.
-In theory, using C++14 generic lambdas, the [macroref BOOST_CONTRACT_OVERRIDE] macro could be re-implemented in a way so it can be expanded at function scoped (instead of class scoped).
-]
-`invariant`, `static_invariant`, and `base_types` normally need to be `public`, but programmers can declare them in a `private` (or `protected`) section of the class as long as they also declare the [classref boost::contract::access] class as `friend`.
-For example (see also [@../../example/features/access.cpp =access.cpp=]):
-
-[import ../example/features/access.cpp]
-[access]
-
-This technique is not used in most examples of this documentation only for brevity, but programmers are encouraged to use it in real code.
-
-See also __Base_Types__, __Class_Invariant__, and __Overloads_and_Named_Override__ to declare these members with different names (e.g., when they clash with other names in the user-defined class).
-
-[endsect]
-
-[section Throw on Failure]
-
-[import ../example/features/throw_on_failure.cpp]
-
-If a condition checked using [macroref BOOST_CONTRACT_ASSERT] is `false` or if code specified in preconditions, postconditions, and class invariants throw any exception, this library calls the /contract failure handler/ functions [funcref boost::contract::precondition_failed], [funcref boost::contract::postcondition_failed], [funcref boost::contract::entry_invariant_failed], or [funcref boost::contract::exit_invariant_failed] respectively (in fact, [macroref BOOST_CONTRACT_ASSERT] simply expand to code that throw [classref boost::contract::assertion_failure], see also __No_Macros__).
-
-By default, these handler functions print a message to the standard error `std::cerr` and then terminate the program calling `std::terminate()`.
-[footnote
-*Rationale.*
-In general, when a contract fails the only safe thing to do is to terminate the program execution (because the contract failure indicates a bug in the program, and in general the program might be in a state for which no operation can be successfully performed, so the program should be stopped).
-Therefore, that is what this library does by default.
-However, for a specific application, programmers could implement some fail-safe mechanism for which some mission-critical operations can always be performed upon handling specific failures.
-Therefore, this library allows programmers to override the default contract failure handlers to fully customize how to handle contract failures.
-]
-However, programmers can override the default contract failure handlers to perform any custom action on contract failure using [funcref boost::contract::set_precondition_failed], [funcref boost::contract::set_postcondition_failed], [funcref boost::contract::set_entry_invariant_failed] and [funcref boost::contract::set_exit_exit_invariant_failed] (or just [funcref boost::contract::set_invariant_failed] to set both entry and exit invariant failure handlers at once).
-For example (see also [@../../example/features/throw_on_failure.cpp =throw_on_failure.cpp=]):
-
-[throw_on_failure_handler]
-
-Note that in order to comply with C++ and STL exception safety, destructors should never throw.
-This library passes a [classref boost::contract::from] parameter to the contract failure handler functions that can be used to identify if the contract failure occurred during a destructor, a constructor, or a function call.
-This way programmers can ensure to never throw from a destructor call (in the example above, failures from destructors are simply ignored... in general, this is not a safe thing to do, but how to handle such a case in real code is left up to the specific applications being programmed).
-
-Then the contract assertions can be programmed to throw [classref boost::contract::assertion_failure] using [macroref BOOST_CONTRACT_ASSERT] (see also __No_Macro__), or any other exception using:
-
-    if(``[^['error-condition]]``) throw ...;
-
-For example (see also [@../../example/features/throw_on_failure.cpp =throw_on_failure.cpp=]):
-
-[throw_on_failure_cstring]
-
-[endsect]
-
-[section Disable Contract Checking]
+[section Volatile Public Functions]
 
 TODO
 
 [endsect]
 
-[section Assertion Requirements (Call-If)]
+[section Old Values at Body]
+
+TODO
+
+[import ../example/features/old.cpp]
+[old]
+
+[endsect]
+
+[section Assertion Requirements (Static-If)]
 
 In general, assertions can introduce a new set of requirements on the types used by the program: Some of the type requirements might be necessary only to program the assertions and they would not be required by the program otherwise.
 
@@ -245,6 +149,135 @@ This implementation is much more concise, easy to read and maintain than the usu
 [footnote
 `boost::hana::if_` can also be used to emulate function scope `static if` with C++14 generic lambdas.
 ]
+
+[endsect]
+
+[section Access]
+
+As we have seen, this library requires programmers to augment their classes declaring special members that are internally used to implement contracts:
+
+* The `invariant` and `static_invariant` member functions (used by this library to check class invariants).
+* The `base_types` member type (used by this library to implement subcontracting).
+* The `override_`[^['function-name]] member type (used by this library to implement subcontracting for overriding functions).
+
+Normally, some of these members must be public in order to be accessible by this library.
+However, in some cases programmers might need to exactly control the public members of their classes in order to prevent users from incorrectly accessing encapsulated members (this might be especially true in large projects).
+
+`override_`[^['function-name]] never needs to be `public` and programmers can always declare it using [macroref BOOST_CONTRACT_OVERRIDE] in a `private` (or `protected`) section of the class.
+[footnote
+*Rationale.*
+The internals of the `override_...` type generated by [macroref BOOST_CONTRACT_OVERRIDE] use names reserved by this library to users are not able to actually use such a type even when it is defined as a `public` member.
+In theory, using C++14 generic lambdas, the [macroref BOOST_CONTRACT_OVERRIDE] macro could be re-implemented in a way so it can be expanded at function scoped (instead of class scoped).
+]
+`invariant`, `static_invariant`, and `base_types` normally need to be `public`, but programmers can declare them in a `private` (or `protected`) section of the class as long as they also declare the [classref boost::contract::access] class as `friend`.
+For example (see also [@../../example/features/access.cpp =access.cpp=]):
+
+[import ../example/features/access.cpp]
+[access]
+
+This technique is not used in most examples of this documentation only for brevity, but programmers are encouraged to use it in real code.
+
+See also __Base_Types__, __Class_Invariant__, and __Overloads_and_Named_Override__ to declare these members with different names (e.g., when they clash with other names in the user-defined class).
+
+[endsect]
+
+[section Separate Body Implementation]
+
+Contracts are part of the program specification and not of its implementation (see also __Specification_and_Implementation__).
+However, this library uses function definitions to program the contracts so contract code will normally appear together with the function implementation code.
+Contract code programmed with this library must always appear at the very top of the function definition so programmers will easily be able to distinguish it from the rest of function implementation in any case (so it is not a real problem in practise).
+
+In some cases, it might be desirable to completely separate the contract code from the code that implements the function body implementation code.
+For example, this could be necessary for software that ships only header files and pre-compiled source code to its users (notably, that cannot be done for template code in C++).
+If the contracts are programmed in the function definitions that are pre-compiled with the source code, users will not be able to inspect the contract code to understand semantics and usage of the functions (again, this might not be a real problem in practice for example if contract code is already being extracted from the source code and presented as part of the documentation of the shipped software).
+
+In such cases, the function implementation can be programmed in an extra /body function/ (e.g., named `..._body`) that is defined in the source code.
+The original function definition remains in the header file instead, it programs the contract and simply calls the extra body function.
+At the cost of programmers writing an extra function declaration for the body function, this technique allows to keep the contract code in header files while separating the body implementation code to source files (with the limitation that constructor member initialization lists must still be programmed in the header files because that is where the originally constructors are actually defined).
+
+For example, the following header file only contains function declarations and contract code (see also [@../../example/features/separate_body.hpp =separate_body.hpp=]):
+
+[import ../example/features/separate_body.hpp]
+[separate_body_hpp]
+
+Instead, the code implementing the function bodies is programmed in a separate source file (see also [@../../example/features/separate_body.cpp =separate_body.cpp=]):
+
+[import ../example/features/separate_body.cpp]
+[separate_body_cpp]
+
+The same technique can be used for free, private, and protected functions.
+
+[endsect]
+
+[section Throw on Failure]
+
+If a condition checked using [macroref BOOST_CONTRACT_ASSERT] is `false` or if code specified in preconditions, postconditions, and class invariants throws an exception, this library calls the /contract failure handler/ functions [funcref boost::contract::precondition_failure], [funcref boost::contract::postcondition_failure], [funcref boost::contract::entry_invariant_failure], or [funcref boost::contract::exit_invariant_failure] respectively (in fact, [macroref BOOST_CONTRACT_ASSERT] simply expands to code that throws a [classref boost::contract::assertion_failure] exception, see also __No_Macros__).
+
+By default, the contract failure handler functions print a message to the standard error `std::cerr` and then terminate the program calling `std::terminate`.
+[footnote
+*Rationale.*
+In general, when a contract fails the only safe thing to do is to terminate the program execution (because the contract failure indicates a bug in the program, and in general the program is in a state for which no operation can be successfully performed, so the program should be stopped).
+Therefore, this library terminates the program by default.
+However, for specific applications, programmers could implement some fail-safe mechanism for which some mission-critical operation can always be performed upon handling failures so this library allows programmers to override the default contract failure handlers to fully customize how to handle contract failures.
+]
+However, programmers can override the default contract failure handlers to perform any custom action on contract failure using [funcref boost::contract::set_precondition_failure], [funcref boost::contract::set_postcondition_failure], [funcref boost::contract::set_entry_invariant_failure], [funcref boost::contract::set_exit_invariant_failure], [funcref boost::contract::set_invariant_failure] (to set both entry and exit invariant failure handlers at once for convenience), or [funcref boost::contract::set_failure] (to set all failure handlers at once for convenience).
+For example (see also [@../../example/features/throw_on_failure.cpp =throw_on_failure.cpp=]):
+
+[import ../example/features/throw_on_failure.cpp]
+[throw_on_failure_handler]
+
+Note that in order to comply with C++ and STL exception safety rules, destructors should never throw.
+This library passes a [classref boost::contract::from] parameter to the contract failure handler functions that indicates if the contract failure occurred in a destructor, constructor, or function call.
+This way programmers can ensure to never throw from a destructor call (in the example above, contract failures from destructors are simply ignored even if that is probably never a safe thing to do in real code).
+[footnote
+It is the responsibility of the programmers to decide how to handle contract failures from destructors when they reprogram the contract failure handlers to throw exceptions instead of terminating the program (given that C++ and STL exception safety rules requires destructors to never throw).
+This is not a simple dilemma and it might be one more reason to terminate the program instead of throwing exceptions when contract assertions fail (as this library does by default).
+]
+
+The contract assertions can be programmed to throw [classref boost::contract::assertion_failure] using [macroref BOOST_CONTRACT_ASSERT] (see also __No_Macros__) or to throw any other exception using code similar to:
+
+    if(``[^['error-condition]]``) throw ``[^['exception-object]]``;
+
+For example (see also [@../../example/features/throw_on_failure.cpp =throw_on_failure.cpp=]):
+
+[throw_on_failure_cstring]
+
+[endsect]
+
+[section Disable Contract Checking]
+
+Checking contracts adds run-time overhead and can slow down program execution (see also __Benefits_and_Costs__).
+Therefore, programmers can define the following macros (`-D` option in Clang and GCC, `/D` option in MSVC, etc.) to instruct this library to not check specific set of contracts at run-time: [macroref BOOST_CONTRACT_NO_PRECONDITIONS] (do not check preconditions), [macroref BOOST_CONTRACT_NO_POSTCONDITIONS] (do not check postconditions), [macroref BOOST_CONTRACT_NO_ENTRY_INVARIANTS] (do not check invariants at call entry), [macroref BOOST_CONTRACT_NO_EXIT_INVARIANTS] (do not check invariants at call exit), and [macroref BOOST_CONTRACT_NO_INVARIANTS] (do not check invariants at both call entry and exit).
+By default, none of these macros are defined so this library checks all contracts.
+
+For example, programmers could decide to check all contracts during early development builds, but later check only preconditions and maybe entry invariants for release builds by defining [macroref BOOST_CONTRACT_NO_POSTCONDITIONS] and [macroref BOOST_CONTRACT_NO_EXIT_INVARIANTS].
+
+[heading Disable Contract Compilation]
+
+Library macros can also be used to disable compile-time overhead introduced by contracts but at the cost of manually programming `#ifdef` statements around contract code.
+The authors of this library do not recommend to use this practice unless strictly necessary because it makes the contract code more verbose, less readable, and in most applications the compile-time overhead of contracts should not represent an issue (it should be sufficient to disable contract checking at run-time as indicated before).
+
+In any case, the following example illustrates how to completely disable contract code compilation for non-member functions (see also [@../../example/features/ifdef.cpp =ifdef.cpp=]):
+
+[import ../example/features/ifdef.cpp]
+[ifdef_function]
+
+The same is done to disable contract code complication for private and protected functions.
+For constructors, destructors, and public functions instead (see also [@../../example/features/ifdef.cpp =ifdef.cpp=]):
+
+[ifdef_class]
+
+As shown by the examples above:
+
+* The [macroref BOOST_CONTRACT_NO_PRECONDITIONS] macro is defined by programmers and it can be used in `#ifdef` statements to disable compilation of preconditions, including constructor preconditions ([classref boost::contract::constructor_precondition]).
+* The [macroref BOOST_CONTRACT_NO_POSTCONDITIONS] macro is defined by programmers and it can be used in `#ifdef` statements to disable compilation of postconditions, old value declarations, and old value assignments at body (`.old(...)`).
+* The [macroref BOOST_CONTRACT_NO_INVARIANTS] macro is defined by programmers (or it will be automatically defined by this library if both [macroref BOOST_CONTRACT_NO_ENTRY_INVARIANTS] and [macroref BOOST_CONTRACT_NO_EXIT_INVARIANTS] are defined) and it can be used in `#ifdef` statements to disable compilation of class invariants (including static and volatile class invariants).
+Also the [macroref BOOST_CONTRACT_NO_ENTRY_INVARIANTS] and [macroref BOOST_CONTRACT_NO_EXIT_INVARIANTS] macros are defined by programmers (or they will be both automatically defined by this library if [macroref BOOST_CONTRACT_NO_INVARIANTS] is defined) but these macros are not directly used to disable contract code compilation (only contract code run-time checking).
+* The [macroref BOOST_CONTRACT_NO_CONSTRUCTORS] macro is automatically defined by this library (a compile-time error will be reported if programmes try to manually define this macro) and it can be used in `#ifdef` statements to disable compilation of constructor contract guards.
+* The [macroref BOOST_CONTRACT_NO_DESTRUCTORS] macro is automatically defined by this library (a compile-time error will be reported if programmers try to manually define this macro) and it can be used in `#ifdef` statements to disable compilation of destructor contract guards.
+* The [macroref BOOST_CONTRACT_NO_PUBLIC_FUNCTIONS] macro is automatically defined by this library (a compile-time error will be reported if programmers try to manually define this macro) and it can be used in `#ifdef` statements to disable compilation of public member function contract guards, base type `typedef`, extra [classref boost::contract::virtual_] function parameters, and [macroref BOOST_CONTRACT_OVERRIDE] declarations.
+* The [macroref BOOST_CONTRACT_NO_FUNCTIONS] macro is automatically defined by this library (a compile-time error will be reported if programmers try to manually define this macro) and it can be used in `#ifdef` statements to disable compilation of contract guards for non-member functions as well as private and protected functions.
+* The [macroref BOOST_CONTRACT_NO_ALL] macro is automatically defined by this library (a compile-time error will be reported if programmers try to manually define this macro) and it can be used in `#ifdef` statements to disable [classref boost::contract::access] friendship declarations and also inclusions of [headerref contract.hpp] (some of the other macros listed here can be used to selectively disable inclusion of =boost/contract/*.hpp= headers when they are used instead of [headerref contract.hpp].)
 
 [endsect]
 

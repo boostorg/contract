@@ -1,28 +1,37 @@
 
 #include <boost/contract.hpp>
 #include <boost/optional.hpp>
+#include <cassert>
 
 //[optional_result
 struct surface {
+    int area;
+    int perimeter;
+
     // No default constructor.
-    explicit surface(int area) : area_(area) {}
-    int area() const { return area_; }
-private:
-    int area_;
+    surface(int area, int perimeter) : area(area), perimeter(perimeter) {}
 };
 
-surface square_area(int edge) {
+surface square_surface(int edge) {
     boost::optional<surface> result; // No default constructor so use optional.
-    auto c = boost::contract::function()
+    boost::contract::guard c = boost::contract::function()
         .precondition([&] {
             BOOST_CONTRACT_ASSERT(edge > 0);
         })
         .postcondition([&] {
-            BOOST_CONTRACT_ASSERT(result->area() == edge * edge);
+            BOOST_CONTRACT_ASSERT(result->area == edge * edge);
+            BOOST_CONTRACT_ASSERT(result->perimeter == edge * 4);
         })
     ;
 
-    return *(result = surface(edge * edge)); // Function body.
+    return *(result = surface(edge * edge, edge * 4));
 }
 //]
+
+int main() {
+    surface square = square_surface(10);
+    assert(square.area == 100);
+    assert(square.perimeter == 40);
+    return 0;
+}
 

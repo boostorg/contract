@@ -3,12 +3,17 @@ subdir-usage ;
 
 test-suite features :
     [ subdir-run features : introduction ]
+
     [ subdir-run features : function_comments ]
     [ subdir-run features : function ]
     [ subdir-run features : base_types ]
     [ subdir-run features : public ]
     [ subdir-run features : static_public ]
     [ subdir-run features : private_protected ]
+    
+    [ subdir-run features : optional_result ]
+    [ subdir-run features : throw_on_failure ]
+    [ subdir-run-with-no features : ifdef ]
 ;
 
 test-suite meyer97 :

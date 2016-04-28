@@ -9,7 +9,6 @@
 //[introduction
 #include <boost/contract.hpp>
 #include <vector>
-#include <cassert>
 
 template<typename T> class pushable;
 
