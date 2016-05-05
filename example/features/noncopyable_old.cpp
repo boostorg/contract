@@ -1,0 +1,48 @@
+
+#include <boost/contract.hpp>
+#include <cassert>
+
+//[noncopyable_old
+template<typename T>
+void accumulate(T& total, T const& x) {
+    // No compiler error if T has no copy constructor...
+    boost::contract::noncopyable_old_ptr<T> old_total =
+            BOOST_CONTRACT_OLDOF(total);
+    boost::contract::guard c = boost::contract::function()
+        .postcondition([&] {
+            // ...but old value null if T has no copy constructor.
+            if(old_total) BOOST_CONTRACT_ASSERT(total == *old_total + x);
+        })
+    ;
+    
+    total += x;
+}
+//]
+
+struct n {
+    int value;
+
+    n() : value(0) {}
+    n operator+(n const& r) const { n x; x.value = value + r.value; return x; }
+    n& operator+=(n const& r) { value = value + r.value; return *this; }
+    bool operator==(n const& r) const { return value == r.value; }
+private:
+    n(n const&) {} // Hide copy constructor (non copy-constructible).
+};
+
+// Specialize `boost::is_copy_constructible<n>` trait (not needed on C++11):
+
+int main() {
+    n j, k;
+    j.value = 1;
+    k.value = 2;
+    accumulate(j, k);
+    assert(j.value == 3);
+
+    int i = 1;
+    accumulate(i, 2);
+    assert(i == 3);
+
+    return 0;
+}
+

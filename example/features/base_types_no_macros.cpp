@@ -105,19 +105,19 @@ private:
     std::vector<int> vect_;
 };
 
-//[base_types
-class chars
-    #define BASES /* local macro (for convenience) */ \
-        private boost::contract::constructor_precondition<chars>, \
-        public unique_chars, \
-        public virtual pushable<char>, \
-        virtual protected has_size, \
-        private has_empty
-    : BASES // Bases of this class.
+//[base_types_no_macros
+#include <boost/mpl/vector.hpp>
+
+class chars :
+    private boost::contract::constructor_precondition<chars>,
+    public unique_chars,
+    public virtual pushable<char>,
+    virtual protected has_size,
+    private has_empty
 {
 public:
-    typedef BOOST_CONTRACT_BASE_TYPES(BASES) base_types; // Bases typedef.
-    #undef BASES // Undefine local macro.
+    // Program `base_types` without macros (list only public bases).
+    typedef boost::mpl::vector<unique_chars, pushable<char> > base_types;
 
     /* ... */
 //]

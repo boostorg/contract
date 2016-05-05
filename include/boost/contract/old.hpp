@@ -17,6 +17,8 @@
 #include <boost/shared_ptr.hpp>
 #include <boost/type_traits/is_copy_constructible.hpp>
 #include <boost/utility/enable_if.hpp>
+#include <boost/static_assert.hpp>
+#include <boost/preprocessor/control/expr_iif.hpp>
 #include <boost/preprocessor/config/config.hpp>
 
 #if !BOOST_PP_VARIADICS
@@ -53,7 +55,7 @@ BOOST_CONTRACT_ERROR_macro_OLDOF_requires_variadic_macros_otherwise_manually_pro
     BOOST_CONTRACT_OLDOF_AUTO_TYPEOF_(value)(boost::contract::make_old( \
         boost::contract::copy_old() ? (value) : boost::contract::null_old() \
     ))
-
+        
 /* PUBLIC */
 
 // NOTE: Leave this #defined the same regardless of ..._POSTCONDITIONS.
@@ -67,6 +69,39 @@ BOOST_CONTRACT_ERROR_macro_OLDOF_requires_variadic_macros_otherwise_manually_pro
     )
 
 #endif // variadics
+
+/* PRIVATE */
+
+#ifdef BOOST_CONTRACT_NO_POSTCONDITIONS
+    #define BOOST_CONTRACT_OLD_POSTCONDITIONS_ 0
+#else    
+    #define BOOST_CONTRACT_OLD_POSTCONDITIONS_ 1
+#endif
+
+// Used to avoid exposing entire shared_ptr API (e.g., client stealing
+// pointer ownership could break this library).
+#define BOOST_CONTRACT_OLD_PTR_DEF_(pointer_name, pointed_type) \
+    public: \
+        typedef pointed_type element_type; \
+    \
+        pointer_name() {} \
+    \
+        /* only const access (contracts should not change old values) */ \
+    \
+        pointed_type const* operator->() const { return ptr_.operator->(); } \
+    \
+        BOOST_CONTRACT_DETAIL_OPERATOR_SAFE_BOOL(pointer_name<pointed_type>, \
+                !!ptr_) \
+    \
+    private: \
+        BOOST_PP_EXPR_IIF(BOOST_CONTRACT_OLD_POSTCONDITIONS_, \
+            explicit pointer_name(boost::shared_ptr<pointed_type const> ptr) : \
+                    ptr_(ptr) {} \
+        ) \
+    \
+        boost::shared_ptr<pointed_type const> ptr_; \
+    \
+        friend class convertible_old;
 
 /* CODE */
 
@@ -82,32 +117,41 @@ namespace boost {
 
 namespace boost { namespace contract {
 
-// Used to avoid exposing entire shared_ptr API (e.g., client stealing
-// ownership of this pointer could break this lib).
 template<typename T>
-class old_ptr { // Copyable (as *).
-public:
-    explicit old_ptr() {}
+class noncopyable_old_ptr;
 
-    // Only const access (because contracts should not change program state).
-    
+template<typename T>
+class old_ptr { /* copyable (as *) */
+    BOOST_CONTRACT_OLD_PTR_DEF_(old_ptr, T)
+        
+public:
     T const& operator*() const {
+        // Compiler error if old_ptr<T>::operator* and non-copyable T.
+        BOOST_STATIC_ASSERT_MSG(
+            boost::is_copy_constructible<T>::value,
+"old_ptr<T> requires T copy constructor, otherwise use noncopyable_old_ptr<T>"
+        );
         BOOST_CONTRACT_DETAIL_DEBUG(ptr_);
         return *ptr_;
     }
 
-    T const* operator->() const { return ptr_.operator->(); }
+    friend class noncopyable_old_ptr<T>;
+};
 
-    BOOST_CONTRACT_DETAIL_OPERATOR_SAFE_BOOL(old_ptr<T>, !!ptr_)
+template<typename T>
+class noncopyable_old_ptr { /* copyable (as *) */
+    BOOST_CONTRACT_OLD_PTR_DEF_(noncopyable_old_ptr, T)
+        
+public:
+    // Required to assign to OLDOF (as OLDOF returns old_ptr for auto decl).
+    /* implicit */ noncopyable_old_ptr(old_ptr<T> const& other) :
+            ptr_(other.ptr_) {}
 
-private:
-    #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
-        explicit old_ptr(boost::shared_ptr<T const> ptr) : ptr_(ptr) {}
-    #endif
-
-    boost::shared_ptr<T const> ptr_;
-
-    friend class convertible_old;
+    T const& operator*() const {
+        // No static assert is_copy_constructible so T can be non-copyable here.
+        BOOST_CONTRACT_DETAIL_DEBUG(ptr_);
+        return *ptr_;
+    }
 };
 
 class unconvertible_old { // Copyable (as *). 
@@ -144,21 +188,42 @@ private:
 
 class convertible_old { // Copyable (as *).
 public:
-    // Implicitly called by constructor init `old_ptr<T> old_x = ...`.
+    // Implicitly called by ctor init `noncopyable_old_ptr<T> old_x = ...`.
+    template<typename T>
+    /* implicit */ operator noncopyable_old_ptr<T>() {
+        return ptr<noncopyable_old_ptr<T> >();
+    }
+    
+    // Implicitly called by ctor init `old_ptr<T> old_x = ...`.
     template<typename T>
     /* implicit */ operator old_ptr<T>() {
+        return ptr<old_ptr<T> >();
+    }
+
+private:
+    explicit convertible_old(virtual_* v, unconvertible_old const& old)
         #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
-            if(!boost::is_copy_constructible<T>::value) {
+            : v_(v), ptr_(old.ptr_)
+        #endif
+    {}
+    
+    template<typename Ptr>
+    Ptr ptr() {
+        #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
+            if(!boost::is_copy_constructible<
+                    typename Ptr::element_type>::value) {
                 BOOST_CONTRACT_DETAIL_DEBUG(!ptr_); // Non-copyable so no old...
-                return old_ptr<T>(); // ...and return null.
+                return Ptr(); // ...and return null.
             } else if(!v_ && boost::contract::detail::check_guard::checking()) {
                 // Return null shared ptr (see after if statement).
             } else if(!v_) {
                 BOOST_CONTRACT_DETAIL_DEBUG(ptr_);
-                boost::shared_ptr<T const> old =
-                        boost::static_pointer_cast<T const>(ptr_);
+                boost::shared_ptr<typename Ptr::element_type const> old =
+                    boost::static_pointer_cast<
+                            typename Ptr::element_type const>(ptr_)
+                ;
                 BOOST_CONTRACT_DETAIL_DEBUG(old);
-                return old_ptr<T>(old);
+                return Ptr(old);
             } else if(v_->action_ == boost::contract::virtual_::push_old_init ||
                     v_->action_ == boost::contract::virtual_::push_old_copy) {
                 BOOST_CONTRACT_DETAIL_DEBUG(ptr_);
@@ -167,7 +232,7 @@ public:
                 } else {
                     v_->old_copies_.push(ptr_);
                 }
-                return old_ptr<T>();
+                return Ptr();
             } else if(v_->action_ == boost::contract::virtual_::pop_old_init ||
                     v_->action_ == boost::contract::virtual_::pop_old_copy) {
                 BOOST_CONTRACT_DETAIL_DEBUG(!ptr_);
@@ -183,22 +248,17 @@ public:
                 } else {
                     v_->old_copies_.pop();
                 }
-                boost::shared_ptr<T const> old =
-                        boost::static_pointer_cast<T const>(ptr);
+                boost::shared_ptr<typename Ptr::element_type const> old =
+                    boost::static_pointer_cast<
+                            typename Ptr::element_type const>(ptr)
+                ;
                 BOOST_CONTRACT_DETAIL_DEBUG(old);
-                return old_ptr<T>(old);
+                return Ptr(old);
             }
             BOOST_CONTRACT_DETAIL_DEBUG(!ptr_);
         #endif
-        return old_ptr<T>();
+        return Ptr();
     }
-
-private:
-    explicit convertible_old(virtual_* v, unconvertible_old const& old)
-        #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
-            : v_(v), ptr_(old.ptr_)
-        #endif
-    {}
 
     #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
         virtual_* v_;

@@ -8,6 +8,7 @@
 // See: http://www.boost.org/doc/libs/release/libs/contract/doc/html/index.html
 
 #include <boost/contract/detail/all_core_headers.hpp>
+#include <boost/contract/detail/tvariadic.hpp>
 #include <boost/preprocessor/cat.hpp>
 
 /* PRIVATE */
@@ -15,7 +16,6 @@
 #ifndef BOOST_CONTRACT_NO_PUBLIC_FUNCTIONS
     #include <boost/contract/detail/type_traits/introspection.hpp>
     #include <boost/contract/detail/none.hpp>
-    #include <boost/contract/detail/tvariadic.hpp>
     #include <boost/contract/detail/name.hpp>
 
     #define BOOST_CONTRACT_OVERRIDE_CALL_BASE_(z, arity, arity_compl, f) \
@@ -67,20 +67,39 @@
 
 /* PUBLIC */
 
-    #define BOOST_CONTRACT_OVERRIDE_TRAIT(trait, f) \
-        struct trait { \
+    #define BOOST_CONTRACT_NAMED_OVERRIDE(name, f) \
+        struct name { \
             BOOST_CONTRACT_DETAIL_INTROSPECTION_HAS_MEMBER_FUNCTION( \
                     BOOST_CONTRACT_DETAIL_NAME1(has_member_function), f) \
             \
             BOOST_CONTRACT_OVERRIDE_CALL_BASE_DECL_(f) \
         };
 #else
-    #define BOOST_CONTRACT_OVERRIDE_TRAIT(trait, f) \
-        struct trait {}; /* empty trait type (won't be actually used) */
+    // Empty type (not actually used) just needed to compile user contract code.
+    #define BOOST_CONTRACT_NAMED_OVERRIDE(name, f) struct name {};
 #endif
 
 #define BOOST_CONTRACT_OVERRIDE(f) \
-    BOOST_CONTRACT_OVERRIDE_TRAIT(BOOST_PP_CAT(override_, f), f)
+    BOOST_CONTRACT_NAMED_OVERRIDE(BOOST_PP_CAT(override_, f), f)
+    
+#if BOOST_CONTRACT_DETAIL_TVARIADIC
+    #include <boost/preprocessor/seq/for_each.hpp>
+    #include <boost/preprocessor/variadic/to_seq.hpp>
+    
+    /* PRIVATE */
+
+    #define BOOST_CONTRACT_OVERRIDES_SEQ_(r, unused, f) \
+        BOOST_CONTRACT_OVERRIDE(f)
+
+    /* PUBLIC */
+
+    #define BOOST_CONTRACT_OVERRIDES(...) \
+        BOOST_PP_SEQ_FOR_EACH(BOOST_CONTRACT_OVERRIDES_SEQ_, ~, \
+                BOOST_PP_VARIADIC_TO_SEQ(__VA_ARGS__))
+#else
+    #define BOOST_CONTRACT_OVERRIDES \
+BOOST_CONTRACT_ERROR_macro_OVERRIDES_requires_variadic_macros_otherwise_manually_repeat_OVERRIDE_macro
+#endif
 
 #endif // #include guard
 

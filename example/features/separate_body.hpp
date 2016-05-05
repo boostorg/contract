@@ -1,43 +1,41 @@
 
+#ifndef SEPARATE_BODY_HPP_
+#define SEPARATE_BODY_HPP_
+
 #include <boost/contract.hpp>
 
 //[separate_body_hpp
-template<typename T, std::size_t MaxSize>
-class array
-    : private boost::contract::constructor_precondition<unique_identifiers>
-{
+template<typename T, unsigned MaxSize>
+class array :
+        private boost::contract::constructor_precondition<array<T, MaxSize> > {
 public:
     void invariant() const {
         BOOST_CONTRACT_ASSERT(size() <= MaxSize);
     }
 
-    explicit array(std::size_t count) :
-        boost::contract::constructor_precondition<unique_identifiers>([&] {
-            BOOST_CONTRACT_ASSERT(count <= MaxSize)
+    explicit array(unsigned count) :
+        boost::contract::constructor_precondition<array>([&] {
+            BOOST_CONTRACT_ASSERT(count <= MaxSize);
         }),
-        values_(new T[MaxSize]) // But must member initializations here.
+        values_(new T[MaxSize]) // Still, member initializations must be here.
     {
-        auto c = boost::contract::constructor(this)
+        boost::contract::guard c = boost::contract::constructor(this)
             .postcondition([&] {
                 BOOST_CONTRACT_ASSERT(size() == count);
             })
         ;
-        constructor_body(count);
+        constructor_body(count); // Separate constructor body implementation.
     }
 
     virtual ~array() {
-        auto c = boost::contract::destructor(this); // Check invariants.
-        destructor_body();
+        boost::contract::guard c = boost::contract::destructor(this); // Inv.
+        destructor_body(); // Separate destructor body implementation.
     }
 
-    std::size_t size() const {
-        auto c = boost::contract::public_function(this); // Check invariants.
-        return size_body();
-    }
-
-    void push_back(T const& value) {
-        auto old_size = BOOST_CONTRACT_OLDOF(v, size());
-        auto c = boost::contract::public_function(v, this)
+    virtual void push_back(T const& value, boost::contract::virtual_* v = 0) {
+        boost::contract::old_ptr<unsigned> old_size =
+                BOOST_CONTRACT_OLDOF(v, size());
+        boost::contract::guard c = boost::contract::public_function(v, this)
             .precondition([&] {
                 BOOST_CONTRACT_ASSERT(size() < MaxSize);
             })
@@ -45,18 +43,31 @@ public:
                 BOOST_CONTRACT_ASSERT(size() == *old_size + 1);
             })
         ;
-        push_back_body();
+        push_back_body(value);
+    }
+
+private:
+    // Contracts in class declaration (above), but body implementations are not.
+    void constructor_body(unsigned count);
+    void destructor_body();
+    void push_back_body(T const& value);
+
+    /* ... */
+//]
+    
+public:
+    unsigned size() const {
+        // Check invariants.
+        boost::contract::guard c = boost::contract::public_function(this);
+        return size_body();
     }
     
 private:
-    // Contracts in class declaration (above), but body implementations are not.
-    void construtor_body(std::size_t count);
-    void destructor_body();
-    std::size_t size_body() const;
-    void push_back_body(T const& value);
+    unsigned size_body() const;
 
     T* values_;
-    std::size_t size_;
+    unsigned size_;
 };
-//]
+
+#endif // #include guard
 

@@ -68,7 +68,7 @@ public:
             .precondition([&] {
                 BOOST_CONTRACT_ASSERT(!find(id));
             })
-            .postcondition([&] (int result) {
+            .postcondition([&] (int const result) {
                 if(!*old_find) {
                     BOOST_CONTRACT_ASSERT(find(id));
                     BOOST_CONTRACT_ASSERT(size() == *old_size + 1);
@@ -115,7 +115,7 @@ public:
             .precondition([&] { // Check in OR with bases.
                 BOOST_CONTRACT_ASSERT(find(id));
             })
-            .postcondition([&] (int result) { // Check in AND with bases.
+            .postcondition([&] (int const result) { // Check in AND with bases.
                 if(*old_find) BOOST_CONTRACT_ASSERT(size() == *old_size);
             })
         ;

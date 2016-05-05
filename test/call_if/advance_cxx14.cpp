@@ -11,7 +11,7 @@
 #include <list>
 #include <sstream>
 
-boost::contract::test::detail::oteststream out;
+boost::contract::test::detail::oteststream out; // For testing only.
 
 template<typename Iter>
 struct is_random_access_iterator : std::is_same<
@@ -31,11 +31,12 @@ struct is_input_iterator : std::is_same<
     std::input_iterator_tag
 > {};
 
+//[advance_cxx14
 template<typename Iter, typename Dist>
 void myadvance(Iter& i, Dist n) {
     Iter *p = &i; // So captures change actual pointed iterator value.
     boost::contract::call_if<is_random_access_iterator<Iter> >(
-        std::bind([] (auto p, auto n) {
+        std::bind([] (auto p, auto n) { // C++14 generic lambda.
             out << "random iterator" << std::endl;
             *p += n;
         }, p, n)
@@ -56,6 +57,7 @@ void myadvance(Iter& i, Dist n) {
         }, std::false_type()) // Use constexpr value.
     );
 }
+//]
 
 struct x {}; // Test not an iterator (static_assert failure in else_ above).
 

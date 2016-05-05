@@ -2,28 +2,36 @@
 #include <boost/contract.hpp>
 #include <string>
 #include <cstddef>
+#include <cassert>
 
 //[old
-char replace(std::string& s, std::size_t index, char c) {
+char replace(std::string& s, std::size_t index, char x) {
     char result;
-    boost::shared_ptr<char const> old_c; // But old values copied later...
-    auto c = boost::contract::function()
+    boost::contract::old_ptr<char> old_y; // But old value copied later...
+    boost::contract::guard c = boost::contract::function()
         .precondition([&] {
             BOOST_CONTRACT_ASSERT(index < s.size());
         })
-        .old([&] { // ...here, after preconditions (and invariants) checked.
-            old_c = BOOST_CONTRACT_OLDOF(s[index]);
+        .old([&] { // ...after preconditions (and invariants) checked.
+            old_y = BOOST_CONTRACT_OLDOF(s[index]);
         })
         .postcondition([&] {
-            BOOST_CONTRACT_ASSERT(s[index] == c);
-            BOOST_CONTRACT_ASSERT(result == *old_c);
+            BOOST_CONTRACT_ASSERT(s[index] == x);
+            BOOST_CONTRACT_ASSERT(result == *old_y);
         })
     ;
 
-    // Function body.
     result = s[index];
-    s[index] = c;
+    s[index] = x;
     return result;
 }
 //]
+
+int main() {
+    std::string s = "abc";
+    char r = replace(s, 1, '_');
+    assert(s == "a_c");
+    assert(r == 'b');
+    return 0;
+}
 

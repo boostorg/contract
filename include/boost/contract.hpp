@@ -21,6 +21,8 @@
 #include <boost/contract/override.hpp>
 #include <boost/contract/public_function.hpp>
 
+// TODO: Add a test for all operators (member and non-member ones). In theory nothing special should be needed for operators... but test it. For member operators, test them with public_function virtual overrides.
+
 // TODO: Document compile and run time performances (after creating specific tests to measure them).
 
 // TODO: Add all copyright and licencing info (to all files, etc.).

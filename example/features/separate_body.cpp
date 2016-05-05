@@ -1,20 +1,33 @@
 
 #include "separate_body.hpp"
+#include <cassert>
 
 //[separate_body_cpp
-template<typename T, std::size_t MaxSize>
-void array::constructor_body(std::size_t count) {
-    for(std::size_t i = 0; i < count; ++i) values_[i] = T();
+template<typename T, unsigned MaxSize>
+void array<T, MaxSize>::constructor_body(unsigned count) {
+    for(unsigned i = 0; i < count; ++i) values_[i] = T();
     size_ = count;
 }
 
-template<typename T, std::size_t MaxSize>
-void array::destructor_body() { delete[] values_; }
+template<typename T, unsigned MaxSize>
+void array<T, MaxSize>::destructor_body() { delete[] values_; }
 
-template<typename T, std::size_t MaxSize>
-std::size_t array::size_body() const { return size_; }
+template<typename T, unsigned MaxSize>
+void array<T, MaxSize>::push_back_body(T const& value) {
+    values_[size_++] = value;
+}
 
-template<typename T, std::size_t MaxSize>
-void array::push_back_body(T const& value) { values_[size_++] == value; }
+/* ... */
 //]
+
+template<typename T, unsigned MaxSize>
+unsigned array<T, MaxSize>::size_body() const { return size_; }
+
+int main() {
+    array<char, 3> a(2);
+    assert(a.size() == 2);
+    a.push_back('x');
+    assert(a.size() == 3);
+    return 0;
+}
 

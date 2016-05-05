@@ -29,9 +29,9 @@ surface square_surface(int edge) {
 //]
 
 int main() {
-    surface square = square_surface(10);
-    assert(square.area == 100);
-    assert(square.perimeter == 40);
+    surface s = square_surface(10);
+    assert(s.area == 100);
+    assert(s.perimeter == 40);
     return 0;
 }
 

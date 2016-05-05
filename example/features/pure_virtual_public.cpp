@@ -3,7 +3,8 @@
 #include <boost/optional.hpp>
 #include <cassert>
 
-class surface {
+//[pure_virtual_public
+struct surface {
     int area;
     int perimeter;
 
@@ -11,24 +12,22 @@ class surface {
     surface(int area, int perimeter) : area(area), perimeter(perimeter) {}
 };
 
-//[pure_virtual_public
 class shape {
 public:
-    virtual surface area(boost::contract::virtual_* v = 0) const = 0;
+    virtual surface get_surface(boost::contract::virtual_* v = 0) const = 0;
 };
 
-// Pure-virtual function definitions (so also contracts) out-of-line in C++.
-surface shape::area(boost::contract::virtual_* v) const {
+// Pure-virtual function definition (and contract) out-of-line (usual in C++).
+surface shape::get_surface(boost::contract::virtual_* v) const {
     boost::optional<surface> result;
     boost::contract::guard c = boost::contract::public_function(v, result, this)
-        .postcondition([&] (boost::optional<surface> const& result) {
-            BOOST_CONTRACT_ASSERT(result.area > 0);
-            BOOST_CONTRACT_ASSERT(result.perimeter > 0);
+        .postcondition([&] (boost::optional<surface const&> const& result) {
+            BOOST_CONTRACT_ASSERT(result->area > 0);
+            BOOST_CONTRACT_ASSERT(result->perimeter > 0);
         })
     ;
 
-    // Pure function body (will never be executed by this library).
-    assert(false);
+    assert(false); // Pure function body (never executed by this library).
     return *result;
 }
 
@@ -41,11 +40,11 @@ public:
     typedef BOOST_CONTRACT_BASE_TYPES(BASES) base_types;
     #undef BASES
 
-    surface area(boost::contract::virtual_* v = 0) const /* override */ {
+    surface get_surface(boost::contract::virtual_* v = 0) const /* override */ {
         boost::optional<surface> result;
         boost::contract::guard c = boost::contract::public_function<
-                override_area>(v, result, &square::area, this)
-            .postcondition([&] (boost::optional<surface> const& result) {
+                override_get_surface>(v, result, &square::get_surface, this)
+            .postcondition([&] (boost::optional<surface const&> const& result) {
                 BOOST_CONTRACT_ASSERT(result->area == edge() * edge());
                 BOOST_CONTRACT_ASSERT(result->perimeter == edge() * 4);
             })
@@ -53,13 +52,13 @@ public:
 
         return *(result = surface(edge() * edge(), edge() * 4));
     }
-    BOOST_CONTRACT_OVERRIDE(area)
+    BOOST_CONTRACT_OVERRIDE(get_surface)
 
     /* ... */
 //]
     
     explicit square(int edge) :
-        boost::contract::constructor_precondition([&] {
+        boost::contract::constructor_precondition<square>([&] {
             BOOST_CONTRACT_ASSERT(edge > 0);
         }),
         edge_(edge)
@@ -68,7 +67,7 @@ public:
         boost::contract::guard c = boost::contract::constructor(this);
     }
 
-    virtual ~square() {
+    ~square() {
         // Check invariants.
         boost::contract::guard c = boost::contract::destructor(this);
     }
@@ -88,7 +87,10 @@ private:
 };
 
 int main() {
-
+    square sq(10);
+    surface s = sq.get_surface();
+    assert(s.area == 100);
+    assert(s.perimeter == 40);
     return 0;
 }
 

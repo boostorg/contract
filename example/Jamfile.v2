@@ -6,14 +6,27 @@ test-suite features :
 
     [ subdir-run features : function_comments ]
     [ subdir-run features : function ]
-    [ subdir-run features : base_types ]
     [ subdir-run features : public ]
+    [ subdir-run features : base_types ]
     [ subdir-run features : static_public ]
     [ subdir-run features : private_protected ]
     
+    [ subdir-run features : old ]
     [ subdir-run features : optional_result ]
+    [ subdir-run features : pure_virtual_public ]
+    [ subdir-run features : overload ]
+    [ subdir-run features : named_override ]
+    [ subdir-run features : volatile ]
+    [ subdir-run features : noncopyable_old ]
+    [ subdir-run features : check_if ]
+    [ subdir-run features : access ]
+    [ subdir-run features : separate_body ]
     [ subdir-run features : throw_on_failure ]
     [ subdir-run-with-no features : ifdef ]
+    [ subdir-run features : base_types_no_macros ]
+    [ subdir-run features : old_no_macros ]
+    [ subdir-run features : no_lambdas ]
+    [ subdir-run features : no_lambdas_local_func ]
 ;
 
 test-suite meyer97 :
