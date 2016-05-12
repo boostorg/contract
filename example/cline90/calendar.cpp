@@ -1,10 +1,11 @@
 
 //[cline90_calendar
 #include <boost/contract.hpp>
-#include <boost/detail/lightweight_test.hpp>
+#include <cassert>
 
 class calendar {
-public:
+    friend class boost::contract::access;
+
     void invariant() const {
         BOOST_CONTRACT_ASSERT(month() >= 1);
         BOOST_CONTRACT_ASSERT(month() <= 12);
@@ -12,8 +13,9 @@ public:
         BOOST_CONTRACT_ASSERT(date() <= days_in(month()));
     }
 
+public:
     calendar() : month_(1), date_(31) {
-        auto c = boost::contract::constructor(this)
+        boost::contract::guard c = boost::contract::constructor(this)
             .postcondition([&] {
                 BOOST_CONTRACT_ASSERT(month() == 1);
                 BOOST_CONTRACT_ASSERT(date() == 31);
@@ -22,21 +24,24 @@ public:
     }
 
     virtual ~calendar() {
-        auto c = boost::contract::destructor(this); // Check invariants.
+        // Check invariants.
+        boost::contract::guard c = boost::contract::destructor(this);
     }
 
     int month() const {
-        auto c = boost::contract::public_function(this); // Check invariants.
+        // Check invariants.
+        boost::contract::guard c = boost::contract::public_function(this);
         return month_;
     }
 
     int date() const {
-        auto c = boost::contract::public_function(this); // Check invariants.
+        // Check invariants.
+        boost::contract::guard c = boost::contract::public_function(this);
         return date_;
     }
 
     void reset(int new_month) {
-        auto c = boost::contract::public_function(this)
+        boost::contract::guard c = boost::contract::public_function(this)
             .precondition([&] {
                 BOOST_CONTRACT_ASSERT(new_month >= 1);
                 BOOST_CONTRACT_ASSERT(new_month <= 12);
@@ -52,7 +57,7 @@ public:
 private:
     static int days_in(int month) {
         int result;
-        auto c = boost::contract::function()
+        boost::contract::guard c = boost::contract::function()
             .precondition([&] {
                 BOOST_CONTRACT_ASSERT(month >= 1);
                 BOOST_CONTRACT_ASSERT(month <= 12);
@@ -71,13 +76,13 @@ private:
 
 int main() {
     calendar cal;
-    BOOST_TEST_EQ(cal.date(), 31);
-    BOOST_TEST_EQ(cal.month(), 1);
+    assert(cal.date() == 31);
+    assert(cal.month() == 1);
 
     cal.reset(8); // Set month 
-    BOOST_TEST_EQ(cal.month(), 8);
+    assert(cal.month() == 8);
 
-    return boost::report_errors();
+    return 0;
 }
 //]
 

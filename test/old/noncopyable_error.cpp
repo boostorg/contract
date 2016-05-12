@@ -6,13 +6,9 @@
 #include <boost/contract/guard.hpp>
 #include <boost/contract/assert.hpp>
 #include <boost/noncopyable.hpp>
-#include <boost/type_traits/is_copy_constructible.hpp>
-#include <boost/static_assert.hpp>
 
 template<typename T>
 void next(T& x) {
-    BOOST_STATIC_ASSERT_MSG(boost::is_copy_constructible<T>::value,
-            "old-value type must be copy constructible"); // Forces error.
     boost::contract::old_ptr<T> old_x = BOOST_CONTRACT_OLDOF(x);
     boost::contract::guard c = boost::contract::function()
         .postcondition([&] {

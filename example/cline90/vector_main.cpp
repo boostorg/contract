@@ -1,18 +1,18 @@
 
 //[cline90_vector_main
 #include "vector.hpp"
-#include <boost/detail/lightweight_test.hpp>
+#include <cassert>
 
 int main() {
     vector<int> v (3);
-    BOOST_TEST_EQ(v.size(), 3);
+    assert(v.size() == 3);
     
     v[0] = 123;
     v.resize(2);
-    BOOST_TEST_EQ(v[0], 123);
-    BOOST_TEST_EQ(v.size(), 2);
+    assert(v[0] == 123);
+    assert(v.size() == 2);
     
-    return boost::report_errors();
+    return 0;
 }
 //]
 

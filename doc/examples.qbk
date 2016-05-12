@@ -1,10 +1,10 @@
 
 [section Examples]
 
-This section lists a few non-trivial examples taken from different Contract Programming sources and re-implemented using this library.
+This section lists examples taken from different Contract Programming sources and re-implemented using this library.
 
-Some of these examples might be from old sources, containing old or obsolete code practices, not optimized for execution speed, and they be more relevant in the context of other programming languages different from C++ (because the considered sources were also for the Eiffel and D programming languages).
-Nevertheless, programmers are encouraged to review these examples to see a few diverse uses of this library that could program contracts in ways similar to what programmers need in their specific C++ applications.
+Some of these examples might be from old sources, containing old or obsolete code practices, not optimized for execution speed, and they be more relevant in the context programming languages other than C++.
+Nevertheless, programmers are encouraged to review these examples to see a few diverse usages of this library that might be relevant for the contracts they need to write in their code.
 
 Sources:
 
@@ -12,21 +12,20 @@ Sources:
 * __Meyer97__: Examples using the Eiffel programming language and reprogrammed using this library for C++.
 * __Mitchell02__: Additional examples using the Eiffel programming language and reprogrammed using this library for C++.
 * __Cline90__: Examples from a very early proposal called Annotated C++ (A++) to add Contract Programming to C++ (A++ was never implemented or proposed for addition to the standard).
-* __Stroustrup97__: One example that shows the importance of class invariants and how to configure this library to throw exceptions instead of terminating the program on contract failure.
 
-Most interesting examples:
+A few notable examples:
 
-* [link contract__.examples.__n1962___vector__comparison_with_c___proposed_syntax \[N1962\] Vector]: The complete contracts of `std::vector` and a comparison with __N1962__ syntax.
-* [link contract__.examples.__n1962___square_root__default_parameters_and_comparison_with_d_syntax \[N1962\] Square Root]: A comparison with D syntax.
+* [link contract__.examples.__n1962___vector__comparison_with_c___proposed_syntax \[N1962\] Vector]: Complete contracts for `std::vector` and a comparison with __N1962__ syntax.
+* [link contract__.examples.__n1962___square_root__default_parameters_and_comparison_with_d_syntax \[N1962\] Square Root]: Comparison with D syntax.
 * [link contract__.examples.__mitchell02___counter__subcontracting_and_virtual_specifiers__final__override__new__and_pure_virtual_ \[Mitchell02\] Counter]: Subcontracting.
-* [link contract__.examples.__meyer97___stack4__comparison_with_eiffel_syntax \[Meyer97\] Stack4]: A comparison with Eiffel syntax.
-* [link contract__.examples.__cline90___vector__comparison_with_a___proposed_syntax \[Cline90\] Vector]: A comparison with A++ syntax.
+* [link contract__.examples.__meyer97___stack4__comparison_with_eiffel_syntax \[Meyer97\] Stack4]: Comparison with Eiffel syntax.
+* [link contract__.examples.__cline90___vector__comparison_with_a___proposed_syntax \[Cline90\] Vector]: Comparison with A++ syntax.
 
 [heading \[N1962\] Vector: Comparison with C++ proposal's syntax]
 [import ../example/n1962/vector.cpp]
 [import ../example/n1962/vector_n1962.hpp]
 [table
-    [ [This Library] [\[N1962\] Proposal (not part of C++)] ]
+    [ [This Library] [Contract \[N1962\] and Static-If \[N3613\] Proposals (neither part of C++)] ]
     [ [[n1962_vector]] [[n1962_vector_n1962]] ]
 ]
 
@@ -60,7 +59,7 @@ Most interesting examples:
 [import ../example/meyer97/stack4.e]
 [table
     [ [This Library] [The Eiffel Programming Language] ]
-    [ [[meyer97_stack4_header]] [[meyer97_stack4_e]] ]
+    [ [[meyer97_stack4]] [[meyer97_stack4_e]] ]
     [ [[meyer97_stack4_main]] [] ]
 ]
 
@@ -109,10 +108,6 @@ Most interesting examples:
 [mitchell02_counter]
 [import ../example/mitchell02/counter_main.cpp]
 [mitchell02_counter_main]
-
-[heading \[Stroustrup97\] String: Throw when contracts fail]
-[import ../example/stroustrup97/string.cpp]
-[stroustrup97_string]
 
 [heading \[Cline90\] Vector: Comparison with A++ proposed syntax]
 [import ../example/cline90/vector.hpp]

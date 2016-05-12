@@ -481,22 +481,16 @@ int main() {
 
         out.str("");
         aa.f('a');
-        ok.str(""); ok // Mutable checks static, cv, and const-only inv.
+        ok.str(""); ok // Mutable checks static and const (but not cv) inv.
             #ifndef BOOST_CONTRACT_NO_ENTRY_INVARIANTS
                 #ifdef BOOST_CONTRACT_TEST_STATIC_INV
                     << "b::static_inv" << std::endl
-                #endif
-                #ifdef BOOST_CONTRACT_TEST_CV_INV
-                    << "b::cv_inv" << std::endl
                 #endif
                 #ifdef BOOST_CONTRACT_TEST_CONST_INV
                     << "b::const_inv" << std::endl
                 #endif
                 #ifdef BOOST_CONTRACT_TEST_STATIC_INV
                     << "a::static_inv" << std::endl
-                #endif
-                #ifdef BOOST_CONTRACT_TEST_CV_INV
-                    << "a::cv_inv" << std::endl
                 #endif
                 #ifdef BOOST_CONTRACT_TEST_CONST_INV
                     << "a::const_inv" << std::endl
@@ -515,17 +509,11 @@ int main() {
                 #ifdef BOOST_CONTRACT_TEST_STATIC_INV
                     << "b::static_inv" << std::endl
                 #endif
-                #ifdef BOOST_CONTRACT_TEST_CV_INV
-                    << "b::cv_inv" << std::endl
-                #endif
                 #ifdef BOOST_CONTRACT_TEST_CONST_INV
                     << "b::const_inv" << std::endl
                 #endif
                 #ifdef BOOST_CONTRACT_TEST_STATIC_INV
                     << "a::static_inv" << std::endl
-                #endif
-                #ifdef BOOST_CONTRACT_TEST_CV_INV
-                    << "a::cv_inv" << std::endl
                 #endif
                 #ifdef BOOST_CONTRACT_TEST_CONST_INV
                     << "a::const_inv" << std::endl
@@ -782,13 +770,10 @@ int main() {
 
         out.str("");
         bb.f('b');
-        ok.str(""); ok // Mutable checks static, cv, and const-only inv.
+        ok.str(""); ok // Mutable checks static and const (but not cv) inv.
             #ifndef BOOST_CONTRACT_NO_ENTRY_INVARIANTS
                 #ifdef BOOST_CONTRACT_TEST_STATIC_INV
                     << "b::static_inv" << std::endl
-                #endif
-                #ifdef BOOST_CONTRACT_TEST_CV_INV
-                    << "b::cv_inv" << std::endl
                 #endif
                 #ifdef BOOST_CONTRACT_TEST_CONST_INV
                     << "b::const_inv" << std::endl
@@ -804,9 +789,6 @@ int main() {
             #ifndef BOOST_CONTRACT_NO_EXIT_INVARIANTS
                 #ifdef BOOST_CONTRACT_TEST_STATIC_INV
                     << "b::static_inv" << std::endl
-                #endif
-                #ifdef BOOST_CONTRACT_TEST_CV_INV
-                    << "b::cv_inv" << std::endl
                 #endif
                 #ifdef BOOST_CONTRACT_TEST_CONST_INV
                     << "b::const_inv" << std::endl

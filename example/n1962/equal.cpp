@@ -1,7 +1,7 @@
 
 //[n1962_equal
 #include <boost/contract.hpp>
-#include <boost/detail/lightweight_test.hpp>
+#include <cassert>
 
 // Forward declaration because == and != contracts use one another's function.
 template<typename T>
@@ -10,7 +10,7 @@ bool operator==(T const& left, T const& right);
 template<typename T>
 bool operator!=(T const& left, T const& right) {
     bool result;
-    auto c = boost::contract::function()
+    boost::contract::guard c = boost::contract::function()
         .postcondition([&] {
             BOOST_CONTRACT_ASSERT(result == !(left == right));
         })
@@ -22,7 +22,7 @@ bool operator!=(T const& left, T const& right) {
 template<typename T>
 bool operator==(T const& left, T const& right) {
     bool result;
-    auto c = boost::contract::function()
+    boost::contract::guard c = boost::contract::function()
         .postcondition([&] {
             BOOST_CONTRACT_ASSERT(result == !(left != right));
         })
@@ -37,10 +37,10 @@ int main() {
     number n;
     n.value = 123;
 
-    BOOST_TEST_EQ(n == n, true);    // Explicitly call operator==.
-    BOOST_TEST_EQ(n != n, false);   // Explicitly call operator!=.
+    assert((n == n) == true);   // Explicitly call operator==.
+    assert((n != n) == false);  // Explicitly call operator!=.
 
-    return boost::report_errors();
+    return 0;
 }
 //]
 

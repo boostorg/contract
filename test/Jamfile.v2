@@ -211,16 +211,6 @@ test-suite old
     [ subdir-compile-fail old : no_equal_error ]
 ;
 
-test-suite union
-:
-    [ subdir-run-with-no union : contracts ]
-;
-
-test-suite move
-:
-    [ subdir-run-with-no move : contracts ]
-;
-
 test-suite disable
 :
     [ subdir-run-with-no disable : prog ]

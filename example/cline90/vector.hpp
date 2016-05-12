@@ -5,21 +5,21 @@
 
 #include <boost/contract.hpp>
 
+// NOTE: Incomplete contract assertions, addressing only `size`.
 template<typename T>
 class vector
     #define BASES private boost::contract::constructor_precondition<vector<T> >
     : BASES
 {
-public:
+    friend class boost::contract::access;
     typedef BOOST_CONTRACT_BASE_TYPES(BASES) base_types;
     #undef BASES
-
-    // NOTE: Incomplete contract assertions, addressing only `size`.
 
     void invariant() const {
         BOOST_CONTRACT_ASSERT(size() >= 0);
     }
 
+public:
     explicit vector(int count = 10) :
         boost::contract::constructor_precondition<vector>([&] {
             BOOST_CONTRACT_ASSERT(count >= 0);
@@ -27,9 +27,9 @@ public:
         data_(new T[count]),
         size_(count)
     {
-        auto c = boost::contract::constructor(this)
+        boost::contract::guard c = boost::contract::constructor(this)
             .postcondition([&] {
-                BOOST_CONTRACT_ASSERT(this->size() == count);
+                BOOST_CONTRACT_ASSERT(size() == count);
             })
         ;
 
@@ -37,22 +37,22 @@ public:
     }
 
     virtual ~vector() {
-        auto c = boost::contract::destructor(this);
+        boost::contract::guard c = boost::contract::destructor(this);
         delete[] data_;
     }
 
     int size() const {
-        auto c = boost::contract::public_function(this);
+        boost::contract::guard c = boost::contract::public_function(this);
         return size_; // Non-negative result already checked by invariant.
     }
 
     void resize(int count) {
-        auto c = boost::contract::public_function(this)
+        boost::contract::guard c = boost::contract::public_function(this)
             .precondition([&] {
                 BOOST_CONTRACT_ASSERT(count >= 0);
             })
             .postcondition([&] {
-                BOOST_CONTRACT_ASSERT(this->size() == count);
+                BOOST_CONTRACT_ASSERT(size() == count);
             })
         ;
 
@@ -64,7 +64,7 @@ public:
     }
 
     T& operator[](int index) {
-        auto c = boost::contract::public_function(this)
+        boost::contract::guard c = boost::contract::public_function(this)
             .precondition([&] {
                 BOOST_CONTRACT_ASSERT(index >= 0);
                 BOOST_CONTRACT_ASSERT(index < size());
@@ -75,7 +75,7 @@ public:
     }
     
     T const& operator[](int index) const {
-        auto c = boost::contract::public_function(this)
+        boost::contract::guard c = boost::contract::public_function(this)
             .precondition([&] {
                 BOOST_CONTRACT_ASSERT(index >= 0);
                 BOOST_CONTRACT_ASSERT(index < size());

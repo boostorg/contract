@@ -16,8 +16,10 @@ test-suite features :
     [ subdir-run features : pure_virtual_public ]
     [ subdir-run features : overload ]
     [ subdir-run features : named_override ]
+    [ subdir-run features : move ]
+    [ subdir-run features : union ]
     [ subdir-run features : volatile ]
-    [ subdir-run features : noncopyable_old ]
+    [ subdir-run features : old_noncopyable ]
     [ subdir-run features : check_if ]
     [ subdir-run features : access ]
     [ subdir-run features : separate_body ]
@@ -27,6 +29,15 @@ test-suite features :
     [ subdir-run features : old_no_macros ]
     [ subdir-run features : no_lambdas ]
     [ subdir-run features : no_lambdas_local_func ]
+;
+
+test-suite n1962 :
+    [ subdir-run n1962 : vector ]
+    [ subdir-run n1962 : sqrt ]
+    [ subdir-run n1962 : circle ]
+    [ subdir-run n1962 : equal ]
+    [ subdir-run n1962 : factorial ]
+    [ subdir-run n1962 : sum ]
 ;
 
 test-suite meyer97 :
@@ -50,18 +61,5 @@ test-suite cline90 :
     [ subdir-run cline90 : vector_main ]
     [ subdir-run cline90 : vstack ]
     [ subdir-run cline90 : calendar ]
-;
-
-test-suite n1962 :
-    [ subdir-run n1962 : vector ]
-    [ subdir-run n1962 : sqrt ]
-    [ subdir-run n1962 : circle ]
-    [ subdir-run n1962 : equal ]
-    [ subdir-run n1962 : factorial ]
-    [ subdir-run n1962 : sum ]
-;
-
-test-suite stroustrup97 :
-    [ subdir-run stroustrup97 : string ]
 ;
 

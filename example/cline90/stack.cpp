@@ -1,28 +1,28 @@
 
 //[cline90_stack
 #include <boost/contract.hpp>
-#include <boost/detail/lightweight_test.hpp>
+#include <cassert>
 
+// NOTE: Incomplete contract assertions, addressing only `empty` and `full`.
 template<typename T>
 class stack
     #define BASES private boost::contract::constructor_precondition<stack<T> >
     : BASES
 {
-public:
+    friend class boost::contract::access;
     typedef BOOST_CONTRACT_BASE_TYPES(BASES) base_types;
     #undef BASES
 
-    // NOTE: Incomplete contract assertions, addressing only `empty` and `full`.
-
+public:
     explicit stack(int capacity) :
         boost::contract::constructor_precondition<stack>([&] {
             BOOST_CONTRACT_ASSERT(capacity >= 0);
         }),
         data_(new T[capacity]), capacity_(capacity), size_(0)
     {
-        auto c = boost::contract::constructor(this)
+        boost::contract::guard c = boost::contract::constructor(this)
             .postcondition([&] {
-                BOOST_CONTRACT_ASSERT(this->empty());
+                BOOST_CONTRACT_ASSERT(empty());
                 BOOST_CONTRACT_ASSERT(full() == (capacity == 0));
             })
         ;
@@ -31,22 +31,22 @@ public:
     }
 
     virtual ~stack() {
-        auto c = boost::contract::destructor(this);
+        boost::contract::guard c = boost::contract::destructor(this);
         delete[] data_;
     }
 
     bool empty() const {
-        auto c = boost::contract::public_function(this);
+        boost::contract::guard c = boost::contract::public_function(this);
         return size_ == 0;
     }
 
     bool full() const {
-        auto c = boost::contract::public_function(this);
+        boost::contract::guard c = boost::contract::public_function(this);
         return size_ == capacity_;
     }
 
     void push(T const& value) {
-        auto c = boost::contract::public_function(this)
+        boost::contract::guard c = boost::contract::public_function(this)
             .precondition([&] {
                 BOOST_CONTRACT_ASSERT(!full());
             })
@@ -59,7 +59,7 @@ public:
     }
 
     T pop() {
-        auto c = boost::contract::public_function(this)
+        boost::contract::guard c = boost::contract::public_function(this)
             .precondition([&] {
                 BOOST_CONTRACT_ASSERT(!empty());
             })
@@ -80,8 +80,8 @@ private:
 int main() {
     stack<int> s(3);
     s.push(123);
-    BOOST_TEST_EQ(s.pop(), 123);
-    return boost::report_errors();
+    assert(s.pop() == 123);
+    return 0;
 }
 //]
 

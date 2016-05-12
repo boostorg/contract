@@ -1,13 +1,15 @@
 
 //[mitchell02_customer_manager
 #include <boost/contract.hpp>
-#include <boost/detail/lightweight_test.hpp>
 #include <string>
 #include <map>
 #include <utility>
+#include <cassert>
 
 // Basic customer information.
 struct customer_info {
+    friend class customer_manager;
+
     typedef std::string identifier;
     
     identifier id;
@@ -19,43 +21,47 @@ private:
     std::string name_;
     std::string address_;
     std::string birthday_;
-
-    friend class customer_manager;
 };
 
 // Manage customers.
 class customer_manager {
-public:
+    friend class boost::contract::access;
+
     void invariant() const {
         BOOST_CONTRACT_ASSERT(count() >= 0); // Non-negative count.
     }
 
+public:
     /* Creation */
 
     customer_manager() {
-        auto c = boost::contract::constructor(this); // Check invariants.
+        // Check invariants.
+        boost::contract::guard c = boost::contract::constructor(this);
     }
 
     virtual ~customer_manager() {
-        auto c = boost::contract::destructor(this); // Check invariants.
+        // Check invariants.
+        boost::contract::guard c = boost::contract::destructor(this);
     }
 
     /* Basic Queries */
 
     int count() const {
-        auto c = boost::contract::public_function(this); // Check invariants.
+        // Check invariants.
+        boost::contract::guard c = boost::contract::public_function(this);
         return customers_.size();
     }
 
     bool id_active(customer_info::identifier const& id) const {
-        auto c = boost::contract::public_function(this); // Check invariants.
+        // Check invariants.
+        boost::contract::guard c = boost::contract::public_function(this);
         return customers_.find(id) != customers_.cend();
     }
 
     /* Derived Queries */
 
     std::string const& name_for(customer_info::identifier const& id) const {
-        auto c = boost::contract::public_function(this)
+        boost::contract::guard c = boost::contract::public_function(this)
             .precondition([&] {
                 BOOST_CONTRACT_ASSERT(id_active(id)); // Active.
             })
@@ -68,8 +74,8 @@ public:
     /* Commands */
 
     void add(customer_info const& info) {
-        auto old_count = BOOST_CONTRACT_OLDOF(count());
-        auto c = boost::contract::public_function(this)
+        boost::contract::old_ptr<int> old_count = BOOST_CONTRACT_OLDOF(count());
+        boost::contract::guard c = boost::contract::public_function(this)
             .precondition([&] {
                 // Not already active.
                 BOOST_CONTRACT_ASSERT(!id_active(info.id));
@@ -83,9 +89,9 @@ public:
         customers_.insert(std::make_pair(info.id, customer(info)));
     }
 
-    void set_name(
-            customer_info::identifier const& id, std::string const& name) {
-        auto c = boost::contract::public_function(this)
+    void set_name(customer_info::identifier const& id,
+            std::string const& name) {
+        boost::contract::guard c = boost::contract::public_function(this)
             .precondition([&] {
                 BOOST_CONTRACT_ASSERT(id_active(id)); // Already active.
             })
@@ -114,15 +120,13 @@ private:
 
 int main() {
     customer_manager m;
-    
     customer_info const js("john_smith_123");
     m.add(js);
     m.set_name(js.id, "John Smith");
-    BOOST_TEST_EQ(m.name_for(js.id), "John Smith");
-    BOOST_TEST_EQ(m.count(), 1);
-    BOOST_TEST(m.id_active(js.id));
-
-    return boost::report_errors();
+    assert(m.name_for(js.id) == "John Smith");
+    assert(m.count() == 1);
+    assert(m.id_active(js.id));
+    return 0;
 }
 //]
 

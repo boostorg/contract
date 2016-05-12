@@ -1,12 +1,12 @@
 
 //[n1962_sqrt
 #include <boost/contract.hpp>
-#include <boost/detail/lightweight_test.hpp>
 #include <cmath>
+#include <cassert>
 
 double mysqrt(double x, double precision = 1e-6) {
     double result;
-    auto c = boost::contract::function()
+    boost::contract::guard c = boost::contract::function()
         .precondition([&] {
             BOOST_CONTRACT_ASSERT(x >= 0.0);
         })
@@ -20,8 +20,8 @@ double mysqrt(double x, double precision = 1e-6) {
 
 int main() {
     double const precision = 1e-6;
-    BOOST_TEST(fabs(mysqrt(4.0, precision) - 2.0) <= precision);
-    return boost::report_errors();
+    assert(fabs(mysqrt(4.0, precision) - 2.0) <= precision);
+    return 0;
 }
 //]
 

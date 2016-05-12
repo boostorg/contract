@@ -69,7 +69,7 @@ This section lists all references consulted while designing and developing this 
 
 [#Stroustrup94_anchor] [Stroustrup94] B. Stroustrup. /The Design and Evolution of C++/. Addison Wesley, 1994.
 
-[#Stroustrup97_anchor] [Stroustrup97] B. Stroustrup. /The C++ Programming Language/. Prentice-Hall, 2nd Edition, 1997.
+[#Stroustrup13_anchor] [Stroustrup13] B. Stroustrup. /The C++ Programming Language/. Addison Wesley, 4th Edition, 2013.
 
 [#Tandin04_anchor] [Tandin04] A. Tandin. [@http://www.codeproject.com/KB/macros/DbC_and_Doxygen.aspx /Design by Contract macros for C++ and link to Doxygen/]. 2004.
 

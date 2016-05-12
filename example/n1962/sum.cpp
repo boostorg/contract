@@ -1,11 +1,11 @@
 
 //[n1962_sum
 #include <boost/contract.hpp>
-#include <boost/detail/lightweight_test.hpp>
+#include <cassert>
 
 int sum(int count, int* array) {
     int result;
-    auto c = boost::contract::function()
+    boost::contract::guard c = boost::contract::function()
         .precondition([&] {
             BOOST_CONTRACT_ASSERT(count % 4 == 0);
         })
@@ -18,8 +18,8 @@ int sum(int count, int* array) {
 
 int main() {
     int a[4] = {1, 2, 3, 4};
-    BOOST_TEST_EQ(sum(4, a), 10);
-    return boost::report_errors();
+    assert(sum(4, a) == 10);
+    return 0;
 }
 //]
 

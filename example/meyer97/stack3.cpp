@@ -4,12 +4,13 @@
 #include "stack4.hpp"
 #include <boost/contract.hpp>
 #include <boost/optional.hpp>
-#include <boost/detail/lightweight_test.hpp>
+#include <cassert>
 
 // Dispenser LIFO with max capacity using error codes.
 template<typename T>
 class stack3 {
-public:
+    friend class boost::contract::access;
+
     void invariant() const {
         if(!error()) {
             BOOST_CONTRACT_ASSERT(count() >= 0); // Count non-negative.
@@ -19,6 +20,7 @@ public:
         }
     }
 
+public:
     enum error_code {
         no_error = 0,
         overflow_error,
@@ -31,7 +33,7 @@ public:
     // Create stack for max of n items, if n < 0 set error (no preconditions).
     explicit stack3(int n, T const& default_value = T()) :
             stack_(0), error_(no_error) {
-        auto c = boost::contract::constructor(this)
+        boost::contract::guard c = boost::contract::constructor(this)
             .postcondition([&] {
                 // Error if impossible.
                 BOOST_CONTRACT_ASSERT((n < 0) == (error() == size_error));
@@ -50,24 +52,24 @@ public:
 
     // Max number of stack items.
     int capacity() const {
-        auto c = boost::contract::public_function(this); // Check invariants.
-
+        // Check invariants.
+        boost::contract::guard c = boost::contract::public_function(this);
         return stack_.capacity();
     }
 
     // Number of stack items.
     int count() const {
-        auto c = boost::contract::public_function(this); // Check invariants.
-
+        // Check invariants.
+        boost::contract::guard c = boost::contract::public_function(this);
         return stack_.count();
     }
 
     // Top item if present, otherwise none and set error (no preconditions).
     boost::optional<T const&> item() const {
-        auto c = boost::contract::public_function(this)
+        boost::contract::guard c = boost::contract::public_function(this)
             .postcondition([&] {
-                BOOST_CONTRACT_ASSERT( // Error if impossible.
-                        this->empty() == (error() == underflow_error));
+                // Error if impossible.
+                BOOST_CONTRACT_ASSERT(empty() == (error() == underflow_error));
                 // No error if possible.
                 BOOST_CONTRACT_ASSERT(!empty() == !error());
             })
@@ -86,20 +88,20 @@ public:
 
     // Error indicator set by various operations.
     error_code error() const {
-        auto c = boost::contract::public_function(this); // Check invariants.
-
+        // Check invariants.
+        boost::contract::guard c = boost::contract::public_function(this);
         return error_;
     }
 
     bool empty() const {
-        auto c = boost::contract::public_function(this); // Check invariants.
-
+        // Check invariants.
+        boost::contract::guard c = boost::contract::public_function(this);
         return stack_.empty();
     }
 
     bool full() const {
-        auto c = boost::contract::public_function(this); // Check invariants.
-        
+        // Check invariants.
+        boost::contract::guard c = boost::contract::public_function(this);
         return stack_.full();
     }
 
@@ -107,9 +109,9 @@ public:
 
     // Add x to top if capacity allows, otherwise set error (no preconditions).
     void put(T const& x) {
-        auto old_full = BOOST_CONTRACT_OLDOF(full());
-        auto old_count = BOOST_CONTRACT_OLDOF(count());
-        auto c = boost::contract::public_function(this)
+        boost::contract::old_ptr<bool> old_full = BOOST_CONTRACT_OLDOF(full());
+        boost::contract::old_ptr<int> old_count = BOOST_CONTRACT_OLDOF(count());
+        boost::contract::guard c = boost::contract::public_function(this)
             .postcondition([&] {
                 // Error if impossible.
                 BOOST_CONTRACT_ASSERT(*old_full == (error() == overflow_error));
@@ -133,9 +135,10 @@ public:
 
     // Remove top item if possible, otherwise set error (no preconditions).
     void remove() {
-        auto old_empty = BOOST_CONTRACT_OLDOF(empty());
-        auto old_count = BOOST_CONTRACT_OLDOF(count());
-        auto c = boost::contract::public_function(this)
+        boost::contract::old_ptr<bool> old_empty =
+                BOOST_CONTRACT_OLDOF(empty());
+        boost::contract::old_ptr<int> old_count = BOOST_CONTRACT_OLDOF(count());
+        boost::contract::guard c = boost::contract::public_function(this)
             .postcondition([&] {
                 // Error if impossible.
                 BOOST_CONTRACT_ASSERT(*old_empty == (error() ==
@@ -164,21 +167,21 @@ private:
 
 int main() {
     stack3<int> s(3);
-    BOOST_TEST_EQ(s.capacity(), 3);
-    BOOST_TEST_EQ(s.count(), 0);
-    BOOST_TEST(s.empty());
-    BOOST_TEST(!s.full());
+    assert(s.capacity() == 3);
+    assert(s.count() == 0);
+    assert(s.empty());
+    assert(!s.full());
 
     s.put(123);
-    BOOST_TEST(!s.empty());
-    BOOST_TEST(!s.full());
-    BOOST_TEST_EQ(*s.item(), 123);
+    assert(!s.empty());
+    assert(!s.full());
+    assert(*s.item() == 123);
     
     s.remove();
-    BOOST_TEST(s.empty());
-    BOOST_TEST(!s.full());
+    assert(s.empty());
+    assert(!s.full());
 
-    return boost::report_errors();
+    return 0;
 }
 //]
 

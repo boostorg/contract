@@ -4,14 +4,17 @@
 #define PUSH_BUTTON_HPP_
 
 #include <boost/contract.hpp>
+#include <cassert>
 
 class push_button {
 public:
+    // No inv and no bases so contracts optional if no pre, post, and override.
+
     /* Creation */
 
     // Create an enabled button.
     push_button() : enabled_(true) {
-        auto c = boost::contract::constructor(this)
+        boost::contract::guard c = boost::contract::constructor(this)
             .postcondition([&] {
                 BOOST_CONTRACT_ASSERT(enabled()); // Enabled.
             })
@@ -19,13 +22,15 @@ public:
     }
 
     // Destroy button.
-    virtual ~push_button() { auto c = boost::contract::destructor(this); }
+    virtual ~push_button() {
+        boost::contract::guard c = boost::contract::destructor(this);
+    }
 
     /* Queries */
 
     // If button is enabled.
     bool enabled() const {
-        auto c = boost::contract::public_function(this);
+        boost::contract::guard c = boost::contract::public_function(this);
         return enabled_;
     }
 
@@ -33,7 +38,7 @@ public:
 
     // Enable button.
     void enable() {
-        auto c = boost::contract::public_function(this)
+        boost::contract::guard c = boost::contract::public_function(this)
             .postcondition([&] {
                 BOOST_CONTRACT_ASSERT(enabled()); // Enabled.
             })
@@ -44,7 +49,7 @@ public:
 
     // Disable button.
     void disable() {
-        auto c = boost::contract::public_function(this)
+        boost::contract::guard c = boost::contract::public_function(this)
             .postcondition([&] {
                 BOOST_CONTRACT_ASSERT(!enabled()); // Disabled.
             })
@@ -61,11 +66,12 @@ private:
 };
 
 void push_button::on_bn_clicked(boost::contract::virtual_* v) {
-    auto c = boost::contract::public_function(this)
+    boost::contract::guard c = boost::contract::public_function(v, this)
         .precondition([&] {
             BOOST_CONTRACT_ASSERT(enabled()); // Enabled.
         })
     ;
+    assert(false);
 }
 
 #endif // #include guard

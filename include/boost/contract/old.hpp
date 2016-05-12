@@ -70,39 +70,6 @@ BOOST_CONTRACT_ERROR_macro_OLDOF_requires_variadic_macros_otherwise_manually_pro
 
 #endif // variadics
 
-/* PRIVATE */
-
-#ifdef BOOST_CONTRACT_NO_POSTCONDITIONS
-    #define BOOST_CONTRACT_OLD_POSTCONDITIONS_ 0
-#else    
-    #define BOOST_CONTRACT_OLD_POSTCONDITIONS_ 1
-#endif
-
-// Used to avoid exposing entire shared_ptr API (e.g., client stealing
-// pointer ownership could break this library).
-#define BOOST_CONTRACT_OLD_PTR_DEF_(pointer_name, pointed_type) \
-    public: \
-        typedef pointed_type element_type; \
-    \
-        pointer_name() {} \
-    \
-        /* only const access (contracts should not change old values) */ \
-    \
-        pointed_type const* operator->() const { return ptr_.operator->(); } \
-    \
-        BOOST_CONTRACT_DETAIL_OPERATOR_SAFE_BOOL(pointer_name<pointed_type>, \
-                !!ptr_) \
-    \
-    private: \
-        BOOST_PP_EXPR_IIF(BOOST_CONTRACT_OLD_POSTCONDITIONS_, \
-            explicit pointer_name(boost::shared_ptr<pointed_type const> ptr) : \
-                    ptr_(ptr) {} \
-        ) \
-    \
-        boost::shared_ptr<pointed_type const> ptr_; \
-    \
-        friend class convertible_old;
-
 /* CODE */
 
 // Specialization because `unconvertible_old` incomplete type when trait used.
@@ -118,40 +85,82 @@ namespace boost {
 namespace boost { namespace contract {
 
 template<typename T>
-class noncopyable_old_ptr;
+class old_ptr_noncopyable;
 
 template<typename T>
 class old_ptr { /* copyable (as *) */
-    BOOST_CONTRACT_OLD_PTR_DEF_(old_ptr, T)
-        
 public:
+    typedef T element_type;
+
+    old_ptr() {}
+
+    /* only const access (contracts should not change old values) */
+    
     T const& operator*() const {
-        // Compiler error if old_ptr<T>::operator* and non-copyable T.
         BOOST_STATIC_ASSERT_MSG(
             boost::is_copy_constructible<T>::value,
-"old_ptr<T> requires T copy constructor, otherwise use noncopyable_old_ptr<T>"
+"old_ptr<T> requires T copy constructor, otherwise use old_ptr_noncopyable<T>"
         );
         BOOST_CONTRACT_DETAIL_DEBUG(ptr_);
         return *ptr_;
     }
 
-    friend class noncopyable_old_ptr<T>;
+    T const* operator->() const {
+        BOOST_STATIC_ASSERT_MSG(
+            boost::is_copy_constructible<T>::value,
+"old_ptr<T> requires T copy constructor, otherwise use old_ptr_noncopyable<T>"
+        );
+        return ptr_.operator->();
+    }
+
+    BOOST_CONTRACT_DETAIL_OPERATOR_SAFE_BOOL(old_ptr<T>, !!ptr_)
+
+private:
+    #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
+        explicit old_ptr(boost::shared_ptr<T const> ptr) :
+                ptr_(ptr) {}
+    #endif
+
+    boost::shared_ptr<T const> ptr_;
+
+    friend class convertible_old;
+    friend class old_ptr_noncopyable<T>;
 };
 
+// Similar to above, but does not statically assert copy constructible.
 template<typename T>
-class noncopyable_old_ptr { /* copyable (as *) */
-    BOOST_CONTRACT_OLD_PTR_DEF_(noncopyable_old_ptr, T)
-        
+class old_ptr_noncopyable { /* copyable (as *) */
 public:
+    typedef T element_type;
+
+    old_ptr_noncopyable() {}
+    
     // Required to assign to OLDOF (as OLDOF returns old_ptr for auto decl).
-    /* implicit */ noncopyable_old_ptr(old_ptr<T> const& other) :
+    /* implicit */ old_ptr_noncopyable(old_ptr<T> const& other) :
             ptr_(other.ptr_) {}
 
+    /* only const access (contracts should not change old values) */
+    
     T const& operator*() const {
-        // No static assert is_copy_constructible so T can be non-copyable here.
         BOOST_CONTRACT_DETAIL_DEBUG(ptr_);
         return *ptr_;
     }
+
+    T const* operator->() const {
+        return ptr_.operator->();
+    }
+
+    BOOST_CONTRACT_DETAIL_OPERATOR_SAFE_BOOL(old_ptr_noncopyable<T>, !!ptr_)
+
+private:
+    #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
+        explicit old_ptr_noncopyable(boost::shared_ptr<T const> ptr) :
+                ptr_(ptr) {}
+    #endif
+
+    boost::shared_ptr<T const> ptr_;
+
+    friend class convertible_old;
 };
 
 class unconvertible_old { // Copyable (as *). 
@@ -188,10 +197,10 @@ private:
 
 class convertible_old { // Copyable (as *).
 public:
-    // Implicitly called by ctor init `noncopyable_old_ptr<T> old_x = ...`.
+    // Implicitly called by ctor init `old_ptr_noncopyable<T> old_x = ...`.
     template<typename T>
-    /* implicit */ operator noncopyable_old_ptr<T>() {
-        return ptr<noncopyable_old_ptr<T> >();
+    /* implicit */ operator old_ptr_noncopyable<T>() {
+        return ptr<old_ptr_noncopyable<T> >();
     }
     
     // Implicitly called by ctor init `old_ptr<T> old_x = ...`.

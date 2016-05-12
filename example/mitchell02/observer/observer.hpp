@@ -4,17 +4,23 @@
 #define OBSERVER_HPP_
 
 #include <boost/contract.hpp>
+#include <cassert>
 
 // Observer.
 class observer {
+    friend class subject;
 public:
-    // No inv so contracts could have been omitted when also no pre/post...
+    // No inv and no bases so contracts optional if no pre, post, and override.
 
     /* Creation */
 
-    observer() { auto c = boost::contract::constructor(this); }
+    observer() {
+        boost::contract::guard c = boost::contract::constructor(this);
+    }
     
-    virtual ~observer() { auto c = boost::contract::destructor(this); }
+    virtual ~observer() {
+        boost::contract::guard c = boost::contract::destructor(this);
+    }
 
     /* Commands */
 
@@ -24,22 +30,21 @@ public:
 
     // Update this observer.
     virtual void update(boost::contract::virtual_* v = 0) = 0;
-
-private:
-    friend class subject;
 };
 
 bool observer::up_to_date_with_subject(boost::contract::virtual_* v) const {
-    auto c = boost::contract::public_function(this);
-    return false; // Never reached.
+    boost::contract::guard c = boost::contract::public_function(v, this);
+    assert(false);
+    return false;
 }
 
 void observer::update(boost::contract::virtual_* v) {
-    auto c = boost::contract::public_function(this)
+    boost::contract::guard c = boost::contract::public_function(v, this)
         .postcondition([&] {
             BOOST_CONTRACT_ASSERT(up_to_date_with_subject()); // Up-to-date.
         })
     ;
+    assert(false);
 }
 
 #endif // #include guard

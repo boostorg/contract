@@ -1,17 +1,17 @@
 
 //[n1962_sqrt_d
-// Extra newlines, etc. used to align text with this library code.
+// Extra spaces, newlines, etc. for visual alignment with this library code.
 
 
 
-
-real mysqrt ( real x ) // No default parameters in D.
-    in { assert(x >= 0); } 
-    out(root) {
-
-        assert(std.math.fabs(root * root - x) <= 1e6);
+real mysqrt(real x)
+    in {
+        assert(x >= 0.0);
     } 
-body { 
+    out(result) {
+        assert(std.math.fabs(result * result - x) <= 1e-6);
+    } 
+body {
     return std.math.sqrt(x);
 }
 
@@ -20,5 +20,8 @@ body {
 
 
 
+
+
+// End.
 //]
 

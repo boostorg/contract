@@ -159,6 +159,41 @@ The [macroref BOOST_CONTRACT_NAMED_OVERRIDE] macro can be used for function name
 
 [endsect]
 
+[section Move Operations]
+
+As with all public operations of a class, also move operations should maintain class invariants (see also __Stroustrup13__, p. 520).
+Specifically, C++ requires the following:
+
+* The moved-from object can be copy assigned.
+* The moved-from object can be move assigned.
+* The moved-from object can be destroyed.
+[footnote
+If not anything else, this requires that class invariants are maintained by move operations because the destructor of the moved-from object requires that class invariants are true at its entry (as always with destructors, see also __Destructor_Calls__).
+]
+
+Thus both the move constructor and the move assignment operator need to maintain the class invariants of the moved-from object and their contracts can be programmed using [funcref boost::contract::constructor] and [funcref boost::contract::public_function] as always for constructors and public member functions, for example (see also [@../../example/features/move.cpp =move.cpp=]):
+
+[import ../example/features/move.cpp]
+[move]
+
+This example requires that it is possible to call the public member function `move()` on the moved-from object.
+This allows to make explicit the precondition that except for destructor, copy and move assignments all other public member functions cannot be called on a moved-from object.
+This assumption is usually implicit in C++ (i.e., documented by the standard but not checked by the language at run-time).
+If it is is not possible (e.g., due to some optimized implementation of the move operations) to have such a public `move()` member function, the private `moved_` member (or similar) can be used to program class invariants and preconditions (and that will just relay on the usual implicit C++ assumption on moved-from object because users will not be able to fully check preconditions and class invariants before calling functions of a moved-from object).
+
+[endsect]
+
+[section Unions]
+
+In C++, a `union` cannot have virtual member functions, bases classes, and cannot be used as a base class thus subcontracting ([classref boost::contract::virtual_], [macroref BOOST_CONTRACT_OVERRIDE], etc.) do not apply to unions.
+Also a `union` cannot inherit from [classref boost::contract::constructor_precondition] (because it cannot have base classes) so such a class is used to declare a local object that checks constructor preconditions (see `pre` in the example below).
+A part from that, this library is used as usual to program contracts for unions, for example (see also [@../../example/features/union.cpp =union.cpp=]):
+
+[import ../example/features/union.cpp]
+[union]
+
+[endsect]
+
 [section Volatile Class Invariants]
 
 This library allows to specify a different set of class invariants to be checked for public volatile member functions.

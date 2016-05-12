@@ -1,22 +1,24 @@
 
 //[mitchell02_dictionary
 #include <boost/contract.hpp>
-#include <boost/detail/lightweight_test.hpp>
 #include <utility>
 #include <map>
+#include <cassert>
 
 template<typename K, typename T>
 class dictionary {
-public:
+    friend class boost::contract::access;
+
     void invariant() const {
         BOOST_CONTRACT_ASSERT(count() >= 0); // Non-negative count.
     }
 
+public:
     /* Creation */
 
     // Create empty dictionary.
     dictionary() {
-        auto c = boost::contract::constructor(this)
+        boost::contract::guard c = boost::contract::constructor(this)
             .postcondition([&] {
                 BOOST_CONTRACT_ASSERT(count() == 0); // Empty.
             })
@@ -25,21 +27,23 @@ public:
 
     // Destroy dictionary.
     ~dictionary() {
-        auto c = boost::contract::destructor(this); // Check invariants.
+        // Check invariants.
+        boost::contract::guard c = boost::contract::destructor(this);
     }
 
     /* Basic Queries */
 
     // Number of key entries.
     int count() const {
-        auto c = boost::contract::public_function(this); // Check invariants.
+        // Check invariants.
+        boost::contract::guard c = boost::contract::public_function(this);
         return items_.size();
     }
 
     // Has entry for key?
     bool has(K const& key) const {
         bool result;
-        auto c = boost::contract::public_function(this)
+        boost::contract::guard c = boost::contract::public_function(this)
             .postcondition([&] {
                 // Empty has no key.
                 if(count() == 0) BOOST_CONTRACT_ASSERT(!result);
@@ -51,7 +55,7 @@ public:
 
     // Value for a given key.
     T const& value_for(K const& key) const {
-        auto c = boost::contract::public_function(this)
+        boost::contract::guard c = boost::contract::public_function(this)
             .precondition([&] {
                 BOOST_CONTRACT_ASSERT(has(key)); // Has key.
             })
@@ -65,8 +69,8 @@ public:
 
     // Add value of a given key.
     void put(K const& key, T const& value) {
-        auto old_count = BOOST_CONTRACT_OLDOF(count());
-        auto c = boost::contract::public_function(this)
+        boost::contract::old_ptr<int> old_count = BOOST_CONTRACT_OLDOF(count());
+        boost::contract::guard c = boost::contract::public_function(this)
             .precondition([&] {
                 BOOST_CONTRACT_ASSERT(!has(key)); // Has not key already.
             })
@@ -83,8 +87,8 @@ public:
 
     // Remove value for given key.
     void remove(K const& key) {
-        auto old_count = BOOST_CONTRACT_OLDOF(count());
-        auto c = boost::contract::public_function(this)
+        boost::contract::old_ptr<int> old_count = BOOST_CONTRACT_OLDOF(count());
+        boost::contract::guard c = boost::contract::public_function(this)
             .precondition([&] {
                 BOOST_CONTRACT_ASSERT(has(key)); // Has key.
             })
@@ -105,15 +109,15 @@ int main() {
     std::string const js = "John Smith";
 
     dictionary<std::string, int> ages;
-    BOOST_TEST(!ages.has(js));
+    assert(!ages.has(js));
 
     ages.put(js, 23);
-    BOOST_TEST_EQ(ages.value_for(js), 23);
+    assert(ages.value_for(js) == 23);
 
     ages.remove(js);
-    BOOST_TEST_EQ(ages.count(), 0);
+    assert(ages.count() == 0);
     
-    return boost::report_errors();
+    return 0;
 }
 //]
 

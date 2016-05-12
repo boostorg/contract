@@ -16,7 +16,8 @@ unsigned old_checks;
 template<typename T>
 struct b {
     virtual void next(T& x, boost::contract::virtual_* v = 0) {
-        boost::contract::old_ptr<T> old_x = BOOST_CONTRACT_OLDOF(v, x);
+        boost::contract::old_ptr_noncopyable<T> old_x =
+                BOOST_CONTRACT_OLDOF(v, x);
         boost::contract::guard c = boost::contract::public_function(v, this)
             .postcondition([&] {
                 if(old_x) {
@@ -39,7 +40,8 @@ struct a
     #undef BASES
 
     virtual void next(T& x, boost::contract::virtual_* v = 0) /* override */ {
-        boost::contract::old_ptr<T> old_x = BOOST_CONTRACT_OLDOF(v, x);
+        boost::contract::old_ptr_noncopyable<T> old_x =
+                BOOST_CONTRACT_OLDOF(v, x);
         boost::contract::guard c = boost::contract::public_function<
                 override_next>(v, &a::next, this, x)
             .postcondition([&] {
@@ -56,7 +58,7 @@ struct a
 
 template<typename T>
 void next(T& x) {
-    boost::contract::old_ptr<T> old_x = BOOST_CONTRACT_OLDOF(x);
+    boost::contract::old_ptr_noncopyable<T> old_x = BOOST_CONTRACT_OLDOF(x);
     boost::contract::guard c = boost::contract::function()
         .postcondition([&] {
             if(old_x) {

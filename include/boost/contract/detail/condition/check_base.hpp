@@ -28,10 +28,10 @@ public:
     explicit check_base(boost::contract::from from) :
           BOOST_CONTRACT_ERROR_missing_guard_declaration(false)
         , guard_asserted_(false)
-        , from_(from)
         #if !defined(BOOST_CONTRACT_NO_PRECONDITIONS) || \
                 !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
                 !defined(BOOST_CONTRACT_NO_INVARIANTS)
+            , from_(from)
             , failed_(false)
         #endif
     {}
@@ -112,10 +112,10 @@ private:
     // TODO: Document all BOOST_CONTRACT_ERROR_... and BOOST_STATIC_ASSERT_MSG errors (in an annex...).
     bool BOOST_CONTRACT_ERROR_missing_guard_declaration;
     bool guard_asserted_; // Avoid throwing twice from dtors (undef behavior).
-    boost::contract::from from_;
     #if !defined(BOOST_CONTRACT_NO_PRECONDITIONS) || \
             !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
             !defined(BOOST_CONTRACT_NO_INVARIANTS)
+        boost::contract::from from_;
         bool failed_;
     #endif
     #ifndef BOOST_CONTRACT_NO_PRECONDITIONS
