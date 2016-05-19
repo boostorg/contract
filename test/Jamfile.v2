@@ -187,6 +187,9 @@ test-suite function
 
     [ subdir-run-with-no function : body_throw ]
     [ subdir-run-with-no function : old_throw ]
+    
+    [ subdir-run-with-no function : check_if ]
+    [ subdir-compile-fail function : no_check_if_error ]
 ;
 
 test-suite result
@@ -202,13 +205,13 @@ test-suite old
     [ subdir-run-with-no old : auto ]
 
     [ subdir-run-with-no old : no_macros ]
+    [ subdir-run-with-no old : no_macros_noncopyable ]
+
     [ subdir-compile-fail old : no_make_old_error ]
+    [ subdir-compile-fail old : no_make_old_noncopyable_error ]
 
     [ subdir-run-with-no old : noncopyable ]
     [ subdir-compile-fail old : noncopyable_error ]
-    
-    [ subdir-run-with-no old : no_equal ]
-    [ subdir-compile-fail old : no_equal_error ]
 ;
 
 test-suite disable

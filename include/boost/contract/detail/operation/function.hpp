@@ -35,7 +35,7 @@ private:
             if(check_guard::checking()) return;
             #ifndef BOOST_CONTRACT_NO_PRECONDITIONS
                 {
-                    #ifndef BOOST_CONTRACT_PRECONDITIONS_DISABLE_NOTHING
+                    #ifndef BOOST_CONTRACT_PRECONDITIONS_DISABLE_NO_ASSERTION
                         check_guard checking;
                     #endif
                     this->check_pre();

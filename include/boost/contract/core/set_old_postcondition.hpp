@@ -7,7 +7,9 @@
 // file LICENSE_1_0.txt or a copy at http://www.boost.org/LICENSE_1_0.txt).
 // See: http://www.boost.org/doc/libs/release/libs/contract/doc/html/index.html
 
-/** @file */
+/** @file
+Allow to specify old value assignments and postconditions.
+*/
 
 #include <boost/contract/core/set_postcondition_only.hpp>
 #include <boost/contract/core/set_nothing.hpp>
@@ -32,12 +34,34 @@ namespace boost {
 }
 
 namespace boost { namespace contract {
-    
+
+/**
+Allow to specify old value assignments and postconditions.
+Allow to program functors this library will call to assign old values before
+body execution and to check postconditions.
+@tparam R   Return type of the function being contracted if that function is a
+            non-void virtual or overriding public function, otherwise this is
+            always @c void.
+@see @RefSect{tutorial, Tutorial}, @RefSect{advanced_topics, Advances Topics}.
+*/
 template<typename R = void>
 class set_old_postcondition { // Copyable (as *).
 public:
+    /** Destruct this object. */
     ~set_old_postcondition() BOOST_NOEXCEPT_IF(false) {}
     
+    /**
+    Allow to specify old value assignments to execute just before function body.
+    @param f    Functor called by this library to assign old values. This
+                functor is called just before the function body is executed, but
+                after preconditions and class invariants are checked. Old values
+                are usually assigned using @RefMacro{BOOST_CONTRACT_OLDOF}. This
+                functor must be a nullary functor. This functor should capture
+                old value pointers (and in general all other variables) by
+                (constant) reference.
+    @return After old value assignments have been specified, return object that
+            allows to optionally specify postconditions.
+    */
     template<typename F>
     set_postcondition_only<R> old(F const& f) {
         #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
@@ -53,6 +77,21 @@ public:
         #endif
     }
 
+    /**
+    Allow to specify postconditions.
+    @param f    Functor called by this library to check postconditions. Any
+                exception thrown by a call to this functor indicates a
+                postcondition failure. Assertions within this functor are
+                usually programmed using @RefMacro{BOOST_CONTRACT_ASSERT}. This
+                functor must be a nullary functor if @c R is @c void, otherwise
+                it must be unary functor taking the return value as a parameter
+                of type <c>R const&</c> (to avoid extra copies, or @c R and also
+                <c>R const</c> if extra copies of the return value are
+                irrelevant). This functor should capture variables by
+                (constant) reference.
+    @return After postconditions have been specified, return object that does
+            not allow to specify any additional contract (i.e., set nothing).
+    */
     template<typename F>
     set_nothing postcondition(F const& f) {
         #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
@@ -68,6 +107,7 @@ public:
         #endif
     }
 
+/** @cond */
 private:
     #if !defined(BOOST_CONTRACT_NO_PRECONDITIONS) || \
             !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
@@ -91,6 +131,7 @@ private:
 
     template<class CC>
     friend set_old_postcondition<> destructor(CC* oobj);
+/** @endcond */
 };
 
 } } // namespace

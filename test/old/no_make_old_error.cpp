@@ -1,12 +1,4 @@
 
-// Test error when make_old(...) not used by mistake.
-
-#include <boost/contract/old.hpp>
-
-int main() {
-    int x = 1;
-    boost::contract::old_ptr<int> old_x = boost::contract::copy_old() ? x :
-            boost::contract::null_old(); // Error (missing outer make_old(...)).
-    return 0;
-}
+#define BOOST_CONTRACT_TEST_OLD_PTR_TYPE boost::contract::old_ptr
+#include "no_make_old_error.hpp"
 

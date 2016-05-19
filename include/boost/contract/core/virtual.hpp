@@ -7,6 +7,10 @@
 // file LICENSE_1_0.txt or a copy at http://www.boost.org/LICENSE_1_0.txt).
 // See: http://www.boost.org/doc/libs/release/libs/contract/doc/html/index.html
 
+/** @file
+Used to contract virtual public functions.
+*/
+
 #include <boost/contract/core/config.hpp>
 #include <boost/contract/detail/decl.hpp>
 #include <boost/noncopyable.hpp>
@@ -28,7 +32,20 @@ namespace boost {
 
 namespace boost { namespace contract {
 
+/**
+Class to mark virtual public functions.
+Virtual and overriding public functions contracted using this library must have
+an extra parameter at the very end of their parameter list. This parameter must
+be a pointer to this class and it must be assigned to @c 0 by default. (This
+extra parameter is often named @c v in this documentation, but any name can be
+used.)
+
+<b>Rationale:</b> This extra parameter is internally used by this library to
+recognize virtual public functions and implement subcontracting.
+@see @RefSect{tutorial, Tutorial}.
+*/
 class virtual_ : private boost::noncopyable { // Avoid copy queue, stack, etc.
+/** @cond */
     // No public API (so users cannot use it directly by mistake).
 
     enum action_enum {
@@ -97,6 +114,7 @@ class virtual_ : private boost::noncopyable { // Avoid copy queue, stack, etc.
 
     BOOST_CONTRACT_DETAIL_DECL_DETAIL_CHECK_SUBCONTRACTED_PRE_POST_INV_Z(1,
             /* is_friend = */ 1, OO, RR, FF, CC, AArgs);
+/** @endcond */
 };
 
 } } // namespace

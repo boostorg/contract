@@ -50,7 +50,7 @@ private:
                         this->check_entry_static_inv();
                     #endif
                     #ifndef BOOST_CONTRACT_NO_PRECONDITIONS
-                        #ifndef BOOST_CONTRACT_PRECONDITIONS_DISABLE_NOTHING
+  #ifndef BOOST_CONTRACT_PRECONDITIONS_DISABLE_NO_ASSERTION
                                 this->check_pre();
                             } // Release check guard.
                         #else

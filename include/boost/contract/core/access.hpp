@@ -7,6 +7,10 @@
 // file LICENSE_1_0.txt or a copy at http://www.boost.org/LICENSE_1_0.txt).
 // See: http://www.boost.org/doc/libs/release/libs/contract/doc/html/index.html
 
+/** @file
+Used to declare invariants, base types, etc private members.
+*/
+
 #include <boost/contract/core/config.hpp>
 #include <boost/contract/detail/decl.hpp>
 #if !defined(BOOST_CONTRACT_NO_PRECONDITIONS) || \
@@ -40,14 +44,20 @@ namespace boost {
 
 namespace boost { namespace contract {
 
-// NOTE: Not making this class friend will cause compiler errors on some
-// compilers (e.g., MSVC) because the private members needed for contracts
-// will not be accessible. On other compilers (e.g., GCC and CLang), the
-// private access will instead simply fail SFINAE and no compiler error will be
-// reported but invariants and subcontracting checking will be silently skipped
-// at run-time. Therefore programmers must make sure to either declare contract
-// members public or to make this class a friend.
+/**
+Friend class to declare invariants, base types, etc private members.
+Declare this class as friend of the class being contracted in order to declare
+the class invariants member functions and the base types as non-public members.
+@note Not making this class friend will cause compiler errors on some compilers
+(e.g., MSVC) because the private members needed for contracts will not be
+accessible. On other compilers (e.g., GCC and CLang), the private access will
+instead fail SFINAE and no compiler error will be reported but invariants and
+subcontracting will be silently be skipped at run-time. Therefore programmers
+must make sure to either declare contract members public or to make this class
+a friend.
+*/
 class access { // Copyable (as shell with no data member).
+/** @cond */
     // No public APIs (so users cannot use it directly by mistake).
 
     #if !defined(BOOST_CONTRACT_NO_PRECONDITIONS) || \
@@ -124,6 +134,7 @@ class access { // Copyable (as shell with no data member).
         
     BOOST_CONTRACT_DETAIL_DECL_FRIEND_OVERRIDING_PUBLIC_FUNCTIONS_Z(1,
             OO, RR, FF, CC, AArgs, vv, rr, ff, oobj, aargs)
+/** @endcond */
 };
 
 } } // namespace

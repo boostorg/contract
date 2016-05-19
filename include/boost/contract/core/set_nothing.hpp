@@ -7,7 +7,9 @@
 // file LICENSE_1_0.txt or a copy at http://www.boost.org/LICENSE_1_0.txt).
 // See: http://www.boost.org/doc/libs/release/libs/contract/doc/html/index.html
 
-/** @file */
+/** @file
+Used to prevent setting other contract conditions after postconditions.
+*/
 
 #include <boost/contract/core/config.hpp>
 #if !defined(BOOST_CONTRACT_NO_PRECONDITIONS) || \
@@ -33,12 +35,19 @@ namespace boost {
     
 namespace boost { namespace contract {
 
+/**
+Used to prevent setting other contract conditions after postconditions.
+This class has no member function so it cannot be used to set any contract
+functor.
+*/
 class set_nothing { // Copyable (as *).
 public:
+    /** Destruct this object. */
     ~set_nothing() BOOST_NOEXCEPT_IF(false) {}
     
     // No set member functions here.
 
+/** @cond */
 private:
     #if !defined(BOOST_CONTRACT_NO_PRECONDITIONS) || \
             !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
@@ -62,6 +71,7 @@ private:
 
     template<typename RR>
     friend class set_postcondition_only;
+/** @endcond */
 };
 
 } } // namespace

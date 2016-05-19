@@ -2,37 +2,47 @@
 import quickbook ;
 using boostbook ;
 
-#doxygen reference
-#    :
-#        ../include/contract/function.hpp
-#        ../include/contract/constructor.hpp
-#        ../include/contract/destructor.hpp
-#        ../include/contract/class.hpp
-#        ../include/contract/class_invariant.hpp
-#        ../include/contract/body.hpp
-#        ../include/contract/block_invariant.hpp
-#        ../include/contract/loop_variant.hpp
-#        ../include/contract/parameter.hpp
-#        ../include/contract/oldof.hpp
-#        ../include/contract/copy.hpp
-#        ../include/contract/broken.hpp
-#        ../include/contract/config.hpp
-#        ../include/contract/limits.hpp
-#    :   
-#        <reftitle>"Reference"
-#        <prefix>contract # Strip path prefix.
-#        <doxygen:param>PREDEFINED="DOXYGEN"
-#        <doxygen:param>QUIET=YES
-#        <doxygen:param>WARN_IF_UNDOCUMENTED=NO
-#        <doxygen:param>HIDE_UNDOC_MEMBERS=YES
-#        <doxygen:param>HIDE_UNDOC_CLASSES=YES
-#        <doxygen:param>SHORT_NAMES=NO
-#        <doxygen:param>ALIASES=" Params=\"<b>Parameters:</b> <table border="0">\" Param{2}=\"<tr><td><b><tt>\\1</tt></b></td><td>\\2</td></tr>\" EndParams=\"</table>\" Returns=\"<b>Returns:</b>\" Note=\"<b>Note:</b>\" Warning=\"<b>Warning:</b>\" SeeAlso=\"<b>See also:</b>\" RefSect{2}=\"\\xmlonly<link linkend='contract__.\\1'>\\2</link>\\endxmlonly\" RefClass{1}=\"\\xmlonly<computeroutput><classname alt='\\1'>\\1</classname></computeroutput>\\endxmlonly\" RefFunc{1}=\"\\xmlonly<computeroutput><functionname alt='\\1'>\\1</functionname></computeroutput>\\endxmlonly\" RefMacro{1}=\"\\xmlonly<computeroutput><macroname alt='\\1'>\\1</macroname></computeroutput>\\endxmlonly\" RefEnum{1}=\"\\xmlonly<computeroutput><enumname alt='\\1'>\\1</enumname></computeroutput>\\endxmlonly\" "
-#    ;
+doxygen reference
+:
+    ../include/boost/contract/constructor.hpp
+    ../include/boost/contract/destructor.hpp
+    ../include/boost/contract/public_function.hpp
+    ../include/boost/contract/function.hpp
+    ../include/boost/contract/base_types.hpp
+    ../include/boost/contract/override.hpp
+    ../include/boost/contract/guard.hpp
+    ../include/boost/contract/assert.hpp
+    ../include/boost/contract/old.hpp
+    ../include/boost/contract/call_if.hpp
 
-xml contract : contract.qbk
-#    : <dependency>reference
+    ../include/boost/contract/core/access.hpp
+    ../include/boost/contract/core/virtual.hpp
+    ../include/boost/contract/core/set_precondition_old_postcondition.hpp
+    ../include/boost/contract/core/set_old_postcondition.hpp
+    ../include/boost/contract/core/set_postcondition_only.hpp
+    ../include/boost/contract/core/set_nothing.hpp
+    ../include/boost/contract/core/exception.hpp
+    ../include/boost/contract/core/config.hpp
+    
+    ../include/boost/contract.hpp
+:   
+    <reftitle>"Reference"
+    # But Quickbook's Doxygen does not show destructor exception specs.
+    <doxygen:param>PREDEFINED="DOXYGEN BOOST_NOEXCEPT_OR_NOTHROW:=noexcept BOOST_NOEXCEPT_IF:=noexcept BOOST_PP_VARIADICS"
+    <doxygen:param>MACRO_EXPANSION=YES
+    <doxygen:param>INCLUDE_PATH="../include"
+    <doxygen:param>QUIET=YES
+    <doxygen:param>JAVADOC_AUTOBRIEF=YES
+    <doxygen:param>WARN_IF_UNDOCUMENTED=NO
+    # Does not work for XML output (use @cond/#ifdef DOXYGEN in code instead).
+    <doxygen:param>EXTRACT_PRIVATE=NO
+    <doxygen:param>HIDE_UNDOC_MEMBERS=YES
+    <doxygen:param>HIDE_UNDOC_CLASSES=YES
+    <doxygen:param>SHORT_NAMES=NO
+    <doxygen:param>ALIASES=" Params=\"<b>Parameters:</b> <table border="0">\" Param{2}=\"<tr><td><b><tt>\\1</tt></b></td><td>\\2</td></tr>\" EndParams=\"</table>\" Returns=\"<b>Returns:</b>\" Note=\"<b>Note:</b>\" Warning=\"<b>Warning:</b>\" SeeAlso=\"<b>See also:</b>\" RefSect{2}=\"\\xmlonly<link linkend='boost_contract.\\1'>\\2</link>\\endxmlonly\" RefClass{1}=\"\\xmlonly<computeroutput><classname alt='\\1'>\\1</classname></computeroutput>\\endxmlonly\" RefFunc{1}=\"\\xmlonly<computeroutput><functionname alt='\\1'>\\1</functionname></computeroutput>\\endxmlonly\" RefMacro{1}=\"\\xmlonly<computeroutput><macroname alt='\\1'>\\1</macroname></computeroutput>\\endxmlonly\" RefEnum{1}=\"\\xmlonly<computeroutput><enumname alt='\\1'>\\1</enumname></computeroutput>\\endxmlonly\" "
 ;
+
+xml contract : contract.qbk : <dependency>reference ;
 
 boostbook doc : contract
 :

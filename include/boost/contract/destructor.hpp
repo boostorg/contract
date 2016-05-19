@@ -7,7 +7,9 @@
 // file LICENSE_1_0.txt or a copy at http://www.boost.org/LICENSE_1_0.txt).
 // See: http://www.boost.org/doc/libs/release/libs/contract/doc/html/index.html
 
-/** @file */
+/** @file
+Program contracts for destructors.
+*/
 
 #include <boost/contract/detail/all_core_headers.hpp>
 #if !defined(BOOST_CONTRACT_NO_DESTRUCTORS) || \
@@ -17,6 +19,17 @@
 
 namespace boost { namespace contract {
 
+/**
+Program contracts for destructors.
+Used to specify postconditions and check class invariants for destructors
+(destructors do not have preconditions).
+@see @RefSect{tutorial, Tutorial}.
+@param obj The destructor's object @c this.
+@return The result of this function must be assigned to a local variable of type
+        @RefClass{boost::contract::guard} declared at the beginning of the
+        destructor definition (after specifying old value assignments and
+        postconditions if they are present).
+*/
 template<class C>
 set_old_postcondition<> destructor(C* obj) {
     // Must #if also on ..._PRECONDITIONS here because set_... is generic.

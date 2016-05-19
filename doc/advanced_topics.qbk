@@ -258,20 +258,20 @@ More precisely, dereferencing an old value pointer of type [classref boost::cont
 In these cases, programmers can declare old values using [classref boost::contract::old_ptr] as seen so far (or equivalently using C++11 `auto` declarations `auto ... = BOOST_CONTRACT_OLDOF(...)`).
 [footnote
 *Rationale*.
-When C++11 `auto` declarations are used, this library defaults the type of [macroref BOOST_CONTRACT_OLDOF] to [classref boost::contract::old_ptr] because it generates a compile-time error for non-copyable types so it is in general more conservative than [classref boost::contract::noncopyable_old_ptr].
+When C++11 `auto` declarations are used, this library defaults the type of [macroref BOOST_CONTRACT_OLDOF] to [classref boost::contract::old_ptr] because it generates a compile-time error for non-copyable types so it is in general more conservative than [classref boost::contract::old_ptr_noncopyable].
 ]
 * However, in other cases it might be desirable to simply not check assertions that use some old values when the related old value types are not copy constructible.
-Programmers can do this by using [classref boost::contract::noncopyable_old_ptr] instead of [classref boost::contract::old_ptr] to program these old values (and by checking if the old value pointer is not null before dereferencing it in postconditions).
+Programmers can do this by using [classref boost::contract::old_ptr_noncopyable] instead of [classref boost::contract::old_ptr] to program these old values (and by checking if the old value pointer is not null before dereferencing it in postconditions).
 
-For example, consider the following `accumulate` function template that could in general be instantiated for types `T` that are not copy constructible (i.e., `boost::is_copy_constructible<T>::value` is `false`):
+For example, consider the following `accumulate` function template that could in general be instantiated for types `T` that are not copy constructible, that is when `boost::is_copy_constructible<T>::value` is `false` (see also [@../../example/features/old_noncopyable.cpp =noncopyable.cpp=]):
 
-[import ../example/features/noncopyable_old.cpp]
-[noncopyable_old]
+[import ../example/features/old_noncopyable.cpp]
+[old_noncopyable]
 
-The old value pointer `old_total` is programmed using [classref boost::contract::noncopyable_old_ptr] so if `T` is not copy constructible then `total` will simply not be copied and `old_total` will be left as a null pointer (in these cases `old_total` must be checked to be not null `if(old_total) ...` before it can be dereferenced in the postconditions).
+The old value pointer `old_total` is programmed using [classref boost::contract::old_ptr_noncopyable] so if `T` is not copy constructible then `total` will simply not be copied and `old_total` will be left as a null pointer (in these cases `old_total` must be checked to be not null `if(old_total) ...` before it can be dereferenced in the postconditions).
 If the above example used [classref boost::contract::old_ptr] instead then the library would have generated a compile-time error if `accumulate` is instantiated for types `T` that are not copy constructible (but only if `old_total` is actually dereferenced in the contract assertions somewhere `*old_total ...`).
 
-Note that the `noncopyable_...` prefix of the name [classref boost::contract::noncopyable_old_ptr]`<T>` refers to the pointed type `T` that may or not be copy constructible without causing a compile-time error in this case (the old value pointer itself is always copyable, or at least copy assignable).
+The `..._noncopyable` postfix in the type name [classref boost::contract::old_ptr_noncopyable]`<T>` refers to the pointed type `T` that may or not be copy constructible without causing a compile-time error in this case (the old value pointer itself is always copyable, or at least copy assignable).
 
 [heading No C++11]
 

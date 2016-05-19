@@ -76,7 +76,7 @@ private:
                         this->check_subcontracted_entry_inv();
                     #endif
                     #ifndef BOOST_CONTRACT_NO_PRECONDITIONS
-                        #ifndef BOOST_CONTRACT_PRECONDITIONS_DISABLE_NOTHING
+  #ifndef BOOST_CONTRACT_PRECONDITIONS_DISABLE_NO_ASSERTION
                                 this->check_subcontracted_pre();
                             } // Release check guard.
                         #else

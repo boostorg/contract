@@ -7,9 +7,11 @@
 // file LICENSE_1_0.txt or a copy at http://www.boost.org/LICENSE_1_0.txt).
 // See: http://www.boost.org/doc/libs/release/libs/contract/doc/html/index.html
 
-/** @file */
+/** @file
+Include all header files required by this library at once.
+*/
 
-// Include all and only public headers as users would (not core headers, etc.).
+#include <boost/contract/detail/all_core_headers.hpp>
 #include <boost/contract/assert.hpp>
 #include <boost/contract/base_types.hpp>
 #include <boost/contract/call_if.hpp>
