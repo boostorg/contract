@@ -24,57 +24,68 @@ namespace boost { namespace contract {
 
 /**
 Program contracts for constructors.
-This is used to specify postconditions and check class invariants for
-constructors (see @RefClass{boost::contract::constructor_precondition} to
-specify preconditions for constructors instead).
-@see @RefSect{tutorial, Tutorial}.
-@param obj The object @c this in scope of the constructor being contracted.
-@return The result of this function must be assigned to variable of type
-        @RefClass{boost::contract::guard} declared locally within the
-        constructor being contracted.
+This is used to specify postconditions, old value assignments at body, and
+check class invariants for constructors (see
+@RefClass{boost::contract::constructor_precondition} to specify preconditions
+for constructors instead).
+
+For optimization, this can be omitted for constructors that do not have
+postconditions when the enclosing class has no invariants.
+@see @RefSect{tutorial, Tutorial}
+@param obj The object @c this from the scope of the contracted constructor.
+@return The result of this function must be assigned to a variable of type
+        @RefClass{boost::contract::guard} declared locally just before the body
+        of the contracted constructor (otherwise this library will generate a
+        run-time error, see @RefMacro{BOOST_CONTRACT_ON_MISSING_GUARD}).
 */
-template<class C>
-set_old_postcondition<> constructor(C* obj) {
-    // Must #if also on ..._PRECONDITIONS here because set_... is generic.
+template<class Class>
+specify_old_postcondition<> constructor(Class* obj) {
+    // Must #if also on ..._PRECONDITIONS here because specify_... is generic.
     #if !defined(BOOST_CONTRACT_NO_CONSTRUCTORS) || \
             !defined(BOOST_CONTRACT_NO_PRECONDITIONS)
-        return set_old_postcondition<>(
-                new boost::contract::detail::constructor<C>(obj));
+        return specify_old_postcondition<>(
+                new boost::contract::detail::constructor<Class>(obj));
     #else
-        return set_old_postcondition<>();
+        return specify_old_postcondition<>();
     #endif
 }
 
 // TODO: Document that constructor_precondition for unions must be called at the very beginning of ctor body before `boost::contract::guard c = ...` (because unions cannot have base classes, not even in C++11).
 /**
-Program constructor preconditions.
-This class must be the very first base class of the class being contracted. Also
-the contracted class must privately inherit from this base class.
+Program preconditions for constructors.
+This class must be the very first base class of the contracted class. Also the
+contracted class shall privately inherit from this base class (to not alter the
+contracted class public interface).
 
-Unions cannot have base classes so this class can be used to declare a local
-object within the constructor function just before
-@RefClass{boost::contract::constructor} is used (see
+Unions cannot have base classes in C++ so this class can be used to declare a
+local object within the constructor function just before
+@RefFunc{boost::contract::constructor} is used (see
 @RefSect{advanced_topics, Advanced Topics}).
 
-@see @RefSect{tutorial, Tutorial}.
-@tparam C   Class of constructor being contracted (CRTP used here to avoid
-            multiple instances of same base class error).
+@see @RefSect{tutorial, Tutorial}
+@tparam Class Class of contracted constructor.
 */
-template<class C>
-class constructor_precondition { // Copyable (no data).
+template<class Class>
+class constructor_precondition { // Copyable (has no data).
 public:
-    /** Construct this object for constructor that do not have preconditions. */
+    /**
+    Construct this object without specifying constructor preconditions.
+    This is implicitly called for those constructors of the contracted class
+    that do not specify preconditions.
+    */
     constructor_precondition() {}
 
     /**
-    Constructor this object specifying constructor preconditions.
-    @param f    Functor called by this library to check preconditions. Any
-                exception thrown by a call to this functor indicates a
-                precondition failure. Assertions within this functor are usually
-                programmed using @RefMacro{BOOST_CONTRACT_ASSERT}. This functor
-                must be a nullary functor. This functor could capture variables
-                by value, or better by (constant) reference to void extra
-                copies.
+    Construct this object specifying constructor preconditions.
+    @param f    Functor called by this library to check constructor
+                preconditions @c f(). Precondition assertions within this
+                functor call are usually programmed using
+                @RefMacro{BOOST_CONTRACT_ASSERT}, but any exception thrown by a
+                call to this functor indicates a precondition failure (and will
+                result in this library calling
+                @RefFunc{boost::contract::precondition_failure}). This functor
+                must be a nullary functor. This functor can capture variables by
+                value, or better by (constant) reference to avoid extra copies.
     */
     template<typename F>
     explicit constructor_precondition(F const& f) {

@@ -21,24 +21,28 @@ namespace boost { namespace contract {
 
 /**
 Program contracts for destructors.
-Used to specify postconditions and check class invariants for destructors
-(destructors do not have preconditions).
-@see @RefSect{tutorial, Tutorial}.
-@param obj The destructor's object @c this.
-@return The result of this function must be assigned to a local variable of type
-        @RefClass{boost::contract::guard} declared at the beginning of the
-        destructor definition (after specifying old value assignments and
-        postconditions if they are present).
+This is used to specify postconditions, old value assignments at body, and check
+class invariants for destructors (destructors cannot not have preconditions, see
+@RefSect{contract_programming_overview, Contract Programming Overview}).
+
+For optimization, this can be omitted for destructors that do not have
+postconditions when the enclosing class has no invariants.
+@see @RefSect{tutorial, Tutorial}
+@param obj The object @c this from the scope of the contracted destructor.
+@return The result of this function must be assigned to a variable of type
+        @RefClass{boost::contract::guard} declared locally just before the body
+        of the contracted destructor (otherwise this library will generate a
+        run-time error, see @RefMacro{BOOST_CONTRACT_ON_MISSING_GUARD}).
 */
-template<class C>
-set_old_postcondition<> destructor(C* obj) {
-    // Must #if also on ..._PRECONDITIONS here because set_... is generic.
+template<class Class>
+specify_old_postcondition<> destructor(Class* obj) {
+    // Must #if also on ..._PRECONDITIONS here because specify_... is generic.
     #if !defined(BOOST_CONTRACT_NO_DESTRUCTORS) || \
             !defined(BOOST_CONTRACT_NO_PRECONDITIONS)
-        return set_old_postcondition<>(
-                new boost::contract::detail::destructor<C>(obj));
+        return specify_old_postcondition<>(
+                new boost::contract::detail::destructor<Class>(obj));
     #else
-        return set_old_postcondition<>();
+        return specify_old_postcondition<>();
     #endif
 }
 

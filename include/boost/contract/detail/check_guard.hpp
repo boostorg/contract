@@ -34,9 +34,11 @@ private:
 
 } } } // namespace
 
+/** @cond Needed because this header included by other public headers. */
 #if BOOST_CONTRACT_HEADER_ONLY
     #include <boost/contract/detail/inlined/detail/check_guard.hpp>
 #endif
+/** @endcond */
 
 #endif // #include guard
 

@@ -41,18 +41,18 @@
 
 namespace boost { namespace contract { namespace detail {
 
-template<typename R>
+template<typename VR>
 class check_pre_post : public check_base { // Non-copyable base.
 public:
     explicit check_pre_post(boost::contract::from from) : check_base(from) {}
     
     #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
 private:
-        typedef typename boost::mpl::if_<is_optional<R>,
+        typedef typename boost::mpl::if_<is_optional<VR>,
             boost::optional<typename boost::remove_reference<typename
-                    optional_value_type<R>::type>::type const&> const&
+                    optional_value_type<VR>::type>::type const&> const&
         ,
-            R const&
+            VR const&
         >::type r_type;
 
         BOOST_CONTRACT_DETAIL_CHECK_PRE_POST_DEF_(

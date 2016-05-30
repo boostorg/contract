@@ -26,9 +26,9 @@ namespace boost { namespace contract { namespace detail {
 // Dtor subcontracting impl via C++ obj destruction mechanism.
 template<class C>
 class destructor :
-        public check_pre_post_inv</* R = */ none, C> { // Non-copyable base.
+        public check_pre_post_inv</* VR = */ none, C> { // Non-copyable base.
 public:
-    explicit destructor(C* obj) : check_pre_post_inv</* R = */ none, C>(
+    explicit destructor(C* obj) : check_pre_post_inv</* VR = */ none, C>(
             boost::contract::from_destructor, obj) {}
 
 private:

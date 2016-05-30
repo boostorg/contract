@@ -22,10 +22,7 @@
 #include <boost/contract/core/access.hpp>
 #include <boost/contract/core/config.hpp>
 #include <boost/contract/core/exception.hpp>
-#include <boost/contract/core/set_nothing.hpp>
-#include <boost/contract/core/set_old_postcondition.hpp>
-#include <boost/contract/core/set_postcondition_only.hpp>
-#include <boost/contract/core/set_precondition_old_postcondition.hpp>
+#include <boost/contract/core/specify.hpp>
 #include <boost/contract/core/virtual.hpp>
 
 #endif // #include guard

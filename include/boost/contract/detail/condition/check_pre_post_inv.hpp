@@ -31,8 +31,8 @@
 
 namespace boost { namespace contract { namespace detail {
 
-template<typename R, class C>
-class check_pre_post_inv : public check_pre_post<R> { // Non-copyable base.
+template<typename VR, class C>
+class check_pre_post_inv : public check_pre_post<VR> { // Non-copyable base.
     #if !defined(BOOST_CONTRACT_NO_INVARIANTS) && \
             !defined(BOOST_CONTRACT_PERMISSIVE)
         BOOST_STATIC_ASSERT_MSG(
@@ -95,7 +95,7 @@ class check_pre_post_inv : public check_pre_post<R> { // Non-copyable base.
 public:
     // obj can be 0 for static member functions.
     explicit check_pre_post_inv(boost::contract::from from, C* obj) :
-        check_pre_post<R>(from)
+        check_pre_post<VR>(from)
         #if !defined(BOOST_CONTRACT_NO_PRECONDITIONS) || \
                 !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
                 !defined(BOOST_CONTRACT_NO_INVARIANTS)

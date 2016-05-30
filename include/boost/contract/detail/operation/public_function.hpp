@@ -29,26 +29,26 @@
 namespace boost { namespace contract { namespace detail {
 
 template<
-    class O, typename R, typename F, class C
+    class O, typename VR, typename F, class C
     BOOST_CONTRACT_DETAIL_TVARIADIC_COMMA(BOOST_CONTRACT_MAX_ARGS)
     BOOST_CONTRACT_DETAIL_TVARIADIC_TPARAMS_Z(1, BOOST_CONTRACT_MAX_ARGS, Args)
 >
 class public_function : // Non-copyable base.
     public check_subcontracted_pre_post_inv<
-        O, R, F, C
+        O, VR, F, C
         BOOST_CONTRACT_DETAIL_TVARIADIC_COMMA(BOOST_CONTRACT_MAX_ARGS)
         BOOST_CONTRACT_DETAIL_TVARIADIC_ARGS_Z(1, BOOST_CONTRACT_MAX_ARGS, Args)
     >
 {
 public:
     explicit public_function(
-        boost::contract::virtual_* v, C* obj, R& r
+        boost::contract::virtual_* v, C* obj, VR& r
         BOOST_CONTRACT_DETAIL_TVARIADIC_COMMA(BOOST_CONTRACT_MAX_ARGS)
         BOOST_CONTRACT_DETAIL_TVARIADIC_FPARAMS_Z(1,
                 BOOST_CONTRACT_MAX_ARGS, Args, &, args)
     ) :
         check_subcontracted_pre_post_inv<
-            O, R, F, C
+            O, VR, F, C
             BOOST_CONTRACT_DETAIL_TVARIADIC_COMMA(BOOST_CONTRACT_MAX_ARGS)
             BOOST_CONTRACT_DETAIL_TVARIADIC_ARGS_Z(1,
                     BOOST_CONTRACT_MAX_ARGS, Args)

@@ -23,9 +23,9 @@ namespace boost { namespace contract { namespace detail {
 
 // Used for free function, private and protected member functions.
 class function :
-        public check_pre_post</* R = */ none> { // Non-copyable base.
+        public check_pre_post</* VR = */ none> { // Non-copyable base.
 public:
-    explicit function() : check_pre_post</* R = */ none>(
+    explicit function() : check_pre_post</* VR = */ none>(
             boost::contract::from_function) {}
 
 private:

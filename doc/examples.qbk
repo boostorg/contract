@@ -15,13 +15,14 @@ Sources:
 
 A few notable examples:
 
-* [link contract__.examples.__n1962___vector__comparison_with_c___proposed_syntax \[N1962\] Vector]: Complete contracts for `std::vector` and a comparison with __N1962__ syntax.
-* [link contract__.examples.__n1962___square_root__default_parameters_and_comparison_with_d_syntax \[N1962\] Square Root]: Comparison with D syntax.
-* [link contract__.examples.__mitchell02___counter__subcontracting_and_virtual_specifiers__final__override__new__and_pure_virtual_ \[Mitchell02\] Counter]: Subcontracting.
-* [link contract__.examples.__meyer97___stack4__comparison_with_eiffel_syntax \[Meyer97\] Stack4]: Comparison with Eiffel syntax.
-* [link contract__.examples.__cline90___vector__comparison_with_a___proposed_syntax \[Cline90\] Vector]: Comparison with A++ syntax.
+* [link N1962_vector_anchor \[N1962\] Vector]: Complete contracts for `std::vector` and a comparison with __N1962__ syntax.
+* [link N1962_square_root_anchor \[N1962\] Square Root]: Comparison with D syntax.
+* [link Mitchell02_counter_anchor \[Mitchell02\] Counter]: Subcontracting.
+* [link Meyer97_stack4_anchor \[Meyer97\] Stack4]: Comparison with Eiffel syntax.
+* [link Cline90_vector_anchor \[Cline90\] Vector]: Comparison with A++ syntax.
 
-[heading \[N1962\] Vector: Comparison with C++ proposal's syntax]
+[#N1962_vector_anchor]
+[heading \[N1962\] Vector: STL Vector contracts and comparison with C++ contract proposal syntax]
 [import ../example/n1962/vector.cpp]
 [import ../example/n1962/vector_n1962.hpp]
 [table
@@ -45,6 +46,7 @@ A few notable examples:
 [import ../example/n1962/sum.cpp]
 [n1962_sum]
 
+[#N1962_square_root_anchor]
 [heading \[N1962\] Square Root: Default parameters and comparison with D syntax]
 [import ../example/n1962/sqrt.cpp]
 [import ../example/n1962/sqrt.d]
@@ -53,6 +55,7 @@ A few notable examples:
     [ [[n1962_sqrt]] [[n1962_sqrt_d]] ]
 ]
 
+[#Meyer97_stack4_anchor]
 [heading \[Meyer97\] Stack4: Comparison with Eiffel syntax]
 [import ../example/meyer97/stack4.hpp]
 [import ../example/meyer97/stack4_main.cpp]
@@ -99,6 +102,7 @@ A few notable examples:
 [import ../example/mitchell02/observer_main.cpp]
 [mitchell02_observer_main]
 
+[#Mitchell02_counter_anchor]
 [heading \[Mitchell02\] Counter: Subcontracting]
 [import ../example/mitchell02/counter/push_button.hpp]
 [mitchell02_push_button]
@@ -109,6 +113,7 @@ A few notable examples:
 [import ../example/mitchell02/counter_main.cpp]
 [mitchell02_counter_main]
 
+[#Cline90_vector_anchor]
 [heading \[Cline90\] Vector: Comparison with A++ proposed syntax]
 [import ../example/cline90/vector.hpp]
 [import ../example/cline90/vector_main.cpp]

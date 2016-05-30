@@ -438,7 +438,7 @@ Therefore, this feature was removed in the current revision of this library.
 ][
     [['Disable contract checking]]
     [
-Yes, contract checking can be skipped at run-time by defining combinations of the [macroref BOOST_CONTRACT_NO_PRECONDITIONS], [macroref BOOST_CONTRACT_NO_POSTCONDITIONS], [macroref BOOST_CONTRACT_NO_INVARIANTS], [macroref BOOST_CONTRACT_NO_ENTRY_INVARIATS], and [macroref BOOST_CONTRACT_NO_EXIT_INVARIANTS] macros.
+Yes, contract checking can be skipped at run-time by defining combinations of the [macroref BOOST_CONTRACT_NO_PRECONDITIONS], [macroref BOOST_CONTRACT_NO_POSTCONDITIONS], [macroref BOOST_CONTRACT_NO_INVARIANTS], [macroref BOOST_CONTRACT_NO_ENTRY_INVARIANTS], and [macroref BOOST_CONTRACT_NO_EXIT_INVARIANTS] macros.
 (Also removing contract code from compiled object code is possible but requires users to program a fare amount of boiler-plate code, see __Disable_Contract_Checking__.)
 ]
     [Yes (contract code also removed from compiled object code).]

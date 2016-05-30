@@ -117,7 +117,7 @@ $ .\/introduction
 
 The above steps also work for Clang using =clang++= instead of =g++=.
 
-Following a convention common to many Boost libraries, this library provides the [macroref BOOST_CONTACT_DYN_LINK] macro to be defined when compiling this library as a shared library instead.
+Following a convention common to many Boost libraries, this library provides the [macroref BOOST_CONTRACT_DYN_LINK] macro to be defined when compiling this library as a shared library instead.
 If this macro is not defined, this library will be compiled as a statically linked library.
 There is also a [macroref BOOST_CONTRACT_HEADER_ONLY] macro that can be defined when compiling user programs instead of pre-compiling this library separately as either a static or shared library (because this library will then be composed only of header files so it no longer needs to be compiled separately).
 

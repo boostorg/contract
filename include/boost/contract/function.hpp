@@ -21,41 +21,27 @@ namespace boost { namespace contract {
 
 /**
 Program contracts for non-member, private and protected functions.
+This is used to specify preconditions, postconditions, and old value assignments
+at body for non-member, private and protected functions (these functions never
+check class invariants, see
+@RefSect{contract_programming_overview, Contract Programming Overview}).
 
-Allow to program preconditions and postconditions (both optional) for
-non-member, private and protected functions (these functions never check
-invariants or participate in subcontracting).
-The result of this function must be assigned to a local variable of type
-@RefClass{boost::contract::guard} at the scope of the function being contracted.
-
-@code
-    // Enclosing function scope.
-    boost::contract::guard c = boost::contract::function()
-        .precondition(...)      // Optional.
-        .old(...)               // Optional.
-        .postcondition(...)     // Optional.
-    ;
-    ... // Enclosing function body.
-@endcode
-
-For optimization purposes this can be avoided for functions that do not have
+For optimization, this can be omitted for functions that do not have
 preconditions and postconditions.
-
-Where <c>.precondition(...)</c>, <c>.old(...)</c>, and
-<c>.postcondition(...)</c> take nullary functors that assert preconditions,
-assign old value pointers just before body execution (most of the times it
-should be sufficient to assign these pointers where they are first declared
-instead), and assert postconditions respectively.
-@SeeAlso @RefSect{tutorial, Tutorial}
+@see @RefSect{tutorial, Tutorial}
+@return The result of this function must be assigned to a variable of type
+        @RefClass{boost::contract::guard} declared locally just before the body
+        of the contracted function (otherwise this library will generate a
+        run-time error, see @RefMacro{BOOST_CONTRACT_ON_MISSING_GUARD}).
 */
-set_precondition_old_postcondition<> function() {
-    // Must #if also on ..._INVARIANTS here because set_... is generic.
+specify_precondition_old_postcondition<> function() {
+    // Must #if also on ..._INVARIANTS here because specify_... is generic.
     #if !defined(BOOST_CONTRACT_NO_FUNCTIONS) || \
             !defined(BOOST_CONTRACT_NO_INVARIANTS)
-        return set_precondition_old_postcondition<>(
+        return specify_precondition_old_postcondition<>(
                 new boost::contract::detail::function());
     #else
-        return set_precondition_old_postcondition<>();
+        return specify_precondition_old_postcondition<>();
     #endif
 }
 

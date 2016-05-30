@@ -67,10 +67,10 @@ namespace check_subcontracted_pre_post_inv_ {
     class signal_not_checked {};
 }
 
-// O, R, F, and Args-i can be none types (but C cannot).
+// O, VR, F, and Args-i can be none types (but C cannot).
 BOOST_CONTRACT_DETAIL_DECL_DETAIL_CHECK_SUBCONTRACTED_PRE_POST_INV_Z(1,
-        /* is_friend = */ 0, O, R, F, C, Args) : // Non-copyable base.
-    public check_pre_post_inv<R, C>
+        /* is_friend = */ 0, O, VR, F, C, Args) : // Non-copyable base.
+    public check_pre_post_inv<VR, C>
 {
     #if !defined(BOOST_CONTRACT_NO_PRECONDITIONS) || \
             !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
@@ -145,12 +145,12 @@ public:
         boost::contract::from from,
         boost::contract::virtual_* v,
         C* obj,
-        R& r
+        VR& r
         BOOST_CONTRACT_DETAIL_TVARIADIC_COMMA(BOOST_CONTRACT_MAX_ARGS)
         BOOST_CONTRACT_DETAIL_TVARIADIC_FPARAMS_Z(1,
                 BOOST_CONTRACT_MAX_ARGS, Args, &, args)
     ) :
-        check_pre_post_inv<R, C>(from, obj)
+        check_pre_post_inv<VR, C>(from, obj)
         #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
             , r_(r)
         #endif
@@ -176,8 +176,8 @@ public:
                             boost::contract::virtual_::no_action);
                     #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
                         v_->result_ptr_ = &r_;
-                        v_->result_type_name_ = typeid(R).name();
-                        v_->result_optional_ = is_optional<R>::value;
+                        v_->result_type_name_ = typeid(VR).name();
+                        v_->result_optional_ = is_optional<VR>::value;
                     #endif
                 } else v_ = 0;
             }
@@ -275,7 +275,7 @@ private:
             }
 
             typedef typename boost::remove_reference<typename
-                    optional_value_type<R>::type>::type r_type;
+                    optional_value_type<VR>::type>::type r_type;
             boost::optional<r_type const&> r; // No result copy in this code.
             if(!base_call_) r = r_;
             else if(v_->result_optional_) {
@@ -307,7 +307,7 @@ private:
                     }
                 }
             }
-            check_post_r<R>(r);
+            check_post_r<VR>(r);
         }
 
         template<typename R_, typename Result>
@@ -450,7 +450,7 @@ private:
     #endif
 
     #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
-        R& r_;
+        VR& r_;
     #endif
     #if !defined(BOOST_CONTRACT_NO_PRECONDITIONS) || \
             !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \

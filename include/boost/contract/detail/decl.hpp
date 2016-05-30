@@ -23,26 +23,26 @@
 
 #define BOOST_CONTRACT_DETAIL_DECL_OVERRIDING_PUBLIC_FUNCTION_Z(z, \
     arity, is_friend, has_result, \
-    O, R, F, C, Args, \
+    O, VR, F, C, Args, \
     v, r, f, obj, args \
 ) \
     template< \
         class O \
         BOOST_PP_COMMA_IF(has_result) \
-        BOOST_PP_EXPR_IIF(has_result, typename R) \
+        BOOST_PP_EXPR_IIF(has_result, typename VR) \
         , typename F \
         , class C \
         BOOST_CONTRACT_DETAIL_TVARIADIC_COMMA(arity) \
         BOOST_CONTRACT_DETAIL_TVARIADIC_TPARAMS_Z(z, arity, Args) \
     > \
     BOOST_PP_EXPR_IIF(is_friend, friend) \
-    boost::contract::set_precondition_old_postcondition< \
-            BOOST_PP_EXPR_IIF(has_result, R)> \
+    boost::contract::specify_precondition_old_postcondition< \
+            BOOST_PP_EXPR_IIF(has_result, VR)> \
     /* no boost::contract:: here for friends (otherwise need fwd decl) */ \
     public_function( \
         boost::contract::virtual_* v \
         BOOST_PP_COMMA_IF(has_result) \
-        BOOST_PP_EXPR_IIF(has_result, R& r) \
+        BOOST_PP_EXPR_IIF(has_result, VR& r) \
         , F f \
         , C* obj \
         BOOST_CONTRACT_DETAIL_TVARIADIC_COMMA(arity) \
@@ -51,16 +51,16 @@
 
 #if BOOST_CONTRACT_DETAIL_TVARIADIC
     #define BOOST_CONTRACT_DETAIL_DECL_FRIEND_OVERRIDING_PUBLIC_FUNCTIONS_Z(z, \
-        O, R, F, C, Args, \
+        O, VR, F, C, Args, \
         v, r, f, obj, args \
     ) \
         BOOST_CONTRACT_DETAIL_DECL_OVERRIDING_PUBLIC_FUNCTION_Z(z, \
             ~, /* is_friend = */ 1, /* has_result = */ 0, \
-            O, R, F, C, Args, v, r, f, obj, args \
+            O, VR, F, C, Args, v, r, f, obj, args \
         ); \
         BOOST_CONTRACT_DETAIL_DECL_OVERRIDING_PUBLIC_FUNCTION_Z(z, \
             ~, /* is_friend = */ 1, /* has_result = */ 1, \
-            O, R, F, C, Args, v, r, f, obj, args \
+            O, VR, F, C, Args, v, r, f, obj, args \
         );
 #else
     /* PRIVATE */
@@ -84,25 +84,25 @@
 
     /* PUBLIC */
     #define BOOST_CONTRACT_DETAIL_DECL_FRIEND_OVERRIDING_PUBLIC_FUNCTIONS_Z(z, \
-        O, R, F, C, Args, \
+        O, VR, F, C, Args, \
         v, r, f, obj, args \
     ) \
         BOOST_PP_REPEAT_ ## z( \
             BOOST_PP_INC(BOOST_CONTRACT_MAX_ARGS), \
             BOOST_CONTRACT_DETAIL_DECL_FRIEND_OVERRIDING_PUBLIC_FUNCTION_, \
-            (/* has_result = */ 0, O, R, F, C, Args, v, r, f, obj, args) \
+            (/* has_result = */ 0, O, VR, F, C, Args, v, r, f, obj, args) \
         ) \
         BOOST_PP_REPEAT_ ## z( \
             BOOST_PP_INC(BOOST_CONTRACT_MAX_ARGS), \
             BOOST_CONTRACT_DETAIL_DECL_FRIEND_OVERRIDING_PUBLIC_FUNCTION_, \
-            (/* has_result = */ 1, O, R, F, C, Args, v, r, f, obj, args) \
+            (/* has_result = */ 1, O, VR, F, C, Args, v, r, f, obj, args) \
         )
 #endif
 
 #define BOOST_CONTRACT_DETAIL_DECL_DETAIL_CHECK_SUBCONTRACTED_PRE_POST_INV_Z( \
-        z, is_friend, O, R, F, C, Args) \
+        z, is_friend, O, VR, F, C, Args) \
     template< \
-        class O, typename R, typename F, class C \
+        class O, typename VR, typename F, class C \
         BOOST_CONTRACT_DETAIL_TVARIADIC_COMMA(BOOST_CONTRACT_MAX_ARGS) \
         BOOST_CONTRACT_DETAIL_TVARIADIC_TPARAMS_Z(z, \
                 BOOST_CONTRACT_MAX_ARGS, Args) \
@@ -120,8 +120,8 @@ namespace boost {
     namespace contract {
         class virtual_;
 
-        template<typename R = void>
-        class set_precondition_old_postcondition;
+        template<typename VR = void>
+        class specify_precondition_old_postcondition;
     }
 }
     

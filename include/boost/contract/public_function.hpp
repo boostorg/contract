@@ -9,8 +9,8 @@
 
 /** @file
 Program contracts for public member functions.
-Different overloads are provided to handle static, virtual void/non-void, and
-overriding void/non-void public functions.
+Overloads are provided to handle static, virtual void, virtual non-void,
+overriding void, and override non-void public functions.
 */
 
 // TODO: Document that even with variadic templates there's a hard limit to function max args (18 works, but MAX_ARGS=19 does not). This limit comes from Boost.MPL (vector, push_back, etc.), Boost.FunctionTypes, and other Boost algorithm that do not currently have a variadic template implementation. However, re-impl all these Boost alg would be too much work for this lib, plus the 19 max args limit seems high enough, and it would eventually be removed if Boost.MPL, Boost.FunctionTypes are ever ported to impl that use variadic templates.
@@ -44,68 +44,79 @@ overriding void/non-void public functions.
 
 namespace boost { namespace contract {
 
-// NOTE: O and (optionally) R allowed only when v is present because:
+// NOTE: Override and (optionally) VirtualResult allowed only when v is present
+// because:
 // * An overriding func must override a base func declared virtual so with
-//   v extra param, thus the overriding func must also always have v (i.e., O
-//   might be present only if v is also present).
-//   However, the first appearing virtual func (e.g., in root class) will not
-//   override any previously declared virtual func so does not need O (i.e., O
+//   v extra param, thus the overriding func must also always have v (i.e.,
+//   Override might be present only if v is also present). However, the first
+//   appearing virtual func (e.g., in root class) will not override any
+//   previously declared virtual func so does not need Override (i.e., Override
 //   always optional).
-//   Furthermore, F needs to be specified only together with O.
-// * R is only used for virtual functions (i.e., R might be present only if v
-//   is also present).
-//   However, R is never specified, not even for virtual functions, when the
-//   return type is void (i.e., R always optional).
+//   Furthermore, F needs to be specified only together with Override.
+// * VirtualResult is only used for virtual functions (i.e., VirtualResult might
+//   be present only if v is also present).
+//   However, VirtualResult is never specified, not even for virtual functions,
+//   when the return type is void (i.e., VirtualResult always optional).
 
 /**
 Program contracts for static public functions.
-Used to specify preconditions, postconditions, old value assignments, and check
-static class invariants for static public functions.
-@see @RefSect{tutorial, Tutorial}.
-@tparam C   Class of contracted member function. This template parameter must
-            be explicitly specified for static public functions (because they
-            have no object so this template parameter cannot be automatically
-            deduced).
-@return The result of this function must be assigned to a local variable of type
-        @RefClass{boost::contract::guard} declared at the beginning of the
-        static public function definition (after declaring old value pointers
-        if they are present).
+This is used to specify preconditions, postconditions, old value assignments at
+body, and check static class invariants for static public functions.
+
+For optimization, this can be omitted for static public functions that do not
+have preconditions and postconditions when the enclosing class has no static
+invariants.
+@see @RefSect{tutorial, Tutorial}
+@tparam Class   The class of the contracted member function. This template
+                parameter must be explicitly specified for static public
+                functions (because they have no object @c this so there is no
+                function argument from which this type template parameter can be
+                automatically deduced).
+@return The result of this function must be assigned to a variable of type
+        @RefClass{boost::contract::guard} declared locally just before the body
+        of the contracted function (otherwise this library will generate a
+        run-time error, see @RefMacro{BOOST_CONTRACT_ON_MISSING_GUARD}).
 */
-template<class C>
-set_precondition_old_postcondition<> public_function() {
+template<class Class>
+specify_precondition_old_postcondition<> public_function() {
     #ifndef BOOST_CONTRACT_NO_PUBLIC_FUNCTIONS
-        return set_precondition_old_postcondition<>(
-            new boost::contract::detail::public_static_function<C>());
+        return specify_precondition_old_postcondition<>(
+            new boost::contract::detail::public_static_function<Class>());
     #else
-        return set_precondition_old_postcondition<>();
+        return specify_precondition_old_postcondition<>();
     #endif
 }
 
 /**
 Program contracts for non-static, non-virtual, and not overriding public
 functions.
-Used to specify preconditions, postconditions, old value assignments, and to
-check class invariants for public functions that are not static, not virtual,
-and do not override.
-@see @RefSect{tutorial, Tutorial}.
-@param obj  The public function's object @c this. It will be @c const and/or
-            @c volatile depending on the cv-qualifier for the contracted public
-            function (volatile public functions will check volatile class
-            invariants, see also @RefSect{advanced_topics, Advanced Topics}).
-@return The result of this function must be assigned to a local variable of type
-        @RefClass{boost::contract::guard} declared at the beginning of the
-        static public function definition (after declaring old value pointers
-        if they are present).
+This is used to specify preconditions, postconditions, old value assignments at
+body, and check class invariants for public functions that are not static, not
+virtual, and do not override.
+
+For optimization, this can be omitted for public functions that do not have
+preconditions and postconditions when the enclosing class has no (non-static)
+invariants.
+@see @RefSect{tutorial, Tutorial}
+@param obj  The object @c this from the scope of the contracted function. This
+            object can be @c const and @c volatile depending on the
+            cv-qualifier for the contracted function (volatile public functions
+            will check volatile class invariants, see also
+            @RefSect{advanced_topics, Advanced Topics}).
+@return The result of this function must be assigned to a variable of type
+        @RefClass{boost::contract::guard} declared locally just before the body
+        of the contracted function (otherwise this library will generate a
+        run-time error, see @RefMacro{BOOST_CONTRACT_ON_MISSING_GUARD}).
 */
-template<class C>
-set_precondition_old_postcondition<> public_function(C* obj) {
+template<class Class>
+specify_precondition_old_postcondition<> public_function(Class* obj) {
     #ifndef BOOST_CONTRACT_NO_PUBLIC_FUNCTIONS
-        return set_precondition_old_postcondition<>(
+        return specify_precondition_old_postcondition<>(
             new boost::contract::detail::public_function<
                 boost::contract::detail::none,
                 boost::contract::detail::none,
                 boost::contract::detail::none,
-                C
+                Class
                 BOOST_CONTRACT_DETAIL_NO_TVARIADIC_COMMA(
                         BOOST_CONTRACT_MAX_ARGS)
                 BOOST_CONTRACT_DETAIL_NO_TVARIADIC_ENUM_Z(1,
@@ -125,7 +136,7 @@ set_precondition_old_postcondition<> public_function(C* obj) {
             )
         );
     #else
-        return set_precondition_old_postcondition<>();
+        return specify_precondition_old_postcondition<>();
     #endif
 }
 
@@ -138,34 +149,36 @@ set_precondition_old_postcondition<> public_function(C* obj) {
     #define BOOST_CONTRACT_PUBLIC_FUNCTIONS_ 1
 #endif
 
-// TODO: Document no F here so cannot check consistency between R and actual func's result type... up to user to pass the right R...
+// TODO: Document no F here so cannot check consistency between VirtualResult and actual func's result type... up to user to pass the right VirtualResult...
 // For non-static, virtual, and non-overriding public functions (PRIVATE macro).
-#define BOOST_CONTRACT_PUBLIC_FUNCTION_VIRTUAL_NO_OVERRIDE_(has_result) \
+#define BOOST_CONTRACT_PUBLIC_FUNCTION_VIRTUAL_NO_OVERRIDE_( \
+        has_virtual_result) \
     template< \
-        BOOST_PP_EXPR_IIF(has_result, typename R) \
-        BOOST_PP_COMMA_IF(has_result) \
-        class C \
+        BOOST_PP_EXPR_IIF(has_virtual_result, typename VirtualResult) \
+        BOOST_PP_COMMA_IF(has_virtual_result) \
+        class Class \
     > \
-    set_precondition_old_postcondition<BOOST_PP_EXPR_IIF(has_result, R)> \
+    specify_precondition_old_postcondition< \
+            BOOST_PP_EXPR_IIF(has_virtual_result, VirtualResult)> \
     public_function( \
         virtual_* v \
-        BOOST_PP_COMMA_IF(has_result) \
-        BOOST_PP_EXPR_IIF(has_result, R& r) \
-        , C* obj \
+        BOOST_PP_COMMA_IF(has_virtual_result) \
+        BOOST_PP_EXPR_IIF(has_virtual_result, VirtualResult& r) \
+        , Class* obj \
     ) { \
         BOOST_PP_IIF(BOOST_CONTRACT_PUBLIC_FUNCTIONS_, \
-            /* no F... so cannot enforce contracted F ret R (up to user) */ \
-            return (set_precondition_old_postcondition< \
-                    BOOST_PP_EXPR_IIF(has_result, R)>( \
+            /* no F... so cannot enforce contracted F returns VirtualResult */ \
+            return (specify_precondition_old_postcondition< \
+                    BOOST_PP_EXPR_IIF(has_virtual_result, VirtualResult)>( \
                 new boost::contract::detail::public_function< \
                     boost::contract::detail::none, \
-                    BOOST_PP_IIF(has_result, \
-                        R \
+                    BOOST_PP_IIF(has_virtual_result, \
+                        VirtualResult \
                     , \
                         boost::contract::detail::none \
                     ), \
                     boost::contract::detail::none, \
-                    C \
+                    Class \
                     BOOST_CONTRACT_DETAIL_NO_TVARIADIC_COMMA( \
                             BOOST_CONTRACT_MAX_ARGS) \
                     BOOST_CONTRACT_DETAIL_NO_TVARIADIC_ENUM_Z(1, \
@@ -175,7 +188,7 @@ set_precondition_old_postcondition<> public_function(C* obj) {
                 >( \
                     v, \
                     obj, \
-                    BOOST_PP_IIF(has_result, \
+                    BOOST_PP_IIF(has_virtual_result, \
                         r \
                     , \
                         boost::contract::detail::none::value() \
@@ -189,8 +202,8 @@ set_precondition_old_postcondition<> public_function(C* obj) {
                 ) \
             )); \
         , \
-            return set_precondition_old_postcondition< \
-                    BOOST_PP_EXPR_IIF(has_result, R)>(); \
+            return specify_precondition_old_postcondition< \
+                    BOOST_PP_EXPR_IIF(has_virtual_result, VirtualResult)>(); \
         ) \
     }
 
@@ -198,68 +211,81 @@ set_precondition_old_postcondition<> public_function(C* obj) {
     
 #ifdef DOXYGEN
     /**
-    Program contracts for virtual but not overriding public functions returning
+    Program contracts for virtual, not overriding public functions returning
     void.
-    Used to specify preconditions, postconditions, old value assignments, and
-    to check class invariants for public functions that are virtual, do not
-    override, and return @c void.
-    @see @RefSect{tutorial, Tutorial}.
+    This is used to specify preconditions, postconditions, old value assignments
+    at body, and check class invariants for public functions that are virtual,
+    do not override, and return @c void.
+
+    For optimization, this can be omitted for public functions that do not have
+    preconditions and postconditions when the enclosing class has no
+    (non-static) invariants.
+    @see @RefSect{tutorial, Tutorial}
     @param v    The contracted virtual function extra trailing parameter of type
                 @RefClass{boost::contract::virtual_}<c>*</c> and with default
                 value @c 0.
-    @param obj  The public function's object @c this. It will be @c const and/or
-                @c volatile depending on the cv-qualifier for the contracted
-                public function (volatile public functions will check volatile
-                class invariants, see also
+    @param obj  The object @c this from the scope of the contracted function.
+                This object can be @c const and @c volatile depending on the
+                cv-qualifier for the contracted function (volatile public
+                functions will check volatile class invariants, see also
                 @RefSect{advanced_topics, Advanced Topics}).
-    @return The result of this function must be assigned to a local variable of
-            type @RefClass{boost::contract::guard} declared at the beginning of
-            the static public function definition (after declaring old value
-            pointers if they are present).
+    @return The result of this function must be assigned to a variable of type
+            @RefClass{boost::contract::guard} declared locally just before the
+            body of the contracted function (otherwise this library will
+            generate a run-time error, see
+            @RefMacro{BOOST_CONTRACT_ON_MISSING_GUARD}).
     */
-    template<class C>
-    set_precondition_old_postcondition<> public_function(virtual_* v, C* obj);
+    template<class Class>
+    specify_precondition_old_postcondition<> public_function(virtual_* v,
+            Class* obj);
     
     /**
-    Program contracts for virtual but not overriding public functions returning
+    Program contracts for virtual, not overriding public functions returning
     non-void.
-    Used to specify preconditions, postconditions, old value assignments, and
-    to check class invariants for public functions that are virtual, do not
-    override, and do not return @c void.
-    @see @RefSect{tutorial, Tutorial}.
+    This is used to specify preconditions, postconditions, old value assignments
+    at body, and check class invariants for public functions that are virtual,
+    do not override, and do not return @c void.
+
+    For optimization, this can be omitted for public functions that do not have
+    preconditions and postconditions when the enclosing class has no
+    (non-static) invariants.
+    @see @RefSect{tutorial, Tutorial}
     @param v    The contracted virtual function extra trailing parameter of type
                 @RefClass{boost::contract::virtual_}<c>*</c> and with default
                 value @c 0.
     @param r    A reference to the contracted virtual function return value.
-                (This could be a variable local to the contracted function
+                (This can be a local variable within the contracted function
                 scope, but it must be set by programmers at each function
                 @c return statement.)
-    @param obj  The public function's object @c this. It will be @c const and/or
-                @c volatile depending on the cv-qualifier for the contracted
-                public function (volatile public functions will check volatile
-                class invariants, see also
+    @param obj  The object @c this from the scope of the contracted function.
+                This object can be @c const and @c volatile depending on the
+                cv-qualifier for the contracted function (volatile public
+                functions will check volatile class invariants, see also
                 @RefSect{advanced_topics, Advanced Topics}).
-    @return The result of this function must be assigned to a local variable of
-            type @RefClass{boost::contract::guard} declared at the beginning of
-            the static public function definition (after declaring old value
-            pointers if they are present).
+    @return The result of this function must be assigned to a variable of type
+            @RefClass{boost::contract::guard} declared locally just before the
+            body of the contracted function (otherwise this library will
+            generate a run-time error, see
+            @RefMacro{BOOST_CONTRACT_ON_MISSING_GUARD}).
     */
-    template<typename R, class C>
-    set_precondition_old_postcondition<R> public_function(
-            virtual_* v, R& r, C* obj);
+    template<typename VirtualResult, class Class>
+    specify_precondition_old_postcondition<VirtualResult> public_function(
+            virtual_* v, VirtualResult& r, Class* obj);
 #else
-    BOOST_CONTRACT_PUBLIC_FUNCTION_VIRTUAL_NO_OVERRIDE_(/* has_result = */ 0)
-    BOOST_CONTRACT_PUBLIC_FUNCTION_VIRTUAL_NO_OVERRIDE_(/* has_result = */ 1)
+    BOOST_CONTRACT_PUBLIC_FUNCTION_VIRTUAL_NO_OVERRIDE_(
+            /* has_virtual_result = */ 0)
+    BOOST_CONTRACT_PUBLIC_FUNCTION_VIRTUAL_NO_OVERRIDE_(
+            /* has_virtual_result = */ 1)
 #endif
 
 /** @cond */
 
 // For non-static, virtual, and overriding public functions (PRIVATE macro).
 #define BOOST_CONTRACT_PUBLIC_FUNCTION_VIRTUAL_OVERRIDE_Z_( \
-        z, arity, arity_compl, has_result) \
+        z, arity, arity_compl, has_virtual_result) \
     BOOST_CONTRACT_DETAIL_DECL_OVERRIDING_PUBLIC_FUNCTION_Z(z, \
-        arity, /* is_friend = */ 0, has_result, \
-        O, R, F, C, Args, \
+        arity, /* is_friend = */ 0, has_virtual_result, \
+        Override, VirtualResult, F, Class, Args, \
         v, r, f, obj, args \
     ) { \
         BOOST_PP_IIF(BOOST_CONTRACT_PUBLIC_FUNCTIONS_, \
@@ -271,8 +297,8 @@ set_precondition_old_postcondition<> public_function(C* obj) {
                         BOOST_CONTRACT_DETAIL_TVARIADIC_SIZEOF(arity, Args), \
                 "missing one or more arguments for specified function" \
             ); \
-            /* assert consistency of F's result type and R (if has_result) */ \
-            BOOST_PP_IIF(has_result, \
+            /* assert consistency of F's result type and VirtualResult */ \
+            BOOST_PP_IIF(has_virtual_result, \
                 BOOST_STATIC_ASSERT_MSG \
             , \
                 BOOST_PP_TUPLE_EAT(2) \
@@ -281,26 +307,26 @@ set_precondition_old_postcondition<> public_function(C* obj) {
                     typename boost::remove_reference<typename boost:: \
                             function_types::result_type<F>::type>::type, \
                     typename boost::contract::detail:: \
-                            remove_value_reference_if_optional<R>::type \
+                        remove_value_reference_if_optional<VirtualResult>::type\
                 >::value), \
                 "mismatching result type for specified function" \
             ); \
             /* assert this so lib can check and enforce override */ \
             BOOST_STATIC_ASSERT_MSG( \
-                boost::contract::access::has_base_types<C>::value, \
+                boost::contract::access::has_base_types<Class>::value, \
                 "enclosing class missing 'base-types' typedef" \
             ); \
-            return (set_precondition_old_postcondition< \
-                    BOOST_PP_EXPR_IIF(has_result, R)>( \
+            return (specify_precondition_old_postcondition< \
+                    BOOST_PP_EXPR_IIF(has_virtual_result, VirtualResult)>( \
                 new boost::contract::detail::public_function< \
-                    O, \
-                    BOOST_PP_IIF(has_result, \
-                        R \
+                    Override, \
+                    BOOST_PP_IIF(has_virtual_result, \
+                        VirtualResult \
                     , \
                         boost::contract::detail::none \
                     ), \
                     F, \
-                    C \
+                    Class \
                     BOOST_CONTRACT_DETAIL_TVARIADIC_COMMA(arity) \
                     BOOST_CONTRACT_DETAIL_TVARIADIC_ARGS_Z(z, arity, Args) \
                     BOOST_CONTRACT_DETAIL_NO_TVARIADIC_COMMA(arity_compl) \
@@ -309,7 +335,7 @@ set_precondition_old_postcondition<> public_function(C* obj) {
                 >( \
                     v, \
                     obj, \
-                    BOOST_PP_IIF(has_result, \
+                    BOOST_PP_IIF(has_virtual_result, \
                         r \
                     , \
                         boost::contract::detail::none::value() \
@@ -322,8 +348,8 @@ set_precondition_old_postcondition<> public_function(C* obj) {
                 ) \
             )); \
         , \
-            return set_precondition_old_postcondition< \
-                    BOOST_PP_EXPR_IIF(has_result, R)>(); \
+            return specify_precondition_old_postcondition< \
+                    BOOST_PP_EXPR_IIF(has_virtual_result, VirtualResult)>(); \
         ) \
     }
 
@@ -331,87 +357,100 @@ set_precondition_old_postcondition<> public_function(C* obj) {
 
 #ifdef DOXYGEN
     /**
-    Program contracts for overriding (virtual or not) public functions returning
+    Program contracts for overriding public functions (virtual or not) returning
     void.
-    Used to specify preconditions, postconditions, old value assignments, and
-    to check class invariants for public functions that are virtual, do not
-    override, and return @c void.
-    @see @RefSect{tutorial, Tutorial}.
+    This is used to specify preconditions, postconditions, old value assignments
+    at body, and check class invariants for overriding public functions (virtual
+    or not) that return @c void.
+
+    For optimization, this can be omitted for public functions that do not have
+    preconditions and postconditions when the enclosing class has no
+    (non-static) invariants.
+    @see @RefSect{tutorial, Tutorial}
     @param v    The contracted virtual function extra trailing parameter of type
                 @RefClass{boost::contract::virtual_}<c>*</c> and with default
                 value @c 0.
     @param f    A pointer to the contracted function.
-    @param obj  The public function's object @c this. It will be @c const and/or
-                @c volatile depending on the cv-qualifier for the contracted
-                public function (volatile public functions will check volatile
-                class invariants, see also
+    @param obj  The object @c this from the scope of the contracted function.
+                This object can be @c const and @c volatile depending on the
+                cv-qualifier for the contracted function (volatile public
+                functions will check volatile class invariants, see also
                 @RefSect{advanced_topics, Advanced Topics}).
-    @param args The contracted function formal parameters (by reference and in
-                the oder they appear in the contracted function declaration).
-                On compilers that do not support variadic templates, this
-                library internally implements this function using preprocessor
+    @param args The contracted function arguments (by reference and in the oder
+                they appear in the contracted function declaration). On
+                compilers that do not support variadic templates, this library
+                internally implements this function using preprocessor
                 meta-programming (in this case, the maximum number of supported
                 arguments @p args is defined by
                 @RefMacro{BOOST_CONTRACT_MAX_ARGS}).
-    @tparam O   The overriding type @c override_... declared invoking the
-                @RefMacro{BOOST_CONTRACT_OVERRIDE} (or similar) macro with the
-                contracted function name. This template parameter must be
-                explicitly specified (because it is not used in this function
-                formal parameter so it cannot be automatically deduced).
-    @return The result of this function must be assigned to a local variable of
-            type @RefClass{boost::contract::guard} declared at the beginning of
-            the static public function definition (after declaring old value
-            pointers if they are present).
+    @tparam Override    The type @c override_... declared using the
+                        @RefMacro{BOOST_CONTRACT_OVERRIDE} (or similar) macro
+                        using the contracted function name. This template
+                        parameter must be explicitly specified (because there is
+                        no function arguments from which this type template
+                        parameter can be automatically deduced).
+    @return The result of this function must be assigned to a variable of type
+            @RefClass{boost::contract::guard} declared locally just before the
+            body of the contracted function (otherwise this library will
+            generate a run-time error, see
+            @RefMacro{BOOST_CONTRACT_ON_MISSING_GUARD}).
     */
-    template<class O, typename F, class C, typename... Args>
-    set_precondition_old_postcondition<> public_function(
-            virtual_* v, F f, C* obj, Args&... args);
+    template<class Override, typename F, class Class, typename... Args>
+    specify_precondition_old_postcondition<> public_function(
+            virtual_* v, F f, Class* obj, Args&... args);
 
     /**
-    Program contracts for overriding (virtual or not) public functions returning
+    Program contracts for overriding public functions (virtual or not) returning
     non-void.
-    Used to specify preconditions, postconditions, old value assignments, and
-    to check class invariants for public functions that are virtual, do not
-    override, and do not return @c void.
-    @see @RefSect{tutorial, Tutorial}.
+    This is used to specify preconditions, postconditions, old value assignments
+    at body, and check class invariants for overriding public functions (virtual
+    or not) that do not return @c void.
+
+    For optimization, this can be omitted for public functions that do not have
+    preconditions and postconditions when the enclosing class has no
+    (non-static) invariants.
+    @see @RefSect{tutorial, Tutorial}
     @param v    The contracted virtual function extra trailing parameter of type
                 @RefClass{boost::contract::virtual_}<c>*</c> and with default
                 value @c 0.
     @param r    A reference to the contracted virtual function return value.
-                (This could be a variable local to the contracted function
+                (This can be a local variable within the contracted function
                 scope, but it must be set by programmers at each function
                 @c return statement.)
     @param f    A pointer to the contracted function.
-    @param obj  The public function's object @c this. It will be @c const and/or
-                @c volatile depending on the cv-qualifier for the contracted
-                public function (volatile public functions will check volatile
-                class invariants, see also
+    @param obj  The object @c this from the scope of the contracted function.
+                This object can be @c const and @c volatile depending on the
+                cv-qualifier for the contracted function (volatile public
+                functions will check volatile class invariants, see also
                 @RefSect{advanced_topics, Advanced Topics}).
-    @param args The contracted function formal parameters (by reference and in
-                the oder they appear in the contracted function declaration).
-                On compilers that do not support variadic templates, this
-                library internally implements this function using preprocessor
+    @param args The contracted function arguments (by reference and in the oder
+                they appear in the contracted function declaration). On
+                compilers that do not support variadic templates, this library
+                internally implements this function using preprocessor
                 meta-programming (in this case, the maximum number of supported
                 arguments @p args is defined by
                 @RefMacro{BOOST_CONTRACT_MAX_ARGS}).
-    @tparam O   The overriding type @c override_... declared invoking the
-                @RefMacro{BOOST_CONTRACT_OVERRIDE} (or similar) macro with the
-                contracted function name. This template parameter must be
-                explicitly specified (because it is not used in this function
-                formal parameter so it cannot be automatically deduced).
-    @return The result of this function must be assigned to a local variable of
-            type @RefClass{boost::contract::guard} declared at the beginning of
-            the static public function definition (after declaring old value
-            pointers if they are present).
+    @tparam Override    The type @c override_... declared using the
+                        @RefMacro{BOOST_CONTRACT_OVERRIDE} (or similar) macro
+                        using the contracted function name. This template
+                        parameter must be explicitly specified (because there is
+                        no function arguments from which this type template
+                        parameter can be automatically deduced).
+    @return The result of this function must be assigned to a variable of type
+            @RefClass{boost::contract::guard} declared locally just before the
+            body of the contracted function (otherwise this library will
+            generate a run-time error, see
+            @RefMacro{BOOST_CONTRACT_ON_MISSING_GUARD}).
     */
-    template<class O, typename R, typename F, class C, typename... Args>
-    set_precondition_old_postcondition<R> public_function(
-            virtual_* v, R& r, F f, C* obj, Args&... args);
+    template<class Override, typename VirtualResult, typename F, class Class,
+            typename... Args>
+    specify_precondition_old_postcondition<VirtualResult> public_function(
+            virtual_* v, VirtualResult& r, F f, Class* obj, Args&... args);
 #elif BOOST_CONTRACT_DETAIL_TVARIADIC
-    BOOST_CONTRACT_PUBLIC_FUNCTION_VIRTUAL_OVERRIDE_Z_(1,
-            /* arity = */ ~, /* arity_compl = */ ~, /* has_result = */ 0)
-    BOOST_CONTRACT_PUBLIC_FUNCTION_VIRTUAL_OVERRIDE_Z_(1,
-            /* arity = */ ~, /* arity_compl = */ ~, /* has_result = */ 1)
+    BOOST_CONTRACT_PUBLIC_FUNCTION_VIRTUAL_OVERRIDE_Z_(1, /* arity = */ ~,
+            /* arity_compl = */ ~, /* has_virtual_result = */ 0)
+    BOOST_CONTRACT_PUBLIC_FUNCTION_VIRTUAL_OVERRIDE_Z_(1, /* arity = */ ~,
+            /* arity_compl = */ ~, /* has_virtual_result = */ 1)
 #else
     /* PRIVATE */
 
@@ -423,9 +462,9 @@ set_precondition_old_postcondition<> public_function(C* obj) {
     #define BOOST_CONTRACT_PUBLIC_FUNCTION_VIRTUAL_OVERRIDES_(z, \
             arity, arity_compl, unused) \
         BOOST_CONTRACT_PUBLIC_FUNCTION_VIRTUAL_OVERRIDE_Z_(z, \
-                arity, arity_compl, /* has_result = */ 0) \
+                arity, arity_compl, /* has_virtual_result = */ 0) \
         BOOST_CONTRACT_PUBLIC_FUNCTION_VIRTUAL_OVERRIDE_Z_(z, \
-                arity, arity_compl, /* has_result = */ 1)
+                arity, arity_compl, /* has_virtual_result = */ 1)
 
     /* CODE */
 

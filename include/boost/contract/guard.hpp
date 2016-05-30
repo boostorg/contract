@@ -8,7 +8,7 @@
 // See: http://www.boost.org/doc/libs/release/libs/contract/doc/html/index.html
 
 /** @file
-RAII object that checks the contracts.
+RAII object to check contracts.
 */
 
 #include <boost/contract/detail/all_core_headers.hpp>
@@ -43,20 +43,22 @@ namespace boost { namespace contract {
 /**
 RAII object that checks the contracts.
 In general, this object checks entry invariants, preconditions, and assigns old
-values when it is constructed. It then checks exit invariants and postconditions
-when it is destructed. However, special attention in placed in marking sure
-postconditions are checked only if the body did not throw an exception,
-constructors never check entry invariants, destructor check exit invariants only
-if their body throws, etc. (see also
-@RefSect{contract_programming_overview, Contract Programming Overview}).
-@see @RefSect{tutorial, Tutorial}.
+values when it is constructed. Then it checks exit invariants and postconditions
+when it is destructed. In addition, this object markes sure that postconditions
+are checked only if the body does not throw an exception, constructors never
+check entry invariants, destructors check exit invariants only if their bodies
+throw an exception, static invariants are always checked at entry and exit, etc.
+(see also @RefSect{contract_programming_overview,
+Contract Programming Overview}).
+@see @RefSect{tutorial, Tutorial}
 */
-class guard { // Non-copyable (but copy ctor ~= move via ptr release).
+class guard { // Copy ctor only (as move via ptr release).
 public:
     /**
-    Construct this object copying it from specified one.
+    Construct this object copying it from the specified one.
     This object will check the contract, the copied-from object will not (i.e.,
-    contract checking ownership is transfered to the this object).
+    contract checking ownership is transfered from the copied object to this
+    object).
     */
     guard(guard const& other) // Copy ctor moves check_ pointer to dest.
         #if !defined(BOOST_CONTRACT_NO_PRECONDITIONS) || \
@@ -67,101 +69,112 @@ public:
     {}
 
     /**
-    Construct this object from specified contract.
-    Check entry invariants (as they apply for specified contract).
-    Implicit so initialization operator @c = can be used.
+    Construct this object from the specified contract.
+    Check entry invariants (if they apply to the specified contract).
+    This constructor is not @c explicit so initializations can use operator @c =
+    syntax.
 
-    <b>Throws:</b>  This can throw any exception (exception specification
-                    <c>noexcept(false)</c>) to allow to configure this library
-                    to throw on contract failure.
-    @param contract Contract to be guarded by this object.
-    @tparam R   Return type of operation being contracted if that operation is a
-                non-void virtual or overriding public function, otherwise this
-                is always void.
+    @b Throws:  This can throw (i.e., @c noexcept(false)) in case programmers
+                specify failure handlers that throw exceptions instead of
+                terminating the program (see
+                @RefFunc{boost::contract::set_precondition_failure}, etc.).
+    @param contract Contract to be checked.
+    @tparam VirtualResult   Return type of the contracted function if that is
+                            either a virtual or an overriding public function,
+                            otherwise this is always @c void.
     */
-    template<typename R>
-    /* implicit */ guard(set_precondition_old_postcondition<R> const& contract)
+    template<typename VirtualResult>
+    /* implicit */ guard(specify_precondition_old_postcondition<VirtualResult>
+            const& contract)
     #ifndef DOXYGEN
-        BOOST_CONTRACT_GUARD_CTOR_DEF_(set_precondition_old_postcondition<R>)
+        BOOST_CONTRACT_GUARD_CTOR_DEF_(
+                specify_precondition_old_postcondition<VirtualResult>)
     #else
         ;
     #endif
     
     /**
-    Construct this object from specified contract.
-    Check entry invariants (as they apply for specified contract) and check 
+    Construct this object from the specified contract.
+    Check entry invariants (if they apply to the specified contract) and check 
     preconditions.
-    Implicit so initialization operator @c = can be used.
+    This constructor is not @c explicit so initializations can use operator @c =
+    syntax.
 
-    <b>Throws:</b>  This can throw any exception (exception specification
-                    <c>noexcept(false)</c>) to allow to configure this library
-                    to throw on contract failure.
-    @param contract Contract to be guarded by this object.
-    @tparam R   Return type of operation being contracted if that operation is a
-                non-void virtual or overriding public function, otherwise this
-                is always void.
+    @b Throws:  This can throw (i.e., @c noexcept(false)) in case programmers
+                specify failure handlers that throw exceptions instead of
+                terminating the program (see
+                @RefFunc{boost::contract::set_precondition_failure}, etc.).
+    @param contract Contract to be checked.
+    @tparam VirtualResult   Return type of the contracted function if that is
+                            either a virtual or an overriding public function,
+                            otherwise this is always @c void.
     */
-    template<typename R>
-    /* implicit */ guard(set_old_postcondition<R> const& contract)
+    template<typename VirtualResult>
+    /* implicit */ guard(specify_old_postcondition<VirtualResult> const&
+            contract)
     #ifndef DOXYGEN
-        BOOST_CONTRACT_GUARD_CTOR_DEF_(set_old_postcondition<R>)
+        BOOST_CONTRACT_GUARD_CTOR_DEF_(specify_old_postcondition<VirtualResult>)
     #else
         ;
     #endif
     
     /**
-    Construct this object from specified contract.
-    Check entry invariants (as they apply for specified contract), check
+    Construct this object from the specified contract.
+    Check entry invariants (if they apply to the specified contract) and check 
     preconditions, and assign old values.
-    Implicit so initialization operator @c = can be used.
+    This constructor is not @c explicit so initializations can use operator @c =
+    syntax.
 
-    <b>Throws:</b>  This can throw any exception (exception specification
-                    <c>noexcept(false)</c>) to allow to configure this library
-                    to throw on contract failure.
-    @param contract Contract to be guarded by this object.
-    @tparam R   Return type of operation being contracted if that operation is a
-                non-void virtual or overriding public function, otherwise this
-                is always void.
+    @b Throws:  This can throw (i.e., @c noexcept(false)) in case programmers
+                specify failure handlers that throw exceptions instead of
+                terminating the program (see
+                @RefFunc{boost::contract::set_precondition_failure}, etc.).
+    @param contract Contract to be checked.
+    @tparam VirtualResult   Return type of the contracted function if that is
+                            either a virtual or an overriding public function,
+                            otherwise this is always @c void.
     */
-    template<typename R>
-    /* implicit */ guard(set_postcondition_only<R> const& contract)
+    template<typename VirtualResult>
+    /* implicit */ guard(specify_postcondition_only<VirtualResult> const&
+            contract)
     #ifndef DOXYGEN
-        BOOST_CONTRACT_GUARD_CTOR_DEF_(set_postcondition_only<R>)
+        BOOST_CONTRACT_GUARD_CTOR_DEF_(
+                specify_postcondition_only<VirtualResult>)
     #else
         ;
     #endif
     
     /**
-    Construct this object from specified contract.
-    Check entry invariants (as they apply for specified contract), check
-    preconditions, and assign old values. (In this case, the destructor of this
-    object will also check postconditions.)
-    Implicit so initialization operator @c = can be used.
+    Construct this object from the specified contract.
+    Check entry invariants (if they apply to the specified contract) and check 
+    preconditions, and assign old values (plus the destructor of this object
+    will also check postconditions in this case).
+    This constructor is not @c explicit so initializations can use operator @c =
+    syntax.
 
-    <b>Throws:</b>  This can throw any exception (exception specification
-                    <c>noexcept(false)</c>) to allow to configure this library
-                    to throw on contract failure.
-    @param contract Contract to be guarded by this object.
-    @tparam R   Return type of operation being contracted if that operation is a
-                non-void virtual or overriding public function, otherwise this
-                is always void.
+    @b Throws:  This can throw (i.e., @c noexcept(false)) in case programmers
+                specify failure handlers that throw exceptions instead of
+                terminating the program (see
+                @RefFunc{boost::contract::set_precondition_failure}, etc.).
+    @param contract Contract to be checked.
     */
-    /* implicit */ guard(set_nothing const& contract)
+    /* implicit */ guard(specify_nothing const& contract)
     #ifndef DOXYGEN
-        BOOST_CONTRACT_GUARD_CTOR_DEF_(set_nothing)
+        BOOST_CONTRACT_GUARD_CTOR_DEF_(specify_nothing)
     #else
         ;
     #endif
 
     /**
-    Destroy this object.
-    Check exit invariants (as they apply for specified contract). Check
-    postconditions (if the body did not throw and postconditions where
-    specified for the contract specified when constructing this object).
+    Destruct this object.
+    Check exit invariants (if they apply to the contract specified at
+    construction) and postconditions (if the body did not throw and
+    postconditions apply to the contract specified at construction).
 
-    <b>Throws:</b>  This can throw any exception (exception specification
-                    <c>noexcept(false)</c>) to allow to configure this library
-                    to throw on contract failure.
+    @b Throws:  This can throw (i.e., @c noexcept(false)) in case programmers
+                specify failure handlers that throw exceptions instead of
+                terminating the program (see
+                @RefFunc{boost::contract::set_postcondition_failure}, etc.).
     */
     ~guard() BOOST_NOEXCEPT_IF(false) {} // Allow auto_ptr dtor to throw.
 

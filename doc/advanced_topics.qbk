@@ -358,7 +358,7 @@ This implementation is much more concise, easy to read and maintain than the usu
 
 [endsect]
 
-[section Access]
+[section Access Specifiers]
 
 As seen so far, programmers are required to decorate their classes declaring extra members that are internally used by this library to check contracts:
 
@@ -487,7 +487,7 @@ Also the [macroref BOOST_CONTRACT_NO_ENTRY_INVARIANTS] and [macroref BOOST_CONTR
 * The [macroref BOOST_CONTRACT_NO_DESTRUCTORS] macro is automatically defined by this library (a compile-time error will be reported if programmers try to manually define this macro) and it can be used in `#ifdef` statements to disable compilation of destructor contract guards.
 * The [macroref BOOST_CONTRACT_NO_PUBLIC_FUNCTIONS] macro is automatically defined by this library (a compile-time error will be reported if programmers try to manually define this macro) and it can be used in `#ifdef` statements to disable compilation of public member function contract guards, base type `typedef`, extra [classref boost::contract::virtual_] function parameters, and [macroref BOOST_CONTRACT_OVERRIDE] declarations.
 * The [macroref BOOST_CONTRACT_NO_FUNCTIONS] macro is automatically defined by this library (a compile-time error will be reported if programmers try to manually define this macro) and it can be used in `#ifdef` statements to disable compilation of contract guards for non-member functions as well as private and protected functions.
-* The [macroref BOOST_CONTRACT_NO_ALL] macro is automatically defined by this library (a compile-time error will be reported if programmers try to manually define this macro) and it can be used in `#ifdef` statements to disable [classref boost::contract::access] friendship declarations and also inclusions of [headerref contract.hpp] (some of the other macros listed here can be used to selectively disable inclusion of =boost/contract/*.hpp= headers when they are used instead of [headerref contract.hpp].)
+* The [macroref BOOST_CONTRACT_NO_ALL] macro is automatically defined by this library (a compile-time error will be reported if programmers try to manually define this macro) and it can be used in `#ifdef` statements to disable [classref boost::contract::access] friendship declarations and also inclusions of [headerref boost/contract.hpp] (some of the other macros listed here can be used to selectively disable inclusion of =boost/contract/*.hpp= headers when they are used instead of [headerref boost/contract.hpp].)
 
 [endsect]
 

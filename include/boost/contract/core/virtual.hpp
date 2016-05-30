@@ -8,7 +8,7 @@
 // See: http://www.boost.org/doc/libs/release/libs/contract/doc/html/index.html
 
 /** @file
-Used to contract virtual public functions.
+Facility to declare virtual public functions with contracts.
 */
 
 #include <boost/contract/core/config.hpp>
@@ -33,16 +33,27 @@ namespace boost {
 namespace boost { namespace contract {
 
 /**
-Class to mark virtual public functions.
-Virtual and overriding public functions contracted using this library must have
-an extra parameter at the very end of their parameter list. This parameter must
-be a pointer to this class and it must be assigned to @c 0 by default. (This
-extra parameter is often named @c v in this documentation, but any name can be
-used.)
+Class to mark declarations of virtual public functions.
+Virtual public functions (and therefore overriding public functions) contracted
+using this library must have an extra parameter at the very end of their
+parameter list. This parameter must be a pointer to this class and it must have
+default value @c 0 (i.e., null). (This extra parameter is often named @c v in
+this documentation, but any name can be used.)
 
-<b>Rationale:</b> This extra parameter is internally used by this library to
-recognize virtual public functions and implement subcontracting.
-@see @RefSect{tutorial, Tutorial}.
+This extra parameter does not alter the calling interface of the contracted
+function because it is always the last parameter and it has a default value (so
+it is always omitted when users call the contracted function). This extra
+parameter must be passed to @RefFunc{boost::contract::public_function},
+@RefMacro{BOOST_CONTRACT_OLDOF}, and all other operations of this library that
+require a pointer to @RefClass{boost::contract::virtual_}. A part from that,
+this class is not intended to be directly used by programmers (and that is why
+this class does not have any public member and it is not copyable).
+
+@b Rationale:   This extra parameter is internally used by this library to
+                recognize virtual public functions to implement subcontracting
+                (@c virtual cannot be introspected using template
+                meta-programming techniques in C++).
+@see @RefSect{tutorial, Tutorial}
 */
 class virtual_ : private boost::noncopyable { // Avoid copy queue, stack, etc.
 /** @cond */
@@ -101,7 +112,7 @@ class virtual_ : private boost::noncopyable { // Avoid copy queue, stack, etc.
         std::queue<boost::shared_ptr<void> > old_inits_;
         std::stack<boost::shared_ptr<void> > old_copies_;
 
-        boost::any result_ptr_;
+        boost::any result_ptr_; // Result for virtual and overriding functions.
         char const* result_type_name_;
         bool result_optional_;
     #endif

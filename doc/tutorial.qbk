@@ -182,7 +182,7 @@ The pointed old value is automatically qualified as `const` (so old values canno
 This library ensures that old value pointers are always not null by the time postconditions are checked (so programmers can safely dereference these pointers in postcondition assertions using `operator*` or `operator->` without having to check if old value pointers are not null first).
 
 Old values should never be used in preconditions (because old values are the same as the original values when preconditions are checked).
-This library does not even guarantee that old value pointers are not null when precondition functors are called (for example, when postcondition contract checking is disabled using [macroref BOOST_CONTRACT_NO_POSTCONDITONS], when checking an overridden virtual public function contract via subcontracting, etc.).
+This library does not even guarantee that old value pointers are not null when precondition functors are called (for example, when postcondition contract checking is disabled using [macroref BOOST_CONTRACT_NO_POSTCONDITIONS], when checking an overridden virtual public function contract via subcontracting, etc.).
 Finally, see __Old_Values_at_Body__ for delaying the assignment of old values until after preconditions (and possibly class invariants) are checked (this allows to program old value expressions under the simplifying assumption that precondition and class invariant assertions are satisfied already).
 
 The [macroref BOOST_CONTRACT_OLDOF] macro is actually a variadic macro and it takes an extra parameter when used in virtual or overriding public functions (see __Virtual_Public_Functions__ and __Overriding_Public_Functions__).
@@ -558,7 +558,7 @@ It is the responsibility of the programmers to make sure that all bases passed t
 ]
 
 See __Access__ to avoid making `base_types` member type `public` (e.g., in cases when all public members of a class including `typedef`s must be controlled exactly).
-Set the [macroref BOOST_CONTRACT_CONFIG_BASE_TYPES] configuration macro to use a name different from `base_types` (e.g., because `base_types` clashes with other names in the user-defined class).
+Set the [macroref BOOST_CONTRACT_BASE_TYPEDEF] configuration macro to use a name different from `base_types` (e.g., because `base_types` clashes with other names in the user-defined class).
 
 [endsect]
 

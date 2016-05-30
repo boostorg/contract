@@ -10,7 +10,7 @@
 // TODO: Document the max number of bases is 20 because of Boost.MPL vector limit. If Boost.MPL vector and related alg impl was to change to use variadic templates in the future there will be not limit to max bases (but for now this high limit is better than the extra complexity of reimpl all Boost.MPL vector, etc. within this lib with variadic templates).
 
 /** @file
-Facilities to specify base classes so to support subcontracting.
+Facility to specify inheritance form base classes (to support subcontracting).
 */
 
 #include <boost/contract/detail/all_core_headers.hpp>
@@ -24,16 +24,21 @@ BOOST_CONTRACT_ERROR_macro_BASE_TYPES_requires_variadic_macros_otherwise_manuall
 #elif defined(BOOST_CONTRACT_NO_PUBLIC_FUNCTIONS)
 
 /**
-Variadic macro to program base classes @c typedef.
-A class that has contracts for one or more overriding public functions must
-declare a @c typedef named @RefMacro{BOOST_CONTRACT_BASE_TYPEDEF} using this
-macro.
-This @c typedef can be programmed manually without this macro on compilers that
-do not support variadic macros (see @RefSect{advanced_topics, Advanced Topics}).
-@see @RefSect{tutorial, Tutorial}.
-@param ...  Comma separated list of base classes with must explicitly list their
-            access (@c public, @c protected, or @c private) and @c virtual (if
-            present) specifiers.
+Used to program a @c typedef listing the bases of a derived class.
+In order to support subcontracting, a derived class that specifies contracts for
+one or more overriding public function must declare a @c typedef named
+@RefMacro{BOOST_CONTRACT_BASE_TYPEDEF} using this macro.
+This @c typedef must be @c public unless @RefClass{boost::contract::access} is
+used.
+
+This is a variadic macro. On compilers that do not support variadic macros, the
+base classes @c typedef can be programmed manually without using this macro (see
+@RefSect{advanced_topics, Advanced Topics}).
+@see @RefSect{tutorial, Tutorial}
+@param ...  Comma separated list of base classes. Each listed base must
+            explicitly list its access specifier @c public, @c protected, or
+            @c private, and @c virtual if present (this not always required in
+            C++ instead).
 */
 #define BOOST_CONTRACT_BASE_TYPES(...) void /* dummy type for typedef */
 

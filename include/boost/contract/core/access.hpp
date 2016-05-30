@@ -8,7 +8,7 @@
 // See: http://www.boost.org/doc/libs/release/libs/contract/doc/html/index.html
 
 /** @file
-Used to declare invariants, base types, etc private members.
+Facility to declare invariants, base types, etc all as private members.
 */
 
 #include <boost/contract/core/config.hpp>
@@ -23,6 +23,7 @@ Used to declare invariants, base types, etc private members.
     #include <boost/function_types/property_tags.hpp>
     #include <boost/mpl/vector.hpp>
 #endif
+#include <boost/noncopyable.hpp>
 
 // TODO: Review all warnings for examples, tests, and also lib compilation...
 
@@ -45,18 +46,27 @@ namespace boost {
 namespace boost { namespace contract {
 
 /**
-Friend class to declare invariants, base types, etc private members.
-Declare this class as friend of the class being contracted in order to declare
-the class invariants member functions and the base types as non-public members.
-@note Not making this class friend will cause compiler errors on some compilers
-(e.g., MSVC) because the private members needed for contracts will not be
-accessible. On other compilers (e.g., GCC and CLang), the private access will
-instead fail SFINAE and no compiler error will be reported but invariants and
-subcontracting will be silently be skipped at run-time. Therefore programmers
-must make sure to either declare contract members public or to make this class
-a friend.
+Friend this class to declare invariants and base types as private members.
+Declare this class as friend of the contracted class in order to declare
+the invariants functions and the base types @c typedef as non-public members.
+In real code, programmers will likely chose to declare this class as friend so
+to fully control the contracted class public interface.
+
+This class is not intended to be directly used by programmers a part from
+declaring it @c friend (and that is why this class does not have any public
+member and it is not copyable).
+
+@note   Not making this class friend of the contracted class will cause
+        compiler errors on some compilers (e.g., MSVC) because the private
+        members needed to check the contracts will not be accessible. On other
+        compilers (e.g., GCC and CLang), the private access will instead fail
+        SFINAE and no compiler error will be reported while invariants and
+        subcontracting will be silently skipped at run-time. Therefore,
+        programmers must make sure to either declare invariant functions and
+        base types @c typedef as public members or to make this class a friend.
+@see @RefSect{advanced_topics, Advanced Topics}
 */
-class access { // Copyable (as shell with no data member).
+class access : private boost::noncopyable {
 /** @cond */
     // No public APIs (so users cannot use it directly by mistake).
 
