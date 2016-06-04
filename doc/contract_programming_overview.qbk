@@ -24,7 +24,7 @@ Postconditions can usually access the function return value (for non-void functi
 It is possible to specify a different set of class invariants for volatile member functions, namely /volatile class invariants/.
 It is also possible to specify /static class invariants/ which are excepted to be true before and after the execution of any constructor, destructor (even if it does not throw an exception), and public member function (even if static).
 [footnote
-*Rationale.*
+*Rationale:*
 Static and volatile class invariants were first introduced by this library to reflect the fact that C++ supports both static and volatile member functions.
 Static and volatile class invariants are not part of __N1962__.
 ]
@@ -279,7 +279,7 @@ Furthermore, contracts are most useful when they assert conditions only using pu
 For example, the caller of a public member function cannot in general make sure that the function preconditions are satisfied if the precondition assertions use private members that are not callable by the caller (therefore, a failure in the preconditions will not necessarily indicate a bug in the caller given that the caller was made unable to fully check the preconditions in the first place).
 However, given that C++ provides programmers ways around access level restrictions (`friend`, function pointers, etc.), this library leaves it up to the programmers to make sure that only public members are used in contract assertions (__N1962__ follows the same approach not restricting contracts to only use public members, Eiffel instead generates a compiler error if precondition assertions use non-public members).
 [footnote
-*Rationale.*
+*Rationale:*
 In theory, if C++ [@http://www.open-std.org/jtc1/sc22/wg21/docs/cwg_defects.html#45 defect 45] did not get fixed, this library could have been implemented in a way that generates a compile-time error when precondition assertions use non-public members (but still at the expense of programmers writing extra boiler-plate code).
 ]
 
@@ -292,7 +292,7 @@ If either preconditions, postconditions, or class invariants throw exceptions or
 By default, these failure handler functions print a text message to the standard error `std::cerr` (with detailed information about the failure) and then terminate the program calling `std::terminate`.
 However, using [funcref boost::contract::set_precondition_failure], [funcref boost::contract::set_postcondition_failure], [funcref boost::contract::set_invariant_failure], etc. programmers can define their own failure handler functions that can take any desired action (throw an exception, exit the program with an error code, etc., see __Throw_on_Failure__).
 [footnote
-*Rationale.*
+*Rationale:*
 This customizable failure handling mechanism is similar to the one used by `std::terminate` and also proposed by __N1962__.
 ]
 
@@ -370,7 +370,7 @@ Yes, also support subcontracting for multiple inheritance ([macroref BOOST_CONTR
     [
 Yes, also support subcontracting for multiple inheritance. Only base classes can specify preconditions.
 [footnote
-*Rationale.*
+*Rationale:*
 The authors of __N1962__ decided to forbid derived classes from subcontracting preconditions because they found such a feature rarely if ever used (see [@http://lists.boost.org/Archives/boost/2010/04/164862.php Re: \[boost\] \[contract\] diff n1962]).
 Still, it should be noted that even in __N1962__ if a derived class overrides two functions with preconditions coming from two different base classes via multiple inheritance, the overriding function contract will check preconditions from its two base function in __OR__ (so even in __N1962__ preconditions can indirectly be subcontracted by the derived class when multiple inheritance is used).
 The authors of this library found that confusing about __N1962__.
@@ -409,7 +409,7 @@ Furthermore, subcontracting preconditions is soundly defined by the __substituti
     [
 Yes, but use [macroref BOOST_CONTRACT_PRECONDITIONS_DISABLE_NO_ASSERTION] to disable no assertion while checking preconditions.
 [footnote
-*Rationale.*
+*Rationale:*
 Theoretically, it can be shown that an incorrect argument might be passed to the function body when assertion checking is disabled while checking preconditions (see [@http://lists.boost.org/Archives/boost/2010/04/164862.php Re: \[boost\] \[contract\] diff n1962]).
 Therefore, __N1962__ does not disable any assertion while checking preconditions.
 However, that makes it possible to have infinite recursion while checking preconditions, plus Eiffel disables assertion checking also while checking preconditions.
@@ -425,7 +425,7 @@ Therefore, this library by default disables assertion checking also while checki
     [
 Disable nothing.
 [footnote
-*Rationale.*
+*Rationale:*
 Older versions of this library defined a data member in the user class that was automatically used to disable checking of class invariants within nested member function calls (similarly to Eiffel).
 This feature was also required by older revisions of __N1962__ but it is no longer required by __N1962__.
 Furthermore, in multi-threaded programs this feature would introduce a lock that synchronizes all member functions calls for a given object.
@@ -460,7 +460,7 @@ This supports class invariants and old values but it does not support subcontrac
 [ [__Tandin04__] [C++] [
 Interestingly, these contract macros automatically generate Doxygen documentation
 [footnote
-*Rationale.*
+*Rationale:*
 Older versions of this library used to automatically generate Doxygen documentation from contract definition macros.
 This functionality was abandoned for a number of reasons: this library no longer uses macros to program contracts; even before that, this library macros became too complex and the Doxygen preprocessor was no longer able to expand them; the Doxygen documentation was just a repeat of the contract code (so programmers could directly look at contracts in the source code); Doxygen might not necessarily be the documentation tool used by all C++ programmers.
 ]

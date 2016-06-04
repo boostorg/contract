@@ -187,9 +187,6 @@ test-suite function
 
     [ subdir-run-with-no function : body_throw ]
     [ subdir-run-with-no function : old_throw ]
-    
-    [ subdir-run-with-no function : check_if ]
-    [ subdir-compile-fail function : no_check_if_error ]
 ;
 
 test-suite result
@@ -245,22 +242,27 @@ test-suite disable
             <library>disable-lib_x <library>disable-lib_y ]
 ;
 
-test-suite set
+test-suite specify
 :
-    [ subdir-run-with-no set : pre_old_post ]
-    [ subdir-run-with-no set : pre_old ]
-    [ subdir-run-with-no set : old_post ]
-    [ subdir-run-with-no set : pre_post ]
-    [ subdir-run-with-no set : pre ]
-    [ subdir-run-with-no set : old ]
-    [ subdir-run-with-no set : post ]
-    [ subdir-run-with-no set : nothing ]
+    [ subdir-run-with-no specify : pre_old_post ]
+    [ subdir-run-with-no specify : pre_old ]
+    [ subdir-run-with-no specify : old_post ]
+    [ subdir-run-with-no specify : pre_post ]
+    [ subdir-run-with-no specify : pre ]
+    [ subdir-run-with-no specify : old ]
+    [ subdir-run-with-no specify : post ]
+    [ subdir-run-with-no specify : nothing ]
     
-    [ subdir-run-with-no set : no_guard ]
+    [ subdir-run-with-no specify : no_guard ]
 
-    [ subdir-compile-fail set : old_pre_error ]
-    [ subdir-compile-fail set : post_old_error ]
-    [ subdir-compile-fail set : post_pre_error ]
+    [ subdir-compile-fail specify : old_pre_error ]
+    [ subdir-compile-fail specify : post_old_error ]
+    [ subdir-compile-fail specify : post_pre_error ]
+;
+
+test-suite misc
+:
+    [ subdir-run-with-no misc : mutex ]
 ;
 
 test-suite call_if
@@ -272,6 +274,9 @@ test-suite call_if
     [ subdir-run call_if : false_void ]
     
     [ subdir-run call_if : equal_to ]
+    
+    [ subdir-run-with-no call_if : check_if ]
+    [ subdir-compile-fail call_if : no_check_if_error ]
 ;
 
 # C++14 supported only by Clang... so in its own test-suite and explicit.

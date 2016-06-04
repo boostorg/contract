@@ -120,8 +120,7 @@ class virtual_ : private boost::noncopyable { // Avoid copy queue, stack, etc.
     // Friends (used to limit library's public API).
 
     friend bool copy_old(virtual_*);
-    
-    friend class convertible_old;
+    friend class old_pointer;
 
     BOOST_CONTRACT_DETAIL_DECL_DETAIL_CHECK_SUBCONTRACTED_PRE_POST_INV_Z(1,
             /* is_friend = */ 1, OO, RR, FF, CC, AArgs);

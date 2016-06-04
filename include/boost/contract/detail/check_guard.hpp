@@ -26,7 +26,6 @@ public:
 
 private:
     static bool checking_;
-    // TODO: Document this (and also exception handler mutexes) introduce global locks when checking contracts...
     #ifndef BOOST_CONTRACT_DISABLE_THREADS
         static boost::mutex mutex_;
     #endif

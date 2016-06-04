@@ -76,7 +76,7 @@ subcontracting).
     /* PUBLIC */
 
     #define BOOST_CONTRACT_NAMED_OVERRIDE(override_name, function_name) \
-        struct name { \
+        struct override_name { \
             BOOST_CONTRACT_DETAIL_INTROSPECTION_HAS_MEMBER_FUNCTION( \
                 BOOST_CONTRACT_DETAIL_NAME1(has_member_function), \
                 function_name \
@@ -97,7 +97,7 @@ subcontracting).
                             @RefSect{advanced_topics, Advanced Topics}).
     */
     #define BOOST_CONTRACT_NAMED_OVERRIDE(override_name, function_name) \
-            struct name {}; /* empty type (not used) just to compile code */
+            struct override_name {}; /* empty (not used), just to compile */
 #endif
     
 /* PUBLIC */

@@ -53,7 +53,7 @@ public:
     vector() : vect_() {
         boost::contract::guard c = boost::contract::constructor(this)
             .postcondition([&] {
-                BOOST_CONTRACT_ASSERT(!empty());
+                BOOST_CONTRACT_ASSERT(empty());
             })
         ;
     }

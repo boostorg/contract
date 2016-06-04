@@ -13,10 +13,6 @@ Overloads are provided to handle static, virtual void, virtual non-void,
 overriding void, and override non-void public functions.
 */
 
-// TODO: Document that even with variadic templates there's a hard limit to function max args (18 works, but MAX_ARGS=19 does not). This limit comes from Boost.MPL (vector, push_back, etc.), Boost.FunctionTypes, and other Boost algorithm that do not currently have a variadic template implementation. However, re-impl all these Boost alg would be too much work for this lib, plus the 19 max args limit seems high enough, and it would eventually be removed if Boost.MPL, Boost.FunctionTypes are ever ported to impl that use variadic templates.
-
-// TODO: Document that not using variadic templates (i.e., using pp meta-programming impl instead) does not increase compilation times (I measured this with the max_arg test program).
-
 #include <boost/contract/detail/all_core_headers.hpp>
 #include <boost/contract/detail/decl.hpp>
 #include <boost/contract/detail/tvariadic.hpp>
@@ -149,7 +145,6 @@ specify_precondition_old_postcondition<> public_function(Class* obj) {
     #define BOOST_CONTRACT_PUBLIC_FUNCTIONS_ 1
 #endif
 
-// TODO: Document no F here so cannot check consistency between VirtualResult and actual func's result type... up to user to pass the right VirtualResult...
 // For non-static, virtual, and non-overriding public functions (PRIVATE macro).
 #define BOOST_CONTRACT_PUBLIC_FUNCTION_VIRTUAL_NO_OVERRIDE_( \
         has_virtual_result) \
@@ -253,10 +248,18 @@ specify_precondition_old_postcondition<> public_function(Class* obj) {
     @param v    The contracted virtual function extra trailing parameter of type
                 @RefClass{boost::contract::virtual_}<c>*</c> and with default
                 value @c 0.
-    @param r    A reference to the contracted virtual function return value.
-                (This can be a local variable within the contracted function
+    @param r    A reference to the contracted virtual function return value
+                (this can be a local variable within the contracted function
                 scope, but it must be set by programmers at each function
-                @c return statement.)
+                @c return statement). The type of this parameter must be the
+                same as (or compatible with) the contracted function return type
+                (this library might not be able to raise a compile-time error
+                if that is not the case (because this function does not take a
+                pointer to the contracted function or similar), but in general
+                such a type mismatch will cause a run-time error or undefined
+                behaviour). Alternatively,
+                <c>boost::optional<<i>return_type</i>></c> can be used here (see
+                @RefSect{advanced_topics, Advanced Topics}).
     @param obj  The object @c this from the scope of the contracted function.
                 This object can be @c const and @c volatile depending on the
                 cv-qualifier for the contracted function (volatile public
@@ -413,10 +416,15 @@ specify_precondition_old_postcondition<> public_function(Class* obj) {
     @param v    The contracted virtual function extra trailing parameter of type
                 @RefClass{boost::contract::virtual_}<c>*</c> and with default
                 value @c 0.
-    @param r    A reference to the contracted virtual function return value.
-                (This can be a local variable within the contracted function
+    @param r    A reference to the contracted virtual function return value
+                (this can be a local variable within the contracted function
                 scope, but it must be set by programmers at each function
-                @c return statement.)
+                @c return statement). The type of this parameter must be the
+                same as (or compatible with) the contracted function return type
+                as specified by @c F (this library will generate a compile-time
+                error otherwise) Alternatively,
+                <c>boost::optional<<i>return_type</i>></c> can be used here (see
+                @RefSect{advanced_topics, Advanced Topics}).
     @param f    A pointer to the contracted function.
     @param obj  The object @c this from the scope of the contracted function.
                 This object can be @c const and @c volatile depending on the

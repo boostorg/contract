@@ -36,32 +36,32 @@ int a::f(x_type& x) {
 
 void a::disable_pre_failure() {
     boost::contract::set_precondition_failure([] (boost::contract::from)
-            { out("a::pre_failure"); });
+            { out("a::pre_failure\n"); });
 }
 
 void a::disable_post_failure() {
     boost::contract::set_postcondition_failure([] (boost::contract::from)
-            { out("a::post_failure"); });
+            { out("a::post_failure\n"); });
 }
 
 void a::disable_entry_inv_failure() {
     boost::contract::set_entry_invariant_failure([] (boost::contract::from)
-            { out("a::entry_inv_failure"); });
+            { out("a::entry_inv_failure\n"); });
 }
 
 void a::disable_exit_inv_failure() {
     boost::contract::set_exit_invariant_failure([] (boost::contract::from)
-            { out("a::exit_inv_failure"); });
+            { out("a::exit_inv_failure\n"); });
 }
 
 void a::disable_inv_failure() {
     boost::contract::set_invariant_failure([] (boost::contract::from)
-            { out("a::inv_failure"); });
+            { out("a::inv_failure\n"); });
 }
 
 void a::disable_failure() {
     boost::contract::set_failure([] (boost::contract::from)
-            { out("a::failure"); });
+            { out("a::failure\n"); });
 }
 
 #endif // #include guard

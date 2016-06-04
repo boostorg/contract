@@ -25,10 +25,6 @@ Facility to declare invariants, base types, etc all as private members.
 #endif
 #include <boost/noncopyable.hpp>
 
-// TODO: Review all warnings for examples, tests, and also lib compilation...
-
-// TODO: Document (in a rationale) that using friend to limit lib's public API does not increase compilation times at all. I compiled with friends. Then I removed all friends, made related APIs all public and the compilation times of all test/public_function/* where exactly the same for all compilers (msvc 37 min, gcc 70 min, clang 46 min). So there is not reason at all to not use friends (plus not using friend will complicate the internal APIs because contractor names cannot be wrapped using DETAIL_NAME so they will still be made private and accessed via some sort of static DETAIL_NAME(make) member function...).
-
 namespace boost {
     namespace contract {
         class virtual_;
@@ -135,6 +131,10 @@ class access : private boost::noncopyable {
     #endif
     
     // Friends (used to limit library's public API).
+
+    // NOTE: Using friends here and in all other places in this library does not
+    // increase compilation times (I experimented replacing all friends with
+    // public and got the same compilation times).
 
     BOOST_CONTRACT_DETAIL_DECL_DETAIL_CHECK_SUBCONTRACTED_PRE_POST_INV_Z(1,
             /* is_friend = */ 1, OO, RR, FF, CC, AArgs);

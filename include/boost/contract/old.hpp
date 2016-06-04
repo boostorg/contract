@@ -324,7 +324,6 @@ private:
     #endif
 
     friend class old_pointer;
-
     friend old_value null_old();
 /** @endcond */
 };
@@ -433,7 +432,6 @@ private:
     #endif
     
     friend old_pointer make_old(old_value const&);
-
     friend old_pointer make_old(virtual_*, old_value const&);
 /** @endcond */
 };

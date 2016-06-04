@@ -89,7 +89,6 @@ protected:
     #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
         void copy_old() {
             if(failed()) return;
-            // TODO: Document that when old copies throw, using .old() calls post failure handler (more correct), while using = OLDOF makes enclosing user function throw (less correct). Plus of course using .old() makes old copies after inv and pre are checked, while using = OLDOF makes old copies before inv and pre checking (this is less correct in theory, but it should not really matter in most practical cases unless the old copy are programmed assuming inv and pre are satisfied). Also document in a rationale that it would be possible to wrap all old.hpp operations (old_ptr copy constructor, make_old, etc.) in try-catch statements so for this lib to call postcondition_failure handler also when ... = OLDOF is used. However, in that case this lib cannot populate the from parameter (and destructors can have postconditions so from would be necessary for ... = OLDOF used in a destructor) so the authors decided to not do that and leave that in the hands of the programmers (that can manually wrap ... = OLDOF with a try-catch in their user code if necessary, or better just use .old(...) when calling the failure handler for old value copies is important).
             try { if(old_) old_(); }
             catch(...) { fail(&boost::contract::postcondition_failure); }
         }
@@ -109,7 +108,6 @@ protected:
     #endif
 
 private:
-    // TODO: Document all BOOST_CONTRACT_ERROR_... and BOOST_STATIC_ASSERT_MSG errors (in an annex...).
     bool BOOST_CONTRACT_ERROR_missing_guard_declaration;
     bool guard_asserted_; // Avoid throwing twice from dtors (undef behavior).
     #if !defined(BOOST_CONTRACT_NO_PRECONDITIONS) || \

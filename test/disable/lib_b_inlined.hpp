@@ -39,7 +39,7 @@ bool b::test_disable_pre_failure() {
     out("");
     boost::contract::precondition_failure(boost::contract::from());
     return boost::contract::test::detail::oteststream::eq(out(),
-            "a::pre_failure");
+            "a::pre_failure\n");
 }
 
 bool b::test_disable_post_failure() {
@@ -47,7 +47,7 @@ bool b::test_disable_post_failure() {
     out("");
     boost::contract::postcondition_failure(boost::contract::from());
     return boost::contract::test::detail::oteststream::eq(out(),
-            "a::post_failure");
+            "a::post_failure\n");
 }
     
 bool b::test_disable_entry_inv_failure() {
@@ -55,7 +55,7 @@ bool b::test_disable_entry_inv_failure() {
     out("");
     boost::contract::entry_invariant_failure(boost::contract::from());
     return boost::contract::test::detail::oteststream::eq(out(),
-            "a::entry_inv_failure");
+            "a::entry_inv_failure\n");
 }
     
 bool b::test_disable_exit_inv_failure() {
@@ -63,7 +63,7 @@ bool b::test_disable_exit_inv_failure() {
     out("");
     boost::contract::exit_invariant_failure(boost::contract::from());
     return boost::contract::test::detail::oteststream::eq(out(),
-            "a::exit_inv_failure");
+            "a::exit_inv_failure\n");
 }
     
 bool b::test_disable_inv_failure() {
@@ -71,11 +71,11 @@ bool b::test_disable_inv_failure() {
     out("");
     boost::contract::entry_invariant_failure(boost::contract::from());
     bool entry_inv = boost::contract::test::detail::oteststream::eq(out(),
-            "a::inv_failure");
+            "a::inv_failure\n");
     out("");
     boost::contract::exit_invariant_failure(boost::contract::from());
     bool exit_inv = boost::contract::test::detail::oteststream::eq(out(),
-            "a::inv_failure");
+            "a::inv_failure\n");
     return entry_inv && exit_inv;
 }
     
@@ -84,19 +84,19 @@ bool b::test_disable_failure() {
     out("");
     boost::contract::precondition_failure(boost::contract::from());
     bool pre = boost::contract::test::detail::oteststream::eq(out(),
-            "a::failure");
+            "a::failure\n");
     out("");
     boost::contract::postcondition_failure(boost::contract::from());
     bool post = boost::contract::test::detail::oteststream::eq(out(),
-            "a::failure");
+            "a::failure\n");
     out("");
     boost::contract::entry_invariant_failure(boost::contract::from());
     bool entry_inv = boost::contract::test::detail::oteststream::eq(out(),
-            "a::failure");
+            "a::failure\n");
     out("");
     boost::contract::exit_invariant_failure(boost::contract::from());
     bool exit_inv = boost::contract::test::detail::oteststream::eq(out(),
-            "a::failure");
+            "a::failure\n");
     return pre && post && entry_inv && exit_inv;
 }
 

@@ -16,8 +16,6 @@ Facilities to configure this library compile-time and run-time behaviour.
 // headers after that depending on the contract 0/1 macros below ensuring no
 // compilation overhead.
 
-// TODO: Document that when contracts are programmed in .cpp and all these lib headers are #include only from within .cpp, then a given lib can be compiled for example without inv/post, only with pre. The code that will link to that lib will not be able to enable inv/post, or disable the pre. However, if contracts are programmed in .hpp and this lib headers are #included in .hpp that are shipped to users with a given lib, users of that lib can turn on/off all contracts for the shipped lib as well.
-
 #ifdef DOXYGEN
     /**
     Define this macro to compile this library as a shared library or DLL
@@ -51,8 +49,6 @@ Facilities to configure this library compile-time and run-time behaviour.
     #define BOOST_CONTRACT_HEADER_ONLY
 #endif
 
-// TODO: Document that no code should in general be programmed before the contract in function definitions, but for example mutex locks can be programmed before contracts if necessary for synchronization.
-
 #ifdef DOXYGEN
     /**
     Define this macro to not lock internal library data for thread safety
@@ -80,8 +76,10 @@ Facilities to configure this library compile-time and run-time behaviour.
     to support a maximum number of arguments different than @c 10 for
     overriding public functions (contracted via
     @RefFunc{boost::contract::public_function}).
+    (Compilation times of this library were measured to be comparable between
+    compilers that support variadic macros and compilers that do not.)
     @note   Regardless of the value of this macro and of compiler support for
-            variadic macros, there is an intrinsic limit around 19 arguments
+            variadic macros, there is an intrinsic limit around 18 arguments
             for overriding public functions (because of similar limits for some
             Boost libraries like Boost.MPL and Boost.FunctionTypes internally
             used by this library).

@@ -52,7 +52,7 @@ public:
 
     vector()
         postcondition {
-            !empty();
+            empty();
         }
         : vect_()
     {}

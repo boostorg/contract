@@ -14,6 +14,13 @@ There can be cases in which the expression passed to [macroref BOOST_CONTRACT_OL
 
 This library allows to construct [classref boost::contract::old_ptr] variables using their default constructor (equivalent to a null pointer) and then assign them later to a copy of the expression passed to [macroref BOOST_CONTRACT_OLDOF] in a functor with no parameter [^['h]]`()` passed to `.old(`[^['h]]`)`.
 The nullary functor [^['h]]`()` is called by this library before the function body is executed but only after class invariants and preconditions are checked:
+[footnote
+*Rationale:*
+Functors for preconditions, old value assignments, and postconditions are all optional but when specified, they must be specified in this order.
+Such order is enforced by the fact that [classref boost::contract::specify_precondition_old_postconditions], [classref boost::contract::specify_old_postcondition], [classref boost::contract::specify_postcondition_only], and [classref boost::contract::specify_nothing] provide a progressively decreasing subset of the `.precondition(...)`, `.old(...)` and `.postcondition(...)` member functions.
+The enforced order of preconditions, old value assignments, and postconditions is logical because it reflects the order in which they are executed at run-time.
+Other contract programming frameworks allow to mix this order, that could have been implemented for this library too but it would have complicated a somewhat the library implementation while adding no real value (arguably creating confusion because allowing for less logical orderings).
+]
 
     boost::contract::old_ptr<...> old_``[^['name]]``;                 // Use default constructor.
     boost::contract::guard c = boost::contract::function()  // Same for all other contracts.
@@ -37,13 +44,21 @@ The functor passed to `.old(...)` should capture all variables it needs to evalu
 In general, these variables should be captured by reference and not by value (because old values need to copy values the variables will have just before executing the function body, and not the value these variables had when the functor passed to `.old(...)` was first declared).
 In any case, this functor should modify only old values and not the value of other captured variables (see also __Constant_Correctness__).
 
+This library will automatically call [funcref boost::contract::postcondition_failure] if calling the functor specified via `.old(...)` throws an exception (by default, this terminates the program calling `std::terminate`, but see __Throw_on_Failure__ to throw exceptions, exit the program with an error code, etc.).
+[footnote
+*Rationale:*
+If old value pointers are assigned at the point of their construction instead of using `.old(...)` then an exception thrown by the old value expression [macroref BOOST_CONTRACT_OLDOF] or more in general any exception thrown by the old value pointer initialization will result in that exception being thrown up the stack by the contracted function.
+This is arguably less correct than calling [funcref boost::contract::postcondition_failure] because an exception thrown by an old value copy causes the program to fail checking its postconditions and should not technically causes the contracted function to thrown an exception (however, this might not be a significant difference in practice).
+Note that while it would be possible to wrap all old value operations ([refclass boost::contract::old_ptr] copy constructor, [funcref boost::contract::make_old], etc.) in try-catch statements so this library will call [funcref boost::contract::postcondition_failure] also when old values are copied when they are constructed outside `.old(...)`, that will prevent this library from knowing the [enumref boost::contract::from] parameter which is not acceptable (specifically because destructors can have postconditions).
+]
+
 [endsect]
 
 [section Optional Return Value]
 
 It is possible to use `boost::optional` to handle the return value when programmers cannot construct the result variable at its point of declaration before the contract (e.g., because an appropriate constructor for the return type is not available at that point, or just because it would be too expensive to execute an extra initialization of the result value at run-time).
 [footnote
-*Rationale.*
+*Rationale:*
 `boost::optional` was used instead of `std::optional` because this library is designed to work well with Boost and because `std::optional` is not part of the C++ standard yet.
 ]
 For example (see also [@../../example/features/optional_result.cpp =optional_result.cpp=]):
@@ -84,7 +99,7 @@ This this case the functor passed to `.postcondition(...)` takes a parameter of 
 
 The inner `const&` in the postcondition functor parameter type `boost::optional<... const&>` is mandatory (the outer `const&` in the postcondition functor parameter type `boost::optional<... const&> const&` is not).
 [footnote
-*Rationale.*
+*Rationale:*
 This library requires the postcondition functor parameter to be of type `boost::optional<... const&>` so the return value does not have to be copied (because of `&`) while postconditions are still prevented from changing it (because of `const`, see also __Constant_Correctness__).
 Note that the library cannot require the actual functor parameter `result` to be `const&` instead (because programmers can always program the functor without specifying the `const&` outside the `boost::optional<... const&>` type).
 ]
@@ -124,7 +139,7 @@ Therefore, no contract is ever programmed for a private or protected pure virtua
 As seen in __Public_Function_Overrides__, [funcref boost::contract::public_function] takes a pointer to the enclosing function as a parameter when used in overriding public functions.
 When an overriding public function is overloaded, the function pointer cannot be automatically deduced by the compiler so programmers have to use `static_cast` to resolve ambiguities (as usual with pointers to overloaded functions in C++).
 [footnote
-*Rationale.*
+*Rationale:*
 In oder to avoid copies, this library takes all contracted function arguments and the return value as references when passed to [funcref boost::contract::public_function] for overriding public functions.
 Therefore, the library cannot differentiate the actual argument and return types of the contracted functions when they are passed by reference and when they are not.
 As a result, the library cannot automatically reconstruct the contracted function pointer type which must be instead deduced from the function pointer explicitly passed by programmers to [funcref boost::contract::public_function] (in turn this requires using `static_cast` to resolve ambiguities as usual in C++ when obtaining the pointer of overloaded functions).
@@ -144,7 +159,7 @@ Therefore, [macroref BOOST_CONTRACT_OVERRIDE] only needs to be invoked once for 
 The function name passed to [macroref BOOST_CONTRACT_OVERRIDE] should never start with an underscore to avoid generating names containing double underscores `override__...` that are reserved by the C++ standard.
 There is a separate macro [macroref BOOST_CONTRACT_NAMED_OVERRIDE] that can be used to explicitly specify the name of the type that will be passed to [funcref boost::contract::public_function] as a template argument:
 [footnote
-*Rationale.*
+*Rationale:*
 A different macro [macroref BOOST_CONTRACT_NAMED_OVERRIDE] is used instead of overloading [macroref BOOST_CONTRACT_OVERRIDE] using variadic macros because the override macros cannot be programmed manually by the users so making them variadic would prevent the use of this library on compilers that do not support variadic macros (see also __No_Macros__).
 ]
 
@@ -176,10 +191,16 @@ Thus both the move constructor and the move assignment operator need to maintain
 [import ../example/features/move.cpp]
 [move]
 
-This example requires that it is possible to call the public member function `move()` on the moved-from object.
+This example assumes that it is possible to call the public member function `move()` on the moved-from object.
 This allows to make explicit the precondition that except for destructor, copy and move assignments all other public member functions cannot be called on a moved-from object.
-This assumption is usually implicit in C++ (i.e., documented by the standard but not checked by the language at run-time).
+This precondition is usually implicit in C++ (i.e., documented by the standard but not checked by the language at run-time).
 If it is is not possible (e.g., due to some optimized implementation of the move operations) to have such a public `move()` member function, the private `moved_` member (or similar) can be used to program class invariants and preconditions (and that will just relay on the usual implicit C++ assumption on moved-from object because users will not be able to fully check preconditions and class invariants before calling functions of a moved-from object).
+
+[note
+The default move constructor and move assignment operator automatically generated by C++ will not check contracts.
+Therefore, unless these operations are not public or they have no preconditions, no postconditions, and the class has no invariants, programmers should manually define them using [funcref boost::contract::constructor], [classref boost::contract::constructor_precondition], and [funcref boost::contract::public_function].
+(Same for all other automatically generated operations.)
+]
 
 [endsect]
 
@@ -202,7 +223,7 @@ These /volatile class invariants/ are programmed in a public member function `co
 In general, `const volatile` qualified invariants work the same as `const` qualified invariant (see __Class_Invariants__) with the only difference that `volatile` and `const volatile` member functions check `const volatile` invariants while mutable (i.e., neither `const` nor `volatile` qualified) and `const` member functions check `const` invariants.
 A given class can specify both `const volatile` and `const` qualified invariant member functions:
 [footnote
-*Rationale.*
+*Rationale:*
 Constructors and destructors check `const volatile` and `const` invariants in that order because the qualifier that limits the calls the least is checked first (note that a `const volatile` calls can be made on any object while `const` calls cannot be made on `volatile` non-`const` objects, in that sense the `const volatile` qualifier limits calls on an object less than `const` alone does).
 This is consistent with `static` class invariants that are checked even before `const volatile` invariants (the `static` classifier limits calls even less than `const volatile` in the sense that an object is not even needed to make static calls).
 While there is a more important reason to check `static` invariants before all other invariants (see __Contract_Programming_Overview__), the above is the only reason why this library checks `const volatile` invariants before `const` invariants for constructors and destructors.
@@ -221,7 +242,7 @@ For example (see also [@../../example/features/volatile.cpp =volatile.cpp=]):
 
 While this library does not automatically check `const volatile` invariants for non-volatile functions, programmers can explicitly call the `const volatile` invariant function from the `const` invariant function if that makes sense for the contracts being specified (that way all public member functions `volatile` and not will check `const volatile` invariants):
 [footnote
-*Rationale.*
+*Rationale:*
 Note that while all public member functions can be made to check `const volatile` invariants, it is never possible to make volatile public member functions check `const` non-volatile invariants.
 That is because both `const` and `volatile` can always be added but never stripped in C++ (a part from forcefully via `const_cast`) but `const` is always automatically added by this library in order to enforce contract constant-correctness (see __Constant_Correctness__).
 That said, it would be incorrect for this library to also automatically add `volatile` and require all functions to check `const volatile` (not just `const`) invariants because only `volatile` members can be accessed from `const volatile` invariants so there could be many `const` (but not `const volatile`) members that are accessible from `const` invariants but not from `const volatile` invariants.
@@ -257,7 +278,7 @@ More precisely, dereferencing an old value pointer of type [classref boost::cont
 * In some cases it might be acceptable, or even desirable, to cause a compile-time error when a program uses old value types that are not copy constructible (because it is not possible to fully check the correctness of the program as stated by the contract assertions that use these old values).
 In these cases, programmers can declare old values using [classref boost::contract::old_ptr] as seen so far (or equivalently using C++11 `auto` declarations `auto ... = BOOST_CONTRACT_OLDOF(...)`).
 [footnote
-*Rationale*.
+*Rationale:*
 When C++11 `auto` declarations are used, this library defaults the type of [macroref BOOST_CONTRACT_OLDOF] to [classref boost::contract::old_ptr] because it generates a compile-time error for non-copyable types so it is in general more conservative than [classref boost::contract::old_ptr_noncopyable].
 ]
 * However, in other cases it might be desirable to simply not check assertions that use some old values when the related old value types are not copy constructible.
@@ -366,7 +387,7 @@ As seen so far, programmers are required to decorate their classes declaring ext
 * The `base_types` member type declared via [macroref BOOST_CONTRACT_BASE_TYPES] (used to implement subcontracting, see also __Public_Function_Overrides__).
 * The `override_...` member types declared via [macroref BOOST_CONTRACT_OVERRIDE], [macroref BOOST_CONTRACT_NAMED_OVERRIDE], and [macroref BOOST_CONTRACT_OVERRIDES] (used to implement subcontracting for overriding functions, see also __Public_Function_Overrides__).
 [footnote
-*Rationale.*
+*Rationale:*
 The internals of the `override_...` type generated by [macroref BOOST_CONTRACT_OVERRIDE] use names reserved by this library to users should not actually use such a type even when it is defined `public`.
 (On a related note, in theory using C++14 generic lambdas, the [macroref BOOST_CONTRACT_OVERRIDE] macro could be re-implemented in a way so it can be expanded at function scoped, instead of class scoped.)
 ]
@@ -415,6 +436,16 @@ Instead, the function bodies (function implementations) is programmed in a separ
 
 The same technique can be used for non-member, private, and protected functions.
 
+[note
+When contracts are programmed in a separate =.cpp= files and also /all/ these library headers are `#include`d only from =.cpp= files, then the =.cpp= files can be compiled disabling specific contract checking (for example, [macroref BOOST_CONTRACT_NO_POSTCONDITIONS] and [macroref BOOST_CONTRACT_NO_EXIT_INVARIANTS], see __Disable_Contract_Checking__).
+The user code that will link to these =.cpp= files not be able to 
+Then the code in these =.cpp= files will always have such contract checking disabled even when linked to some other user code that might have been compiled with a different set of disable contracts (i.e., a different `BOOST_CONTRACT_NO_...` defined).
+This technique might be useful to ship a pre-compiled set of object files (e.g., for a library) that will never check some contracts (e.g., postconditions and exit invariants) regardless of the definition of the `BOOST_CONTRACT_NO_...` macros used to compile code that uses such object files.
+
+On the contrary, if contracts are programmed in header files and this library headers are `#include`d in header files that are being shipped, then end users enable or disables contracts of the shipped code by defining `BOOST_CONTRACT_NO_...` when they compiled the shipped header files as part of their code.
+This technique might be useful in other situations when programmers that ship code want instead to leave it up the their end users to decide which contracts in the shipped code should be checked at run-time.
+]
+
 [endsect]
 
 [section Throw on Failure]
@@ -423,7 +454,7 @@ If a condition checked using [macroref BOOST_CONTRACT_ASSERT] is `false` or if c
 
 By default, the contract failure handler functions print a message to the standard error `std::cerr` and then terminate the program calling `std::terminate`.
 [footnote
-*Rationale.*
+*Rationale:*
 In general, when a contract fails the only safe thing to do is to terminate the program execution (because the contract failure indicates a bug in the program, and in general the program is in a state for which no operation can be successfully performed, so the program should be stopped).
 Therefore, this library terminates the program by default.
 However, for specific applications, programmers could implement some fail-safe mechanism for which some mission-critical operation can always be performed upon handling failures so this library allows programmers to override the default contract failure handlers to fully customize how to handle contract failures.
@@ -504,7 +535,7 @@ Therefore, the following can be considered mainly a curiosity because programmer
 As shown in __Public_Function_Overrides__ and __Named_Overrides__, this library provides the [macroref BOOST_CONTRACT_OVERRIDE] and [macroref BOOST_CONTRACT_NAMED_OVERRIDE] macros to program contracts for overriding public functions.
 These macros cannot be programmed manually but they are not variadic macros so programmers should be able to use them on all C++ compilers.
 [footnote
-*Rationale.*
+*Rationale:*
 These macros expand SFINAE-based introspection templates that cannot be reasonably programmed by users (that remains the case even if C++14 generic lambdas were to be used here).
 ]
 The [macroref BOOST_CONTRACT_OVERRIDES] macro is a variadic macro instead but programmes can manually repeat the non-variadic macro [macroref BOOST_CONTRACT_OVERRIDE] for each overriding public function name on compilers that do not support variadic macros.

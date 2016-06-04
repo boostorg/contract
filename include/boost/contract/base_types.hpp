@@ -7,8 +7,6 @@
 // file LICENSE_1_0.txt or a copy at http://www.boost.org/LICENSE_1_0.txt).
 // See: http://www.boost.org/doc/libs/release/libs/contract/doc/html/index.html
 
-// TODO: Document the max number of bases is 20 because of Boost.MPL vector limit. If Boost.MPL vector and related alg impl was to change to use variadic templates in the future there will be not limit to max bases (but for now this high limit is better than the extra complexity of reimpl all Boost.MPL vector, etc. within this lib with variadic templates).
-
 /** @file
 Facility to specify inheritance form base classes (to support subcontracting).
 */
@@ -38,7 +36,9 @@ base classes @c typedef can be programmed manually without using this macro (see
 @param ...  Comma separated list of base classes. Each listed base must
             explicitly list its access specifier @c public, @c protected, or
             @c private, and @c virtual if present (this not always required in
-            C++ instead).
+            C++ instead). There is an intrinsic limit around 20 on the maximum
+            number of supported bases (because of similar limits for some Boost
+            libraries like Boost.MPL internally used by this library).
 */
 #define BOOST_CONTRACT_BASE_TYPES(...) void /* dummy type for typedef */
 

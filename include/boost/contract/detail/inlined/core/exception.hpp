@@ -61,7 +61,7 @@ bad_virtual_result_cast::bad_virtual_result_cast(char const* from_type_name,
 
 bad_virtual_result_cast::~bad_virtual_result_cast() {}
 
-char const* bad_virtual_result_cast::what() const BOOST_NOEXCEPT {
+char const* bad_virtual_result_cast::what() const BOOST_NOEXCEPT_OR_NOTHROW {
     return what_.c_str();
 }
 
@@ -76,7 +76,7 @@ assertion_failure::assertion_failure(char const* const code) :
 
 assertion_failure::~assertion_failure() {}
 
-char const* assertion_failure::what() const BOOST_NOEXCEPT {
+char const* assertion_failure::what() const BOOST_NOEXCEPT_OR_NOTHROW {
     return what_.c_str();
 }
 

@@ -387,7 +387,7 @@ This is equivalent to calling both
 */
 void /** @cond */ BOOST_CONTRACT_DETAIL_DECLSPEC /** @endcond */
 set_invariant_failure(assertion_failure_handler const& f)
-        /** @cond */ OOST_NOEXCEPT_OR_NOTHROW /** @endcond */;
+        /** @cond */ BOOST_NOEXCEPT_OR_NOTHROW /** @endcond */;
 
 /**
 Set the all contract failure handlers at once (for convenience).

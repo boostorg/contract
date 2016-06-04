@@ -50,7 +50,7 @@ int main() {
                 // Test preconditions have disabled no contract (incorrect, but
                 // only possible behaviour if shared linking not used ad doc).
                 << ok_f()
-            #elif defined(BOOST_CONTRACT_PRECONDITIONS_DISABLE_NOTHING)
+            #elif defined(BOOST_CONTRACT_PRECONDITIONS_DISABLE_NO_ASSERTION)
                 // Test preconditions have disabled no contract.
                 << ok_f()
             #else
@@ -82,7 +82,7 @@ int main() {
 
     // Test old values not copied for disabled contracts.
     unsigned const cnt =
-        #if defined(BOOST_CONTRACT_PRECONDITIONS_DISABLE_NOTHING) && \
+        #if defined(BOOST_CONTRACT_PRECONDITIONS_DISABLE_NO_ASSERTION) && \
                 !defined(BOOST_CONTRACT_NO_PRECONDITIONS) && \
                 !defined(BOOST_CONTRACT_NO_POSTCONDITIONS)
             1
@@ -105,53 +105,53 @@ int main() {
     out("");
     boost::contract::precondition_failure(boost::contract::from());
     BOOST_TEST(boost::contract::test::detail::oteststream::eq(out(),
-            "a::pre_failure"));
+            "a::pre_failure\n"));
     
     a::disable_post_failure();
     out("");
     boost::contract::postcondition_failure(boost::contract::from());
     BOOST_TEST(boost::contract::test::detail::oteststream::eq(out(),
-            "a::post_failure"));
+            "a::post_failure\n"));
     
     a::disable_entry_inv_failure();
     out("");
     boost::contract::entry_invariant_failure(boost::contract::from());
     BOOST_TEST(boost::contract::test::detail::oteststream::eq(out(),
-            "a::entry_inv_failure"));
+            "a::entry_inv_failure\n"));
     
     a::disable_exit_inv_failure();
     out("");
     boost::contract::exit_invariant_failure(boost::contract::from());
     BOOST_TEST(boost::contract::test::detail::oteststream::eq(out(),
-            "a::exit_inv_failure"));
+            "a::exit_inv_failure\n"));
     
     a::disable_inv_failure();
     out("");
     boost::contract::entry_invariant_failure(boost::contract::from());
     BOOST_TEST(boost::contract::test::detail::oteststream::eq(out(),
-            "a::inv_failure"));
+            "a::inv_failure\n"));
     out("");
     boost::contract::exit_invariant_failure(boost::contract::from());
     BOOST_TEST(boost::contract::test::detail::oteststream::eq(out(),
-            "a::inv_failure"));
+            "a::inv_failure\n"));
     
     a::disable_failure();
     out("");
     boost::contract::precondition_failure(boost::contract::from());
     BOOST_TEST(boost::contract::test::detail::oteststream::eq(out(),
-            "a::failure"));
+            "a::failure\n"));
     out("");
     boost::contract::postcondition_failure(boost::contract::from());
     BOOST_TEST(boost::contract::test::detail::oteststream::eq(out(),
-            "a::failure"));
+            "a::failure\n"));
     out("");
     boost::contract::entry_invariant_failure(boost::contract::from());
     BOOST_TEST(boost::contract::test::detail::oteststream::eq(out(),
-            "a::failure"));
+            "a::failure\n"));
     out("");
     boost::contract::exit_invariant_failure(boost::contract::from());
     BOOST_TEST(boost::contract::test::detail::oteststream::eq(out(),
-            "a::failure"));
+            "a::failure\n"));
 
     // Test setting failure handlers (from a lib using another lib).
 

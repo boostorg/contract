@@ -29,7 +29,13 @@ The [funcref boost::contract::function] function returns an RAII object that mus
 The name of this local variable is arbitrary, but `c` is often used in this documentation.
 ]
 The function body is programmed right after the declaration of this RAII object.
-At construction, this RAII object does the following:
+
+[note
+In some cases, it might be necessary to program some code before the contract.
+For example for acquiring resources that will be used while checking the contract like old values, but also to lock mutexes (or other synchronization mechanisms) in multi-threaded programs (as usual with C++, in these cases it is generally preferred to use RAII objects to automatically control acquisition and release of the resources).
+]
+
+At construction, the RAII object returned by [funcref boost::contract::function] does the following:
 
 # Check preconditions, by calling the nullary functor [^['f]]`()` passed to `.precondition(`[^['f]]`)`.
 
@@ -80,7 +86,7 @@ It is also recommended to use the [macroref BOOST_CONTRACT_ASSERT] macro to prog
     // Or, if condition has commas `,` not already within parenthesis `(...)`.
     BOOST_CONTRACT_ASSERT((``/boolean-condition/``))
 
-This library will automatically call [funcref boost::contract::precondition_failure] if any of the [macroref BOOST_CONTRACT_ASSERT] macro conditions are `false` and also if the precondition functor throws an exception (by default, this terminates the program calling `std::terminate`, but see __Throw_on_Failure__ to throw exceptions, exit the program with an error code, etc.).
+This library will automatically call [funcref boost::contract::precondition_failure] if any of the [macroref BOOST_CONTRACT_ASSERT] macro conditions are `false` and also if calling the functor specified via `.precondition(...)` throws an exception (by default, this terminates the program calling `std::terminate`, but see __Throw_on_Failure__ to throw exceptions, exit the program with an error code, etc.).
 
 [note
 Contracts are most useful when their assertions only use public members that are accessible to the caller so the caller can properly check and use the contract.
@@ -120,7 +126,7 @@ It is also recommended to use the [macroref BOOST_CONTRACT_ASSERT] macro to prog
     // Or, if condition has commas `,` not already within parenthesis `(...)`.
     BOOST_CONTRACT_ASSERT((``/boolean-condition/``))
 
-This library will automatically call [funcref boost::contract::postcondition_failure] if any of the [macroref BOOST_CONTRACT_ASSERT] macro conditions are `false` and also if the postcondition functor throws an exception (by default, this terminates the program calling `std::terminate`, but see __Throw_on_Failure__ to throw exceptions, exit the program with an error code, etc.).
+This library will automatically call [funcref boost::contract::postcondition_failure] if any of the [macroref BOOST_CONTRACT_ASSERT] macro conditions are `false` and also if calling the functor specified via `.postcondition(...)` throws an exception (by default, this terminates the program calling `std::terminate`, but see __Throw_on_Failure__ to throw exceptions, exit the program with an error code, etc.).
 
 For non-void public functions, the functor passed to `.postcondition(...)` is not a nullary functor.
 Instead, it is a unary functor taking a variable holding the return value as its one parameter (see also __Public_Functions__).
@@ -274,7 +280,7 @@ However, in most production code it might not be acceptable to augment the publi
 ]
 Set the [macroref BOOST_CONTRACT_STATIC_INVARIANT] macro to use a name different from `static_invariant` (e.g., because `static_invariant` clashes with other names in the user-defined class).
 [footnote
-*Rationale.*
+*Rationale:*
 In C++, it is not possible to overload a member function based on the `static` classifier.
 Therefore, different function names have to be used for member functions checking static and non-static class invariants, namely `invariant` and `static_invariant`.
 ]
@@ -296,12 +302,16 @@ Constructor preconditions are specified using the [classref boost::contract:cons
 Programmes should not access the object `this` from constructor preconditions (because the object does not exists yet before the constructor body is executed, see also __No_Lambda_Functions__).
 Constructors without preconditions simply do not explicitly initialize the [classref boost::contract::constructor_precondition] base (because [classref boost::contract::constructor_precondition] default constructor checks no contract).
 When [classref boost::contract::constructor_precondition] is used:
+[footnote
+There is a MSVC bug that was fixed in MSVC 2013 for which lambdas cannot be used in constructor member initialization lists for templates.
+On MSVC compilers with that bug, an external (static member) function can be used (together with `bind` and `cref` as needed) to program constructor preconditions instead of using lambdas.
+]
 
 * It should be specified as the /first/ class in the inheritance list (so constructor preconditions are checked before initializing any other base or member).
 * Its inheritance level should always be `private` (so this extra base class does not alter the public inheritance tree of the derived class).
 * It takes the derived class as template parameter (the Curiously Recursive Template Pattern (CRTP) is used here to avoid ambiguity errors with multiple inheritance).
 [footnote
-*Rationale.*
+*Rationale:*
 The [classref boost::contract::constructor_precondition] takes the derived class as its template parameter so the instantiated template type is unique for each derived class always avoiding base class ambiguities even in case of multiple inheritance.
 Virtual inheritance cannot be used resolve such ambiguities because virtual bases are initialized only once by the out-most derived class, and that would not allow to properly check preconditions of all base classes.
 ]
@@ -328,6 +338,10 @@ This together with C++ object construction mechanism of base classes and the use
 [note
 A constructor can avoid calling [funcref boost::contract::constructor] for efficiency but only when it has no postconditions and its class has no invariants.
 (Even if [funcref boost::contract::constuctor] is not used by a derived class, contracts of base classes will still be correctly checked by C++ object construction mechanism.)
+
+The default constructor and copy constructor automatically generated by C++ will not check contracts.
+Therefore, unless these constructors are not public or they have no preconditions, no postconditions, and the class has no invariants, programmers should manually define them using [funcref boost::contract::constructor] and [classref boost::contract::constructor_precondition].
+(Same for all other automatically generated operations.)
 ]
 
 Private and protected constructors can omit [funcref boost::contract::constructor] because they are not part of the public interface of the class so they are not required to check class invariants (see also __Constructor_Calls__).
@@ -366,6 +380,10 @@ This together with C++ object destruction mechanism of base classes ensures that
 [note
 A destructor can avoid calling [funcref boost::contract::destructor] for efficiency but only when it has no postconditions and its class has no invariants.
 (Even if [funcref boost::contract::destructor] is not used by a derived class, contracts of base classes will still be correctly checked by C++ object destruction mechanism.)
+
+The default destructor automatically generated by C++ will not check contracts.
+Therefore, unless the destructor is not public or it has no postconditions and the class has no invariants, programmers should manually define it using [funcref boost::contract::destructor].
+(Same for all other automatically generated operations.)
 ]
 
 Private and protected destructors can omit [funcref boost::contract::destructor] because they are not part of the public interface of the class so they are not required to check class invariants (see also __Destructor_Calls__).
@@ -402,6 +420,10 @@ This ensures that public member function contracts are correctly checked at run-
 
 [note
 A public member function can avoid calling [funcref boost::contract::public_function] for efficiency but only when it has no preconditions and no postconditions, it is not virtual, it does not override any virtual function, and its class has no invariant.
+
+The default copy assignment operator automatically generated by C++ will not check contracts.
+Therefore, unless this operator is not public or it has no preconditions, no postconditions, and the class has no invariants, programmers should manually define it using [funcref boost::contract::public_function].
+(Same for all other automatically generated operations.)
 ]
 
 [endsect]
@@ -421,7 +443,7 @@ This extra parameter is the last parameter and it has a default argument so it d
 Callers will rarely have to explicitly deal with this extra parameter (a part from when manipulating the virtual function type directly as a function pointer, for function pointer type-casts, etc.).
 Programmers must pass the extra virtual parameter as the very first argument to all [macroref BOOST_CONTRACT_OLDOF] and [funcref boost::contract::public_function] calls in the virtual function.
 [footnote
-*Rationale.*
+*Rationale:*
 The [classref boost::contract::virtual_]`*` optional parameter is used by this library to determine that a function is virtual (in C++ it is not possible to introspect if a function has been declared `virtual`).
 Furthermore, this parameter is internally used by this library to pass result and old values that are evaluated by the overriding function to overridden virtual functions, and also to check preconditions and postconditions of overridden virtual functions when subcontracting (but without executing overridden function bodies).
 ]
@@ -430,7 +452,7 @@ The [funcref boost::contract::public_function] function takes `this` as a parame
 As shown in the example above, when the public virtual function has a non-void return type programmers must pass a reference to the function return value as the second argument to [funcref boost::contract::public_function].
 In this case the functor specified to `.postcondition(...)` takes a single parameter for the return value (possibly as a constant reference `const&` to avoid extra copies of the return value).
 [footnote
-*Rationale.*
+*Rationale:*
 The functor passed to `.postcondition(...)` takes the extra return value parameter because that is used by this library to pass the return value evaluated by the overriding function to all its overridden virtual functions when subcontracting.
 ]
 
@@ -438,7 +460,7 @@ The functor passed to `.postcondition(...)` takes the extra return value paramet
 It is the responsibility of the programmers to pass the extra parameter `v` to all [macroref BOOST_CONTRACT_OLDOF] and [funcref boost::contract::public_function] calls within public virtual functions, and also to pass the return value reference after `v` to [funcref boost::contract::public_function] for non-void public virtual functions.
 This library cannot automatically generate compile-time errors if programmers fail to do so (but in general contract checking will not correctly work at run-time).
 [footnote
-*Rationale.*
+*Rationale:*
 This library does not require the function type when using [funcref boost::contract::public_function] for non-overriding virtual functions.
 Therefore, this library does not know if the enclosing function has a non-void return type so it cannot check if the return value reference is passed as required for non-overriding virtual functions.
 Instead this library requires the function type for overriding virtual functions thus it gives a compile-time error if the return value reference is missing in those cases.
@@ -490,13 +512,13 @@ Programmers must pass the extra virtual parameter as the very first argument to 
 
 When called from overriding public functions, [funcref boost::contract::public_function] also takes a pointer to the enclosing function, the object `this` (because overriding public functions check class invariants), and references to each function argument in the order they appear in the function declaration.
 [footnote
-*Rationale.*
+*Rationale:*
 The object `this` is passed after the function pointer to follow `bind`'s syntax.
 The function pointer and references to all function arguments are needed for overriding virtual public functions because this library has to call overridden virtual public functions to check their contracts for subcontracting (even if this library will not actually execute the bodies of the overridden functions).
 ]
 As shown in the example above, when the overriding public function has a non-void return type, programmers must pass a reference to the function return value as the second argument to [funcref boost::contract::public_function] (this library will generate a compile-time error otherwise).
 [footnote
-*Rationale.*
+*Rationale:*
 As for non-overriding public virtual functions, also overriding functions use the extra return value parameter to pass it to the overridden functions when subcontracting.
 In the case of overriding functions this library also has the function pointer so it will generate a compile-time error if the function is non-void and programmers forget to specify the extra return value parameter (this extra error checking is not possible instead for non-overriding public virtual functions because their contracts do not have to specify the function pointer, see also __Virtual_Public_Functions__).
 ]
@@ -548,7 +570,7 @@ When the extra base [classref boost::contract::constructor_precondition] is used
 [important
 Each base passed to [macroref BOOST_CONTRACT_BASE_TYPES] must /explicitly/ specify its inheritance access level `public`, `protected`, or `private` (`virtual` is optional and can be specified either before or after the access level as usual in C++).
 [footnote
-*Rationale.*
+*Rationale:*
 This library explicitly requires the inheritance access level because derived classes must subcontract only from public bases, but not from protected or private bases (see __Public_Function_Calls__).
 Therefore, [macroref BOOST_CONTRACT_BASE_TYPES] inspect each inheritance access level (using preprocessor meta-programming) and removes non-public bases from the list bases `base_types` to consider for subcontracting.
 ]

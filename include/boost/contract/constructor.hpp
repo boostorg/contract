@@ -50,7 +50,6 @@ specify_old_postcondition<> constructor(Class* obj) {
     #endif
 }
 
-// TODO: Document that constructor_precondition for unions must be called at the very beginning of ctor body before `boost::contract::guard c = ...` (because unions cannot have base classes, not even in C++11).
 /**
 Program preconditions for constructors.
 This class must be the very first base class of the contracted class. Also the
@@ -61,7 +60,6 @@ Unions cannot have base classes in C++ so this class can be used to declare a
 local object within the constructor function just before
 @RefFunc{boost::contract::constructor} is used (see
 @RefSect{advanced_topics, Advanced Topics}).
-
 @see @RefSect{tutorial, Tutorial}
 @tparam Class Class of contracted constructor.
 */
