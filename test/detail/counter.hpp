@@ -2,6 +2,11 @@
 #ifndef BOOST_CONTRACT_TEST_DETAIL_COUNTER_HPP_
 #define BOOST_CONTRACT_TEST_DETAIL_COUNTER_HPP_
 
+// Copyright (C) 2008-2016 Lorenzo Caminiti
+// Distributed under the Boost Software License, Version 1.0 (see accompanying
+// file LICENSE_1_0.txt or a copy at http://www.boost.org/LICENSE_1_0.txt).
+// See: http://www.boost.org/doc/libs/release/libs/contract/doc/html/index.html
+
 namespace boost { namespace contract { namespace test { namespace detail {
 
 // Helper to count copies and evaluations of type (e.g., for old values).

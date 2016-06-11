@@ -1,4 +1,9 @@
 
+[/ Copyright (C) 2008-2016 Lorenzo Caminiti]
+[/ Distributed under the Boost Software License, Version 1.0 (see accompanying]
+[/ file LICENSE_1_0.txt or a copy at http://www.boost.org/LICENSE_1_0.txt).]
+[/ See: http://www.boost.org/doc/libs/release/libs/contract/doc/html/index.html]
+
 [section Contract Programming Overview]
 
 [:['["It is absurd to make elaborate security checks on debugging runs, when no trust is put in the results, and then remove them in production runs, when an erroneous result could be expensive or disastrous. What would we think of a sailing enthusiast who wears his life-jacket when training on dry land but takes it off as soon as he goes to sea?]]]

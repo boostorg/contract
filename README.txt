@@ -1,29 +1,15 @@
+Boost.Contract
 
-Contract++
+This library implements Contract Programming (a.k.a., Design by Contract or DbC)
+for the C++ programming language.
 
-Contract Programming Library for C++
+All Contract Programming features are supported by this library: subcontracting,
+class invariants, postconditions (with old and return values), preconditions,
+customizable actions on assertion failure (terminate, throw, etc.), optional
+compilation of assertion checking, disable assertion checking while already
+checking other assertions (to avoid infinite recursion), etc.
 
-DESCRIPTION
-
-C++ Contract Programming (a.k.a. Design by Contract or DbC).
-All Eiffel features supported: subcontracting, postcondition old and result
-values, optional contract compilation, customizable action on assertion
-failure, block invariants, loop variants, etc.
-Plus virtual specifiers, concept checking, named parameters.
-See: http://contractpp.sourceforge.net
-
-FEATURES
-
-* Support for preconditions, postconditions, class invariants, block
-  invariants, and loop variants.
-* Subcontract derived classes (with support for pure virtual functions and
-  multiple inheritance).
-* Access expression old values and function return value in postconditions.
-* Optional compilation and checking of preconditions, postconditions, class
-  invariants, block invariants, and loop variants.
-* Customizable actions on contract assertion failure (terminate by default but
-  it can throw, exit, etc).
-* Virtual specifiers.
-* Concept checking.
-* Named parameters.
-
+Copyright (C) 2008-2016 Lorenzo Caminiti
+Distributed under the Boost Software License, Version 1.0 (see accompanying
+file LICENSE_1_0.txt or a copy at http://www.boost.org/LICENSE_1_0.txt).
+See: http://www.boost.org/doc/libs/release/libs/contract/doc/html/index.html

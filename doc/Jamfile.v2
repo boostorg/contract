@@ -1,4 +1,9 @@
 
+# Copyright (C) 2008-2016 Lorenzo Caminiti
+# Distributed under the Boost Software License, Version 1.0 (see accompanying
+# file LICENSE_1_0.txt or a copy at http://www.boost.org/LICENSE_1_0.txt).
+# See: http://www.boost.org/doc/libs/release/libs/contract/doc/html/index.html
+
 import quickbook ;
 using boostbook ;
 
@@ -23,7 +28,7 @@ doxygen reference
     ../include/boost/contract.hpp
 :   
     <reftitle>"Reference"
-    # But Quickbook's Doxygen does not show destructor exception specs.
+    # Quickbook's Doxygen does not show destructor exception specs.
     <doxygen:param>PREDEFINED="DOXYGEN BOOST_PP_VARIADICS"
     <doxygen:param>MACRO_EXPANSION=YES
     <doxygen:param>INCLUDE_PATH="../include"
@@ -36,7 +41,7 @@ doxygen reference
     <doxygen:param>HIDE_UNDOC_MEMBERS=YES
     <doxygen:param>HIDE_UNDOC_CLASSES=YES
     <doxygen:param>SHORT_NAMES=NO
-    <doxygen:param>ALIASES=" Params=\"<b>Parameters:</b> <table border="0">\" Param{2}=\"<tr><td><b><tt>\\1</tt></b></td><td>\\2</td></tr>\" EndParams=\"</table>\" Returns=\"<b>Returns:</b>\" Note=\"<b>Note:</b>\" Warning=\"<b>Warning:</b>\" SeeAlso=\"<b>See also:</b>\" RefSect{2}=\"\\xmlonly<link linkend='boost_contract.\\1'>\\2</link>\\endxmlonly\" RefClass{1}=\"\\xmlonly<computeroutput><classname alt='\\1'>\\1</classname></computeroutput>\\endxmlonly\" RefFunc{1}=\"\\xmlonly<computeroutput><functionname alt='\\1'>\\1</functionname></computeroutput>\\endxmlonly\" RefMacro{1}=\"\\xmlonly<computeroutput><macroname alt='\\1'>\\1</macroname></computeroutput>\\endxmlonly\" RefEnum{1}=\"\\xmlonly<computeroutput><enumname alt='\\1'>\\1</enumname></computeroutput>\\endxmlonly\" "
+    <doxygen:param>ALIASES=" RefSect{2}=\"\\xmlonly<link linkend='boost_contract.\\1'>\\2</link>\\endxmlonly\" RefClass{1}=\"\\xmlonly<computeroutput><classname alt='\\1'>\\1</classname></computeroutput>\\endxmlonly\" RefFunc{1}=\"\\xmlonly<computeroutput><functionname alt='\\1'>\\1</functionname></computeroutput>\\endxmlonly\" RefMacro{1}=\"\\xmlonly<computeroutput><macroname alt='\\1'>\\1</macroname></computeroutput>\\endxmlonly\" RefEnum{1}=\"\\xmlonly<computeroutput><enumname alt='\\1'>\\1</enumname></computeroutput>\\endxmlonly\" "
 ;
 
 xml contract : contract.qbk : <dependency>reference ;
