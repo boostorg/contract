@@ -11,7 +11,7 @@
 #include <string>
         
 std::string ok_begin() {
-    std::ostringstream ok; ok
+    std::ostringstream ok; ok << "" // Suppress a warning.
         #ifndef BOOST_CONTRACT_NO_ENTRY_INVARIANTS
             << "c::static_inv" << std::endl
             << "c::inv" << std::endl

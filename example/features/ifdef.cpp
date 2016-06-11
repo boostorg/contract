@@ -125,7 +125,7 @@ public:
             boost::contract::guard c = boost::contract::constructor(this)
                 #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
                     .postcondition([&] {
-                        BOOST_CONTRACT_ASSERT(size() == (to - from + 1));
+                        BOOST_CONTRACT_ASSERT(int(size()) == (to - from + 1));
                     })
                 #endif
             ;

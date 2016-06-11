@@ -121,7 +121,7 @@ int main() {
 
     old_checks = 0;
     next(n);
-    BOOST_TEST_EQ(old_checks, 0);
+    BOOST_TEST_EQ(old_checks, 0u);
 
     // Test virtual functions (old values with `v`).
     
@@ -146,7 +146,7 @@ int main() {
     a<ncp> an;
     old_checks = 0;
     an.next(n);
-    BOOST_TEST_EQ(old_checks, 0);
+    BOOST_TEST_EQ(old_checks, 0u);
 
     return boost::report_errors();
 }

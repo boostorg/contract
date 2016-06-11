@@ -37,9 +37,9 @@ never be used directly by programmers.
 #include <boost/contract/override.hpp>
 #include <boost/contract/public_function.hpp>
 
-// TODO: Review all warnings for examples, tests, and also lib compilation...
-
 // TODO: Add all copyright and licencing info (to all files, etc.).
+
+// TODO: Document that the correct way of programming contracts for overridden protected and overriding public functions is as follows: Both must use virtual_ (otherwise C++ won't override because mismatching parameters), but overridden protected does not use public_function. See test/public_function/protected.cpp.
 
 #endif // #include guard
 

@@ -151,7 +151,8 @@ struct b {
 
     virtual ~b() {}
 
-    virtual result_type& f(s_type& s) { // No contract.
+    // No contract (no virtual_ so this is not actually overridden by a::f).
+    virtual result_type& f(s_type& s) {
         static result_type result("none-b");
         out << "b::f::body" << std::endl;
         result.value = s.value;

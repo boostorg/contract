@@ -33,7 +33,7 @@ std::string ok_begin() {
 }
 
 std::string ok_end() {
-    std::ostringstream ok; ok
+    std::ostringstream ok; ok << "" // Suppress a warning.
         #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
             << "c::f::old" << std::endl
             << "c::f::post" << std::endl

@@ -11,7 +11,7 @@
 #include <string>
         
 std::string ok_a(bool failed = false) {
-    std::ostringstream ok; ok
+    std::ostringstream ok; ok << "" // Suppress a warning.
         #ifndef BOOST_CONTRACT_NO_ENTRY_INVARIANTS
             << "a::static_inv" << std::endl
             << "a::inv" << std::endl // This can fail.
@@ -35,7 +35,7 @@ std::string ok_a(bool failed = false) {
 enum checked { passed, failed, threw };
 
 std::string ok_b(checked check = passed) {
-    std::ostringstream ok; ok
+    std::ostringstream ok; ok << "" // Suppress a warning.
         #ifndef BOOST_CONTRACT_NO_ENTRY_INVARIANTS
             << "b::static_inv" << std::endl
             << "b::inv" << std::endl // This can fail.
@@ -58,7 +58,7 @@ std::string ok_b(checked check = passed) {
 }
 
 std::string ok_c(checked check = passed) {
-    std::ostringstream ok; ok
+    std::ostringstream ok; ok << "" // Suppress a warning.
         #ifndef BOOST_CONTRACT_NO_ENTRY_INVARIANTS
             << "c::static_inv" << std::endl
             << "c::inv" << std::endl // This can fail.

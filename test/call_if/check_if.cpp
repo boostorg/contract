@@ -18,11 +18,12 @@ void push_back(std::vector<T>& vect, T const& val) {
     boost::contract::guard c = boost::contract::function()
         .postcondition([&] {
             BOOST_CONTRACT_ASSERT(
-                boost::contract::call_if<boost::has_equal_to<T> >(
+                boost::contract::check_if<boost::has_equal_to<T> >(
                     boost::bind(std::equal_to<T>(), boost::cref(vect.back()),
                             boost::cref(val))
-                ).else_([] { ++equal_skips; return true; })
+                )
             );
+            if(!boost::has_equal_to<T>::value) ++equal_skips;
         })
     ;
     vect.push_back(val);
@@ -38,7 +39,7 @@ int main() {
     std::vector<int> vi;
     equal_skips = 0;
     push_back(vi, 123);
-    BOOST_TEST_EQ(equal_skips, 0);
+    BOOST_TEST_EQ(equal_skips, 0u);
         
     unsigned const cnt =
         #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS

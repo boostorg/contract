@@ -74,6 +74,7 @@ int main() {
     
     a_exit_inv = true;
     b_exit_inv = false;
+    a_entering_inv = b_entering_inv = c_entering_inv =
             BOOST_PP_IIF(BOOST_CONTRACT_TEST_entry_inv, true, false);
     out.str("");
     aa.f();

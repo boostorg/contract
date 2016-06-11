@@ -15,6 +15,11 @@
 
 namespace boost { namespace contract { namespace detail {
 
+#ifdef BOOST_MSVC
+    #pragma warning(push)
+    #pragma warning(disable: 4251) // Member w/o DLL spec (mutex_ type).
+#endif
+
 class BOOST_CONTRACT_DETAIL_DECLSPEC check_guard :
     private boost::noncopyable // Non-copyable resource (might use mutex, etc.).
 {
@@ -30,6 +35,10 @@ private:
         static boost::mutex mutex_;
     #endif
 };
+
+#ifdef BOOST_MSVC
+    #pragma warning(pop)
+#endif
 
 } } } // namespace
 

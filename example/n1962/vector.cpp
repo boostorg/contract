@@ -658,7 +658,9 @@ int main() {
     vector<x> z(y);
 
     typename vector<x>::iterator j = y.begin();
+    assert(j != y.end());
     typename vector<x>::const_iterator cj = cy.begin();
+    assert(cj != cy.end());
 
     y.insert(j, 2, x());
     y.push_back(x());

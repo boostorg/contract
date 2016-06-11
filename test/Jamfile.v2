@@ -260,11 +260,6 @@ test-suite specify
     [ subdir-compile-fail specify : post_pre_error ]
 ;
 
-test-suite misc
-:
-    [ subdir-run-with-no misc : mutex ]
-;
-
 test-suite call_if
 :
     [ subdir-run call_if : true_ ]

@@ -81,15 +81,15 @@ int main() {
     #endif
 
     BOOST_TEST_EQ(x_type::copies(),
-            BOOST_PP_IIF(BOOST_CONTRACT_TEST_post, 1, 0));
+            BOOST_PP_IIF(BOOST_CONTRACT_TEST_post, 1u, 0u));
     BOOST_TEST_EQ(x_type::evals(),
-            BOOST_PP_IIF(BOOST_CONTRACT_TEST_post, 1, 0));
+            BOOST_PP_IIF(BOOST_CONTRACT_TEST_post, 1u, 0u));
     BOOST_TEST_EQ(x_type::ctors(), x_type::dtors()); // No leak.
     
     BOOST_TEST_EQ(y_type::copies(),
-        BOOST_PP_IIF(BOOST_CONTRACT_TEST_post, 1, 0));
+        BOOST_PP_IIF(BOOST_CONTRACT_TEST_post, 1u, 0u));
     BOOST_TEST_EQ(y_type::evals(),
-        BOOST_PP_IIF(BOOST_CONTRACT_TEST_post, 1, 0));
+        BOOST_PP_IIF(BOOST_CONTRACT_TEST_post, 1u, 0u));
     BOOST_TEST_EQ(y_type::ctors(), y_type::dtors()); // No leak.
 
     #undef BOOST_CONTRACT_TEST_post

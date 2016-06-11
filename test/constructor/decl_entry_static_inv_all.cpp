@@ -12,7 +12,7 @@
 #include <string>
 
 std::string ok_c() {
-    std::ostringstream ok; ok
+    std::ostringstream ok; ok << "" // Suppress a warning.
         #ifndef BOOST_CONTRACT_NO_PRECONDITIONS
             << "a::ctor::pre" << std::endl
             << "b::ctor::pre" << std::endl

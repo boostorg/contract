@@ -61,30 +61,30 @@ int main() {
     BOOST_TEST_EQ(r.value, "C");
     BOOST_TEST_EQ(s.value, "cde");
     BOOST_TEST_EQ(s.copies(),
-            BOOST_PP_IIF(BOOST_CONTRACT_TEST_post, 3, 0));
+            BOOST_PP_IIF(BOOST_CONTRACT_TEST_post, 3u, 0u));
     BOOST_TEST_EQ(s.evals(),
-            BOOST_PP_IIF(BOOST_CONTRACT_TEST_post, 3, 0));
+            BOOST_PP_IIF(BOOST_CONTRACT_TEST_post, 3u, 0u));
     BOOST_TEST_EQ(s.ctors(), s.dtors() + 1); // 1 local var.
 
     BOOST_TEST_EQ(cc.y.value, "cC");
     BOOST_TEST_EQ(cc.y.copies(),
-            BOOST_PP_IIF(BOOST_CONTRACT_TEST_post, 1, 0));
+            BOOST_PP_IIF(BOOST_CONTRACT_TEST_post, 1u, 0u));
     BOOST_TEST_EQ(cc.y.evals(),
-            BOOST_PP_IIF(BOOST_CONTRACT_TEST_post, 1, 0));
+            BOOST_PP_IIF(BOOST_CONTRACT_TEST_post, 1u, 0u));
     BOOST_TEST_EQ(cc.y.ctors(), cc.y.dtors() + 1); // 1 data member.
     
     BOOST_TEST_EQ(cc.t<'d'>::z.value, "dC");
     BOOST_TEST_EQ(cc.t<'d'>::z.copies(),
-            BOOST_PP_IIF(BOOST_CONTRACT_TEST_post, 1, 0));
+            BOOST_PP_IIF(BOOST_CONTRACT_TEST_post, 1u, 0u));
     BOOST_TEST_EQ(cc.t<'d'>::z.evals(),
-            BOOST_PP_IIF(BOOST_CONTRACT_TEST_post, 1, 0));
+            BOOST_PP_IIF(BOOST_CONTRACT_TEST_post, 1u, 0u));
     BOOST_TEST_EQ(cc.t<'d'>::z.ctors(), cc.t<'d'>::z.dtors() + 1); // 1 member.
 
     BOOST_TEST_EQ(cc.t<'e'>::z.value, "eC");
     BOOST_TEST_EQ(cc.t<'e'>::z.copies(),
-            BOOST_PP_IIF(BOOST_CONTRACT_TEST_post, 1, 0));
+            BOOST_PP_IIF(BOOST_CONTRACT_TEST_post, 1u, 0u));
     BOOST_TEST_EQ(cc.t<'e'>::z.evals(),
-            BOOST_PP_IIF(BOOST_CONTRACT_TEST_post, 1, 0));
+            BOOST_PP_IIF(BOOST_CONTRACT_TEST_post, 1u, 0u));
     BOOST_TEST_EQ(cc.t<'e'>::z.ctors(), cc.t<'e'>::z.dtors() + 1); // 1 member.
 
     return boost::report_errors();

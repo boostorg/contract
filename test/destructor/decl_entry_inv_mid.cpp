@@ -30,7 +30,7 @@ std::string ok_a() {
 }
 
 std::string ok_b(bool failed = false) {
-    std::ostringstream ok; ok
+    std::ostringstream ok; ok << "" // Suppress a warning.
         #ifndef BOOST_CONTRACT_NO_ENTRY_INVARIANTS
             << "b::static_inv" << std::endl
             << "b::inv" << std::endl // This can fail.
@@ -126,7 +126,7 @@ int main() {
             ok.str(""); ok
                 << ok_a()
                 // Test entry b::inv failed...
-                << ok_b(BOOST_CONTRACT_TEST_entry_inv)
+                << ok_b(bool(BOOST_CONTRACT_TEST_entry_inv))
             ;
             out.str("");
         }
@@ -135,7 +135,7 @@ int main() {
             } catch(err const&) {
         #endif
         ok // ...then exec other dtors and check inv on throw (as dtor threw).
-            << ok_c(BOOST_CONTRACT_TEST_entry_inv)
+            << ok_c(bool(BOOST_CONTRACT_TEST_entry_inv))
         ;
         BOOST_TEST(out.eq(ok.str()));
     } catch(...) { BOOST_TEST(false); }
@@ -173,7 +173,7 @@ int main() {
         << ok_a() // Test no entry a::inv so no failure here.
         
         // Test entry b::inv failed (as all did).
-        << ok_b(BOOST_CONTRACT_TEST_entry_inv)
+        << ok_b(bool(BOOST_CONTRACT_TEST_entry_inv))
         #ifndef BOOST_CONTRACT_NO_ENTRY_INVARIANTS
             << "b::dtor::body" << std::endl
         #endif

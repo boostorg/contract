@@ -48,6 +48,12 @@ public:
     virtual ~exception() /** @cond */ BOOST_NOEXCEPT_OR_NOTHROW /** @endcond */;
 };
 
+#ifdef BOOST_MSVC
+    #pragma warning(push)
+    #pragma warning(disable: 4275) // Bases w/o DLL spec (bad_cast, etc).
+    #pragma warning(disable: 4251) // Members w/o DLL spec (string for what_).
+#endif
+
 /**
 Exception thrown when inconsistent return values are passed to overridden
 virtual public functions.
@@ -180,6 +186,10 @@ private:
     std::string what_;
 /** @endcond */
 };
+
+#ifdef BOOST_MSVC
+    #pragma warning(pop)
+#endif
 
 /**
 Represent the operation where the contract assertion failed.

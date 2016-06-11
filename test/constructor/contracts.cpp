@@ -349,77 +349,77 @@ int main() {
     #endif
 
     BOOST_TEST_EQ(a::x_type::copies(),
-            BOOST_PP_IIF(BOOST_CONTRACT_TEST_post, 1, 0));
+            BOOST_PP_IIF(BOOST_CONTRACT_TEST_post, 1u, 0u));
     BOOST_TEST_EQ(a::x_type::evals(),
-            BOOST_PP_IIF(BOOST_CONTRACT_TEST_post, 1, 0));
+            BOOST_PP_IIF(BOOST_CONTRACT_TEST_post, 1u, 0u));
     BOOST_TEST_EQ(a::x_type::ctors(), a::x_type::dtors()); // No leak.
     
     BOOST_TEST_EQ(c::y_type::copies(),
-            BOOST_PP_IIF(BOOST_CONTRACT_TEST_post, 1, 0));
+            BOOST_PP_IIF(BOOST_CONTRACT_TEST_post, 1u, 0u));
     BOOST_TEST_EQ(c::y_type::evals(),
-            BOOST_PP_IIF(BOOST_CONTRACT_TEST_post, 1, 0));
+            BOOST_PP_IIF(BOOST_CONTRACT_TEST_post, 1u, 0u));
     BOOST_TEST_EQ(c::y_type::ctors(), c::y_type::dtors()); // No leak.
     
     BOOST_TEST_EQ(t<'d'>::z_type::copies(),
-            BOOST_PP_IIF(BOOST_CONTRACT_TEST_post, 1, 0));
+            BOOST_PP_IIF(BOOST_CONTRACT_TEST_post, 1u, 0u));
     BOOST_TEST_EQ(t<'d'>::z_type::evals(),
-            BOOST_PP_IIF(BOOST_CONTRACT_TEST_post, 1, 0));
+            BOOST_PP_IIF(BOOST_CONTRACT_TEST_post, 1u, 0u));
     BOOST_TEST_EQ(t<'d'>::z_type::ctors(), t<'d'>::z_type::dtors()); // No leak.
     
     BOOST_TEST_EQ(t<'p'>::z_type::copies(),
-            BOOST_PP_IIF(BOOST_CONTRACT_TEST_post, 1, 0));
+            BOOST_PP_IIF(BOOST_CONTRACT_TEST_post, 1u, 0u));
     BOOST_TEST_EQ(t<'p'>::z_type::evals(),
-            BOOST_PP_IIF(BOOST_CONTRACT_TEST_post, 1, 0));
+            BOOST_PP_IIF(BOOST_CONTRACT_TEST_post, 1u, 0u));
     BOOST_TEST_EQ(t<'p'>::z_type::ctors(), t<'p'>::z_type::dtors()); // No leak.
     
     BOOST_TEST_EQ(t<'q'>::z_type::copies(),
-            BOOST_PP_IIF(BOOST_CONTRACT_TEST_post, 1, 0));
+            BOOST_PP_IIF(BOOST_CONTRACT_TEST_post, 1u, 0u));
     BOOST_TEST_EQ(t<'q'>::z_type::evals(),
-            BOOST_PP_IIF(BOOST_CONTRACT_TEST_post, 1, 0));
+            BOOST_PP_IIF(BOOST_CONTRACT_TEST_post, 1u, 0u));
     BOOST_TEST_EQ(t<'q'>::z_type::ctors(), t<'q'>::z_type::dtors()); // No leak.
 
     BOOST_TEST_EQ(t<'e'>::z_type::copies(),
-            BOOST_PP_IIF(BOOST_CONTRACT_TEST_post, 1, 0));
+            BOOST_PP_IIF(BOOST_CONTRACT_TEST_post, 1u, 0u));
     BOOST_TEST_EQ(t<'e'>::z_type::evals(),
-            BOOST_PP_IIF(BOOST_CONTRACT_TEST_post, 1, 0));
+            BOOST_PP_IIF(BOOST_CONTRACT_TEST_post, 1u, 0u));
     BOOST_TEST_EQ(t<'e'>::z_type::ctors(), t<'e'>::z_type::dtors()); // No leak.
 
     // Following destroy only copies (actual objects are static data members).
 
     BOOST_TEST_EQ(a::n_type::copies(),
-            BOOST_PP_IIF(BOOST_CONTRACT_TEST_post, 1, 0));
+            BOOST_PP_IIF(BOOST_CONTRACT_TEST_post, 1u, 0u));
     BOOST_TEST_EQ(a::n_type::evals(),
-            BOOST_PP_IIF(BOOST_CONTRACT_TEST_post, 1, 0));
+            BOOST_PP_IIF(BOOST_CONTRACT_TEST_post, 1u, 0u));
     BOOST_TEST_EQ(a::n_type::copies(), a::n_type::dtors()); // No leak.
     
     BOOST_TEST_EQ(c::m_type::copies(),
-            BOOST_PP_IIF(BOOST_CONTRACT_TEST_post, 1, 0));
+            BOOST_PP_IIF(BOOST_CONTRACT_TEST_post, 1u, 0u));
     BOOST_TEST_EQ(c::m_type::evals(),
-            BOOST_PP_IIF(BOOST_CONTRACT_TEST_post, 1, 0));
+            BOOST_PP_IIF(BOOST_CONTRACT_TEST_post, 1u, 0u));
     BOOST_TEST_EQ(c::m_type::copies(), c::m_type::dtors()); // No leak.
     
     BOOST_TEST_EQ(t<'d'>::l_type::copies(),
-            BOOST_PP_IIF(BOOST_CONTRACT_TEST_post, 1, 0));
+            BOOST_PP_IIF(BOOST_CONTRACT_TEST_post, 1u, 0u));
     BOOST_TEST_EQ(t<'d'>::l_type::evals(),
-            BOOST_PP_IIF(BOOST_CONTRACT_TEST_post, 1, 0));
+            BOOST_PP_IIF(BOOST_CONTRACT_TEST_post, 1u, 0u));
     BOOST_TEST_EQ(t<'e'>::l_type::copies(), t<'e'>::l_type::dtors()); // No leak
     
     BOOST_TEST_EQ(t<'p'>::l_type::copies(),
-            BOOST_PP_IIF(BOOST_CONTRACT_TEST_post, 1, 0));
+            BOOST_PP_IIF(BOOST_CONTRACT_TEST_post, 1u, 0u));
     BOOST_TEST_EQ(t<'p'>::l_type::evals(),
-            BOOST_PP_IIF(BOOST_CONTRACT_TEST_post, 1, 0));
+            BOOST_PP_IIF(BOOST_CONTRACT_TEST_post, 1u, 0u));
     BOOST_TEST_EQ(t<'e'>::l_type::copies(), t<'e'>::l_type::dtors()); // No leak
     
     BOOST_TEST_EQ(t<'q'>::l_type::copies(),
-            BOOST_PP_IIF(BOOST_CONTRACT_TEST_post, 1, 0));
+            BOOST_PP_IIF(BOOST_CONTRACT_TEST_post, 1u, 0u));
     BOOST_TEST_EQ(t<'q'>::l_type::evals(),
-            BOOST_PP_IIF(BOOST_CONTRACT_TEST_post, 1, 0));
+            BOOST_PP_IIF(BOOST_CONTRACT_TEST_post, 1u, 0u));
     BOOST_TEST_EQ(t<'e'>::l_type::copies(), t<'e'>::l_type::dtors()); // No leak
     
     BOOST_TEST_EQ(t<'e'>::l_type::copies(),
-            BOOST_PP_IIF(BOOST_CONTRACT_TEST_post, 1, 0));
+            BOOST_PP_IIF(BOOST_CONTRACT_TEST_post, 1u, 0u));
     BOOST_TEST_EQ(t<'e'>::l_type::evals(),
-            BOOST_PP_IIF(BOOST_CONTRACT_TEST_post, 1, 0));
+            BOOST_PP_IIF(BOOST_CONTRACT_TEST_post, 1u, 0u));
     BOOST_TEST_EQ(t<'e'>::l_type::copies(), t<'e'>::l_type::dtors()); // No leak
 
     #undef BOOST_CONTRACT_TEST_post

@@ -36,7 +36,7 @@ int main() {
             BOOST_TEST(false);
         #endif
     } catch(err const&) {
-        ok.str(""); ok
+        ok.str(""); ok << "" // Suppress a warning.
             #ifndef BOOST_CONTRACT_NO_PRECONDITIONS
                 << "f::pre" << std::endl
             #endif

@@ -46,7 +46,7 @@
 
 namespace boost { namespace contract {
 
-exception::~exception() {}
+exception::~exception() BOOST_NOEXCEPT_OR_NOTHROW {}
 
 bad_virtual_result_cast::bad_virtual_result_cast(char const* from_type_name,
             char const* to_type_name) {
@@ -59,7 +59,7 @@ bad_virtual_result_cast::bad_virtual_result_cast(char const* from_type_name,
     what_ = text.str();
 }
 
-bad_virtual_result_cast::~bad_virtual_result_cast() {}
+bad_virtual_result_cast::~bad_virtual_result_cast() BOOST_NOEXCEPT_OR_NOTHROW {}
 
 char const* bad_virtual_result_cast::what() const BOOST_NOEXCEPT_OR_NOTHROW {
     return what_.c_str();
@@ -74,7 +74,7 @@ assertion_failure::assertion_failure(char const* const code) :
     file_(""), line_(0), code_(code)
 { init(); }
 
-assertion_failure::~assertion_failure() {}
+assertion_failure::~assertion_failure() BOOST_NOEXCEPT_OR_NOTHROW {}
 
 char const* assertion_failure::what() const BOOST_NOEXCEPT_OR_NOTHROW {
     return what_.c_str();

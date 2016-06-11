@@ -9,7 +9,7 @@
 #include <string>
 
 std::string ok_f(bool failed = false) {
-    std::ostringstream ok; ok
+    std::ostringstream ok; ok << "" // Suppress a warning.
         #ifndef BOOST_CONTRACT_NO_PRECONDITIONS
             << "f::pre" << std::endl // Test no failure here.
         #endif

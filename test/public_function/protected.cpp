@@ -11,15 +11,16 @@
 
 boost::contract::test::detail::oteststream out;
 
-// NOTE: This is the correct way of programming contracts for base protected
-// and public overriding function.
-
 struct b {
     static void static_invariant() { out << "b::static_inv" << std::endl; }
     void invariant() const { out << "b::inv" << std::endl; }
 
 protected:
-    virtual void f() { // Protected do not use public_function (or virtual_).
+    // NOTE: This is the correct way of programming contracts for overridden
+    // protected and overriding public functions: Both must use virtual_
+    // (otherwise C++ won't override because mismatching parameters), but
+    // overridden protected does not use public_function.
+    virtual void f(boost::contract::virtual_* v = 0) {
         boost::contract::guard c = boost::contract::function()
             .precondition([] { out << "b::f::pre" << std::endl; })
             .old([] { out << "b::f::old" << std::endl; })
