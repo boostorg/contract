@@ -12,5 +12,4 @@ checking other assertions (to avoid infinite recursion), etc.
 Copyright (C) 2008-2016 Lorenzo Caminiti
 Distributed under the Boost Software License, Version 1.0 (see accompanying
 file LICENSE_1_0.txt or a copy at http://www.boost.org/LICENSE_1_0.txt).
-
-Documentation: https://lcaminiti.github.io/boost-contract
+See: https://lcaminiti.github.io/boost-contract
