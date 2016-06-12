@@ -1,0 +1,1640 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<title>Contract Programming Overview</title>
+<link rel="stylesheet" href="../../../doc/src/boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.78.1">
+<link rel="home" href="../index.html" title="Chapter&#160;1.&#160;Boost.Contract 1.0">
+<link rel="up" href="../index.html" title="Chapter&#160;1.&#160;Boost.Contract 1.0">
+<link rel="prev" href="getting_started.html" title="Getting Started">
+<link rel="next" href="tutorial.html" title="Tutorial">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../..//boost.png"></td>
+<td align="center"><a href="../../..//index.html">Home</a></td>
+<td align="center"><a href="../../..//libs/libraries.htm">Libraries</a></td>
+<td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
+<td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
+<td align="center"><a href="../../..//more/index.htm">More</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="getting_started.html"><img src="../../..//doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../..//doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../..//doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="tutorial.html"><img src="../../..//doc/src/images/next.png" alt="Next"></a>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="boost_contract.contract_programming_overview"></a><a class="link" href="contract_programming_overview.html" title="Contract Programming Overview">Contract
+    Programming Overview</a>
+</h2></div></div></div>
+<div class="toc"><dl class="toc">
+<dt><span class="section"><a href="contract_programming_overview.html#boost_contract.contract_programming_overview.assertions">Assertions</a></span></dt>
+<dt><span class="section"><a href="contract_programming_overview.html#boost_contract.contract_programming_overview.benefits_and_costs">Benefits
+      and Costs</a></span></dt>
+<dt><span class="section"><a href="contract_programming_overview.html#boost_contract.contract_programming_overview.function_calls">Function
+      Calls</a></span></dt>
+<dt><span class="section"><a href="contract_programming_overview.html#boost_contract.contract_programming_overview.public_function_calls">Public
+      Function Calls</a></span></dt>
+<dt><span class="section"><a href="contract_programming_overview.html#boost_contract.contract_programming_overview.constructor_calls">Constructor
+      Calls</a></span></dt>
+<dt><span class="section"><a href="contract_programming_overview.html#boost_contract.contract_programming_overview.destructor_calls">Destructor
+      Calls</a></span></dt>
+<dt><span class="section"><a href="contract_programming_overview.html#boost_contract.contract_programming_overview.constant_correctness">Constant-Correctness</a></span></dt>
+<dt><span class="section"><a href="contract_programming_overview.html#boost_contract.contract_programming_overview.specification_and_implementation">Specification
+      and Implementation</a></span></dt>
+<dt><span class="section"><a href="contract_programming_overview.html#boost_contract.contract_programming_overview.on_contract_failure">On
+      Contract Failure</a></span></dt>
+<dt><span class="section"><a href="contract_programming_overview.html#boost_contract.contract_programming_overview.features">Features</a></span></dt>
+</dl></div>
+<div class="blockquote"><blockquote class="blockquote"><p>
+        <span class="emphasis"><em><span class="quote">&#8220;<span class="quote">It is absurd to make elaborate security checks on debugging
+        runs, when no trust is put in the results, and then remove them in production
+        runs, when an erroneous result could be expensive or disastrous. What would
+        we think of a sailing enthusiast who wears his life-jacket when training
+        on dry land but takes it off as soon as he goes to sea?</span>&#8221;</span></em></span>
+      </p></blockquote></div>
+<div class="blockquote"><blockquote class="blockquote"><p>
+        <span class="emphasis"><em>-- Charles Antony Richard Hoare (see <a class="link" href="bibliography.html#Hoare73_anchor">[Hoare73]</a>)</em></span>
+      </p></blockquote></div>
+<p>
+      This section gives an overview of Contract Programming (see <a class="link" href="bibliography.html#Meyer97_anchor">[Meyer97]</a>,
+      <a class="link" href="bibliography.html#Mitchell02_anchor">[Mitchell02]</a>, and <a class="link" href="bibliography.html#N1613_anchor">[N1613]</a>
+      for a more detailed introduction to Contract Programming). Readers that already
+      have a basic understanding of Contract Programming can skip this section and
+      come back to it after reading the <a class="link" href="tutorial.html" title="Tutorial">Tutorial</a>.
+    </p>
+<div class="note"><table border="0" summary="Note">
+<tr>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="../../../doc/src/images/note.png"></td>
+<th align="left">Note</th>
+</tr>
+<tr><td align="left" valign="top"><p>
+        The objective of this library is <span class="emphasis"><em>not</em></span> to convince programmers
+        to use Contract Programming. It is assumed that programmes understand the
+        benefits and trade-offs associated with Contract Programming and they have
+        already decided to use this methodology to code program specifications. Then,
+        this library aims to be the best and more complete Contract Programming library
+        for C++.
+      </p></td></tr>
+</table></div>
+<div class="section">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost_contract.contract_programming_overview.assertions"></a><a class="link" href="contract_programming_overview.html#boost_contract.contract_programming_overview.assertions" title="Assertions">Assertions</a>
+</h3></div></div></div>
+<p>
+        Contract Programming is characterized by the following assertion mechanisms:
+      </p>
+<div class="orderedlist"><ol class="orderedlist" type="1">
+<li class="listitem">
+            Preconditions: These are logical conditions that programmers expect to
+            be true when the function is called (e.g., to check constraints on the
+            function arguments).
+          </li>
+<li class="listitem">
+            Postconditions: These are logical conditions that programmers expect
+            to be true when the function exits without throwing an exception (e.g.,
+            to check the result and any side effect that a function might have).
+            Postconditions can usually access the function return value (for non-void
+            functions) and <span class="emphasis"><em>old values</em></span> that expressions had before
+            the function body was executed.
+          </li>
+<li class="listitem">
+            Class invariants: These are logical conditions that programmers expect
+            to be true after the constructor exits without throwing an exception,
+            before and after the execution of every public non-static member function
+            (even if they throw exceptions), before the destructor is executed and
+            if the destructor throws an exception (e.g, class invariants can define
+            valid states for all objects of a given class). It is possible to specify
+            a different set of class invariants for volatile member functions, namely
+            <span class="emphasis"><em>volatile class invariants</em></span>. It is also possible to
+            specify <span class="emphasis"><em>static class invariants</em></span> which are excepted
+            to be true before and after the execution of any constructor, destructor
+            (even if it does not throw an exception), and public member function
+            (even if static). <a href="#ftn.boost_contract.contract_programming_overview.assertions.f0" class="footnote" name="boost_contract.contract_programming_overview.assertions.f0"><sup class="footnote">[5]</sup></a>
+          </li>
+<li class="listitem">
+            Subcontracting: Subcontracting is defined according to the <a href="http://en.wikipedia.org/wiki/Liskov_substitution_principle" target="_top">substitution
+            principle</a> and it indicates that preconditions cannot be strengthen,
+            while postconditions and class invariants cannot be weaken.
+          </li>
+</ol></div>
+<p>
+        Furthermore, it is a common requirement for Contract Programming to automatically
+        disable other contracts while a contract assertions is already being checked
+        (in order to avoid infinite recursion while checking contract assertions).
+      </p>
+<div class="note"><table border="0" summary="Note">
+<tr>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="../../../doc/src/images/note.png"></td>
+<th align="left">Note</th>
+</tr>
+<tr><td align="left" valign="top"><p>
+          This library implements this requirement but it should be noted that, in
+          order to globally disable assertions while checking another assertion,
+          some type of global variable needs to be used by the library implementation.
+          This library will automatically protect such a global variable from race
+          conditions in multi-threated programs, but this will effectively introduce
+          a global lock in the program (the <code class="computeroutput"><a class="link" href="../BOOST_CONTRACT_DISABLE_THREADS.html" title="Macro BOOST_CONTRACT_DISABLE_THREADS">BOOST_CONTRACT_DISABLE_THREADS</a></code>
+          macro can be defined to disable this global lock but at the risk of incurring
+          in race conditions).
+        </p></td></tr>
+</table></div>
+<p>
+        In general, it is recommended to specify different contract conditions using
+        separate assertion statements and not to group them together into a single
+        condition using logical operators (<code class="computeroutput"><span class="special">&amp;&amp;</span></code>,
+        <code class="computeroutput"><span class="special">||</span></code>, etc.). This is because if
+        contract conditions are programmed together using a single assertion then
+        it will not be clear which condition actually failed in case the assertion
+        is evaluated to be false at run-time.
+      </p>
+<p>
+        A limited form of Contract Programming is the use of the C-style <code class="computeroutput"><span class="identifier">assert</span></code> macro. Using <code class="computeroutput"><span class="identifier">assert</span></code>
+        is common practice for many programmers but it suffers of the following limitations:
+      </p>
+<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
+<li class="listitem">
+            <code class="computeroutput"><span class="identifier">assert</span></code> does not distinguish
+            between preconditions and postconditions. In well-tested production code,
+            postconditions can usually be disabled trusting the correctness of the
+            implementation while preconditions might still need to remain enabled
+            because of possible changes in the calling code (e.g., postconditions
+            of a given library could be disabled after testing while its preconditions
+            can be kept enabled given the library cannot predict the evolution of
+            user code that will be calling it). Using <code class="computeroutput"><span class="identifier">assert</span></code>
+            it is not possible to selectively disable only postconditions and all
+            assertions must be disabled at once.
+          </li>
+<li class="listitem">
+            <code class="computeroutput"><span class="identifier">assert</span></code> requires to manually
+            program extra code to check class invariants (e.g., extra member functions
+            and try blocks).
+          </li>
+<li class="listitem">
+            <code class="computeroutput"><span class="identifier">assert</span></code> does not support
+            subcontracting.
+          </li>
+<li class="listitem">
+            <code class="computeroutput"><span class="identifier">assert</span></code> calls are usually
+            scattered throughout the implementation thus the asserted conditions
+            are not immediately visible in their entirety by programmers.
+          </li>
+</ul></div>
+<p>
+        These limitation do not apply to Contract Programming instead.
+      </p>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost_contract.contract_programming_overview.benefits_and_costs"></a><a class="link" href="contract_programming_overview.html#boost_contract.contract_programming_overview.benefits_and_costs" title="Benefits and Costs">Benefits
+      and Costs</a>
+</h3></div></div></div>
+<h5>
+<a name="boost_contract.contract_programming_overview.benefits_and_costs.h0"></a>
+        <span class="phrase"><a name="boost_contract.contract_programming_overview.benefits_and_costs.benefits"></a></span><a class="link" href="contract_programming_overview.html#boost_contract.contract_programming_overview.benefits_and_costs.benefits">Benefits</a>
+      </h5>
+<p>
+        The main use of Contract Programming is to improve software quality. <a class="link" href="bibliography.html#Meyer97_anchor">[Meyer97]</a> discusses how Contract Programming
+        can be used as the basic tool to write <span class="quote">&#8220;<span class="quote">correct</span>&#8221;</span> software. __Stroustrup97__
+        discusses the key importance of class invariants plus advantages and disadvantages
+        of preconditions and postconditions. The following is a short summary of
+        the benefits associated with Contract Programming inspired mainly by <a class="link" href="bibliography.html#N1613_anchor">[N1613]</a>:
+      </p>
+<div class="orderedlist"><ol class="orderedlist" type="1">
+<li class="listitem">
+            Preconditions and postconditions: Using function preconditions and postconditions,
+            programmers can give a precise semantic description of what a function
+            requires at its entry and what it ensures under its exit (if it does
+            not throw an exception). In particular, using postcondition old values,
+            Contract Programming provides a mechanism that allows programmers to
+            compare values of an expression before and after the function body execution.
+            This mechanism is powerful enough to enable programmers to express many
+            correctness constraints within the code itself, constraints that would
+            otherwise have to be captured at best only informally by documentation.
+          </li>
+<li class="listitem">
+            Class invariants: Using class invariants, programmers can describe what
+            to expect from a class and the logic dependencies between the class members.
+            It is the job of the constructor to ensure that the class invariants
+            are satisfied when the object is first created. Then the implementation
+            of the member functions can be largely simplified as they can be written
+            knowing that the class invariants are satisfied because Contract Programing
+            checks them before and after the execution of every public member function.
+            Finally, the destructor makes sure that the class invariants held for
+            the entire life of the object checking the class invariants one last
+            time before the object is destructed.
+          </li>
+<li class="listitem">
+            Self-documenting code: Contracts are part of the source code, they are
+            checked at run-time so they are always up-to-date with the code itself.
+            Therefore program specifications, as documented by the contracts, can
+            be trusted to always be up-to-date with the implementation.
+          </li>
+<li class="listitem">
+            Easier debugging: Contract Programming can provide a powerful debugging
+            facility because, if contracts are well written, bugs will cause contract
+            assertions to fail exactly where the problem first occurs instead than
+            at some later stage of the program execution in an apparently unrelated
+            manner. Note that a precondition failure points to a bug in the function
+            caller, a postcondition failure points instead to a bug in the function
+            implementation. <a href="#ftn.boost_contract.contract_programming_overview.benefits_and_costs.f0" class="footnote" name="boost_contract.contract_programming_overview.benefits_and_costs.f0"><sup class="footnote">[6]</sup></a>
+          </li>
+<li class="listitem">
+            Easier testing: Contract Programming facilitates testing because a contract
+            naturally specifies what a test should check. For example, preconditions
+            of a function state which inputs cause the function to fail and postconditions
+            state which outputs are produced by the function on successful exit.
+            (That said, Contract Programming should be seen as a tool to complement
+            (and obviously not to replace) testing.)
+          </li>
+<li class="listitem">
+            Formal design: Contract Programming can serve to reduce the gap between
+            designers and programmers by providing a precise and unambiguous specification
+            language. Moreover, contracts can make code reviews easier by clarifying
+            some of the semantics and usage of the code.
+          </li>
+<li class="listitem">
+            Formalized inheritance: Contract Programming formalizes the virtual function
+            overriding mechanism using subcontracting as justified by the <a href="http://en.wikipedia.org/wiki/Liskov_substitution_principle" target="_top">substitution
+            principle</a>. This keeps the base class programmers in control as
+            overriding functions always have to fully satisfy the base class contracts.
+          </li>
+<li class="listitem">
+            Replace Defensive Programming: Contract Programming assertions can replace
+            <a href="http://en.wikipedia.org/wiki/Defensive_programming" target="_top">Defensive
+            Programming</a> checks localizing these checks within the contract
+            and making the code more readable.
+          </li>
+</ol></div>
+<h5>
+<a name="boost_contract.contract_programming_overview.benefits_and_costs.h1"></a>
+        <span class="phrase"><a name="boost_contract.contract_programming_overview.benefits_and_costs.costs"></a></span><a class="link" href="contract_programming_overview.html#boost_contract.contract_programming_overview.benefits_and_costs.costs">Costs</a>
+      </h5>
+<p>
+        In general, Contract Programming benefits come at the cost of performance
+        as discussed in detail by both __Stroustrup97__ and <a class="link" href="bibliography.html#Meyer97_anchor">[Meyer97]</a>.
+        However, while performance trade-offs should be carefully considered depending
+        on the specific application domain, software quality cannot be sacrificed:
+        it is difficult to see value in software that quickly and efficiently provides
+        incorrect results.
+      </p>
+<p>
+        The run-time performances are negatively impacted by Contract Programming
+        mainly because of extra time require to:
+      </p>
+<div class="orderedlist"><ol class="orderedlist" type="1">
+<li class="listitem">
+            Check the asserted conditions.
+          </li>
+<li class="listitem">
+            Call additional functions that specify preconditions, postconditions,
+            class invariants, etc.
+          </li>
+<li class="listitem">
+            Copy old and return values when these are used in postconditions.
+          </li>
+</ol></div>
+<p>
+        To mitigate the run-time performance impact, programmers can selectively
+        disable run-time checking of some of the contract assertions. Programmers
+        will have to decide based on the performance trade-offs required by their
+        applications, but a reasonable approach often is to:
+      </p>
+<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
+<li class="listitem">
+            Always write contracts to clarify the semantics of the design embedding
+            the specifications directly in the code and making the code self-documenting.
+          </li>
+<li class="listitem">
+            Enable preconditions, postconditions, and class invariants checking during
+            initial testing.
+          </li>
+<li class="listitem">
+            Enable only preconditions (and possibly class invariants) checking during
+            release testing and for the final release (see <a class="link" href="advanced_topics.html#boost_contract.advanced_topics.disable_contract_checking" title="Disable Contract Checking">Disable
+            Contract Checking</a>).
+          </li>
+</ul></div>
+<p>
+        This approach is usually reasonable because in well-tested production code,
+        validating the function body implementation using postconditions (and often
+        class invariants) is rarely needed since the function has shown itself to
+        be <span class="quote">&#8220;<span class="quote">correct</span>&#8221;</span> during testing. On the other hand, checking function
+        arguments using preconditions is always needed because of changes that can
+        be made to the calling code (without having to necessarily re-test and re-released
+        to called code). Furthermore, postconditions are usually computationally
+        more expensive to check than preconditions and class invariants.
+      </p>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost_contract.contract_programming_overview.function_calls"></a><a class="link" href="contract_programming_overview.html#boost_contract.contract_programming_overview.function_calls" title="Function Calls">Function
+      Calls</a>
+</h3></div></div></div>
+<h5>
+<a name="boost_contract.contract_programming_overview.function_calls.h0"></a>
+        <span class="phrase"><a name="boost_contract.contract_programming_overview.function_calls.free_functions"></a></span><a class="link" href="contract_programming_overview.html#boost_contract.contract_programming_overview.function_calls.free_functions">Free
+        Functions</a>
+      </h5>
+<p>
+        A call to a non-member function with contracts executes the following steps
+        (see also <code class="computeroutput"><a class="link" href="../boost/contract/function.html" title="Function function">boost::contract::function</a></code>):
+      </p>
+<div class="orderedlist"><ol class="orderedlist" type="1">
+<li class="listitem">
+            Check function preconditions.
+          </li>
+<li class="listitem">
+            Execute the function body.
+          </li>
+<li class="listitem">
+            If the body did not throw an exception, check function postconditions.
+          </li>
+</ol></div>
+<h5>
+<a name="boost_contract.contract_programming_overview.function_calls.h1"></a>
+        <span class="phrase"><a name="boost_contract.contract_programming_overview.function_calls.private_and_protected_member_functions"></a></span><a class="link" href="contract_programming_overview.html#boost_contract.contract_programming_overview.function_calls.private_and_protected_member_functions">Private
+        and Protected Member Functions</a>
+      </h5>
+<p>
+        In Contract Programming, Private and protected member functions do not have
+        to satisfy the class invariants (because these functions are considered part
+        of the implementation of the class). Furthermore, the <a href="http://en.wikipedia.org/wiki/Liskov_substitution_principle" target="_top">substitution
+        principle</a> does not apply to private and protected member functions
+        (because these functions are not accessible to the user at the calling site
+        where the <a href="http://en.wikipedia.org/wiki/Liskov_substitution_principle" target="_top">substitution
+        principle</a> applies).
+      </p>
+<p>
+        Therefore, calls to private and protected member functions with contracts
+        execute the same steps as the ones indicated for non-member functions above
+        (checking only preconditions and postconditions, but without checking class
+        invariants and without subcontracting).
+      </p>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost_contract.contract_programming_overview.public_function_calls"></a><a class="link" href="contract_programming_overview.html#boost_contract.contract_programming_overview.public_function_calls" title="Public Function Calls">Public
+      Function Calls</a>
+</h3></div></div></div>
+<h5>
+<a name="boost_contract.contract_programming_overview.public_function_calls.h0"></a>
+        <span class="phrase"><a name="boost_contract.contract_programming_overview.public_function_calls.overriding_public_member_functions"></a></span><a class="link" href="contract_programming_overview.html#boost_contract.contract_programming_overview.public_function_calls.overriding_public_member_functions">Overriding
+        Public Member Functions</a>
+      </h5>
+<p>
+        Let's consider a public member function in a derived class that is overriding
+        public virtual functions declared in a number of its base classes (because
+        of multiple inheritance, the function could override from more than one base
+        class). We refer to the function in the derived class as the <span class="emphasis"><em>overriding
+        function</em></span>, and to the functions being overridden in the different
+        base classes as the <span class="emphasis"><em>overridden functions</em></span>.
+      </p>
+<p>
+        Then a call to the overriding public member function with contracts executes
+        the following steps (see also <code class="computeroutput"><a class="link" href="../boost/contract/public_function_id442010.html" title="Function template public_function">boost::contract::public_function</a></code>):
+      </p>
+<div class="orderedlist"><ol class="orderedlist" type="1">
+<li class="listitem">
+            Check static class invariants <a class="link" href="contract_programming_overview.html#and_anchor"><code class="literal"><span class="emphasis"><em>AND</em></span></code></a>
+            non-static class invariants for all overridden bases, <a class="link" href="contract_programming_overview.html#and_anchor"><code class="literal"><span class="emphasis"><em>AND</em></span></code></a>
+            then check the derived class static <a class="link" href="contract_programming_overview.html#and_anchor"><code class="literal"><span class="emphasis"><em>AND</em></span></code></a>
+            non-static invariants.
+          </li>
+<li class="listitem">
+            Check preconditions of overridden public member functions from all overridden
+            bases in <a class="link" href="contract_programming_overview.html#or_anchor"><code class="literal"><span class="emphasis"><em>OR</em></span></code></a>
+            with each other, <a class="link" href="contract_programming_overview.html#or_anchor"><code class="literal"><span class="emphasis"><em>OR</em></span></code></a>
+            else check the overriding function preconditions in the derived class.
+          </li>
+<li class="listitem">
+            Executed the overriding function body.
+          </li>
+<li class="listitem">
+            Check static class invariants <a class="link" href="contract_programming_overview.html#and_anchor"><code class="literal"><span class="emphasis"><em>AND</em></span></code></a>
+            non-static class invariants for all overridden bases, <a class="link" href="contract_programming_overview.html#and_anchor"><code class="literal"><span class="emphasis"><em>AND</em></span></code></a>
+            then check the derived class static <a class="link" href="contract_programming_overview.html#and_anchor"><code class="literal"><span class="emphasis"><em>AND</em></span></code></a>
+            non-static invariants (even if the body threw an exception).
+          </li>
+<li class="listitem">
+            If the body did not throw an exception, check postconditions of overridden
+            public member functions from all overridden bases in <a class="link" href="contract_programming_overview.html#and_anchor"><code class="literal"><span class="emphasis"><em>AND</em></span></code></a>
+            with each other, <a class="link" href="contract_programming_overview.html#and_anchor"><code class="literal"><span class="emphasis"><em>AND</em></span></code></a>
+            then check the overriding function postconditions in the derived class.
+          </li>
+</ol></div>
+<p>
+        Volatile member functions check static class invariants <a class="link" href="contract_programming_overview.html#and_anchor"><code class="literal"><span class="emphasis"><em>AND</em></span></code></a>
+        volatile class invariants instead. Preconditions and postconditions of volatile
+        member functions and volatile class invariants access the object as <code class="computeroutput"><span class="keyword">volatile</span></code>.
+      </p>
+<div class="note"><table border="0" summary="Note">
+<tr>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="../../../doc/src/images/note.png"></td>
+<th align="left">Note</th>
+</tr>
+<tr><td align="left" valign="top"><p>
+          <a name="and_anchor"></a><a name="or_anchor"></a>In this documentation
+          <a class="link" href="contract_programming_overview.html#and_anchor"><code class="literal"><span class="emphasis"><em>AND</em></span></code></a>
+          and <a class="link" href="contract_programming_overview.html#or_anchor"><code class="literal"><span class="emphasis"><em>OR</em></span></code></a>
+          indicate the logic <span class="emphasis"><em>and</em></span> and <span class="emphasis"><em>or</em></span>
+          operations evaluated in <span class="emphasis"><em>short-circuit</em></span>. For example:
+          <code class="computeroutput"><span class="identifier">p</span></code> <a class="link" href="contract_programming_overview.html#and_anchor"><code class="literal"><span class="emphasis"><em>AND</em></span></code></a>
+          <code class="computeroutput"><span class="identifier">q</span></code> is true if and only if
+          both <code class="computeroutput"><span class="identifier">p</span></code> and <code class="computeroutput"><span class="identifier">q</span></code> are true, but <code class="computeroutput"><span class="identifier">q</span></code>
+          is never evaluated when <code class="computeroutput"><span class="identifier">p</span></code>
+          is false; <code class="computeroutput"><span class="identifier">p</span></code> <a class="link" href="contract_programming_overview.html#or_anchor"><code class="literal"><span class="emphasis"><em>OR</em></span></code></a>
+          <code class="computeroutput"><span class="identifier">q</span></code> is true if and only if
+          either <code class="computeroutput"><span class="identifier">p</span></code> or <code class="computeroutput"><span class="identifier">q</span></code> are true, but <code class="computeroutput"><span class="identifier">q</span></code>
+          is never evaluated when <code class="computeroutput"><span class="identifier">p</span></code>
+          is true.
+        </p></td></tr>
+</table></div>
+<p>
+        When subcontracting, overridden functions are searched (at compile-time)
+        deeply in the public branches of the inheritance tree (i.e., not just the
+        derived class's direct public parents are inspected, but also all its public
+        grandparents, etc.). In case of multiple inheritance this search extends
+        widely to all multiple public base classes following their order of declaration
+        in the derived class inheritance list (as usual in C++, this search could
+        result in multiple overridden functions and therefore in subcontracting from
+        multiple public base classes). Note that only public base classes are considered
+        for subcontracting (because private and protected base classes are not accessible
+        to the user at the calling site where the <a href="http://en.wikipedia.org/wiki/Liskov_substitution_principle" target="_top">substitution
+        principle</a> applies).
+      </p>
+<p>
+        Class invariants are checked before preconditions and postconditions so programming
+        of precondition and postcondition assertions can be simplified by assuming
+        that class invariants are satisfied already (e.g., if class invariants assert
+        that a pointer cannot be null then preconditions and postconditions can safety
+        dereference that pointer without additional checking). Similarly, subcontracting
+        checks contracts of public base classes before checking the derived class
+        contracts so programming derived class contract assertions can be simplified
+        by assuming that public base class contracts are satisfied already.
+      </p>
+<h5>
+<a name="boost_contract.contract_programming_overview.public_function_calls.h1"></a>
+        <span class="phrase"><a name="boost_contract.contract_programming_overview.public_function_calls.non_overriding_public_member_functions"></a></span><a class="link" href="contract_programming_overview.html#boost_contract.contract_programming_overview.public_function_calls.non_overriding_public_member_functions">Non-Overriding
+        Public Member Functions</a>
+      </h5>
+<p>
+        A call to a public non-static member function with contracts but that is
+        not overriding functions from any of the public base classes executes the
+        following steps (see also <code class="computeroutput"><a class="link" href="../boost/contract/public_function_id442010.html" title="Function template public_function">boost::contract::public_function</a></code>):
+      </p>
+<div class="orderedlist"><ol class="orderedlist" type="1">
+<li class="listitem">
+            Check class static <a class="link" href="contract_programming_overview.html#and_anchor"><code class="literal"><span class="emphasis"><em>AND</em></span></code></a>
+            non-static invariants (but none of the invariants from base classes).
+          </li>
+<li class="listitem">
+            Check function preconditions (but none of the preconditions from functions
+            in base classes).
+          </li>
+<li class="listitem">
+            Executed the function body.
+          </li>
+<li class="listitem">
+            Check the class static <a class="link" href="contract_programming_overview.html#and_anchor"><code class="literal"><span class="emphasis"><em>AND</em></span></code></a>
+            non-static invariants (even if the body threw an exception, but none
+            of the invariants from base classes).
+          </li>
+<li class="listitem">
+            If the body did not throw an exception, check function postconditions
+            (but none of the postconditions from functions in base classes).
+          </li>
+</ol></div>
+<p>
+        Volatile member functions check static class invariants <a class="link" href="contract_programming_overview.html#and_anchor"><code class="literal"><span class="emphasis"><em>AND</em></span></code></a>
+        volatile class invariants instead. Preconditions and postconditions of volatile
+        member functions and volatile class invariants access the object as <code class="computeroutput"><span class="keyword">volatile</span></code>.
+      </p>
+<p>
+        Class invariants are checked because this function is part of the class public
+        API. However, none of the contracts of the base classes are checked because
+        this function is not overriding functions from any of the public base classes
+        (so the <a href="http://en.wikipedia.org/wiki/Liskov_substitution_principle" target="_top">substitution
+        principle</a> does not require this function to subcontract).
+      </p>
+<h5>
+<a name="boost_contract.contract_programming_overview.public_function_calls.h2"></a>
+        <span class="phrase"><a name="boost_contract.contract_programming_overview.public_function_calls.static_public_member_functions"></a></span><a class="link" href="contract_programming_overview.html#boost_contract.contract_programming_overview.public_function_calls.static_public_member_functions">Static
+        Public Member Functions</a>
+      </h5>
+<p>
+        A call to a public static member function with contracts executes the following
+        steps (see also <code class="computeroutput"><a class="link" href="../boost/contract/public_function_id442010.html" title="Function template public_function">boost::contract::public_function</a></code>):
+      </p>
+<div class="orderedlist"><ol class="orderedlist" type="1">
+<li class="listitem">
+            Check static class invariants (but not the non-static invariants and
+            none of the invariants from base classes).
+          </li>
+<li class="listitem">
+            Check function preconditions (but none of the preconditions from function
+            in base classes).
+          </li>
+<li class="listitem">
+            Executed the function body.
+          </li>
+<li class="listitem">
+            Check static class invariants (even if the body threw an exception, but
+            not the non-static invariants and none of the invariants from base classes).
+          </li>
+<li class="listitem">
+            If the body did not throw an exception, check function postconditions
+            (but none of the postconditions from functions in base classes).
+          </li>
+</ol></div>
+<p>
+        Class invariants are checked because this function is part of the class public
+        API, but only static class invariants can be checked (because this is a static
+        function so it cannot access the object that would instead be required to
+        check non-static class invariants). Furthermore, static functions cannot
+        override any function so the <a href="http://en.wikipedia.org/wiki/Liskov_substitution_principle" target="_top">substitution
+        principle</a> does not apply and they do not subcontract.
+      </p>
+<p>
+        Preconditions, postconditions, and class invariants of static member functions
+        cannot access the object (because they are <code class="computeroutput"><span class="keyword">static</span></code>
+        members).
+      </p>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost_contract.contract_programming_overview.constructor_calls"></a><a class="link" href="contract_programming_overview.html#boost_contract.contract_programming_overview.constructor_calls" title="Constructor Calls">Constructor
+      Calls</a>
+</h3></div></div></div>
+<p>
+        A call to a constructor with contracts executes the following steps (see
+        also <code class="computeroutput"><a class="link" href="../boost/contract/constructor_precondition.html" title="Class template constructor_precondition">boost::contract::constructor_precondition</a></code>
+        and <code class="computeroutput"><a class="link" href="../boost/contract/constructor.html" title="Function template constructor">boost::contract::constructor</a></code>):
+      </p>
+<div class="orderedlist"><ol class="orderedlist" type="1">
+<li class="listitem">
+            Check constructor preconditions (but these cannot access the object because
+            the object is not constructed yet).
+          </li>
+<li class="listitem">
+            Execute the constructor member initialization list (if present).
+            <div class="orderedlist"><ol class="orderedlist" type="a"><li class="listitem">
+                  Construct any base class (public or not) according with C++ construction
+                  mechanism and also check the contracts of these base constructors
+                  (according with steps similar to the ones listed here).
+                </li></ol></div>
+          </li>
+<li class="listitem">
+            Check static class invariants (but not the non-static or volatile class
+            invariants, because the object is not constructed yet).
+          </li>
+<li class="listitem">
+            Execute the constructor body.
+          </li>
+<li class="listitem">
+            Check static class invariants (even if the body threw an exception).
+          </li>
+<li class="listitem">
+            If the body did not throw an exception:
+            <div class="orderedlist"><ol class="orderedlist" type="a">
+<li class="listitem">
+                  Check non-static <a class="link" href="contract_programming_overview.html#and_anchor"><code class="literal"><span class="emphasis"><em>AND</em></span></code></a>
+                  volatile class invariants (because the object is now successfully
+                  constructed).
+                </li>
+<li class="listitem">
+                  Check constructor postconditions (but these cannot access the object
+                  old value because there was no object before the execution of the
+                  constructor body).
+                </li>
+</ol></div>
+          </li>
+</ol></div>
+<p>
+        Constructor preconditions are checked before executing the member initialization
+        list so that programming these initializations can be simplified assuming
+        the constructor preconditions are satisfied (e.g., constructor arguments
+        can be validated by the constructor preconditions before they are used to
+        initialize bases and data members).
+      </p>
+<p>
+        As indicated in the steps above, C++ object construction mechanism will automatically
+        check base class contracts when these bases are initialized (no explicit
+        subcontracting behaviour is required).
+      </p>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost_contract.contract_programming_overview.destructor_calls"></a><a class="link" href="contract_programming_overview.html#boost_contract.contract_programming_overview.destructor_calls" title="Destructor Calls">Destructor
+      Calls</a>
+</h3></div></div></div>
+<p>
+        A call to a destructor with contracts executes the following steps (see also
+        <code class="computeroutput"><a class="link" href="../boost/contract/destructor.html" title="Function template destructor">boost::contract::destructor</a></code>):
+      </p>
+<div class="orderedlist"><ol class="orderedlist" type="1">
+<li class="listitem">
+            Check static class invariants <a class="link" href="contract_programming_overview.html#and_anchor"><code class="literal"><span class="emphasis"><em>AND</em></span></code></a>
+            non-static <a class="link" href="contract_programming_overview.html#and_anchor"><code class="literal"><span class="emphasis"><em>AND</em></span></code></a>
+            volatile class invariants.
+          </li>
+<li class="listitem">
+            Execute the destructor body (destructors have no parameters and they
+            can be called at any time after object construction so they have no preconditions).
+          </li>
+<li class="listitem">
+            Check static class invariants (even if the body threw an exception).
+          </li>
+<li class="listitem">
+            If the body threw an exception, check non-static class invariants (because
+            the object was not successfully destructed so it still exists and should
+            satisfy its invariants).
+          </li>
+<li class="listitem">
+            If the body did not throw an exception:
+            <div class="orderedlist"><ol class="orderedlist" type="a">
+<li class="listitem">
+                  Check destructor postconditions (but these can only access the
+                  class static members because there is no object after successful
+                  execution of the destructor body). <a href="#ftn.boost_contract.contract_programming_overview.destructor_calls.f0" class="footnote" name="boost_contract.contract_programming_overview.destructor_calls.f0"><sup class="footnote">[7]</sup></a>
+                </li>
+<li class="listitem">
+                  Destroy any base class (public or not) according with C++ destruction
+                  mechanism and also check the contracts of these base destructors
+                  (according with steps similar to the ones listed here).
+                </li>
+</ol></div>
+          </li>
+</ol></div>
+<p>
+        As indicated in the steps above, C++ object destruction mechanism will automatically
+        check base class contracts when the destructor exits without throwing an
+        exception (no explicit subcontracting behaviour is required).
+      </p>
+<div class="note"><table border="0" summary="Note">
+<tr>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="../../../doc/src/images/note.png"></td>
+<th align="left">Note</th>
+</tr>
+<tr><td align="left" valign="top"><p>
+          Given that C++ allows destructors to throw, this library handles the cases
+          when destructor bodies throw exceptions as indicated above. However, in
+          order to comply with STL exception safety guarantees and good C++ programming
+          practices, users should program destructor bodies to never throw.
+        </p></td></tr>
+</table></div>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost_contract.contract_programming_overview.constant_correctness"></a><a class="link" href="contract_programming_overview.html#boost_contract.contract_programming_overview.constant_correctness" title="Constant-Correctness">Constant-Correctness</a>
+</h3></div></div></div>
+<p>
+        Contracts are only responsible to check the program state in oder to ensure
+        its compliance with the specifications. Therefore, contracts should only
+        have access to the object, function arguments, function return value, old
+        values, and all other program variables in <code class="computeroutput"><span class="keyword">const</span></code>
+        context (via <code class="computeroutput"><span class="keyword">const</span><span class="special">&amp;</span></code>,
+        <code class="computeroutput"><span class="keyword">const</span><span class="special">*</span>
+        <span class="keyword">const</span></code>, etc.).
+      </p>
+<p>
+        Whenever possible (e.g., class invariants and postcondition old values),
+        this library automatically enforces this constant-correctness constraint
+        at compile-time using <code class="computeroutput"><span class="keyword">const</span></code>.
+        However, this library cannot automatically enforce this constraint in all
+        cases (e.g., for preconditions and postconditions of mutable member functions,
+        for global variables, etc.). Ultimately, it is the responsibility of the
+        users to program assertions that do <span class="emphasis"><em>not</em></span> change program
+        variables (the same limitation exists with the C-style <code class="computeroutput"><span class="identifier">assert</span></code>
+        mechanism).
+      </p>
+<p>
+        See <a class="link" href="advanced_topics.html#boost_contract.advanced_topics.no_lambda_functions__no_c__11_" title="No Lambda Functions (No C++11)">No
+        Lambda Functions</a> for information on how to use this library to always
+        enforce the constant-correctness constraint at compile-time (but these methods
+        require a significant amount of boiler-plate code to be programmed manually
+        so they are not recommended).
+      </p>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost_contract.contract_programming_overview.specification_and_implementation"></a><a class="link" href="contract_programming_overview.html#boost_contract.contract_programming_overview.specification_and_implementation" title="Specification and Implementation">Specification
+      and Implementation</a>
+</h3></div></div></div>
+<p>
+        Contracts are part of the program specification and not of its implementation.
+        Therefore, contracts should ideally be programmed within C++ declarations,
+        and not within definitions.
+      </p>
+<p>
+        In general, this library cannot satisfy this requirement but even when the
+        contracts are programmed together with the body in the function definition,
+        it is still very easy for users to identify and read just the contract portion
+        of the function definition (because that must always appear at the very top
+        of the function code). See <a class="link" href="advanced_topics.html#boost_contract.advanced_topics.separate_body_implementation" title="Separate Body Implementation">Separate
+        Body Implementation</a> for information on how to separate contract specification
+        from body implementation at the cost of programming an extra function (for
+        applications were this requirement is truly important).
+      </p>
+<p>
+        Furthermore, contracts are most useful when they assert conditions only using
+        public members (in most cases, the need of using non-public members to check
+        contracts indicates an error in the design of the class).
+      </p>
+<p>
+        For example, the caller of a public member function cannot in general make
+        sure that the function preconditions are satisfied if the precondition assertions
+        use private members that are not callable by the caller (therefore, a failure
+        in the preconditions will not necessarily indicate a bug in the caller given
+        that the caller was made unable to fully check the preconditions in the first
+        place). However, given that C++ provides programmers ways around access level
+        restrictions (<code class="computeroutput"><span class="keyword">friend</span></code>, function
+        pointers, etc.), this library leaves it up to the programmers to make sure
+        that only public members are used in contract assertions (<a class="link" href="bibliography.html#N1962_anchor">[N1962]</a>
+        follows the same approach not restricting contracts to only use public members,
+        Eiffel instead generates a compiler error if precondition assertions use
+        non-public members). <a href="#ftn.boost_contract.contract_programming_overview.specification_and_implementation.f0" class="footnote" name="boost_contract.contract_programming_overview.specification_and_implementation.f0"><sup class="footnote">[8]</sup></a>
+      </p>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost_contract.contract_programming_overview.on_contract_failure"></a><a class="link" href="contract_programming_overview.html#boost_contract.contract_programming_overview.on_contract_failure" title="On Contract Failure">On
+      Contract Failure</a>
+</h3></div></div></div>
+<p>
+        If either preconditions, postconditions, or class invariants throw exceptions
+        or their assertions are checked to be false at run-time then specific failure
+        handler functions are automatically invoked by this library.
+      </p>
+<p>
+        By default, these failure handler functions print a text message to the standard
+        error <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">cerr</span></code> (with detailed information about the
+        failure) and then terminate the program calling <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">terminate</span></code>.
+        However, using <code class="computeroutput">boost::contract::set_precondition_failure</code>,
+        <code class="computeroutput">boost::contract::set_postcondition_failure</code>,
+        <code class="computeroutput">boost::contract::set_invariant_failure</code>,
+        etc. programmers can define their own failure handler functions that can
+        take any desired action (throw an exception, exit the program with an error
+        code, etc., see <a class="link" href="advanced_topics.html#boost_contract.advanced_topics.throw_on_failure" title="Throw on Failure">Throw
+        on Failure</a>). <a href="#ftn.boost_contract.contract_programming_overview.on_contract_failure.f0" class="footnote" name="boost_contract.contract_programming_overview.on_contract_failure.f0"><sup class="footnote">[9]</sup></a>
+      </p>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost_contract.contract_programming_overview.features"></a><a class="link" href="contract_programming_overview.html#boost_contract.contract_programming_overview.features" title="Features">Features</a>
+</h3></div></div></div>
+<p>
+        The Contract Programming features supported by this library are largely based
+        on <a class="link" href="bibliography.html#N1962_anchor">[N1962]</a> and on the Eiffel programming
+        language. The following table compares this library features with the <a class="link" href="bibliography.html#N1962_anchor">[N1962]</a> proposal for adding Contract Programming
+        to the C++ standard, <a href="#ftn.boost_contract.contract_programming_overview.features.f0" class="footnote" name="boost_contract.contract_programming_overview.features.f0"><sup class="footnote">[10]</sup></a> the Eiffel programming language (see <a class="link" href="bibliography.html#Meyer97_anchor">[Meyer97]</a>),
+        and the D programming language (see <a class="link" href="bibliography.html#Bright04_anchor">[Bright04]</a>).
+      </p>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+<col>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                <p>
+                  Feature
+                </p>
+              </th>
+<th>
+                <p>
+                  This Library
+                </p>
+              </th>
+<th>
+                <p>
+                  [N1962] Proposal (not part of C++)
+                </p>
+              </th>
+<th>
+                <p>
+                  ISE Eiffel 5.4
+                </p>
+              </th>
+<th>
+                <p>
+                  D
+                </p>
+              </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+                <p>
+                  <span class="emphasis"><em>Keywords and specifiers</em></span>
+                </p>
+              </td>
+<td>
+                <p>
+                  Specifiers: <code class="computeroutput"><span class="identifier">precondition</span></code>,
+                  <code class="computeroutput"><span class="identifier">postcondition</span></code>,
+                  <code class="computeroutput"><span class="identifier">invariant</span></code>, <code class="computeroutput"><span class="identifier">static_invariant</span></code>, and <code class="computeroutput"><span class="identifier">base_types</span></code>.
+                </p>
+                <p>
+                  (The last three specifiers appear in user code so their names can
+                  be changed using <code class="computeroutput"><a class="link" href="../BOOST_CONTRACT_INVARIANT.html" title="Macro BOOST_CONTRACT_INVARIANT">BOOST_CONTRACT_INVARIANT</a></code>,
+                  <code class="computeroutput"><a class="link" href="../BOOST_CONTRACT_STATIC_INVARIANT.html" title="Macro BOOST_CONTRACT_STATIC_INVARIANT">BOOST_CONTRACT_STATIC_INVARIANT</a></code>,
+                  and <code class="computeroutput"><a class="link" href="../BOOST_CONTRACT_BASE_TYPEDEF.html" title="Macro BOOST_CONTRACT_BASE_TYPEDEF">BOOST_CONTRACT_BASE_TYPEDEF</a></code>
+                  macros respectively to avoid name clashes in user code.)
+                </p>
+              </td>
+<td>
+                <p>
+                  Keywords: <code class="computeroutput"><span class="identifier">precondition</span></code>,
+                  <code class="computeroutput"><span class="identifier">postcondition</span></code>,
+                  <code class="computeroutput"><span class="identifier">oldof</span></code>, and <code class="computeroutput"><span class="identifier">invariant</span></code>.
+                </p>
+              </td>
+<td>
+                <p>
+                  Keywords: <code class="literal">require</code>, <code class="literal">require else</code>,
+                  <code class="literal">ensure</code>, <code class="literal">ensure then</code>, <code class="literal">old</code>,
+                  <code class="literal">result</code>, <code class="literal">do</code>, and <code class="literal">invariant</code>.
+                </p>
+              </td>
+<td>
+                <p>
+                  Keywords: <code class="literal">in</code>, <code class="literal">out</code>, <code class="literal">assert</code>,
+                  and <code class="literal">invariant</code>.
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <span class="emphasis"><em>On contract failure</em></span>
+                </p>
+              </td>
+<td>
+                <p>
+                  Print an error to <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">cerr</span></code>
+                  and call <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">terminate</span></code> (but can be customized
+                  to throw exceptions, exit with an error code, etc.).
+                </p>
+              </td>
+<td>
+                <p>
+                  Call <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">terminate</span></code> (but can be customized
+                  to throw exceptions, exit with an error code, etc.).
+                </p>
+              </td>
+<td>
+                <p>
+                  Throw exceptions.
+                </p>
+              </td>
+<td>
+                <p>
+                  Throw exceptions.
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <span class="emphasis"><em>Result value in postconditions</em></span>
+                </p>
+              </td>
+<td>
+                <p>
+                  Yes, captured by or passed as a parameter to (for virtual functions)
+                  the postcondition functor.
+                </p>
+              </td>
+<td>
+                <p>
+                  Yes, <code class="computeroutput"><span class="identifier">postcondition</span><span class="special">(</span></code><code class="literal"><span class="emphasis"><em>result-variable-name</em></span></code><code class="computeroutput"><span class="special">)</span></code>.
+                </p>
+              </td>
+<td>
+                <p>
+                  Yes, <code class="literal">result</code> keyword.
+                </p>
+              </td>
+<td>
+                <p>
+                  No.
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <span class="emphasis"><em>Old values in postconditions</em></span>
+                </p>
+              </td>
+<td>
+                <p>
+                  Yes, <code class="computeroutput"><a class="link" href="../BOOST_CONTRACT_OLDOF.html" title="Macro BOOST_CONTRACT_OLDOF">BOOST_CONTRACT_OLDOF</a></code>
+                  macro.
+                </p>
+              </td>
+<td>
+                <p>
+                  Yes, <code class="computeroutput"><span class="identifier">oldof</span></code> keyword.
+                </p>
+              </td>
+<td>
+                <p>
+                  Yes, <code class="literal">old</code> keyword.
+                </p>
+              </td>
+<td>
+                <p>
+                  No.
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <span class="emphasis"><em>Class invariants</em></span>
+                </p>
+              </td>
+<td>
+                <p>
+                  Checked at constructor exit, at destructor entry and throw, and
+                  at public member function entry, exit, and throw. Same for volatile
+                  class invariants. Static class invariants checked at entry and
+                  exit of constructor, destructor, and any (also <code class="computeroutput"><span class="keyword">static</span></code>)
+                  public member function.
+                </p>
+              </td>
+<td>
+                <p>
+                  Checked at constructor exit, at destructor entry and throw, and
+                  at public member function entry, exit, and throw. Volatile and
+                  static class invariants not supported.
+                </p>
+              </td>
+<td>
+                <p>
+                  Checked at constructor exit, and around public member functions.
+                  (Volatile and static class invariants do not apply to Eiffel.)
+                </p>
+              </td>
+<td>
+                <p>
+                  Checked at constructor exit, at destructor entry, and around public
+                  member functions. Volatile and static class invariants not supported
+                  (<code class="computeroutput"><span class="keyword">volatile</span></code> was deprecated
+                  all together in D).
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <span class="emphasis"><em>Subcontracting</em></span>
+                </p>
+              </td>
+<td>
+                <p>
+                  Yes, also support subcontracting for multiple inheritance (<code class="computeroutput"><a class="link" href="../BOOST_CONTRACT_BASE_TYPES.html" title="Macro BOOST_CONTRACT_BASE_TYPES">BOOST_CONTRACT_BASE_TYPES</a></code>,
+                  <code class="computeroutput"><a class="link" href="../BOOST_CONTRACT_OVERRIDE.html" title="Macro BOOST_CONTRACT_OVERRIDE">BOOST_CONTRACT_OVERRIDE</a></code>,
+                  and <code class="computeroutput"><a class="link" href="../boost/contract/virtual_.html" title="Class virtual_">boost::contract::virtual_</a></code>
+                  are used when declaring base classes, overriding and virtual public
+                  member functions respectively).
+                </p>
+              </td>
+<td>
+                <p>
+                  Yes, also support subcontracting for multiple inheritance. Only
+                  base classes can specify preconditions. <a href="#ftn.boost_contract.contract_programming_overview.features.f1" class="footnote" name="boost_contract.contract_programming_overview.features.f1"><sup class="footnote">[a]</sup></a>
+                </p>
+              </td>
+<td>
+                <p>
+                  Yes.
+                </p>
+              </td>
+<td>
+                <p>
+                  Yes.
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <span class="emphasis"><em>Contracts for pure virtual functions</em></span>
+                </p>
+              </td>
+<td>
+                <p>
+                  Yes (but they must be programmed in out-of-line functions as always
+                  in C++ with pure virtual function definitions).
+                </p>
+              </td>
+<td>
+                <p>
+                  Yes.
+                </p>
+              </td>
+<td>
+                <p>
+                  Yes (contracts for abstract functions).
+                </p>
+              </td>
+<td>
+                <p>
+                  No (but planned).
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <span class="emphasis"><em>Arbitrary code in contracts</em></span>
+                </p>
+              </td>
+<td>
+                <p>
+                  Yes (but users are generally recommended to only program assertions
+                  using <code class="computeroutput"><a class="link" href="../BOOST_CONTRACT_ASSERT.html" title="Macro BOOST_CONTRACT_ASSERT">BOOST_CONTRACT_ASSERT</a></code>
+                  and if-guard statements within contracts to avoid introducing bugs
+                  and expensive code in contracts, and also to only use public functions
+                  to program preconditions).
+                </p>
+              </td>
+<td>
+                <p>
+                  No, assertions only.
+                </p>
+              </td>
+<td>
+                <p>
+                  No, assertions only. In addition only public members can be used
+                  in preconditions.
+                </p>
+              </td>
+<td>
+                <p>
+                  Yes.
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <span class="emphasis"><em>Constant-correctness</em></span>
+                </p>
+              </td>
+<td>
+                <p>
+                  Enforced only for class invariants and old values (making also
+                  preconditions and postconditions constant-correct is possible but
+                  requires users to program a fare amount of boiler-plate code, see
+                  <a class="link" href="advanced_topics.html#boost_contract.advanced_topics.no_lambda_functions__no_c__11_" title="No Lambda Functions (No C++11)">No
+                  Lambda Functions</a>).
+                </p>
+              </td>
+<td>
+                <p>
+                  Yes.
+                </p>
+              </td>
+<td>
+                <p>
+                  Yes.
+                </p>
+              </td>
+<td>
+                <p>
+                  No.
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <span class="emphasis"><em>Function code ordering</em></span>
+                </p>
+              </td>
+<td>
+                <p>
+                  Preconditions, postconditions, body.
+                </p>
+              </td>
+<td>
+                <p>
+                  Preconditions, postconditions, body.
+                </p>
+              </td>
+<td>
+                <p>
+                  Preconditions, body, postconditions.
+                </p>
+              </td>
+<td>
+                <p>
+                  Preconditions, postconditions, body.
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <span class="emphasis"><em>Disable assertion checking within assertions checking
+                  (to avoid infinite recursion when checking contracts)</em></span>
+                </p>
+              </td>
+<td>
+                <p>
+                  Yes, but use <code class="computeroutput"><a class="link" href="../BOOST_CONTRACT_PRECONDITIONS_DISABLE_NO_ASSERTION.html" title="Macro BOOST_CONTRACT_PRECONDITIONS_DISABLE_NO_ASSERTION">BOOST_CONTRACT_PRECONDITIONS_DISABLE_NO_ASSERTION</a></code>
+                  to disable no assertion while checking preconditions. <a href="#ftn.boost_contract.contract_programming_overview.features.f2" class="footnote" name="boost_contract.contract_programming_overview.features.f2"><sup class="footnote">[b]</sup></a> (In multi-threaded programs this introduces a global
+                  lock, see also the <code class="computeroutput"><a class="link" href="../BOOST_CONTRACT_DISABLE_THREADS.html" title="Macro BOOST_CONTRACT_DISABLE_THREADS">BOOST_CONTRACT_DISABLE_THREADS</a></code>
+                  macro.)
+                </p>
+              </td>
+<td>
+                <p>
+                  Yes for class invariants and postconditions, but preconditions
+                  disable no assertion.
+                </p>
+              </td>
+<td>
+                <p>
+                  Yes.
+                </p>
+              </td>
+<td>
+                <p>
+                  No.
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <span class="emphasis"><em>Nested member function calls</em></span>
+                </p>
+              </td>
+<td>
+                <p>
+                  Disable nothing. <a href="#ftn.boost_contract.contract_programming_overview.features.f3" class="footnote" name="boost_contract.contract_programming_overview.features.f3"><sup class="footnote">[c]</sup></a>
+                </p>
+              </td>
+<td>
+                <p>
+                  Disable nothing.
+                </p>
+              </td>
+<td>
+                <p>
+                  Disable all contract assertions.
+                </p>
+              </td>
+<td>
+                <p>
+                  Disable nothing.
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <span class="emphasis"><em>Disable contract checking</em></span>
+                </p>
+              </td>
+<td>
+                <p>
+                  Yes, contract checking can be skipped at run-time by defining combinations
+                  of the <code class="computeroutput"><a class="link" href="../BOOST_CONTRACT_NO_PRECONDITIONS.html" title="Macro BOOST_CONTRACT_NO_PRECONDITIONS">BOOST_CONTRACT_NO_PRECONDITIONS</a></code>,
+                  <code class="computeroutput"><a class="link" href="../BOOST_CONTRACT_NO_POSTCONDITIONS.html" title="Macro BOOST_CONTRACT_NO_POSTCONDITIONS">BOOST_CONTRACT_NO_POSTCONDITIONS</a></code>,
+                  <code class="computeroutput"><a class="link" href="../BOOST_CONTRACT_NO_INVARIANTS.html" title="Macro BOOST_CONTRACT_NO_INVARIANTS">BOOST_CONTRACT_NO_INVARIANTS</a></code>,
+                  <code class="computeroutput"><a class="link" href="../BOOST_CONTRACT_NO_ENTRY_INVARIANTS.html" title="Macro BOOST_CONTRACT_NO_ENTRY_INVARIANTS">BOOST_CONTRACT_NO_ENTRY_INVARIANTS</a></code>,
+                  and <code class="computeroutput"><a class="link" href="../BOOST_CONTRACT_NO_EXIT_INVARIANTS.html" title="Macro BOOST_CONTRACT_NO_EXIT_INVARIANTS">BOOST_CONTRACT_NO_EXIT_INVARIANTS</a></code>
+                  macros. (Also removing contract code from compiled object code
+                  is possible but requires users to program a fare amount of boiler-plate
+                  code, see <a class="link" href="advanced_topics.html#boost_contract.advanced_topics.disable_contract_checking" title="Disable Contract Checking">Disable
+                  Contract Checking</a>.)
+                </p>
+              </td>
+<td>
+                <p>
+                  Yes (contract code also removed from compiled object code).
+                </p>
+              </td>
+<td>
+                <p>
+                  Yes, but only predefined combinations of preconditions, postconditions,
+                  and class invariants can be disabled (contract code also removed
+                  from compiled object code).
+                </p>
+              </td>
+<td>
+                <p>
+                  Yes.
+                </p>
+              </td>
+</tr>
+</tbody>
+<tbody class="footnotes"><tr><td colspan="5">
+<div id="ftn.boost_contract.contract_programming_overview.features.f1" class="footnote"><p><a href="#boost_contract.contract_programming_overview.features.f1" class="para"><sup class="para">[a] </sup></a>
+                    <span class="bold"><strong>Rationale:</strong></span> The authors of <a class="link" href="bibliography.html#N1962_anchor">[N1962]</a> decided to forbid derived
+                    classes from subcontracting preconditions because they found
+                    such a feature rarely if ever used (see <a href="http://lists.boost.org/Archives/boost/2010/04/164862.php" target="_top">Re:
+                    [boost] [contract] diff n1962</a>). Still, it should be noted
+                    that even in <a class="link" href="bibliography.html#N1962_anchor">[N1962]</a> if a
+                    derived class overrides two functions with preconditions coming
+                    from two different base classes via multiple inheritance, the
+                    overriding function contract will check preconditions from its
+                    two base function in <a class="link" href="contract_programming_overview.html#or_anchor"><code class="literal"><span class="emphasis"><em>OR</em></span></code></a>
+                    (so even in <a class="link" href="bibliography.html#N1962_anchor">[N1962]</a> preconditions
+                    can indirectly be subcontracted by the derived class when multiple
+                    inheritance is used). The authors of this library found that
+                    confusing about <a class="link" href="bibliography.html#N1962_anchor">[N1962]</a>.
+                    Furthermore, subcontracting preconditions is soundly defined
+                    by the <a href="http://en.wikipedia.org/wiki/Liskov_substitution_principle" target="_top">substitution
+                    principle</a> so this library allows to subcontract preconditions
+                    as Eiffel does (users can alway avoid using such a feature if
+                    they have no need for it). (This is essentially the only feature
+                    on which this library deliberately differ from <a class="link" href="bibliography.html#N1962_anchor">[N1962]</a>.)
+                  </p></div>
+<div id="ftn.boost_contract.contract_programming_overview.features.f2" class="footnote"><p><a href="#boost_contract.contract_programming_overview.features.f2" class="para"><sup class="para">[b] </sup></a>
+                    <span class="bold"><strong>Rationale:</strong></span> Theoretically, it
+                    can be shown that an incorrect argument might be passed to the
+                    function body when assertion checking is disabled while checking
+                    preconditions (see <a href="http://lists.boost.org/Archives/boost/2010/04/164862.php" target="_top">Re:
+                    [boost] [contract] diff n1962</a>). Therefore, <a class="link" href="bibliography.html#N1962_anchor">[N1962]</a>
+                    does not disable any assertion while checking preconditions.
+                    However, that makes it possible to have infinite recursion while
+                    checking preconditions, plus Eiffel disables assertion checking
+                    also while checking preconditions. Therefore, this library by
+                    default disables assertion checking also while checking preconditions,
+                    but it also provides the <code class="computeroutput"><a class="link" href="../BOOST_CONTRACT_PRECONDITIONS_DISABLE_NO_ASSERTION.html" title="Macro BOOST_CONTRACT_PRECONDITIONS_DISABLE_NO_ASSERTION">BOOST_CONTRACT_PRECONDITIONS_DISABLE_NO_ASSERTION</a></code>
+                    configuration macro so users can change this behaviour if needed.
+                  </p></div>
+<div id="ftn.boost_contract.contract_programming_overview.features.f3" class="footnote"><p><a href="#boost_contract.contract_programming_overview.features.f3" class="para"><sup class="para">[c] </sup></a>
+                    <span class="bold"><strong>Rationale:</strong></span> Older versions of
+                    this library defined a data member in the user class that was
+                    automatically used to disable checking of class invariants within
+                    nested member function calls (similarly to Eiffel). This feature
+                    was also required by older revisions of <a class="link" href="bibliography.html#N1962_anchor">[N1962]</a>
+                    but it is no longer required by <a class="link" href="bibliography.html#N1962_anchor">[N1962]</a>.
+                    Furthermore, in multi-threaded programs this feature would introduce
+                    a lock that synchronizes all member functions calls for a given
+                    object. Therefore, this feature was removed in the current revision
+                    of this library.
+                  </p></div>
+</td></tr></tbody>
+</table></div>
+<p>
+        The authors of this library also consulted the following references that
+        implement Contract Programming for C++ (but usually for a somewhat limited
+        subset of the features above) or for other languages (see <a class="link" href="bibliography.html" title="Bibliography">Bibliography</a>
+        for a complete list of all the references consulted in the design and development
+        of this library):
+      </p>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                <p>
+                  Reference
+                </p>
+              </th>
+<th>
+                <p>
+                  Language
+                </p>
+              </th>
+<th>
+                <p>
+                  Notes
+                </p>
+              </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+                <p>
+                  <a class="link" href="bibliography.html#Bright04b_anchor">[Bright04b]</a>
+                </p>
+              </td>
+<td>
+                <p>
+                  C++
+                </p>
+              </td>
+<td>
+                <p>
+                  The Digital Mars C++ compiler extends C++ adding Contract Programming
+                  language support (among many other features).
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <a class="link" href="bibliography.html#Lindrud04_anchor">[Lindrud04]</a>
+                </p>
+              </td>
+<td>
+                <p>
+                  C++
+                </p>
+              </td>
+<td>
+                <p>
+                  This supports class invariants and old values but it does not support
+                  subcontracting (contracts are specified within definitions instead
+                  of declarations and assertions are not constant-correct).
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <a class="link" href="bibliography.html#Tandin04_anchor">[Tandin04]</a>
+                </p>
+              </td>
+<td>
+                <p>
+                  C++
+                </p>
+              </td>
+<td>
+                <p>
+                  Interestingly, these contract macros automatically generate Doxygen
+                  documentation <a href="#ftn.boost_contract.contract_programming_overview.features.f4" class="footnote" name="boost_contract.contract_programming_overview.features.f4"><sup class="footnote">[a]</sup></a> but old values, class invariants, and subcontracting
+                  are not supported (plus contracts are specified within definitions
+                  instead of declarations and assertions are not constant-correct).
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <a class="link" href="bibliography.html#Maley99_anchor">[Maley99]</a>
+                </p>
+              </td>
+<td>
+                <p>
+                  C++
+                </p>
+              </td>
+<td>
+                <p>
+                  This supports Contract Programming including subcontracting but
+                  with limitations (e.g., programmers need to manually build an inheritance
+                  tree using artificial template parameters), it does not use macros
+                  but programmers are required to write by hand a significant amount
+                  of boiler-plate code. (The authors have found this work very inspiring
+                  when developing initial revisions of this library especially for
+                  the attempt to support subcontracting.)
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <a class="link" href="bibliography.html#C2_anchor">[C2]</a>
+                </p>
+              </td>
+<td>
+                <p>
+                  C++
+                </p>
+              </td>
+<td>
+                <p>
+                  This uses an external preprocessing tool (the authors could no
+                  longer find this project's code to evaluate it).
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <a class="link" href="bibliography.html#iContract_anchor">[iContract]</a>
+                </p>
+              </td>
+<td>
+                <p>
+                  Java
+                </p>
+              </td>
+<td>
+                <p>
+                  This uses an external preprocessing tool.
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <a class="link" href="bibliography.html#Jcontract_anchor">[Jcontract]</a>
+                </p>
+              </td>
+<td>
+                <p>
+                  Java
+                </p>
+              </td>
+<td>
+                <p>
+                  This uses an external preprocessing tool.
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <a class="link" href="bibliography.html#CodeContracts_anchor">[CodeContracts]</a>
+                </p>
+              </td>
+<td>
+                <p>
+                  .NET
+                </p>
+              </td>
+<td>
+                <p>
+                  Microsoft Contract Programming for .NET programming languages.
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <a class="link" href="bibliography.html#SpecSharp_anchor">[SpecSharp]</a>
+                </p>
+              </td>
+<td>
+                <p>
+                  C#
+                </p>
+              </td>
+<td>
+                <p>
+                  This is a C# extension with Contract Programming language support.
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <a class="link" href="bibliography.html#Chrome02_anchor">[Chrome02]</a>
+                </p>
+              </td>
+<td>
+                <p>
+                  Object Pascal
+                </p>
+              </td>
+<td>
+                <p>
+                  This is the .NET version of Object Pascal and it has language support
+                  for Contract Programming.
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <a class="link" href="bibliography.html#SPARKAda_anchor">[SPARKAda]</a>
+                </p>
+              </td>
+<td>
+                <p>
+                  Ada
+                </p>
+              </td>
+<td>
+                <p>
+                  This is an Ada-like programming language with support for Contract
+                  Programming.
+                </p>
+              </td>
+</tr>
+</tbody>
+<tbody class="footnotes"><tr><td colspan="3"><div id="ftn.boost_contract.contract_programming_overview.features.f4" class="footnote"><p><a href="#boost_contract.contract_programming_overview.features.f4" class="para"><sup class="para">[a] </sup></a>
+                    <span class="bold"><strong>Rationale:</strong></span> Older versions of
+                    this library used to automatically generate Doxygen documentation
+                    from contract definition macros. This functionality was abandoned
+                    for a number of reasons: this library no longer uses macros to
+                    program contracts; even before that, this library macros became
+                    too complex and the Doxygen preprocessor was no longer able to
+                    expand them; the Doxygen documentation was just a repeat of the
+                    contract code (so programmers could directly look at contracts
+                    in the source code); Doxygen might not necessarily be the documentation
+                    tool used by all C++ programmers.
+                  </p></div></td></tr></tbody>
+</table></div>
+<p>
+        Typically, preprocessing tools external to the language work by transforming
+        specially formatted code comments into contract code that is then checked
+        at run-time. One of this library primary goals was to support Contract Programming
+        entirely <span class="emphasis"><em>within C++</em></span> and without using any tool external
+        to the standard language itself.
+      </p>
+<p>
+        To the authors' knowledge, this the only library that fully supports all
+        Contract Programming features for C++. <a href="#ftn.boost_contract.contract_programming_overview.features.f5" class="footnote" name="boost_contract.contract_programming_overview.features.f5"><sup class="footnote">[11]</sup></a>
+      </p>
+</div>
+<div class="footnotes">
+<br><hr style="width:100; text-align:left;margin-left: 0">
+<div id="ftn.boost_contract.contract_programming_overview.assertions.f0" class="footnote"><p><a href="#boost_contract.contract_programming_overview.assertions.f0" class="para"><sup class="para">[5] </sup></a>
+              <span class="bold"><strong>Rationale:</strong></span> Static and volatile class
+              invariants were first introduced by this library to reflect the fact
+              that C++ supports both static and volatile member functions. Static
+              and volatile class invariants are not part of <a class="link" href="bibliography.html#N1962_anchor">[N1962]</a>.
+            </p></div>
+<div id="ftn.boost_contract.contract_programming_overview.benefits_and_costs.f0" class="footnote"><p><a href="#boost_contract.contract_programming_overview.benefits_and_costs.f0" class="para"><sup class="para">[6] </sup></a>
+              Of course, if the contract is ill-written then Contract Programming
+              is of little use. However, it is less likely to have a bug in both
+              the function body and the contract than in the function body only.
+              For example, consider the validation of a result in postconditions.
+              Validating the return value might seem redundant, but in this case
+              we actually want that redundancy. When programmers write a function,
+              there is a certain probability that they make a mistake in implementing
+              the function body. When programmers specify the result of the function
+              in the postconditions, there is also a certain probability that they
+              make a mistake in writing the contract. However, the probability that
+              programmers make a mistake twice (in both the body <span class="emphasis"><em>and</em></span>
+              the contract) is in general lower than the probability that the mistake
+              is made just once (in either the body or the contract).
+            </p></div>
+<div id="ftn.boost_contract.contract_programming_overview.destructor_calls.f0" class="footnote"><p><a href="#boost_contract.contract_programming_overview.destructor_calls.f0" class="para"><sup class="para">[7] </sup></a>
+                    None of the Contract Programming references that the authors
+                    have studied propose postconditions for destructor (neither
+                    <a class="link" href="bibliography.html#N1962_anchor">[N1962]</a> nor <a class="link" href="bibliography.html#Meyer97_anchor">[Meyer97]</a>
+                    (but Eiffel does not support static data members also)). However,
+                    in principle there could be uses cases for destructor postconditions
+                    (e.g., a class that counts object instances could use destructor
+                    postconditions to assert that an instance counter stored in a
+                    static data member is decreased by <code class="computeroutput"><span class="number">1</span></code>
+                    because the object has been destructed) so this library supports
+                    postconditions for destructors. Of course, after destructor body
+                    execution there is no object anymore so destructor postconditions
+                    should only access the class' static members.
+                  </p></div>
+<div id="ftn.boost_contract.contract_programming_overview.specification_and_implementation.f0" class="footnote"><p><a href="#boost_contract.contract_programming_overview.specification_and_implementation.f0" class="para"><sup class="para">[8] </sup></a>
+          <span class="bold"><strong>Rationale:</strong></span> In theory, if C++ <a href="http://www.open-std.org/jtc1/sc22/wg21/docs/cwg_defects.html#45" target="_top">defect
+          45</a> did not get fixed, this library could have been implemented
+          in a way that generates a compile-time error when precondition assertions
+          use non-public members (but still at the expense of programmers writing
+          extra boiler-plate code).
+        </p></div>
+<div id="ftn.boost_contract.contract_programming_overview.on_contract_failure.f0" class="footnote"><p><a href="#boost_contract.contract_programming_overview.on_contract_failure.f0" class="para"><sup class="para">[9] </sup></a>
+          <span class="bold"><strong>Rationale:</strong></span> This customizable failure handling
+          mechanism is similar to the one used by <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">terminate</span></code>
+          and also proposed by <a class="link" href="bibliography.html#N1962_anchor">[N1962]</a>.
+        </p></div>
+<div id="ftn.boost_contract.contract_programming_overview.features.f0" class="footnote"><p><a href="#boost_contract.contract_programming_overview.features.f0" class="para"><sup class="para">[10] </sup></a>
+          The <a class="link" href="bibliography.html#N1962_anchor">[N1962]</a> was unfortunately rejected
+          because the standard committee did not considered important to add Contract
+          Programming to the core language (but the <a class="link" href="bibliography.html#N1962_anchor">[N1962]</a>
+          proposal itself is sound). In any case, this library will allow C++ programmers
+          to still use Contract Programming even if the standard committee never
+          decides to add it as a language feature.
+        </p></div>
+<div id="ftn.boost_contract.contract_programming_overview.features.f5" class="footnote"><p><a href="#boost_contract.contract_programming_overview.features.f5" class="para"><sup class="para">[11] </sup></a>
+          Generally speaking, implementing preconditions and postconditions in C++
+          is not difficult (e.g., using some type of RAII object). Implementing postcondition
+          old values is also not too difficult (usually requiring users to copy old
+          values into local variables, but it is somewhat more difficult to ensure
+          such copies are not performed when postconditions are disable). Most Contract
+          Programming libraries for C++ stop here because implementing class invariants
+          is already somewhat more involved even if still doable (especially without
+          requiring users to manually invoke an extra function to check invariants).
+          After that, implementing subcontracting requires a significant amount of
+          complexity and it seems to not be properly supported by any library other
+          than this one (especially including multiple inheritance, correctly copying
+          postcondition old values across all overridden contracts deep in the inheritance
+          tree, and correctly reporting the return value to the postconditions of
+          the overridden virtual functions). This library supports all of these features
+          instead.
+        </p></div>
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright &#169; 2008-2016 Lorenzo
+      Caminiti<p>
+        Distributed under the Boost Software License, Version 1.0 (see accompanying
+        file LICENSE_1_0.txt or a copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="getting_started.html"><img src="../../..//doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../..//doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../..//doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="tutorial.html"><img src="../../..//doc/src/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>
