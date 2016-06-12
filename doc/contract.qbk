@@ -108,6 +108,12 @@ All Contract Programming features are supported by this library: subcontracting,
 
 Hosted at: [@https://github.com/lcaminiti/boost-contract]
 
+[note
+In one of its previous revisions, this library passed Boost formal reviews and
+it was accepted into the Boost libraries (see [@https://groups.google.com/forum/?fromgroups=#!topic/boost-list/jQ7OjAmos_Y]).
+However, the authors have not had time yet to push this library into an official Boost release.
+]
+
 [include introduction.qbk]
 [include getting_started.qbk]
 [include contract_programming_overview.qbk]
