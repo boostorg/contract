@@ -10,7 +10,7 @@
 #include <boost/contract.hpp>
 #include <vector>
 
-template<typename T> class pushable;
+template<typename T> class pushable; // Arbitrary base to show subcontracting.
 
 template<typename T>
 class vector
@@ -18,7 +18,7 @@ class vector
     : BASES
 {
 public:
-    typedef BOOST_CONTRACT_BASE_TYPES(BASES) base_types; // Subcontracting.
+    typedef BOOST_CONTRACT_BASE_TYPES(BASES) base_types; // For subcontracting.
     #undef BASES
 
     void invariant() const { // Checked in AND with base class invariants.
@@ -43,6 +43,7 @@ public:
     }
     BOOST_CONTRACT_OVERRIDE(push_back) // For `override_push_back`.
 
+    // Could program contracts for those as well.
     unsigned size() const { return vect_.size(); }
     unsigned max_size() const { return vect_.max_size(); }
     unsigned capacity() const { return vect_.capacity(); }
