@@ -10,7 +10,7 @@
 #include <boost/contract.hpp>
 #include <vector>
 
-template<typename T> class pushable; // Arbitrary base to show subcontracting.
+template<typename T> class pushable; // Arbitrary base to demo subcontracting.
 
 template<typename T>
 class vector
