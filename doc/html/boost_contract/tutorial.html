@@ -45,8 +45,6 @@
       Classes (Subcontracting)</a></span></dt>
 <dt><span class="section"><a href="tutorial.html#boost_contract.tutorial.static_public_functions">Static
       Public Functions</a></span></dt>
-<dt><span class="section"><a href="tutorial.html#boost_contract.tutorial.private_and_protected_functions">Private
-      and Protected Functions</a></span></dt>
 </dl></div>
 <p>
       This section illustrates basic uses of this library.
@@ -174,7 +172,7 @@
 <p>
         The same considerations also apply to private and protected member functions
         because their contracts are also programmed using <code class="computeroutput"><a class="link" href="../boost/contract/function.html" title="Function function">boost::contract::function</a></code>
-        like for non-member functions (see <a class="link" href="tutorial.html#boost_contract.tutorial.private_and_protected_functions" title="Private and Protected Functions">Private
+        like for non-member functions (see <a class="link" href="../">Private
         and Protected Functions</a>).
       </p>
 </div>
@@ -724,7 +722,7 @@
         to check preconditions before member initializations, and use <code class="computeroutput"><a class="link" href="../boost/contract/function.html" title="Function function">boost::contract::function</a></code>
         (but not <code class="computeroutput"><a class="link" href="../boost/contract/constructor.html" title="Function template constructor">boost::contract::constructor</a></code>)
         to only check postconditions without checking class invariants (see also
-        <a class="link" href="tutorial.html#boost_contract.tutorial.private_and_protected_functions" title="Private and Protected Functions">Private
+        <a class="link" href="../">Private
         and Protected Functions</a>).
       </p>
 </div>
@@ -831,7 +829,7 @@
         Calls</a>). They could use <code class="computeroutput"><a class="link" href="../boost/contract/function.html" title="Function function">boost::contract::function</a></code>
         (but not <code class="computeroutput"><a class="link" href="../boost/contract/destructor.html" title="Function template destructor">boost::contract::destructor</a></code>)
         to only check postconditions without checking class invariants (see also
-        <a class="link" href="tutorial.html#boost_contract.tutorial.private_and_protected_functions" title="Private and Protected Functions">Private
+        <a class="link" href="../">Private
         and Protected Functions</a>).
       </p>
 </div>
@@ -840,7 +838,7 @@
 <a name="boost_contract.tutorial.public_functions"></a><a class="link" href="tutorial.html#boost_contract.tutorial.public_functions" title="Public Functions">Public Functions</a>
 </h3></div></div></div>
 <p>
-        Contracts for public member functions are programmed using the <code class="computeroutput"><a class="link" href="../boost/contract/public_function_id467153.html" title="Function template public_function">boost::contract::public_function</a></code>
+        Contracts for public member functions are programmed using the <code class="computeroutput"><a class="link" href="../boost/contract/public_function_id462154.html" title="Function template public_function">boost::contract::public_function</a></code>
         function.
       </p>
 <p>
@@ -871,13 +869,13 @@
         It is possible to specify both preconditions and postconditions for public
         member functions (see also <a class="link" href="tutorial.html#boost_contract.tutorial.preconditions" title="Preconditions">Preconditions</a>
         and <a class="link" href="tutorial.html#boost_contract.tutorial.postconditions" title="Postconditions">Postconditions</a>).
-        The <code class="computeroutput"><a class="link" href="../boost/contract/public_function_id467153.html" title="Function template public_function">boost::contract::public_function</a></code>
+        The <code class="computeroutput"><a class="link" href="../boost/contract/public_function_id462154.html" title="Function template public_function">boost::contract::public_function</a></code>
         function takes <code class="computeroutput"><span class="keyword">this</span></code> as a parameter
         because public member functions check class invariants (see also <a class="link" href="tutorial.html#boost_contract.tutorial.class_invariants" title="Class Invariants">Class
         Invariants</a>).
       </p>
 <p>
-        The <code class="computeroutput"><a class="link" href="../boost/contract/public_function_id467153.html" title="Function template public_function">boost::contract::public_function</a></code>
+        The <code class="computeroutput"><a class="link" href="../boost/contract/public_function_id462154.html" title="Function template public_function">boost::contract::public_function</a></code>
         function returns an RAII object that must always be assigned to a local variable
         of type <code class="computeroutput"><a class="link" href="../boost/contract/guard.html" title="Class guard">boost::contract::guard</a></code>
         otherwise this library will generate a run-time error (note that C++11 <code class="computeroutput"><span class="keyword">auto</span></code> declarations cannot be used here and
@@ -923,7 +921,7 @@
 </tr>
 <tr><td align="left" valign="top">
 <p>
-          A public member function can avoid calling <code class="computeroutput"><a class="link" href="../boost/contract/public_function_id467153.html" title="Function template public_function">boost::contract::public_function</a></code>
+          A public member function can avoid calling <code class="computeroutput"><a class="link" href="../boost/contract/public_function_id462154.html" title="Function template public_function">boost::contract::public_function</a></code>
           for efficiency but only when it has no preconditions and no postconditions,
           it is not virtual, it does not override any virtual function, and its class
           has no invariant.
@@ -932,7 +930,7 @@
           The default copy assignment operator automatically generated by C++ will
           not check contracts. Therefore, unless this operator is not public or it
           has no preconditions, no postconditions, and the class has no invariants,
-          programmers should manually define it using <code class="computeroutput"><a class="link" href="../boost/contract/public_function_id467153.html" title="Function template public_function">boost::contract::public_function</a></code>.
+          programmers should manually define it using <code class="computeroutput"><a class="link" href="../boost/contract/public_function_id462154.html" title="Function template public_function">boost::contract::public_function</a></code>.
           (Same for all other automatically generated operations.)
         </p>
 </td></tr>
@@ -990,16 +988,16 @@
         (a part from when manipulating the virtual function type directly as a function
         pointer, for function pointer type-casts, etc.). Programmers must pass the
         extra virtual parameter as the very first argument to all <code class="computeroutput"><a class="link" href="../BOOST_CONTRACT_OLDOF.html" title="Macro BOOST_CONTRACT_OLDOF">BOOST_CONTRACT_OLDOF</a></code>
-        and <code class="computeroutput"><a class="link" href="../boost/contract/public_function_id467153.html" title="Function template public_function">boost::contract::public_function</a></code>
+        and <code class="computeroutput"><a class="link" href="../boost/contract/public_function_id462154.html" title="Function template public_function">boost::contract::public_function</a></code>
         calls in the virtual function. <a href="#ftn.boost_contract.tutorial.virtual_public_functions.f1" class="footnote" name="boost_contract.tutorial.virtual_public_functions.f1"><sup class="footnote">[24]</sup></a>
       </p>
 <p>
-        The <code class="computeroutput"><a class="link" href="../boost/contract/public_function_id467153.html" title="Function template public_function">boost::contract::public_function</a></code>
+        The <code class="computeroutput"><a class="link" href="../boost/contract/public_function_id462154.html" title="Function template public_function">boost::contract::public_function</a></code>
         function takes <code class="computeroutput"><span class="keyword">this</span></code> as a parameter
         because public virtual functions check class invariants (see also <a class="link" href="tutorial.html#boost_contract.tutorial.class_invariants" title="Class Invariants">Class
         Invariants</a>). As shown in the example above, when the public virtual
         function has a non-void return type programmers must pass a reference to
-        the function return value as the second argument to <code class="computeroutput"><a class="link" href="../boost/contract/public_function_id467153.html" title="Function template public_function">boost::contract::public_function</a></code>.
+        the function return value as the second argument to <code class="computeroutput"><a class="link" href="../boost/contract/public_function_id462154.html" title="Function template public_function">boost::contract::public_function</a></code>.
         In this case the functor specified to <code class="computeroutput"><span class="special">.</span><span class="identifier">postcondition</span><span class="special">(...)</span></code>
         takes a single parameter for the return value (possibly as a constant reference
         <code class="computeroutput"><span class="keyword">const</span><span class="special">&amp;</span></code>
@@ -1014,9 +1012,9 @@
 <p>
           It is the responsibility of the programmers to pass the extra parameter
           <code class="computeroutput"><span class="identifier">v</span></code> to all <code class="computeroutput"><a class="link" href="../BOOST_CONTRACT_OLDOF.html" title="Macro BOOST_CONTRACT_OLDOF">BOOST_CONTRACT_OLDOF</a></code>
-          and <code class="computeroutput"><a class="link" href="../boost/contract/public_function_id467153.html" title="Function template public_function">boost::contract::public_function</a></code>
+          and <code class="computeroutput"><a class="link" href="../boost/contract/public_function_id462154.html" title="Function template public_function">boost::contract::public_function</a></code>
           calls within public virtual functions, and also to pass the return value
-          reference after <code class="computeroutput"><span class="identifier">v</span></code> to <code class="computeroutput"><a class="link" href="../boost/contract/public_function_id467153.html" title="Function template public_function">boost::contract::public_function</a></code>
+          reference after <code class="computeroutput"><span class="identifier">v</span></code> to <code class="computeroutput"><a class="link" href="../boost/contract/public_function_id462154.html" title="Function template public_function">boost::contract::public_function</a></code>
           for non-void public virtual functions. This library cannot automatically
           generate compile-time errors if programmers fail to do so (but in general
           contract checking will not correctly work at run-time). <a href="#ftn.boost_contract.tutorial.virtual_public_functions.f3" class="footnote" name="boost_contract.tutorial.virtual_public_functions.f3"><sup class="footnote">[26]</sup></a>
@@ -1099,7 +1097,7 @@
         Classes</a>).
       </p>
 <p>
-        When called from overriding public functions, <code class="computeroutput"><a class="link" href="../boost/contract/public_function_id467153.html" title="Function template public_function">boost::contract::public_function</a></code>
+        When called from overriding public functions, <code class="computeroutput"><a class="link" href="../boost/contract/public_function_id462154.html" title="Function template public_function">boost::contract::public_function</a></code>
         takes an explicit template argument <code class="computeroutput"><span class="identifier">override_</span></code><code class="literal"><span class="emphasis"><em>function-name</em></span></code>
         that must be defined by:
       </p>
@@ -1139,16 +1137,16 @@
         (because this parameter is present in the signature of the virtual function
         being overridden from base classes). Programmers must pass the extra virtual
         parameter as the very first argument to all <code class="computeroutput"><a class="link" href="../BOOST_CONTRACT_OLDOF.html" title="Macro BOOST_CONTRACT_OLDOF">BOOST_CONTRACT_OLDOF</a></code>
-        and <code class="computeroutput"><a class="link" href="../boost/contract/public_function_id467153.html" title="Function template public_function">boost::contract::public_function</a></code>
+        and <code class="computeroutput"><a class="link" href="../boost/contract/public_function_id462154.html" title="Function template public_function">boost::contract::public_function</a></code>
         calls in the overriding function.
       </p>
 <p>
-        When called from overriding public functions, <code class="computeroutput"><a class="link" href="../boost/contract/public_function_id467153.html" title="Function template public_function">boost::contract::public_function</a></code>
+        When called from overriding public functions, <code class="computeroutput"><a class="link" href="../boost/contract/public_function_id462154.html" title="Function template public_function">boost::contract::public_function</a></code>
         also takes a pointer to the enclosing function, the object <code class="computeroutput"><span class="keyword">this</span></code> (because overriding public functions
         check class invariants), and references to each function argument in the
         order they appear in the function declaration. <a href="#ftn.boost_contract.tutorial.public_function_overrides__subcontracting_.f2" class="footnote" name="boost_contract.tutorial.public_function_overrides__subcontracting_.f2"><sup class="footnote">[29]</sup></a> As shown in the example above, when the overriding public function
         has a non-void return type, programmers must pass a reference to the function
-        return value as the second argument to <code class="computeroutput"><a class="link" href="../boost/contract/public_function_id467153.html" title="Function template public_function">boost::contract::public_function</a></code>
+        return value as the second argument to <code class="computeroutput"><a class="link" href="../boost/contract/public_function_id462154.html" title="Function template public_function">boost::contract::public_function</a></code>
         (this library will generate a compile-time error otherwise). <a href="#ftn.boost_contract.tutorial.public_function_overrides__subcontracting_.f3" class="footnote" name="boost_contract.tutorial.public_function_overrides__subcontracting_.f3"><sup class="footnote">[30]</sup></a> In this case the functor specified to <code class="computeroutput"><span class="special">.</span><span class="identifier">postcondition</span><span class="special">(...)</span></code>
         takes a single parameter for the return value (possibly as a constant reference
         <code class="computeroutput"><span class="keyword">const</span><span class="special">&amp;</span></code>
@@ -1163,9 +1161,9 @@
 <p>
           It is the responsibility of the programmers to pass the extra parameter
           <code class="computeroutput"><span class="identifier">v</span></code> to all <code class="computeroutput"><a class="link" href="../BOOST_CONTRACT_OLDOF.html" title="Macro BOOST_CONTRACT_OLDOF">BOOST_CONTRACT_OLDOF</a></code>
-          and <code class="computeroutput"><a class="link" href="../boost/contract/public_function_id467153.html" title="Function template public_function">boost::contract::public_function</a></code>
+          and <code class="computeroutput"><a class="link" href="../boost/contract/public_function_id462154.html" title="Function template public_function">boost::contract::public_function</a></code>
           calls within overriding public functions, and also to pass the return value
-          reference after <code class="computeroutput"><span class="identifier">v</span></code> to <code class="computeroutput"><a class="link" href="../boost/contract/public_function_id467153.html" title="Function template public_function">boost::contract::public_function</a></code>
+          reference after <code class="computeroutput"><span class="identifier">v</span></code> to <code class="computeroutput"><a class="link" href="../boost/contract/public_function_id462154.html" title="Function template public_function">boost::contract::public_function</a></code>
           for non-void overriding public functions. This library cannot always generate
           compile-time errors if programmers fail to do so (but in general contract
           checking will not correctly work at run-time).
@@ -1179,7 +1177,7 @@
 </td></tr>
 </table></div>
 <p>
-        The <code class="computeroutput"><a class="link" href="../boost/contract/public_function_id467153.html" title="Function template public_function">boost::contract::public_function</a></code>
+        The <code class="computeroutput"><a class="link" href="../boost/contract/public_function_id462154.html" title="Function template public_function">boost::contract::public_function</a></code>
         function returns an RAII object that must always be assigned to a local variable
         of type <code class="computeroutput"><a class="link" href="../boost/contract/guard.html" title="Class guard">boost::contract::guard</a></code>
         otherwise this library will generate a run-time error (note that C++11 <code class="computeroutput"><span class="keyword">auto</span></code> declarations cannot be used here and
@@ -1359,7 +1357,7 @@
 <p>
       </p>
 <p>
-        When called from static public functions, <code class="computeroutput"><a class="link" href="../boost/contract/public_function_id467153.html" title="Function template public_function">boost::contract::public_function</a></code>
+        When called from static public functions, <code class="computeroutput"><a class="link" href="../boost/contract/public_function_id462154.html" title="Function template public_function">boost::contract::public_function</a></code>
         cannot take the object <code class="computeroutput"><span class="keyword">this</span></code>
         as a parameter (because there is no object <code class="computeroutput"><span class="keyword">this</span></code>
         in static member functions) so the enclosing class type (necessary to check
@@ -1372,7 +1370,7 @@
         and <a class="link" href="tutorial.html#boost_contract.tutorial.postconditions" title="Postconditions">Postconditions</a>).
       </p>
 <p>
-        The <code class="computeroutput"><a class="link" href="../boost/contract/public_function_id467153.html" title="Function template public_function">boost::contract::public_function</a></code>
+        The <code class="computeroutput"><a class="link" href="../boost/contract/public_function_id462154.html" title="Function template public_function">boost::contract::public_function</a></code>
         function returns an RAII object that must be assigned to a local variable
         of type <code class="computeroutput"><a class="link" href="../boost/contract/guard.html" title="Class guard">boost::contract::guard</a></code>
         otherwise this library will generate a run-time error (note that C++11 <code class="computeroutput"><span class="keyword">auto</span></code> declarations cannot be used here and
@@ -1416,76 +1414,12 @@
 <th align="left">Note</th>
 </tr>
 <tr><td align="left" valign="top"><p>
-          A static public member function can avoid calling <code class="computeroutput"><a class="link" href="../boost/contract/public_function_id467153.html" title="Function template public_function">boost::contract::public_function</a></code>
+          A static public member function can avoid calling <code class="computeroutput"><a class="link" href="../boost/contract/public_function_id462154.html" title="Function template public_function">boost::contract::public_function</a></code>
           for efficiency but only when it has no preconditions, no postconditions,
           and its class has no static invariants (the class can still have non-static
           invariants or base classes instead).
         </p></td></tr>
 </table></div>
-</div>
-<div class="section">
-<div class="titlepage"><div><div><h3 class="title">
-<a name="boost_contract.tutorial.private_and_protected_functions"></a><a class="link" href="tutorial.html#boost_contract.tutorial.private_and_protected_functions" title="Private and Protected Functions">Private
-      and Protected Functions</a>
-</h3></div></div></div>
-<p>
-        Private and protected member functions do not check class invariants (because
-        they are not part of the public class interface) and they do not subcontract
-        (because they are not accessible at the calling site where the <a href="http://en.wikipedia.org/wiki/Liskov_substitution_principle" target="_top">substitution
-        principle</a> applies, see also <a class="link" href="contract_programming_overview.html#boost_contract.contract_programming_overview.function_calls" title="Function Calls">Function
-        Calls</a>). However, programmers can still choose to specify preconditions
-        and postconditions for private and protected member functions if they want
-        to check correctness of implementations and usage of base member functions
-        in derived classes. Therefore, when programmers decide to specify contracts
-        for private and protected member functions, they can use <code class="computeroutput"><a class="link" href="../boost/contract/function.html" title="Function function">boost::contract::function</a></code>
-        (like for non-member functions). For example (see also <a href="../../../example/features/private_protected.cpp" target="_top"><code class="literal">private_protected.cpp</code></a>):
-      </p>
-<p>
-</p>
-<pre class="programlisting"><span class="keyword">class</span> <span class="identifier">counter</span> <span class="special">{</span>
-<span class="keyword">protected</span><span class="special">:</span>
-    <span class="keyword">int</span> <span class="identifier">get</span><span class="special">()</span> <span class="keyword">const</span> <span class="special">{</span> <span class="comment">// Protected function (like non-member functions).</span>
-        <span class="keyword">int</span> <span class="identifier">result</span><span class="special">;</span>
-        <span class="identifier">boost</span><span class="special">::</span><span class="identifier">contract</span><span class="special">::</span><span class="identifier">guard</span> <span class="identifier">c</span> <span class="special">=</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">contract</span><span class="special">::</span><span class="identifier">function</span><span class="special">()</span>
-            <span class="special">.</span><span class="identifier">postcondition</span><span class="special">([&amp;]</span> <span class="special">{</span>
-                <span class="identifier">BOOST_CONTRACT_ASSERT</span><span class="special">(</span><span class="identifier">result</span> <span class="special">==</span> <span class="identifier">n_</span><span class="special">);</span>
-            <span class="special">})</span>
-        <span class="special">;</span>
-
-        <span class="keyword">return</span> <span class="identifier">result</span> <span class="special">=</span> <span class="identifier">n_</span><span class="special">;</span> <span class="comment">// Function body.</span>
-    <span class="special">}</span>
-
-<span class="keyword">private</span><span class="special">:</span>
-    <span class="keyword">void</span> <span class="identifier">dec</span><span class="special">()</span> <span class="special">{</span> <span class="comment">// Private function (like non-member functions).</span>
-        <span class="identifier">boost</span><span class="special">::</span><span class="identifier">contract</span><span class="special">::</span><span class="identifier">old_ptr</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;</span> <span class="identifier">old_n</span> <span class="special">=</span> <span class="identifier">BOOST_CONTRACT_OLDOF</span><span class="special">(</span><span class="identifier">n_</span><span class="special">);</span>
-        <span class="identifier">boost</span><span class="special">::</span><span class="identifier">contract</span><span class="special">::</span><span class="identifier">guard</span> <span class="identifier">c</span> <span class="special">=</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">contract</span><span class="special">::</span><span class="identifier">function</span><span class="special">()</span>
-            <span class="special">.</span><span class="identifier">precondition</span><span class="special">([&amp;]</span> <span class="special">{</span>
-                <span class="identifier">BOOST_CONTRACT_ASSERT</span><span class="special">(</span><span class="identifier">n_</span> <span class="special">&gt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">numeric_limits</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;::</span><span class="identifier">min</span><span class="special">());</span>
-            <span class="special">})</span>
-            <span class="special">.</span><span class="identifier">postcondition</span><span class="special">([&amp;]</span> <span class="special">{</span>
-                <span class="identifier">BOOST_CONTRACT_ASSERT</span><span class="special">(</span><span class="identifier">n_</span> <span class="special">==</span> <span class="special">*</span><span class="identifier">old_n</span> <span class="special">-</span> <span class="number">1</span><span class="special">);</span>
-            <span class="special">})</span>
-        <span class="special">;</span>
-
-        <span class="special">--</span><span class="identifier">n_</span><span class="special">;</span> <span class="comment">// Function body.</span>
-    <span class="special">}</span>
-
-    <span class="keyword">int</span> <span class="identifier">n_</span><span class="special">;</span>
-
-    <span class="comment">/* ... */</span>
-</pre>
-<p>
-      </p>
-<p>
-        The same considerations made in <a class="link" href="tutorial.html#boost_contract.tutorial.non_member_functions" title="Non-Member Functions">Non-Member
-        Functions</a> apply.
-      </p>
-<p>
-        See <a class="link" href="tutorial.html#boost_contract.tutorial.constructors" title="Constructors">Constructors</a>
-        and <a class="link" href="tutorial.html#boost_contract.tutorial.destructors" title="Destructors">Destructors</a>
-        for notes on how to program contracts for private and protected constructors
-        and destructors respectively.
-      </p>
 </div>
 <div class="footnotes">
 <br><hr style="width:100; text-align:left;margin-left: 0">
@@ -1580,7 +1514,7 @@
         </p></div>
 <div id="ftn.boost_contract.tutorial.virtual_public_functions.f3" class="footnote"><p><a href="#boost_contract.tutorial.virtual_public_functions.f3" class="para"><sup class="para">[26] </sup></a>
             <span class="bold"><strong>Rationale:</strong></span> This library does not require
-            the function type when using <code class="computeroutput"><a class="link" href="../boost/contract/public_function_id467153.html" title="Function template public_function">boost::contract::public_function</a></code>
+            the function type when using <code class="computeroutput"><a class="link" href="../boost/contract/public_function_id462154.html" title="Function template public_function">boost::contract::public_function</a></code>
             for non-overriding virtual functions. Therefore, this library does not
             know if the enclosing function has a non-void return type so it cannot
             check if the return value reference is passed as required for non-overriding

@@ -90,17 +90,15 @@
       Classes (Subcontracting)</a></span></dt>
 <dt><span class="section"><a href="boost_contract/tutorial.html#boost_contract.tutorial.static_public_functions">Static
       Public Functions</a></span></dt>
-<dt><span class="section"><a href="boost_contract/tutorial.html#boost_contract.tutorial.private_and_protected_functions">Private
-      and Protected Functions</a></span></dt>
 </dl></dd>
 <dt><span class="section"><a href="boost_contract/advanced_topics.html">Advanced Topics</a></span></dt>
 <dd><dl>
-<dt><span class="section"><a href="boost_contract/advanced_topics.html#boost_contract.advanced_topics.old_values_at_body">Old
-      Values at Body</a></span></dt>
 <dt><span class="section"><a href="boost_contract/advanced_topics.html#boost_contract.advanced_topics.optional_return_value">Optional
       Return Value</a></span></dt>
 <dt><span class="section"><a href="boost_contract/advanced_topics.html#boost_contract.advanced_topics.pure_virtual_public_functions">Pure
       Virtual Public Functions</a></span></dt>
+<dt><span class="section"><a href="boost_contract/advanced_topics.html#boost_contract.advanced_topics.private_and_protected_functions">Private
+      and Protected Functions</a></span></dt>
 <dt><span class="section"><a href="boost_contract/advanced_topics.html#boost_contract.advanced_topics.overloaded_functions">Overloaded
       Functions</a></span></dt>
 <dt><span class="section"><a href="boost_contract/advanced_topics.html#boost_contract.advanced_topics.named_overrides">Named
@@ -110,6 +108,8 @@
 <dt><span class="section"><a href="boost_contract/advanced_topics.html#boost_contract.advanced_topics.unions">Unions</a></span></dt>
 <dt><span class="section"><a href="boost_contract/advanced_topics.html#boost_contract.advanced_topics.volatile_class_invariants">Volatile
       Class Invariants</a></span></dt>
+<dt><span class="section"><a href="boost_contract/advanced_topics.html#boost_contract.advanced_topics.old_values_at_body">Old
+      Values at Body</a></span></dt>
 <dt><span class="section"><a href="boost_contract/advanced_topics.html#boost_contract.advanced_topics.old_value_requirements">Old
       Value Requirements</a></span></dt>
 <dt><span class="section"><a href="boost_contract/advanced_topics.html#boost_contract.advanced_topics.assertion_requirements__static_if_">Assertion
@@ -237,7 +237,7 @@
             <span class="special">})</span>
         <span class="special">;</span>
 
-        <span class="identifier">vect_</span><span class="special">.</span><span class="identifier">push_back</span><span class="special">(</span><span class="identifier">value</span><span class="special">);</span>
+        <span class="identifier">vect_</span><span class="special">.</span><span class="identifier">push_back</span><span class="special">(</span><span class="identifier">value</span><span class="special">);</span> <span class="comment">// Function body.</span>
     <span class="special">}</span>
     <span class="identifier">BOOST_CONTRACT_OVERRIDE</span><span class="special">(</span><span class="identifier">push_back</span><span class="special">)</span> <span class="comment">// For `override_push_back`.</span>
 
@@ -351,7 +351,7 @@
 </div>
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
-<td align="left"><p><small>Last revised: June 12, 2016 at 19:51:30 GMT</small></p></td>
+<td align="left"><p><small>Last revised: June 15, 2016 at 15:18:56 GMT</small></p></td>
 <td align="right"><div class="copyright-footer"></div></td>
 </tr></table>
 <hr>

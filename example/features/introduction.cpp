@@ -39,7 +39,7 @@ public:
             })
         ;
 
-        vect_.push_back(value);
+        vect_.push_back(value); // Function body.
     }
     BOOST_CONTRACT_OVERRIDE(push_back) // For `override_push_back`.
 

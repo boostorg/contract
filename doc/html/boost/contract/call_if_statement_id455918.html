@@ -6,8 +6,8 @@
 <meta name="generator" content="DocBook XSL Stylesheets V1.78.1">
 <link rel="home" href="../../index.html" title="Chapter&#160;1.&#160;Boost.Contract 1.0">
 <link rel="up" href="../../reference.html#header.boost.contract.call_if_hpp" title="Header &lt;boost/contract/call_if.hpp&gt;">
-<link rel="prev" href="call_if_statement_id461686.html" title="Struct template call_if_statement&lt;true, Then, unspecified&gt;">
-<link rel="next" href="call_if_statement_id462051.html" title="Struct template call_if_statement&lt;true, Then, void&gt;">
+<link rel="prev" href="call_if_statement_id455817.html" title="Struct template call_if_statement&lt;true, Then, unspecified&gt;">
+<link rel="next" href="call_if_statement_id458367.html" title="Struct template call_if_statement&lt;true, Then, void&gt;">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
 <table cellpadding="2" width="100%"><tr>
@@ -20,10 +20,10 @@
 </tr></table>
 <hr>
 <div class="spirit-nav">
-<a accesskey="p" href="call_if_statement_id461686.html"><img src="../../../..//doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../../reference.html#header.boost.contract.call_if_hpp"><img src="../../../..//doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../..//doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="call_if_statement_id462051.html"><img src="../../../..//doc/src/images/next.png" alt="Next"></a>
+<a accesskey="p" href="call_if_statement_id455817.html"><img src="../../../..//doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../../reference.html#header.boost.contract.call_if_hpp"><img src="../../../..//doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../..//doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="call_if_statement_id458367.html"><img src="../../../..//doc/src/images/next.png" alt="Next"></a>
 </div>
 <div class="refentry">
-<a name="boost.contract.call_if_statement_id461787"></a><div class="titlepage"></div>
+<a name="boost.contract.call_if_statement_id455918"></a><div class="titlepage"></div>
 <div class="refnamediv">
 <h2><span class="refentrytitle">Struct template call_if_statement&lt;true, Then, ThenResult&gt;</span></h2>
 <p>boost::contract::call_if_statement&lt;true, Then, ThenResult&gt; &#8212; Template specialization to handle true static conditions for then-branch functor calls that do not return <code class="computeroutput">void</code>. </p>
@@ -32,22 +32,22 @@
 <div xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="refsynopsisdiv"><pre class="synopsis"><span class="comment">// In header: &lt;<a class="link" href="../../reference.html#header.boost.contract.call_if_hpp" title="Header &lt;boost/contract/call_if.hpp&gt;">boost/contract/call_if.hpp</a>&gt;
 
 </span><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> Then<span class="special">,</span> <span class="keyword">typename</span> ThenResult<span class="special">&gt;</span> 
-<span class="keyword">struct</span> <a class="link" href="call_if_statement_id461787.html" title="Struct template call_if_statement&lt;true, Then, ThenResult&gt;">call_if_statement</a><span class="special">&lt;</span><span class="keyword">true</span><span class="special">,</span> <span class="identifier">Then</span><span class="special">,</span> <span class="identifier">ThenResult</span><span class="special">&gt;</span> <span class="special">{</span>
-  <span class="comment">// <a class="link" href="call_if_statement_id461787.html#boost.contract.call_if_statement_id461787construct-copy-destruct">construct/copy/destruct</a></span>
-  <span class="keyword">explicit</span> <a class="link" href="call_if_statement_id461787.html#id462020-bb"><span class="identifier">call_if_statement</span></a><span class="special">(</span><span class="identifier">Then</span><span class="special">)</span><span class="special">;</span>
+<span class="keyword">struct</span> <a class="link" href="call_if_statement_id455918.html" title="Struct template call_if_statement&lt;true, Then, ThenResult&gt;">call_if_statement</a><span class="special">&lt;</span><span class="keyword">true</span><span class="special">,</span> <span class="identifier">Then</span><span class="special">,</span> <span class="identifier">ThenResult</span><span class="special">&gt;</span> <span class="special">{</span>
+  <span class="comment">// <a class="link" href="call_if_statement_id455918.html#boost.contract.call_if_statement_id455918construct-copy-destruct">construct/copy/destruct</a></span>
+  <span class="keyword">explicit</span> <a class="link" href="call_if_statement_id455918.html#id458336-bb"><span class="identifier">call_if_statement</span></a><span class="special">(</span><span class="identifier">Then</span><span class="special">)</span><span class="special">;</span>
 
-  <span class="comment">// <a class="link" href="call_if_statement_id461787.html#id461851-bb">public member functions</a></span>
-  <a class="link" href="call_if_statement_id461787.html#id461854-bb"><span class="keyword">operator</span> <span class="identifier">ThenResult</span></a><span class="special">(</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span>
-  <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> Else<span class="special">&gt;</span> <span class="identifier">ThenResult</span> <a class="link" href="call_if_statement_id461787.html#id461864-bb"><span class="identifier">else_</span></a><span class="special">(</span><span class="identifier">Else</span> <span class="keyword">const</span> <span class="special">&amp;</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span>
+  <span class="comment">// <a class="link" href="call_if_statement_id455918.html#id455982-bb">public member functions</a></span>
+  <a class="link" href="call_if_statement_id455918.html#id455985-bb"><span class="keyword">operator</span> <span class="identifier">ThenResult</span></a><span class="special">(</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span>
+  <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> Else<span class="special">&gt;</span> <span class="identifier">ThenResult</span> <a class="link" href="call_if_statement_id455918.html#id455995-bb"><span class="identifier">else_</span></a><span class="special">(</span><span class="identifier">Else</span> <span class="keyword">const</span> <span class="special">&amp;</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span>
   <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">bool</span> ElseIfCond<span class="special">,</span> <span class="keyword">typename</span> ElseIfThen<span class="special">&gt;</span> 
     <a class="link" href="call_if_statement.html" title="Struct template call_if_statement">call_if_statement</a><span class="special">&lt;</span> <span class="keyword">true</span><span class="special">,</span> <span class="identifier">Then</span><span class="special">,</span> <span class="identifier">ThenResult</span> <span class="special">&gt;</span> 
-    <a class="link" href="call_if_statement_id461787.html#id461908-bb"><span class="identifier">else_if_c</span></a><span class="special">(</span><span class="identifier">ElseIfThen</span> <span class="keyword">const</span> <span class="special">&amp;</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span>
+    <a class="link" href="call_if_statement_id455918.html#id456039-bb"><span class="identifier">else_if_c</span></a><span class="special">(</span><span class="identifier">ElseIfThen</span> <span class="keyword">const</span> <span class="special">&amp;</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span>
   <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> ElseIfCond<span class="special">,</span> <span class="keyword">typename</span> ElseIfThen<span class="special">&gt;</span> 
     <a class="link" href="call_if_statement.html" title="Struct template call_if_statement">call_if_statement</a><span class="special">&lt;</span> <span class="keyword">true</span><span class="special">,</span> <span class="identifier">Then</span><span class="special">,</span> <span class="identifier">ThenResult</span> <span class="special">&gt;</span> 
-    <a class="link" href="call_if_statement_id461787.html#id461965-bb"><span class="identifier">else_if</span></a><span class="special">(</span><span class="identifier">ElseIfThen</span> <span class="keyword">const</span> <span class="special">&amp;</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span>
+    <a class="link" href="call_if_statement_id455918.html#id458281-bb"><span class="identifier">else_if</span></a><span class="special">(</span><span class="identifier">ElseIfThen</span> <span class="keyword">const</span> <span class="special">&amp;</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span>
 <span class="special">}</span><span class="special">;</span></pre></div>
 <div class="refsect1">
-<a name="id937696"></a><h2>Description</h2>
+<a name="id939116"></a><h2>Description</h2>
 <p>Usually this class template is instantiated only via the return value of  <code class="computeroutput"><a class="link" href="call_if.html" title="Function template call_if">boost::contract::call_if</a></code> and <code class="computeroutput"><a class="link" href="call_if_c.html" title="Function template call_if_c">boost::contract::call_if_c</a></code>. </p>
 <p><span class="bold"><strong>See Also:</strong></span></p>
 <p> <a class="link" href="../../boost_contract/advanced_topics.html" title="Advanced Topics"> Advanced Topics</a> </p>
@@ -55,7 +55,7 @@
 
 </p>
 <div class="refsect2">
-<a name="id937729"></a><h3>Template Parameters</h3>
+<a name="id939150"></a><h3>Template Parameters</h3>
 <div class="orderedlist"><ol class="orderedlist" type="1">
 <li class="listitem">
 <pre class="literallayout"><span class="keyword">typename</span> Then</pre>
@@ -68,12 +68,12 @@
 </ol></div>
 </div>
 <div class="refsect2">
-<a name="id937766"></a><h3>
-<a name="boost.contract.call_if_statement_id461787construct-copy-destruct"></a><code class="computeroutput">call_if_statement</code> 
+<a name="id939187"></a><h3>
+<a name="boost.contract.call_if_statement_id455918construct-copy-destruct"></a><code class="computeroutput">call_if_statement</code> 
         public
        construct/copy/destruct</h3>
 <div class="orderedlist"><ol class="orderedlist" type="1"><li class="listitem">
-<pre class="literallayout"><span class="keyword">explicit</span> <a name="id462020-bb"></a><span class="identifier">call_if_statement</span><span class="special">(</span><span class="identifier">Then</span> f<span class="special">)</span><span class="special">;</span></pre>Construct this object with the then-branch functor. <p>
+<pre class="literallayout"><span class="keyword">explicit</span> <a name="id458336-bb"></a><span class="identifier">call_if_statement</span><span class="special">(</span><span class="identifier">Then</span> f<span class="special">)</span><span class="special">;</span></pre>Construct this object with the then-branch functor. <p>
 </p>
 <div class="variablelist"><table border="0" class="variablelist compact">
 <colgroup>
@@ -97,13 +97,13 @@
 </li></ol></div>
 </div>
 <div class="refsect2">
-<a name="id937854"></a><h3>
-<a name="id461851-bb"></a><code class="computeroutput">call_if_statement</code> public member functions</h3>
+<a name="id939274"></a><h3>
+<a name="id455982-bb"></a><code class="computeroutput">call_if_statement</code> public member functions</h3>
 <div class="orderedlist"><ol class="orderedlist" type="1">
 <li class="listitem">
-<pre class="literallayout"><a name="id461854-bb"></a><span class="keyword">operator</span> <span class="identifier">ThenResult</span><span class="special">(</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span></pre>This implicit type conversion returns a copy of the value returned by the call to the then-branch functor. </li>
+<pre class="literallayout"><a name="id455985-bb"></a><span class="keyword">operator</span> <span class="identifier">ThenResult</span><span class="special">(</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span></pre>This implicit type conversion returns a copy of the value returned by the call to the then-branch functor. </li>
 <li class="listitem">
-<pre class="literallayout"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> Else<span class="special">&gt;</span> <span class="identifier">ThenResult</span> <a name="id461864-bb"></a><span class="identifier">else_</span><span class="special">(</span><span class="identifier">Else</span> <span class="keyword">const</span> <span class="special">&amp;</span> f<span class="special">)</span> <span class="keyword">const</span><span class="special">;</span></pre>Specify the else-branch functor. <p>
+<pre class="literallayout"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> Else<span class="special">&gt;</span> <span class="identifier">ThenResult</span> <a name="id455995-bb"></a><span class="identifier">else_</span><span class="special">(</span><span class="identifier">Else</span> <span class="keyword">const</span> <span class="special">&amp;</span> f<span class="special">)</span> <span class="keyword">const</span><span class="special">;</span></pre>Specify the else-branch functor. <p>
 
 </p>
 <div class="variablelist"><table border="0" class="variablelist compact">
@@ -135,7 +135,7 @@
 <li class="listitem">
 <pre class="literallayout"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">bool</span> ElseIfCond<span class="special">,</span> <span class="keyword">typename</span> ElseIfThen<span class="special">&gt;</span> 
   <a class="link" href="call_if_statement.html" title="Struct template call_if_statement">call_if_statement</a><span class="special">&lt;</span> <span class="keyword">true</span><span class="special">,</span> <span class="identifier">Then</span><span class="special">,</span> <span class="identifier">ThenResult</span> <span class="special">&gt;</span> 
-  <a name="id461908-bb"></a><span class="identifier">else_if_c</span><span class="special">(</span><span class="identifier">ElseIfThen</span> <span class="keyword">const</span> <span class="special">&amp;</span> f<span class="special">)</span> <span class="keyword">const</span><span class="special">;</span></pre>Specify an else-if-branch functor. <p>
+  <a name="id456039-bb"></a><span class="identifier">else_if_c</span><span class="special">(</span><span class="identifier">ElseIfThen</span> <span class="keyword">const</span> <span class="special">&amp;</span> f<span class="special">)</span> <span class="keyword">const</span><span class="special">;</span></pre>Specify an else-if-branch functor. <p>
 
 
 </p>
@@ -181,7 +181,7 @@
 <li class="listitem">
 <pre class="literallayout"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> ElseIfCond<span class="special">,</span> <span class="keyword">typename</span> ElseIfThen<span class="special">&gt;</span> 
   <a class="link" href="call_if_statement.html" title="Struct template call_if_statement">call_if_statement</a><span class="special">&lt;</span> <span class="keyword">true</span><span class="special">,</span> <span class="identifier">Then</span><span class="special">,</span> <span class="identifier">ThenResult</span> <span class="special">&gt;</span> 
-  <a name="id461965-bb"></a><span class="identifier">else_if</span><span class="special">(</span><span class="identifier">ElseIfThen</span> <span class="keyword">const</span> <span class="special">&amp;</span> f<span class="special">)</span> <span class="keyword">const</span><span class="special">;</span></pre>Specify an else-if-branch functor. <p>
+  <a name="id458281-bb"></a><span class="identifier">else_if</span><span class="special">(</span><span class="identifier">ElseIfThen</span> <span class="keyword">const</span> <span class="special">&amp;</span> f<span class="special">)</span> <span class="keyword">const</span><span class="special">;</span></pre>Specify an else-if-branch functor. <p>
 
 
 </p>
@@ -239,7 +239,7 @@
 </tr></table>
 <hr>
 <div class="spirit-nav">
-<a accesskey="p" href="call_if_statement_id461686.html"><img src="../../../..//doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../../reference.html#header.boost.contract.call_if_hpp"><img src="../../../..//doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../..//doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="call_if_statement_id462051.html"><img src="../../../..//doc/src/images/next.png" alt="Next"></a>
+<a accesskey="p" href="call_if_statement_id455817.html"><img src="../../../..//doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../../reference.html#header.boost.contract.call_if_hpp"><img src="../../../..//doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../..//doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="call_if_statement_id458367.html"><img src="../../../..//doc/src/images/next.png" alt="Next"></a>
 </div>
 </body>
 </html>

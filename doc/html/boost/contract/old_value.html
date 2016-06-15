@@ -36,14 +36,14 @@
 <span class="keyword">public</span><span class="special">:</span>
   <span class="comment">// <a class="link" href="old_value.html#boost.contract.old_valueconstruct-copy-destruct">construct/copy/destruct</a></span>
   <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> T<span class="special">&gt;</span> 
-    <a class="link" href="old_value.html#id465842-bb"><span class="identifier">old_value</span></a><span class="special">(</span><span class="identifier">T</span> <span class="keyword">const</span> <span class="special">&amp;</span><span class="special">,</span> 
+    <a class="link" href="old_value.html#id461603-bb"><span class="identifier">old_value</span></a><span class="special">(</span><span class="identifier">T</span> <span class="keyword">const</span> <span class="special">&amp;</span><span class="special">,</span> 
               <span class="keyword">typename</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">enable_if</span><span class="special">&lt;</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">is_copy_constructible</span><span class="special">&lt;</span> <span class="identifier">T</span> <span class="special">&gt;</span> <span class="special">&gt;</span><span class="special">::</span><span class="identifier">type</span> <span class="special">*</span> <span class="special">=</span> <span class="number">0</span><span class="special">)</span><span class="special">;</span>
   <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> T<span class="special">&gt;</span> 
-    <a class="link" href="old_value.html#id465881-bb"><span class="identifier">old_value</span></a><span class="special">(</span><span class="identifier">T</span> <span class="keyword">const</span> <span class="special">&amp;</span><span class="special">,</span> 
+    <a class="link" href="old_value.html#id461642-bb"><span class="identifier">old_value</span></a><span class="special">(</span><span class="identifier">T</span> <span class="keyword">const</span> <span class="special">&amp;</span><span class="special">,</span> 
               <span class="keyword">typename</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">disable_if</span><span class="special">&lt;</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">is_copy_constructible</span><span class="special">&lt;</span> <span class="identifier">T</span> <span class="special">&gt;</span> <span class="special">&gt;</span><span class="special">::</span><span class="identifier">type</span> <span class="special">*</span> <span class="special">=</span> <span class="number">0</span><span class="special">)</span><span class="special">;</span>
 <span class="special">}</span><span class="special">;</span></pre></div>
 <div class="refsect1">
-<a name="id952426"></a><h2>Description</h2>
+<a name="id953855"></a><h2>Description</h2>
 <p>This class is often only implicitly used by this library and it does not explicitly appear in user code.</p>
 <p>On older compilers that cannot correctly deduce the <code class="computeroutput">boost::is_copy_constructible</code> trait, programmers can manually specialize that trait to make sure that only old value types that are copy constructible are actually copied (see the <code class="computeroutput">boost::is_copy_constructible</code> documentation). </p>
 <p><span class="bold"><strong>See Also:</strong></span></p>
@@ -51,14 +51,14 @@
 <p>
 </p>
 <div class="refsect2">
-<a name="id952457"></a><h3>
+<a name="id953886"></a><h3>
 <a name="boost.contract.old_valueconstruct-copy-destruct"></a><code class="computeroutput">old_value</code> 
         public
        construct/copy/destruct</h3>
 <div class="orderedlist"><ol class="orderedlist" type="1">
 <li class="listitem">
 <pre class="literallayout"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> T<span class="special">&gt;</span> 
-  <a name="id465842-bb"></a><span class="identifier">old_value</span><span class="special">(</span><span class="identifier">T</span> <span class="keyword">const</span> <span class="special">&amp;</span> old<span class="special">,</span> 
+  <a name="id461603-bb"></a><span class="identifier">old_value</span><span class="special">(</span><span class="identifier">T</span> <span class="keyword">const</span> <span class="special">&amp;</span> old<span class="special">,</span> 
             <span class="keyword">typename</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">enable_if</span><span class="special">&lt;</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">is_copy_constructible</span><span class="special">&lt;</span> <span class="identifier">T</span> <span class="special">&gt;</span> <span class="special">&gt;</span><span class="special">::</span><span class="identifier">type</span> <span class="special">*</span> <span class="special">=</span> <span class="number">0</span><span class="special">)</span><span class="special">;</span></pre>Construct this object from the specified old value when the old value type is copy constructible. <p>The specified old value is copied (one time only) and the related old value pointer will be set to not null (no copy is made instead if postconditions are not being checked, see <code class="computeroutput"><code class="computeroutput"><a class="link" href="../../BOOST_CONTRACT_NO_POSTCONDITIONS.html" title="Macro BOOST_CONTRACT_NO_POSTCONDITIONS">BOOST_CONTRACT_NO_POSTCONDITIONS</a></code></code>). 
 
 </p>
@@ -99,7 +99,7 @@
 </li>
 <li class="listitem">
 <pre class="literallayout"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> T<span class="special">&gt;</span> 
-  <a name="id465881-bb"></a><span class="identifier">old_value</span><span class="special">(</span><span class="identifier">T</span> <span class="keyword">const</span> <span class="special">&amp;</span> old<span class="special">,</span> 
+  <a name="id461642-bb"></a><span class="identifier">old_value</span><span class="special">(</span><span class="identifier">T</span> <span class="keyword">const</span> <span class="special">&amp;</span> old<span class="special">,</span> 
             <span class="keyword">typename</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">disable_if</span><span class="special">&lt;</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">is_copy_constructible</span><span class="special">&lt;</span> <span class="identifier">T</span> <span class="special">&gt;</span> <span class="special">&gt;</span><span class="special">::</span><span class="identifier">type</span> <span class="special">*</span> <span class="special">=</span> <span class="number">0</span><span class="special">)</span><span class="special">;</span></pre>Construct this object from the specified old value when the old value type is not copy constructible. <p>The specified old value cannot be copied in this case so it is not copied and the related old value pointer will always be null. 
 
 </p>

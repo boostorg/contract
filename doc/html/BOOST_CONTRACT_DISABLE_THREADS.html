@@ -33,7 +33,7 @@
 
 </span>BOOST_CONTRACT_DISABLE_THREADS</pre></div>
 <div class="refsect1">
-<a name="id942513"></a><h2>Description</h2>
+<a name="id943182"></a><h2>Description</h2>
 <p>Defining this macro will make the library implementation code not thread safe so this macro should not be defined unless the library is being used strictly under single-threaded applications. However, when this macro is left undefined this library needs to use "global" locks (to ensure contract checking is globally disabled when other contracts are being checked and also to safely access the failure handler functors) and that could introduce a significant amount of synchronization in some multi-threaded applications.</p>
 <p><span class="bold"><strong>Rationale:</strong></span> Named after <code class="computeroutput">BOOST_DISABLE_THREADS</code>. </p>
 <p><span class="bold"><strong>See Also:</strong></span></p>

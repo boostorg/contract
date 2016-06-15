@@ -6,8 +6,8 @@
 <meta name="generator" content="DocBook XSL Stylesheets V1.78.1">
 <link rel="home" href="../../index.html" title="Chapter&#160;1.&#160;Boost.Contract 1.0">
 <link rel="up" href="../../reference.html#header.boost.contract.public_function_hpp" title="Header &lt;boost/contract/public_function.hpp&gt;">
-<link rel="prev" href="public_function_id467211.html" title="Function template public_function">
-<link rel="next" href="public_function_id467388.html" title="Function template public_function">
+<link rel="prev" href="public_function_id462389.html" title="Function template public_function">
+<link rel="next" href="public_function_id462675.html" title="Function template public_function">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
 <table cellpadding="2" width="100%"><tr>
@@ -20,28 +20,29 @@
 </tr></table>
 <hr>
 <div class="spirit-nav">
-<a accesskey="p" href="public_function_id467211.html"><img src="../../../..//doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../../reference.html#header.boost.contract.public_function_hpp"><img src="../../../..//doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../..//doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="public_function_id467388.html"><img src="../../../..//doc/src/images/next.png" alt="Next"></a>
+<a accesskey="p" href="public_function_id462389.html"><img src="../../../..//doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../../reference.html#header.boost.contract.public_function_hpp"><img src="../../../..//doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../..//doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="public_function_id462675.html"><img src="../../../..//doc/src/images/next.png" alt="Next"></a>
 </div>
 <div class="refentry">
-<a name="boost.contract.public_function_id467286"></a><div class="titlepage"></div>
+<a name="boost.contract.public_function_id462520"></a><div class="titlepage"></div>
 <div class="refnamediv">
 <h2><span class="refentrytitle">Function template public_function</span></h2>
-<p>boost::contract::public_function &#8212; Program contracts for virtual, not overriding public functions returning void. </p>
+<p>boost::contract::public_function &#8212; Program contracts for overriding public functions (virtual or not) returning void. </p>
 </div>
 <h2 xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="refsynopsisdiv-title">Synopsis</h2>
 <div xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="refsynopsisdiv"><pre class="synopsis"><span class="comment">// In header: &lt;<a class="link" href="../../reference.html#header.boost.contract.public_function_hpp" title="Header &lt;boost/contract/public_function.hpp&gt;">boost/contract/public_function.hpp</a>&gt;
 
 </span>
-<span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> Class<span class="special">&gt;</span> 
-  <a class="link" href="specify_precondit_id464674.html" title="Class template specify_precondition_old_postcondition">specify_precondition_old_postcondition</a> 
-  <span class="identifier">public_function</span><span class="special">(</span><a class="link" href="virtual_.html" title="Class virtual_">virtual_</a> <span class="special">*</span> v<span class="special">,</span> <span class="identifier">Class</span> <span class="special">*</span> obj<span class="special">)</span><span class="special">;</span></pre></div>
+<span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> Override<span class="special">,</span> <span class="keyword">typename</span> F<span class="special">,</span> <span class="keyword">typename</span> Class<span class="special">,</span> <span class="keyword">typename</span><span class="special">...</span> Args<span class="special">&gt;</span> 
+  <a class="link" href="specify_precondit_id460435.html" title="Class template specify_precondition_old_postcondition">specify_precondition_old_postcondition</a> 
+  <span class="identifier">public_function</span><span class="special">(</span><a class="link" href="virtual_.html" title="Class virtual_">virtual_</a> <span class="special">*</span> v<span class="special">,</span> <span class="identifier">F</span> f<span class="special">,</span> <span class="identifier">Class</span> <span class="special">*</span> obj<span class="special">,</span> <span class="identifier">Args</span> <span class="special">&amp;</span><span class="special">...</span> args<span class="special">)</span><span class="special">;</span></pre></div>
 <div class="refsect1">
-<a name="id956007"></a><h2>Description</h2>
-<p>This is used to specify preconditions, postconditions, old value assignments at body, and check class invariants for public functions that are virtual, do not override, and return <code class="computeroutput">void</code>.</p>
+<a name="id957852"></a><h2>Description</h2>
+<p>This is used to specify preconditions, postconditions, old value assignments at body, and check class invariants for overriding public functions (virtual or not) that return <code class="computeroutput">void</code>.</p>
 <p>For optimization, this can be omitted for public functions that do not have preconditions and postconditions when the enclosing class has no (non-static) invariants. </p>
 <p><span class="bold"><strong>See Also:</strong></span></p>
 <p> <a class="link" href="../../boost_contract/tutorial.html" title="Tutorial"> Tutorial</a> </p>
 <p>
+
 
 
 </p>
@@ -60,6 +61,14 @@
 </colgroup>
 <tbody>
 <tr>
+<td><p><span class="term"><code class="computeroutput">args</code></span></p></td>
+<td><p>The contracted function arguments (by reference and in the oder they appear in the contracted function declaration). On compilers that do not support variadic templates, this library internally implements this function using preprocessor meta-programming (in this case, the maximum number of supported arguments <code class="computeroutput">args</code> is defined by  <code class="computeroutput"><code class="computeroutput"><a class="link" href="../../BOOST_CONTRACT_MAX_ARGS.html" title="Macro BOOST_CONTRACT_MAX_ARGS">BOOST_CONTRACT_MAX_ARGS</a></code></code>). </p></td>
+</tr>
+<tr>
+<td><p><span class="term"><code class="computeroutput">f</code></span></p></td>
+<td><p>A pointer to the contracted function. </p></td>
+</tr>
+<tr>
 <td><p><span class="term"><code class="computeroutput">obj</code></span></p></td>
 <td><p>The object <code class="computeroutput">this</code> from the scope of the contracted function. This object can be <code class="computeroutput">const</code> and <code class="computeroutput">volatile</code> depending on the cv-qualifier for the contracted function (volatile public functions will check volatile class invariants, see also  <a class="link" href="../../boost_contract/advanced_topics.html" title="Advanced Topics"> Advanced Topics</a>). </p></td>
 </tr>
@@ -68,6 +77,19 @@
 <td><p>The contracted virtual function extra trailing parameter of type  <code class="computeroutput"><code class="computeroutput"><a class="link" href="virtual_.html" title="Class virtual_">boost::contract::virtual_</a></code></code><code class="computeroutput">*</code> and with default value <code class="computeroutput">0</code>. </p></td>
 </tr>
 </tbody>
+</table></div></td>
+</tr>
+<tr>
+<td><p><span class="term">Template Parameters:</span></p></td>
+<td><div class="variablelist"><table border="0" class="variablelist compact">
+<colgroup>
+<col align="left" valign="top">
+<col>
+</colgroup>
+<tbody><tr>
+<td><p><span class="term"><code class="computeroutput">Override</code></span></p></td>
+<td><p>The type <code class="computeroutput">override_</code>... declared using the  <code class="computeroutput"><code class="computeroutput"><a class="link" href="../../BOOST_CONTRACT_OVERRIDE.html" title="Macro BOOST_CONTRACT_OVERRIDE">BOOST_CONTRACT_OVERRIDE</a></code></code> (or similar) macro using the contracted function name. This template parameter must be explicitly specified (because there is no function arguments from which this type template parameter can be automatically deduced). </p></td>
+</tr></tbody>
 </table></div></td>
 </tr>
 <tr>
@@ -89,7 +111,7 @@
 </tr></table>
 <hr>
 <div class="spirit-nav">
-<a accesskey="p" href="public_function_id467211.html"><img src="../../../..//doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../../reference.html#header.boost.contract.public_function_hpp"><img src="../../../..//doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../..//doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="public_function_id467388.html"><img src="../../../..//doc/src/images/next.png" alt="Next"></a>
+<a accesskey="p" href="public_function_id462389.html"><img src="../../../..//doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../../reference.html#header.boost.contract.public_function_hpp"><img src="../../../..//doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../..//doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="public_function_id462675.html"><img src="../../../..//doc/src/images/next.png" alt="Next"></a>
 </div>
 </body>
 </html>

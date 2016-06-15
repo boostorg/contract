@@ -6,8 +6,8 @@
 <meta name="generator" content="DocBook XSL Stylesheets V1.78.1">
 <link rel="home" href="../../index.html" title="Chapter&#160;1.&#160;Boost.Contract 1.0">
 <link rel="up" href="../../reference.html#header.boost.contract.call_if_hpp" title="Header &lt;boost/contract/call_if.hpp&gt;">
-<link rel="prev" href="call_if_statement_id461419.html" title="Struct template call_if_statement&lt;false, Then, unspecified&gt;">
-<link rel="next" href="call_if_statement_id461787.html" title="Struct template call_if_statement&lt;true, Then, ThenResult&gt;">
+<link rel="prev" href="call_if_statement_id455550.html" title="Struct template call_if_statement&lt;false, Then, unspecified&gt;">
+<link rel="next" href="call_if_statement_id455918.html" title="Struct template call_if_statement&lt;true, Then, ThenResult&gt;">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
 <table cellpadding="2" width="100%"><tr>
@@ -20,10 +20,10 @@
 </tr></table>
 <hr>
 <div class="spirit-nav">
-<a accesskey="p" href="call_if_statement_id461419.html"><img src="../../../..//doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../../reference.html#header.boost.contract.call_if_hpp"><img src="../../../..//doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../..//doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="call_if_statement_id461787.html"><img src="../../../..//doc/src/images/next.png" alt="Next"></a>
+<a accesskey="p" href="call_if_statement_id455550.html"><img src="../../../..//doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../../reference.html#header.boost.contract.call_if_hpp"><img src="../../../..//doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../..//doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="call_if_statement_id455918.html"><img src="../../../..//doc/src/images/next.png" alt="Next"></a>
 </div>
 <div class="refentry">
-<a name="boost.contract.call_if_statement_id461686"></a><div class="titlepage"></div>
+<a name="boost.contract.call_if_statement_id455817"></a><div class="titlepage"></div>
 <div class="refnamediv">
 <h2><span class="refentrytitle">Struct template call_if_statement&lt;true, Then, unspecified&gt;</span></h2>
 <p>boost::contract::call_if_statement&lt;true, Then, unspecified&gt; &#8212; Template specialization to dispatch between then-branch functor calls that return void and the ones that return non-void. </p>
@@ -32,13 +32,13 @@
 <div xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="refsynopsisdiv"><pre class="synopsis"><span class="comment">// In header: &lt;<a class="link" href="../../reference.html#header.boost.contract.call_if_hpp" title="Header &lt;boost/contract/call_if.hpp&gt;">boost/contract/call_if.hpp</a>&gt;
 
 </span><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> Then<span class="special">&gt;</span> 
-<span class="keyword">struct</span> <a class="link" href="call_if_statement_id461686.html" title="Struct template call_if_statement&lt;true, Then, unspecified&gt;">call_if_statement</a><span class="special">&lt;</span><span class="keyword">true</span><span class="special">,</span> <span class="identifier">Then</span><span class="special">,</span> <span class="identifier">unspecified</span><span class="special">&gt;</span> <span class="special">:</span> <span class="keyword">public</span> boost::contract::call_if_statement&lt; true, Then, result_of&lt; Then()&gt;::type &gt;
+<span class="keyword">struct</span> <a class="link" href="call_if_statement_id455817.html" title="Struct template call_if_statement&lt;true, Then, unspecified&gt;">call_if_statement</a><span class="special">&lt;</span><span class="keyword">true</span><span class="special">,</span> <span class="identifier">Then</span><span class="special">,</span> <span class="identifier">unspecified</span><span class="special">&gt;</span> <span class="special">:</span> <span class="keyword">public</span> boost::contract::call_if_statement&lt; true, Then, result_of&lt; Then()&gt;::type &gt;
 <span class="special">{</span>
-  <span class="comment">// <a class="link" href="call_if_statement_id461686.html#boost.contract.call_if_statement_id461686construct-copy-destruct">construct/copy/destruct</a></span>
-  <span class="keyword">explicit</span> <a class="link" href="call_if_statement_id461686.html#id461762-bb"><span class="identifier">call_if_statement</span></a><span class="special">(</span><span class="identifier">Then</span><span class="special">)</span><span class="special">;</span>
+  <span class="comment">// <a class="link" href="call_if_statement_id455817.html#boost.contract.call_if_statement_id455817construct-copy-destruct">construct/copy/destruct</a></span>
+  <span class="keyword">explicit</span> <a class="link" href="call_if_statement_id455817.html#id455893-bb"><span class="identifier">call_if_statement</span></a><span class="special">(</span><span class="identifier">Then</span><span class="special">)</span><span class="special">;</span>
 <span class="special">}</span><span class="special">;</span></pre></div>
 <div class="refsect1">
-<a name="id937112"></a><h2>Description</h2>
+<a name="id937303"></a><h2>Description</h2>
 <p>The base class is a call-if statement so the else and else-if statements can be specified if needed.</p>
 <p>Usually this class template is instantiated only via the return value of  <code class="computeroutput"><a class="link" href="call_if.html" title="Function template call_if">boost::contract::call_if</a></code> and <code class="computeroutput"><a class="link" href="call_if_c.html" title="Function template call_if_c">boost::contract::call_if_c</a></code>. </p>
 <div class="note"><table border="0" summary="Note">
@@ -56,19 +56,19 @@
 
 </p>
 <div class="refsect2">
-<a name="id937163"></a><h3>Template Parameters</h3>
+<a name="id937354"></a><h3>Template Parameters</h3>
 <div class="orderedlist"><ol class="orderedlist" type="1"><li class="listitem">
 <pre class="literallayout"><span class="keyword">typename</span> Then</pre>
 <p>Type of functor to call when the static condition if true. </p>
 </li></ol></div>
 </div>
 <div class="refsect2">
-<a name="id937186"></a><h3>
-<a name="boost.contract.call_if_statement_id461686construct-copy-destruct"></a><code class="computeroutput">call_if_statement</code> 
+<a name="id937377"></a><h3>
+<a name="boost.contract.call_if_statement_id455817construct-copy-destruct"></a><code class="computeroutput">call_if_statement</code> 
         public
        construct/copy/destruct</h3>
 <div class="orderedlist"><ol class="orderedlist" type="1"><li class="listitem">
-<pre class="literallayout"><span class="keyword">explicit</span> <a name="id461762-bb"></a><span class="identifier">call_if_statement</span><span class="special">(</span><span class="identifier">Then</span> f<span class="special">)</span><span class="special">;</span></pre>Construct this object with the then-branch functor. <p>
+<pre class="literallayout"><span class="keyword">explicit</span> <a name="id455893-bb"></a><span class="identifier">call_if_statement</span><span class="special">(</span><span class="identifier">Then</span> f<span class="special">)</span><span class="special">;</span></pre>Construct this object with the then-branch functor. <p>
 </p>
 <div class="variablelist"><table border="0" class="variablelist compact">
 <colgroup>
@@ -104,7 +104,7 @@
 </tr></table>
 <hr>
 <div class="spirit-nav">
-<a accesskey="p" href="call_if_statement_id461419.html"><img src="../../../..//doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../../reference.html#header.boost.contract.call_if_hpp"><img src="../../../..//doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../..//doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="call_if_statement_id461787.html"><img src="../../../..//doc/src/images/next.png" alt="Next"></a>
+<a accesskey="p" href="call_if_statement_id455550.html"><img src="../../../..//doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../../reference.html#header.boost.contract.call_if_hpp"><img src="../../../..//doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../..//doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="call_if_statement_id455918.html"><img src="../../../..//doc/src/images/next.png" alt="Next"></a>
 </div>
 </body>
 </html>

@@ -33,7 +33,7 @@
 
 </span>BOOST_CONTRACT_ASSERT(condition)</pre></div>
 <div class="refsect1">
-<a name="id934342"></a><h2>Description</h2>
+<a name="id934532"></a><h2>Description</h2>
 <p>Any exception thrown from within a preconditions, postcondition, or class invariant functor is interpreted by this library as a contract failure. Therefore, users can program contract assertions manually throwing exceptions from the precondition, postcondition, or invariant functions when the asserted condition is checked to be <code class="computeroutput">false</code> (this library will then call the appropriate contract failure handler  <code class="computeroutput">boost::contract::precondition_failure</code>, etc.). However, using this macro is preferred because in case <code class="computeroutput">condition</code> is checked to be <code class="computeroutput">false</code>, this macro expands to code that throws  <code class="computeroutput">boost::contract::assertion_failure</code> with the correct assertion file name (<code class="computeroutput">__FILE__</code>), line number (<code class="computeroutput">__LINE__</code>), and asserted condition source code so to produce an informative error message.</p>
 <p>This macro is not a variadic macro. Therefore, if <code class="computeroutput">condition</code> contains commas not already wrapped by round parenthesis, it needs to be wrapped by an outer set of extra round parenthesis <code class="computeroutput">BOOST_CONTRACT_ASSERT((...))</code> (as usual with C++ non-variadic macro parameters). </p>
 <p><span class="bold"><strong>See Also:</strong></span></p>

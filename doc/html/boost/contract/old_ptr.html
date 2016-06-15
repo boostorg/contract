@@ -38,42 +38,42 @@
   <span class="keyword">typedef</span> <span class="identifier">T</span> <a name="boost.contract.old_ptr.element_type"></a><span class="identifier">element_type</span><span class="special">;</span>  <span class="comment">// Pointed old value type. </span>
 
   <span class="comment">// <a class="link" href="old_ptr.html#boost.contract.old_ptrconstruct-copy-destruct">construct/copy/destruct</a></span>
-  <a class="link" href="old_ptr.html#id465647-bb"><span class="identifier">old_ptr</span></a><span class="special">(</span><span class="special">)</span><span class="special">;</span>
+  <a class="link" href="old_ptr.html#id461408-bb"><span class="identifier">old_ptr</span></a><span class="special">(</span><span class="special">)</span><span class="special">;</span>
 
-  <span class="comment">// <a class="link" href="old_ptr.html#id465574-bb">public member functions</a></span>
-  <span class="identifier">T</span> <span class="keyword">const</span> <span class="special">&amp;</span> <a class="link" href="old_ptr.html#id465578-bb"><span class="keyword">operator</span><span class="special">*</span></a><span class="special">(</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span>
-  <span class="identifier">T</span> <span class="keyword">const</span> <span class="special">*</span><span class="keyword">const</span> <a class="link" href="old_ptr.html#id465603-bb"><span class="keyword">operator</span><span class="special">-&gt;</span></a><span class="special">(</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span>
-  <span class="keyword">explicit</span> <a class="link" href="old_ptr.html#id465628-bb"><span class="keyword">operator</span> <span class="keyword">bool</span></a><span class="special">(</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span>
+  <span class="comment">// <a class="link" href="old_ptr.html#id461335-bb">public member functions</a></span>
+  <span class="identifier">T</span> <span class="keyword">const</span> <span class="special">&amp;</span> <a class="link" href="old_ptr.html#id461339-bb"><span class="keyword">operator</span><span class="special">*</span></a><span class="special">(</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span>
+  <span class="identifier">T</span> <span class="keyword">const</span> <span class="special">*</span><span class="keyword">const</span> <a class="link" href="old_ptr.html#id461364-bb"><span class="keyword">operator</span><span class="special">-&gt;</span></a><span class="special">(</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span>
+  <span class="keyword">explicit</span> <a class="link" href="old_ptr.html#id461389-bb"><span class="keyword">operator</span> <span class="keyword">bool</span></a><span class="special">(</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span>
 <span class="special">}</span><span class="special">;</span></pre></div>
 <div class="refsect1">
-<a name="id951118"></a><h2>Description</h2>
-<p>This is set to point to an actual old value via either  <code class="computeroutput"><a class="link" href="../../BOOST_CONTRACT_OLDOF.html" title="Macro BOOST_CONTRACT_OLDOF">BOOST_CONTRACT_OLDOF</a></code> or <code class="computeroutput"><a class="link" href="make_old_id465946.html" title="Function make_old">boost::contract::make_old</a></code> (that is why this class does not have public non-default constructors). </p>
+<a name="id952478"></a><h2>Description</h2>
+<p>This is set to point to an actual old value via either  <code class="computeroutput"><a class="link" href="../../BOOST_CONTRACT_OLDOF.html" title="Macro BOOST_CONTRACT_OLDOF">BOOST_CONTRACT_OLDOF</a></code> or <code class="computeroutput"><a class="link" href="make_old_id461707.html" title="Function make_old">boost::contract::make_old</a></code> (that is why this class does not have public non-default constructors). </p>
 <p><span class="bold"><strong>See Also:</strong></span></p>
 <p> <a class="link" href="../../boost_contract/tutorial.html" title="Tutorial"> Tutorial</a> </p>
 <p>
 
 </p>
 <div class="refsect2">
-<a name="id951153"></a><h3>Template Parameters</h3>
+<a name="id952513"></a><h3>Template Parameters</h3>
 <div class="orderedlist"><ol class="orderedlist" type="1"><li class="listitem">
 <pre class="literallayout"><span class="keyword">typename</span> T</pre>
 <p>Type of the pointed old value. This type must be copy constructible, otherwise this pointer will always be null and this library will generate a compile-time error if this pointer is dereferenced. </p>
 </li></ol></div>
 </div>
 <div class="refsect2">
-<a name="id951174"></a><h3>
+<a name="id952535"></a><h3>
 <a name="boost.contract.old_ptrconstruct-copy-destruct"></a><code class="computeroutput">old_ptr</code> 
         public
        construct/copy/destruct</h3>
 <div class="orderedlist"><ol class="orderedlist" type="1"><li class="listitem">
-<pre class="literallayout"><a name="id465647-bb"></a><span class="identifier">old_ptr</span><span class="special">(</span><span class="special">)</span><span class="special">;</span></pre>Construct this object as a null old value pointer. </li></ol></div>
+<pre class="literallayout"><a name="id461408-bb"></a><span class="identifier">old_ptr</span><span class="special">(</span><span class="special">)</span><span class="special">;</span></pre>Construct this object as a null old value pointer. </li></ol></div>
 </div>
 <div class="refsect2">
-<a name="id951212"></a><h3>
-<a name="id465574-bb"></a><code class="computeroutput">old_ptr</code> public member functions</h3>
+<a name="id952572"></a><h3>
+<a name="id461335-bb"></a><code class="computeroutput">old_ptr</code> public member functions</h3>
 <div class="orderedlist"><ol class="orderedlist" type="1">
 <li class="listitem">
-<pre class="literallayout"><span class="identifier">T</span> <span class="keyword">const</span> <span class="special">&amp;</span> <a name="id465578-bb"></a><span class="keyword">operator</span><span class="special">*</span><span class="special">(</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span></pre>Dereference this old value pointer. <p>This will generate a run-time error if this pointer is null and a compile-time error if the pointed type <code class="computeroutput">T</code> is not copy constructible. 
+<pre class="literallayout"><span class="identifier">T</span> <span class="keyword">const</span> <span class="special">&amp;</span> <a name="id461339-bb"></a><span class="keyword">operator</span><span class="special">*</span><span class="special">(</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span></pre>Dereference this old value pointer. <p>This will generate a run-time error if this pointer is null and a compile-time error if the pointed type <code class="computeroutput">T</code> is not copy constructible. 
 </p>
 <div class="variablelist"><table border="0" class="variablelist compact">
 <colgroup>
@@ -87,7 +87,7 @@
 </table></div>
 </li>
 <li class="listitem">
-<pre class="literallayout"><span class="identifier">T</span> <span class="keyword">const</span> <span class="special">*</span><span class="keyword">const</span> <a name="id465603-bb"></a><span class="keyword">operator</span><span class="special">-&gt;</span><span class="special">(</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span></pre>Structure-dereference this old value pointer. <p>This will generate a compile-time error if the pointed type <code class="computeroutput">T</code> is not copy constructible. 
+<pre class="literallayout"><span class="identifier">T</span> <span class="keyword">const</span> <span class="special">*</span><span class="keyword">const</span> <a name="id461364-bb"></a><span class="keyword">operator</span><span class="special">-&gt;</span><span class="special">(</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span></pre>Structure-dereference this old value pointer. <p>This will generate a compile-time error if the pointed type <code class="computeroutput">T</code> is not copy constructible. 
 </p>
 <div class="variablelist"><table border="0" class="variablelist compact">
 <colgroup>
@@ -101,7 +101,7 @@
 </table></div>
 </li>
 <li class="listitem">
-<pre class="literallayout"><span class="keyword">explicit</span> <a name="id465628-bb"></a><span class="keyword">operator</span> <span class="keyword">bool</span><span class="special">(</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span></pre>Check if this old value pointer is null or not (safe-bool operator). <p>
+<pre class="literallayout"><span class="keyword">explicit</span> <a name="id461389-bb"></a><span class="keyword">operator</span> <span class="keyword">bool</span><span class="special">(</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span></pre>Check if this old value pointer is null or not (safe-bool operator). <p>
 </p>
 <div class="variablelist"><table border="0" class="variablelist compact">
 <colgroup>

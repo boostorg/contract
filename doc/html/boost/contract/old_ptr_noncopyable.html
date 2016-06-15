@@ -38,39 +38,39 @@
   <span class="keyword">typedef</span> <span class="identifier">T</span> <a name="boost.contract.old_ptr_noncopyable.element_type"></a><span class="identifier">element_type</span><span class="special">;</span>  <span class="comment">// Pointed old value type. </span>
 
   <span class="comment">// <a class="link" href="old_ptr_noncopyable.html#boost.contract.old_ptr_noncopyableconstruct-copy-destruct">construct/copy/destruct</a></span>
-  <a class="link" href="old_ptr_noncopyable.html#id465776-bb"><span class="identifier">old_ptr_noncopyable</span></a><span class="special">(</span><span class="special">)</span><span class="special">;</span>
-  <a class="link" href="old_ptr_noncopyable.html#id465781-bb"><span class="identifier">old_ptr_noncopyable</span></a><span class="special">(</span><a class="link" href="old_ptr.html" title="Class template old_ptr">old_ptr</a><span class="special">&lt;</span> <span class="identifier">T</span> <span class="special">&gt;</span> <span class="keyword">const</span> <span class="special">&amp;</span><span class="special">)</span><span class="special">;</span>
+  <a class="link" href="old_ptr_noncopyable.html#id461537-bb"><span class="identifier">old_ptr_noncopyable</span></a><span class="special">(</span><span class="special">)</span><span class="special">;</span>
+  <a class="link" href="old_ptr_noncopyable.html#id461542-bb"><span class="identifier">old_ptr_noncopyable</span></a><span class="special">(</span><a class="link" href="old_ptr.html" title="Class template old_ptr">old_ptr</a><span class="special">&lt;</span> <span class="identifier">T</span> <span class="special">&gt;</span> <span class="keyword">const</span> <span class="special">&amp;</span><span class="special">)</span><span class="special">;</span>
 
-  <span class="comment">// <a class="link" href="old_ptr_noncopyable.html#id465705-bb">public member functions</a></span>
-  <span class="identifier">T</span> <span class="keyword">const</span> <span class="special">&amp;</span> <a class="link" href="old_ptr_noncopyable.html#id465709-bb"><span class="keyword">operator</span><span class="special">*</span></a><span class="special">(</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span>
-  <span class="identifier">T</span> <span class="keyword">const</span> <span class="special">*</span><span class="keyword">const</span> <a class="link" href="old_ptr_noncopyable.html#id465733-bb"><span class="keyword">operator</span><span class="special">-&gt;</span></a><span class="special">(</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span>
-  <span class="keyword">explicit</span> <a class="link" href="old_ptr_noncopyable.html#id465757-bb"><span class="keyword">operator</span> <span class="keyword">bool</span></a><span class="special">(</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span>
+  <span class="comment">// <a class="link" href="old_ptr_noncopyable.html#id461466-bb">public member functions</a></span>
+  <span class="identifier">T</span> <span class="keyword">const</span> <span class="special">&amp;</span> <a class="link" href="old_ptr_noncopyable.html#id461470-bb"><span class="keyword">operator</span><span class="special">*</span></a><span class="special">(</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span>
+  <span class="identifier">T</span> <span class="keyword">const</span> <span class="special">*</span><span class="keyword">const</span> <a class="link" href="old_ptr_noncopyable.html#id461494-bb"><span class="keyword">operator</span><span class="special">-&gt;</span></a><span class="special">(</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span>
+  <span class="keyword">explicit</span> <a class="link" href="old_ptr_noncopyable.html#id461518-bb"><span class="keyword">operator</span> <span class="keyword">bool</span></a><span class="special">(</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span>
 <span class="special">}</span><span class="special">;</span></pre></div>
 <div class="refsect1">
-<a name="id951724"></a><h2>Description</h2>
-<p>This is set to point to an actual old value via either  <code class="computeroutput"><a class="link" href="../../BOOST_CONTRACT_OLDOF.html" title="Macro BOOST_CONTRACT_OLDOF">BOOST_CONTRACT_OLDOF</a></code> or <code class="computeroutput"><a class="link" href="make_old_id465946.html" title="Function make_old">boost::contract::make_old</a></code>. </p>
+<a name="id953084"></a><h2>Description</h2>
+<p>This is set to point to an actual old value via either  <code class="computeroutput"><a class="link" href="../../BOOST_CONTRACT_OLDOF.html" title="Macro BOOST_CONTRACT_OLDOF">BOOST_CONTRACT_OLDOF</a></code> or <code class="computeroutput"><a class="link" href="make_old_id461707.html" title="Function make_old">boost::contract::make_old</a></code>. </p>
 <p><span class="bold"><strong>See Also:</strong></span></p>
 <p> <a class="link" href="../../boost_contract/advanced_topics.html" title="Advanced Topics"> Advanced Topics</a> </p>
 <p>
 
 </p>
 <div class="refsect2">
-<a name="id951759"></a><h3>Template Parameters</h3>
+<a name="id953119"></a><h3>Template Parameters</h3>
 <div class="orderedlist"><ol class="orderedlist" type="1"><li class="listitem">
 <pre class="literallayout"><span class="keyword">typename</span> T</pre>
 <p>Type of pointed old value. If this type is not copy constructible, this pointer will always be null (but this library will not generate compile-time errors when this pointer is dereferenced). </p>
 </li></ol></div>
 </div>
 <div class="refsect2">
-<a name="id951780"></a><h3>
+<a name="id953141"></a><h3>
 <a name="boost.contract.old_ptr_noncopyableconstruct-copy-destruct"></a><code class="computeroutput">old_ptr_noncopyable</code> 
         public
        construct/copy/destruct</h3>
 <div class="orderedlist"><ol class="orderedlist" type="1">
 <li class="listitem">
-<pre class="literallayout"><a name="id465776-bb"></a><span class="identifier">old_ptr_noncopyable</span><span class="special">(</span><span class="special">)</span><span class="special">;</span></pre>Construct this object as a null old value pointer. </li>
+<pre class="literallayout"><a name="id461537-bb"></a><span class="identifier">old_ptr_noncopyable</span><span class="special">(</span><span class="special">)</span><span class="special">;</span></pre>Construct this object as a null old value pointer. </li>
 <li class="listitem">
-<pre class="literallayout"><a name="id465781-bb"></a><span class="identifier">old_ptr_noncopyable</span><span class="special">(</span><a class="link" href="old_ptr.html" title="Class template old_ptr">old_ptr</a><span class="special">&lt;</span> <span class="identifier">T</span> <span class="special">&gt;</span> <span class="keyword">const</span> <span class="special">&amp;</span> other<span class="special">)</span><span class="special">;</span></pre>Construct this object from an old value pointer of copyable-only types. <p>This constructor is implicitly called by this library when assigning an object of this type using <code class="computeroutput"><code class="computeroutput"><a class="link" href="../../BOOST_CONTRACT_OLDOF.html" title="Macro BOOST_CONTRACT_OLDOF">BOOST_CONTRACT_OLDOF</a></code></code>. 
+<pre class="literallayout"><a name="id461542-bb"></a><span class="identifier">old_ptr_noncopyable</span><span class="special">(</span><a class="link" href="old_ptr.html" title="Class template old_ptr">old_ptr</a><span class="special">&lt;</span> <span class="identifier">T</span> <span class="special">&gt;</span> <span class="keyword">const</span> <span class="special">&amp;</span> other<span class="special">)</span><span class="special">;</span></pre>Construct this object from an old value pointer of copyable-only types. <p>This constructor is implicitly called by this library when assigning an object of this type using <code class="computeroutput"><code class="computeroutput"><a class="link" href="../../BOOST_CONTRACT_OLDOF.html" title="Macro BOOST_CONTRACT_OLDOF">BOOST_CONTRACT_OLDOF</a></code></code>. 
 </p>
 <div class="variablelist"><table border="0" class="variablelist compact">
 <colgroup>
@@ -95,11 +95,11 @@
 </ol></div>
 </div>
 <div class="refsect2">
-<a name="id951905"></a><h3>
-<a name="id465705-bb"></a><code class="computeroutput">old_ptr_noncopyable</code> public member functions</h3>
+<a name="id953334"></a><h3>
+<a name="id461466-bb"></a><code class="computeroutput">old_ptr_noncopyable</code> public member functions</h3>
 <div class="orderedlist"><ol class="orderedlist" type="1">
 <li class="listitem">
-<pre class="literallayout"><span class="identifier">T</span> <span class="keyword">const</span> <span class="special">&amp;</span> <a name="id465709-bb"></a><span class="keyword">operator</span><span class="special">*</span><span class="special">(</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span></pre>Dereference this old value pointer. <p>This will generate a run-time error if this pointer is null (but no compile-time error if the pointed type <code class="computeroutput">T</code> is not copy constructible). 
+<pre class="literallayout"><span class="identifier">T</span> <span class="keyword">const</span> <span class="special">&amp;</span> <a name="id461470-bb"></a><span class="keyword">operator</span><span class="special">*</span><span class="special">(</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span></pre>Dereference this old value pointer. <p>This will generate a run-time error if this pointer is null (but no compile-time error if the pointed type <code class="computeroutput">T</code> is not copy constructible). 
 </p>
 <div class="variablelist"><table border="0" class="variablelist compact">
 <colgroup>
@@ -113,7 +113,7 @@
 </table></div>
 </li>
 <li class="listitem">
-<pre class="literallayout"><span class="identifier">T</span> <span class="keyword">const</span> <span class="special">*</span><span class="keyword">const</span> <a name="id465733-bb"></a><span class="keyword">operator</span><span class="special">-&gt;</span><span class="special">(</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span></pre>Structure-dereference this old value pointer. <p>(This will not generate a compile-time error if the pointed type <code class="computeroutput">T</code> is not copy constructible.) 
+<pre class="literallayout"><span class="identifier">T</span> <span class="keyword">const</span> <span class="special">*</span><span class="keyword">const</span> <a name="id461494-bb"></a><span class="keyword">operator</span><span class="special">-&gt;</span><span class="special">(</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span></pre>Structure-dereference this old value pointer. <p>(This will not generate a compile-time error if the pointed type <code class="computeroutput">T</code> is not copy constructible.) 
 </p>
 <div class="variablelist"><table border="0" class="variablelist compact">
 <colgroup>
@@ -127,7 +127,7 @@
 </table></div>
 </li>
 <li class="listitem">
-<pre class="literallayout"><span class="keyword">explicit</span> <a name="id465757-bb"></a><span class="keyword">operator</span> <span class="keyword">bool</span><span class="special">(</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span></pre>Check if this old value pointer is null or not (safe-bool operator). <p>
+<pre class="literallayout"><span class="keyword">explicit</span> <a name="id461518-bb"></a><span class="keyword">operator</span> <span class="keyword">bool</span><span class="special">(</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span></pre>Check if this old value pointer is null or not (safe-bool operator). <p>
 </p>
 <div class="variablelist"><table border="0" class="variablelist compact">
 <colgroup>
