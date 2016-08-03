@@ -104,7 +104,7 @@ This library implements
 Design by Contract (DbC) is a registered trademark of [@http://en.wikipedia.org/wiki/Eiffel_Software Eiffel Software] and it was first introduced by the Eiffel programming language (see __Meyer97__).
 ]
 for the C++ programming language.
-All Contract Programming features are supported by this library: subcontracting, class invariants, postconditions (with old and return values), preconditions, customizable actions on assertion failure (terminate, throw, etc.), optional compilation of assertion checking, disable assertion checking while already checking other assertions (to avoid infinite recursion), etc.
+All Contract Programming features are supported by this library: subcontracting, class invariants (also static and volatile), postconditions (with old and return values), preconditions, customizable actions on assertion failure (terminate, throw, etc.), optional compilation of assertion checking, disable assertion checking while already checking other assertions (to avoid infinite recursion), etc.
 
 Hosted at: [@https://github.com/lcaminiti/boost-contract]
 

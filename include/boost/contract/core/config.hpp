@@ -156,9 +156,9 @@ Facilities to configure this library compile-time and run-time behaviour.
 #ifdef DOXYGEN
     /**
     Code block to execute if contracts are not assigned to a
-    @RefClass{boost::contract::guard} variable (undefined by default).
+    @RefClass{boost::contract::check} variable (undefined by default).
     In general, there is a logic error in the program when contracts are not
-    assigned to a local variable of type @RefClass{boost::contract::guard}.
+    assigned to a local variable of type @RefClass{boost::contract::check}.
     Therefore, by default (i.e., when this macro is not defined) this library
     calls @c assert with a @c false condition in such cases. If this macro is
     defined, this library will execute the code expanded by the macro instead of
@@ -267,7 +267,7 @@ Facilities to configure this library compile-time and run-time behaviour.
 
 // Following are NOT configuration macros.
 
-// Ctor pre checked separately and outside guard so not part of this #define.
+// Ctor pre checked separately and outside RAII so not part of this #define.
 #ifdef BOOST_CONTRACT_NO_CONSTRUCTORS
     #error "define NO_ENTRY_INVARIANTS, NO_EXIT_INVARIANTS, and NO_POSTCONDITIONS instead"
 #elif defined(BOOST_CONTRACT_NO_POSTCONDITIONS) && \

@@ -13,7 +13,7 @@ template<typename T>
 class vector {
 public:
     virtual void push_back(T const& value, boost::contract::virtual_* v = 0) {
-        // Program old value instead of using `OLDOF(size())` macro.
+        // Program old value instead of using `OLD(size())` macro.
         boost::contract::old_ptr<unsigned> old_size =
             boost::contract::make_old(v, boost::contract::copy_old(v) ?
                     size() : boost::contract::null_old())

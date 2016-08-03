@@ -77,7 +77,7 @@ result_type& t<Id>::f(s_type& s, boost::contract::virtual_* v) {
             BOOST_CONTRACT_ASSERT(result.value == old_s->value);
         })
     ;
-    out << "t<" << Id << ">::body" << std::endl;
+    out << "t<" << Id << ">::f::body" << std::endl;
     return result;
 }
 

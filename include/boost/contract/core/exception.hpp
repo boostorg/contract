@@ -127,6 +127,9 @@ public:
     @param line Number of the line containing the assertion (usually set using
                 <c>__LINE__</c>).
     @param code Text listing the source code of the asserted condition.
+    @note No need to support <c>__func__</c> because it will trivially expand
+    to <c>operator()</c> for lambdas functions (which are typically used to
+    specify contract assertions).
     */
     explicit assertion_failure(char const* const file = "",
             unsigned long const line = 0, char const* const code = "");
@@ -220,7 +223,20 @@ returning @c void and taking a single parameter of type
 also lambdas, binds, etc.).
 @see @RefSect{advanced_topics, Advanced Topics}
 */
-typedef boost::function<void (from)> assertion_failure_handler;
+typedef boost::function<void (from)> from_failure_handler;
+
+typedef boost::function<void ()> failure_handler;
+
+failure_handler /** @cond */ BOOST_CONTRACT_DETAIL_DECLSPEC /** @endcond */
+set_check_failure(failure_handler const& f)
+        /** @cond */ BOOST_NOEXCEPT_OR_NOTHROW /** @endcond */;
+
+failure_handler
+/** @cond */ BOOST_CONTRACT_DETAIL_DECLSPEC /** @endcond */
+get_check_failure() /** @cond */ BOOST_NOEXCEPT_OR_NOTHROW /** @endcond */;
+
+void /** @cond */ BOOST_CONTRACT_DETAIL_DECLSPEC /** @endcond */
+check_failure() /* can throw */;
 
 /**
 Set the precondition failure handler.
@@ -231,9 +247,8 @@ Set a new precondition failure handler and return the old one.
 @return Old precondition failure handler functor.
 @see @RefSect{advanced_topics, Advanced Topics}
 */
-assertion_failure_handler
-/** @cond */ BOOST_CONTRACT_DETAIL_DECLSPEC /** @endcond */
-set_precondition_failure(assertion_failure_handler const& f)
+from_failure_handler /** @cond */ BOOST_CONTRACT_DETAIL_DECLSPEC /** @endcond */
+set_precondition_failure(from_failure_handler const& f)
         /** @cond */ BOOST_NOEXCEPT_OR_NOTHROW /** @endcond */;
 
 /**
@@ -244,8 +259,7 @@ This is often called only internally by this library.
 @return Precondition failure handler functor.
 @see @RefSect{advanced_topics, Advanced Topics}
 */
-assertion_failure_handler
-/** @cond */ BOOST_CONTRACT_DETAIL_DECLSPEC /** @endcond */
+from_failure_handler /** @cond */ BOOST_CONTRACT_DETAIL_DECLSPEC /** @endcond */
 get_precondition_failure()
         /** @cond */ BOOST_NOEXCEPT_OR_NOTHROW /** @endcond */;
 
@@ -271,9 +285,8 @@ Set a new postcondition failure handler and return the old one.
 @return Old postcondition failure handler functor.
 @see @RefSect{advanced_topics, Advanced Topics}
 */
-assertion_failure_handler
-/** @cond */ BOOST_CONTRACT_DETAIL_DECLSPEC /** @endcond */
-set_postcondition_failure(assertion_failure_handler const& f)
+from_failure_handler /** @cond */ BOOST_CONTRACT_DETAIL_DECLSPEC /** @endcond */
+set_postcondition_failure(from_failure_handler const& f)
         /** @cond */ BOOST_NOEXCEPT_OR_NOTHROW /** @endcond */;
 
 /**
@@ -284,8 +297,7 @@ This is often called only internally by this library.
 @return Postcondition failure handler functor.
 @see @RefSect{advanced_topics, Advanced Topics}
 */
-assertion_failure_handler
-/** @cond */ BOOST_CONTRACT_DETAIL_DECLSPEC /** @endcond */
+from_failure_handler /** @cond */ BOOST_CONTRACT_DETAIL_DECLSPEC /** @endcond */
 get_postcondition_failure()
         /** @cond */ BOOST_NOEXCEPT_OR_NOTHROW /** @endcond */;
 
@@ -312,9 +324,8 @@ Set a new entry invariant failure handler and return the old one.
 @return Old entry invariant failure handler functor.
 @see @RefSect{advanced_topics, Advanced Topics}
 */
-assertion_failure_handler
-/** @cond */ BOOST_CONTRACT_DETAIL_DECLSPEC /** @endcond */
-set_entry_invariant_failure(assertion_failure_handler const& f)
+from_failure_handler /** @cond */ BOOST_CONTRACT_DETAIL_DECLSPEC /** @endcond */
+set_entry_invariant_failure(from_failure_handler const& f)
         /** @cond */ BOOST_NOEXCEPT_OR_NOTHROW /** @endcond */;
 
 /**
@@ -325,8 +336,7 @@ This is often called only internally by this library.
 @return Entry invariant failure handler functor.
 @see @RefSect{advanced_topics, Advanced Topics}
 */
-assertion_failure_handler
-/** @cond */ BOOST_CONTRACT_DETAIL_DECLSPEC /** @endcond */
+from_failure_handler /** @cond */ BOOST_CONTRACT_DETAIL_DECLSPEC /** @endcond */
 get_entry_invariant_failure()
         /** @cond */ BOOST_NOEXCEPT_OR_NOTHROW /** @endcond */;
 
@@ -353,9 +363,8 @@ Set a new exit invariant failure handler and return the old one.
 @return Old exit invariant failure handler functor.
 @see @RefSect{advanced_topics, Advanced Topics}
 */
-assertion_failure_handler
-/** @cond */ BOOST_CONTRACT_DETAIL_DECLSPEC /** @endcond */
-set_exit_invariant_failure(assertion_failure_handler const& f)
+from_failure_handler /** @cond */ BOOST_CONTRACT_DETAIL_DECLSPEC /** @endcond */
+set_exit_invariant_failure(from_failure_handler const& f)
         /** @cond */ BOOST_NOEXCEPT_OR_NOTHROW /** @endcond */;
 
 /**
@@ -366,8 +375,7 @@ This is often called only internally by this library.
 @return Exit invariant failure handler functor.
 @see @RefSect{advanced_topics, Advanced Topics}
 */
-assertion_failure_handler
-/** @cond */ BOOST_CONTRACT_DETAIL_DECLSPEC /** @endcond */
+from_failure_handler /** @cond */ BOOST_CONTRACT_DETAIL_DECLSPEC /** @endcond */
 get_exit_invariant_failure()
         /** @cond */ BOOST_NOEXCEPT_OR_NOTHROW /** @endcond */;
 
@@ -396,24 +404,10 @@ This is equivalent to calling both
 @see @RefSect{advanced_topics, Advanced Topics}
 */
 void /** @cond */ BOOST_CONTRACT_DETAIL_DECLSPEC /** @endcond */
-set_invariant_failure(assertion_failure_handler const& f)
+set_invariant_failure(from_failure_handler const& f)
         /** @cond */ BOOST_NOEXCEPT_OR_NOTHROW /** @endcond */;
 
-/**
-Set the all contract failure handlers at once (for convenience).
-This is equivalent to calling
-@RefFunc{boost::contract::set_entry_invariant_failure}<c>(f)</c>,
-@RefFunc{boost::contract::set_precondition_failure}<c>(f)</c>,
-@RefFunc{boost::contract::set_exit_invariant_failure}<c>(f)</c>, and
-@RefFunc{boost::contract::set_postcondition_failure}<c>(f)</c>.
-
-@b Throws: @c noexcept (or @c throw() if no C++11).
-@param f New contract failure handler functor.
-@see @RefSect{advanced_topics, Advanced Topics}
-*/
-void /** @cond */ BOOST_CONTRACT_DETAIL_DECLSPEC /** @endcond */
-set_failure(assertion_failure_handler const& f)
-        /** @cond */ BOOST_NOEXCEPT_OR_NOTHROW /** @endcond */;
+// Cannot provide a `set_all_failures` because check handler has no `from`.
 
 } } // namespace
 

@@ -73,9 +73,8 @@ protected:
     // Return true if actually checked calling user ftor.
     #ifndef BOOST_CONTRACT_NO_PRECONDITIONS
         bool check_pre(bool throw_on_failure = false) {
-            if(!pre_) return false;
             if(failed()) return true;
-            try { pre_(); }
+            try { if(pre_) pre_(); else return false; }
             catch(...) {
                 // Subcontracted pre must throw on failure (instead of
                 // calling failure handler) so to be checked in logic-or.

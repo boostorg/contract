@@ -10,54 +10,71 @@
 
 //[private_protected
 class counter {
-protected:
-    int get() const { // Protected function (like non-member functions).
-        int result;
+    // Private and protected functions use `function()` like non-members.
+
+private:
+    int n_;
+
+    void dec() {
+        boost::contract::old_ptr<int> old_get = BOOST_CONTRACT_OLDOF(get());
         boost::contract::guard c = boost::contract::function()
+            .precondition([&] {
+                BOOST_CONTRACT_ASSERT(
+                        get() + 1 >= std::numeric_limits<int>::min());
+            })
             .postcondition([&] {
+                BOOST_CONTRACT_ASSERT(get() == *old_get - 1);
+            })
+        ;
+
+        set(get() - 1);
+    }
+
+protected:
+    virtual void set(int n, boost::contract::virtual_* = 0) {
+        boost::contract::guard c = boost::contract::function()
+            .precondition([&] {
+                BOOST_CONTRACT_ASSERT(n <= 0);
+            })
+            .postcondition([&] {
+                BOOST_CONTRACT_ASSERT(get() == n);
+            })
+        ;
+
+        n_ = n;
+    }
+
+    /* ... */
+//]
+
+public:
+    virtual int get(boost::contract::virtual_* v = 0) const {
+        int result;
+        boost::contract::guard c = boost::contract::public_function(
+                v, result, this)
+            .postcondition([&] (int const result) {
+                BOOST_CONTRACT_ASSERT(result <= 0);
                 BOOST_CONTRACT_ASSERT(result == n_);
             })
         ;
 
-        return result = n_; // Function body.
+        return result = n_;
     }
 
-private:
-    void dec() { // Private function (like non-member functions).
-        boost::contract::old_ptr<int> old_n = BOOST_CONTRACT_OLDOF(n_);
-        boost::contract::guard c = boost::contract::function()
-            .precondition([&] {
-                BOOST_CONTRACT_ASSERT(n_ > std::numeric_limits<int>::min());
-            })
-            .postcondition([&] {
-                BOOST_CONTRACT_ASSERT(n_ == *old_n - 1);
-            })
-        ;
-
-        --n_; // Function body.
-    }
-
-    int n_;
+    counter() : n_(0) {} // Should contract constructor and destructor too.
     
-    /* ... */
-//]
-
-    friend struct test_counter;
-public:
-    counter() : n_(0) {}
-};
-
-struct test_counter {
-    static void run() {
-        counter cnt;
-        assert(cnt.get() == 0);
-        cnt.dec();
-        assert(cnt.get() == -1);
+    void invariant() const {
+        BOOST_CONTRACT_ASSERT(get() <= 0);
     }
+
+    friend int main();
 };
 
 int main() {
-    test_counter::run();
+    counter cnt;
+    assert(cnt.get() == 0);
+    cnt.dec();
+    assert(cnt.get() == -1);
     return 0;
 }
 

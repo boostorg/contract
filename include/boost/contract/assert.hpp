@@ -18,12 +18,9 @@ Facility to assert contract conditions.
 #if !defined(BOOST_CONTRACT_NO_PRECONDITIONS) || \
         !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
         !defined(BOOST_CONTRACT_NO_INVARIANTS)
-    #include <boost/preprocessor/stringize.hpp>
-    // Ternary operator used so this macro expand to an expression and it can
-    // be used with `if` and all other statements.
+    #include <boost/contract/detail/assert.hpp>
     #define BOOST_CONTRACT_ASSERT(condition) \
-        ((condition) ? (void*)0 : throw boost::contract::assertion_failure( \
-                __FILE__, __LINE__, BOOST_PP_STRINGIZE(condition)))
+        { BOOST_CONTRACT_DETAIL_ASSERT(condition); }
 #else
     /**
     Preferred way to assert contract conditions.
@@ -47,7 +44,7 @@ Facility to assert contract conditions.
     @see @RefSect{tutorial, Tutorial}
     @param condition The contract condition being checked.
     */
-    #define BOOST_CONTRACT_ASSERT(condition) /* nothing */
+    #define BOOST_CONTRACT_ASSERT(condition) {}
 #endif
 
 #endif // #include guard

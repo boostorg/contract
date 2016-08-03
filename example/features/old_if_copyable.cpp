@@ -7,12 +7,12 @@
 #include <boost/contract.hpp>
 #include <cassert>
 
-//[old_noncopyable
+//[old_if_copyable
 template<typename T>
 void accumulate(T& total, T const& x) {
     // No compiler error if T has no copy constructor...
-    boost::contract::old_ptr_noncopyable<T> old_total =
-            BOOST_CONTRACT_OLDOF(total);
+    boost::contract::old_ptr_if_copyable<T> old_total =
+            BOOST_CONTRACT_OLD(total);
     boost::contract::guard c = boost::contract::function()
         .postcondition([&] {
             // ...but old value null if T has no copy constructor.

@@ -77,7 +77,7 @@ private:
 
     // Friends (used to limit library's public API).
 
-    friend class guard;
+    friend class check;
 
     template<typename VR>
     friend class specify_precondition_old_postcondition;
@@ -159,7 +159,7 @@ private:
     #endif
 
     // Friends (used to limit library's public API).
-    friend class guard;
+    friend class check;
     friend class specify_precondition_old_postcondition<VirtualResult>;
     friend class specify_old_postcondition<VirtualResult>;
 /** @endcond */
@@ -274,7 +274,7 @@ private:
 
     // Friends (used to limit library's public API).
 
-    friend class guard;
+    friend class check;
     friend class specify_precondition_old_postcondition<VirtualResult>;
 
     template<class C>
@@ -428,7 +428,7 @@ private:
 
     // Friends (used to limit library's public API).
 
-    friend class guard;
+    friend class check;
     friend specify_precondition_old_postcondition<> function();
 
     template<class C>

@@ -17,6 +17,9 @@
 
 #define BOOST_CONTRACT_DETAIL_NAME1(name1) \
     BOOST_PP_CAT(BOOST_CONTRACT_DETAIL_NAME_PREFIX, name1)
+
+#define BOOST_CONTRACT_DETAIL_NAME2(name1, name2) \
+    BOOST_PP_CAT(BOOST_CONTRACT_DETAIL_NAME_PREFIX, BOOST_PP_CAT(name1, name2))
        
 #endif // #include guard
 

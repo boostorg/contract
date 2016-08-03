@@ -15,6 +15,10 @@ test-suite features :
     [ subdir-run features : base_types ]
     [ subdir-run features : static_public ]
     [ subdir-run features : private_protected ]
+    [ subdir-run features : private_protected_virtual ]
+    [ subdir-run features : private_protected_virtual_multi ]
+    [ subdir-run features : friend ]
+    [ subdir-run features : check ]
     
     [ subdir-run features : old ]
     [ subdir-run features : optional_result ]

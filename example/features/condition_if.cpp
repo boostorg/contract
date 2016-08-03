@@ -10,16 +10,16 @@
 #include <functional>
 #include <cassert>
 
-//[check_if
+//[condition_if
 template<typename T>
 class vector {
 public:
     void push_back(T const& value) {
         boost::contract::guard c = boost::contract::public_function(this)
             .postcondition([&] {
-                // Instead of `ASSERT(back() == value)` to handle T no `==`.
+                // Instead of `ASSERT(back() == value)` for T without `==`.
                 BOOST_CONTRACT_ASSERT(
-                    boost::contract::check_if<boost::has_equal_to<T> >(
+                    boost::contract::condition_if<boost::has_equal_to<T> >(
                         boost::bind(std::equal_to<T>(),
                             boost::cref(back()),
                             boost::cref(value)

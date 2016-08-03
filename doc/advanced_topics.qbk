@@ -8,57 +8,6 @@
 
 This section illustrates more advanced uses of this library.
 
-[section Old Values at Body]
-
-In the examples seen so far old value variables of type [classref boost::contract::old_ptr] are initialized to a copy of the expression passed to [macroref BOOST_CONTRACT_OLDOF] at the point of their declaration.
-This correctly is before the function body is executed but also before the contract is executed, therefore even before class invariants at function entry and preconditions are checked.
-
-This is convenient and might be sufficient in most cases.
-However, in general old values should be copied before executing the function body but after checking entry class invariants and preconditions (see __Assertions__).
-There can be cases in which the expression passed to [macroref BOOST_CONTRACT_OLDOF] should be evaluated only if the assertions in class invariants and preconditions are checked to be true.
-
-This library allows to construct [classref boost::contract::old_ptr] variables using their default constructor (equivalent to a null pointer) and then assign them later to a copy of the expression passed to [macroref BOOST_CONTRACT_OLDOF] in a functor with no parameter [^['h]]`()` passed to `.old(`[^['h]]`)`.
-The nullary functor [^['h]]`()` is called by this library before the function body is executed but only after class invariants and preconditions are checked:
-[footnote
-*Rationale:*
-Functors for preconditions, old value assignments, and postconditions are all optional but when specified, they must be specified in this order.
-Such order is enforced by the fact that [classref boost::contract::specify_precondition_old_postconditions], [classref boost::contract::specify_old_postcondition], [classref boost::contract::specify_postcondition_only], and [classref boost::contract::specify_nothing] provide a progressively decreasing subset of the `.precondition(...)`, `.old(...)` and `.postcondition(...)` member functions.
-The enforced order of preconditions, old value assignments, and postconditions is logical because it reflects the order in which they are executed at run-time.
-Other contract programming frameworks allow to mix this order, that could have been implemented for this library too but it would have complicated a somewhat the library implementation while adding no real value (arguably creating confusion because allowing for less logical orderings).
-]
-
-    boost::contract::old_ptr<...> old_``[^['name]]``;                 // Use default constructor.
-    boost::contract::guard c = boost::contract::function()  // Same for all other contracts.
-        ...
-        .old([&] {                                          // Capture by reference...
-            old_``[^['name]]`` = BOOST_CONTRACT_OLDOF(``[^['expression]]``);    // ...but modify only old values.
-        })
-        .postcondition([&] {
-            BOOST_CONTRACT_ASSERT(*old_``[^['name]]`` ...);
-            ...
-        })
-    ;
-
-For example, the following old value expression `s[index]` passed to [macroref BOOST_CONTRACT_OLDOF] is valid only after the precondition has checked that `index` is within range `index < s.size()`.
-Therefore, `old_y` is first declared using its default constructor (i.e., initialized to a null pointer) and later assigned to a copy of `s[index]` in `.old(...)` after the precondition has checked that `index` is in range (see also [@../../example/features/old.cpp =old.cpp=]):
-
-[import ../example/features/old.cpp]
-[old]
-
-The functor passed to `.old(...)` should capture all variables it needs to evaluate and copy old value expressions.
-In general, these variables should be captured by reference and not by value (because old values need to copy values the variables will have just before executing the function body, and not the value these variables had when the functor passed to `.old(...)` was first declared).
-In any case, this functor should modify only old values and not the value of other captured variables (see also __Constant_Correctness__).
-
-This library will automatically call [funcref boost::contract::postcondition_failure] if calling the functor specified via `.old(...)` throws an exception (by default, this terminates the program calling `std::terminate`, but see __Throw_on_Failure__ to throw exceptions, exit the program with an error code, etc.).
-[footnote
-*Rationale:*
-If old value pointers are assigned at the point of their construction instead of using `.old(...)` then an exception thrown by the old value expression [macroref BOOST_CONTRACT_OLDOF] or more in general any exception thrown by the old value pointer initialization will result in that exception being thrown up the stack by the contracted function.
-This is arguably less correct than calling [funcref boost::contract::postcondition_failure] because an exception thrown by an old value copy causes the program to fail checking its postconditions and should not technically causes the contracted function to thrown an exception (however, this might not be a significant difference in practice).
-Note that while it would be possible to wrap all old value operations ([refclass boost::contract::old_ptr] copy constructor, [funcref boost::contract::make_old], etc.) in try-catch statements so this library will call [funcref boost::contract::postcondition_failure] also when old values are copied when they are constructed outside `.old(...)`, that will prevent this library from knowing the [enumref boost::contract::from] parameter which is not acceptable (specifically because destructors can have postconditions).
-]
-
-[endsect]
-
 [section Optional Return Value]
 
 It is possible to use `boost::optional` to handle the return value when programmers cannot construct the result variable at its point of declaration before the contract (e.g., because an appropriate constructor for the return type is not available at that point, or just because it would be too expensive to execute an extra initialization of the result value at run-time).
@@ -134,8 +83,43 @@ For example (see also [@../../example/features/named_override.cpp =named_overrid
 [import ../example/features/named_override.cpp]
 [named_override_pure_virtual_assert_false]
 
-As already discussed in __Private_and_Protected_Functions__, private and protected member functions do not check class invariants and do not subcontract (not even when they are virtual or pure virtual).
-Therefore, no contract is ever programmed for a private or protected pure virtual function (because that contract would never be checked during subcontracting anyway).
+[endsect]
+
+[section Private and Protected Functions]
+
+Private and protected member functions do not check class invariants (because they are not part of the public class interface) and they do not subcontract (because they are not accessible at the calling site where the __substitution_principle__ applies, see also __Function_Calls__).
+However, programmers can still choose to specify preconditions and postconditions for private and protected member functions if they want to check correctness of implementations and usage of base member functions in derived classes.
+Therefore, when programmers decide to specify contracts for private and protected member functions, they can use [funcref boost::contract::function] (like for non-member functions).
+For example (see also [@../../example/features/private_protected.cpp =private_protected.cpp=]):
+
+[import ../example/features/private_protected.cpp]
+[private_protected]
+
+The same considerations made in __Non_Member_Functions__ apply.
+See __Constructors__ and __Destructors__ for notes on how to program contracts for private and protected constructors and destructors respectively.
+
+When private and protected member functions are virtual they should declare the extra parameter of type [classref boost::contract::virtual_]`*` with default value `0` (see __Virtual_Public_Functions__) even if [funcref boost::contract::function] never accepts that as an argument so this parameter will remain unused and it need not a name.
+Otherwise, these private and protected virtual functions cannot be overridden by public functions in the derived classes that specifies contracts for the overriding functions (because C++ uses also default parameters to match signatures of overriding functions).
+In this case, overriding public functions in derived classes will not specify the extra `override_...` parameter to [funcref boost::contract::public_function] (because the overridden functions are private or protected and not being public they do not participate to subcontracting).
+For example (see also [@../../example/features/private_protected_virtual.cpp =private_protected_virtual.cpp=]):
+
+[import ../example/features/private_protected_virtual.cpp]
+[private_protected_virtual_counter]
+[private_protected_virtual_counter10]
+
+Finally, using multiple inheritance it is also possible to override functions that are private or protected from one base but public from another base.
+In this case, overriding public functions in derived classes will specify the extra `override_...` parameter to [funcref boost::contract::public_function] (because the overridden functions private or protected in one base and those do not participate to subcontracting, but public in another base and these participate to subcontracting).
+For example (see also [@../../example/features/private_protected_virtual_multi.cpp =private_protected_virtual_multi.cpp=]):
+
+[import ../example/features/private_protected_virtual_multi.cpp]
+[private_protected_virtual_multi_counter]
+[private_protected_virtual_multi_countable]
+[private_protected_virtual_multi_counter10]
+
+[warning
+Unfortunately, the code above does not compile on MSVC (at least up to Visual Studio 2015) because MSVC incorrectly gives a compile-time error when SFINAE fails due to private or protected access levels.
+Instead, GCC and Clang correctly implement SFINAE failures due to private and protected member functions so they successfully compile the code above.
+]
 
 [endsect]
 
@@ -272,6 +256,57 @@ If programmers need non-volatile members to check `const volatile` invariants, t
     };
 
 As usual, static class invariants can also be specified (see __Static_Class_Invariants__) and private and protected member functions do not check any invariant (see __Private_and_Protected_Functions__).
+
+[endsect]
+
+[section Old Values at Body]
+
+In the examples seen so far old value variables of type [classref boost::contract::old_ptr] are initialized to a copy of the expression passed to [macroref BOOST_CONTRACT_OLDOF] at the point of their declaration.
+This correctly is before the function body is executed but also before the contract is executed, therefore even before class invariants at function entry and preconditions are checked.
+
+This is convenient and might be sufficient in most cases.
+However, in general old values should be copied before executing the function body but after checking entry class invariants and preconditions (see __Assertions__).
+There can be cases in which the expression passed to [macroref BOOST_CONTRACT_OLDOF] should be evaluated only if the assertions in class invariants and preconditions are checked to be true.
+
+This library allows to construct [classref boost::contract::old_ptr] variables using their default constructor (equivalent to a null pointer) and then assign them later to a copy of the expression passed to [macroref BOOST_CONTRACT_OLDOF] in a functor with no parameter [^['h]]`()` passed to `.old(`[^['h]]`)`.
+The nullary functor [^['h]]`()` is called by this library before the function body is executed but only after class invariants and preconditions are checked:
+[footnote
+*Rationale:*
+Functors for preconditions, old value assignments, and postconditions are all optional but when specified, they must be specified in this order.
+Such order is enforced by the fact that [classref boost::contract::specify_precondition_old_postconditions], [classref boost::contract::specify_old_postcondition], [classref boost::contract::specify_postcondition_only], and [classref boost::contract::specify_nothing] provide a progressively decreasing subset of the `.precondition(...)`, `.old(...)` and `.postcondition(...)` member functions.
+The enforced order of preconditions, old value assignments, and postconditions is logical because it reflects the order in which they are executed at run-time.
+Other contract programming frameworks allow to mix this order, that could have been implemented for this library too but it would have complicated a somewhat the library implementation while adding no real value (arguably creating confusion because allowing for less logical orderings).
+]
+
+    boost::contract::old_ptr<...> old_``[^['name]]``;                 // Use default constructor.
+    boost::contract::guard c = boost::contract::function()  // Same for all other contracts.
+        ...
+        .old([&] {                                          // Capture by reference...
+            old_``[^['name]]`` = BOOST_CONTRACT_OLDOF(``[^['expression]]``);    // ...but modify only old values.
+        })
+        .postcondition([&] {
+            BOOST_CONTRACT_ASSERT(*old_``[^['name]]`` ...);
+            ...
+        })
+    ;
+
+For example, the following old value expression `s[index]` passed to [macroref BOOST_CONTRACT_OLDOF] is valid only after the precondition has checked that `index` is within range `index < s.size()`.
+Therefore, `old_y` is first declared using its default constructor (i.e., initialized to a null pointer) and later assigned to a copy of `s[index]` in `.old(...)` after the precondition has checked that `index` is in range (see also [@../../example/features/old.cpp =old.cpp=]):
+
+[import ../example/features/old.cpp]
+[old]
+
+The functor passed to `.old(...)` should capture all variables it needs to evaluate and copy old value expressions.
+In general, these variables should be captured by reference and not by value (because old values need to copy values the variables will have just before executing the function body, and not the value these variables had when the functor passed to `.old(...)` was first declared).
+In any case, this functor should modify only old values and not the value of other captured variables (see also __Constant_Correctness__).
+
+This library will automatically call [funcref boost::contract::postcondition_failure] if calling the functor specified via `.old(...)` throws an exception (by default, this terminates the program calling `std::terminate`, but see __Throw_on_Failure__ to throw exceptions, exit the program with an error code, etc.).
+[footnote
+*Rationale:*
+If old value pointers are assigned at the point of their construction instead of using `.old(...)` then an exception thrown by the old value expression [macroref BOOST_CONTRACT_OLDOF] or more in general any exception thrown by the old value pointer initialization will result in that exception being thrown up the stack by the contracted function.
+This is arguably less correct than calling [funcref boost::contract::postcondition_failure] because an exception thrown by an old value copy causes the program to fail checking its postconditions and should not technically causes the contracted function to thrown an exception (however, this might not be a significant difference in practice).
+Note that while it would be possible to wrap all old value operations ([refclass boost::contract::old_ptr] copy constructor, [funcref boost::contract::make_old], etc.) in try-catch statements so this library will call [funcref boost::contract::postcondition_failure] also when old values are copied when they are constructed outside `.old(...)`, that will prevent this library from knowing the [enumref boost::contract::from] parameter which is not acceptable (specifically because destructors can have postconditions).
+]
 
 [endsect]
 

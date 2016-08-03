@@ -13,10 +13,11 @@
     #include <boost/thread/mutex.hpp>
 #endif
 #include <boost/exception/diagnostic_information.hpp>
+#include <boost/preprocessor/facilities/empty.hpp>
 #include <string>
-#include <exception>
 #include <sstream>
 #include <iostream>
+#include <exception>
 
 /* PRIVATE */
 
@@ -28,9 +29,10 @@
         /* nothing */
 #endif
 
-#define BOOST_CONTRACT_EXCEPTION_HANDLER_SET_(handler_mutex, handler, f) \
+#define BOOST_CONTRACT_EXCEPTION_HANDLER_SET_(handler_mutex, handler_type, \
+        handler, f) \
     BOOST_CONTRACT_EXCEPTION_HANDLER_SCOPED_LOCK_(handler_mutex); \
-    assertion_failure_handler result = handler; \
+    handler_type result = handler; \
     handler = f; \
     return result;
     
@@ -99,12 +101,15 @@ void assertion_failure::init() {
 }
 
 namespace exception_ {
-    enum failure_key { pre_key, post_key, entry_inv_key, exit_inv_key };
+    enum failure_key {
+        check_key, pre_key, post_key, entry_inv_key, exit_inv_key
+    };
 
     template<failure_key Key>
-    void default_handler(from) {
+    void default_handler() {
         std::string k = "";
         switch(Key) {
+            case check_key: k = "check "; break;
             case pre_key: k = "precondition "; break;
             case post_key: k = "postcondition "; break;
             case entry_inv_key: k = "entry invariant "; break;
@@ -116,45 +121,69 @@ namespace exception_ {
             // what = "assertion '...' failed: ...".
             std::cerr << k << error.what() << std::endl;
         } catch(...) {
-            std::cerr << k << "checking threw following exception:" << std::endl
+            std::cerr << k << "threw following exception:" << std::endl
                     << boost::current_exception_diagnostic_information();
         }
         std::terminate(); // Default handlers log and call terminate.
     }
+    
+    template<failure_key Key>
+    void default_from_handler(from) { default_handler<Key>(); }
+
+    #ifndef BOOST_CONTRACT_DISABLE_THREAD
+        boost::mutex check_failure_mutex;
+    #endif
+    failure_handler check_failure_handler = &default_handler<check_key>;
 
     #ifndef BOOST_CONTRACT_DISABLE_THREADS
         boost::mutex pre_failure_mutex;
     #endif
-    assertion_failure_handler pre_failure_handler = &default_handler<pre_key>;
+    from_failure_handler pre_failure_handler = &default_from_handler<pre_key>;
     
     #ifndef BOOST_CONTRACT_DISABLE_THREADS
         boost::mutex post_failure_mutex;
     #endif
-    assertion_failure_handler post_failure_handler = &default_handler<post_key>;
+    from_failure_handler post_failure_handler = &default_from_handler<post_key>;
     
     #ifndef BOOST_CONTRACT_DISABLE_THREADS
         boost::mutex entry_inv_failure_mutex;
     #endif
-    assertion_failure_handler entry_inv_failure_handler =
-            &default_handler<entry_inv_key>;
+    from_failure_handler entry_inv_failure_handler =
+            &default_from_handler<entry_inv_key>;
     
     #ifndef BOOST_CONTRACT_DISABLE_THREADS
         boost::mutex exit_inv_failure_mutex;
     #endif
-    assertion_failure_handler exit_inv_failure_handler =
-            &default_handler<exit_inv_key>;
+    from_failure_handler exit_inv_failure_handler =
+            &default_from_handler<exit_inv_key>;
 }
 
 // IMPORTANT: Following func cannot be declared inline (on GCC, Clang, etc.) and
-// their definition code cannot be changed by contract on/off macros.
+// their definition code should not be changed by contract on/off macros.
 
-assertion_failure_handler set_precondition_failure(
-        assertion_failure_handler const& f) BOOST_NOEXCEPT_OR_NOTHROW {
-    BOOST_CONTRACT_EXCEPTION_HANDLER_SET_(exception_::pre_failure_mutex,
-            exception_::pre_failure_handler, f);
+failure_handler set_check_failure(failure_handler const& f)
+        BOOST_NOEXCEPT_OR_NOTHROW {
+    BOOST_CONTRACT_EXCEPTION_HANDLER_SET_(exception_::check_failure_mutex,
+            failure_handler, exception_::check_failure_handler, f);
 }
 
-assertion_failure_handler get_precondition_failure() BOOST_NOEXCEPT_OR_NOTHROW {
+failure_handler get_check_failure() BOOST_NOEXCEPT_OR_NOTHROW {
+    BOOST_CONTRACT_EXCEPTION_HANDLER_GET_(exception_::check_failure_mutex,
+            exception_::check_failure_handler);
+}
+
+void check_failure() /* can throw */ {
+    BOOST_CONTRACT_EXCEPTION_HANDLER_(exception_::check_failure_mutex,
+            exception_::check_failure_handler, BOOST_PP_EMPTY())
+}
+
+from_failure_handler set_precondition_failure(from_failure_handler const& f)
+        BOOST_NOEXCEPT_OR_NOTHROW {
+    BOOST_CONTRACT_EXCEPTION_HANDLER_SET_(exception_::pre_failure_mutex,
+            from_failure_handler, exception_::pre_failure_handler, f);
+}
+
+from_failure_handler get_precondition_failure() BOOST_NOEXCEPT_OR_NOTHROW {
     BOOST_CONTRACT_EXCEPTION_HANDLER_GET_(exception_::pre_failure_mutex,
             exception_::pre_failure_handler);
 }
@@ -164,14 +193,13 @@ void precondition_failure(from where) /* can throw */ {
             exception_::pre_failure_handler, where)
 }
 
-assertion_failure_handler set_postcondition_failure(
-        assertion_failure_handler const& f) BOOST_NOEXCEPT_OR_NOTHROW {
+from_failure_handler set_postcondition_failure(from_failure_handler const& f)
+        BOOST_NOEXCEPT_OR_NOTHROW {
     BOOST_CONTRACT_EXCEPTION_HANDLER_SET_(exception_::post_failure_mutex,
-            exception_::post_failure_handler, f);
+            from_failure_handler, exception_::post_failure_handler, f);
 }
 
-assertion_failure_handler get_postcondition_failure()
-        BOOST_NOEXCEPT_OR_NOTHROW {
+from_failure_handler get_postcondition_failure() BOOST_NOEXCEPT_OR_NOTHROW {
     BOOST_CONTRACT_EXCEPTION_HANDLER_GET_(exception_::post_failure_mutex,
             exception_::post_failure_handler);
 }
@@ -181,14 +209,13 @@ void postcondition_failure(from where) /* can throw */ {
             exception_::post_failure_handler, where);
 }
 
-assertion_failure_handler set_entry_invariant_failure(
-        assertion_failure_handler const& f) BOOST_NOEXCEPT_OR_NOTHROW {
+from_failure_handler set_entry_invariant_failure(from_failure_handler const& f)
+        BOOST_NOEXCEPT_OR_NOTHROW {
     BOOST_CONTRACT_EXCEPTION_HANDLER_SET_(exception_::entry_inv_failure_mutex,
-        exception_::entry_inv_failure_handler, f);
+            from_failure_handler, exception_::entry_inv_failure_handler, f);
 }
 
-assertion_failure_handler get_entry_invariant_failure()
-        BOOST_NOEXCEPT_OR_NOTHROW {
+from_failure_handler get_entry_invariant_failure() BOOST_NOEXCEPT_OR_NOTHROW {
     BOOST_CONTRACT_EXCEPTION_HANDLER_GET_(exception_::entry_inv_failure_mutex,
             exception_::entry_inv_failure_handler);
 }
@@ -198,14 +225,13 @@ void entry_invariant_failure(from where) /* can throw */ {
             exception_::entry_inv_failure_handler, where);
 }
 
-assertion_failure_handler set_exit_invariant_failure(
-        assertion_failure_handler const& f) BOOST_NOEXCEPT_OR_NOTHROW {
+from_failure_handler set_exit_invariant_failure(from_failure_handler const& f)
+        BOOST_NOEXCEPT_OR_NOTHROW {
     BOOST_CONTRACT_EXCEPTION_HANDLER_SET_(exception_::exit_inv_failure_mutex,
-        exception_::exit_inv_failure_handler, f);
+            from_failure_handler, exception_::exit_inv_failure_handler, f);
 }
 
-assertion_failure_handler get_exit_invariant_failure()
-        BOOST_NOEXCEPT_OR_NOTHROW {
+from_failure_handler get_exit_invariant_failure() BOOST_NOEXCEPT_OR_NOTHROW {
     BOOST_CONTRACT_EXCEPTION_HANDLER_GET_(exception_::exit_inv_failure_mutex,
             exception_::exit_inv_failure_handler);
 }
@@ -215,16 +241,10 @@ void exit_invariant_failure(from where) /* can throw */ {
             exception_::exit_inv_failure_handler, where);
 }
 
-void set_invariant_failure(assertion_failure_handler const& f)
+void set_invariant_failure(from_failure_handler const& f)
         BOOST_NOEXCEPT_OR_NOTHROW {
     set_entry_invariant_failure(f);
     set_exit_invariant_failure(f);
-}
-
-void set_failure(assertion_failure_handler const& f) BOOST_NOEXCEPT_OR_NOTHROW {
-    set_precondition_failure(f);
-    set_postcondition_failure(f);
-    set_invariant_failure(f);
 }
 
 } } // namespace

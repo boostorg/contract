@@ -12,10 +12,10 @@ Statically disable compilation and execution of functor calls.
 */
 
 // Do not include all_core_headers here (call_if is essentially standalone).
-#include <boost/contract/detail/always_true.hpp>
 #include <boost/contract/detail/none.hpp>
 #include <boost/make_shared.hpp>
 #include <boost/shared_ptr.hpp>
+#include <boost/utility/enable_if.hpp>
 #include <boost/config.hpp>
 
 /* PRIVATE */
@@ -420,11 +420,13 @@ static condition is true, otherwise trivially return @c true.
 @return Boolean value returned by @c f() if the static condition if true,
         otherwise simply return @c true (i.e., check trivially passed).
 */
-template<bool Cond, typename Check>
-bool check_if_c(Check f) {
-    return call_if_c<Cond>(f).else_(
-            boost::contract::detail::always_true());
-}
+template<bool Cond, typename Then>
+typename boost::enable_if_c<Cond, bool>::type
+condition_if_c(Then f, bool else_ = true) { return f(); }
+
+template<bool Cond, typename Then>
+typename boost::disable_if_c<Cond, bool>::type
+condition_if_c(Then f, bool else_ = true) { return else_; }
 
 /**
 Select compilation and execution of a boolean functor check via a static boolean
@@ -439,10 +441,9 @@ static condition is true, otherwise trivially return @c true.
 @return Boolean value returned by @c f() if the static condition if true,
         otherwise simply return @c true (i.e., check trivially passed).
 */
-template<class Cond, typename Check>
-bool check_if(Check f) {
-    return call_if_c<Cond::value>(f).else_(
-            boost::contract::detail::always_true());
+template<class Cond, typename Then>
+bool condition_if(Then f, bool else_ = true) {
+    return condition_if_c<Cond::value>(f, else_);
 }
 
 } } // namespace

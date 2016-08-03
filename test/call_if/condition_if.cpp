@@ -23,7 +23,7 @@ void push_back(std::vector<T>& vect, T const& val) {
     boost::contract::guard c = boost::contract::function()
         .postcondition([&] {
             BOOST_CONTRACT_ASSERT(
-                boost::contract::check_if<boost::has_equal_to<T> >(
+                boost::contract::condition_if<boost::has_equal_to<T> >(
                     boost::bind(std::equal_to<T>(), boost::cref(vect.back()),
                             boost::cref(val))
                 )

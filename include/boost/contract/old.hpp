@@ -25,8 +25,8 @@ Facilities to support old values.
 
 #if !BOOST_PP_VARIADICS
 
-#define BOOST_CONTRACT_OLDOF \
-BOOST_CONTRACT_ERROR_macro_OLDOF_requires_variadic_macros_otherwise_manually_program_old_values
+#define BOOST_CONTRACT_OLD \
+BOOST_CONTRACT_ERROR_macro_OLD_requires_variadic_macros_otherwise_manually_program_old_values
 
 #else // variadics
 
@@ -40,23 +40,23 @@ BOOST_CONTRACT_ERROR_macro_OLDOF_requires_variadic_macros_otherwise_manually_pro
 /** @cond */
 
 #ifdef BOOST_NO_CXX11_AUTO_DECLARATIONS
-    #define BOOST_CONTRACT_OLDOF_AUTO_TYPEOF_(value) /* nothing */
+    #define BOOST_CONTRACT_OLD_AUTO_TYPEOF_(value) /* nothing */
 #else
     #include <boost/typeof/typeof.hpp>
     // Explicitly force old_ptr<...> conversion to allow for C++11 auto decl.
-    #define BOOST_CONTRACT_OLDOF_AUTO_TYPEOF_(value) \
+    #define BOOST_CONTRACT_OLD_AUTO_TYPEOF_(value) \
         boost::contract::old_ptr<BOOST_TYPEOF(value)>
 #endif
 
-#define BOOST_CONTRACT_ERROR_macro_OLDOF_has_invalid_number_of_arguments_2( \
+#define BOOST_CONTRACT_ERROR_macro_OLD_has_invalid_number_of_arguments_2( \
         v, value) \
-    BOOST_CONTRACT_OLDOF_AUTO_TYPEOF_(value)(boost::contract::make_old(v, \
+    BOOST_CONTRACT_OLD_AUTO_TYPEOF_(value)(boost::contract::make_old(v, \
         boost::contract::copy_old(v) ? (value) : boost::contract::null_old() \
     ))
 
-#define BOOST_CONTRACT_ERROR_macro_OLDOF_has_invalid_number_of_arguments_1( \
+#define BOOST_CONTRACT_ERROR_macro_OLD_has_invalid_number_of_arguments_1( \
         value) \
-    BOOST_CONTRACT_OLDOF_AUTO_TYPEOF_(value)(boost::contract::make_old( \
+    BOOST_CONTRACT_OLD_AUTO_TYPEOF_(value)(boost::contract::make_old( \
         boost::contract::copy_old() ? (value) : boost::contract::null_old() \
     ))
 
@@ -70,7 +70,7 @@ Macro typically used to copy an old value expression and assign it to an old
 value pointer.
 The expression expanded by this macro should be assigned to an old value
 pointer of type @RefClass{boost::contract::old_ptr} or
-@RefClass{boost::contract::old_ptr_noncopyable}.
+@RefClass{boost::contract::old_ptr_if_copyable}.
 
 This is a variadic macro. On compilers that do not support variadic macros,
 programmers can manually copy old value expressions without using this macro
@@ -84,10 +84,10 @@ programmers can manually copy old value expressions without using this macro
             the pointer to @RefClass{boost::contract::virtual_} and the second
             parameter is the old value expression to be copied.
 */
-#define BOOST_CONTRACT_OLDOF(...) \
+#define BOOST_CONTRACT_OLD(...) \
     BOOST_PP_CAT( /* CAT(..., EMTPY()) required on MSVC */ \
         BOOST_PP_OVERLOAD( \
-  BOOST_CONTRACT_ERROR_macro_OLDOF_has_invalid_number_of_arguments_, \
+  BOOST_CONTRACT_ERROR_macro_OLD_has_invalid_number_of_arguments_, \
             __VA_ARGS__ \
         )(__VA_ARGS__), \
         BOOST_PP_EMPTY() \
@@ -112,13 +112,13 @@ namespace boost {
 namespace boost { namespace contract {
 
 template<typename T>
-class old_ptr_noncopyable;
+class old_ptr_if_copyable;
 
 /**
 Old value pointer (that requires the pointed old value type to be copy
 constructible).
 This is set to point to an actual old value via either
-@RefMacro{BOOST_CONTRACT_OLDOF} or @RefFunc{boost::contract::make_old} (that is
+@RefMacro{BOOST_CONTRACT_OLD} or @RefFunc{boost::contract::make_old} (that is
 why this class does not have public non-default constructors).
 @see @RefSect{tutorial, Tutorial}
 @tparam T Type of the pointed old value. This type must be copy constructible,
@@ -145,7 +145,7 @@ public:
     T const& operator*() const {
         BOOST_STATIC_ASSERT_MSG(
             boost::is_copy_constructible<T>::value,
-"old_ptr<T> requires T copy constructor, otherwise use old_ptr_noncopyable<T>"
+"old_ptr<T> requires T copy constructor, otherwise use old_ptr_if_copyable<T>"
         );
         BOOST_CONTRACT_DETAIL_DEBUG(ptr_);
         return *ptr_;
@@ -162,7 +162,7 @@ public:
     T const* const operator->() const {
         BOOST_STATIC_ASSERT_MSG(
             boost::is_copy_constructible<T>::value,
-"old_ptr<T> requires T copy constructor, otherwise use old_ptr_noncopyable<T>"
+"old_ptr<T> requires T copy constructor, otherwise use old_ptr_if_copyable<T>"
         );
         return ptr_.operator->();
     }
@@ -187,36 +187,38 @@ private:
     boost::shared_ptr<T const> ptr_;
 
     friend class old_pointer;
-    friend class old_ptr_noncopyable<T>;
+    friend class old_ptr_if_copyable<T>;
 /** @endcond */
 };
+
+// TODO: Rename this old_ptr_ifcopyable<T>.
 
 /**
 Old value pointer (that does not require the pointed old value type to be copy
 constructible).
 This is set to point to an actual old value via either
-@RefMacro{BOOST_CONTRACT_OLDOF} or @RefFunc{boost::contract::make_old}.
+@RefMacro{BOOST_CONTRACT_OLD} or @RefFunc{boost::contract::make_old}.
 @see @RefSect{advanced_topics, Advanced Topics}
 @tparam T   Type of pointed old value. If this type is not copy constructible,
             this pointer will always be null (but this library will not generate
             compile-time errors when this pointer is dereferenced).
 */
 template<typename T>
-class old_ptr_noncopyable { /* copyable (as *) */
+class old_ptr_if_copyable { /* copyable (as *) */
 public:
     /** Pointed old value type. */
     typedef T element_type;
 
     /** Construct this object as a null old value pointer. */
-    old_ptr_noncopyable() {}
+    old_ptr_if_copyable() {}
     
     /**
     Construct this object from an old value pointer of copyable-only types.
     This constructor is implicitly called by this library when assigning an
-    object of this type using @RefMacro{BOOST_CONTRACT_OLDOF}.
+    object of this type using @RefMacro{BOOST_CONTRACT_OLD}.
     @param other Copyable-only old value pointer.
     */
-    /* implicit */ old_ptr_noncopyable(old_ptr<T> const& other) :
+    /* implicit */ old_ptr_if_copyable(old_ptr<T> const& other) :
             ptr_(other.ptr_) {}
 
     /**
@@ -245,7 +247,7 @@ public:
     }
 
     #ifndef DOXYGEN
-        BOOST_CONTRACT_DETAIL_OPERATOR_SAFE_BOOL(old_ptr_noncopyable<T>, !!ptr_)
+        BOOST_CONTRACT_DETAIL_OPERATOR_SAFE_BOOL(old_ptr_if_copyable<T>, !!ptr_)
     #else
         /**
         Check if this old value pointer is null or not (safe-bool operator).
@@ -257,7 +259,7 @@ public:
 /** @cond */
 private:
     #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
-        explicit old_ptr_noncopyable(boost::shared_ptr<T const> ptr) :
+        explicit old_ptr_if_copyable(boost::shared_ptr<T const> ptr) :
                 ptr_(ptr) {}
     #endif
 
@@ -347,8 +349,8 @@ public:
             will not generate a compile-time error).
     */
     template<typename T>
-    /* implicit */ operator old_ptr_noncopyable<T>() {
-        return ptr<old_ptr_noncopyable<T> >();
+    /* implicit */ operator old_ptr_if_copyable<T>() {
+        return ptr<old_ptr_if_copyable<T> >();
     }
     
     /**
@@ -454,7 +456,7 @@ actually copied.
             expression to be copied).
 @return Old value pointer (usually implicitly converted to either
         @RefClass{boost::contract::old_ptr} or
-        @RefClass{boost::contract::old_ptr_noncopyable} in user code).
+        @RefClass{boost::contract::old_ptr_if_copyable} in user code).
 */
 old_pointer make_old(old_value const& old) {
     return old_pointer(0, old);
@@ -473,7 +475,7 @@ actually copied.
             expression to be copied).
 @return Old value pointer (usually implicitly converted to either
         @RefClass{boost::contract::old_ptr} or
-        @RefClass{boost::contract::old_ptr_noncopyable} in user code).
+        @RefClass{boost::contract::old_ptr_if_copyable} in user code).
 */
 old_pointer make_old(virtual_* v, old_value const& old) {
     return old_pointer(v, old);

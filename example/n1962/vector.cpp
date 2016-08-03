@@ -77,7 +77,7 @@ public:
             .postcondition([&] {
                 BOOST_CONTRACT_ASSERT(size() == count);
                 BOOST_CONTRACT_ASSERT(
-                    boost::contract::check_if<boost::has_equal_to<T> >(
+                    boost::contract::condition_if<boost::has_equal_to<T> >(
                         boost::bind(all_of_equal_to(), begin(), end(), T())
                     )
                 );
@@ -90,7 +90,7 @@ public:
             .postcondition([&] {
                 BOOST_CONTRACT_ASSERT(size() == count);
                 BOOST_CONTRACT_ASSERT(
-                    boost::contract::check_if<boost::has_equal_to<T> >(
+                    boost::contract::condition_if<boost::has_equal_to<T> >(
                         boost::bind(all_of_equal_to(), begin(), end(),
                                 boost::cref(value))
                     )
@@ -105,7 +105,7 @@ public:
             .postcondition([&] {
                 BOOST_CONTRACT_ASSERT(size() == count);
                 BOOST_CONTRACT_ASSERT(
-                    boost::contract::check_if<boost::has_equal_to<T> >(
+                    boost::contract::condition_if<boost::has_equal_to<T> >(
                         boost::bind(all_of_equal_to(), begin(), end(),
                                 boost::cref(value))
                     )
@@ -141,7 +141,7 @@ public:
         boost::contract::guard c = boost::contract::constructor(this)
             .postcondition([&] {
                 BOOST_CONTRACT_ASSERT(
-                    boost::contract::check_if<boost::has_equal_to<T> >(
+                    boost::contract::condition_if<boost::has_equal_to<T> >(
                         boost::bind(std::equal_to<vector<T> >(),
                                 boost::cref(*this), boost::cref(other))
                     )
@@ -155,13 +155,13 @@ public:
         boost::contract::guard c = boost::contract::public_function(this)
             .postcondition([&] {
                 BOOST_CONTRACT_ASSERT(
-                    boost::contract::check_if<boost::has_equal_to<T> >(
+                    boost::contract::condition_if<boost::has_equal_to<T> >(
                         boost::bind(std::equal_to<vector<T> >(),
                                 boost::cref(*this), boost::cref(other))
                     )
                 );
                 BOOST_CONTRACT_ASSERT(
-                    boost::contract::check_if<boost::has_equal_to<T> >(
+                    boost::contract::condition_if<boost::has_equal_to<T> >(
                         boost::bind(std::equal_to<vector<T> >(),
                                 boost::cref(*result), boost::cref(*this))
                     )
@@ -267,13 +267,13 @@ public:
 
     void resize(size_type count, T const& value = T()) {
         boost::contract::old_ptr<size_type> old_size =
-                BOOST_CONTRACT_OLDOF(size());
+                BOOST_CONTRACT_OLD(size());
         boost::contract::guard c = boost::contract::public_function(this)
             .postcondition([&] {
                 BOOST_CONTRACT_ASSERT(size() == count);
                 if(count > *old_size) {
                     BOOST_CONTRACT_ASSERT(
-                        boost::contract::check_if<boost::has_equal_to<T> >(
+                        boost::contract::condition_if<boost::has_equal_to<T> >(
                             boost::bind(all_of_equal_to(), begin() + *old_size,
                                     end(), boost::cref(value))
                         )
@@ -397,9 +397,9 @@ public:
 
     void push_back(T const& value) {
         boost::contract::old_ptr<size_type> old_size =
-                BOOST_CONTRACT_OLDOF(size());
+                BOOST_CONTRACT_OLD(size());
         boost::contract::old_ptr<size_type> old_capacity =
-                BOOST_CONTRACT_OLDOF(capacity());
+                BOOST_CONTRACT_OLD(capacity());
         boost::contract::guard c = boost::contract::public_function(this)
             .precondition([&] {
                 BOOST_CONTRACT_ASSERT(size() < max_size());
@@ -408,7 +408,7 @@ public:
                 BOOST_CONTRACT_ASSERT(size() == *old_size + 1);
                 BOOST_CONTRACT_ASSERT(capacity() >= *old_capacity);
                 BOOST_CONTRACT_ASSERT(
-                    boost::contract::check_if<boost::has_equal_to<T> >(
+                    boost::contract::condition_if<boost::has_equal_to<T> >(
                         boost::bind(std::equal_to<T>(), boost::cref(back()),
                                 boost::cref(value))
                     )
@@ -421,7 +421,7 @@ public:
 
     void pop_back() {
         boost::contract::old_ptr<size_type> old_size =
-                BOOST_CONTRACT_OLDOF(size());
+                BOOST_CONTRACT_OLD(size());
         boost::contract::guard c = boost::contract::public_function(this)
             .precondition([&] {
                 BOOST_CONTRACT_ASSERT(!empty());
@@ -454,7 +454,7 @@ public:
             })
             .postcondition([&] {
                 BOOST_CONTRACT_ASSERT(
-                    boost::contract::check_if<boost::has_equal_to<T> >(
+                    boost::contract::condition_if<boost::has_equal_to<T> >(
                         boost::bind(all_of_equal_to(), begin(), end(),
                                 boost::cref(value))
                     )
@@ -468,7 +468,7 @@ public:
     iterator insert(iterator where, T const& value) {
         iterator result;
         boost::contract::old_ptr<size_type> old_size =
-                BOOST_CONTRACT_OLDOF(size());
+                BOOST_CONTRACT_OLD(size());
         boost::contract::guard c = boost::contract::public_function(this)
             .precondition([&] {
                 BOOST_CONTRACT_ASSERT(size() < max_size());
@@ -476,11 +476,11 @@ public:
             .postcondition([&] {
                 BOOST_CONTRACT_ASSERT(size() == *old_size + 1);
                 BOOST_CONTRACT_ASSERT(
-                    boost::contract::check_if<boost::has_equal_to<T> >(
+                    boost::contract::condition_if<boost::has_equal_to<T> >(
                         boost::bind(std::equal_to<T>(), boost::cref(*result),
                                 boost::cref(value))
                     )
-                    //  if(capacity() > oldof capacity())
+                    //  if(capacity() > old(capacity()))
                     //      [begin(), end()) is invalid
                     //  else
                     //      [where, end()) is invalid
@@ -493,11 +493,11 @@ public:
 
     void insert(iterator where, size_type count, T const& value) {
         boost::contract::old_ptr<size_type> old_size =
-                BOOST_CONTRACT_OLDOF(size());
+                BOOST_CONTRACT_OLD(size());
         boost::contract::old_ptr<size_type> old_capacity =
-                BOOST_CONTRACT_OLDOF(capacity());
+                BOOST_CONTRACT_OLD(capacity());
         boost::contract::old_ptr<iterator> old_where =
-                BOOST_CONTRACT_OLDOF(where);
+                BOOST_CONTRACT_OLD(where);
         boost::contract::guard c = boost::contract::public_function(this)
             .precondition([&] {
                 BOOST_CONTRACT_ASSERT(size() + count < max_size());
@@ -507,7 +507,7 @@ public:
                 BOOST_CONTRACT_ASSERT(capacity() >= *old_capacity);
                 if(capacity() == *old_capacity) {
                     BOOST_CONTRACT_ASSERT(
-                        boost::contract::check_if<boost::has_equal_to<T> >(
+                        boost::contract::condition_if<boost::has_equal_to<T> >(
                             boost::bind(all_of_equal_to(),
                                 boost::prior(*old_where),
                                 boost::prior(*old_where) + count,
@@ -527,9 +527,9 @@ public:
     template<typename InputIter>
     void insert(iterator where, InputIter first, InputIter last) {
         boost::contract::old_ptr<size_type> old_size =
-                BOOST_CONTRACT_OLDOF(size());
+                BOOST_CONTRACT_OLD(size());
         boost::contract::old_ptr<size_type> old_capacity =
-                BOOST_CONTRACT_OLDOF(capacity());
+                BOOST_CONTRACT_OLD(capacity());
         boost::contract::guard c = boost::contract::public_function(this)
             .precondition([&] {
                 BOOST_CONTRACT_ASSERT(size() + std::distance(first, last) <
@@ -549,7 +549,7 @@ public:
     iterator erase(iterator where) {
         iterator result;
         boost::contract::old_ptr<size_type> old_size =
-                BOOST_CONTRACT_OLDOF(size());
+                BOOST_CONTRACT_OLD(size());
         boost::contract::guard c = boost::contract::public_function(this)
             .precondition([&] {
                 BOOST_CONTRACT_ASSERT(!empty());
@@ -568,7 +568,7 @@ public:
     iterator erase(iterator first, iterator last) {
         iterator result;
         boost::contract::old_ptr<size_type> old_size =
-                BOOST_CONTRACT_OLDOF(size());
+                BOOST_CONTRACT_OLD(size());
         boost::contract::guard c = boost::contract::public_function(this)
             .precondition([&] {
                 BOOST_CONTRACT_ASSERT(size() >= std::distance(first, last));
@@ -595,20 +595,19 @@ public:
     }
 
     void swap(vector& other) {
-        boost::contract::old_ptr<vector> old_me = BOOST_CONTRACT_OLDOF(*this);
-        boost::contract::old_ptr<vector> old_other =
-                BOOST_CONTRACT_OLDOF(other);
+        boost::contract::old_ptr<vector> old_me = BOOST_CONTRACT_OLD(*this);
+        boost::contract::old_ptr<vector> old_other = BOOST_CONTRACT_OLD(other);
         boost::contract::guard c = boost::contract::public_function(this)
             .postcondition([&] {
                 BOOST_CONTRACT_ASSERT(
-                    boost::contract::check_if<boost::has_equal_to<
+                    boost::contract::condition_if<boost::has_equal_to<
                             vector<T> > >(
                         boost::bind(std::equal_to<vector<T> >(),
                                 boost::cref(*this), boost::cref(*old_other))
                     )
                 );
                 BOOST_CONTRACT_ASSERT(
-                    boost::contract::check_if<boost::has_equal_to<
+                    boost::contract::condition_if<boost::has_equal_to<
                             vector<T> > >(
                         boost::bind(std::equal_to<vector<T> >(),
                                 boost::cref(other), boost::cref(*old_me))

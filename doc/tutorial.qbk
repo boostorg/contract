@@ -621,21 +621,5 @@ A static public member function can avoid calling [funcref boost::contract::publ
 
 [endsect]
 
-[section Private and Protected Functions]
-
-Private and protected member functions do not check class invariants (because they are not part of the public class interface) and they do not subcontract (because they are not accessible at the calling site where the __substitution_principle__ applies, see also __Function_Calls__).
-However, programmers can still choose to specify preconditions and postconditions for private and protected member functions if they want to check correctness of implementations and usage of base member functions in derived classes.
-Therefore, when programmers decide to specify contracts for private and protected member functions, they can use [funcref boost::contract::function] (like for non-member functions).
-For example (see also [@../../example/features/private_protected.cpp =private_protected.cpp=]):
-
-[import ../example/features/private_protected.cpp]
-[private_protected]
-
-The same considerations made in __Non_Member_Functions__ apply.
-
-See __Constructors__ and __Destructors__ for notes on how to program contracts for private and protected constructors and destructors respectively.
-
-[endsect]
-
 [endsect]
 
