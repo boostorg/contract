@@ -15,7 +15,7 @@
 #include <boost/contract/base_types.hpp>
 #include <boost/contract/assert.hpp>
 #include <boost/contract/old.hpp>
-#include <boost/contract/guard.hpp>
+#include <boost/contract/check.hpp>
 #include <boost/contract/override.hpp>
 #include <string>
 
@@ -58,16 +58,16 @@ result_type& t<Id>::f(s_type& s, boost::contract::virtual_* v) {
     std::ostringstream r; r << "none-" << Id;
     static result_type result(r.str());
     boost::contract::old_ptr<z_type> old_z =
-            BOOST_CONTRACT_OLDOF(v, z_type::eval(z));
+            BOOST_CONTRACT_OLD(v, z_type::eval(z));
     boost::contract::old_ptr<s_type> old_s;
-    boost::contract::guard c = boost::contract::public_function(v, result, this)
+    boost::contract::check c = boost::contract::public_function(v, result, this)
         .precondition([&] {
             out << Id << "::f::pre" << std::endl;
             BOOST_CONTRACT_ASSERT(s.value[0] == Id);
         })
         .old([&] {
             out << Id << "::f::old" << std::endl;
-            old_s = BOOST_CONTRACT_OLDOF(v, s_type::eval(s));
+            old_s = BOOST_CONTRACT_OLD(v, s_type::eval(s));
         })
         .postcondition([&] (result_type const& result) {
             out << Id << "::f::post" << std::endl;
@@ -107,9 +107,9 @@ struct c
             /* override */ {
         static result_type result("none-c");
         boost::contract::old_ptr<y_type> old_y =
-                BOOST_CONTRACT_OLDOF(v, y_type::eval(y));
+                BOOST_CONTRACT_OLD(v, y_type::eval(y));
         boost::contract::old_ptr<s_type> old_s;
-        boost::contract::guard c = boost::contract::public_function<
+        boost::contract::check c = boost::contract::public_function<
                 override_f>(v, result, &c::f, this, s)
             .precondition([&] {
                 out << "c::f::pre" << std::endl;
@@ -117,7 +117,7 @@ struct c
             })
             .old([&] {
                 out << "c::f::old" << std::endl;
-                old_s = BOOST_CONTRACT_OLDOF(v, s_type::eval(s));
+                old_s = BOOST_CONTRACT_OLD(v, s_type::eval(s));
             })
             .postcondition([&] (result_type const& result) {
                 out << "c::f::post" << std::endl;
@@ -191,9 +191,9 @@ struct a
             /* override */ {
         static result_type result("none-a");
         boost::contract::old_ptr<x_type> old_x =
-                BOOST_CONTRACT_OLDOF(v, x_type::eval(x));
+                BOOST_CONTRACT_OLD(v, x_type::eval(x));
         boost::contract::old_ptr<s_type> old_s;
-        boost::contract::guard c = boost::contract::public_function<
+        boost::contract::check c = boost::contract::public_function<
                 override_f>(v, result, &a::f, this, s)
             .precondition([&] {
                 out << "a::f::pre" << std::endl;
@@ -201,7 +201,7 @@ struct a
             })
             .old([&] {
                 out << "a::f::old" << std::endl;
-                old_s = BOOST_CONTRACT_OLDOF(v, s_type::eval(s));
+                old_s = BOOST_CONTRACT_OLD(v, s_type::eval(s));
             })
             .postcondition([&] (result_type const& result) {
                 out << "a::f::post" << std::endl;

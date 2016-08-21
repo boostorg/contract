@@ -14,27 +14,27 @@ public:
     void invariant() const;             // Invariants const qualified.
 
     a() { // Check both cv and const invariant (at exit if no throw).
-        boost::contract::guard c= boost::contract::constructor(this);
+        boost::contract::check c= boost::contract::constructor(this);
     }
 
     ~a() { // Check both cv and const invariant (at entry).
-        boost::contract::guard c = boost::contract::destructor(this);
+        boost::contract::check c = boost::contract::destructor(this);
     }
 
     void m() { // Check const invariant (at entry and exit if no throw).
-        boost::contract::guard c = boost::contract::public_function(this);
+        boost::contract::check c = boost::contract::public_function(this);
     }
 
     void c() const { // Check const invariant (at entry and exit if no throw).
-        boost::contract::guard c = boost::contract::public_function(this);
+        boost::contract::check c = boost::contract::public_function(this);
     }
     
     void v() volatile { // Check cv invariant (at entry and exit if no throw).
-        boost::contract::guard c = boost::contract::public_function(this);
+        boost::contract::check c = boost::contract::public_function(this);
     }
     
     void cv() const volatile { // Check cv inv. (at entry and exit if no throw).
-        boost::contract::guard c = boost::contract::public_function(this);
+        boost::contract::check c = boost::contract::public_function(this);
     }
 };
 //]

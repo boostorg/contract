@@ -9,12 +9,12 @@
 #include <boost/contract/public_function.hpp>
 #include <boost/contract/base_types.hpp>
 #include <boost/contract/override.hpp>
-#include <boost/contract/guard.hpp>
+#include <boost/contract/check.hpp>
 
 struct b {
 protected:
     virtual void f(boost::contract::virtual_* v = 0) {
-        boost::contract::guard c = boost::contract::public_function(v, this);
+        boost::contract::check c = boost::contract::public_function(v, this);
     }
     
     friend class boost::contract::access; // Test this cannot prevent error.
@@ -27,7 +27,7 @@ struct a
     #undef BASES
 
     void f(boost::contract::virtual_* v = 0) /* override */ {
-        boost::contract::guard c = boost::contract::public_function<override_f>(
+        boost::contract::check c = boost::contract::public_function<override_f>(
                 v, &a::f, this);
     }
 

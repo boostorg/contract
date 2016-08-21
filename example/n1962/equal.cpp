@@ -15,7 +15,7 @@ bool operator==(T const& left, T const& right);
 template<typename T>
 bool operator!=(T const& left, T const& right) {
     bool result;
-    boost::contract::guard c = boost::contract::function()
+    boost::contract::check c = boost::contract::function()
         .postcondition([&] {
             BOOST_CONTRACT_ASSERT(result == !(left == right));
         })
@@ -27,7 +27,7 @@ bool operator!=(T const& left, T const& right) {
 template<typename T>
 bool operator==(T const& left, T const& right) {
     bool result;
-    boost::contract::guard c = boost::contract::function()
+    boost::contract::check c = boost::contract::function()
         .postcondition([&] {
             BOOST_CONTRACT_ASSERT(result == !(left != right));
         })

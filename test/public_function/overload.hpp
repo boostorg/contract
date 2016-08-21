@@ -10,7 +10,7 @@
 #include <boost/contract/public_function.hpp>
 #include <boost/contract/base_types.hpp>
 #include <boost/contract/override.hpp>
-#include <boost/contract/guard.hpp>
+#include <boost/contract/check.hpp>
 #include <boost/detail/lightweight_test.hpp>
 #include <sstream>
 #include <string>
@@ -22,7 +22,7 @@ struct b {
     void invariant() const { out << "b::inv" << std::endl; }
 
     virtual void f(int x, boost::contract::virtual_* v = 0) {
-        boost::contract::guard c = boost::contract::public_function(v, this)
+        boost::contract::check c = boost::contract::public_function(v, this)
             .precondition([] { out << "b::f(int)::pre" << std::endl; })
             .old([] { out << "b::f(int)::old" << std::endl; })
             .postcondition([] { out << "b::f(int)::post" << std::endl; })
@@ -31,7 +31,7 @@ struct b {
     }
     
     virtual void f(char const* x, boost::contract::virtual_* v = 0) {
-        boost::contract::guard c = boost::contract::public_function(v, this)
+        boost::contract::check c = boost::contract::public_function(v, this)
             .precondition([] { out << "b::f(char const*)::pre" << std::endl; })
             .old([] { out << "b::f(char const*)::old" << std::endl; })
             .postcondition(
@@ -41,7 +41,7 @@ struct b {
     }
 
     virtual void f(int x, int y, boost::contract::virtual_* v = 0) {
-        boost::contract::guard c = boost::contract::public_function(v, this)
+        boost::contract::check c = boost::contract::public_function(v, this)
             .precondition([] { out << "b::f(int, int)::pre" << std::endl; })
             .old([] { out << "b::f(int, int)::old" << std::endl; })
             .postcondition([] { out << "b::f(int, int)::post" << std::endl; })
@@ -50,7 +50,7 @@ struct b {
     }
     
     virtual void f(boost::contract::virtual_* v = 0) {
-        boost::contract::guard c = boost::contract::public_function(v, this)
+        boost::contract::check c = boost::contract::public_function(v, this)
             .precondition([] { out << "b::f()::pre" << std::endl; })
             .old([] { out << "b::f()::old" << std::endl; })
             .postcondition([] { out << "b::f()::post" << std::endl; })
@@ -59,7 +59,7 @@ struct b {
     }
     
     void f(int x[2][3], boost::contract::virtual_* v = 0) {
-        boost::contract::guard c = boost::contract::public_function(v, this)
+        boost::contract::check c = boost::contract::public_function(v, this)
             .precondition([] { out << "b::f(int[2][3])::pre" << std::endl; })
             .old([] { out << "b::f(int[2][3])::old" << std::endl; })
             .postcondition([] { out << "b::f(int[2][3])::post" << std::endl; })
@@ -68,7 +68,7 @@ struct b {
     }
     
     void f(void (*x)(int), boost::contract::virtual_* v = 0) {
-        boost::contract::guard c = boost::contract::public_function(v, this)
+        boost::contract::check c = boost::contract::public_function(v, this)
             .precondition(
                     [] { out << "b::f(void (*)(int))::pre" << std::endl; })
             .old(
@@ -91,7 +91,7 @@ struct a
     void invariant() const { out << "a::inv" << std::endl; }
 
     void f(int x, boost::contract::virtual_* v = 0) /* override */ {
-        boost::contract::guard c = boost::contract::public_function<override_f>(
+        boost::contract::check c = boost::contract::public_function<override_f>(
             v,
             static_cast<void (a::*)(int, boost::contract::virtual_*)>(&a::f),
             this, x
@@ -105,7 +105,7 @@ struct a
     
     // Test overload via argument type.
     void f(char const* x, boost::contract::virtual_* v = 0) /* override */ {
-        boost::contract::guard c = boost::contract::public_function<override_f>(
+        boost::contract::check c = boost::contract::public_function<override_f>(
             v,
             static_cast<void (a::*)(char const*, boost::contract::virtual_*)>(
                     &a::f),
@@ -121,7 +121,7 @@ struct a
     
     // Test overload via argument count.
     void f(int x, int y, boost::contract::virtual_* v = 0) /* override */ {
-        boost::contract::guard c = boost::contract::public_function<override_f>(
+        boost::contract::check c = boost::contract::public_function<override_f>(
             v,
             static_cast<void (a::*)(int, int, boost::contract::virtual_*)>(
                     &a::f),
@@ -137,7 +137,7 @@ struct a
     // Test overload via template argument type.
     template<typename T>
     void f(T x) { // Template cannot be virtual (or override) in C++.
-        boost::contract::guard c = boost::contract::public_function(this)
+        boost::contract::check c = boost::contract::public_function(this)
             .precondition([] { out << "a::f(T)::pre" << std::endl; })
             .old([] { out << "a::f(T)::old" << std::endl; })
             .postcondition([] { out << "a::f(T)::post" << std::endl; })
@@ -160,7 +160,7 @@ struct a
         f0_ptr f0 = static_cast<f0_ptr>(&a::f);
         // Test this and public_function call in func below both take same 3
         // args but they are ambiguous because of presence override_f.
-        boost::contract::guard c = boost::contract::public_function<override_f>(
+        boost::contract::check c = boost::contract::public_function<override_f>(
                 v, f0, this)
             .precondition([] { out << "a::f()::pre" << std::endl; })
             .old([] { out << "a::f()::old" << std::endl; })
@@ -174,7 +174,7 @@ struct a
         f0_ptr f0 = static_cast<f0_ptr>(&a::f);
         // Test this and public_function call in func above both take same 3
         // args but they are ambiguous because of lack of override_f.
-        boost::contract::guard c = boost::contract::public_function(
+        boost::contract::check c = boost::contract::public_function(
                 v, f0, this)
             .precondition([] { out << "a::f(bool)::pre" << std::endl; })
             .old([] { out << "a::f(bool)::old" << std::endl; })
@@ -187,7 +187,7 @@ struct a
     
     // Test overload with array parameter.
     void f(int x[2][3], boost::contract::virtual_* v = 0) /* override */ {
-        boost::contract::guard c = boost::contract::public_function<override_f>(
+        boost::contract::check c = boost::contract::public_function<override_f>(
             v,
             static_cast<void (a::*)(int[2][3], boost::contract::virtual_*)>(
                     &a::f),
@@ -202,7 +202,7 @@ struct a
     
     // Test overload with function pointer parameter.
     void f(void (*x)(int), boost::contract::virtual_* v = 0) /* override */ {
-        boost::contract::guard c = boost::contract::public_function<override_f>(
+        boost::contract::check c = boost::contract::public_function<override_f>(
             v,
             static_cast<void (a::*)(void (*)(int), boost::contract::virtual_*)>(
                     &a::f),

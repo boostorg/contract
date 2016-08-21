@@ -37,16 +37,16 @@ private:
 };
 
 void set_all(x& a, y& b, int value) {
-    boost::contract::guard post = boost::contract::function()
+    boost::contract::check post = boost::contract::function()
         .postcondition([&] {
             std::cout << "f::post" << std::endl;
             BOOST_CONTRACT_ASSERT(a.get() == value);
             BOOST_CONTRACT_ASSERT(b.get() == value);
         })
     ;
-    boost::contract::guard inv_b = boost::contract::public_function(&b);
-    boost::contract::guard inv_a = boost::contract::public_function(&a);
-    boost::contract::guard pre = boost::contract::function()
+    boost::contract::check inv_b = boost::contract::public_function(&b);
+    boost::contract::check inv_a = boost::contract::public_function(&a);
+    boost::contract::check pre = boost::contract::function()
         .precondition([&] {
             std::cout << "f::pre" << std::endl;
             BOOST_CONTRACT_ASSERT(value > 0);

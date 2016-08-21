@@ -102,18 +102,19 @@ void assertion_failure::init() {
 
 namespace exception_ {
     enum failure_key {
-        check_key, pre_key, post_key, entry_inv_key, exit_inv_key
+        entry_inv_key, exit_inv_key, pre_key, post_key, except_key, check_key
     };
 
     template<failure_key Key>
     void default_handler() {
         std::string k = "";
         switch(Key) {
-            case check_key: k = "check "; break;
-            case pre_key: k = "precondition "; break;
-            case post_key: k = "postcondition "; break;
             case entry_inv_key: k = "entry invariant "; break;
             case exit_inv_key: k = "exit invariant "; break;
+            case pre_key: k = "precondition "; break;
+            case post_key: k = "postcondition "; break;
+            case except_key: k = "except "; break;
+            case check_key: k = "check "; break;
             // No default (so compiler warning/error on missing enum case).
         }
         try { throw; }
@@ -130,10 +131,17 @@ namespace exception_ {
     template<failure_key Key>
     void default_from_handler(from) { default_handler<Key>(); }
 
-    #ifndef BOOST_CONTRACT_DISABLE_THREAD
-        boost::mutex check_failure_mutex;
+    #ifndef BOOST_CONTRACT_DISABLE_THREADS
+        boost::mutex entry_inv_failure_mutex;
     #endif
-    failure_handler check_failure_handler = &default_handler<check_key>;
+    from_failure_handler entry_inv_failure_handler =
+            &default_from_handler<entry_inv_key>;
+    
+    #ifndef BOOST_CONTRACT_DISABLE_THREADS
+        boost::mutex exit_inv_failure_mutex;
+    #endif
+    from_failure_handler exit_inv_failure_handler =
+            &default_from_handler<exit_inv_key>;
 
     #ifndef BOOST_CONTRACT_DISABLE_THREADS
         boost::mutex pre_failure_mutex;
@@ -146,16 +154,15 @@ namespace exception_ {
     from_failure_handler post_failure_handler = &default_from_handler<post_key>;
     
     #ifndef BOOST_CONTRACT_DISABLE_THREADS
-        boost::mutex entry_inv_failure_mutex;
+        boost::mutex except_failure_mutex;
     #endif
-    from_failure_handler entry_inv_failure_handler =
-            &default_from_handler<entry_inv_key>;
+    from_failure_handler except_failure_handler =
+            &default_from_handler<except_key>;
     
-    #ifndef BOOST_CONTRACT_DISABLE_THREADS
-        boost::mutex exit_inv_failure_mutex;
+    #ifndef BOOST_CONTRACT_DISABLE_THREAD
+        boost::mutex check_failure_mutex;
     #endif
-    from_failure_handler exit_inv_failure_handler =
-            &default_from_handler<exit_inv_key>;
+    failure_handler check_failure_handler = &default_handler<check_key>;
 }
 
 // IMPORTANT: Following func cannot be declared inline (on GCC, Clang, etc.) and
@@ -209,6 +216,22 @@ void postcondition_failure(from where) /* can throw */ {
             exception_::post_failure_handler, where);
 }
 
+from_failure_handler set_except_failure(from_failure_handler const& f)
+        BOOST_NOEXCEPT_OR_NOTHROW {
+    BOOST_CONTRACT_EXCEPTION_HANDLER_SET_(exception_::except_failure_mutex,
+            from_failure_handler, exception_::except_failure_handler, f);
+}
+
+from_failure_handler get_except_failure() BOOST_NOEXCEPT_OR_NOTHROW {
+    BOOST_CONTRACT_EXCEPTION_HANDLER_GET_(exception_::except_failure_mutex,
+            exception_::except_failure_handler);
+}
+
+void except_failure(from where) /* can throw */ {
+    BOOST_CONTRACT_EXCEPTION_HANDLER_(exception_::except_failure_mutex,
+            exception_::except_failure_handler, where);
+}
+
 from_failure_handler set_entry_invariant_failure(from_failure_handler const& f)
         BOOST_NOEXCEPT_OR_NOTHROW {
     BOOST_CONTRACT_EXCEPTION_HANDLER_SET_(exception_::entry_inv_failure_mutex,
@@ -243,6 +266,14 @@ void exit_invariant_failure(from where) /* can throw */ {
 
 void set_invariant_failure(from_failure_handler const& f)
         BOOST_NOEXCEPT_OR_NOTHROW {
+    set_entry_invariant_failure(f);
+    set_exit_invariant_failure(f);
+}
+
+void set_specification_failure(from_failure_handler const& f)
+        BOOST_NOEXCEPT_OR_NOTHROW {
+    set_precondition_failure(f);
+    set_postcondition_failure(f);
     set_entry_invariant_failure(f);
     set_exit_invariant_failure(f);
 }

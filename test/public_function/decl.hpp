@@ -13,7 +13,7 @@
 #include <boost/contract/public_function.hpp>
 #include <boost/contract/base_types.hpp>
 #include <boost/contract/override.hpp>
-#include <boost/contract/guard.hpp>
+#include <boost/contract/check.hpp>
 #include <boost/contract/assert.hpp>
 
 boost::contract::test::detail::oteststream out;
@@ -41,9 +41,9 @@ struct c {
     #endif
 
     virtual void f(boost::contract::virtual_* v = 0) {
-        boost::contract::guard c = boost::contract::public_function(v, this)
+        boost::contract::check c = boost::contract::public_function(v, this)
             #ifndef BOOST_CONTRACT_TEST_NO_C_PRE
-                .precondition([&] {
+                .precondition([] {
                     out << "c::f::pre" << std::endl;
                     BOOST_CONTRACT_ASSERT(c_pre);
                 })
@@ -89,9 +89,9 @@ struct b
     #endif
 
     virtual void f(boost::contract::virtual_* v = 0) {
-        boost::contract::guard c = boost::contract::public_function(v, this)
+        boost::contract::check c = boost::contract::public_function(v, this)
             #ifndef BOOST_CONTRACT_TEST_NO_B_PRE
-                .precondition([&] {
+                .precondition([] {
                     out << "b::f::pre" << std::endl;
                     BOOST_CONTRACT_ASSERT(b_pre);
                 })
@@ -137,10 +137,10 @@ struct a
     #endif
 
     virtual void f(boost::contract::virtual_* v = 0) /* override */ {
-        boost::contract::guard c = boost::contract::public_function<override_f>(
+        boost::contract::check c = boost::contract::public_function<override_f>(
                 v, &a::f, this)
             #ifndef BOOST_CONTRACT_TEST_NO_A_PRE
-                .precondition([&] {
+                .precondition([] {
                     out << "a::f::pre" << std::endl;
                     BOOST_CONTRACT_ASSERT(a_pre);
                 })

@@ -17,7 +17,7 @@ public:
             BOOST_CONTRACT_ASSERT(from <= to);
         })
     {
-        boost::contract::guard c = boost::contract::constructor(this)
+        boost::contract::check c = boost::contract::constructor(this)
             .postcondition([&] {
                 BOOST_CONTRACT_ASSERT(size() == (to - from + 1));
             })
@@ -33,7 +33,7 @@ public:
     //[public_destructor
     virtual ~unique_identifiers() {
         // Following contract checks invariants.
-        boost::contract::guard c = boost::contract::destructor(this);
+        boost::contract::check c = boost::contract::destructor(this);
 
         // Destructor body here... (do nothing in this example).
     }
@@ -41,14 +41,14 @@ public:
 
     int size() const {
         // Following contract checks invariants.
-        boost::contract::guard c = boost::contract::public_function(this);
+        boost::contract::check c = boost::contract::public_function(this);
         return vect_.size();
     }
 
     //[public_function
     bool find(int id) const {
         bool result;
-        boost::contract::guard c = boost::contract::public_function(this)
+        boost::contract::check c = boost::contract::public_function(this)
             .postcondition([&] {
                 if(size() == 0) BOOST_CONTRACT_ASSERT(!result);
             })
@@ -65,10 +65,10 @@ public:
     virtual int push_back(int id, boost::contract::virtual_* v = 0) {
         int result;
         boost::contract::old_ptr<bool> old_find =
-                    BOOST_CONTRACT_OLDOF(v, find(id)); // Pass `v`.
+                    BOOST_CONTRACT_OLD(v, find(id)); // Pass `v`.
         boost::contract::old_ptr<int> old_size =
-                    BOOST_CONTRACT_OLDOF(v, size()); // Pass `v`.
-        boost::contract::guard c = boost::contract::public_function(
+                    BOOST_CONTRACT_OLD(v, size()); // Pass `v`.
+        boost::contract::check c = boost::contract::public_function(
                 v, result, this) // Pass `v` and `result`.
             .precondition([&] {
                 BOOST_CONTRACT_ASSERT(!find(id));
@@ -111,10 +111,9 @@ public:
     int push_back(int id, boost::contract::virtual_* v = 0) /* override */ {
         int result;
         boost::contract::old_ptr<bool> old_find =
-                BOOST_CONTRACT_OLDOF(v, find(id));
-        boost::contract::old_ptr<int> old_size =
-                BOOST_CONTRACT_OLDOF(v, size());
-        boost::contract::guard c = boost::contract::public_function<
+                BOOST_CONTRACT_OLD(v, find(id));
+        boost::contract::old_ptr<int> old_size = BOOST_CONTRACT_OLD(v, size());
+        boost::contract::check c = boost::contract::public_function<
             override_push_back // Pass override plus below function pointer...
         >(v, result, &identifiers::push_back, this, id) // ...and arguments.
             .precondition([&] { // Check in OR with bases.
@@ -136,13 +135,13 @@ public:
     
     bool empty() const {
         // Following contract checks invariants.
-        boost::contract::guard c = boost::contract::public_function(this);
+        boost::contract::check c = boost::contract::public_function(this);
         return size() == 0;
     }
     
     identifiers(int from, int to) : unique_identifiers(from, to) {
         // Following contract checks invariants.
-        boost::contract::guard c = boost::contract::constructor(this);
+        boost::contract::check c = boost::contract::constructor(this);
     }
 };
     

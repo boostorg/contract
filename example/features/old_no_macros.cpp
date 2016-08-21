@@ -19,7 +19,7 @@ public:
                     size() : boost::contract::null_old())
         ;
 
-        boost::contract::guard c = boost::contract::public_function(v, this)
+        boost::contract::check c = boost::contract::public_function(v, this)
             .postcondition([&] {
                 BOOST_CONTRACT_ASSERT(size() == *old_size + 1);
             })

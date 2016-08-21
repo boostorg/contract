@@ -8,14 +8,14 @@
 
 #include "../detail/oteststream.hpp"
 #include <boost/contract/function.hpp>
-#include <boost/contract/guard.hpp>
+#include <boost/contract/check.hpp>
 #include <boost/detail/lightweight_test.hpp>
 #include <sstream>
 
 boost::contract::test::detail::oteststream out;
 
 void f() {
-    boost::contract::guard c = boost::contract::function()
+    boost::contract::check c = boost::contract::function()
         .postcondition([] { out << "f::post" << std::endl; })
     ;
     out << "f::body" << std::endl;

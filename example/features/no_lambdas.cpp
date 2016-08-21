@@ -16,7 +16,7 @@ array<T, MaxSize>::array(unsigned count) :
     values_(new T[MaxSize]) // Member initializations can be here.
 {
     boost::contract::old_ptr<int> old_instances;
-    boost::contract::guard c = boost::contract::constructor(this)
+    boost::contract::check c = boost::contract::constructor(this)
         .old(boost::bind(&array::constructor_old, boost::ref(old_instances)))
         .postcondition(boost::bind(&array::constructor_postcondition, this,
                 boost::cref(count), boost::cref(old_instances)))
@@ -30,7 +30,7 @@ array<T, MaxSize>::array(unsigned count) :
 template<typename T, unsigned MaxSize>
 array<T, MaxSize>::~array() {
     boost::contract::old_ptr<int> old_instances;
-    boost::contract::guard c = boost::contract::destructor(this)
+    boost::contract::check c = boost::contract::destructor(this)
         .old(boost::bind(&array::destructor_old, this,
                 boost::ref(old_instances)))
         .postcondition(boost::bind(&array::destructor_postcondition,
@@ -45,7 +45,7 @@ template<typename T, unsigned MaxSize>
 void array<T, MaxSize>::push_back(T const& value,
         boost::contract::virtual_* v) {
     boost::contract::old_ptr<unsigned> old_size;
-    boost::contract::guard c = boost::contract::public_function(v, this)
+    boost::contract::check c = boost::contract::public_function(v, this)
         .precondition(boost::bind(&array::push_back_precondition, this))
         .old(boost::bind(&array::push_back_old, this, boost::cref(v),
                 boost::ref(old_size)))
@@ -59,14 +59,14 @@ void array<T, MaxSize>::push_back(T const& value,
 template<typename T, unsigned MaxSize>
 unsigned array<T, MaxSize>::size() const {
     // Check invariants.
-    boost::contract::guard c = boost::contract::public_function(this);
+    boost::contract::check c = boost::contract::public_function(this);
     return size_;
 }
 
 template<typename T, unsigned MaxSize>
 int array<T, MaxSize>::instances() {
     // Check static invariants.
-    boost::contract::guard c = boost::contract::public_function<array>();
+    boost::contract::check c = boost::contract::public_function<array>();
     return instances_;
 }
 

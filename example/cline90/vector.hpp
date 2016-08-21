@@ -32,7 +32,7 @@ public:
         data_(new T[count]),
         size_(count)
     {
-        boost::contract::guard c = boost::contract::constructor(this)
+        boost::contract::check c = boost::contract::constructor(this)
             .postcondition([&] {
                 BOOST_CONTRACT_ASSERT(size() == count);
             })
@@ -42,17 +42,17 @@ public:
     }
 
     virtual ~vector() {
-        boost::contract::guard c = boost::contract::destructor(this);
+        boost::contract::check c = boost::contract::destructor(this);
         delete[] data_;
     }
 
     int size() const {
-        boost::contract::guard c = boost::contract::public_function(this);
+        boost::contract::check c = boost::contract::public_function(this);
         return size_; // Non-negative result already checked by invariant.
     }
 
     void resize(int count) {
-        boost::contract::guard c = boost::contract::public_function(this)
+        boost::contract::check c = boost::contract::public_function(this)
             .precondition([&] {
                 BOOST_CONTRACT_ASSERT(count >= 0);
             })
@@ -69,7 +69,7 @@ public:
     }
 
     T& operator[](int index) {
-        boost::contract::guard c = boost::contract::public_function(this)
+        boost::contract::check c = boost::contract::public_function(this)
             .precondition([&] {
                 BOOST_CONTRACT_ASSERT(index >= 0);
                 BOOST_CONTRACT_ASSERT(index < size());
@@ -80,7 +80,7 @@ public:
     }
     
     T const& operator[](int index) const {
-        boost::contract::guard c = boost::contract::public_function(this)
+        boost::contract::check c = boost::contract::public_function(this)
             .precondition([&] {
                 BOOST_CONTRACT_ASSERT(index >= 0);
                 BOOST_CONTRACT_ASSERT(index < size());

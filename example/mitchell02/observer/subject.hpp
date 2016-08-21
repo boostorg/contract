@@ -35,20 +35,20 @@ public:
     // Construct subject with no observer.
     subject() {
         // Check invariant.
-        boost::contract::guard c = boost::contract::constructor(this);
+        boost::contract::check c = boost::contract::constructor(this);
     }
 
     // Destroy subject.
     virtual ~subject() {
         // Check invariant.
-        boost::contract::guard c = boost::contract::destructor(this);
+        boost::contract::check c = boost::contract::destructor(this);
     }
 
     /* Queries */
 
     // If given object is attached.
     bool attached(observer const* ob) const {
-        boost::contract::guard c = boost::contract::public_function(this)
+        boost::contract::check c = boost::contract::public_function(this)
             .precondition([&] {
                 BOOST_CONTRACT_ASSERT(ob); // Not null.
             })
@@ -63,8 +63,8 @@ public:
     // Attach given object as an observer.
     void attach(observer* ob) {
         boost::contract::old_ptr<std::vector<observer const*> > old_observers =
-                BOOST_CONTRACT_OLDOF(observers());
-        boost::contract::guard c = boost::contract::public_function(this)
+                BOOST_CONTRACT_OLD(observers());
+        boost::contract::check c = boost::contract::public_function(this)
             .precondition([&] {
                 BOOST_CONTRACT_ASSERT(ob); // Not null.
                 BOOST_CONTRACT_ASSERT(!attached(ob)); // Not already attached.
@@ -102,7 +102,7 @@ protected:
     // Update all attached observers.
     void notify() {
         // Protected members use `function` (no inv and no subcontracting).
-        boost::contract::guard c = boost::contract::function()
+        boost::contract::check c = boost::contract::function()
             .postcondition([&] {
                 if(O_N <= COMPLEXITY_MAX) {
                     // All updated.
@@ -137,7 +137,7 @@ private:
         observer const* ob
     ) {
         // Private members use `function` (no inv and no subcontracting).
-        boost::contract::guard c = boost::contract::function()
+        boost::contract::check c = boost::contract::function()
             .precondition([&] {
                 BOOST_CONTRACT_ASSERT(ob); // Not null.
             })

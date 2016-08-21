@@ -30,11 +30,11 @@ namespace boost {
         class virtual_;
 
         namespace detail {
-  BOOST_CONTRACT_DETAIL_DECL_DETAIL_CHECK_SUBCONTRACTED_PRE_POST_INV_Z(1,
-                    /* is_friend = */ 0, OO, RR, FF, CC, AArgs);
+            BOOST_CONTRACT_DETAIL_DECL_DETAIL_COND_WITH_SUBCONTRACTING_Z(1,
+                /* is_friend = */ 0, OO, RR, FF, CC, AArgs);
             
             template<typename RR, class CC>
-            class check_pre_post_inv;
+            class cond_with_inv;
         }
     }
 }
@@ -136,11 +136,11 @@ class access : private boost::noncopyable {
     // increase compilation times (I experimented replacing all friends with
     // public and got the same compilation times).
 
-    BOOST_CONTRACT_DETAIL_DECL_DETAIL_CHECK_SUBCONTRACTED_PRE_POST_INV_Z(1,
+    BOOST_CONTRACT_DETAIL_DECL_DETAIL_COND_WITH_SUBCONTRACTING_Z(1,
             /* is_friend = */ 1, OO, RR, FF, CC, AArgs);
             
     template<typename RR, class CC>
-    friend class boost::contract::detail::check_pre_post_inv;
+    friend class boost::contract::detail::cond_with_inv;
         
     BOOST_CONTRACT_DETAIL_DECL_FRIEND_OVERRIDING_PUBLIC_FUNCTIONS_Z(1,
             OO, RR, FF, CC, AArgs, vv, rr, ff, oobj, aargs)

@@ -407,10 +407,10 @@ The [funcref boost::contract::check_if_c], [funcref boost::contract::call_if_c],
 
 The [funcref boost::contract::call_if] function template is a general facility and its use is not limited to programming contracts.
 In fact, [funcref boost::contract::call_if] can be used together with C++14 generic lambdas to program statements similar to the `static if` proposal (at least at function scope, see also [@http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2013/n3613.pdf N3613]).
-For example, consider the following implementation of `std::advance` that uses `static if`-like statements programmed via [funcref boost::contract::call_if] (see also [@../../test/call_if/advance_cxx14.cpp =advance_cxx14.cpp=]):
+For example, consider the following implementation of `std::advance` that uses `static if`-like statements programmed via [funcref boost::contract::call_if] (see also [@../../example/features/call_if_cxx14.cpp =call_if_cxx14.cpp=]):
 
-[import ../test/call_if/advance_cxx14.cpp]
-[advance_cxx14]
+[import ../example/features/call_if_cxx14.cpp]
+[call_if_cxx14]
 
 This implementation is much more concise, easy to read and maintain than the usual implementation of `std::advance` that uses tag dispatching.
 [footnote

@@ -16,6 +16,9 @@ Facility to declare virtual public functions with contracts.
 #include <boost/noncopyable.hpp>
 #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
     #include <boost/any.hpp>
+#endif
+#if     !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
+        !defined(BOOST_CONTRACT_NO_EXCEPTS)
     #include <boost/shared_ptr.hpp>
     #include <queue>
     #include <stack>
@@ -24,7 +27,7 @@ Facility to declare virtual public functions with contracts.
 namespace boost {
     namespace contract {
         namespace detail {
-  BOOST_CONTRACT_DETAIL_DECL_DETAIL_CHECK_SUBCONTRACTED_PRE_POST_INV_Z(1,
+            BOOST_CONTRACT_DETAIL_DECL_DETAIL_COND_WITH_SUBCONTRACTING_Z(1,
                     /* is_friend = */ 0, OO, RR, FF, CC, AArgs);
         }
     }
@@ -61,9 +64,10 @@ class virtual_ : private boost::noncopyable { // Avoid copy queue, stack, etc.
 
     enum action_enum {
         // virtual_ always hold/passed by ptr so null ptr used for user call.
-        #if !defined(BOOST_CONTRACT_NO_PRECONDITIONS) || \
+        #if     !defined(BOOST_CONTRACT_NO_INVARIANTS) || \
+                !defined(BOOST_CONTRACT_NO_PRECONDITIONS) || \
                 !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
-                !defined(BOOST_CONTRACT_NO_INVARIANTS)
+                !defined(BOOST_CONTRACT_NO_EXCEPTS)
             no_action,
         #endif
         #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
@@ -85,13 +89,17 @@ class virtual_ : private boost::noncopyable { // Avoid copy queue, stack, etc.
         #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
             pop_old_copy,
             check_post,
-            pop_old_init = check_post // These must be the same value.
+            pop_old_init = check_post, // These must be the same value.
+        #endif
+        #ifndef BOOST_CONTRACT_NO_EXCEPTS
+            check_except,
         #endif
     };
 
-    #if !defined(BOOST_CONTRACT_NO_PRECONDITIONS) || \
+    #if     !defined(BOOST_CONTRACT_NO_INVARIANTS) || \
+            !defined(BOOST_CONTRACT_NO_PRECONDITIONS) || \
             !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
-            !defined(BOOST_CONTRACT_NO_INVARIANTS)
+            !defined(BOOST_CONTRACT_NO_EXCEPTS)
         explicit virtual_(action_enum a) :
               action_(a)
             , failed_(false)
@@ -102,16 +110,19 @@ class virtual_ : private boost::noncopyable { // Avoid copy queue, stack, etc.
         {}
     #endif
 
-    #if !defined(BOOST_CONTRACT_NO_PRECONDITIONS) || \
+    #if     !defined(BOOST_CONTRACT_NO_INVARIANTS) || \
+            !defined(BOOST_CONTRACT_NO_PRECONDITIONS) || \
             !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
-            !defined(BOOST_CONTRACT_NO_INVARIANTS)
+            !defined(BOOST_CONTRACT_NO_EXCEPTS)
         action_enum action_;
         bool failed_;
     #endif
-    #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
+    #if     !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
+            !defined(BOOST_CONTRACT_NO_EXCEPTS)
         std::queue<boost::shared_ptr<void> > old_inits_;
         std::stack<boost::shared_ptr<void> > old_copies_;
-
+    #endif
+    #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
         boost::any result_ptr_; // Result for virtual and overriding functions.
         char const* result_type_name_;
         bool result_optional_;
@@ -122,7 +133,7 @@ class virtual_ : private boost::noncopyable { // Avoid copy queue, stack, etc.
     friend bool copy_old(virtual_*);
     friend class old_pointer;
 
-    BOOST_CONTRACT_DETAIL_DECL_DETAIL_CHECK_SUBCONTRACTED_PRE_POST_INV_Z(1,
+    BOOST_CONTRACT_DETAIL_DECL_DETAIL_COND_WITH_SUBCONTRACTING_Z(1,
             /* is_friend = */ 1, OO, RR, FF, CC, AArgs);
 /** @endcond */
 };

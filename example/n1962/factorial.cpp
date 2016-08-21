@@ -16,7 +16,7 @@
 
 int factorial(int n ) {
     int result;
-    boost::contract::guard c = boost::contract::function()
+    boost::contract::check c = boost::contract::function()
         .precondition([&] {
             BOOST_CONTRACT_ASSERT(n >= 0); // Non-negative natural number.
             BOOST_CONTRACT_ASSERT(n <= 12); // Max function input.

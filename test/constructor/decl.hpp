@@ -12,7 +12,7 @@
 #include "../detail/oteststream.hpp"
 #include <boost/contract/constructor.hpp>
 #include <boost/contract/base_types.hpp>
-#include <boost/contract/guard.hpp>
+#include <boost/contract/check.hpp>
 #include <boost/contract/assert.hpp>
 
 boost::contract::test::detail::oteststream out;
@@ -49,7 +49,7 @@ struct c
             })
         #endif
     {
-        boost::contract::guard c = boost::contract::constructor(this)
+        boost::contract::check c = boost::contract::constructor(this)
             .old([] { out << "c::ctor::old" << std::endl; })
             #ifndef BOOST_CONTRACT_TEST_NO_C_POST
                 .postcondition([] {
@@ -101,7 +101,7 @@ struct b
             })
         #endif
     {
-        boost::contract::guard c = boost::contract::constructor(this)
+        boost::contract::check c = boost::contract::constructor(this)
             .old([] { out << "b::ctor::old" << std::endl; })
             #ifndef BOOST_CONTRACT_TEST_NO_B_POST
                 .postcondition([] {
@@ -153,7 +153,7 @@ struct a
             })
         #endif
     {
-        boost::contract::guard c = boost::contract::constructor(this)
+        boost::contract::check c = boost::contract::constructor(this)
             .old([] { out << "a::ctor::old" << std::endl; })
             #ifndef BOOST_CONTRACT_TEST_NO_A_POST
                 .postcondition([] {

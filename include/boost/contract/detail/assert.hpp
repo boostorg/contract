@@ -10,13 +10,13 @@
 #include <boost/contract/core/exception.hpp>
 #include <boost/preprocessor/stringize.hpp>
 
+// Use ternary operator `?:` and no trailing `;` here to allow `if(...) ASSERT(
+// ...); else ...` (won't compile if expands using an if statement instead even
+// if wrapped by {}, and else won't compile if expands trailing `;`).
 #define BOOST_CONTRACT_DETAIL_ASSERT(condition) \
-    { \
-        if(!(condition)) { \
-            throw boost::contract::assertion_failure(__FILE__, __LINE__, \
-                    BOOST_PP_STRINGIZE(condition)); \
-        } \
-    }
+    /* no if-statement here */ \
+    ((condition) ? (void*)0 : throw boost::contract::assertion_failure( \
+            __FILE__, __LINE__, BOOST_PP_STRINGIZE(condition))) /* no ; here */
 
 #endif // #include guard
 

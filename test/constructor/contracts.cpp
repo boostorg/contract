@@ -12,7 +12,7 @@
 #include <boost/contract/base_types.hpp>
 #include <boost/contract/assert.hpp>
 #include <boost/contract/old.hpp>
-#include <boost/contract/guard.hpp>
+#include <boost/contract/check.hpp>
 #include <boost/bind.hpp>
 #include <boost/ref.hpp>
 #include <boost/preprocessor/control/iif.hpp>
@@ -54,11 +54,11 @@ struct t
     {
         boost::contract::old_ptr<z_type> old_z;
         boost::contract::old_ptr<l_type> old_l =
-                BOOST_CONTRACT_OLDOF(l_type::eval(l));
-        boost::contract::guard c = boost::contract::constructor(this)
+                BOOST_CONTRACT_OLD(l_type::eval(l));
+        boost::contract::check c = boost::contract::constructor(this)
             .old([&] {
                 out << Id << "::ctor::old" << std::endl;
-                old_z = BOOST_CONTRACT_OLDOF(z_type::eval(z));
+                old_z = BOOST_CONTRACT_OLD(z_type::eval(z));
             })
             .postcondition([&] {
                 out << Id << "::ctor::post" << std::endl;
@@ -117,12 +117,12 @@ struct c
         t<'d'>(dz), t<'p'>(pz), t<'q'>(qz), t<'e'>(ez)
     {
         boost::contract::old_ptr<y_type> old_y =
-                BOOST_CONTRACT_OLDOF(y_type::eval(y));
+                BOOST_CONTRACT_OLD(y_type::eval(y));
         boost::contract::old_ptr<m_type> old_m;
-        boost::contract::guard c = boost::contract::constructor(this)
+        boost::contract::check c = boost::contract::constructor(this)
             .old([&] {
                 out << "c::ctor::old" << std::endl;
-                old_m = BOOST_CONTRACT_OLDOF(m_type::eval(m));
+                old_m = BOOST_CONTRACT_OLD(m_type::eval(m));
             })
             .postcondition([&] {
                 out << "c::ctor::post" << std::endl;
@@ -194,11 +194,11 @@ struct a
     {
         boost::contract::old_ptr<x_type> old_x;
         boost::contract::old_ptr<n_type> old_n =
-                BOOST_CONTRACT_OLDOF(n_type::eval(n));
-        boost::contract::guard c = boost::contract::constructor(this)
+                BOOST_CONTRACT_OLD(n_type::eval(n));
+        boost::contract::check c = boost::contract::constructor(this)
             .old([&] {
                 out << "a::ctor::old" << std::endl;
-                old_x = BOOST_CONTRACT_OLDOF(x_type::eval(x));
+                old_x = BOOST_CONTRACT_OLD(x_type::eval(x));
             })
             .postcondition([&] {
                 out << "a::ctor::post" << std::endl;

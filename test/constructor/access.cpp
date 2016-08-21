@@ -9,7 +9,7 @@
 #include "../detail/oteststream.hpp"
 #include <boost/contract/constructor.hpp>
 #include <boost/contract/base_types.hpp>
-#include <boost/contract/guard.hpp>
+#include <boost/contract/check.hpp>
 #include <boost/detail/lightweight_test.hpp>
 #include <sstream>
 
@@ -31,7 +31,7 @@ public:
     b() : boost::contract::constructor_precondition<b>([] {
         out << "b::ctor::pre" << std::endl;
     }) {
-        boost::contract::guard c = boost::contract::constructor(this)
+        boost::contract::check c = boost::contract::constructor(this)
             .old([] { out << "b::ctor::old" << std::endl; })
             .postcondition([] { out << "b::ctor::post" << std::endl; })
         ;
@@ -57,7 +57,7 @@ public:
     a() : boost::contract::constructor_precondition<a>([] {
         out << "a::ctor::pre" << std::endl;
     }) {
-        boost::contract::guard c = boost::contract::constructor(this)
+        boost::contract::check c = boost::contract::constructor(this)
             .old([] { out << "a::ctor::old" << std::endl; })
             .postcondition([] { out << "a::ctor::post" << std::endl; })
         ;

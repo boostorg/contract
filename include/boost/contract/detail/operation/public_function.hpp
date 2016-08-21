@@ -10,19 +10,22 @@
 #include <boost/contract/core/virtual.hpp>
 #include <boost/contract/core/exception.hpp>
 #include <boost/contract/core/config.hpp>
-#include <boost/contract/detail/condition/check_subcontracted_pre_post_inv.hpp>
+#include <boost/contract/detail/condition/cond_with_subcontracting.hpp>
 #include <boost/contract/detail/tvariadic.hpp>
 #include <boost/contract/core/virtual.hpp>
-#if !defined(BOOST_CONTRACT_NO_PRECONDITIONS) || \
+#if     !defined(BOOST_CONTRACT_NO_INVARIANTS) || \
+        !defined(BOOST_CONTRACT_NO_PRECONDITIONS) || \
         !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
-        !defined(BOOST_CONTRACT_NO_INVARIANTS)
-    #include <boost/contract/detail/check_guard.hpp>
+        !defined(BOOST_CONTRACT_NO_EXCEPTS)
+    #include <boost/contract/detail/checking.hpp>
 #endif
-#if !defined(BOOST_CONTRACT_NO_EXIT_INVARIANTS) || \
-        !defined(BOOST_CONTRACT_NO_POSTCONDITIONS)
+#if     !defined(BOOST_CONTRACT_NO_EXIT_INVARIANTS) || \
+        !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
+        !defined(BOOST_CONTRACT_NO_EXCEPTS)
     #include <boost/config.hpp>
 #endif
-#ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
+#if     !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
+        !defined(BOOST_CONTRACT_NO_EXCEPTS)
     #include <exception>
 #endif
 
@@ -34,7 +37,7 @@ template<
     BOOST_CONTRACT_DETAIL_TVARIADIC_TPARAMS_Z(1, BOOST_CONTRACT_MAX_ARGS, Args)
 >
 class public_function : // Non-copyable base.
-    public check_subcontracted_pre_post_inv<
+    public cond_with_subcontracting<
         O, VR, F, C
         BOOST_CONTRACT_DETAIL_TVARIADIC_COMMA(BOOST_CONTRACT_MAX_ARGS)
         BOOST_CONTRACT_DETAIL_TVARIADIC_ARGS_Z(1, BOOST_CONTRACT_MAX_ARGS, Args)
@@ -47,7 +50,7 @@ public:
         BOOST_CONTRACT_DETAIL_TVARIADIC_FPARAMS_Z(1,
                 BOOST_CONTRACT_MAX_ARGS, Args, &, args)
     ) :
-        check_subcontracted_pre_post_inv<
+        cond_with_subcontracting<
             O, VR, F, C
             BOOST_CONTRACT_DETAIL_TVARIADIC_COMMA(BOOST_CONTRACT_MAX_ARGS)
             BOOST_CONTRACT_DETAIL_TVARIADIC_ARGS_Z(1,
@@ -61,32 +64,35 @@ public:
     {}
 
 private:
-    #if !defined(BOOST_CONTRACT_NO_PRECONDITIONS) || \
+    #if     !defined(BOOST_CONTRACT_NO_INVARIANTS) || \
+            !defined(BOOST_CONTRACT_NO_PRECONDITIONS) || \
             !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
-            !defined(BOOST_CONTRACT_NO_INVARIANTS)
+            !defined(BOOST_CONTRACT_NO_EXCEPTS)
         void init() /* override */ {
             #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
                 this->init_subcontracted_old();
             #endif
             if(!this->base_call()) {
-                if(check_guard::checking()) return;
-                { // Acquire check guard.
-                    check_guard checking;
+                if(checking::already()) return;
+                { // Acquire checking guard.
+                    checking k;
                     #ifndef BOOST_CONTRACT_NO_ENTRY_INVARIANTS
                         this->check_subcontracted_entry_inv();
                     #endif
                     #ifndef BOOST_CONTRACT_NO_PRECONDITIONS
-  #ifndef BOOST_CONTRACT_PRECONDITIONS_DISABLE_NO_ASSERTION
+                        #ifndef \
+  BOOST_CONTRACT_PRECONDITIONS_DISABLE_NO_ASSERTION
                                 this->check_subcontracted_pre();
-                            } // Release check guard.
+                            } // Release checking guard.
                         #else
-                            } // Release check guard.
+                            } // Release checking guard.
                             this->check_subcontracted_pre();
                         #endif
                     #else
-                        } // Release check guard.
+                        } // Release checking guard.
                     #endif
-                #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
+                #if     !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
+                        !defined(BOOST_CONTRACT_NO_EXCEPTS)
                     this->copy_subcontracted_old();
                 #endif
             } else {
@@ -96,38 +102,48 @@ private:
                 #ifndef BOOST_CONTRACT_NO_PRECONDITIONS
                     this->check_subcontracted_pre();
                 #endif
-                #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
+                #if     !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
+                        !defined(BOOST_CONTRACT_NO_EXCEPTS)
                     this->copy_subcontracted_old();
                 #endif
                 #ifndef BOOST_CONTRACT_NO_EXIT_INVARIANTS
                     this->check_subcontracted_exit_inv();
                 #endif
-                #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
-                    if(!std::uncaught_exception()) {
+                if(std::uncaught_exception()) {
+                    #ifndef BOOST_CONTRACT_NO_EXCEPTS
+                        this->check_subcontracted_except();
+                    #endif
+                } else {
+                    #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
                         this->check_subcontracted_post();
-                    }
-                #endif
+                    #endif
+                }
             }
         }
     #endif
 
 public:
-    #if !defined(BOOST_CONTRACT_NO_EXIT_INVARIANTS) || \
-            !defined(BOOST_CONTRACT_NO_POSTCONDITIONS)
+    #if     !defined(BOOST_CONTRACT_NO_EXIT_INVARIANTS) || \
+            !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
+            !defined(BOOST_CONTRACT_NO_EXCEPTS)
         ~public_function() BOOST_NOEXCEPT_IF(false) {
-            this->assert_guarded();
+            this->assert_initialized();
             if(!this->base_call()) {
-                if(check_guard::checking()) return;
-                check_guard checking;
+                if(checking::already()) return;
+                checking k;
 
                 #ifndef BOOST_CONTRACT_NO_EXIT_INVARIANTS
                     this->check_subcontracted_exit_inv();
                 #endif
-                #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
-                    if(!std::uncaught_exception()) {
+                if(std::uncaught_exception()) {
+                    #ifndef BOOST_CONTRACT_NO_EXCEPTS
+                        this->check_subcontracted_except();
+                    #endif
+                } else {
+                    #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
                         this->check_subcontracted_post();
-                    }
-                #endif
+                    #endif
+                }
             }
         }
     #endif

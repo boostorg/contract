@@ -8,7 +8,7 @@
 
 #include "../detail/oteststream.hpp"
 #include <boost/contract/public_function.hpp>
-#include <boost/contract/guard.hpp>
+#include <boost/contract/check.hpp>
 #include <boost/contract/base_types.hpp>
 #include <boost/contract/override.hpp>
 #include <boost/preprocessor/repetition/repeat.hpp>
@@ -41,7 +41,7 @@ struct b {
             boost::contract::virtual_* v = 0 \
         ) { \
             int result = 0; \
-            boost::contract::guard c = boost::contract::public_function( \
+            boost::contract::check c = boost::contract::public_function( \
                     v, result, this) \
                 .precondition([] { \
                     out << "b::" << BOOST_PP_STRINGIZE(BOOST_PP_CAT(f, n)) << \
@@ -82,7 +82,7 @@ struct a
             boost::contract::virtual_* v = 0 \
         ) /* override */ { \
             int result = 0; \
-            boost::contract::guard c = boost::contract::public_function< \
+            boost::contract::check c = boost::contract::public_function< \
                 BOOST_PP_CAT(override_, BOOST_PP_CAT(f, n)) \
             >( \
                 v, result, &a::BOOST_PP_CAT(f, n), this \

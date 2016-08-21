@@ -17,7 +17,6 @@ test-suite features :
     [ subdir-run features : private_protected ]
     [ subdir-run features : private_protected_virtual ]
     [ subdir-run features : private_protected_virtual_multi ]
-    [ subdir-run features : friend ]
     [ subdir-run features : check ]
     
     [ subdir-run features : old ]
@@ -28,8 +27,8 @@ test-suite features :
     [ subdir-run features : move ]
     [ subdir-run features : union ]
     [ subdir-run features : volatile ]
-    [ subdir-run features : old_noncopyable ]
-    [ subdir-run features : check_if ]
+    [ subdir-run features : old_if_copyable ]
+    [ subdir-run features : condition_if ]
     [ subdir-run features : access ]
     [ subdir-run features : separate_body ]
     [ subdir-run features : throw_on_failure ]
@@ -39,6 +38,11 @@ test-suite features :
     [ subdir-run features : no_lambdas ]
     [ subdir-run features : no_lambdas_local_func ]
 ;
+test-suite features-cxx14 : # Requires C++14.
+    [ subdir-run features : call_if_cxx14 :
+            <toolset>clang:<cxxflags>-std=c++1y ]
+;
+explicit features-cxx14 ;
 
 test-suite n1962 :
     [ subdir-run n1962 : vector ]

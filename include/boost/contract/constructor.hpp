@@ -12,12 +12,12 @@ Program contracts for constructors.
 */
 
 #include <boost/contract/detail/all_core_headers.hpp>
-#if !defined(BOOST_CONTRACT_NO_CONSTRUCTORS) || \
+#if     !defined(BOOST_CONTRACT_NO_CONSTRUCTORS) || \
         !defined(BOOST_CONTRACT_NO_PRECONDITIONS)
     #include <boost/contract/detail/operation/constructor.hpp>
 #endif
-#if !defined(BOOST_CONTRACT_NO_PRECONDITIONS)
-    #include <boost/contract/detail/check_guard.hpp>
+#ifndef BOOST_CONTRACT_NO_PRECONDITIONS
+    #include <boost/contract/detail/checking.hpp>
 #endif
 
 namespace boost { namespace contract {
@@ -39,14 +39,14 @@ postconditions when the enclosing class has no invariants.
         run-time error, see @RefMacro{BOOST_CONTRACT_ON_MISSING_GUARD}).
 */
 template<class Class>
-specify_old_postcondition<> constructor(Class* obj) {
+specify_old_postcondition_except<> constructor(Class* obj) {
     // Must #if also on ..._PRECONDITIONS here because specify_... is generic.
     #if !defined(BOOST_CONTRACT_NO_CONSTRUCTORS) || \
             !defined(BOOST_CONTRACT_NO_PRECONDITIONS)
-        return specify_old_postcondition<>(
+        return specify_old_postcondition_except<>(
                 new boost::contract::detail::constructor<Class>(obj));
     #else
-        return specify_old_postcondition<>();
+        return specify_old_postcondition_except<>();
     #endif
 }
 
@@ -88,10 +88,10 @@ public:
     template<typename F>
     explicit constructor_precondition(F const& f) {
         #ifndef BOOST_CONTRACT_NO_PRECONDITIONS
-            if(boost::contract::detail::check_guard::checking()) return;
+            if(boost::contract::detail::checking::already()) return;
             try {
                 #ifndef BOOST_CONTRACT_PRECONDITIONS_DISABLE_NO_ASSERTION
-                    boost::contract::detail::check_guard checking;
+                    boost::contract::detail::checking k;
                 #endif
                 f();
             } catch(...) { precondition_failure(from_constructor); }

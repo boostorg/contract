@@ -28,7 +28,7 @@ public:
         index_(start),
         moved_(false)
     {
-        boost::contract::guard c = boost::contract::constructor(this)
+        boost::contract::check c = boost::contract::constructor(this)
             .postcondition([&] {
                 BOOST_CONTRACT_ASSERT(!moved());
             })
@@ -37,7 +37,7 @@ public:
 
     ~circular_buffer() {
         // Moved-from can always be destroyed (so no pre `!moved()` here).
-        boost::contract::guard c = boost::contract::destructor(this);
+        boost::contract::check c = boost::contract::destructor(this);
     }
     
     // Copy constructor.
@@ -46,7 +46,7 @@ public:
             BOOST_CONTRACT_ASSERT(!other.moved());
         })
     {
-        boost::contract::guard c = boost::contract::constructor(this)
+        boost::contract::check c = boost::contract::constructor(this)
             .postcondition([&] {
                 BOOST_CONTRACT_ASSERT(!moved());
             })
@@ -58,7 +58,7 @@ public:
     // Copy assignment.
     circular_buffer& operator=(circular_buffer const& other) {
         // Moved-from can be (copy) assigned (so no pre `!moved()` here).
-        boost::contract::guard c = boost::contract::public_function(this)
+        boost::contract::check c = boost::contract::public_function(this)
             .precondition([&] {
                 BOOST_CONTRACT_ASSERT(!other.moved());
             })
@@ -76,7 +76,7 @@ public:
             BOOST_CONTRACT_ASSERT(!other.moved());
         })
     {
-        boost::contract::guard c = boost::contract::constructor(this)
+        boost::contract::check c = boost::contract::constructor(this)
             .postcondition([&] {
                 BOOST_CONTRACT_ASSERT(!moved());
                 BOOST_CONTRACT_ASSERT(other.moved());
@@ -89,7 +89,7 @@ public:
     // Move assignment.
     circular_buffer& operator=(circular_buffer&& other) {
         // Moved-from can be (move) assigned (so no pre `!moved()` here).
-        boost::contract::guard c = boost::contract::public_function(this)
+        boost::contract::check c = boost::contract::public_function(this)
             .precondition([&] {
                 BOOST_CONTRACT_ASSERT(!other.moved());
             })
@@ -103,7 +103,7 @@ public:
     }
 
     char read() {
-        boost::contract::guard c = boost::contract::public_function(this)
+        boost::contract::check c = boost::contract::public_function(this)
             .precondition([&] {
                 BOOST_CONTRACT_ASSERT(!moved());
             })
@@ -115,7 +115,7 @@ public:
     }
 
     bool moved() const {
-        boost::contract::guard c = boost::contract::public_function(this);
+        boost::contract::check c = boost::contract::public_function(this);
         return moved_;
     }
 
@@ -144,12 +144,12 @@ private:
 
 public:
     unsigned index() const {
-        boost::contract::guard c = boost::contract::public_function(this);
+        boost::contract::check c = boost::contract::public_function(this);
         return index_;
     }
 
     unsigned size() const {
-        boost::contract::guard c = boost::contract::public_function(this);
+        boost::contract::check c = boost::contract::public_function(this);
         return data_.size();
     }
 };

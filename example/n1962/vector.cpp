@@ -56,7 +56,7 @@ public:
             const_reverse_iterator;
 
     vector() : vect_() {
-        boost::contract::guard c = boost::contract::constructor(this)
+        boost::contract::check c = boost::contract::constructor(this)
             .postcondition([&] {
                 BOOST_CONTRACT_ASSERT(empty());
             })
@@ -64,7 +64,7 @@ public:
     }
     
     explicit vector(Allocator const& alloc) : vect_(alloc) {
-        boost::contract::guard c = boost::contract::constructor(this)
+        boost::contract::check c = boost::contract::constructor(this)
             .postcondition([&] {
                 BOOST_CONTRACT_ASSERT(empty());
                 BOOST_CONTRACT_ASSERT(get_allocator() == alloc);
@@ -73,7 +73,7 @@ public:
     }
 
     explicit vector(size_type count) : vect_(count) {
-        boost::contract::guard c = boost::contract::constructor(this)
+        boost::contract::check c = boost::contract::constructor(this)
             .postcondition([&] {
                 BOOST_CONTRACT_ASSERT(size() == count);
                 BOOST_CONTRACT_ASSERT(
@@ -86,7 +86,7 @@ public:
     }
 
     vector(size_type count, T const& value) : vect_(count, value) {
-        boost::contract::guard c = boost::contract::constructor(this)
+        boost::contract::check c = boost::contract::constructor(this)
             .postcondition([&] {
                 BOOST_CONTRACT_ASSERT(size() == count);
                 BOOST_CONTRACT_ASSERT(
@@ -101,7 +101,7 @@ public:
 
     vector(size_type count, const T& value, Allocator const& alloc) :
             vect_(count, value, alloc) {
-        boost::contract::guard c = boost::contract::constructor(this)
+        boost::contract::check c = boost::contract::constructor(this)
             .postcondition([&] {
                 BOOST_CONTRACT_ASSERT(size() == count);
                 BOOST_CONTRACT_ASSERT(
@@ -117,7 +117,7 @@ public:
 
     template<typename InputIter>
     vector(InputIter first, InputIter last) : vect_(first, last) {
-        boost::contract::guard c = boost::contract::constructor(this)
+        boost::contract::check c = boost::contract::constructor(this)
             .postcondition([&] {
                 BOOST_CONTRACT_ASSERT(std::distance(first, last) ==
                         int(size()));
@@ -128,7 +128,7 @@ public:
     template<typename InputIter>
     vector(InputIter first, InputIter last, Allocator const& alloc) :
             vect_(first, last, alloc) {
-        boost::contract::guard c = boost::contract::constructor(this)
+        boost::contract::check c = boost::contract::constructor(this)
             .postcondition([&] {
                 BOOST_CONTRACT_ASSERT(std::distance(first, last) ==
                         int(size()));
@@ -138,7 +138,7 @@ public:
     }
 
     /* implicit */ vector(vector const& other) : vect_(other.vect_) {
-        boost::contract::guard c = boost::contract::constructor(this)
+        boost::contract::check c = boost::contract::constructor(this)
             .postcondition([&] {
                 BOOST_CONTRACT_ASSERT(
                     boost::contract::condition_if<boost::has_equal_to<T> >(
@@ -152,7 +152,7 @@ public:
 
     vector& operator=(vector const& other) {
         boost::optional<vector&> result;
-        boost::contract::guard c = boost::contract::public_function(this)
+        boost::contract::check c = boost::contract::public_function(this)
             .postcondition([&] {
                 BOOST_CONTRACT_ASSERT(
                     boost::contract::condition_if<boost::has_equal_to<T> >(
@@ -174,11 +174,11 @@ public:
     }
 
     virtual ~vector() {
-        boost::contract::guard c = boost::contract::destructor(this);
+        boost::contract::check c = boost::contract::destructor(this);
     }
 
     void reserve(size_type count) {
-        boost::contract::guard c = boost::contract::public_function(this)
+        boost::contract::check c = boost::contract::public_function(this)
             .precondition([&] {
                 BOOST_CONTRACT_ASSERT(count < max_size());
             })
@@ -192,7 +192,7 @@ public:
 
     size_type capacity() const {
         size_type result;
-        boost::contract::guard c = boost::contract::public_function(this)
+        boost::contract::check c = boost::contract::public_function(this)
             .postcondition([&] {
                 BOOST_CONTRACT_ASSERT(result >= size());
             })
@@ -203,7 +203,7 @@ public:
 
     iterator begin() {
         iterator result;
-        boost::contract::guard c = boost::contract::public_function(this)
+        boost::contract::check c = boost::contract::public_function(this)
             .postcondition([&] {
                 if(empty()) BOOST_CONTRACT_ASSERT(result == end());
             })
@@ -214,7 +214,7 @@ public:
 
     const_iterator begin() const {
         const_iterator result;
-        boost::contract::guard c = boost::contract::public_function(this)
+        boost::contract::check c = boost::contract::public_function(this)
             .postcondition([&] {
                 if(empty()) BOOST_CONTRACT_ASSERT(result == end());
             })
@@ -224,18 +224,18 @@ public:
     }
 
     iterator end() {
-        boost::contract::guard c = boost::contract::public_function(this);
+        boost::contract::check c = boost::contract::public_function(this);
         return vect_.end();
     }
     
     const_iterator end() const {
-        boost::contract::guard c = boost::contract::public_function(this);
+        boost::contract::check c = boost::contract::public_function(this);
         return vect_.end();
     }
     
     reverse_iterator rbegin() {
         iterator result;
-        boost::contract::guard c = boost::contract::public_function(this)
+        boost::contract::check c = boost::contract::public_function(this)
             .postcondition([&] {
                 if(empty()) BOOST_CONTRACT_ASSERT(result == rend());
             })
@@ -246,7 +246,7 @@ public:
 
     const_reverse_iterator rbegin() const {
         const_reverse_iterator result;
-        boost::contract::guard c = boost::contract::public_function(this)
+        boost::contract::check c = boost::contract::public_function(this)
             .postcondition([&] {
                 if(empty()) BOOST_CONTRACT_ASSERT(result == rend());
             })
@@ -256,19 +256,19 @@ public:
     }
 
     reverse_iterator rend() {
-        boost::contract::guard c = boost::contract::public_function(this);
+        boost::contract::check c = boost::contract::public_function(this);
         return vect_.rend();
     }
     
     const_reverse_iterator rend() const {
-        boost::contract::guard c = boost::contract::public_function(this);
+        boost::contract::check c = boost::contract::public_function(this);
         return vect_.rend();
     }
 
     void resize(size_type count, T const& value = T()) {
         boost::contract::old_ptr<size_type> old_size =
                 BOOST_CONTRACT_OLD(size());
-        boost::contract::guard c = boost::contract::public_function(this)
+        boost::contract::check c = boost::contract::public_function(this)
             .postcondition([&] {
                 BOOST_CONTRACT_ASSERT(size() == count);
                 if(count > *old_size) {
@@ -287,7 +287,7 @@ public:
 
     size_type size() const {
         size_type result;
-        boost::contract::guard c = boost::contract::public_function(this)
+        boost::contract::check c = boost::contract::public_function(this)
             .postcondition([&] {
                 BOOST_CONTRACT_ASSERT(result <= capacity());
             })
@@ -298,7 +298,7 @@ public:
 
     size_type max_size() const {
         size_type result;
-        boost::contract::guard c = boost::contract::public_function(this)
+        boost::contract::check c = boost::contract::public_function(this)
             .postcondition([&] {
                 BOOST_CONTRACT_ASSERT(result >= capacity());
             })
@@ -309,7 +309,7 @@ public:
 
     bool empty() const {
         bool result;
-        boost::contract::guard c = boost::contract::public_function(this)
+        boost::contract::check c = boost::contract::public_function(this)
             .postcondition([&] {
                 BOOST_CONTRACT_ASSERT(result == (size() == 0));
             })
@@ -319,24 +319,24 @@ public:
     }
 
     Allocator get_allocator() const {
-        boost::contract::guard c = boost::contract::public_function(this);
+        boost::contract::check c = boost::contract::public_function(this);
         return vect_.get_allocator();
     }
 
     reference at(size_type index) {
         // No precondition because throws out_of_range for invalid index.
-        boost::contract::guard c = boost::contract::public_function(this);
+        boost::contract::check c = boost::contract::public_function(this);
         return vect_.at(index);
     }
     
     const_reference at(size_type index) const {
         // No precondition because throws out_of_range for invalid index.
-        boost::contract::guard c = boost::contract::public_function(this);
+        boost::contract::check c = boost::contract::public_function(this);
         return vect_.at(index);
     }
 
     reference operator[](size_type index) {
-        boost::contract::guard c = boost::contract::public_function(this)
+        boost::contract::check c = boost::contract::public_function(this)
             .precondition([&] {
                 BOOST_CONTRACT_ASSERT(index < size());
             })
@@ -346,7 +346,7 @@ public:
     }
     
     const_reference operator[](size_type index) const {
-        boost::contract::guard c = boost::contract::public_function(this)
+        boost::contract::check c = boost::contract::public_function(this)
             .precondition([&] {
                 BOOST_CONTRACT_ASSERT(index < size());
             })
@@ -356,7 +356,7 @@ public:
     }
 
     reference front() {
-        boost::contract::guard c = boost::contract::public_function(this)
+        boost::contract::check c = boost::contract::public_function(this)
             .precondition([&] {
                 BOOST_CONTRACT_ASSERT(!empty());
             })
@@ -366,7 +366,7 @@ public:
     }
     
     const_reference front() const {
-        boost::contract::guard c = boost::contract::public_function(this)
+        boost::contract::check c = boost::contract::public_function(this)
             .precondition([&] {
                 BOOST_CONTRACT_ASSERT(!empty());
             })
@@ -376,7 +376,7 @@ public:
     }
 
     reference back() {
-        boost::contract::guard c = boost::contract::public_function(this)
+        boost::contract::check c = boost::contract::public_function(this)
             .precondition([&] {
                 BOOST_CONTRACT_ASSERT(!empty());
             })
@@ -386,7 +386,7 @@ public:
     }
     
     const_reference back() const {
-        boost::contract::guard c = boost::contract::public_function(this)
+        boost::contract::check c = boost::contract::public_function(this)
             .precondition([&] {
                 BOOST_CONTRACT_ASSERT(!empty());
             })
@@ -400,7 +400,7 @@ public:
                 BOOST_CONTRACT_OLD(size());
         boost::contract::old_ptr<size_type> old_capacity =
                 BOOST_CONTRACT_OLD(capacity());
-        boost::contract::guard c = boost::contract::public_function(this)
+        boost::contract::check c = boost::contract::public_function(this)
             .precondition([&] {
                 BOOST_CONTRACT_ASSERT(size() < max_size());
             })
@@ -422,7 +422,7 @@ public:
     void pop_back() {
         boost::contract::old_ptr<size_type> old_size =
                 BOOST_CONTRACT_OLD(size());
-        boost::contract::guard c = boost::contract::public_function(this)
+        boost::contract::check c = boost::contract::public_function(this)
             .precondition([&] {
                 BOOST_CONTRACT_ASSERT(!empty());
             })
@@ -436,7 +436,7 @@ public:
 
     template<typename InputIter>
     void assign(InputIter first, InputIter last) {
-        boost::contract::guard c = boost::contract::public_function(this)
+        boost::contract::check c = boost::contract::public_function(this)
             // Precondition: [begin(), end()) does not contain [first, last).
             .postcondition([&] {
                 BOOST_CONTRACT_ASSERT(std::distance(first, last) ==
@@ -448,7 +448,7 @@ public:
     }
 
     void assign(size_type count, T const& value) {
-        boost::contract::guard c = boost::contract::public_function(this)
+        boost::contract::check c = boost::contract::public_function(this)
             .precondition([&] {
                 BOOST_CONTRACT_ASSERT(count <= max_size());
             })
@@ -469,7 +469,7 @@ public:
         iterator result;
         boost::contract::old_ptr<size_type> old_size =
                 BOOST_CONTRACT_OLD(size());
-        boost::contract::guard c = boost::contract::public_function(this)
+        boost::contract::check c = boost::contract::public_function(this)
             .precondition([&] {
                 BOOST_CONTRACT_ASSERT(size() < max_size());
             })
@@ -498,7 +498,7 @@ public:
                 BOOST_CONTRACT_OLD(capacity());
         boost::contract::old_ptr<iterator> old_where =
                 BOOST_CONTRACT_OLD(where);
-        boost::contract::guard c = boost::contract::public_function(this)
+        boost::contract::check c = boost::contract::public_function(this)
             .precondition([&] {
                 BOOST_CONTRACT_ASSERT(size() + count < max_size());
             })
@@ -530,7 +530,7 @@ public:
                 BOOST_CONTRACT_OLD(size());
         boost::contract::old_ptr<size_type> old_capacity =
                 BOOST_CONTRACT_OLD(capacity());
-        boost::contract::guard c = boost::contract::public_function(this)
+        boost::contract::check c = boost::contract::public_function(this)
             .precondition([&] {
                 BOOST_CONTRACT_ASSERT(size() + std::distance(first, last) <
                         max_size());
@@ -550,7 +550,7 @@ public:
         iterator result;
         boost::contract::old_ptr<size_type> old_size =
                 BOOST_CONTRACT_OLD(size());
-        boost::contract::guard c = boost::contract::public_function(this)
+        boost::contract::check c = boost::contract::public_function(this)
             .precondition([&] {
                 BOOST_CONTRACT_ASSERT(!empty());
                 BOOST_CONTRACT_ASSERT(where != end());
@@ -569,7 +569,7 @@ public:
         iterator result;
         boost::contract::old_ptr<size_type> old_size =
                 BOOST_CONTRACT_OLD(size());
-        boost::contract::guard c = boost::contract::public_function(this)
+        boost::contract::check c = boost::contract::public_function(this)
             .precondition([&] {
                 BOOST_CONTRACT_ASSERT(size() >= std::distance(first, last));
             })
@@ -585,7 +585,7 @@ public:
     }
 
     void clear() {
-        boost::contract::guard c = boost::contract::public_function(this)
+        boost::contract::check c = boost::contract::public_function(this)
             .postcondition([&] {
                 BOOST_CONTRACT_ASSERT(empty());
             })
@@ -597,7 +597,7 @@ public:
     void swap(vector& other) {
         boost::contract::old_ptr<vector> old_me = BOOST_CONTRACT_OLD(*this);
         boost::contract::old_ptr<vector> old_other = BOOST_CONTRACT_OLD(other);
-        boost::contract::guard c = boost::contract::public_function(this)
+        boost::contract::check c = boost::contract::public_function(this)
             .postcondition([&] {
                 BOOST_CONTRACT_ASSERT(
                     boost::contract::condition_if<boost::has_equal_to<

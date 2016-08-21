@@ -32,7 +32,7 @@ public:
 
         /* ... */
 //]
-        boost::contract::guard c = boost::contract::constructor(this)
+        boost::contract::check c = boost::contract::constructor(this)
             .postcondition([&] {
                 BOOST_CONTRACT_ASSERT(size() == std::strlen(chars));
             })
@@ -45,12 +45,12 @@ public:
 
     ~cstring() {
         // Check invariants.
-        boost::contract::guard c = boost::contract::destructor(this);
+        boost::contract::check c = boost::contract::destructor(this);
     }
     
     std::size_t size() const {
         // Check invariants.
-        boost::contract::guard c = boost::contract::public_function(this);
+        boost::contract::check c = boost::contract::public_function(this);
         return size_;
     }
     
@@ -66,15 +66,21 @@ private:
 };
 
 //[throw_on_failure_handler
-void throwing_handler(boost::contract::from context) {
-    if(context == boost::contract::from_destructor) {
-        // Ignore exception because destructors should never throw.
-        std::clog << "destructor contract failed (ignored)" << std::endl;
-    } else throw; // Re-throw (assertion_failure, too_large_error, etc.).
-}
-
 int main() {
-    boost::contract::set_failure(&throwing_handler);
+    boost::contract::set_specification_failure(
+        [] (boost::contract::from context) {
+            if(context == boost::contract::from_destructor) {
+                // Ignore exception because destructors should never throw.
+                std::clog << "destructor contract failed (ignored)" <<
+                        std::endl;
+            } else throw; // Rethrow (assertion_failure, too_large_error, etc.).
+        }
+    );
+    boost::contract::set_check_failure( // Then do not use CHECK in destructors.
+        [] {
+            throw; // Rethrow (assertion_failure, too_large_error, etc.).
+        }
+    );
 
     /* ... */
 //]

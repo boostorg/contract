@@ -29,8 +29,8 @@ union positive {
             BOOST_CONTRACT_ASSERT(x > 0);
         });
         boost::contract::old_ptr<int> old_instances =
-                BOOST_CONTRACT_OLDOF(instances());
-        boost::contract::guard c = boost::contract::constructor(this)
+                BOOST_CONTRACT_OLD(instances());
+        boost::contract::check c = boost::contract::constructor(this)
             .postcondition([&] {
                 BOOST_CONTRACT_ASSERT(instances() == *old_instances + 1);
             })
@@ -46,8 +46,8 @@ union positive {
             BOOST_CONTRACT_ASSERT(x > 0);
         });
         boost::contract::old_ptr<int> old_instances =
-                BOOST_CONTRACT_OLDOF(instances());
-        boost::contract::guard c = boost::contract::constructor(this)
+                BOOST_CONTRACT_OLD(instances());
+        boost::contract::check c = boost::contract::constructor(this)
             .postcondition([&] {
                 BOOST_CONTRACT_ASSERT(instances() == *old_instances + 1);
             })
@@ -59,8 +59,8 @@ union positive {
 
     ~positive() {
         boost::contract::old_ptr<int> old_instances =
-                BOOST_CONTRACT_OLDOF(instances());
-        boost::contract::guard c = boost::contract::destructor(this)
+                BOOST_CONTRACT_OLD(instances());
+        boost::contract::check c = boost::contract::destructor(this)
             .postcondition([&] {
                 BOOST_CONTRACT_ASSERT(instances() == *old_instances - 1);
             })
@@ -70,7 +70,7 @@ union positive {
     }
 
     void get(int& x) {
-        boost::contract::guard c = boost::contract::public_function(this)
+        boost::contract::check c = boost::contract::public_function(this)
             .postcondition([&] {
                 BOOST_CONTRACT_ASSERT(x > 0);
             });
@@ -80,7 +80,7 @@ union positive {
     }
     
     void get(double& x) {
-        boost::contract::guard c = boost::contract::public_function(this)
+        boost::contract::check c = boost::contract::public_function(this)
             .postcondition([&] {
                 BOOST_CONTRACT_ASSERT(x > 0);
             });
@@ -90,7 +90,7 @@ union positive {
     }
 
     static int instances() {
-        boost::contract::guard c = boost::contract::public_function<positive>();
+        boost::contract::check c = boost::contract::public_function<positive>();
         return instances_;
     }
 

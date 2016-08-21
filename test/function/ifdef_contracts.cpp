@@ -10,7 +10,7 @@
 #include <boost/contract/core/config.hpp>
 #ifndef BOOST_CONTRACT_NO_FUNCTIONS
     #include <boost/contract/function.hpp>
-    #include <boost/contract/guard.hpp>
+    #include <boost/contract/check.hpp>
     #include <boost/contract/old.hpp>
 #endif
 #include <boost/detail/lightweight_test.hpp>
@@ -20,10 +20,10 @@ boost::contract::test::detail::oteststream out;
 
 void f(int x) {
     #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
-        boost::contract::old_ptr<int> old_x = BOOST_CONTRACT_OLDOF(x);
+        boost::contract::old_ptr<int> old_x = BOOST_CONTRACT_OLD(x);
     #endif
     #ifndef BOOST_CONTRACT_NO_FUNCTIONS
-        boost::contract::guard c = boost::contract::function()
+        boost::contract::check c = boost::contract::function()
             #ifndef BOOST_CONTRACT_NO_PRECONDITIONS
                 .precondition([] { out << "f::pre" << std::endl; })
             #endif

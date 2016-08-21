@@ -15,7 +15,7 @@ template<typename T>
 class vector {
 public:
     void push_back(T const& value) {
-        boost::contract::guard c = boost::contract::public_function(this)
+        boost::contract::check c = boost::contract::public_function(this)
             .postcondition([&] {
                 // Instead of `ASSERT(back() == value)` for T without `==`.
                 BOOST_CONTRACT_ASSERT(

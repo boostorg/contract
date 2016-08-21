@@ -31,8 +31,8 @@ private:
     int n_;
     
     virtual void dec(boost::contract::virtual_* = 0) {
-        boost::contract::old_ptr<int> old_get = BOOST_CONTRACT_OLDOF(get());
-        boost::contract::guard c = boost::contract::function()
+        boost::contract::old_ptr<int> old_get = BOOST_CONTRACT_OLD(get());
+        boost::contract::check c = boost::contract::function()
             .precondition([&] {
                 BOOST_CONTRACT_ASSERT(
                         get() + 1 >= std::numeric_limits<int>::min());
@@ -47,7 +47,7 @@ private:
 
 protected:
     virtual void set(int n, boost::contract::virtual_* = 0) {
-        boost::contract::guard c = boost::contract::function()
+        boost::contract::check c = boost::contract::function()
             .precondition([&] {
                 BOOST_CONTRACT_ASSERT(n <= 0);
             })
@@ -65,7 +65,7 @@ protected:
 public:
     virtual int get(boost::contract::virtual_* v = 0) const {
         int result;
-        boost::contract::guard c = boost::contract::public_function(
+        boost::contract::check c = boost::contract::public_function(
                 v, result, this)
             .postcondition([&] (int const result) {
                 BOOST_CONTRACT_ASSERT(result <= 0);
@@ -101,8 +101,8 @@ public:
 //]
 
 void countable::dec(boost::contract::virtual_* v) {
-    boost::contract::old_ptr<int> old_get = BOOST_CONTRACT_OLDOF(v, get());
-    boost::contract::guard c = boost::contract::public_function(v, this)
+    boost::contract::old_ptr<int> old_get = BOOST_CONTRACT_OLD(v, get());
+    boost::contract::check c = boost::contract::public_function(v, this)
         .precondition([&] {
             BOOST_CONTRACT_ASSERT(get() > std::numeric_limits<int>::min());
         })
@@ -114,7 +114,7 @@ void countable::dec(boost::contract::virtual_* v) {
 }
 
 void countable::set(int n, boost::contract::virtual_* v) {
-    boost::contract::guard c = boost::contract::public_function(
+    boost::contract::check c = boost::contract::public_function(
             v, this)
         .precondition([&] {
             BOOST_CONTRACT_ASSERT(n <= 0);
@@ -128,7 +128,7 @@ void countable::set(int n, boost::contract::virtual_* v) {
 
 int countable::get(boost::contract::virtual_* v) const {
     int result;
-    boost::contract::guard c = boost::contract::public_function(
+    boost::contract::check c = boost::contract::public_function(
             v, result, this);
     assert(false); // Never executed by this library.
 }
@@ -145,8 +145,8 @@ public:
     // Overriding from public members from `countable` so use `override_...`.
 
     virtual void dec(boost::contract::virtual_* v = 0) {
-        boost::contract::old_ptr<int> old_get = BOOST_CONTRACT_OLDOF(v, get());
-        boost::contract::guard c = boost::contract::public_function<
+        boost::contract::old_ptr<int> old_get = BOOST_CONTRACT_OLD(v, get());
+        boost::contract::check c = boost::contract::public_function<
                 override_dec>(v, &counter10::dec, this)
             .precondition([&] {
                 BOOST_CONTRACT_ASSERT(
@@ -161,7 +161,7 @@ public:
     }
     
     virtual void set(int n, boost::contract::virtual_* v = 0) {
-        boost::contract::guard c = boost::contract::public_function<
+        boost::contract::check c = boost::contract::public_function<
                 override_set>(v, &counter10::set, this, n)
             .precondition([&] {
                 BOOST_CONTRACT_ASSERT(n % 10 == 0);
@@ -181,7 +181,7 @@ public:
     
     virtual int get(boost::contract::virtual_* v = 0) const {
         int result;
-        boost::contract::guard c = boost::contract::public_function<
+        boost::contract::check c = boost::contract::public_function<
                 override_get>(v, result, &counter10::get, this);
 
         return result = counter::get();

@@ -12,7 +12,7 @@
 #include "../detail/oteststream.hpp"
 #include <boost/contract/destructor.hpp>
 #include <boost/contract/base_types.hpp>
-#include <boost/contract/guard.hpp>
+#include <boost/contract/check.hpp>
 #include <boost/contract/assert.hpp>
 #include <boost/config.hpp>
 
@@ -39,7 +39,7 @@ struct c {
     #endif
 
     virtual ~c() BOOST_NOEXCEPT_IF(false) {
-        boost::contract::guard c = boost::contract::destructor(this)
+        boost::contract::check c = boost::contract::destructor(this)
             #ifdef BOOST_CONTRACT_TEST_NO_C_PRE
                 #error "destructors cannot have preconditions"
             #endif
@@ -82,7 +82,7 @@ struct b
     #endif
 
     virtual ~b() BOOST_NOEXCEPT_IF(false) {
-        boost::contract::guard c = boost::contract::destructor(this)
+        boost::contract::check c = boost::contract::destructor(this)
             #ifdef BOOST_CONTRACT_TEST_NO_B_PRE
                 #error "destructors cannot have preconditions"
             #endif
@@ -125,7 +125,7 @@ struct a
     #endif
 
     virtual ~a() BOOST_NOEXCEPT_IF(false) {
-        boost::contract::guard c = boost::contract::destructor(this)
+        boost::contract::check c = boost::contract::destructor(this)
             #ifdef BOOST_CONTRACT_TEST_NO_A_PRE
                 #error "destructors cannot have preconditions"
             #endif

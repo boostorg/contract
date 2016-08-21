@@ -17,7 +17,7 @@ public:
 
 unsigned shape::compute_area(boost::contract::virtual_* v) const {
     unsigned result;
-    boost::contract::guard c = boost::contract::public_function(v, result, this)
+    boost::contract::check c = boost::contract::public_function(v, result, this)
         .postcondition([&] (int const& result) {
             BOOST_CONTRACT_ASSERT(result > 0);
         })
@@ -39,7 +39,7 @@ public:
     static int const pi = 3; // Truncated to int from 3.14...
 
     explicit circle(unsigned a_radius) : radius_(a_radius) {
-        boost::contract::guard c = boost::contract::constructor(this)
+        boost::contract::check c = boost::contract::constructor(this)
             .postcondition([&] {
                 BOOST_CONTRACT_ASSERT(radius() == a_radius);
             })
@@ -49,7 +49,7 @@ public:
     virtual unsigned compute_area(boost::contract::virtual_* v = 0) const
             /* override */ {
         unsigned result;
-        boost::contract::guard c = boost::contract::public_function<
+        boost::contract::check c = boost::contract::public_function<
                 override_compute_area>(v, result, &circle::compute_area, this)
             .postcondition([&] (unsigned const& result) {
                 BOOST_CONTRACT_ASSERT(result == pi * radius() * radius());
@@ -60,7 +60,7 @@ public:
     }
 
     unsigned radius() const {
-        boost::contract::guard c = boost::contract::public_function(this);
+        boost::contract::check c = boost::contract::public_function(this);
         return radius_;
     }
 

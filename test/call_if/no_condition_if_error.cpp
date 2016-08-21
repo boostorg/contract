@@ -7,18 +7,18 @@
 // Test assertion error when operations to check them missing (e.g., `==`).
 
 #include <boost/contract/function.hpp>
-#include <boost/contract/guard.hpp>
+#include <boost/contract/check.hpp>
 #include <boost/contract/assert.hpp>
 #include <vector>
 
 template<typename T>
-void push_back(std::vector<T>& vect, T const& val) {
-    boost::contract::guard c = boost::contract::function()
+void push_back(std::vector<T>& vect, T const& value) {
+    boost::contract::check c = boost::contract::function()
         .postcondition([&] {
-            BOOST_CONTRACT_ASSERT(vect.back() == val); // Error (j has no ==).
+            BOOST_CONTRACT_ASSERT(vect.back() == value); // Error (j has no ==).
         })
     ;
-    vect.push_back(val);
+    vect.push_back(value);
 }
 
 struct j { // Type without operator==.

@@ -17,7 +17,7 @@ public:
 
     static int instances() {
         // Explicit template parameter `make` (to check static invariants).
-        boost::contract::guard c = boost::contract::public_function<make>();
+        boost::contract::check c = boost::contract::public_function<make>();
 
         return instances_; // Function body.
     }
@@ -27,8 +27,8 @@ public:
 
     make() : object() {
         boost::contract::old_ptr<int> old_instances =
-                BOOST_CONTRACT_OLDOF(instances());
-        boost::contract::guard c = boost::contract::constructor(this)
+                BOOST_CONTRACT_OLD(instances());
+        boost::contract::check c = boost::contract::constructor(this)
             .postcondition([&] {
                 BOOST_CONTRACT_ASSERT(instances() == *old_instances + 1);
             })
@@ -39,8 +39,8 @@ public:
 
     ~make() {
         boost::contract::old_ptr<int> old_instances =
-                BOOST_CONTRACT_OLDOF(instances());
-        boost::contract::guard c = boost::contract::destructor(this)
+                BOOST_CONTRACT_OLD(instances());
+        boost::contract::check c = boost::contract::destructor(this)
             .postcondition([&] { // (An example of destructor postconditions.)
                 BOOST_CONTRACT_ASSERT(instances() == *old_instances - 1);
             })

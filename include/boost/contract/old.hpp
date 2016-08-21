@@ -12,7 +12,7 @@ Facilities to support old values.
 */
 
 #include <boost/contract/detail/all_core_headers.hpp>
-#include <boost/contract/detail/check_guard.hpp>
+#include <boost/contract/detail/checking.hpp>
 #include <boost/contract/detail/operator_safe_bool.hpp>
 #include <boost/contract/detail/debug.hpp>
 #include <boost/make_shared.hpp>
@@ -382,7 +382,7 @@ private:
                     typename Ptr::element_type>::value) {
                 BOOST_CONTRACT_DETAIL_DEBUG(!ptr_); // Non-copyable so no old...
                 return Ptr(); // ...and return null.
-            } else if(!v_ && boost::contract::detail::check_guard::checking()) {
+            } else if(!v_ && boost::contract::detail::checking::already()) {
                 // Return null shared ptr (see after if statement).
             } else if(!v_) {
                 BOOST_CONTRACT_DETAIL_DEBUG(ptr_);
@@ -491,7 +491,7 @@ being checked (see @RefMacro{BOOST_CONTRACT_NO_POSTCONDITIONS}).
 */
 bool copy_old() {
     #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
-        return !boost::contract::detail::check_guard::checking();
+        return !boost::contract::detail::checking::already();
     #else
         return false; // Post checking disabled, so never copy old values.
     #endif
@@ -510,7 +510,7 @@ being checked (see @RefMacro{BOOST_CONTRACT_NO_POSTCONDITIONS}).
 */
 bool copy_old(virtual_* v) {
     #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
-        if(!v) return !boost::contract::detail::check_guard::checking();
+        if(!v) return !boost::contract::detail::checking::already();
         return v->action_ == boost::contract::virtual_::push_old_init ||
                 v->action_ == boost::contract::virtual_::push_old_copy;
     #else

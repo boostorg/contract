@@ -15,19 +15,19 @@ template<typename T>
 class abstract_stack {
 public:
     abstract_stack() {
-        boost::contract::guard c = boost::contract::constructor(this)
+        boost::contract::check c = boost::contract::constructor(this)
             // Postcondition: empty() (but it cannot be checked here to avoid
             // calling pure virtual function length() during construction).
         ;
     }
 
     virtual ~abstract_stack() {
-        boost::contract::guard c = boost::contract::destructor(this);
+        boost::contract::check c = boost::contract::destructor(this);
     }
 
     bool full() const {
         bool result;
-        boost::contract::guard c = boost::contract::public_function(this)
+        boost::contract::check c = boost::contract::public_function(this)
             .postcondition([&] {
                 BOOST_CONTRACT_ASSERT(result == (length() == capacity()));
             })
@@ -38,7 +38,7 @@ public:
 
     bool empty() const {
         bool result;
-        boost::contract::guard c = boost::contract::public_function(this)
+        boost::contract::check c = boost::contract::public_function(this)
             .postcondition([&] {
                 BOOST_CONTRACT_ASSERT(result = (length() == 0));
             })
@@ -61,7 +61,7 @@ public:
 template<typename T>
 int abstract_stack<T>::length(boost::contract::virtual_* v) const {
     int result;
-    boost::contract::guard c = boost::contract::public_function(v, result, this)
+    boost::contract::check c = boost::contract::public_function(v, result, this)
         .postcondition([&] (int const& result) {
             BOOST_CONTRACT_ASSERT(result >= 0);
         })
@@ -73,7 +73,7 @@ int abstract_stack<T>::length(boost::contract::virtual_* v) const {
 template<typename T>
 int abstract_stack<T>::capacity(boost::contract::virtual_* v) const {
     int result;
-    boost::contract::guard c = boost::contract::public_function(v, result, this)
+    boost::contract::check c = boost::contract::public_function(v, result, this)
         .postcondition([&] (int const& result) {
             BOOST_CONTRACT_ASSERT(result >= 0);
         })
@@ -85,7 +85,7 @@ int abstract_stack<T>::capacity(boost::contract::virtual_* v) const {
 template<typename T>
 T const& abstract_stack<T>::item(boost::contract::virtual_* v) const {
     boost::optional<T const&> result;
-    boost::contract::guard c = boost::contract::public_function(v, result, this)
+    boost::contract::check c = boost::contract::public_function(v, result, this)
         .precondition([&] {
             BOOST_CONTRACT_ASSERT(!empty());
         })
@@ -96,7 +96,7 @@ T const& abstract_stack<T>::item(boost::contract::virtual_* v) const {
 
 template<typename T>
 void abstract_stack<T>::push(T const& value, boost::contract::virtual_* v) {
-    boost::contract::guard c = boost::contract::public_function(v, this)
+    boost::contract::check c = boost::contract::public_function(v, this)
         .precondition([&] {
             BOOST_CONTRACT_ASSERT(!full());
         })
@@ -110,8 +110,8 @@ void abstract_stack<T>::push(T const& value, boost::contract::virtual_* v) {
 template<typename T>
 T const& abstract_stack<T>::pop(boost::contract::virtual_* v) {
     boost::optional<T const&> result;
-    boost::contract::old_ptr<T> old_item = BOOST_CONTRACT_OLDOF(v, item());
-    boost::contract::guard c = boost::contract::public_function(v, result, this)
+    boost::contract::old_ptr<T> old_item = BOOST_CONTRACT_OLD(v, item());
+    boost::contract::check c = boost::contract::public_function(v, result, this)
         .precondition([&] {
             BOOST_CONTRACT_ASSERT(!empty());
         })
@@ -126,7 +126,7 @@ T const& abstract_stack<T>::pop(boost::contract::virtual_* v) {
 
 template<typename T>
 void abstract_stack<T>::clear(boost::contract::virtual_* v) {
-    boost::contract::guard c = boost::contract::public_function(v, this)
+    boost::contract::check c = boost::contract::public_function(v, this)
         .postcondition([&] {
             BOOST_CONTRACT_ASSERT(empty());
         })
@@ -158,7 +158,7 @@ public:
         vect_(count), // OK, executed after precondition so count >= 0.
         len_(0)
     {
-        boost::contract::guard c = boost::contract::constructor(this)
+        boost::contract::check c = boost::contract::constructor(this)
             .postcondition([&] {
                 BOOST_CONTRACT_ASSERT(length() == 0);
                 BOOST_CONTRACT_ASSERT(capacity() == count);
@@ -167,14 +167,14 @@ public:
     }
 
     virtual ~vstack() {
-        boost::contract::guard c = boost::contract::destructor(this);
+        boost::contract::check c = boost::contract::destructor(this);
     }
 
     // Inherited from abstract_stack.
 
     virtual int length(boost::contract::virtual_* v = 0) const /* override */ {
         int result;
-        boost::contract::guard c = boost::contract::public_function<
+        boost::contract::check c = boost::contract::public_function<
                 override_length>(v, result, &vstack::length, this);
         return result = len_;
     }
@@ -182,7 +182,7 @@ public:
     virtual int capacity(boost::contract::virtual_* v = 0)
             const /* override */ {
         int result;
-        boost::contract::guard c = boost::contract::public_function<
+        boost::contract::check c = boost::contract::public_function<
                 override_capacity>(v, result, &vstack::capacity, this);
         return result = vect_.size();
     }
@@ -190,27 +190,27 @@ public:
     virtual T const& item(boost::contract::virtual_* v = 0)
             const /* override */ {
         boost::optional<T const&> result;
-        boost::contract::guard c = boost::contract::public_function<
+        boost::contract::check c = boost::contract::public_function<
                 override_item>(v, result, &vstack::item, this);
         return *(result = vect_[len_ - 1]);
     }
 
     virtual void push(T const& value, boost::contract::virtual_* v = 0)
             /* override */ {
-        boost::contract::guard c = boost::contract::public_function<
+        boost::contract::check c = boost::contract::public_function<
                 override_push>(v, &vstack::push, this, value);
         vect_[len_++] = value;
     }
 
     virtual T const& pop(boost::contract::virtual_* v = 0) /* override */ {
         boost::optional<T const&> result;
-        boost::contract::guard c = boost::contract::public_function<
+        boost::contract::check c = boost::contract::public_function<
                 override_pop>(v, result, &vstack::pop, this);
         return *(result = vect_[--len_]);
     }
 
     virtual void clear(boost::contract::virtual_* v = 0) /* override */ {
-        boost::contract::guard c = boost::contract::public_function<
+        boost::contract::check c = boost::contract::public_function<
                 override_clear>(v, &vstack::clear, this);
         len_ = 0;
     }

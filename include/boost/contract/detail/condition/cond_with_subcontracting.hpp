@@ -1,6 +1,6 @@
 
-#ifndef BOOST_CONTRACT_DETAIL_CHECK_SUBCONTRACTED_PRE_POST_INV_HPP_
-#define BOOST_CONTRACT_DETAIL_CHECK_SUBCONTRACTED_PRE_POST_INV_HPP_
+#ifndef BOOST_CONTRACT_DETAIL_COND_WITH_SUBCONTRACTING_HPP_
+#define BOOST_CONTRACT_DETAIL_COND_WITH_SUBCONTRACTING_HPP_
 
 // Copyright (C) 2008-2016 Lorenzo Caminiti
 // Distributed under the Boost Software License, Version 1.0 (see accompanying
@@ -8,16 +8,18 @@
 // See: http://www.boost.org/doc/libs/release/libs/contract/doc/html/index.html
 
 #include <boost/contract/core/config.hpp>
-#if !defined(BOOST_CONTRACT_NO_PRECONDITIONS) || \
-        !defined(BOOST_CONTRACT_NO_POSTCONDITIONS)
+#if     !defined(BOOST_CONTRACT_NO_PRECONDITIONS) || \
+        !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
+        !defined(BOOST_CONTRACT_NO_EXCEPTS)
     #include <boost/contract/core/exception.hpp>
 #endif
-#include <boost/contract/detail/condition/check_pre_post_inv.hpp>
+#include <boost/contract/detail/condition/cond_with_inv.hpp>
 #include <boost/contract/detail/decl.hpp>
 #include <boost/contract/detail/tvariadic.hpp>
-#if !defined(BOOST_CONTRACT_NO_PRECONDITIONS) || \
+#if     !defined(BOOST_CONTRACT_NO_INVARIANTS) || \
+        !defined(BOOST_CONTRACT_NO_PRECONDITIONS) || \
         !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
-        !defined(BOOST_CONTRACT_NO_INVARIANTS)
+        !defined(BOOST_CONTRACT_NO_EXCEPTS)
     #include <boost/contract/core/virtual.hpp>
     #include <boost/contract/core/access.hpp>
     #include <boost/contract/detail/type_traits/optional.hpp>
@@ -43,15 +45,17 @@
     #include <boost/config.hpp>
 #endif
 #include <boost/mpl/vector.hpp>
-#if !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
-        !defined(BOOST_CONTRACT_NO_INVARIANTS)
+#if     !defined(BOOST_CONTRACT_NO_INVARIANTS) || \
+        !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
+        !defined(BOOST_CONTRACT_NO_EXCEPTS)
     #include <boost/mpl/for_each.hpp>
 #endif
 #ifndef BOOST_CONTRACT_NO_PRECONDITIONS
     #include <boost/mpl/pop_front.hpp>
     #include <boost/mpl/front.hpp>
 #endif
-#ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
+#if     !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
+        !defined(BOSOT_CONTRACT_NO_EXCEPTS)
     #include <boost/any.hpp>
     #include <boost/optional.hpp>
     #include <boost/type_traits/remove_reference.hpp>
@@ -61,20 +65,20 @@
 
 namespace boost { namespace contract { namespace detail {
 
-namespace check_subcontracted_pre_post_inv_ {
+namespace cond_with_subcontracting_ {
     // Exception signals (must not inherit).
     class signal_no_error {};
     class signal_not_checked {};
 }
 
 // O, VR, F, and Args-i can be none types (but C cannot).
-BOOST_CONTRACT_DETAIL_DECL_DETAIL_CHECK_SUBCONTRACTED_PRE_POST_INV_Z(1,
-        /* is_friend = */ 0, O, VR, F, C, Args) : // Non-copyable base.
-    public check_pre_post_inv<VR, C>
-{
-    #if !defined(BOOST_CONTRACT_NO_PRECONDITIONS) || \
+BOOST_CONTRACT_DETAIL_DECL_DETAIL_COND_WITH_SUBCONTRACTING_Z(1,
+        /* is_friend = */ 0, O, VR, F, C, Args) : public cond_with_inv<VR, C>
+{ // Non-copyable base.
+    #if     !defined(BOOST_CONTRACT_NO_INVARIANTS) || \
+            !defined(BOOST_CONTRACT_NO_PRECONDITIONS) || \
             !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
-            !defined(BOOST_CONTRACT_NO_INVARIANTS)
+            !defined(BOOST_CONTRACT_NO_EXCEPTS)
         template<class Class, typename Result = boost::mpl::vector<> >
         class overridden_bases_of {
             struct search_bases {
@@ -141,7 +145,7 @@ BOOST_CONTRACT_DETAIL_DECL_DETAIL_CHECK_SUBCONTRACTED_PRE_POST_INV_Z(1,
     #endif
 
 public:
-    explicit check_subcontracted_pre_post_inv(
+    explicit cond_with_subcontracting(
         boost::contract::from from,
         boost::contract::virtual_* v,
         C* obj,
@@ -150,21 +154,23 @@ public:
         BOOST_CONTRACT_DETAIL_TVARIADIC_FPARAMS_Z(1,
                 BOOST_CONTRACT_MAX_ARGS, Args, &, args)
     ) :
-        check_pre_post_inv<VR, C>(from, obj)
+        cond_with_inv<VR, C>(from, obj)
         #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
             , r_(r)
         #endif
-        #if !defined(BOOST_CONTRACT_NO_PRECONDITIONS) || \
+        #if     !defined(BOOST_CONTRACT_NO_INVARIANTS) || \
+                !defined(BOOST_CONTRACT_NO_PRECONDITIONS) || \
                 !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
-                !defined(BOOST_CONTRACT_NO_INVARIANTS)
+                !defined(BOOST_CONTRACT_NO_EXCEPTS)
             BOOST_CONTRACT_DETAIL_TVARIADIC_COMMA(BOOST_CONTRACT_MAX_ARGS)
             BOOST_CONTRACT_DETAIL_TVARIADIC_TUPLE_INIT_Z(1,
                     BOOST_CONTRACT_MAX_ARGS, args_, args)
         #endif
     {
-        #if !defined(BOOST_CONTRACT_NO_PRECONDITIONS) || \
+        #if     !defined(BOOST_CONTRACT_NO_INVARIANTS) || \
+                !defined(BOOST_CONTRACT_NO_PRECONDITIONS) || \
                 !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
-                !defined(BOOST_CONTRACT_NO_INVARIANTS)
+                !defined(BOOST_CONTRACT_NO_EXCEPTS)
             if(v) {
                 base_call_ = true;
                 v_ = v; // Invariant: v_ never null if base_call_.
@@ -184,10 +190,11 @@ public:
         #endif
     }
 
-    #if !defined(BOOST_CONTRACT_NO_PRECONDITIONS) || \
+    #if     !defined(BOOST_CONTRACT_NO_INVARIANTS) || \
+            !defined(BOOST_CONTRACT_NO_PRECONDITIONS) || \
             !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
-            !defined(BOOST_CONTRACT_NO_INVARIANTS)
-        virtual ~check_subcontracted_pre_post_inv() BOOST_NOEXCEPT_IF(false) {
+            !defined(BOOST_CONTRACT_NO_EXCEPTS)
+        virtual ~cond_with_subcontracting() BOOST_NOEXCEPT_IF(false) {
             if(!base_call_) delete v_;
         }
     #endif
@@ -203,7 +210,7 @@ protected:
     #ifndef BOOST_CONTRACT_NO_ENTRY_INVARIANTS
         void check_subcontracted_entry_inv() {
             exec_and(boost::contract::virtual_::check_entry_inv,
-                    &check_subcontracted_pre_post_inv::check_entry_inv);
+                    &cond_with_subcontracting::check_entry_inv);
         }
     #endif
     
@@ -211,7 +218,7 @@ protected:
         void check_subcontracted_pre() {
             exec_or(
                 boost::contract::virtual_::check_pre,
-                &check_subcontracted_pre_post_inv::check_pre,
+                &cond_with_subcontracting::check_pre,
                 &boost::contract::precondition_failure
             );
         }
@@ -220,43 +227,52 @@ protected:
     #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
         void copy_subcontracted_old() {
             exec_and(boost::contract::virtual_::call_old_copy,
-                    &check_subcontracted_pre_post_inv::copy_old_v);
+                    &cond_with_subcontracting::copy_virtual_old);
         }
     #endif
 
     #ifndef BOOST_CONTRACT_NO_EXIT_INVARIANTS
         void check_subcontracted_exit_inv() {
             exec_and(boost::contract::virtual_::check_exit_inv,
-                    &check_subcontracted_pre_post_inv::check_exit_inv);
+                    &cond_with_subcontracting::check_exit_inv);
         }
     #endif
 
     #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
         void check_subcontracted_post() {
             exec_and(boost::contract::virtual_::check_post,
-                    &check_subcontracted_pre_post_inv::check_post_v);
+                    &cond_with_subcontracting::check_virtual_post);
         }
     #endif
 
-    #if !defined(BOOST_CONTRACT_NO_PRECONDITIONS) || \
+    #ifndef BOOST_CONTRAT_NO_EXCEPTS
+        void check_subcontracted_except() {
+            exec_and(boost::contract::virtual_::check_except,
+                    &cond_with_subcontracting::check_except);
+        }
+    #endif
+
+    #if     !defined(BOOST_CONTRACT_NO_INVARIANTS) || \
+            !defined(BOOST_CONTRACT_NO_PRECONDITIONS) || \
             !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
-            !defined(BOOST_CONTRACT_NO_INVARIANTS)
+            !defined(BOOST_CONTRACT_NO_EXCEPTS)
         bool base_call() const { return base_call_; }
 
         bool failed() const /* override */ {
             if(v_) return v_->failed_;
-            else return check_base::failed();
+            else return cond_base::failed();
         }
 
         void failed(bool value) /* override */ {
             if(v_) v_->failed_ = value;
-            else check_base::failed(value);
+            else cond_base::failed(value);
         }
     #endif
 
 private:
-    #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
-        void copy_old_v() {
+    #if     !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
+            !defined(BOOST_CONTRACT_NO_EXCEPTS)
+        void copy_virtual_old() {
             boost::contract::virtual_::action_enum a;
             if(base_call_) {
                 a = v_->action_;
@@ -265,8 +281,10 @@ private:
             this->copy_old();
             if(base_call_) v_->action_ = a;
         }
+    #endif
     
-        void check_post_v() {
+    #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
+        void check_virtual_post() {
             if(base_call_) {
                 boost::contract::virtual_::action_enum a = v_->action_;
                 v_->action_ = boost::contract::virtual_::pop_old_copy;
@@ -307,26 +325,27 @@ private:
                     }
                 }
             }
-            check_post_r<VR>(r);
+            check_virtual_post_with_result<VR>(r);
         }
 
         template<typename R_, typename Result>
         typename boost::enable_if<is_optional<R_> >::type
-        check_post_r(Result const& r) { this->check_post(r); }
+        check_virtual_post_with_result(Result const& r) { this->check_post(r); }
         
         template<typename R_, typename Result>
         typename boost::disable_if<is_optional<R_> >::type
-        check_post_r(Result const& r) {
+        check_virtual_post_with_result(Result const& r) {
             BOOST_CONTRACT_DETAIL_DEBUG(r);
             this->check_post(*r);
         }
     #endif
 
-    #if !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
-            !defined(BOOST_CONTRACT_NO_INVARIANTS)
+    #if     !defined(BOOST_CONTRACT_NO_INVARIANTS) || \
+            !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
+            !defined(BOOST_CONTRACT_NO_EXCEPTS)
         void exec_and( // Execute action in short-circuit logic-and with bases.
             boost::contract::virtual_::action_enum a,
-            void (check_subcontracted_pre_post_inv::* f)() = 0
+            void (cond_with_subcontracting::* f)() = 0
         ) {
             if(failed()) return;
             if(!base_call_ || v_->action_ == a) {
@@ -336,7 +355,7 @@ private:
                 }
                 if(f) (this->*f)();
                 if(base_call_) {
-                    throw check_subcontracted_pre_post_inv_::signal_no_error();
+                    throw cond_with_subcontracting_::signal_no_error();
                 }
             }
         }
@@ -345,7 +364,7 @@ private:
     #ifndef BOOST_CONTRACT_NO_PRECONDITIONS
         void exec_or( // Execute action in short-circuit logic-or with bases.
             boost::contract::virtual_::action_enum a,
-            bool (check_subcontracted_pre_post_inv::* f)(bool) = 0,
+            bool (cond_with_subcontracting::* f)(bool) = 0,
             void (*h)(boost::contract::from) = 0
         ) {
             if(failed()) return;
@@ -369,10 +388,9 @@ private:
                         (this->*f)(/* throw_on_failure = */ base_call_) : false;
                 if(base_call_) {
                     if(!checked) {
-                        throw check_subcontracted_pre_post_inv_::
-                                signal_not_checked();
+                        throw cond_with_subcontracting_::signal_not_checked();
                     }
-                    throw check_subcontracted_pre_post_inv_::signal_no_error();
+                    throw cond_with_subcontracting_::signal_no_error();
                 }
             }
         }
@@ -387,8 +405,7 @@ private:
             if(boost::mpl::empty<Bases>::value) return false;
             try {
                 call_base(*this)(typename boost::mpl::front<Bases>::type());
-            } catch(check_subcontracted_pre_post_inv_::
-                    signal_not_checked const&) {
+            } catch(cond_with_subcontracting_::signal_not_checked const&) {
                 return exec_or_bases<
                         typename boost::mpl::pop_front<Bases>::type>();
             } catch(...) {
@@ -403,13 +420,13 @@ private:
         }
     #endif
     
-    #if !defined(BOOST_CONTRACT_NO_PRECONDITIONS) || \
+    #if     !defined(BOOST_CONTRACT_NO_INVARIANTS) || \
+            !defined(BOOST_CONTRACT_NO_PRECONDITIONS) || \
             !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
-            !defined(BOOST_CONTRACT_NO_INVARIANTS)
+            !defined(BOOST_CONTRACT_NO_EXCEPTS)
         class call_base { // Copyable (as &).
         public:
-            explicit call_base(check_subcontracted_pre_post_inv& me) :
-                    me_(me) {}
+            explicit call_base(cond_with_subcontracting& me) : me_(me) {}
 
             template<class B>
             void operator()(B*) {
@@ -420,8 +437,7 @@ private:
                 try {
                     call<B>(BOOST_CONTRACT_DETAIL_TVARIADIC_TUPLE_INDEXES_OF(
                             Args));
-                } catch(check_subcontracted_pre_post_inv_::
-                        signal_no_error const&) {
+                } catch(cond_with_subcontracting_::signal_no_error const&) {
                     // No error (do not throw).
                 }
             }
@@ -445,16 +461,17 @@ private:
                 );
             }
             
-            check_subcontracted_pre_post_inv& me_;
+            cond_with_subcontracting& me_;
         };
     #endif
 
     #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
         VR& r_;
     #endif
-    #if !defined(BOOST_CONTRACT_NO_PRECONDITIONS) || \
+    #if     !defined(BOOST_CONTRACT_NO_INVARIANTS) || \
+            !defined(BOOST_CONTRACT_NO_PRECONDITIONS) || \
             !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
-            !defined(BOOST_CONTRACT_NO_INVARIANTS)
+            !defined(BOOST_CONTRACT_NO_EXCEPTS)
         boost::contract::virtual_* v_;
         bool base_call_;
         BOOST_CONTRACT_DETAIL_TVARIADIC_TUPLE_Z(1,

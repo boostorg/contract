@@ -9,7 +9,7 @@
 #include <boost/contract/public_function.hpp>
 #include <boost/contract/override.hpp>
 #include <boost/contract/base_types.hpp>
-#include <boost/contract/guard.hpp>
+#include <boost/contract/check.hpp>
 
 struct b {
     virtual int f(boost::contract::virtual_* v = 0) {
@@ -17,7 +17,7 @@ struct b {
         // in this case public_function does not that &b::f as param (but this
         // will error at run-time on a virtual call via a derived class).
         char result;
-        boost::contract::guard c = boost::contract::public_function(
+        boost::contract::check c = boost::contract::public_function(
                 v, result, this);
         return result;
     }
@@ -32,7 +32,7 @@ struct a
 
     virtual int f(boost::contract::virtual_* v = 0) /* override */ {
         char result;
-        boost::contract::guard c = boost::contract::public_function<override_f>(
+        boost::contract::check c = boost::contract::public_function<override_f>(
                 v, result, &a::f, this); // Error (result time mismatch).
         return result;
     }

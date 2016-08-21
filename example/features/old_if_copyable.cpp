@@ -13,7 +13,7 @@ void accumulate(T& total, T const& x) {
     // No compiler error if T has no copy constructor...
     boost::contract::old_ptr_if_copyable<T> old_total =
             BOOST_CONTRACT_OLD(total);
-    boost::contract::guard c = boost::contract::function()
+    boost::contract::check c = boost::contract::function()
         .postcondition([&] {
             // ...but old value null if T has no copy constructor.
             if(old_total) BOOST_CONTRACT_ASSERT(total == *old_total + x);

@@ -14,7 +14,7 @@ Program contracts for non-member, private, and protected functions.
 */
 
 #include <boost/contract/detail/all_core_headers.hpp>
-#if !defined(BOOST_CONTRACT_NO_FUNCTIONS) || \
+#if     !defined(BOOST_CONTRACT_NO_FUNCTIONS) || \
         !defined(BOOST_CONTRACT_NO_INVARIANTS)
     #include <boost/contract/detail/operation/function.hpp>
 #endif
@@ -36,14 +36,14 @@ preconditions and postconditions.
         of the contracted function (otherwise this library will generate a
         run-time error, see @RefMacro{BOOST_CONTRACT_ON_MISSING_GUARD}).
 */
-specify_precondition_old_postcondition<> function() {
+specify_precondition_old_postcondition_except<> function() {
     // Must #if also on ..._INVARIANTS here because specify_... is generic.
-    #if !defined(BOOST_CONTRACT_NO_FUNCTIONS) || \
+    #if     !defined(BOOST_CONTRACT_NO_FUNCTIONS) || \
             !defined(BOOST_CONTRACT_NO_INVARIANTS)
-        return specify_precondition_old_postcondition<>(
+        return specify_precondition_old_postcondition_except<>(
                 new boost::contract::detail::function());
     #else
-        return specify_precondition_old_postcondition<>();
+        return specify_precondition_old_postcondition_except<>();
     #endif
 }
 

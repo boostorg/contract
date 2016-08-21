@@ -32,7 +32,7 @@ int gcd(int const a, int const b) {
 
     //[check_macro
     while(x != y) {
-        BOOST_CONTRACT_CHECK(x > 0); // Body checks with macro (preferred).
+        BOOST_CONTRACT_CHECK(x > 0); // Body checks with macros (preferred).
         BOOST_CONTRACT_CHECK(y > 0);
 
         if(x > y) x = x - y;

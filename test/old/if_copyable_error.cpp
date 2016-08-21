@@ -8,14 +8,14 @@
 
 #include <boost/contract/function.hpp>
 #include <boost/contract/old.hpp>
-#include <boost/contract/guard.hpp>
+#include <boost/contract/check.hpp>
 #include <boost/contract/assert.hpp>
 #include <boost/noncopyable.hpp>
 
 template<typename T>
 void next(T& x) {
-    boost::contract::old_ptr<T> old_x = BOOST_CONTRACT_OLDOF(x);
-    boost::contract::guard c = boost::contract::function()
+    boost::contract::old_ptr<T> old_x = BOOST_CONTRACT_OLD(x);
+    boost::contract::check c = boost::contract::function()
         .postcondition([&] {
             BOOST_CONTRACT_ASSERT(x > *old_x); // No need to check if(old_x)...
         })

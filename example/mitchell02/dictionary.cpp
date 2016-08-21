@@ -23,7 +23,7 @@ public:
 
     // Create empty dictionary.
     dictionary() {
-        boost::contract::guard c = boost::contract::constructor(this)
+        boost::contract::check c = boost::contract::constructor(this)
             .postcondition([&] {
                 BOOST_CONTRACT_ASSERT(count() == 0); // Empty.
             })
@@ -33,7 +33,7 @@ public:
     // Destroy dictionary.
     ~dictionary() {
         // Check invariants.
-        boost::contract::guard c = boost::contract::destructor(this);
+        boost::contract::check c = boost::contract::destructor(this);
     }
 
     /* Basic Queries */
@@ -41,14 +41,14 @@ public:
     // Number of key entries.
     int count() const {
         // Check invariants.
-        boost::contract::guard c = boost::contract::public_function(this);
+        boost::contract::check c = boost::contract::public_function(this);
         return items_.size();
     }
 
     // Has entry for key?
     bool has(K const& key) const {
         bool result;
-        boost::contract::guard c = boost::contract::public_function(this)
+        boost::contract::check c = boost::contract::public_function(this)
             .postcondition([&] {
                 // Empty has no key.
                 if(count() == 0) BOOST_CONTRACT_ASSERT(!result);
@@ -60,7 +60,7 @@ public:
 
     // Value for a given key.
     T const& value_for(K const& key) const {
-        boost::contract::guard c = boost::contract::public_function(this)
+        boost::contract::check c = boost::contract::public_function(this)
             .precondition([&] {
                 BOOST_CONTRACT_ASSERT(has(key)); // Has key.
             })
@@ -74,8 +74,8 @@ public:
 
     // Add value of a given key.
     void put(K const& key, T const& value) {
-        boost::contract::old_ptr<int> old_count = BOOST_CONTRACT_OLDOF(count());
-        boost::contract::guard c = boost::contract::public_function(this)
+        boost::contract::old_ptr<int> old_count = BOOST_CONTRACT_OLD(count());
+        boost::contract::check c = boost::contract::public_function(this)
             .precondition([&] {
                 BOOST_CONTRACT_ASSERT(!has(key)); // Has not key already.
             })
@@ -92,8 +92,8 @@ public:
 
     // Remove value for given key.
     void remove(K const& key) {
-        boost::contract::old_ptr<int> old_count = BOOST_CONTRACT_OLDOF(count());
-        boost::contract::guard c = boost::contract::public_function(this)
+        boost::contract::old_ptr<int> old_count = BOOST_CONTRACT_OLD(count());
+        boost::contract::check c = boost::contract::public_function(this)
             .precondition([&] {
                 BOOST_CONTRACT_ASSERT(has(key)); // Has key.
             })

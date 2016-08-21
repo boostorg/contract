@@ -20,7 +20,7 @@ class calendar {
 
 public:
     calendar() : month_(1), date_(31) {
-        boost::contract::guard c = boost::contract::constructor(this)
+        boost::contract::check c = boost::contract::constructor(this)
             .postcondition([&] {
                 BOOST_CONTRACT_ASSERT(month() == 1);
                 BOOST_CONTRACT_ASSERT(date() == 31);
@@ -30,23 +30,23 @@ public:
 
     virtual ~calendar() {
         // Check invariants.
-        boost::contract::guard c = boost::contract::destructor(this);
+        boost::contract::check c = boost::contract::destructor(this);
     }
 
     int month() const {
         // Check invariants.
-        boost::contract::guard c = boost::contract::public_function(this);
+        boost::contract::check c = boost::contract::public_function(this);
         return month_;
     }
 
     int date() const {
         // Check invariants.
-        boost::contract::guard c = boost::contract::public_function(this);
+        boost::contract::check c = boost::contract::public_function(this);
         return date_;
     }
 
     void reset(int new_month) {
-        boost::contract::guard c = boost::contract::public_function(this)
+        boost::contract::check c = boost::contract::public_function(this)
             .precondition([&] {
                 BOOST_CONTRACT_ASSERT(new_month >= 1);
                 BOOST_CONTRACT_ASSERT(new_month <= 12);
@@ -62,7 +62,7 @@ public:
 private:
     static int days_in(int month) {
         int result;
-        boost::contract::guard c = boost::contract::function()
+        boost::contract::check c = boost::contract::function()
             .precondition([&] {
                 BOOST_CONTRACT_ASSERT(month >= 1);
                 BOOST_CONTRACT_ASSERT(month <= 12);

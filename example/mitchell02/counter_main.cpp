@@ -26,7 +26,7 @@ public:
 
     // Create view associated with given counter.
     explicit view_of_counter(counter& a_counter) : counter_(a_counter) {
-        boost::contract::guard c = boost::contract::constructor(this);
+        boost::contract::check c = boost::contract::constructor(this);
 
         counter_.attach(this);
         assert(counter_.value() == test_counter);
@@ -34,7 +34,7 @@ public:
 
     // Destroy view.
     virtual ~view_of_counter() {
-        boost::contract::guard c = boost::contract::destructor(this);
+        boost::contract::check c = boost::contract::destructor(this);
     }
 
     /* Commands */
@@ -42,7 +42,7 @@ public:
     virtual bool up_to_date_with_subject(boost::contract::virtual_* v = 0)
             const /* override */ {
         bool result;
-        boost::contract::guard c = boost::contract::public_function<
+        boost::contract::check c = boost::contract::public_function<
             override_up_to_date_with_subject
         >(v, result, &view_of_counter::up_to_date_with_subject, this);
 
@@ -50,7 +50,7 @@ public:
     }
 
     virtual void update(boost::contract::virtual_* v = 0) /* override */ {
-        boost::contract::guard c = boost::contract::public_function<
+        boost::contract::check c = boost::contract::public_function<
                 override_update>(v, &view_of_counter::update, this);
 
         assert(counter_.value() == test_counter);

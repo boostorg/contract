@@ -6,8 +6,7 @@
 
 subdir-usage ;
 
-test-suite constructor
-:
+test-suite constructor :
     [ subdir-run-with-no constructor : decl_pre_all ]
     [ subdir-run-with-no constructor : decl_pre_ends ]
     [ subdir-run-with-no constructor : decl_pre_mid ]
@@ -45,8 +44,7 @@ test-suite constructor
     [ subdir-compile-fail constructor : pre_error ]
 ;
 
-test-suite destructor
-:
+test-suite destructor :
     # No decl_pre_... for destructors.
     
     [ subdir-run-with-no destructor : decl_post_all ]
@@ -81,8 +79,7 @@ test-suite destructor
     [ subdir-compile-fail destructor : pre_error ]
 ;
 
-test-suite public_function
-:
+test-suite public_function :
     [ subdir-run-with-no public_function : decl_pre_all ]
     [ subdir-run-with-no public_function : decl_pre_ends ]
     [ subdir-run-with-no public_function : decl_pre_mid ]
@@ -153,8 +150,7 @@ test-suite public_function
     [ subdir-run-with-no public_function : static_no_contracts ]
 ;
     
-test-suite invariant
-:
+test-suite invariant :
     [ subdir-run-with-no invariant : decl_static_cv_const ]
     [ subdir-run-with-no invariant : decl_static_cv ]
     [ subdir-run-with-no invariant : decl_cv_const ]
@@ -181,8 +177,7 @@ test-suite invariant
     [ subdir-run-with-no invariant : volatile_permissive ]
 ;
 
-test-suite function
-:
+test-suite function :
     [ subdir-run-with-no function : decl_pre_all ]
     [ subdir-run-with-no function : decl_pre_none ]
     
@@ -196,36 +191,32 @@ test-suite function
     [ subdir-run-with-no function : old_throw ]
 ;
 
-test-suite check
-:
+test-suite check :
     [ subdir-run-with-no check : decl_class ]
     [ subdir-run-with-no check : decl_macro ]
 ;
 
-test-suite result
-:
+test-suite result :
     [ subdir-run-with-no result : mixed_optional ]
     [ subdir-run-with-no result : mixed_optional_ref ]
 
     [ subdir-compile-fail result : type_mismatch_error ]
 ;
 
-test-suite old
-:
+test-suite old :
     [ subdir-run-with-no old : auto ]
 
     [ subdir-run-with-no old : no_macros ]
-    [ subdir-run-with-no old : no_macros_noncopyable ]
+    [ subdir-run-with-no old : no_macros_if_copyable ]
 
     [ subdir-compile-fail old : no_make_old_error ]
-    [ subdir-compile-fail old : no_make_old_noncopyable_error ]
+    [ subdir-compile-fail old : no_make_old_if_copyable_error ]
 
-    [ subdir-run-with-no old : noncopyable ]
-    [ subdir-compile-fail old : noncopyable_error ]
+    [ subdir-run-with-no old : if_copyable ]
+    [ subdir-compile-fail old : if_copyable_error ]
 ;
 
-test-suite disable
-:
+test-suite disable :
     [ subdir-run-with-no disable : prog ]
     [ subdir-run-with-no disable : prog_pre_disable_nothing ]
 
@@ -236,27 +227,15 @@ test-suite disable
     [ subdir-run-with-no disable : lib_ab :
             <library>disable-lib_a <library>disable-lib_b ]
     
-    [
-        subdir-lib disable : lib_x
-        :
-            <link>shared:<define>BOOST_CONTRACT_TEST_LIB_X_DYN_LINK
-            # Test contracts in .cpp so never post (as NO_POST here).
-            <define>BOOST_CONTRACT_NO_POSTCONDITIONS
-    ]
-    [
-        subdir-lib disable : lib_y
-        :
-            <library>disable-lib_x
-            <link>shared:<define>BOOST_CONTRACT_TEST_LIB_Y_DYN_LINK
-            # Test contracts in .hpp so can have post (even if NO_POST here).
-            <define>BOOST_CONTRACT_NO_POSTCONDITIONS
-    ]
+    [ subdir-lib disable : lib_x :
+            <link>shared:<define>BOOST_CONTRACT_TEST_LIB_X_DYN_LINK ]
+    [ subdir-lib disable : lib_y : <library>disable-lib_x
+            <link>shared:<define>BOOST_CONTRACT_TEST_LIB_Y_DYN_LINK ]
     [ subdir-run-with-no disable : lib_xy :
             <library>disable-lib_x <library>disable-lib_y ]
 ;
 
-test-suite specify
-:
+test-suite specify :
     [ subdir-run-with-no specify : pre_old_post ]
     [ subdir-run-with-no specify : pre_old ]
     [ subdir-run-with-no specify : old_post ]
@@ -266,15 +245,14 @@ test-suite specify
     [ subdir-run-with-no specify : post ]
     [ subdir-run-with-no specify : nothing ]
     
-    [ subdir-run-with-no specify : no_guard ]
+    [ subdir-run-with-no specify : missing_check_decl ]
 
     [ subdir-compile-fail specify : old_pre_error ]
     [ subdir-compile-fail specify : post_old_error ]
     [ subdir-compile-fail specify : post_pre_error ]
 ;
 
-test-suite call_if
-:
+test-suite call_if :
     [ subdir-run call_if : true_ ]
     [ subdir-run call_if : false_ ]
 
@@ -286,13 +264,8 @@ test-suite call_if
     [ subdir-run-with-no call_if : condition_if ]
     [ subdir-compile-fail call_if : no_condition_if_error ]
 ;
-
-# C++14 supported only by Clang... so in its own test-suite and explicit.
-test-suite call_if-cxx14
-:
+test-suite call_if-cxx14 : # Requires C++14.
     [ subdir-run call_if : equal_to_cxx14 :
-            <toolset>clang:<cxxflags>-std=c++1y ]
-    [ subdir-run call_if : advance_cxx14 :
             <toolset>clang:<cxxflags>-std=c++1y ]
 ;
 explicit call_if-cxx14 ;

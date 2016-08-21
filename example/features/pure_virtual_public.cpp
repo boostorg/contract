@@ -25,7 +25,7 @@ public:
 // Pure-virtual function definition (and contract) out-of-line (usual in C++).
 surface shape::get_surface(boost::contract::virtual_* v) const {
     boost::optional<surface> result;
-    boost::contract::guard c = boost::contract::public_function(v, result, this)
+    boost::contract::check c = boost::contract::public_function(v, result, this)
         .postcondition([&] (boost::optional<surface const&> const& result) {
             BOOST_CONTRACT_ASSERT(result->area > 0);
             BOOST_CONTRACT_ASSERT(result->perimeter > 0);
@@ -47,7 +47,7 @@ public:
 
     surface get_surface(boost::contract::virtual_* v = 0) const /* override */ {
         boost::optional<surface> result;
-        boost::contract::guard c = boost::contract::public_function<
+        boost::contract::check c = boost::contract::public_function<
                 override_get_surface>(v, result, &square::get_surface, this)
             .postcondition([&] (boost::optional<surface const&> const& result) {
                 BOOST_CONTRACT_ASSERT(result->area == edge() * edge());
@@ -69,17 +69,17 @@ public:
         edge_(edge)
     {
         // Check invariants.
-        boost::contract::guard c = boost::contract::constructor(this);
+        boost::contract::check c = boost::contract::constructor(this);
     }
 
     ~square() {
         // Check invariants.
-        boost::contract::guard c = boost::contract::destructor(this);
+        boost::contract::check c = boost::contract::destructor(this);
     }
 
     int edge() const {
         // Check invariants.
-        boost::contract::guard c = boost::contract::public_function(this);
+        boost::contract::check c = boost::contract::public_function(this);
         return edge_;
     }
     

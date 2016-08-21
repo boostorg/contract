@@ -16,10 +16,10 @@
 int inc(int& x) {
     int result;
     #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
-        boost::contract::old_ptr<int> old_x = BOOST_CONTRACT_OLDOF(x);
+        boost::contract::old_ptr<int> old_x = BOOST_CONTRACT_OLD(x);
     #endif
     #ifndef BOOST_CONTRACT_NO_FUNCTIONS
-        boost::contract::guard c = boost::contract::function()
+        boost::contract::check c = boost::contract::function()
             #ifndef BOOST_CONTRACT_NO_PRECONDITIONS
                 .precondition([&] {
                     BOOST_CONTRACT_ASSERT(x < std::numeric_limits<int>::max());
@@ -72,10 +72,10 @@ void pushable<T>::push_back(
 ) {
     #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
         boost::contract::old_ptr<unsigned> old_capacity =
-                BOOST_CONTRACT_OLDOF(v, capacity());
+                BOOST_CONTRACT_OLD(v, capacity());
     #endif
     #ifndef BOOST_CONTRACT_NO_PUBLIC_FUNCTIONS
-        boost::contract::guard c = boost::contract::public_function(v, this)
+        boost::contract::check c = boost::contract::public_function(v, this)
             #ifndef BOOST_CONTRACT_NO_PRECONDITIONS
                 .precondition([&] {
                     BOOST_CONTRACT_ASSERT(capacity() < max_size());
@@ -127,7 +127,7 @@ public:
         vect_(to - from + 1)
     {
         #ifndef BOOST_CONTRACT_NO_CONSTRUCTORS
-            boost::contract::guard c = boost::contract::constructor(this)
+            boost::contract::check c = boost::contract::constructor(this)
                 #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
                     .postcondition([&] {
                         BOOST_CONTRACT_ASSERT(int(size()) == (to - from + 1));
@@ -142,7 +142,7 @@ public:
     virtual ~integers() {
         #ifndef BOOST_CONTRACT_NO_DESTRUCTORS
             // Check invariants.
-            boost::contract::guard c = boost::contract::destructor(this);
+            boost::contract::check c = boost::contract::destructor(this);
         #endif
     }
 
@@ -156,7 +156,7 @@ public:
             boost::contract::old_ptr<unsigned> old_size;
         #endif
         #ifndef BOOST_CONTRACT_NO_PUBLIC_FUNCTIONS
-            boost::contract::guard c = boost::contract::public_function<
+            boost::contract::check c = boost::contract::public_function<
                     override_push_back>(v, &integers::push_back, this, x)
                 #ifndef BOOST_CONTRACT_NO_PRECONDITIONS
                     .precondition([&] {
@@ -165,7 +165,7 @@ public:
                 #endif
                 #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
                     .old([&] {
-                        old_size = BOOST_CONTRACT_OLDOF(v, size());
+                        old_size = BOOST_CONTRACT_OLD(v, size());
                     })
                     .postcondition([&] {
                         BOOST_CONTRACT_ASSERT(size() == *old_size + 1);

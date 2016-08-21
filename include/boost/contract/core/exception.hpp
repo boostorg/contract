@@ -315,6 +315,16 @@ This is often called only internally by this library.
 void /** @cond */ BOOST_CONTRACT_DETAIL_DECLSPEC /** @endcond */
 postcondition_failure(from where) /* can throw */;
 
+from_failure_handler /** @cond */ BOOST_CONTRACT_DETAIL_DECLSPEC /** @endcond */
+set_except_failure(from_failure_handler const& f)
+        /** @cond */ BOOST_NOEXCEPT_OR_NOTHROW /** @endcond */;
+
+from_failure_handler /** @cond */ BOOST_CONTRACT_DETAIL_DECLSPEC /** @endcond */
+get_except_failure() /** @cond */ BOOST_NOEXCEPT_OR_NOTHROW /** @endcond */;
+
+void /** @cond */ BOOST_CONTRACT_DETAIL_DECLSPEC /** @endcond */
+except_failure(from where) /* can throw */;
+
 /**
 Set the entry invariant failure handler.
 Set a new entry invariant failure handler and return the old one.
@@ -405,6 +415,10 @@ This is equivalent to calling both
 */
 void /** @cond */ BOOST_CONTRACT_DETAIL_DECLSPEC /** @endcond */
 set_invariant_failure(from_failure_handler const& f)
+        /** @cond */ BOOST_NOEXCEPT_OR_NOTHROW /** @endcond */;
+
+void /** @cond */ BOOST_CONTRACT_DETAIL_DECLSPEC /** @endcond */
+set_specification_failure(from_failure_handler const& f)
         /** @cond */ BOOST_NOEXCEPT_OR_NOTHROW /** @endcond */;
 
 // Cannot provide a `set_all_failures` because check handler has no `from`.

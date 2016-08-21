@@ -9,14 +9,16 @@
 
 #include <boost/contract/core/exception.hpp>
 #include <boost/contract/core/config.hpp>
-#include <boost/contract/detail/condition/check_pre_post_inv.hpp>
+#include <boost/contract/detail/condition/cond_with_inv.hpp>
 #include <boost/contract/detail/none.hpp>
-#if !defined(BOOST_CONTRACT_NO_INVARIANTS) || \
-        !defined(BOOST_CONTRACT_NO_POSTCONDITIONS)
-    #include <boost/contract/detail/check_guard.hpp>
+#if     !defined(BOOST_CONTRACT_NO_INVARIANTS) || \
+        !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
+        !defined(BOOST_CONTRACT_NO_EXCEPTS)
+    #include <boost/contract/detail/checking.hpp>
 #endif
-#if !defined(BOOST_CONTRACT_NO_EXIT_INVARIANTS) || \
-        !defined(BOOST_CONTRACT_NO_POSTCONDITIONS)
+#if     !defined(BOOST_CONTRACT_NO_EXIT_INVARIANTS) || \
+        !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
+        !defined(BOOST_CONTRACT_NO_EXCEPTS)
     #include <boost/config.hpp>
     #include <exception>
 #endif
@@ -24,51 +26,60 @@
 namespace boost { namespace contract { namespace detail {
 
 // Ctor subcontracting impl via C++ obj construction mechanism.
-template<class C>
-class constructor :
-        public check_pre_post_inv</* VR = */ none, C> { // Non-copyable base.
+template<class C> // Non-copyable base.
+class constructor : public cond_with_inv</* VR = */ none, C> {
 public:
-    explicit constructor(C* obj) : check_pre_post_inv</* VR = */ none, C>(
+    explicit constructor(C* obj) : cond_with_inv</* VR = */ none, C>(
             boost::contract::from_constructor, obj) {}
 
 private:
-    #if !defined(BOOST_CONTRACT_NO_ENTRY_INVARIANTS) || \
-            !defined(BOOST_CONTRACT_NO_POSTCONDITIONS)
+    #if     !defined(BOOST_CONTRACT_NO_ENTRY_INVARIANTS) || \
+            !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
+            !defined(BOOST_CONTRACT_NO_EXCEPTS)
         void init() /* override */ {
-            if(check_guard::checking()) return;
+            if(checking::already()) return;
 
             #ifndef BOOST_CONTRACT_NO_ENTRY_INVARIANTS
                 {
-                    check_guard checking;
+                    checking k;
                     this->check_entry_static_inv();
                     // No object before ctor body so check only static inv at
                     // entry. Ctor pre checked by constructor_precondition.
                 }
             #endif
-            #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
+            #if     !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
+                    !defined(BOOST_CONTRACT_NO_EXCEPTS)
                 this->copy_old();
             #endif
         }
     #endif
 
 public:
-    #if !defined(BOOST_CONTRACT_NO_EXIT_INVARIANTS) || \
-            !defined(BOOST_CONTRACT_NO_POSTCONDITIONS)
+    #if     !defined(BOOST_CONTRACT_NO_EXIT_INVARIANTS) || \
+            !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
+            !defined(BOOST_CONTRACT_NO_EXCEPTS)
         ~constructor() BOOST_NOEXCEPT_IF(false) {
-            this->assert_guarded();
-            if(check_guard::checking()) return;
-            check_guard checking;
+            this->assert_initialized();
+            if(checking::already()) return;
+            checking k;
+
             // If ctor body threw, no obj so check only static inv. Otherwise,
             // obj constructed so check static inv, non-static inv, and post.
-            bool body_threw = std::uncaught_exception();
-
-            #ifndef BOOST_CONTRACT_NO_EXIT_INVARIANTS
-                if(body_threw) this->check_exit_static_inv();
-                else this->check_exit_all_inv();
-            #endif
-            #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
-                if(!body_threw) this->check_post(none());
-            #endif
+            if(std::uncaught_exception()) {
+                #ifndef BOOST_CONTRACT_NO_EXIT_INVARIANTS
+                    this->check_exit_static_inv();
+                #endif
+                #ifndef BOOST_CONTRACT_NO_EXCEPTS
+                    this->check_except();
+                #endif
+            } else {
+                #ifndef BOOST_CONTRACT_NO_EXIT_INVARIANTS
+                    this->check_exit_all_inv();
+                #endif
+                #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
+                    this->check_post(none());
+                #endif
+            }
         }
     #endif
 };

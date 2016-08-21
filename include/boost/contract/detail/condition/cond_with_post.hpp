@@ -1,6 +1,6 @@
 
-#ifndef BOOST_CONTRACT_DETAIL_CHECK_PRE_POST_HPP_
-#define BOOST_CONTRACT_DETAIL_CHECK_PRE_POST_HPP_
+#ifndef BOOST_CONTRACT_DETAIL_COND_WITH_POST_HPP_
+#define BOOST_CONTRACT_DETAIL_COND_WITH_POST_HPP_
 
 // Copyright (C) 2008-2016 Lorenzo Caminiti
 // Distributed under the Boost Software License, Version 1.0 (see accompanying
@@ -9,7 +9,7 @@
 
 #include <boost/contract/core/exception.hpp>
 #include <boost/contract/core/config.hpp>
-#include <boost/contract/detail/condition/check_base.hpp>
+#include <boost/contract/detail/condition/cond_base.hpp>
 #include <boost/contract/detail/none.hpp>
 #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
     #include <boost/contract/detail/type_traits/optional.hpp>
@@ -21,7 +21,7 @@
 
 /* PRIVATE */
 
-#define BOOST_CONTRACT_DETAIL_CHECK_PRE_POST_DEF_( \
+#define BOOST_CONTRACT_DETAIL_COND_WITH_POST_DEF_( \
         result_type, result_param, ftor_type, ftor_var, ftor_call) \
     public: \
         template<typename F> \
@@ -42,9 +42,9 @@
 namespace boost { namespace contract { namespace detail {
 
 template<typename VR>
-class check_pre_post : public check_base { // Non-copyable base.
+class cond_with_post : public cond_base { // Non-copyable base.
 public:
-    explicit check_pre_post(boost::contract::from from) : check_base(from) {}
+    explicit cond_with_post(boost::contract::from from) : cond_base(from) {}
     
     #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
 private:
@@ -55,7 +55,7 @@ private:
             VR const&
         >::type r_type;
 
-        BOOST_CONTRACT_DETAIL_CHECK_PRE_POST_DEF_(
+        BOOST_CONTRACT_DETAIL_COND_WITH_POST_DEF_(
             r_type,
             r,
             void (r_type),
@@ -67,12 +67,12 @@ private:
 };
 
 template<>
-class check_pre_post<none> : public check_base { // Non-copyable base.
+class cond_with_post<none> : public cond_base { // Non-copyable base.
 public:
-    explicit check_pre_post(boost::contract::from from) : check_base(from) {}
+    explicit cond_with_post(boost::contract::from from) : cond_base(from) {}
     
     #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
-        BOOST_CONTRACT_DETAIL_CHECK_PRE_POST_DEF_(
+        BOOST_CONTRACT_DETAIL_COND_WITH_POST_DEF_(
             none,
             unused,
             void (),

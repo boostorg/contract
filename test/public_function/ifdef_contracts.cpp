@@ -13,7 +13,7 @@
     #include <boost/contract/public_function.hpp>
     #include <boost/contract/base_types.hpp>
     #include <boost/contract/override.hpp>
-    #include <boost/contract/guard.hpp>
+    #include <boost/contract/check.hpp>
     #include <boost/contract/old.hpp>
 #endif
 #include <boost/detail/lightweight_test.hpp>
@@ -32,10 +32,10 @@ struct b {
 
 void b::f(int x, boost::contract::virtual_* v) {
     #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
-        boost::contract::old_ptr<int> old_x = BOOST_CONTRACT_OLDOF(v, x);
+        boost::contract::old_ptr<int> old_x = BOOST_CONTRACT_OLD(v, x);
     #endif
     #ifndef BOOST_CONTRACT_NO_PUBLIC_FUNCTIONS
-        boost::contract::guard c = boost::contract::public_function(v, this)
+        boost::contract::check c = boost::contract::public_function(v, this)
             #ifndef BOOST_CONTRACT_NO_PRECONDITIONS
                 .precondition([] { out << "b::f::pre" << std::endl; })
             #endif
@@ -64,10 +64,10 @@ struct a
 
     virtual void f(int x, boost::contract::virtual_* v = 0) {
         #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
-            boost::contract::old_ptr<int> old_x = BOOST_CONTRACT_OLDOF(v, x);
+            boost::contract::old_ptr<int> old_x = BOOST_CONTRACT_OLD(v, x);
         #endif
         #ifndef BOOST_CONTRACT_NO_PUBLIC_FUNCTIONS
-            boost::contract::guard c = boost::contract::public_function<
+            boost::contract::check c = boost::contract::public_function<
                     override_f>(v, &a::f, this, x)
                 #ifndef BOOST_CONTRACT_NO_PRECONDITIONS
                     .precondition([] { out << "a::f::pre" << std::endl; })

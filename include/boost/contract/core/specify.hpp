@@ -13,32 +13,102 @@ Facilities to specify preconditions, old value assignments, and postconditions.
 
 #include <boost/contract/core/config.hpp>
 #include <boost/contract/detail/decl.hpp>
-#if !defined(BOOST_CONTRACT_NO_PRECONDITIONS) || \
+#if     !defined(BOOST_CONTRACT_NO_INVARIANTS) || \
+        !defined(BOOST_CONTRACT_NO_PRECONDITIONS) || \
         !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
-        !defined(BOOST_CONTRACT_NO_INVARIANTS)
-    #include <boost/contract/detail/condition/check_base.hpp>
-    #include <boost/contract/detail/condition/check_pre_post.hpp>
+        !defined(BOOST_CONTRACT_NO_EXCEPTS)
+    #include <boost/contract/detail/condition/cond_base.hpp>
+    #include <boost/contract/detail/condition/cond_with_post.hpp>
     #include <boost/contract/detail/auto_ptr.hpp>
     #include <boost/contract/detail/none.hpp>
 #endif
-#if !defined(BOOST_CONTRACT_NO_PRECONDITIONS) || \
-        !defined(BOOST_CONTRACT_NO_POSTCONDITIONS)
+#if     !defined(BOOST_CONTRACT_NO_PRECONDITIONS) || \
+        !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
+        !defined(BOOST_CONTRACT_NO_EXCEPTS)
     #include <boost/contract/detail/debug.hpp>
 #endif
 #include <boost/config.hpp>
 
+// NOTE: Do not use inheritance here to avoid extra runtime costs (code
+// duplication avoid via macros instead).
+
+/* PRIVATE */
+        
+#if     !defined(BOOST_CONTRACT_NO_INVARIANTS) || \
+        !defined(BOOST_CONTRACT_NO_PRECONDITIONS) || \
+        !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
+        !defined(BOOST_CONTRACT_NO_EXCEPTS)
+    #define BOOST_CONTRACT_SPECIFY_COND_CTOR_(ctor_name, cond_type) \
+        explicit ctor_name(cond_type* cond) : cond_(cond) {} \
+        boost::contract::detail::auto_ptr<cond_type> cond_;
+    
+    #define BOOST_CONTRACT_SPECIFY_COND_RELEASE_ cond_.release()
+#else
+    #define BOOST_CONTRACT_SPECIFY_COND_CTOR_(cond_type) /* nothing */
+
+    #define BOOST_CONTRACT_SPECIFY_COND_RELEASE_ /* nothing */
+#endif
+
+#ifndef BOOST_CONTRACT_NO_PRECONDITIONS
+    #define BOOST_CONTRACT_SPECIFY_PRECONDITION_IMPL_ \
+        BOOST_CONTRACT_DETAIL_DEBUG(cond_); \
+        cond_->set_pre(f); \
+        return specify_old_postcondition_except<VirtualResult>( \
+                BOOST_CONTRACT_SPECIFY_COND_RELEASE_);
+#else
+    #define BOOST_CONTRACT_SPECIFY_PRECONDITION_IMPL_ \
+        return specify_old_postcondition_except<VirtualResult>( \
+                BOOST_CONTRACT_SPECIFY_COND_RELEASE_);
+#endif
+        
+#ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
+    #define BOOST_CONTRACT_SPECIFY_OLD_IMPL_ \
+        BOOST_CONTRACT_DETAIL_DEBUG(cond_); \
+        cond_->set_old(f); \
+        return specify_postcondition_except<VirtualResult>( \
+                BOOST_CONTRACT_SPECIFY_COND_RELEASE_);
+#else
+    #define BOOST_CONTRACT_SPECIFY_OLD_IMPL_ \
+        return specify_postcondition_except<VirtualResult>( \
+                BOOST_CONTRACT_SPECIFY_COND_RELEASE_);
+#endif
+            
+#ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
+    #define BOOST_CONTRACT_SPECIFY_POSTCONDITION_IMPL_ \
+        BOOST_CONTRACT_DETAIL_DEBUG(cond_); \
+        cond_->set_post(f); \
+        return specify_except(BOOST_CONTRACT_SPECIFY_COND_RELEASE_);
+#else
+    #define BOOST_CONTRACT_SPECIFY_POSTCONDITION_IMPL_ \
+        return specify_except(BOOST_CONTRACT_SPECIFY_COND_RELEASE_);
+#endif
+        
+#ifndef BOOST_CONTRACT_NO_EXCEPTS
+    #define BOOST_CONTRACT_SPECIFY_EXCEPT_IMPL_ \
+        BOOST_CONTRACT_DETAIL_DEBUG(cond_); \
+        cond_->set_except(f); \
+        return specify_nothing(BOOST_CONTRACT_SPECIFY_COND_RELEASE_);
+#else
+    #define BOOST_CONTRACT_SPECIFY_EXCEPT_IMPL_ \
+        return specify_nothing(BOOST_CONTRACT_SPECIFY_COND_RELEASE_);
+#endif
+
+/* CODE */
+
 namespace boost {
     namespace contract {
         class virtual_;
-
-        template<typename VR>
-        class specify_precondition_old_postcondition;
         
         template<typename VR>
-        class specify_old_postcondition;
+        class specify_precondition_old_postcondition_except;
         
         template<typename VR>
-        class specify_postcondition_only;
+        class specify_old_postcondition_except;
+        
+        template<typename VR>
+        class specify_postcondition_except;
+        
+        class specify_except;
     }
 }
 
@@ -65,28 +135,51 @@ public:
 
 /** @cond */
 private:
-    #if !defined(BOOST_CONTRACT_NO_PRECONDITIONS) || \
-            !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
-            !defined(BOOST_CONTRACT_NO_INVARIANTS)
-        typedef boost::contract::detail::check_base check_type;
-
-        explicit specify_nothing(check_type* check) : check_(check) {}
-        
-        boost::contract::detail::auto_ptr<check_type> check_;
-    #endif
+    BOOST_CONTRACT_SPECIFY_COND_CTOR_(specify_nothing,
+            boost::contract::detail::cond_base)
 
     // Friends (used to limit library's public API).
 
     friend class check;
 
     template<typename VR>
-    friend class specify_precondition_old_postcondition;
+    friend class specify_precondition_old_postcondition_except;
     
     template<typename VR>
-    friend class specify_old_postcondition;
+    friend class specify_old_postcondition_except;
 
     template<typename VR>
-    friend class specify_postcondition_only;
+    friend class specify_postcondition_except;
+
+    friend class specify_except;
+/** @endcond */
+};
+
+class specify_except { // Copyable (as *).
+public:
+    ~specify_except() BOOST_NOEXCEPT_IF(false) {}
+
+    template<typename F>
+    specify_nothing except(F const& f) {
+        BOOST_CONTRACT_SPECIFY_EXCEPT_IMPL_
+    }
+
+/** @cond */
+private:
+    BOOST_CONTRACT_SPECIFY_COND_CTOR_(specify_except,
+            boost::contract::detail::cond_base)
+
+    // Friends (used to limit library's public API).
+    friend class check;
+
+    template<typename VR>
+    friend class specify_precondition_old_postcondition_except;
+    
+    template<typename VR>
+    friend class specify_old_postcondition_except;
+    
+    template<typename VR>
+    friend class specify_postcondition_except;
 /** @endcond */
 };
 
@@ -99,7 +192,7 @@ Allow to program functors this library will call to check postconditions.
                         this is always @c void.
 */
 template<typename VirtualResult = void>
-class specify_postcondition_only { // Copyable (as *).
+class specify_postcondition_except { // Copyable (as *).
 public:
     /**
     Destruct this object.
@@ -108,7 +201,7 @@ public:
                 terminating the program (see
                 @RefFunc{boost::contract::set_precondition_failure}, etc.).
     */
-    ~specify_postcondition_only() BOOST_NOEXCEPT_IF(false) {}
+    ~specify_postcondition_except() BOOST_NOEXCEPT_IF(false) {}
 
     /**
     Allow to specify postconditions.
@@ -130,38 +223,27 @@ public:
             not allow to specify any additional contract.
     */
     template<typename F>
-    specify_nothing postcondition(F const& f) {
-        #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
-            BOOST_CONTRACT_DETAIL_DEBUG(check_);
-            check_->set_post(f);
-        #endif
-        #if !defined(BOOST_CONTRACT_NO_PRECONDITIONS) || \
-                !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
-                !defined(BOOST_CONTRACT_NO_INVARIANTS)
-            return specify_nothing(check_.release());
-        #else
-            return specify_nothing();
-        #endif
+    specify_except postcondition(F const& f) {
+        BOOST_CONTRACT_SPECIFY_POSTCONDITION_IMPL_
+    }
+    
+    template<typename F>
+    specify_nothing except(F const& f) {
+        BOOST_CONTRACT_SPECIFY_EXCEPT_IMPL_
     }
 
 /** @cond */
 private:
-    #if !defined(BOOST_CONTRACT_NO_PRECONDITIONS) || \
-            !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
-            !defined(BOOST_CONTRACT_NO_INVARIANTS)
-        typedef boost::contract::detail::check_pre_post<typename boost::contract
-                ::detail::none_if_void<VirtualResult>::type> check_type;
-
-        explicit specify_postcondition_only(check_type* check) :
-                check_(check) {}
-        
-        boost::contract::detail::auto_ptr<check_type> check_;
-    #endif
+    BOOST_CONTRACT_SPECIFY_COND_CTOR_(
+        specify_postcondition_except,
+        boost::contract::detail::cond_with_post<typename
+                boost::contract::detail::none_if_void<VirtualResult>::type>
+    )
 
     // Friends (used to limit library's public API).
     friend class check;
-    friend class specify_precondition_old_postcondition<VirtualResult>;
-    friend class specify_old_postcondition<VirtualResult>;
+    friend class specify_precondition_old_postcondition_except<VirtualResult>;
+    friend class specify_old_postcondition_except<VirtualResult>;
 /** @endcond */
 };
 
@@ -175,7 +257,7 @@ body execution and to check postconditions.
                         this is always @c void.
 */
 template<typename VirtualResult = void>
-class specify_old_postcondition { // Copyable (as *).
+class specify_old_postcondition_except { // Copyable (as *).
 public:
     /**
     Destruct this object.
@@ -184,7 +266,7 @@ public:
                 terminating the program (see
                 @RefFunc{boost::contract::set_precondition_failure}, etc.).
     */
-    ~specify_old_postcondition() BOOST_NOEXCEPT_IF(false) {}
+    ~specify_old_postcondition_except() BOOST_NOEXCEPT_IF(false) {}
     
     /**
     Allow to specify old value assignments to execute just before the function
@@ -210,18 +292,8 @@ public:
             allows to optionally specify postconditions.
     */
     template<typename F>
-    specify_postcondition_only<VirtualResult> old(F const& f) {
-        #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
-            BOOST_CONTRACT_DETAIL_DEBUG(check_);
-            check_->set_old(f);
-        #endif
-        #if !defined(BOOST_CONTRACT_NO_PRECONDITIONS) || \
-                !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
-                !defined(BOOST_CONTRACT_NO_INVARIANTS)
-            return specify_postcondition_only<VirtualResult>(check_.release());
-        #else
-            return specify_postcondition_only<VirtualResult>();
-        #endif
+    specify_postcondition_except<VirtualResult> old(F const& f) {
+        BOOST_CONTRACT_SPECIFY_OLD_IMPL_
     }
 
     /**
@@ -244,44 +316,33 @@ public:
             not allow to specify any additional contract.
     */
     template<typename F>
-    specify_nothing postcondition(F const& f) {
-        #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
-            BOOST_CONTRACT_DETAIL_DEBUG(check_);
-            check_->set_post(f);
-        #endif
-        #if !defined(BOOST_CONTRACT_NO_PRECONDITIONS) || \
-                !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
-                !defined(BOOST_CONTRACT_NO_INVARIANTS)
-            return specify_nothing(check_.release());
-        #else
-            return specify_nothing();
-        #endif
+    specify_except postcondition(F const& f) {
+        BOOST_CONTRACT_SPECIFY_POSTCONDITION_IMPL_
+    }
+    
+    template<typename F>
+    specify_nothing except(F const& f) {
+        BOOST_CONTRACT_SPECIFY_EXCEPT_IMPL_
     }
 
 /** @cond */
 private:
-    #if !defined(BOOST_CONTRACT_NO_PRECONDITIONS) || \
-            !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
-            !defined(BOOST_CONTRACT_NO_INVARIANTS)
-        typedef boost::contract::detail::check_pre_post<typename boost::contract
-                ::detail::none_if_void<VirtualResult>::type> check_type;
-
-        explicit specify_old_postcondition(check_type* check) :
-                check_(check) {}
-        
-        boost::contract::detail::auto_ptr<check_type> check_;
-    #endif
+    BOOST_CONTRACT_SPECIFY_COND_CTOR_(
+        specify_old_postcondition_except,
+        boost::contract::detail::cond_with_post<typename
+                boost::contract::detail::none_if_void<VirtualResult>::type>
+    )
 
     // Friends (used to limit library's public API).
 
     friend class check;
-    friend class specify_precondition_old_postcondition<VirtualResult>;
+    friend class specify_precondition_old_postcondition_except<VirtualResult>;
 
     template<class C>
-    friend specify_old_postcondition<> constructor(C*);
+    friend specify_old_postcondition_except<> constructor(C*);
 
     template<class C>
-    friend specify_old_postcondition<> destructor(C*);
+    friend specify_old_postcondition_except<> destructor(C*);
 /** @endcond */
 };
 
@@ -300,7 +361,7 @@ template<
         = void
     #endif
 >
-class specify_precondition_old_postcondition { // Copyable (as *).
+class specify_precondition_old_postcondition_except { // Copyable (as *).
 public:
     /**
     Destruct this object.
@@ -309,7 +370,7 @@ public:
                 terminating the program (see
                 @RefFunc{boost::contract::set_precondition_failure}, etc.).
     */
-    ~specify_precondition_old_postcondition() BOOST_NOEXCEPT_IF(false) {}
+    ~specify_precondition_old_postcondition_except() BOOST_NOEXCEPT_IF(false) {}
     
     /**
     Allow to specify preconditions.
@@ -326,18 +387,8 @@ public:
             to optionally specify old value assignments and postconditions.
     */
     template<typename F>
-    specify_old_postcondition<VirtualResult> precondition(F const& f) {
-        #ifndef BOOST_CONTRACT_NO_PRECONDITIONS
-            BOOST_CONTRACT_DETAIL_DEBUG(check_);
-            check_->set_pre(f);
-        #endif
-        #if !defined(BOOST_CONTRACT_NO_PRECONDITIONS) || \
-                !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
-                !defined(BOOST_CONTRACT_NO_INVARIANTS)
-            return specify_old_postcondition<VirtualResult>(check_.release());
-        #else
-            return specify_old_postcondition<VirtualResult>();
-        #endif
+    specify_old_postcondition_except<VirtualResult> precondition(F const& f) {
+        BOOST_CONTRACT_SPECIFY_PRECONDITION_IMPL_
     }
 
     /**
@@ -364,18 +415,8 @@ public:
             allows to optionally specify postconditions.
     */
     template<typename F>
-    specify_postcondition_only<VirtualResult> old(F const& f) {
-        #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
-            BOOST_CONTRACT_DETAIL_DEBUG(check_);
-            check_->set_old(f);
-        #endif
-        #if !defined(BOOST_CONTRACT_NO_PRECONDITIONS) || \
-                !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
-                !defined(BOOST_CONTRACT_NO_INVARIANTS)
-            return specify_postcondition_only<VirtualResult>(check_.release());
-        #else
-            return specify_postcondition_only<VirtualResult>();
-        #endif
+    specify_postcondition_except<VirtualResult> old(F const& f) {
+        BOOST_CONTRACT_SPECIFY_OLD_IMPL_
     }
 
     /**
@@ -398,51 +439,40 @@ public:
             not allow to specify any additional contract.
     */
     template<typename F>
-    specify_nothing postcondition(F const& f) {
-        #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
-            BOOST_CONTRACT_DETAIL_DEBUG(check_);
-            check_->set_post(f);
-        #endif
-        #if !defined(BOOST_CONTRACT_NO_PRECONDITIONS) || \
-                !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
-                !defined(BOOST_CONTRACT_NO_INVARIANTS)
-            return specify_nothing(check_.release());
-        #else
-            return specify_nothing();
-        #endif
+    specify_except postcondition(F const& f) {
+        BOOST_CONTRACT_SPECIFY_POSTCONDITION_IMPL_
+    }
+    
+    template<typename F>
+    specify_nothing except(F const& f) {
+        BOOST_CONTRACT_SPECIFY_EXCEPT_IMPL_
     }
 
 /** @cond */
 private:
-    #if !defined(BOOST_CONTRACT_NO_PRECONDITIONS) || \
-            !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
-            !defined(BOOST_CONTRACT_NO_INVARIANTS)
-        typedef boost::contract::detail::check_pre_post<typename boost::contract
-                ::detail::none_if_void<VirtualResult>::type> check_type;
-
-        explicit specify_precondition_old_postcondition(check_type* check) :
-                check_(check) {}
-
-        boost::contract::detail::auto_ptr<check_type> check_;
-    #endif
+    BOOST_CONTRACT_SPECIFY_COND_CTOR_(
+        specify_precondition_old_postcondition_except,
+        boost::contract::detail::cond_with_post<typename
+                boost::contract::detail::none_if_void<VirtualResult>::type>
+    )
 
     // Friends (used to limit library's public API).
 
     friend class check;
-    friend specify_precondition_old_postcondition<> function();
+    friend specify_precondition_old_postcondition_except<> function();
 
     template<class C>
-    friend specify_precondition_old_postcondition<> public_function();
+    friend specify_precondition_old_postcondition_except<> public_function();
 
     template<class C>
-    friend specify_precondition_old_postcondition<> public_function(C*);
+    friend specify_precondition_old_postcondition_except<> public_function(C*);
     
     template<class C>
-    friend specify_precondition_old_postcondition<> public_function(
+    friend specify_precondition_old_postcondition_except<> public_function(
             virtual_*, C*);
 
     template<typename VR, class C>
-    friend specify_precondition_old_postcondition<VR> public_function(
+    friend specify_precondition_old_postcondition_except<VR> public_function(
             virtual_*, VR&, C*);
 
     BOOST_CONTRACT_DETAIL_DECL_FRIEND_OVERRIDING_PUBLIC_FUNCTIONS_Z(1,

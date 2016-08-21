@@ -11,7 +11,7 @@
 #include <boost/contract/function.hpp>
 #include <boost/contract/old.hpp>
 #include <boost/contract/assert.hpp>
-#include <boost/contract/guard.hpp>
+#include <boost/contract/check.hpp>
 #include <boost/preprocessor/control/iif.hpp>
 #include <boost/detail/lightweight_test.hpp>
 #include <sstream>
@@ -24,16 +24,16 @@ struct y_tag; typedef boost::contract::test::detail::counter<y_tag, int> y_type;
 bool swap(x_type& x, y_type& y) {
     bool result;
     boost::contract::old_ptr<x_type> old_x =
-            BOOST_CONTRACT_OLDOF(x_type::eval(x));
+            BOOST_CONTRACT_OLD(x_type::eval(x));
     boost::contract::old_ptr<y_type> old_y;
-    boost::contract::guard c = boost::contract::function()
+    boost::contract::check c = boost::contract::function()
         .precondition([&] {
             out << "swap::pre" << std::endl;
             BOOST_CONTRACT_ASSERT(x.value != y.value);
         })
         .old([&] {
             out << "swap::old" << std::endl;
-            old_y = BOOST_CONTRACT_OLDOF(y_type::eval(y));
+            old_y = BOOST_CONTRACT_OLD(y_type::eval(y));
         })
         .postcondition([&] {
             out << "swap::post" << std::endl;

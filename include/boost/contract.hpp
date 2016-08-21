@@ -25,9 +25,15 @@ never be used directly by programmers.
 @see @RefSect{getting_started, Getting Started}
 */
 
+// TODO: Clearly separate const and const volatile inv checked by mutable+const and volatile+const_volatile func respectively (see related email to Boost).
+
+// TODO: Add a macro ALL_DISABLE_NOTHING to turn-off disabling assertions within assertions for all contracts, not just preconditions (do I still need PRECONDITIONS_DISABLE_NOTHING then?).
+
+// TODO: Consider using a trait like boost::contract::is_copy_constructible<T> (or has_old<T>) instead of boost::is_copy_constructible<T> directly (so programmers can specialize it to avoid old copies of specify types T without affecting other parts of the program that might be using boost::is_copy_constructible). Then maybe I should also introduce a trait to make the copy instead of directly using the copy constructor... so to allow for maximum customization..
+
 // TODO: Document that boost::contract::function() can be used to program contracts for lambda functions. And also "abused" a bit to program pre/postconditions for any arbitrary scope of code in function body.
 
-// TODO: Document that friends do not in general check invariants so their contracts are usually programmed using function(). But if a function friend of an object takes an instance of that object as a parameter and therefore is essentially part of the object's public API, then programmers can make that explicit by using public_function(obj) after function() to program the friend function contract (but note that in general friends functions can take instances of multiple different objects because the same function can be friend of different classes).
+// TODO: Document that friends do not in general check invariants so their contracts are usually programmed using function(). But if a function friend of an object takes an instance of that object as a parameter and therefore is essentially part of the object's public API, then programmers can make that explicit by using public_function(obj) after function() to program the friend function contract (but note that in general friends functions can take instances of multiple different objects because the same function can be friend of different classes). Also add a test (under test/public_function/...) and an example for friend.
 
 // TODO: Document that noexcept (and exception throw(...)) specifications of the enclosing function apply to contracts. So if a contract handler is set so contract failures throw, noexcept function will still not throw, they will always terminate (because that's what users of such functions except, even if the function fails in any way, including the function contract fails).
 
@@ -35,13 +41,13 @@ never be used directly by programmers.
 
 // TODO: Document (in Getting Started) that some example source code has `//[...` and `//]` tags used to import example code in Quickbook docs (so doc's examples always up to date with code).
 
-// TODO: Add a macro ALL_DISABLE_NOTHING to turn-off disabling assertions within assertions for all contracts, not just preconditions (do I still need PRECONDITIONS_DISABLE_NOTHING then?).
+// TODO: Document that result is NOT accessible in .except's functor because function threw. Old values are accessible in both post and except so OLDOF copies disabled on if both except and post checking disabled (NO_EXCEPTS && NO_POSTCONDITIONS). except will have its own failure handler except_failure, check disabling macro NO_EXCEPTS, etc.
 
-// TODO: Consider a better name for contract::detail::check_guard (it's confusing with old contract::guard and with current check_base::guard)... maybe I can call it contract::detail::disable?
+// TODO: Document that contract for constexpr functions cannot be supported at the moment because constexpr functions cannot: (1) declare local variables of (literal) types with non-trivial constexpr destructors (needed by this lib to check inv, post, and except at exit), (2) call other (constexpr) functions with try-catch statements (used by this lib to report assertion failure and catch any other exception that might be thrown by the evaluation of the asserted conditions), (3) use lambda functions (use by this for convenience to program functors that check per and post). Also note that even if supported, contracts for constexpr probably will not use old values (because constexpr prevent the function from having any side effect visible to the caller, variables around such side-effects are usually the candidates for old value copies) and subcontracting (because constexpr functions cannot be virtual).
 
-// TODO: Consider using a trait like boost::contract::is_copy_constructible<T> (or has_old<T>) instead of boost::is_copy_constructible<T> directly (so programmers can specialize it to avoid old copies of specify types T without affecting other parts of the program that might be using boost::is_copy_constructible). Then maybe I should also introduce a trait to make the copy instead of directly using the copy constructor... so to allow for maximum customization..
+// TODO: Documentation updates based on all emails to Boost (review all emails).
 
-// TODO: Add .except(...) that is checked at function exit when body throws (in contrast to postconditions). result is NOT accessible in .except's functor because function threw. Old values are accessible in both post and except so OLDOF copies disabled on if both except and post checking disabled (NO_EXCEPTS && NO_POSTCONDITIONS). except will have its own failure handler except_failure, check disabling macro NO_EXCEPTS, etc.
+// TODO: Documentation updates based on all n-papers that I read recently (review notes I wrote on all papers), add those n-papers to the Bibliography section, and add P0380 (the most recent proposal) to the feature comparison table.
 
 #include <boost/contract/detail/all_core_headers.hpp>
 #include <boost/contract/assert.hpp>

@@ -24,7 +24,7 @@ public:
 
     // Construct counter with specified value.
     explicit counter(int a_value = 10) : value_(a_value) {
-        boost::contract::guard c = boost::contract::constructor(this)
+        boost::contract::check c = boost::contract::constructor(this)
             .postcondition([&] {
                 BOOST_CONTRACT_ASSERT(value() == a_value); // Value set.
             })
@@ -33,14 +33,14 @@ public:
 
     // Destroy counter.
     virtual ~counter() {
-        boost::contract::guard c = boost::contract::destructor(this);
+        boost::contract::check c = boost::contract::destructor(this);
     }
 
     /* Queries */
 
     // Current counter value.
     int value() const {
-        boost::contract::guard c = boost::contract::public_function(this);
+        boost::contract::check c = boost::contract::public_function(this);
         return value_;
     }
 
@@ -48,8 +48,8 @@ public:
 
     // Decrement counter value.
     void decrement() {
-        boost::contract::old_ptr<int> old_value = BOOST_CONTRACT_OLDOF(value());
-        boost::contract::guard c = boost::contract::public_function(this)
+        boost::contract::old_ptr<int> old_value = BOOST_CONTRACT_OLD(value());
+        boost::contract::check c = boost::contract::public_function(this)
             .postcondition([&] {
                 BOOST_CONTRACT_ASSERT(value() == *old_value - 1); // Decrement.
             })

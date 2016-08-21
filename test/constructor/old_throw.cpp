@@ -9,7 +9,7 @@
 #include "../detail/oteststream.hpp"
 #include <boost/contract/constructor.hpp>
 #include <boost/contract/base_types.hpp>
-#include <boost/contract/guard.hpp>
+#include <boost/contract/check.hpp>
 #include <boost/detail/lightweight_test.hpp>
 #include <sstream>
 
@@ -26,13 +26,13 @@ struct c
     void invariant() const { out << "c::inv" << std::endl; }
 
     c() :
-        boost::contract::constructor_precondition<c>([&] {
+        boost::contract::constructor_precondition<c>([] {
             out << "c::ctor::pre" << std::endl;
         })
     {
-        boost::contract::guard c = boost::contract::constructor(this)
-            .old([&] { out << "c::ctor::old" << std::endl; })
-            .postcondition([&] { out << "c::ctor::post" << std::endl; })
+        boost::contract::check c = boost::contract::constructor(this)
+            .old([] { out << "c::ctor::old" << std::endl; })
+            .postcondition([] { out << "c::ctor::post" << std::endl; })
         ;
         out << "c::ctor::body" << std::endl;
         // Do not throw (from inheritance root).
@@ -56,12 +56,12 @@ struct b
             out << "b::ctor::pre" << std::endl;
         })
     {
-        boost::contract::guard c = boost::contract::constructor(this)
-            .old([&] {
+        boost::contract::check c = boost::contract::constructor(this)
+            .old([] {
                 out << "b::ctor::old" << std::endl;
                 throw b::err(); // Test .old() throws (from mid branch).
             })
-            .postcondition([&] { out << "b::ctor::post" << std::endl; })
+            .postcondition([] { out << "b::ctor::post" << std::endl; })
         ;
         out << "b::ctor::body" << std::endl;
     }
@@ -78,13 +78,13 @@ struct a
     void invariant() const { out << "a::inv" << std::endl; }
 
     a() :
-        boost::contract::constructor_precondition<a>([&] {
+        boost::contract::constructor_precondition<a>([] {
             out << "a::ctor::pre" << std::endl;
         })
     {
-        boost::contract::guard c = boost::contract::constructor(this)
-            .old([&] { out << "a::ctor::old" << std::endl; })
-            .postcondition([&] { out << "a::ctor::post" << std::endl; })
+        boost::contract::check c = boost::contract::constructor(this)
+            .old([] { out << "a::ctor::old" << std::endl; })
+            .postcondition([] { out << "a::ctor::post" << std::endl; })
         ;
         out << "a::ctor::body" << std::endl;
         // Do not throw (from inheritance leaf).

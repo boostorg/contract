@@ -19,7 +19,7 @@ public:
 
     // Create an enabled button.
     push_button() : enabled_(true) {
-        boost::contract::guard c = boost::contract::constructor(this)
+        boost::contract::check c = boost::contract::constructor(this)
             .postcondition([&] {
                 BOOST_CONTRACT_ASSERT(enabled()); // Enabled.
             })
@@ -28,14 +28,14 @@ public:
 
     // Destroy button.
     virtual ~push_button() {
-        boost::contract::guard c = boost::contract::destructor(this);
+        boost::contract::check c = boost::contract::destructor(this);
     }
 
     /* Queries */
 
     // If button is enabled.
     bool enabled() const {
-        boost::contract::guard c = boost::contract::public_function(this);
+        boost::contract::check c = boost::contract::public_function(this);
         return enabled_;
     }
 
@@ -43,7 +43,7 @@ public:
 
     // Enable button.
     void enable() {
-        boost::contract::guard c = boost::contract::public_function(this)
+        boost::contract::check c = boost::contract::public_function(this)
             .postcondition([&] {
                 BOOST_CONTRACT_ASSERT(enabled()); // Enabled.
             })
@@ -54,7 +54,7 @@ public:
 
     // Disable button.
     void disable() {
-        boost::contract::guard c = boost::contract::public_function(this)
+        boost::contract::check c = boost::contract::public_function(this)
             .postcondition([&] {
                 BOOST_CONTRACT_ASSERT(!enabled()); // Disabled.
             })
@@ -71,7 +71,7 @@ private:
 };
 
 void push_button::on_bn_clicked(boost::contract::virtual_* v) {
-    boost::contract::guard c = boost::contract::public_function(v, this)
+    boost::contract::check c = boost::contract::public_function(v, this)
         .precondition([&] {
             BOOST_CONTRACT_ASSERT(enabled()); // Enabled.
         })

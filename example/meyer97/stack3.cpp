@@ -38,7 +38,7 @@ public:
     // Create stack for max of n items, if n < 0 set error (no preconditions).
     explicit stack3(int n, T const& default_value = T()) :
             stack_(0), error_(no_error) {
-        boost::contract::guard c = boost::contract::constructor(this)
+        boost::contract::check c = boost::contract::constructor(this)
             .postcondition([&] {
                 // Error if impossible.
                 BOOST_CONTRACT_ASSERT((n < 0) == (error() == size_error));
@@ -58,20 +58,20 @@ public:
     // Max number of stack items.
     int capacity() const {
         // Check invariants.
-        boost::contract::guard c = boost::contract::public_function(this);
+        boost::contract::check c = boost::contract::public_function(this);
         return stack_.capacity();
     }
 
     // Number of stack items.
     int count() const {
         // Check invariants.
-        boost::contract::guard c = boost::contract::public_function(this);
+        boost::contract::check c = boost::contract::public_function(this);
         return stack_.count();
     }
 
     // Top item if present, otherwise none and set error (no preconditions).
     boost::optional<T const&> item() const {
-        boost::contract::guard c = boost::contract::public_function(this)
+        boost::contract::check c = boost::contract::public_function(this)
             .postcondition([&] {
                 // Error if impossible.
                 BOOST_CONTRACT_ASSERT(empty() == (error() == underflow_error));
@@ -94,19 +94,19 @@ public:
     // Error indicator set by various operations.
     error_code error() const {
         // Check invariants.
-        boost::contract::guard c = boost::contract::public_function(this);
+        boost::contract::check c = boost::contract::public_function(this);
         return error_;
     }
 
     bool empty() const {
         // Check invariants.
-        boost::contract::guard c = boost::contract::public_function(this);
+        boost::contract::check c = boost::contract::public_function(this);
         return stack_.empty();
     }
 
     bool full() const {
         // Check invariants.
-        boost::contract::guard c = boost::contract::public_function(this);
+        boost::contract::check c = boost::contract::public_function(this);
         return stack_.full();
     }
 
@@ -114,9 +114,9 @@ public:
 
     // Add x to top if capacity allows, otherwise set error (no preconditions).
     void put(T const& x) {
-        boost::contract::old_ptr<bool> old_full = BOOST_CONTRACT_OLDOF(full());
-        boost::contract::old_ptr<int> old_count = BOOST_CONTRACT_OLDOF(count());
-        boost::contract::guard c = boost::contract::public_function(this)
+        boost::contract::old_ptr<bool> old_full = BOOST_CONTRACT_OLD(full());
+        boost::contract::old_ptr<int> old_count = BOOST_CONTRACT_OLD(count());
+        boost::contract::check c = boost::contract::public_function(this)
             .postcondition([&] {
                 // Error if impossible.
                 BOOST_CONTRACT_ASSERT(*old_full == (error() == overflow_error));
@@ -140,10 +140,9 @@ public:
 
     // Remove top item if possible, otherwise set error (no preconditions).
     void remove() {
-        boost::contract::old_ptr<bool> old_empty =
-                BOOST_CONTRACT_OLDOF(empty());
-        boost::contract::old_ptr<int> old_count = BOOST_CONTRACT_OLDOF(count());
-        boost::contract::guard c = boost::contract::public_function(this)
+        boost::contract::old_ptr<bool> old_empty = BOOST_CONTRACT_OLD(empty());
+        boost::contract::old_ptr<int> old_count = BOOST_CONTRACT_OLD(count());
+        boost::contract::check c = boost::contract::public_function(this)
             .postcondition([&] {
                 // Error if impossible.
                 BOOST_CONTRACT_ASSERT(*old_empty == (error() ==

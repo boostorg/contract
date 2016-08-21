@@ -36,7 +36,7 @@ public:
             BOOST_CONTRACT_ASSERT(n >= 0); // Non-negative capacity.
         })
     {
-        boost::contract::guard c = boost::contract::constructor(this)
+        boost::contract::check c = boost::contract::constructor(this)
             .postcondition([&] {
                 BOOST_CONTRACT_ASSERT(capacity() == n); // Capacity set.
             })
@@ -49,7 +49,7 @@ public:
 
     // Deep copy via constructor.
     /* implicit */ stack4(stack4 const& other) {
-        boost::contract::guard c = boost::contract::constructor(this)
+        boost::contract::check c = boost::contract::constructor(this)
             .postcondition([&] {
                 BOOST_CONTRACT_ASSERT(capacity() == other.capacity());
                 BOOST_CONTRACT_ASSERT(count() == other.count());
@@ -65,7 +65,7 @@ public:
 
     // Deep copy via assignment.
     stack4& operator=(stack4 const& other) {
-        boost::contract::guard c = boost::contract::public_function(this)
+        boost::contract::check c = boost::contract::public_function(this)
             .postcondition([&] {
                 BOOST_CONTRACT_ASSERT(capacity() == other.capacity());
                 BOOST_CONTRACT_ASSERT(count() == other.count());
@@ -84,7 +84,7 @@ public:
     // Destroy this stack.
     virtual ~stack4() {
         // Check invariants.
-        boost::contract::guard c = boost::contract::destructor(this);
+        boost::contract::check c = boost::contract::destructor(this);
         delete[] array_;
     }
 
@@ -93,20 +93,20 @@ public:
     // Max number of stack items.
     int capacity() const {
         // Check invariants.
-        boost::contract::guard c = boost::contract::public_function(this);
+        boost::contract::check c = boost::contract::public_function(this);
         return capacity_;
     }
 
     // Number of stack items.
     int count() const {
         // Check invariants.
-        boost::contract::guard c = boost::contract::public_function(this);
+        boost::contract::check c = boost::contract::public_function(this);
         return count_;
     }
 
     // Top item.
     T const& item() const {
-        boost::contract::guard c = boost::contract::public_function(this)
+        boost::contract::check c = boost::contract::public_function(this)
             .precondition([&] {
                 BOOST_CONTRACT_ASSERT(!empty()); // Not empty (count > 0).
             })
@@ -120,7 +120,7 @@ public:
     // Is stack empty?
     bool empty() const {
         bool result;
-        boost::contract::guard c = boost::contract::public_function(this)
+        boost::contract::check c = boost::contract::public_function(this)
             .postcondition([&] {
                 // Empty definition.
                 BOOST_CONTRACT_ASSERT(result == (count() == 0));
@@ -133,7 +133,7 @@ public:
     // Is stack full?
     bool full() const {
         bool result;
-        boost::contract::guard c = boost::contract::public_function(this)
+        boost::contract::check c = boost::contract::public_function(this)
             .postcondition([&] {
                 BOOST_CONTRACT_ASSERT( // Full definition.
                         result == (count() == capacity()));
@@ -147,8 +147,8 @@ public:
 
     // Add x on top.
     void put(T const& x) {
-        boost::contract::old_ptr<int> old_count = BOOST_CONTRACT_OLDOF(count());
-        boost::contract::guard c = boost::contract::public_function(this)
+        boost::contract::old_ptr<int> old_count = BOOST_CONTRACT_OLD(count());
+        boost::contract::check c = boost::contract::public_function(this)
             .precondition([&] {
                 BOOST_CONTRACT_ASSERT(!full()); // Not full.
             })
@@ -164,8 +164,8 @@ public:
 
     // Remove top item.
     void remove() {
-        boost::contract::old_ptr<int> old_count = BOOST_CONTRACT_OLDOF(count());
-        boost::contract::guard c = boost::contract::public_function(this)
+        boost::contract::old_ptr<int> old_count = BOOST_CONTRACT_OLD(count());
+        boost::contract::check c = boost::contract::public_function(this)
             .precondition([&] {
                 BOOST_CONTRACT_ASSERT(!empty()); // Not empty (count > 0).
             })

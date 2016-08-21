@@ -9,12 +9,12 @@
 #include "lib_x.hpp"
 #include "lib_y.hpp"
 #include <boost/contract/function.hpp>
-#include <boost/contract/guard.hpp>
+#include <boost/contract/check.hpp>
 #include <boost/detail/lightweight_test.hpp>
 #include <sstream>
 
 void f() {
-    boost::contract::guard c = boost::contract::function()
+    boost::contract::check c = boost::contract::function()
         .precondition([] { out("f::pre\n"); })
         .old([] { out("f::old\n"); })
         .postcondition([] { out("f::post\n"); })

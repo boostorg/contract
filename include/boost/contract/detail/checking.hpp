@@ -1,6 +1,6 @@
 
-#ifndef BOOST_CONTRACT_DETAIL_CHECK_GUARD_HPP_
-#define BOOST_CONTRACT_DETAIL_CHECK_GUARD_HPP_
+#ifndef BOOST_CONTRACT_DETAIL_CHECKING_HPP_
+#define BOOST_CONTRACT_DETAIL_CHECKING_HPP_
 
 // Copyright (C) 2008-2016 Lorenzo Caminiti
 // Distributed under the Boost Software License, Version 1.0 (see accompanying
@@ -20,14 +20,15 @@ namespace boost { namespace contract { namespace detail {
     #pragma warning(disable: 4251) // Member w/o DLL spec (mutex_ type).
 #endif
 
-class BOOST_CONTRACT_DETAIL_DECLSPEC check_guard :
+// RAII facility to disable assertions while checking other assertions.
+class BOOST_CONTRACT_DETAIL_DECLSPEC checking :
     private boost::noncopyable // Non-copyable resource (might use mutex, etc.).
 {
 public:
-    explicit check_guard();
-    ~check_guard();
+    explicit checking();
+    ~checking();
     
-    static bool checking();
+    static bool already();
 
 private:
     static bool checking_;

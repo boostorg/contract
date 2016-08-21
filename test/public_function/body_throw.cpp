@@ -4,14 +4,14 @@
 // file LICENSE_1_0.txt or a copy at http://www.boost.org/LICENSE_1_0.txt).
 // See: http://www.boost.org/doc/libs/release/libs/contract/doc/html/index.html
 
-// Test from public function (derived) body.
+// Test throw from public function (derived) body.
 
 #include "../detail/oteststream.hpp"
 #include <boost/contract/public_function.hpp>
 #include <boost/contract/assert.hpp>
 #include <boost/contract/base_types.hpp>
 #include <boost/contract/override.hpp>
-#include <boost/contract/guard.hpp>
+#include <boost/contract/check.hpp>
 #include <boost/detail/lightweight_test.hpp>
 #include <sstream>
 
@@ -24,13 +24,14 @@ struct c {
     struct err {};
 
     virtual void f(boost::contract::virtual_* v = 0) {
-        boost::contract::guard c = boost::contract::public_function(v, this)
-            .precondition([&] {
+        boost::contract::check c = boost::contract::public_function(v, this)
+            .precondition([] {
                 out << "c::f::pre" << std::endl;
                 BOOST_CONTRACT_ASSERT(false); // To check derived pre.
             })
-            .old([&] { out << "c::f::old" << std::endl; })
-            .postcondition([&] { out << "c::f::post" << std::endl; })
+            .old([] { out << "c::f::old" << std::endl; })
+            .postcondition([] { out << "c::f::post" << std::endl; })
+            .except([] { out << "c::f::except" << std::endl; })
         ;
         out << "c::f::body" << std::endl;
         throw c::err(); // Test body throws.
@@ -50,14 +51,15 @@ struct b
     struct err {};
 
     virtual void f(boost::contract::virtual_* v = 0) /* override */ {
-        boost::contract::guard c = boost::contract::public_function<override_f>(
+        boost::contract::check c = boost::contract::public_function<override_f>(
                 v, &b::f, this)
-            .precondition([&] {
+            .precondition([] {
                 out << "b::f::pre" << std::endl;
                 BOOST_CONTRACT_ASSERT(false); // To check derived pre.
             })
-            .old([&] { out << "b::f::old" << std::endl; })
-            .postcondition([&] { out << "b::f::post" << std::endl; })
+            .old([] { out << "b::f::old" << std::endl; })
+            .postcondition([] { out << "b::f::post" << std::endl; })
+            .except([] { out << "b::f::except" << std::endl; })
         ;
         out << "b::f::body" << std::endl;
         throw b::err(); // Test body throws.
@@ -78,11 +80,12 @@ struct a
     struct err {};
 
     void f(boost::contract::virtual_* v = 0) /* override */ {
-        boost::contract::guard c = boost::contract::public_function<override_f>(
+        boost::contract::check c = boost::contract::public_function<override_f>(
                 v, &a::f, this)
-            .precondition([&] { out << "a::f::pre" << std::endl; })
-            .old([&] { out << "a::f::old" << std::endl; })
-            .postcondition([&] { out << "a::f::post" << std::endl; })
+            .precondition([] { out << "a::f::pre" << std::endl; })
+            .old([] { out << "a::f::old" << std::endl; })
+            .postcondition([] { out << "a::f::post" << std::endl; })
+            .except([] { out << "a::f::except" << std::endl; })
         ;
         out << "a::f::body" << std::endl;
         throw a::err(); // Test body throws.
@@ -121,13 +124,18 @@ int main() {
             #endif
             << "a::f::body" << std::endl // Test this threw.
             #ifndef BOOST_CONTRACT_NO_EXIT_INVARIANTS
-                // Test no post (but still subcontracted inv) as body threw.
+                // Test no post (but still subcon inv and except) as body threw.
                 << "c::static_inv" << std::endl
                 << "c::inv" << std::endl
                 << "b::static_inv" << std::endl
                 << "b::inv" << std::endl
                 << "a::static_inv" << std::endl
                 << "a::inv" << std::endl
+            #endif
+            #ifndef BOOST_CONTRACT_NO_EXCEPTS
+                << "c::f::except" << std::endl
+                << "b::f::except" << std::endl
+                << "a::f::except" << std::endl
             #endif
         ;
         BOOST_TEST(out.eq(ok.str()));

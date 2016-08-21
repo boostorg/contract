@@ -12,5 +12,5 @@
 
 #define BOOST_CONTRACT_DETAIL_SOURCE
 #include <boost/contract/detail/inlined/core/exception.hpp>
-#include <boost/contract/detail/inlined/detail/check_guard.hpp>
+#include <boost/contract/detail/inlined/detail/checking.hpp>
 

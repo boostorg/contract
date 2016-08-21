@@ -13,7 +13,7 @@
 char replace(std::string& s, std::size_t index, char x) {
     char result;
     boost::contract::old_ptr<char> old_y; // But old value copied later...
-    boost::contract::guard c = boost::contract::function()
+    boost::contract::check c = boost::contract::function()
         .precondition([&] {
             BOOST_CONTRACT_ASSERT(index < s.size());
         })

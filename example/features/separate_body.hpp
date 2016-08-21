@@ -24,7 +24,7 @@ public:
         }),
         values_(new T[MaxSize]) // Still, member initializations must be here.
     {
-        boost::contract::guard c = boost::contract::constructor(this)
+        boost::contract::check c = boost::contract::constructor(this)
             .postcondition([&] {
                 BOOST_CONTRACT_ASSERT(size() == count);
             })
@@ -33,14 +33,14 @@ public:
     }
 
     virtual ~array() {
-        boost::contract::guard c = boost::contract::destructor(this); // Inv.
+        boost::contract::check c = boost::contract::destructor(this); // Inv.
         destructor_body(); // Separate destructor body implementation.
     }
 
     virtual void push_back(T const& value, boost::contract::virtual_* v = 0) {
         boost::contract::old_ptr<unsigned> old_size =
-                BOOST_CONTRACT_OLDOF(v, size());
-        boost::contract::guard c = boost::contract::public_function(v, this)
+                BOOST_CONTRACT_OLD(v, size());
+        boost::contract::check c = boost::contract::public_function(v, this)
             .precondition([&] {
                 BOOST_CONTRACT_ASSERT(size() < MaxSize);
             })
@@ -63,7 +63,7 @@ private:
 public:
     unsigned size() const {
         // Check invariants.
-        boost::contract::guard c = boost::contract::public_function(this);
+        boost::contract::check c = boost::contract::public_function(this);
         return size_body();
     }
     

@@ -20,7 +20,7 @@ Facility to assert contract conditions.
         !defined(BOOST_CONTRACT_NO_INVARIANTS)
     #include <boost/contract/detail/assert.hpp>
     #define BOOST_CONTRACT_ASSERT(condition) \
-        { BOOST_CONTRACT_DETAIL_ASSERT(condition); }
+        BOOST_CONTRACT_DETAIL_ASSERT(condition) /* no `;`  here */
 #else
     /**
     Preferred way to assert contract conditions.

@@ -28,7 +28,7 @@ public:
     /* Creation */
 
     explicit decrement_button(counter& a_counter) : counter_(a_counter) {
-        boost::contract::guard c = boost::contract::constructor(this)
+        boost::contract::check c = boost::contract::constructor(this)
             .postcondition([&] {
                 // Enable iff positive value.
                 BOOST_CONTRACT_ASSERT(enabled() == (a_counter.value() > 0));
@@ -39,7 +39,7 @@ public:
 
     // Destroy button.
     virtual ~decrement_button() {
-        boost::contract::guard c = boost::contract::destructor(this);
+        boost::contract::check c = boost::contract::destructor(this);
     }
 
     /* Commands */
@@ -47,8 +47,8 @@ public:
     virtual void on_bn_clicked(boost::contract::virtual_* v = 0)
             /* override */ {
         boost::contract::old_ptr<int> old_value =
-                BOOST_CONTRACT_OLDOF(v, counter_.value());
-        boost::contract::guard c = boost::contract::public_function<
+                BOOST_CONTRACT_OLD(v, counter_.value());
+        boost::contract::check c = boost::contract::public_function<
             override_on_bn_clicked
         >(v, &decrement_button::on_bn_clicked, this)
             .postcondition([&] {
@@ -62,7 +62,7 @@ public:
     virtual bool up_to_date_with_subject(boost::contract::virtual_* v = 0)
             const /* override */ {
         bool result;
-        boost::contract::guard c = boost::contract::public_function<
+        boost::contract::check c = boost::contract::public_function<
             override_up_to_date_with_subject
         >(v, result, &decrement_button::up_to_date_with_subject, this);
 
@@ -70,7 +70,7 @@ public:
     }
 
     virtual void update(boost::contract::virtual_* v = 0) /* override */ {
-        boost::contract::guard c = boost::contract::public_function<
+        boost::contract::check c = boost::contract::public_function<
                 override_update>(v, &decrement_button::update, this)
             .postcondition([&] {
                 // Enabled iff positive value.

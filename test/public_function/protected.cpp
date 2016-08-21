@@ -10,7 +10,7 @@
 #include <boost/contract/function.hpp>
 #include <boost/contract/public_function.hpp>
 #include <boost/contract/base_types.hpp>
-#include <boost/contract/guard.hpp>
+#include <boost/contract/check.hpp>
 #include <boost/detail/lightweight_test.hpp>
 #include <sstream>
 
@@ -26,7 +26,7 @@ protected:
     // (otherwise C++ won't override because mismatching parameters), but
     // overridden protected does not use public_function.
     virtual void f(boost::contract::virtual_* v = 0) {
-        boost::contract::guard c = boost::contract::function()
+        boost::contract::check c = boost::contract::function()
             .precondition([] { out << "b::f::pre" << std::endl; })
             .old([] { out << "b::f::old" << std::endl; })
             .postcondition([] { out << "b::f::post" << std::endl; })
@@ -46,7 +46,7 @@ struct a
 
     void f(boost::contract::virtual_* v = 0) /* not override */ {
         // C++ func a::f overrides b::f, but contracts don't (so no override_f).
-        boost::contract::guard c = boost::contract::public_function(v, this)
+        boost::contract::check c = boost::contract::public_function(v, this)
             .precondition([] { out << "a::f::pre" << std::endl; })
             .old([] { out << "a::f::old" << std::endl; })
             .postcondition([] { out << "a::f::post" << std::endl; })

@@ -74,12 +74,12 @@ invariants.
         run-time error, see @RefMacro{BOOST_CONTRACT_ON_MISSING_GUARD}).
 */
 template<class Class>
-specify_precondition_old_postcondition<> public_function() {
+specify_precondition_old_postcondition_except<> public_function() {
     #ifndef BOOST_CONTRACT_NO_PUBLIC_FUNCTIONS
-        return specify_precondition_old_postcondition<>(
+        return specify_precondition_old_postcondition_except<>(
             new boost::contract::detail::public_static_function<Class>());
     #else
-        return specify_precondition_old_postcondition<>();
+        return specify_precondition_old_postcondition_except<>();
     #endif
 }
 
@@ -105,9 +105,9 @@ invariants.
         run-time error, see @RefMacro{BOOST_CONTRACT_ON_MISSING_GUARD}).
 */
 template<class Class>
-specify_precondition_old_postcondition<> public_function(Class* obj) {
+specify_precondition_old_postcondition_except<> public_function(Class* obj) {
     #ifndef BOOST_CONTRACT_NO_PUBLIC_FUNCTIONS
-        return specify_precondition_old_postcondition<>(
+        return specify_precondition_old_postcondition_except<>(
             new boost::contract::detail::public_function<
                 boost::contract::detail::none,
                 boost::contract::detail::none,
@@ -132,7 +132,7 @@ specify_precondition_old_postcondition<> public_function(Class* obj) {
             )
         );
     #else
-        return specify_precondition_old_postcondition<>();
+        return specify_precondition_old_postcondition_except<>();
     #endif
 }
 
@@ -153,7 +153,7 @@ specify_precondition_old_postcondition<> public_function(Class* obj) {
         BOOST_PP_COMMA_IF(has_virtual_result) \
         class Class \
     > \
-    specify_precondition_old_postcondition< \
+    specify_precondition_old_postcondition_except< \
             BOOST_PP_EXPR_IIF(has_virtual_result, VirtualResult)> \
     public_function( \
         virtual_* v \
@@ -163,7 +163,7 @@ specify_precondition_old_postcondition<> public_function(Class* obj) {
     ) { \
         BOOST_PP_IIF(BOOST_CONTRACT_PUBLIC_FUNCTIONS_, \
             /* no F... so cannot enforce contracted F returns VirtualResult */ \
-            return (specify_precondition_old_postcondition< \
+            return (specify_precondition_old_postcondition_except< \
                     BOOST_PP_EXPR_IIF(has_virtual_result, VirtualResult)>( \
                 new boost::contract::detail::public_function< \
                     boost::contract::detail::none, \
@@ -197,7 +197,7 @@ specify_precondition_old_postcondition<> public_function(Class* obj) {
                 ) \
             )); \
         , \
-            return specify_precondition_old_postcondition< \
+            return specify_precondition_old_postcondition_except< \
                     BOOST_PP_EXPR_IIF(has_virtual_result, VirtualResult)>(); \
         ) \
     }
@@ -231,8 +231,8 @@ specify_precondition_old_postcondition<> public_function(Class* obj) {
             @RefMacro{BOOST_CONTRACT_ON_MISSING_GUARD}).
     */
     template<class Class>
-    specify_precondition_old_postcondition<> public_function(virtual_* v,
-            Class* obj);
+    specify_precondition_old_postcondition_except<> public_function(
+            virtual_* v, Class* obj);
     
     /**
     Program contracts for virtual, not overriding public functions returning
@@ -272,8 +272,8 @@ specify_precondition_old_postcondition<> public_function(Class* obj) {
             @RefMacro{BOOST_CONTRACT_ON_MISSING_GUARD}).
     */
     template<typename VirtualResult, class Class>
-    specify_precondition_old_postcondition<VirtualResult> public_function(
-            virtual_* v, VirtualResult& r, Class* obj);
+    specify_precondition_old_postcondition_except<VirtualResult>
+    public_function(virtual_* v, VirtualResult& r, Class* obj);
 #else
     BOOST_CONTRACT_PUBLIC_FUNCTION_VIRTUAL_NO_OVERRIDE_(
             /* has_virtual_result = */ 0)
@@ -319,7 +319,7 @@ specify_precondition_old_postcondition<> public_function(Class* obj) {
                 boost::contract::access::has_base_types<Class>::value, \
                 "enclosing class missing 'base-types' typedef" \
             ); \
-            return (specify_precondition_old_postcondition< \
+            return (specify_precondition_old_postcondition_except< \
                     BOOST_PP_EXPR_IIF(has_virtual_result, VirtualResult)>( \
                 new boost::contract::detail::public_function< \
                     Override, \
@@ -351,7 +351,7 @@ specify_precondition_old_postcondition<> public_function(Class* obj) {
                 ) \
             )); \
         , \
-            return specify_precondition_old_postcondition< \
+            return specify_precondition_old_postcondition_except< \
                     BOOST_PP_EXPR_IIF(has_virtual_result, VirtualResult)>(); \
         ) \
     }
@@ -399,7 +399,7 @@ specify_precondition_old_postcondition<> public_function(Class* obj) {
             @RefMacro{BOOST_CONTRACT_ON_MISSING_GUARD}).
     */
     template<class Override, typename F, class Class, typename... Args>
-    specify_precondition_old_postcondition<> public_function(
+    specify_precondition_old_postcondition_except<> public_function(
             virtual_* v, F f, Class* obj, Args&... args);
 
     /**
@@ -452,8 +452,9 @@ specify_precondition_old_postcondition<> public_function(Class* obj) {
     */
     template<class Override, typename VirtualResult, typename F, class Class,
             typename... Args>
-    specify_precondition_old_postcondition<VirtualResult> public_function(
-            virtual_* v, VirtualResult& r, F f, Class* obj, Args&... args);
+    specify_precondition_old_postcondition_except<VirtualResult>
+    public_function(virtual_* v, VirtualResult& r, F f, Class* obj,
+            Args&... args);
 #elif BOOST_CONTRACT_DETAIL_TVARIADIC
     BOOST_CONTRACT_PUBLIC_FUNCTION_VIRTUAL_OVERRIDE_Z_(1, /* arity = */ ~,
             /* arity_compl = */ ~, /* has_virtual_result = */ 0)

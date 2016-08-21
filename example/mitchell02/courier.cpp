@@ -61,13 +61,13 @@ public:
         insurance_cover_usd_(_insurance_cover_usd)
     {
         // Check invariants.
-        boost::contract::guard c = boost::contract::constructor(this);
+        boost::contract::check c = boost::contract::constructor(this);
     }
 
     // Destroy courier.
     virtual ~courier() {
         // Check invariants.
-        boost::contract::guard c = boost::contract::destructor(this);
+        boost::contract::check c = boost::contract::destructor(this);
     }
 
     /* Queries */
@@ -75,7 +75,7 @@ public:
     // Return insurance cover.
     double insurance_cover_usd() const {
         // Check invariants.
-        boost::contract::guard c = boost::contract::public_function(this);
+        boost::contract::check c = boost::contract::public_function(this);
         return insurance_cover_usd_;
     }
 
@@ -87,7 +87,7 @@ public:
         std::string const& destination,
         boost::contract::virtual_* v = 0
     ) {
-        boost::contract::guard c = boost::contract::public_function(v, this)
+        boost::contract::check c = boost::contract::public_function(v, this)
             .precondition([&] {
                 // Within max weight of this delivery.
                 BOOST_CONTRACT_ASSERT(package_delivery.weight_kg < 5.0);
@@ -148,13 +148,13 @@ public:
         courier(insurance_cover_usd)
     {
         // Check invariants.
-        boost::contract::guard c = boost::contract::constructor(this);
+        boost::contract::check c = boost::contract::constructor(this);
     }
 
     // Destroy courier.
     virtual ~different_courier() {
         // Check invariants.
-        boost::contract::guard c = boost::contract::destructor(this);
+        boost::contract::check c = boost::contract::destructor(this);
     }
 
     /* Commands */
@@ -164,7 +164,7 @@ public:
         std::string const& destination,
         boost::contract::virtual_* v = 0
     ) /* override */ {
-        boost::contract::guard c = boost::contract::public_function<
+        boost::contract::check c = boost::contract::public_function<
             override_deliver
         >(v, &different_courier::deliver, this, package_delivery, destination)
             .precondition([&] {

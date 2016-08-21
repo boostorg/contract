@@ -29,8 +29,8 @@ protected:
 template<typename T>
 void pushable<T>::push_back(T const& value, boost::contract::virtual_* v) {
     boost::contract::old_ptr<unsigned> old_capacity =
-            BOOST_CONTRACT_OLDOF(v, capacity());
-    boost::contract::guard c = boost::contract::public_function(v, this)
+            BOOST_CONTRACT_OLD(v, capacity());
+    boost::contract::check c = boost::contract::public_function(v, this)
         .precondition([&] {
             BOOST_CONTRACT_ASSERT(capacity() < max_size());
         })
@@ -63,8 +63,8 @@ public:
     void push_back(T const& value, boost::contract::virtual_* v = 0)
             /* override */ {
         boost::contract::old_ptr<unsigned> old_size =
-                BOOST_CONTRACT_OLDOF(v, size());
-        boost::contract::guard c = boost::contract::public_function<
+                BOOST_CONTRACT_OLD(v, size());
+        boost::contract::check c = boost::contract::public_function<
                 override_push_back>(v, &vector::push_back, this, value)
             .precondition([&] {
                 BOOST_CONTRACT_ASSERT(size() < max_size());

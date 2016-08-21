@@ -28,7 +28,7 @@ public:
         }
         static void constructor_old(boost::contract::old_ptr<int>&
                 old_instances) {
-            old_instances = BOOST_CONTRACT_OLDOF(instances());
+            old_instances = BOOST_CONTRACT_OLD(instances());
         }
         void constructor_postcondition(unsigned const count,
                 boost::contract::old_ptr<int> const old_instances) const {
@@ -39,7 +39,7 @@ public:
     virtual ~array();
         void destructor_old(boost::contract::old_ptr<int>& old_instances)
                 const {
-            old_instances = BOOST_CONTRACT_OLDOF(instances());
+            old_instances = BOOST_CONTRACT_OLD(instances());
         }
         static void destructor_postcondition(boost::contract::old_ptr<int> const
                 old_instances) {
@@ -52,7 +52,7 @@ public:
         }
         void push_back_old(boost::contract::virtual_* v,
                 boost::contract::old_ptr<unsigned>& old_size) const {
-            old_size = BOOST_CONTRACT_OLDOF(v, size());
+            old_size = BOOST_CONTRACT_OLD(v, size());
         }
         void push_back_postcondition(
                 boost::contract::old_ptr<unsigned> const old_size) const {

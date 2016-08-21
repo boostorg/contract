@@ -25,7 +25,7 @@ public:
         }),
         data_(new T[capacity]), capacity_(capacity), size_(0)
     {
-        boost::contract::guard c = boost::contract::constructor(this)
+        boost::contract::check c = boost::contract::constructor(this)
             .postcondition([&] {
                 BOOST_CONTRACT_ASSERT(empty());
                 BOOST_CONTRACT_ASSERT(full() == (capacity == 0));
@@ -36,22 +36,22 @@ public:
     }
 
     virtual ~stack() {
-        boost::contract::guard c = boost::contract::destructor(this);
+        boost::contract::check c = boost::contract::destructor(this);
         delete[] data_;
     }
 
     bool empty() const {
-        boost::contract::guard c = boost::contract::public_function(this);
+        boost::contract::check c = boost::contract::public_function(this);
         return size_ == 0;
     }
 
     bool full() const {
-        boost::contract::guard c = boost::contract::public_function(this);
+        boost::contract::check c = boost::contract::public_function(this);
         return size_ == capacity_;
     }
 
     void push(T const& value) {
-        boost::contract::guard c = boost::contract::public_function(this)
+        boost::contract::check c = boost::contract::public_function(this)
             .precondition([&] {
                 BOOST_CONTRACT_ASSERT(!full());
             })
@@ -64,7 +64,7 @@ public:
     }
 
     T pop() {
-        boost::contract::guard c = boost::contract::public_function(this)
+        boost::contract::check c = boost::contract::public_function(this)
             .precondition([&] {
                 BOOST_CONTRACT_ASSERT(!empty());
             })

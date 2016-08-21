@@ -1,6 +1,6 @@
 
-#ifndef BOOST_CONTRACT_DETAIL_CHECK_PRE_POST_INV_HPP_
-#define BOOST_CONTRACT_DETAIL_CHECK_PRE_POST_INV_HPP_
+#ifndef BOOST_CONTRACT_DETAIL_COND_WITH_INV_HPP_
+#define BOOST_CONTRACT_DETAIL_COND_WITH_INV_HPP_
 
 // Copyright (C) 2008-2016 Lorenzo Caminiti
 // Distributed under the Boost Software License, Version 1.0 (see accompanying
@@ -9,7 +9,7 @@
 
 #include <boost/contract/core/exception.hpp>
 #include <boost/contract/core/config.hpp>
-#include <boost/contract/detail/condition/check_pre_post.hpp>
+#include <boost/contract/detail/condition/cond_with_post.hpp>
 #ifndef BOOST_CONTRACT_NO_INVARIANTS
     #include <boost/contract/core/access.hpp>
     #include <boost/type_traits/add_pointer.hpp>
@@ -32,8 +32,8 @@
 namespace boost { namespace contract { namespace detail {
 
 template<typename VR, class C>
-class check_pre_post_inv : public check_pre_post<VR> { // Non-copyable base.
-    #if !defined(BOOST_CONTRACT_NO_INVARIANTS) && \
+class cond_with_inv : public cond_with_post<VR> { // Non-copyable base.
+    #if     !defined(BOOST_CONTRACT_NO_INVARIANTS) && \
             !defined(BOOST_CONTRACT_PERMISSIVE)
         BOOST_STATIC_ASSERT_MSG(
             !boost::contract::access::has_static_invariant_f<
@@ -94,11 +94,12 @@ class check_pre_post_inv : public check_pre_post<VR> { // Non-copyable base.
 
 public:
     // obj can be 0 for static member functions.
-    explicit check_pre_post_inv(boost::contract::from from, C* obj) :
-        check_pre_post<VR>(from)
-        #if !defined(BOOST_CONTRACT_NO_PRECONDITIONS) || \
+    explicit cond_with_inv(boost::contract::from from, C* obj) :
+        cond_with_post<VR>(from)
+        #if     !defined(BOOST_CONTRACT_NO_INVARIANTS) || \
+                !defined(BOOST_CONTRACT_NO_PRECONDITIONS) || \
                 !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
-                !defined(BOOST_CONTRACT_NO_INVARIANTS)
+                !defined(BOOST_CONTRACT_NO_EXCEPTS)
             , obj_(obj)
         #endif
     {}
@@ -116,9 +117,10 @@ protected:
         void check_exit_all_inv() { check_inv(false, false, true); }
     #endif
 
-    #if !defined(BOOST_CONTRACT_NO_PRECONDITIONS) || \
+    #if     !defined(BOOST_CONTRACT_NO_INVARIANTS) || \
+            !defined(BOOST_CONTRACT_NO_PRECONDITIONS) || \
             !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
-            !defined(BOOST_CONTRACT_NO_INVARIANTS)
+            !defined(BOOST_CONTRACT_NO_EXCEPTS)
         C* object() { return obj_; }
     #endif
 
@@ -183,7 +185,7 @@ private:
             }
         }
 
-        // Check is class's func is inherited from its base types or not.
+        // Check if class's func is inherited from its base types or not.
         template<template<class> class HasFunc, template<class> class FuncAddr>
         struct inherited {
             static bool apply() {
@@ -224,9 +226,10 @@ private:
         };
     #endif
 
-    #if !defined(BOOST_CONTRACT_NO_PRECONDITIONS) || \
+    #if     !defined(BOOST_CONTRACT_NO_INVARIANTS) || \
+            !defined(BOOST_CONTRACT_NO_PRECONDITIONS) || \
             !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
-            !defined(BOOST_CONTRACT_NO_INVARIANTS)
+            !defined(BOOST_CONTRACT_NO_EXCEPTS)
         C* obj_;
     #endif
 };

@@ -4,7 +4,7 @@
 // file LICENSE_1_0.txt or a copy at http://www.boost.org/LICENSE_1_0.txt).
 // See: http://www.boost.org/doc/libs/release/libs/contract/doc/html/index.html
 
-// Test old values without BOOST_CONTRACT_OLDOF macro.
+// Test old values without BOOST_CONTRACT_OLD macro.
 
 #ifndef BOOST_CONTRACT_TEST_OLD_PTR_TYPE
     #error "must define BOOST_CONTRACT_TEST_OLD_PTR_TYPE"
@@ -18,7 +18,7 @@
 #include <boost/contract/override.hpp>
 #include <boost/contract/assert.hpp>
 #include <boost/contract/old.hpp>
-#include <boost/contract/guard.hpp>
+#include <boost/contract/check.hpp>
 #include <boost/detail/lightweight_test.hpp>
 #include <cassert>
 
@@ -39,7 +39,7 @@ void b::swap(i_type& i, j_type& j, boost::contract::virtual_* v) {
             boost::contract::null_old()
     );
     BOOST_CONTRACT_TEST_OLD_PTR_TYPE<j_type> old_j;
-    boost::contract::guard c = boost::contract::public_function(v, this)
+    boost::contract::check c = boost::contract::public_function(v, this)
         .precondition([&] {
             out << "b::swap::pre" << std::endl;
             BOOST_CONTRACT_ASSERT(i.value != j.value);
@@ -67,7 +67,7 @@ struct a
 
     void swap(i_type& i, j_type& j, boost::contract::virtual_* v = 0)
             /* override */ {
-        boost::contract::guard c = boost::contract::public_function<
+        boost::contract::check c = boost::contract::public_function<
                 override_swap>(v, &a::swap, this, i, j);
     
         out << "a::swap::body" << std::endl;
@@ -92,7 +92,7 @@ void swap(x_type& x, y_type& y) {
             boost::contract::null_old()
     );
     BOOST_CONTRACT_TEST_OLD_PTR_TYPE<y_type> old_y;
-    boost::contract::guard c = boost::contract::function()
+    boost::contract::check c = boost::contract::function()
         .precondition([&] {
             out << "swap::pre" << std::endl;
             BOOST_CONTRACT_ASSERT(x.value != y.value);

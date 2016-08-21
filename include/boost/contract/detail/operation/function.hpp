@@ -9,12 +9,14 @@
 
 #include <boost/contract/core/exception.hpp>
 #include <boost/contract/core/config.hpp>
-#include <boost/contract/detail/condition/check_pre_post.hpp>
-#if !defined(BOOST_CONTRACT_NO_PRECONDITIONS) || \
-        !defined(BOOST_CONTRACT_NO_POSTCONDITIONS)
-    #include <boost/contract/detail/check_guard.hpp>
+#include <boost/contract/detail/condition/cond_with_post.hpp>
+#if     !defined(BOOST_CONTRACT_NO_PRECONDITIONS) || \
+        !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
+        !defined(BOOST_CONTRACT_NO_EXCEPTS)
+    #include <boost/contract/detail/checking.hpp>
 #endif
-#ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
+#if     !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
+        !defined(BOOST_CONTRACT_NO_EXCEPTS)
     #include <boost/config.hpp>
     #include <exception>
 #endif
@@ -22,39 +24,49 @@
 namespace boost { namespace contract { namespace detail {
 
 // Used for free function, private and protected member functions.
-class function :
-        public check_pre_post</* VR = */ none> { // Non-copyable base.
+class function : public cond_with_post</* VR = */ none> { // Non-copyable base.
 public:
-    explicit function() : check_pre_post</* VR = */ none>(
+    explicit function() : cond_with_post</* VR = */ none>(
             boost::contract::from_function) {}
 
 private:
-    #if !defined(BOOST_CONTRACT_NO_PRECONDITIONS) || \
-            !defined(BOOST_CONTRACT_NO_POSTCONDITIONS)
+    #if     !defined(BOOST_CONTRACT_NO_PRECONDITIONS) || \
+            !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
+            !defined(BOOST_CONTRACT_NO_EXCEPTS)
         void init() /* override */ {
-            if(check_guard::checking()) return;
+            if(checking::already()) return;
             #ifndef BOOST_CONTRACT_NO_PRECONDITIONS
                 {
                     #ifndef BOOST_CONTRACT_PRECONDITIONS_DISABLE_NO_ASSERTION
-                        check_guard checking;
+                        checking k;
                     #endif
                     this->check_pre();
                 }
             #endif
-            #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
+            #if     !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
+                    !defined(BOOST_CONTRACT_NO_EXCEPTS)
                 this->copy_old();
             #endif
         }
     #endif
 
 public:
-    #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
+    #if     !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
+            !defined(BOOST_CONTRACT_NO_EXCEPTS)
         ~function() BOOST_NOEXCEPT_IF(false) {
-            this->assert_guarded();
-            if(check_guard::checking()) return;
-            check_guard checking;
+            this->assert_initialized();
+            if(checking::already()) return;
+            checking k;
             
-            if(!std::uncaught_exception()) this->check_post(none());
+            if(std::uncaught_exception()) {
+                #ifndef BOOST_CONTRACT_NO_EXCEPTS
+                    this->check_except();
+                #endif
+            } else {
+                #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
+                    this->check_post(none());
+                #endif
+            }
         }
     #endif
 };

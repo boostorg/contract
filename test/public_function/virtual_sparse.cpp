@@ -9,7 +9,7 @@
 #include "../detail/oteststream.hpp"
 #include <boost/contract/public_function.hpp>
 #include <boost/contract/assert.hpp>
-#include <boost/contract/guard.hpp>
+#include <boost/contract/check.hpp>
 #include <boost/contract/override.hpp>
 #include <boost/contract/base_types.hpp>
 #include <boost/detail/lightweight_test.hpp>
@@ -22,13 +22,13 @@ struct j {
     void invariant() const { out << "j::inv" << std::endl; }
 
     virtual void f(char ch, boost::contract::virtual_* v = 0) {
-        boost::contract::guard c = boost::contract::public_function(v, this)
+        boost::contract::check c = boost::contract::public_function(v, this)
             .precondition([&] {
                 out << "j::f::pre" << std::endl;
                 BOOST_CONTRACT_ASSERT(ch == 'j');
             })
-            .old([&] { out << "j::f::old" << std::endl; })
-            .postcondition([&] { out << "j::f::post" << std::endl; })
+            .old([] { out << "j::f::old" << std::endl; })
+            .postcondition([] { out << "j::f::post" << std::endl; })
         ;
         out << "j::f::body" << std::endl;
     }
@@ -39,13 +39,13 @@ struct i {
     void invariant() const { out << "i::inv" << std::endl; }
 
     virtual void f(char ch, boost::contract::virtual_* v = 0) {
-        boost::contract::guard c = boost::contract::public_function(v, this)
+        boost::contract::check c = boost::contract::public_function(v, this)
             .precondition([&] {
                 out << "i::f::pre" << std::endl;
                 BOOST_CONTRACT_ASSERT(ch == 'i');
             })
-            .old([&] { out << "i::f::old" << std::endl; })
-            .postcondition([&] { out << "i::f::post" << std::endl; })
+            .old([] { out << "i::f::old" << std::endl; })
+            .postcondition([] { out << "i::f::post" << std::endl; })
         ;
         out << "i::f::body" << std::endl;
     }
@@ -64,14 +64,14 @@ struct h
     void invariant() const { out << "h::inv" << std::endl; }
 
     virtual void f(char ch, boost::contract::virtual_* v = 0) /* override */ {
-        boost::contract::guard c = boost::contract::public_function<
+        boost::contract::check c = boost::contract::public_function<
                 override_f>(v, &h::f, this, ch)
             .precondition([&] {
                 out << "h::f::pre" << std::endl;
                 BOOST_CONTRACT_ASSERT(ch == 'h');
             })
-            .old([&] { out << "h::f::old" << std::endl; })
-            .postcondition([&] { out << "h::f::post" << std::endl; })
+            .old([] { out << "h::f::old" << std::endl; })
+            .postcondition([] { out << "h::f::post" << std::endl; })
         ;
         out << "h::f::body" << std::endl;
     }
@@ -89,14 +89,14 @@ struct e
     void invariant() const { out << "e::inv" << std::endl; }
 
     virtual void f(char ch, boost::contract::virtual_* v = 0) /* override */ {
-        boost::contract::guard c = boost::contract::public_function<
+        boost::contract::check c = boost::contract::public_function<
                 override_f>(v, &e::f, this, ch)
             .precondition([&] {
                 out << "e::f::pre" << std::endl;
                 BOOST_CONTRACT_ASSERT(ch == 'e');
             })
-            .old([&] { out << "e::f::old" << std::endl; })
-            .postcondition([&] { out << "e::f::post" << std::endl; })
+            .old([] { out << "e::f::old" << std::endl; })
+            .postcondition([] { out << "e::f::post" << std::endl; })
         ;
         out << "e::f::body" << std::endl;
     }
@@ -119,13 +119,13 @@ struct c {
     void invariant() const { out << "c::inv" << std::endl; }
     
     virtual void f(char ch, boost::contract::virtual_* v = 0) {
-        boost::contract::guard c = boost::contract::public_function(v, this)
+        boost::contract::check c = boost::contract::public_function(v, this)
             .precondition([&] {
                 out << "c::f::pre" << std::endl;
                 BOOST_CONTRACT_ASSERT(ch == 'c');
             })
-            .old([&] { out << "c::f::old" << std::endl; })
-            .postcondition([&] { out << "c::f::post" << std::endl; })
+            .old([] { out << "c::f::old" << std::endl; })
+            .postcondition([] { out << "c::f::post" << std::endl; })
         ;
         out << "c::f::body" << std::endl;
     }
@@ -158,14 +158,14 @@ struct a
     void invariant() const { out << "a::inv" << std::endl; }
 
     virtual void f(char ch, boost::contract::virtual_* v = 0) /* override */ {
-        boost::contract::guard c = boost::contract::public_function<
+        boost::contract::check c = boost::contract::public_function<
                 override_f>(v, &a::f, this, ch)
             .precondition([&] {
                 out << "a::f::pre" << std::endl;
                 BOOST_CONTRACT_ASSERT(ch == 'a');
             })
-            .old([&] { out << "a::f::old" << std::endl; })
-            .postcondition([&] { out << "a::f::post" << std::endl; })
+            .old([] { out << "a::f::old" << std::endl; })
+            .postcondition([] { out << "a::f::post" << std::endl; })
         ;
         out << "a::f::body" << std::endl;
     }

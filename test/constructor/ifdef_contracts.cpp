@@ -10,7 +10,7 @@
 #include <boost/contract/core/config.hpp>
 #include <boost/contract/constructor.hpp> // Outside #if below for ctor pre.
 #ifndef BOOST_CONTRACT_NO_CONSTRUCTORS
-    #include <boost/contract/guard.hpp>
+    #include <boost/contract/check.hpp>
     #include <boost/contract/old.hpp>
 #endif
 #include <boost/detail/lightweight_test.hpp>
@@ -36,10 +36,10 @@ struct b
         #endif
     {
         #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
-            boost::contract::old_ptr<int> old_x = BOOST_CONTRACT_OLDOF(x);
+            boost::contract::old_ptr<int> old_x = BOOST_CONTRACT_OLD(x);
         #endif
         #ifndef BOOST_CONTRACT_NO_CONSTRUCTORS
-            boost::contract::guard c = boost::contract::constructor(this)
+            boost::contract::check c = boost::contract::constructor(this)
                 #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
                     .old([] { out << "b::f::old" << std::endl; })
                     .postcondition([] { out << "b::ctor::post" << std::endl; })
@@ -70,10 +70,10 @@ struct a :
         b(x)
     {
         #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
-            boost::contract::old_ptr<int> old_x = BOOST_CONTRACT_OLDOF(x);
+            boost::contract::old_ptr<int> old_x = BOOST_CONTRACT_OLD(x);
         #endif
         #ifndef BOOST_CONTRACT_NO_CONSTRUCTORS
-            boost::contract::guard c = boost::contract::constructor(this)
+            boost::contract::check c = boost::contract::constructor(this)
                 #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
                     .old([] { out << "a::f::old" << std::endl; })
                     .postcondition([] { out << "a::ctor::post" << std::endl; })

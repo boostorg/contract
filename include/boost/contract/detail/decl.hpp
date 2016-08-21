@@ -36,7 +36,7 @@
         BOOST_CONTRACT_DETAIL_TVARIADIC_TPARAMS_Z(z, arity, Args) \
     > \
     BOOST_PP_EXPR_IIF(is_friend, friend) \
-    boost::contract::specify_precondition_old_postcondition< \
+    boost::contract::specify_precondition_old_postcondition_except< \
             BOOST_PP_EXPR_IIF(has_result, VR)> \
     /* no boost::contract:: here for friends (otherwise need fwd decl) */ \
     public_function( \
@@ -99,7 +99,7 @@
         )
 #endif
 
-#define BOOST_CONTRACT_DETAIL_DECL_DETAIL_CHECK_SUBCONTRACTED_PRE_POST_INV_Z( \
+#define BOOST_CONTRACT_DETAIL_DECL_DETAIL_COND_WITH_SUBCONTRACTING_Z( \
         z, is_friend, O, VR, F, C, Args) \
     template< \
         class O, typename VR, typename F, class C \
@@ -112,7 +112,7 @@
     , \
         class \
     ) \
-    check_subcontracted_pre_post_inv
+    cond_with_subcontracting
 
 /* CODE */
 
@@ -121,7 +121,7 @@ namespace boost {
         class virtual_;
 
         template<typename VR = void>
-        class specify_precondition_old_postcondition;
+        class specify_precondition_old_postcondition_except;
     }
 }
     

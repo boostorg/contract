@@ -9,7 +9,7 @@
 #include "../detail/oteststream.hpp"
 #include <boost/contract/destructor.hpp>
 #include <boost/contract/base_types.hpp>
-#include <boost/contract/guard.hpp>
+#include <boost/contract/check.hpp>
 #include <boost/config.hpp>
 #include <boost/detail/lightweight_test.hpp>
 #include <sstream>
@@ -21,8 +21,8 @@ struct c {
     void invariant() const { out << "c::inv" << std::endl; }
 
     ~c() BOOST_NOEXCEPT_IF(false) {
-        boost::contract::guard c = boost::contract::destructor(this)
-            .old([&] { out << "c::dtor::old" << std::endl; })
+        boost::contract::check c = boost::contract::destructor(this)
+            .old([] { out << "c::dtor::old" << std::endl; })
             .postcondition([] { out << "c::dtor::post" << std::endl; })
         ;
         out << "c::dtor::body" << std::endl;
@@ -43,8 +43,8 @@ struct b
     struct err {};
 
     ~b() BOOST_NOEXCEPT_IF(false) {
-        boost::contract::guard c = boost::contract::destructor(this)
-            .old([&] {
+        boost::contract::check c = boost::contract::destructor(this)
+            .old([] {
                 out << "b::dtor::old" << std::endl;
                 throw b::err(); // Test .old() throw (from mid branch).
             })
@@ -65,8 +65,8 @@ struct a
     void invariant() const { out << "a::inv" << std::endl; }
 
     ~a() BOOST_NOEXCEPT_IF(false) {
-        boost::contract::guard c = boost::contract::destructor(this)
-            .old([&] { out << "a::dtor::old" << std::endl; })
+        boost::contract::check c = boost::contract::destructor(this)
+            .old([] { out << "a::dtor::old" << std::endl; })
             .postcondition([] { out << "a::dtor::post" << std::endl; })
         ;
         out << "a::dtor::body" << std::endl;

@@ -12,7 +12,7 @@
 #include "lib_b.hpp"
 #include "lib_a.hpp"
 #include <boost/contract/public_function.hpp>
-#include <boost/contract/guard.hpp>
+#include <boost/contract/check.hpp>
 #include <boost/contract/assert.hpp>
 
 bool call_f() {
@@ -25,7 +25,7 @@ void b::static_invariant() { out("b::static_inv\n"); }
 void b::invariant() const { out("b::inv\n"); }
     
 void b::g() {
-    boost::contract::guard c = boost::contract::public_function(this)
+    boost::contract::check c = boost::contract::public_function(this)
         .precondition([&] {
             out("b::g::pre\n");
             BOOST_CONTRACT_ASSERT(call_f());

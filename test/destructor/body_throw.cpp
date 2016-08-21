@@ -9,7 +9,7 @@
 #include "../detail/oteststream.hpp"
 #include <boost/contract/destructor.hpp>
 #include <boost/contract/base_types.hpp>
-#include <boost/contract/guard.hpp>
+#include <boost/contract/check.hpp>
 #include <boost/config.hpp>
 #include <boost/detail/lightweight_test.hpp>
 #include <sstream>
@@ -21,9 +21,10 @@ struct c {
     void invariant() const { out << "c::inv" << std::endl; }
 
     ~c() BOOST_NOEXCEPT_IF(false) {
-        boost::contract::guard c = boost::contract::destructor(this)
-            .old([&] { out << "c::dtor::old" << std::endl; })
+        boost::contract::check c = boost::contract::destructor(this)
+            .old([] { out << "c::dtor::old" << std::endl; })
             .postcondition([] { out << "c::dtor::post" << std::endl; })
+            .except([] { out << "c::dtor::except" << std::endl; })
         ;
         out << "c::dtor::body" << std::endl;
         // Do not throw (from inheritance root).
@@ -43,9 +44,10 @@ struct b
     struct err {};
 
     ~b() BOOST_NOEXCEPT_IF(false) {
-        boost::contract::guard c = boost::contract::destructor(this)
-            .old([&] { out << "b::dtor::old" << std::endl; })
+        boost::contract::check c = boost::contract::destructor(this)
+            .old([] { out << "b::dtor::old" << std::endl; })
             .postcondition([] { out << "b::dtor::post" << std::endl; })
+            .except([] { out << "b::dtor::except" << std::endl; })
         ;
         out << "b::dtor::body" << std::endl;
         throw b::err(); // Test body throw (from inheritance mid branch).
@@ -63,9 +65,10 @@ struct a
     void invariant() const { out << "a::inv" << std::endl; }
 
     ~a() BOOST_NOEXCEPT_IF(false) {
-        boost::contract::guard c = boost::contract::destructor(this)
-            .old([&] { out << "a::dtor::old" << std::endl; })
+        boost::contract::check c = boost::contract::destructor(this)
+            .old([] { out << "a::dtor::old" << std::endl; })
             .postcondition([] { out << "a::dtor::post" << std::endl; })
+            .except([] { out << "a::dtor::except" << std::endl; })
         ;
         out << "a::dtor::body" << std::endl;
         // Do not throw (from inheritance leaf).
@@ -107,10 +110,13 @@ int main() {
                 << "b::dtor::old" << std::endl
             #endif
             << "b::dtor::body" << std::endl // Test this threw.
-            // Test b not destructed (so both static_inv and inv, but no post).
+            // Test b not destructed (so static_inv, inv, and except, no post).
             #ifndef BOOST_CONTRACT_NO_EXIT_INVARIANTS
                 << "b::static_inv" << std::endl
                 << "b::inv" << std::endl
+            #endif
+            #ifndef BOOST_CONTRACT_NO_EXCEPTS
+                << "b::dtor::except" << std::endl
             #endif
                 
             #ifndef BOOST_CONTRACT_NO_ENTRY_INVARIANTS
@@ -121,10 +127,13 @@ int main() {
                 << "c::dtor::old" << std::endl
             #endif
             << "c::dtor::body" << std::endl
-            // Test c not destructed (so both static_inv and inv, but no post).
+            // Test c not destructed (so static_inv, inv, and except, no post).
             #ifndef BOOST_CONTRACT_NO_EXIT_INVARIANTS
                 << "c::static_inv" << std::endl
                 << "c::inv" << std::endl
+            #endif
+            #ifndef BOOST_CONTRACT_NO_EXCEPTS
+                << "c::dtor::except" << std::endl
             #endif
         ;
         BOOST_TEST(out.eq(ok.str()));

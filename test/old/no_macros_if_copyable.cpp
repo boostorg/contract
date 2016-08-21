@@ -4,6 +4,6 @@
 // file LICENSE_1_0.txt or a copy at http://www.boost.org/LICENSE_1_0.txt).
 // See: http://www.boost.org/doc/libs/release/libs/contract/doc/html/index.html
 
-#define BOOST_CONTRACT_TEST_OLD_PTR_TYPE boost::contract::old_ptr_noncopyable
+#define BOOST_CONTRACT_TEST_OLD_PTR_TYPE boost::contract::old_ptr_if_copyable
 #include "no_macros.hpp"
 

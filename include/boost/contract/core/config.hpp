@@ -164,7 +164,7 @@ Facilities to configure this library compile-time and run-time behaviour.
     defined, this library will execute the code expanded by the macro instead of
     calling @c assert (if programmers prefer to throw an exception, etc.).
     */
-    #define BOOST_CONTRACT_ON_MISSING_GUARD
+    #define BOOST_CONTRACT_ON_MISSING_CHECK_DECL
 #endif
 
 #ifdef DOXYGEN
@@ -245,7 +245,7 @@ Facilities to configure this library compile-time and run-time behaviour.
     #define BOOST_CONTRACT_NO_EXIT_INVARIANTS
 #endif
 
-#if !defined(BOOST_CONTRACT_NO_INVARIANTS) && \
+#if     !defined(BOOST_CONTRACT_NO_INVARIANTS) && \
         defined(BOOST_CONTRACT_NO_ENTRY_INVARIANTS) && \
         defined(BOOST_CONTRACT_NO_EXIT_INVARIANTS)
     /**
@@ -269,9 +269,10 @@ Facilities to configure this library compile-time and run-time behaviour.
 
 // Ctor pre checked separately and outside RAII so not part of this #define.
 #ifdef BOOST_CONTRACT_NO_CONSTRUCTORS
-    #error "define NO_ENTRY_INVARIANTS, NO_EXIT_INVARIANTS, and NO_POSTCONDITIONS instead"
-#elif defined(BOOST_CONTRACT_NO_POSTCONDITIONS) && \
-        defined(BOOST_CONTRACT_NO_INVARIANTS)
+    #error "define NO_ENTRY_INVARIANTS, NO_EXIT_INVARIANTS, NO_POSTCONDITIONS, and NO_EXCEPTS instead"
+#elif   defined(BOOST_CONTRACT_NO_INVARIANTS) && \
+        defined(BOOST_CONTRACT_NO_POSTCONDITIONS) && \
+        defined(BOOST_CONTRACT_NO_EXCEPTS)
     /**
     Defined by this library if constructor contracts are not being checked by
     @RefFunc{boost::contract::constructor}.
@@ -294,9 +295,10 @@ Facilities to configure this library compile-time and run-time behaviour.
 #endif
 
 #ifdef BOOST_CONTRACT_NO_DESTRUCTORS
-    #error "define NO_ENTRY_INVARIANTS, NO_EXIT_INVARIANTS, and NO_POSTCONDITIONS instead"
-#elif defined(BOOST_CONTRACT_NO_POSTCONDITIONS) && \
-        defined(BOOST_CONTRACT_NO_INVARIANTS)
+    #error "define NO_ENTRY_INVARIANTS, NO_EXIT_INVARIANTS, NO_POSTCONDITIONS, and NO_EXCEPTS instead"
+#elif   defined(BOOST_CONTRACT_NO_INVARIANTS) && \
+        defined(BOOST_CONTRACT_NO_POSTCONDITIONS) && \
+        defined(BOOST_CONTRACT_NO_EXCEPTS)
     /**
     Defined by this library if destructor contracts are not being checked by
     @RefFunc{boost::contract::destructor}.
@@ -318,10 +320,11 @@ Facilities to configure this library compile-time and run-time behaviour.
 #endif
 
 #ifdef BOOST_CONTRACT_NO_PUBLIC_FUNCTIONS
-    #error "define NO_ENTRY_INVARIANTS, NO_PRECONDITIONS, NO_EXIT_INVARIANTS, and NO_POSTCONDITIONS instead"
-#elif defined(BOOST_CONTRACT_NO_PRECONDITIONS) && \
+    #error "define NO_ENTRY_INVARIANTS, NO_PRECONDITIONS, NO_EXIT_INVARIANTS, NO_POSTCONDITIONS, and NO_EXCEPTS instead"
+#elif   defined(BOOST_CONTRACT_NO_INVARIANTS) && \
+        defined(BOOST_CONTRACT_NO_PRECONDITIONS) && \
         defined(BOOST_CONTRACT_NO_POSTCONDITIONS) && \
-        defined(BOOST_CONTRACT_NO_INVARIANTS)
+        defined(BOOST_CONTRACT_NO_EXCEPTS)
     /**
     Defined by this library if public function contracts are not being checked
     by @RefFunc{boost::contract::public_function}.
@@ -342,9 +345,10 @@ Facilities to configure this library compile-time and run-time behaviour.
 #endif
     
 #ifdef BOOST_CONTRACT_NO_FUNCTIONS
-    #error "define NO_PRECONDITIONS and NO_POSTCONDITIONS instead"
-#elif defined(BOOST_CONTRACT_NO_PRECONDITIONS) && \
-        defined(BOOST_CONTRACT_NO_POSTCONDITIONS)
+    #error "define NO_PRECONDITIONS, NO_POSTCONDITIONS, and NO_EXCEPTS instead"
+#elif   defined(BOOST_CONTRACT_NO_PRECONDITIONS) && \
+        defined(BOOST_CONTRACT_NO_POSTCONDITIONS) && \
+        defined(BOOST_CONTRACT_NO_EXCEPTS)
     /**
     Defined by this library if non-member, private, and protected function
     contracts are not being checked by @RefFunc{boost::contract::function}.
@@ -365,8 +369,8 @@ Facilities to configure this library compile-time and run-time behaviour.
 #endif
 
 #ifdef BOOST_CONTRACT_NO_ALL
-    #error "define NO_ENTRY_INVARIANTS, NO_PRECONDITIONS, NO_EXIT_INVARIANTS, and NO_POSTCONDITIONS instead"
-#elif defined(BOOST_CONTRACT_NO_CONSTRUCTORS) && \
+    #error "define NO_ENTRY_INVARIANTS, NO_PRECONDITIONS, NO_EXIT_INVARIANTS, NO_POSTCONDITIONS, and NO_EXCEPTS instead"
+#elif   defined(BOOST_CONTRACT_NO_CONSTRUCTORS) && \
         defined(BOOST_CONTRACT_NO_DESTRUCTORS) && \
         defined(BOOST_CONTRACT_NO_PUBLIC_FUNCTIONS) && \
         defined(BOOST_CONTRACT_NO_FUNCTIONS)

@@ -41,32 +41,32 @@ public:
 
     customer_manager() {
         // Check invariants.
-        boost::contract::guard c = boost::contract::constructor(this);
+        boost::contract::check c = boost::contract::constructor(this);
     }
 
     virtual ~customer_manager() {
         // Check invariants.
-        boost::contract::guard c = boost::contract::destructor(this);
+        boost::contract::check c = boost::contract::destructor(this);
     }
 
     /* Basic Queries */
 
     int count() const {
         // Check invariants.
-        boost::contract::guard c = boost::contract::public_function(this);
+        boost::contract::check c = boost::contract::public_function(this);
         return customers_.size();
     }
 
     bool id_active(customer_info::identifier const& id) const {
         // Check invariants.
-        boost::contract::guard c = boost::contract::public_function(this);
+        boost::contract::check c = boost::contract::public_function(this);
         return customers_.find(id) != customers_.cend();
     }
 
     /* Derived Queries */
 
     std::string const& name_for(customer_info::identifier const& id) const {
-        boost::contract::guard c = boost::contract::public_function(this)
+        boost::contract::check c = boost::contract::public_function(this)
             .precondition([&] {
                 BOOST_CONTRACT_ASSERT(id_active(id)); // Active.
             })
@@ -79,8 +79,8 @@ public:
     /* Commands */
 
     void add(customer_info const& info) {
-        boost::contract::old_ptr<int> old_count = BOOST_CONTRACT_OLDOF(count());
-        boost::contract::guard c = boost::contract::public_function(this)
+        boost::contract::old_ptr<int> old_count = BOOST_CONTRACT_OLD(count());
+        boost::contract::check c = boost::contract::public_function(this)
             .precondition([&] {
                 // Not already active.
                 BOOST_CONTRACT_ASSERT(!id_active(info.id));
@@ -96,7 +96,7 @@ public:
 
     void set_name(customer_info::identifier const& id,
             std::string const& name) {
-        boost::contract::guard c = boost::contract::public_function(this)
+        boost::contract::check c = boost::contract::public_function(this)
             .precondition([&] {
                 BOOST_CONTRACT_ASSERT(id_active(id)); // Already active.
             })

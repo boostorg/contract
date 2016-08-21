@@ -23,7 +23,7 @@ public:
 
     // Create empty stack.
     stack() {
-        boost::contract::guard c = boost::contract::constructor(this)
+        boost::contract::check c = boost::contract::constructor(this)
             .postcondition([&] {
                 BOOST_CONTRACT_ASSERT(count() == 0); // Empty.
             })
@@ -33,7 +33,7 @@ public:
     // Destroy stack.
     virtual ~stack() {
         // Check invariants.
-        boost::contract::guard c = boost::contract::destructor(this);
+        boost::contract::check c = boost::contract::destructor(this);
     }
 
     /* Basic Queries */
@@ -41,13 +41,13 @@ public:
     // Number of items.
     int count() const {
         // Check invariants.
-        boost::contract::guard c = boost::contract::public_function(this);
+        boost::contract::check c = boost::contract::public_function(this);
         return items_.size();
     }
 
     // Item at index in [1, count()] (as in Eiffel).
     T const& item_at(int index) const {
-        boost::contract::guard c = boost::contract::public_function(this)
+        boost::contract::check c = boost::contract::public_function(this)
             .precondition([&] {
                 BOOST_CONTRACT_ASSERT(index > 0); // Positive index.
                 BOOST_CONTRACT_ASSERT(index <= count()); // Index within count.
@@ -62,7 +62,7 @@ public:
     // If no items.
     bool is_empty() const {
         bool result;
-        boost::contract::guard c = boost::contract::public_function(this)
+        boost::contract::check c = boost::contract::public_function(this)
             .postcondition([&] {
                 // Consistent with count.
                 BOOST_CONTRACT_ASSERT(result == (count() == 0));
@@ -75,7 +75,7 @@ public:
     // Top item.
     T const& item() const {
         boost::optional<T const&> result; // Avoid extra construction of T.
-        boost::contract::guard c = boost::contract::public_function(this)
+        boost::contract::check c = boost::contract::public_function(this)
             .precondition([&] {
                 BOOST_CONTRACT_ASSERT(count() > 0); // Not empty.
             })
@@ -92,8 +92,8 @@ public:
 
     // Push item to the top.
     void put(T const& new_item) {
-        boost::contract::old_ptr<int> old_count = BOOST_CONTRACT_OLDOF(count());
-        boost::contract::guard c = boost::contract::public_function(this)
+        boost::contract::old_ptr<int> old_count = BOOST_CONTRACT_OLD(count());
+        boost::contract::check c = boost::contract::public_function(this)
             .postcondition([&] {
                 BOOST_CONTRACT_ASSERT(count() == *old_count + 1); // Count inc.
                 BOOST_CONTRACT_ASSERT(item() == new_item); // Item set.
@@ -105,8 +105,8 @@ public:
 
     // Pop top item.
     void remove() {
-        boost::contract::old_ptr<int> old_count = BOOST_CONTRACT_OLDOF(count());
-        boost::contract::guard c = boost::contract::public_function(this)
+        boost::contract::old_ptr<int> old_count = BOOST_CONTRACT_OLD(count());
+        boost::contract::check c = boost::contract::public_function(this)
             .precondition([&] {
                 BOOST_CONTRACT_ASSERT(count() > 0); // Not empty.
             })

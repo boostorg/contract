@@ -12,9 +12,9 @@ RAII object to check contracts.
 */
 
 #include <boost/contract/detail/all_core_headers.hpp>
-#include <boost/contract/detail/condition/check_base.hpp>
+#include <boost/contract/detail/condition/cond_base.hpp>
 #include <boost/contract/detail/assert.hpp>
-#include <boost/contract/detail/check_guard.hpp>
+#include <boost/contract/detail/checking.hpp>
 #include <boost/contract/detail/auto_ptr.hpp>
 #include <boost/contract/detail/debug.hpp>
 #include <boost/contract/detail/name.hpp>
@@ -24,14 +24,15 @@ RAII object to check contracts.
 
 /** @cond */
 
-#if !defined(BOOST_CONTRACT_NO_PRECONDITIONS) || \
+#if     !defined(BOOST_CONTRACT_NO_INVARIANTS) || \
+        !defined(BOOST_CONTRACT_NO_PRECONDITIONS) || \
         !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
-        !defined(BOOST_CONTRACT_NO_INVARIANTS)
+        !defined(BOOST_CONTRACT_NO_EXCEPTS)
     #define BOOST_CONTRACT_CHECK_CTOR_DEF_(contract_type) \
-            : check_(const_cast<contract_type&>(contract).check_.release()) \
+            : cond_(const_cast<contract_type&>(contract).cond_.release()) \
         { \
-            BOOST_CONTRACT_DETAIL_DEBUG(check_); \
-            check_->guard(); \
+            BOOST_CONTRACT_DETAIL_DEBUG(cond_); \
+            cond_->initialize(); \
         }
 #else
     #define BOOST_CONTRACT_CHECK_CTOR_DEF_(contract_type) {}
@@ -41,10 +42,10 @@ RAII object to check contracts.
     #define BOOST_CONTRACT_CHECK_(assertion) \
         { \
             try { \
-                if(!boost::contract::detail::check_guard::checking()) { \
+                if(!boost::contract::detail::checking::already()) { \
                     /* this name somewhat unique to min var shadow warnings */ \
-                    boost::contract::detail::check_guard \
-                            BOOST_CONTRACT_DETAIL_NAME2(checking, __LINE__); \
+                    boost::contract::detail::checking\
+                            BOOST_CONTRACT_DETAIL_NAME2(chk, __LINE__); \
                     { assertion; } \
                 } \
             } catch(...) { boost::contract::check_failure(); } \
@@ -57,6 +58,7 @@ RAII object to check contracts.
 
 /* PUBLIC */
 
+// Requires trailing semicolon to be consistent with ASSERT.
 #define BOOST_CONTRACT_CHECK(condition) \
     BOOST_CONTRACT_CHECK_(BOOST_CONTRACT_DETAIL_ASSERT(condition))
 
@@ -88,11 +90,12 @@ public:
     contract checking ownership is transfered from the copied object to this
     object).
     */
-    check(check const& other) // Copy ctor moves check_ pointer to dest.
-        #if !defined(BOOST_CONTRACT_NO_PRECONDITIONS) || \
+    check(check const& other) // Copy ctor moves cond_ pointer to dest.
+        #if     !defined(BOOST_CONTRACT_NO_INVARIANTS) || \
+                !defined(BOOST_CONTRACT_NO_PRECONDITIONS) || \
                 !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
-                !defined(BOOST_CONTRACT_NO_INVARIANTS)
-            : check_(const_cast<check&>(other).check_.release())
+                !defined(BOOST_CONTRACT_NO_EXCEPTS)
+            : cond_(const_cast<check&>(other).cond_.release())
         #endif
     {}
 
@@ -112,11 +115,11 @@ public:
                             otherwise this is always @c void.
     */
     template<typename VirtualResult>
-    /* implicit */ check(specify_precondition_old_postcondition<VirtualResult>
-            const& contract)
+    /* implicit */ check(specify_precondition_old_postcondition_except<
+            VirtualResult> const& contract)
     #ifndef DOXYGEN
         BOOST_CONTRACT_CHECK_CTOR_DEF_(
-                specify_precondition_old_postcondition<VirtualResult>)
+                specify_precondition_old_postcondition_except<VirtualResult>)
     #else
         ;
     #endif
@@ -138,10 +141,11 @@ public:
                             otherwise this is always @c void.
     */
     template<typename VirtualResult>
-    /* implicit */ check(specify_old_postcondition<VirtualResult> const&
+    /* implicit */ check(specify_old_postcondition_except<VirtualResult> const&
             contract)
     #ifndef DOXYGEN
-        BOOST_CONTRACT_CHECK_CTOR_DEF_(specify_old_postcondition<VirtualResult>)
+        BOOST_CONTRACT_CHECK_CTOR_DEF_(
+                specify_old_postcondition_except<VirtualResult>)
     #else
         ;
     #endif
@@ -163,11 +167,18 @@ public:
                             otherwise this is always @c void.
     */
     template<typename VirtualResult>
-    /* implicit */ check(specify_postcondition_only<VirtualResult> const&
+    /* implicit */ check(specify_postcondition_except<VirtualResult> const&
             contract)
     #ifndef DOXYGEN
         BOOST_CONTRACT_CHECK_CTOR_DEF_(
-                specify_postcondition_only<VirtualResult>)
+                specify_postcondition_except<VirtualResult>)
+    #else
+        ;
+    #endif
+    
+    /* implicit */ check(specify_except const& contract)
+    #ifndef DOXYGEN
+        BOOST_CONTRACT_CHECK_CTOR_DEF_(specify_except)
     #else
         ;
     #endif
@@ -210,11 +221,12 @@ public:
 private:
     check& operator=(check const&); // Cannot copy outside of `check c = ...`.
 
-    #if !defined(BOOST_CONTRACT_NO_PRECONDITIONS) || \
+    #if     !defined(BOOST_CONTRACT_NO_INVARIANTS) || \
+            !defined(BOOST_CONTRACT_NO_PRECONDITIONS) || \
             !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
-            !defined(BOOST_CONTRACT_NO_INVARIANTS)
-        boost::contract::detail::auto_ptr<boost::contract::detail::check_base>
-                check_;
+            !defined(BOOST_CONTRACT_NO_EXCEPTS)
+        boost::contract::detail::auto_ptr<boost::contract::detail::cond_base>
+                cond_;
     #endif
 /** @endcond */
 };

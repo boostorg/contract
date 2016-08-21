@@ -20,11 +20,11 @@ public:
     /* Creation */
 
     observer() {
-        boost::contract::guard c = boost::contract::constructor(this);
+        boost::contract::check c = boost::contract::constructor(this);
     }
     
     virtual ~observer() {
-        boost::contract::guard c = boost::contract::destructor(this);
+        boost::contract::check c = boost::contract::destructor(this);
     }
 
     /* Commands */
@@ -38,13 +38,13 @@ public:
 };
 
 bool observer::up_to_date_with_subject(boost::contract::virtual_* v) const {
-    boost::contract::guard c = boost::contract::public_function(v, this);
+    boost::contract::check c = boost::contract::public_function(v, this);
     assert(false);
     return false;
 }
 
 void observer::update(boost::contract::virtual_* v) {
-    boost::contract::guard c = boost::contract::public_function(v, this)
+    boost::contract::check c = boost::contract::public_function(v, this)
         .postcondition([&] {
             BOOST_CONTRACT_ASSERT(up_to_date_with_subject()); // Up-to-date.
         })

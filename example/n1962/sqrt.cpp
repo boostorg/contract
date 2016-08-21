@@ -11,7 +11,7 @@
 
 double mysqrt(double x, double precision = 1e-6) {
     double result;
-    boost::contract::guard c = boost::contract::function()
+    boost::contract::check c = boost::contract::function()
         .precondition([&] {
             BOOST_CONTRACT_ASSERT(x >= 0.0);
         })

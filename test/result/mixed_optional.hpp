@@ -13,7 +13,7 @@
 #include <boost/contract/base_types.hpp>
 #include <boost/contract/public_function.hpp>
 #include <boost/contract/override.hpp>
-#include <boost/contract/guard.hpp>
+#include <boost/contract/check.hpp>
 #include <boost/contract/assert.hpp>
 #include <boost/optional.hpp>
 #include <boost/detail/lightweight_test.hpp>
@@ -46,13 +46,13 @@ struct d {
             ch_type& ch, boost::contract::virtual_* v = 0) {
         unsigned const old_ch_copies = ch_type::copies();
         boost::optional<BOOST_CONTRACT_TEST_CH_TYPE> result;
-        boost::contract::guard c = boost::contract::public_function(
+        boost::contract::check c = boost::contract::public_function(
                 v, result, this)
             .precondition([&] {
                 out << "d::f::pre" << std::endl;
                 BOOST_CONTRACT_ASSERT(ch.value == 'd');
             })
-            .old([&] { out << "d::f::old" << std::endl; })
+            .old([] { out << "d::f::old" << std::endl; })
             .postcondition([&] (boost::optional<ch_type const&> const& result) {
                 out << "d::f::post" << std::endl;
                 BOOST_CONTRACT_ASSERT(result->value == ch.value);
@@ -81,13 +81,13 @@ struct c
             ch_type& ch, boost::contract::virtual_* v = 0) /* override */ {
         unsigned const old_ch_copies = ch_type::copies();
         boost::optional<BOOST_CONTRACT_TEST_CH_TYPE> result;
-        boost::contract::guard c = boost::contract::public_function<override_f>(
+        boost::contract::check c = boost::contract::public_function<override_f>(
                 v, result, &c::f, this, ch)
             .precondition([&] {
                 out << "c::f::pre" << std::endl;
                 BOOST_CONTRACT_ASSERT(ch.value == 'c');
             })
-            .old([&] { out << "c::f::old" << std::endl; })
+            .old([] { out << "c::f::old" << std::endl; })
             .postcondition([&] (boost::optional<ch_type const&> const& result) {
                 out << "c::f::post" << std::endl;
                 BOOST_CONTRACT_ASSERT(result->value == ch.value);
@@ -117,13 +117,13 @@ struct b
             ch_type& ch, boost::contract::virtual_* v = 0) /* override */ {
         unsigned const old_ch_copies = ch_type::copies();
         BOOST_CONTRACT_TEST_CH_TYPE result BOOST_CONTRACT_TEST_CH_INIT;
-        boost::contract::guard c = boost::contract::public_function<override_f>(
+        boost::contract::check c = boost::contract::public_function<override_f>(
                 v, result, &b::f, this, ch)
             .precondition([&] {
                 out << "b::f::pre" << std::endl;
                 BOOST_CONTRACT_ASSERT(ch.value == 'b');
             })
-            .old([&] { out << "b::f::old" << std::endl; })
+            .old([] { out << "b::f::old" << std::endl; })
             .postcondition([&] (ch_type const& result) {
                 out << "b::f::post" << std::endl; 
                 BOOST_CONTRACT_ASSERT(result.value == ch.value);
@@ -153,13 +153,13 @@ struct a
             ch_type& ch, boost::contract::virtual_* v = 0) /* override */ {
         unsigned const old_ch_copies = ch_type::copies();
         boost::optional<BOOST_CONTRACT_TEST_CH_TYPE> result;
-        boost::contract::guard c = boost::contract::public_function<override_f>(
+        boost::contract::check c = boost::contract::public_function<override_f>(
                 v, result, &a::f, this, ch)
             .precondition([&] {
                 out << "a::f::pre" << std::endl;
                 BOOST_CONTRACT_ASSERT(ch.value == 'a');
             })
-            .old([&] { out << "a::f::old" << std::endl; })
+            .old([] { out << "a::f::old" << std::endl; })
             .postcondition([&] (boost::optional<ch_type const&> const& result) {
                 out << "a::f::post" << std::endl;
                 BOOST_CONTRACT_ASSERT(result->value == ch.value);
@@ -189,13 +189,13 @@ struct e
             ch_type& ch, boost::contract::virtual_* v = 0) /* override */ {
         unsigned const old_ch_copies = ch_type::copies();
         BOOST_CONTRACT_TEST_CH_TYPE result BOOST_CONTRACT_TEST_CH_INIT;
-        boost::contract::guard c = boost::contract::public_function<override_f>(
+        boost::contract::check c = boost::contract::public_function<override_f>(
                 v, result, &e::f, this, ch)
             .precondition([&] {
                 out << "e::f::pre" << std::endl;
                 BOOST_CONTRACT_ASSERT(ch.value == 'e');
             })
-            .old([&] { out << "e::f::old" << std::endl; })
+            .old([] { out << "e::f::old" << std::endl; })
             .postcondition([&] (ch_type const& result) {
                 out << "e::f::post" << std::endl; 
                 BOOST_CONTRACT_ASSERT(result.value == ch.value);

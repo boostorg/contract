@@ -16,8 +16,8 @@ private:
     int n_;
 
     void dec() {
-        boost::contract::old_ptr<int> old_get = BOOST_CONTRACT_OLDOF(get());
-        boost::contract::guard c = boost::contract::function()
+        boost::contract::old_ptr<int> old_get = BOOST_CONTRACT_OLD(get());
+        boost::contract::check c = boost::contract::function()
             .precondition([&] {
                 BOOST_CONTRACT_ASSERT(
                         get() + 1 >= std::numeric_limits<int>::min());
@@ -32,7 +32,7 @@ private:
 
 protected:
     virtual void set(int n, boost::contract::virtual_* = 0) {
-        boost::contract::guard c = boost::contract::function()
+        boost::contract::check c = boost::contract::function()
             .precondition([&] {
                 BOOST_CONTRACT_ASSERT(n <= 0);
             })
@@ -50,7 +50,7 @@ protected:
 public:
     virtual int get(boost::contract::virtual_* v = 0) const {
         int result;
-        boost::contract::guard c = boost::contract::public_function(
+        boost::contract::check c = boost::contract::public_function(
                 v, result, this)
             .postcondition([&] (int const result) {
                 BOOST_CONTRACT_ASSERT(result <= 0);

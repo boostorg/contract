@@ -10,7 +10,7 @@
 #include <boost/contract/core/config.hpp>
 #ifndef BOOST_CONTRACT_NO_PUBLIC_FUNCTIONS
     #include <boost/contract/public_function.hpp>
-    #include <boost/contract/guard.hpp>
+    #include <boost/contract/check.hpp>
     #include <boost/contract/old.hpp>
 #endif
 #include <boost/detail/lightweight_test.hpp>
@@ -26,10 +26,10 @@ struct a {
 
     static void f(int x) {
         #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
-            boost::contract::old_ptr<int> old_x = BOOST_CONTRACT_OLDOF(x);
+            boost::contract::old_ptr<int> old_x = BOOST_CONTRACT_OLD(x);
         #endif
         #ifndef BOOST_CONTRACT_NO_PUBLIC_FUNCTIONS
-            boost::contract::guard c = boost::contract::public_function<a>()
+            boost::contract::check c = boost::contract::public_function<a>()
                 #ifndef BOOST_CONTRACT_NO_PRECONDITIONS
                     .precondition([] { out << "a::f::pre" << std::endl; })
                 #endif

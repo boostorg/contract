@@ -4,24 +4,24 @@
 // file LICENSE_1_0.txt or a copy at http://www.boost.org/LICENSE_1_0.txt).
 // See: http://www.boost.org/doc/libs/release/libs/contract/doc/html/index.html
 
-// Test missing contract guard gives run-time error.
+// Test missing contract check declaration gives run-time error.
 
 struct err {};
-#define BOOST_CONTRACT_ON_MISSING_GUARD { throw err(); }
+#define BOOST_CONTRACT_ON_MISSING_CHECK_DECL { throw err(); }
 
 #include <boost/contract/function.hpp>
-#include <boost/contract/guard.hpp>
+#include <boost/contract/check.hpp>
 #include <boost/detail/lightweight_test.hpp>
 
 int main() {
-    boost::contract::guard c = boost::contract::function() // Test this is OK.
+    boost::contract::check c = boost::contract::function() // Test this is OK.
         .precondition([] {})
         .old([] {})
         .postcondition([] {})
     ;
 
     try {
-        boost::contract::function() // Test no `guard c = ...` errors.
+        boost::contract::function() // Test no `check c = ...` errors.
             .precondition([] {})
             .old([] {})
             .postcondition([] {})

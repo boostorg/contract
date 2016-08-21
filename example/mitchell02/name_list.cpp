@@ -24,7 +24,7 @@ public:
 
     // Create an empty list.
     name_list() {
-        boost::contract::guard c = boost::contract::constructor(this)
+        boost::contract::check c = boost::contract::constructor(this)
             .postcondition([&] {
                 BOOST_CONTRACT_ASSERT(count() == 0); // Empty list.
             })
@@ -34,7 +34,7 @@ public:
     // Destroy list.
     virtual ~name_list() {
         // Check invariants.
-        boost::contract::guard c = boost::contract::destructor(this);
+        boost::contract::check c = boost::contract::destructor(this);
     }
 
     /* Basic Queries */
@@ -42,14 +42,14 @@ public:
     // Number of names in list.
     int count() const {
         // Check invariants.
-        boost::contract::guard c = boost::contract::public_function(this);
+        boost::contract::check c = boost::contract::public_function(this);
         return names_.size();
     }
 
     // Is name in list?
     bool has(std::string const& name) const {
         bool result;
-        boost::contract::guard c = boost::contract::public_function(this)
+        boost::contract::check c = boost::contract::public_function(this)
             .postcondition([&] {
                 // If empty, has not.
                 if(count() == 0) BOOST_CONTRACT_ASSERT(!result);
@@ -66,10 +66,10 @@ public:
     virtual void put(std::string const& name,
             boost::contract::virtual_* v = 0) {
         boost::contract::old_ptr<bool> old_has_name =
-                BOOST_CONTRACT_OLDOF(v, has(name));
+                BOOST_CONTRACT_OLD(v, has(name));
         boost::contract::old_ptr<int> old_count =
-                BOOST_CONTRACT_OLDOF(v, count());
-        boost::contract::guard c = boost::contract::public_function(v, this)
+                BOOST_CONTRACT_OLD(v, count());
+        boost::contract::check c = boost::contract::public_function(v, this)
             .precondition([&] {
                 BOOST_CONTRACT_ASSERT(!has(name)); // Not already in list.
             })
@@ -104,10 +104,10 @@ public:
     void put(std::string const& name,
             boost::contract::virtual_* v = 0) /* override */ {
         boost::contract::old_ptr<bool> old_has_name =
-                BOOST_CONTRACT_OLDOF(v, has(name));
+                BOOST_CONTRACT_OLD(v, has(name));
         boost::contract::old_ptr<int> old_count =
-                BOOST_CONTRACT_OLDOF(v, count());
-        boost::contract::guard c = boost::contract::public_function<
+                BOOST_CONTRACT_OLD(v, count());
+        boost::contract::check c = boost::contract::public_function<
                 override_put>(v, &relaxed_name_list::put, this, name)
             .precondition([&] { // Relax inherited preconditions.
                 BOOST_CONTRACT_ASSERT(has(name)); // Already in list.

@@ -25,15 +25,15 @@ public:
     typedef int state; // Some state being observed.
 
     concrete_subject() : state_() {
-        boost::contract::guard c = boost::contract::constructor(this);
+        boost::contract::check c = boost::contract::constructor(this);
     }
 
     ~concrete_subject() {
-        boost::contract::guard c = boost::contract::destructor(this);
+        boost::contract::check c = boost::contract::destructor(this);
     }
 
     void set_state(state const& new_state) {
-        boost::contract::guard c = boost::contract::public_function(this);
+        boost::contract::check c = boost::contract::public_function(this);
 
         state_ = new_state;
         assert(state_ == test_state);
@@ -41,7 +41,7 @@ public:
     }
 
     state get_state() const {
-        boost::contract::guard c = boost::contract::public_function(this);
+        boost::contract::check c = boost::contract::public_function(this);
         return state_;
     }
 
@@ -63,11 +63,11 @@ public:
     // Create concrete observer.
     explicit concrete_observer(concrete_subject const& subj) :
             subject_(subj), observed_state_() {
-        boost::contract::guard c = boost::contract::constructor(this);
+        boost::contract::check c = boost::contract::constructor(this);
     }
 
     ~concrete_observer() {
-        boost::contract::guard c = boost::contract::destructor(this);
+        boost::contract::check c = boost::contract::destructor(this);
     }
 
     // Implement base virtual functions.
@@ -75,7 +75,7 @@ public:
     bool up_to_date_with_subject(boost::contract::virtual_* v = 0)
             const /* override */ {
         bool result;
-        boost::contract::guard c = boost::contract::public_function<
+        boost::contract::check c = boost::contract::public_function<
             override_up_to_date_with_subject
         >(v, result, &concrete_observer::up_to_date_with_subject, this);
 
@@ -83,7 +83,7 @@ public:
     }
 
     void update(boost::contract::virtual_* v = 0) /* override */ {
-        boost::contract::guard c = boost::contract::public_function<
+        boost::contract::check c = boost::contract::public_function<
                 override_update>(v, &concrete_observer::update, this);
 
         observed_state_ = subject_.get_state();

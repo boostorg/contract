@@ -19,7 +19,7 @@ struct surface {
 
 surface square_surface(int edge) {
     boost::optional<surface> result; // No default constructor so use optional.
-    boost::contract::guard c = boost::contract::function()
+    boost::contract::check c = boost::contract::function()
         .precondition([&] {
             BOOST_CONTRACT_ASSERT(edge > 0);
         })

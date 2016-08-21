@@ -9,7 +9,7 @@
 #include "../detail/oteststream.hpp"
 #include <boost/contract/destructor.hpp>
 #include <boost/contract/base_types.hpp>
-#include <boost/contract/guard.hpp>
+#include <boost/contract/check.hpp>
 #include <boost/detail/lightweight_test.hpp>
 #include <sstream>
 
@@ -23,7 +23,7 @@ class b {
 
 public:
     virtual ~b() {
-        boost::contract::guard c = boost::contract::destructor(this)
+        boost::contract::check c = boost::contract::destructor(this)
             .old([] { out << "b::dtor::old" << std::endl; })
             .postcondition([] { out << "b::dtor::post" << std::endl; })
         ;
@@ -47,7 +47,7 @@ class a
 
 public:
     virtual ~a() {
-        boost::contract::guard c = boost::contract::destructor(this)
+        boost::contract::check c = boost::contract::destructor(this)
             .old([] { out << "a::dtor::old" << std::endl; })
             .postcondition([] { out << "a::dtor::post" << std::endl; })
         ;

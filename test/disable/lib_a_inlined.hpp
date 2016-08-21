@@ -12,7 +12,7 @@
 #include "lib_a.hpp"
 #include <boost/contract/public_function.hpp>
 #include <boost/contract/old.hpp>
-#include <boost/contract/guard.hpp>
+#include <boost/contract/check.hpp>
 #include <boost/contract/assert.hpp>
 
 BOOST_CONTRACT_TEST_DETAIL_OTESTSTREAM_STR_DEF(out)
@@ -22,11 +22,11 @@ void a::invariant() const { out("a::inv\n"); }
 
 int a::f(x_type& x) {
     int result;
-    boost::contract::old_ptr<x_type> old_x = BOOST_CONTRACT_OLDOF(
+    boost::contract::old_ptr<x_type> old_x = BOOST_CONTRACT_OLD(
             x_type::eval(x));
-    boost::contract::guard c = boost::contract::public_function(this)
-        .precondition([&] { out("a::f::pre\n"); })
-        .old([&] { out("a::f::old\n"); })
+    boost::contract::check c = boost::contract::public_function(this)
+        .precondition([] { out("a::f::pre\n"); })
+        .old([] { out("a::f::old\n"); })
         .postcondition([&] {
             out("a::f::post\n");
             BOOST_CONTRACT_ASSERT(x.value == -old_x->value);
@@ -65,7 +65,7 @@ void a::disable_inv_failure() {
 }
 
 void a::disable_failure() {
-    boost::contract::set_failure([] (boost::contract::from)
+    boost::contract::set_specification_failure([] (boost::contract::from)
             { out("a::failure\n"); });
 }
 

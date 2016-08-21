@@ -12,7 +12,7 @@
 #include <boost/contract/base_types.hpp>
 #include <boost/contract/assert.hpp>
 #include <boost/contract/old.hpp>
-#include <boost/contract/guard.hpp>
+#include <boost/contract/check.hpp>
 #include <boost/preprocessor/control/iif.hpp>
 #include <boost/detail/lightweight_test.hpp>
 #include <sstream>
@@ -39,10 +39,10 @@ struct t {
 
     virtual ~t() {
         boost::contract::old_ptr<l_type> old_l;
-        boost::contract::guard c = boost::contract::destructor(this)
+        boost::contract::check c = boost::contract::destructor(this)
             .old([&] {
                 out << Id << "::dtor::old" << std::endl;
-                old_l = BOOST_CONTRACT_OLDOF(l_type::eval(l));
+                old_l = BOOST_CONTRACT_OLD(l_type::eval(l));
             })
             .postcondition([&old_l] {
                 out << Id << "::dtor::post" << std::endl;
@@ -87,9 +87,9 @@ struct c
 
     virtual ~c() {
         boost::contract::old_ptr<m_type> old_m =
-                BOOST_CONTRACT_OLDOF(m_type::eval(m));
-        boost::contract::guard c = boost::contract::destructor(this)
-            .old([&] {
+                BOOST_CONTRACT_OLD(m_type::eval(m));
+        boost::contract::check c = boost::contract::destructor(this)
+            .old([] {
                 out << "c::dtor::old" << std::endl;
                 // Test old-of assignment above instead.
             })
@@ -142,10 +142,10 @@ struct a
 
     virtual ~a() {
         boost::contract::old_ptr<n_type> old_n;
-        boost::contract::guard c = boost::contract::destructor(this)
+        boost::contract::check c = boost::contract::destructor(this)
             .old([&] {
                 out << "a::dtor::old" << std::endl;
-                old_n = BOOST_CONTRACT_OLDOF(n_type::eval(n));
+                old_n = BOOST_CONTRACT_OLD(n_type::eval(n));
             })
             .postcondition([&old_n] {
                 out << "a::dtor::post" << std::endl;

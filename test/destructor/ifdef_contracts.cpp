@@ -10,7 +10,7 @@
 #include <boost/contract/core/config.hpp>
 #ifndef BOOST_CONTRACT_NO_DESTRUCTORS
     #include <boost/contract/destructor.hpp>
-    #include <boost/contract/guard.hpp>
+    #include <boost/contract/check.hpp>
     #include <boost/contract/old.hpp>
 #endif
 #include <boost/detail/lightweight_test.hpp>
@@ -26,10 +26,10 @@ struct b {
 
     virtual ~b() {
         #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
-            boost::contract::old_ptr<int> old_y = BOOST_CONTRACT_OLDOF(y);
+            boost::contract::old_ptr<int> old_y = BOOST_CONTRACT_OLD(y);
         #endif
         #ifndef BOOST_CONTRACT_NO_DESTRUCTORS
-            boost::contract::guard c = boost::contract::destructor(this)
+            boost::contract::check c = boost::contract::destructor(this)
                 #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
                     .old([] { out << "b::dtor::old" << std::endl; })
                     .postcondition([] { out << "b::dtor::post" << std::endl; })
@@ -51,10 +51,10 @@ struct a : public b {
 
     virtual ~a() {
         #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
-            boost::contract::old_ptr<int> old_x = BOOST_CONTRACT_OLDOF(x);
+            boost::contract::old_ptr<int> old_x = BOOST_CONTRACT_OLD(x);
         #endif
         #ifndef BOOST_CONTRACT_NO_DESTRUCTORS
-            boost::contract::guard c = boost::contract::destructor(this)
+            boost::contract::check c = boost::contract::destructor(this)
                 #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
                     .old([] { out << "a::dtor::old" << std::endl; })
                     .postcondition([] { out << "a::dtor::post" << std::endl; })

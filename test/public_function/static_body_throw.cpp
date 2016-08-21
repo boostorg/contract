@@ -8,7 +8,7 @@
 
 #include "../detail/oteststream.hpp"
 #include <boost/contract/public_function.hpp>
-#include <boost/contract/guard.hpp>
+#include <boost/contract/check.hpp>
 #include <boost/detail/lightweight_test.hpp>
 #include <sstream>
 
@@ -21,7 +21,7 @@ struct a {
     struct err {};
 
     static void f() {
-        boost::contract::guard c = boost::contract::public_function<a>()
+        boost::contract::check c = boost::contract::public_function<a>()
             .precondition([] { out << "a::f::pre" << std::endl; })
             .old([] { out << "a::f::old" << std::endl; })
             .postcondition([] { out << "a::f::post" << std::endl; })

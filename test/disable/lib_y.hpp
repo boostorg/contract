@@ -11,7 +11,7 @@
 
 #include "lib_x.hpp"
 #include <boost/contract/function.hpp>
-#include <boost/contract/guard.hpp>
+#include <boost/contract/check.hpp>
 #include <boost/config.hpp>
 
 #ifdef BOOST_CONTRACT_TEST_LIB_Y_DYN_LINK
@@ -29,7 +29,7 @@ namespace lib_y_ { // Internal namepsace.
 }
 
 inline void y() {
-    boost::contract::guard c = boost::contract::function()
+    boost::contract::check c = boost::contract::function()
         .precondition([] { out("y::pre\n"); })
         .old([] { out("y::old\n"); })
         .postcondition([] { out("y::post\n"); })

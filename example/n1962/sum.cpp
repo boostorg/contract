@@ -10,7 +10,7 @@
 
 int sum(int count, int* array) {
     int result;
-    boost::contract::guard c = boost::contract::function()
+    boost::contract::check c = boost::contract::function()
         .precondition([&] {
             BOOST_CONTRACT_ASSERT(count % 4 == 0);
         })

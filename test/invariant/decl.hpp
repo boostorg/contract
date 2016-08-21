@@ -15,7 +15,7 @@
 #include <boost/contract/public_function.hpp>
 #include <boost/contract/function.hpp>
 #include <boost/contract/override.hpp>
-#include <boost/contract/guard.hpp>
+#include <boost/contract/check.hpp>
 #include <boost/contract/assert.hpp>
 #include <boost/detail/lightweight_test.hpp>
 
@@ -37,7 +37,7 @@ struct b : private boost::contract::constructor_precondition<b> {
     b() : boost::contract::constructor_precondition<b>([] {
         out << "b::ctor::pre" << std::endl;
     }) {
-        boost::contract::guard c = boost::contract::constructor(this)
+        boost::contract::check c = boost::contract::constructor(this)
             .old([] { out << "b::ctor::old" << std::endl; })
             .postcondition([] { out << "b::ctor::post" << std::endl; })
         ;
@@ -45,7 +45,7 @@ struct b : private boost::contract::constructor_precondition<b> {
     }
 
     virtual ~b() {
-        boost::contract::guard c = boost::contract::destructor(this)
+        boost::contract::check c = boost::contract::destructor(this)
             .old([] { out << "b::dtor::old" << std::endl; })
             .postcondition([] { out << "b::dtor::post" << std::endl; })
         ;
@@ -53,7 +53,7 @@ struct b : private boost::contract::constructor_precondition<b> {
     }
 
     virtual void f(char x, boost::contract::virtual_* v = 0) volatile {
-        boost::contract::guard c = boost::contract::public_function(v, this)
+        boost::contract::check c = boost::contract::public_function(v, this)
             .precondition([&] {
                 out << "b::f::volatile_pre" << std::endl;
                 BOOST_CONTRACT_ASSERT(x == 'b');
@@ -65,7 +65,7 @@ struct b : private boost::contract::constructor_precondition<b> {
     }
     
     virtual void f(char x, boost::contract::virtual_* v = 0) {
-        boost::contract::guard c = boost::contract::public_function(v, this)
+        boost::contract::check c = boost::contract::public_function(v, this)
             .precondition([&] {
                 out << "b::f::pre" << std::endl;
                 BOOST_CONTRACT_ASSERT(x == 'b');
@@ -97,7 +97,7 @@ struct a
     a() : boost::contract::constructor_precondition<a>([] {
         out << "a::ctor::pre" << std::endl;
     }) {
-        boost::contract::guard c = boost::contract::constructor(this)
+        boost::contract::check c = boost::contract::constructor(this)
             .old([] { out << "a::ctor::old" << std::endl; })
             .postcondition([] { out << "a::ctor::post" << std::endl; })
         ;
@@ -105,7 +105,7 @@ struct a
     }
     
     virtual ~a() {
-        boost::contract::guard c = boost::contract::destructor(this)
+        boost::contract::check c = boost::contract::destructor(this)
             .old([] { out << "a::dtor::old" << std::endl; })
             .postcondition([] { out << "a::dtor::post" << std::endl; })
         ;
@@ -114,7 +114,7 @@ struct a
 
     virtual void f(char x, boost::contract::virtual_* v = 0)
             volatile /* override */ {
-        boost::contract::guard c = boost::contract::public_function<
+        boost::contract::check c = boost::contract::public_function<
                 override_f>(
             v,
             static_cast<void (a::*)(char x, boost::contract::virtual_*)
@@ -132,7 +132,7 @@ struct a
     }
     
     virtual void f(char x, boost::contract::virtual_* v = 0) /* override */ {
-        boost::contract::guard c = boost::contract::public_function<
+        boost::contract::check c = boost::contract::public_function<
                 override_f>(
             v,
             static_cast<void (a::*)(char x, boost::contract::virtual_*)>(&a::f),
@@ -149,7 +149,7 @@ struct a
     }
 
     static void s() {
-        boost::contract::guard c = boost::contract::public_function<a>()
+        boost::contract::check c = boost::contract::public_function<a>()
             .precondition([] { out << "a::s::pre" << std::endl; })
             .old([] { out << "a::s::old" << std::endl; })
             .postcondition([] { out << "a::s::post" << std::endl; })
@@ -159,7 +159,7 @@ struct a
 
 protected:
     void p() volatile {
-        boost::contract::guard c = boost::contract::function()
+        boost::contract::check c = boost::contract::function()
             .precondition([] { out << "a::p::volatile_pre" << std::endl; })
             .old([] { out << "a::p::volatile_old" << std::endl; })
             .postcondition([] { out << "a::p::volatile_post" << std::endl; })
@@ -168,7 +168,7 @@ protected:
     }
     
     void p() {
-        boost::contract::guard c = boost::contract::function()
+        boost::contract::check c = boost::contract::function()
             .precondition([] { out << "a::p::pre" << std::endl; })
             .old([] { out << "a::p::old" << std::endl; })
             .postcondition([] { out << "a::p::post" << std::endl; })
@@ -181,7 +181,7 @@ public:
 
 private:
     void q() volatile {
-        boost::contract::guard c = boost::contract::function()
+        boost::contract::check c = boost::contract::function()
             .precondition([] { out << "a::q::volatile_pre" << std::endl; })
             .old([] { out << "a::q::volatile_old" << std::endl; })
             .postcondition([] { out << "a::q::volatile_post" << std::endl; })
@@ -190,7 +190,7 @@ private:
     }
     
     void q() {
-        boost::contract::guard c = boost::contract::function()
+        boost::contract::check c = boost::contract::function()
             .precondition([] { out << "a::q::pre" << std::endl; })
             .old([] { out << "a::q::old" << std::endl; })
             .postcondition([] { out << "a::q::post" << std::endl; })
