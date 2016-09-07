@@ -133,7 +133,7 @@ int main() {
             #ifndef BOOST_CONTRACT_NO_EXIT_INVARIANTS
                 << "b::static_inv" << std::endl
             #endif
-            #ifndef BOOST_CONTRACT_NO_EXCETPS
+            #ifndef BOOST_CONTRACT_NO_EXCEPTS
                 << "b::ctor::except" << std::endl
             #endif
         ;

@@ -4,11 +4,15 @@
 // file LICENSE_1_0.txt or a copy at http://www.boost.org/LICENSE_1_0.txt).
 // See: http://www.boost.org/doc/libs/release/libs/contract/doc/html/index.html
 
-// Test contracts in .hpp so can have post (even if NO_POST in its Jamfile).
+// Test contracts in .cpp compiled to never check post/except.
 
-// Test contracts in .hpp so have post (even if NO_POST/EXPETS here).
-#define BOOST_CONTRACT_NO_POSTCONDITIONS
-#define BOOST_CONTRACT_NO_EXCEPTS
+// Force .cpp never check post/except.
+#ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
+    #define BOOST_CONTRACT_NO_POSTCONDITIONS
+#endif
+#ifndef BOOST_CONTRACT_NO_EXCEPTS
+    #define BOOST_CONTRACT_NO_EXCEPTS
+#endif
 
 #define BOOST_CONTRACT_TEST_LIB_Y_SOURCE
 #include "lib_y.hpp"

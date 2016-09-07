@@ -34,6 +34,9 @@ struct a
         char result;
         boost::contract::check c = boost::contract::public_function<override_f>(
                 v, result, &a::f, this); // Error (result time mismatch).
+        #ifdef BOOST_CONTRACT_NO_PUBLIC_FUNCTIONS
+            #error "Forcing error even when public functions not checked"
+        #endif
         return result;
     }
     BOOST_CONTRACT_OVERRIDE(f)

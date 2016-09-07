@@ -5,6 +5,7 @@
 // See: http://www.boost.org/doc/libs/release/libs/contract/doc/html/index.html
 
 #include <boost/contract.hpp>
+#include <boost/optional.hpp>
 #include <string>
 #include <sstream>
 #include <cassert>

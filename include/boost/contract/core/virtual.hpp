@@ -79,19 +79,20 @@ class virtual_ : private boost::noncopyable { // Avoid copy queue, stack, etc.
         #ifndef BOOST_CONTRACT_NO_PRECONDITIONS
             check_pre,
         #endif
-        #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
+        #if     !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
+                !defined(BOOST_CONTRACT_NO_EXCEPTS)
             call_old_copy,
             push_old_copy,
         #endif
         #ifndef BOOST_CONTRACT_NO_EXIT_INVARIANTS
             check_exit_inv,
         #endif
-        #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
+        #if     !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
+                !defined(BOOST_CONTRACT_NO_EXCEPTS)
             pop_old_copy,
             check_post,
+            // TODO: Why would this need to have the same value and check_post but not of check_except? There might be a bug here...
             pop_old_init = check_post, // These must be the same value.
-        #endif
-        #ifndef BOOST_CONTRACT_NO_EXCEPTS
             check_except,
         #endif
     };

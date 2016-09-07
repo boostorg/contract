@@ -4,42 +4,43 @@
 # file LICENSE_1_0.txt or a copy at http://www.boost.org/LICENSE_1_0.txt).
 # See: http://www.boost.org/doc/libs/release/libs/contract/doc/html/index.html
 
-subdir-usage ;
+make help : : help_exit ;
+explicit help ;
 
 test-suite constructor :
-    [ subdir-run-with-no constructor : decl_pre_all ]
-    [ subdir-run-with-no constructor : decl_pre_ends ]
-    [ subdir-run-with-no constructor : decl_pre_mid ]
-    [ subdir-run-with-no constructor : decl_pre_none ]
+    [ subdir-run constructor : decl_pre_all ]
+    [ subdir-run constructor : decl_pre_ends ]
+    [ subdir-run constructor : decl_pre_mid ]
+    [ subdir-run constructor : decl_pre_none ]
     
-    [ subdir-run-with-no constructor : decl_post_all ]
-    [ subdir-run-with-no constructor : decl_post_ends ]
-    [ subdir-run-with-no constructor : decl_post_mid ]
-    [ subdir-run-with-no constructor : decl_post_none ]
+    [ subdir-run constructor : decl_post_all ]
+    [ subdir-run constructor : decl_post_ends ]
+    [ subdir-run constructor : decl_post_mid ]
+    [ subdir-run constructor : decl_post_none ]
     
-    [ subdir-run-with-no constructor : decl_entry_static_inv_all ]
-    [ subdir-run-with-no constructor : decl_entry_static_inv_ends ]
-    [ subdir-run-with-no constructor : decl_entry_static_inv_mid ]
-    [ subdir-run-with-no constructor : decl_entry_static_inv_none ]
+    [ subdir-run constructor : decl_entry_static_inv_all ]
+    [ subdir-run constructor : decl_entry_static_inv_ends ]
+    [ subdir-run constructor : decl_entry_static_inv_mid ]
+    [ subdir-run constructor : decl_entry_static_inv_none ]
     
-    [ subdir-run-with-no constructor : decl_exit_static_inv_all ]
-    [ subdir-run-with-no constructor : decl_exit_static_inv_ends ]
-    [ subdir-run-with-no constructor : decl_exit_static_inv_mid ]
-    [ subdir-run-with-no constructor : decl_exit_static_inv_none ]
+    [ subdir-run constructor : decl_exit_static_inv_all ]
+    [ subdir-run constructor : decl_exit_static_inv_ends ]
+    [ subdir-run constructor : decl_exit_static_inv_mid ]
+    [ subdir-run constructor : decl_exit_static_inv_none ]
     
     # No decl_entry_static_inv_... for constructors.
 
-    [ subdir-run-with-no constructor : decl_exit_inv_all ]
-    [ subdir-run-with-no constructor : decl_exit_inv_ends ]
-    [ subdir-run-with-no constructor : decl_exit_inv_mid ]
-    [ subdir-run-with-no constructor : decl_exit_inv_none ]
+    [ subdir-run constructor : decl_exit_inv_all ]
+    [ subdir-run constructor : decl_exit_inv_ends ]
+    [ subdir-run constructor : decl_exit_inv_mid ]
+    [ subdir-run constructor : decl_exit_inv_none ]
     
-    [ subdir-run-with-no constructor : contracts ]
-    [ subdir-run-with-no constructor : access ]
-    [ subdir-run-with-no constructor : ifdef_contracts ]
+    [ subdir-run constructor : contracts ]
+    [ subdir-run constructor : access ]
+    [ subdir-run constructor : ifdef_contracts ]
 
-    [ subdir-run-with-no constructor : body_throw ]
-    [ subdir-run-with-no constructor : old_throw ]
+    [ subdir-run constructor : body_throw ]
+    [ subdir-run constructor : old_throw ]
     
     [ subdir-compile-fail constructor : pre_error ]
 ;
@@ -47,209 +48,224 @@ test-suite constructor :
 test-suite destructor :
     # No decl_pre_... for destructors.
     
-    [ subdir-run-with-no destructor : decl_post_all ]
-    [ subdir-run-with-no destructor : decl_post_ends ]
-    [ subdir-run-with-no destructor : decl_post_mid ]
-    [ subdir-run-with-no destructor : decl_post_none ]
+    [ subdir-run destructor : decl_post_all ]
+    [ subdir-run destructor : decl_post_ends ]
+    [ subdir-run destructor : decl_post_mid ]
+    [ subdir-run destructor : decl_post_none ]
     
-    [ subdir-run-with-no destructor : decl_entry_static_inv_all ]
-    [ subdir-run-with-no destructor : decl_entry_static_inv_ends ]
-    [ subdir-run-with-no destructor : decl_entry_static_inv_mid ]
-    [ subdir-run-with-no destructor : decl_entry_static_inv_none ]
+    [ subdir-run destructor : decl_entry_static_inv_all ]
+    [ subdir-run destructor : decl_entry_static_inv_ends ]
+    [ subdir-run destructor : decl_entry_static_inv_mid ]
+    [ subdir-run destructor : decl_entry_static_inv_none ]
     
-    [ subdir-run-with-no destructor : decl_exit_static_inv_all ]
-    [ subdir-run-with-no destructor : decl_exit_static_inv_ends ]
-    [ subdir-run-with-no destructor : decl_exit_static_inv_mid ]
-    [ subdir-run-with-no destructor : decl_exit_static_inv_none ]
+    [ subdir-run destructor : decl_exit_static_inv_all ]
+    [ subdir-run destructor : decl_exit_static_inv_ends ]
+    [ subdir-run destructor : decl_exit_static_inv_mid ]
+    [ subdir-run destructor : decl_exit_static_inv_none ]
     
-    [ subdir-run-with-no destructor : decl_entry_inv_all ]
-    [ subdir-run-with-no destructor : decl_entry_inv_ends ]
-    [ subdir-run-with-no destructor : decl_entry_inv_mid ]
-    [ subdir-run-with-no destructor : decl_entry_inv_none ]
+    [ subdir-run destructor : decl_entry_inv_all ]
+    [ subdir-run destructor : decl_entry_inv_ends ]
+    [ subdir-run destructor : decl_entry_inv_mid ]
+    [ subdir-run destructor : decl_entry_inv_none ]
 
     # No decl_exit_inv_... for destructors.
 
-    [ subdir-run-with-no destructor : contracts ]
-    [ subdir-run-with-no destructor : access ]
-    [ subdir-run-with-no destructor : ifdef_contracts ]
+    [ subdir-run destructor : contracts ]
+    [ subdir-run destructor : access ]
+    [ subdir-run destructor : ifdef_contracts ]
 
-    [ subdir-run-with-no destructor : body_throw ]
-    [ subdir-run-with-no destructor : old_throw ]
+    [ subdir-run destructor : body_throw ]
+    [ subdir-run destructor : old_throw ]
 
     [ subdir-compile-fail destructor : pre_error ]
 ;
 
 test-suite public_function :
-    [ subdir-run-with-no public_function : decl_pre_all ]
-    [ subdir-run-with-no public_function : decl_pre_ends ]
-    [ subdir-run-with-no public_function : decl_pre_mid ]
-    [ subdir-run-with-no public_function : decl_pre_none ]
+    [ subdir-run public_function : decl_pre_all ]
+    [ subdir-run public_function : decl_pre_ends ]
+    [ subdir-run public_function : decl_pre_mid ]
+    [ subdir-run public_function : decl_pre_none ]
 
-    [ subdir-run-with-no public_function : decl_post_all ]
-    [ subdir-run-with-no public_function : decl_post_ends ]
-    [ subdir-run-with-no public_function : decl_post_mid ]
-    [ subdir-run-with-no public_function : decl_post_none ]
+    [ subdir-run public_function : decl_post_all ]
+    [ subdir-run public_function : decl_post_ends ]
+    [ subdir-run public_function : decl_post_mid ]
+    [ subdir-run public_function : decl_post_none ]
     
-    [ subdir-run-with-no public_function : decl_entry_static_inv_all ]
-    [ subdir-run-with-no public_function : decl_entry_static_inv_ends ]
-    [ subdir-run-with-no public_function : decl_entry_static_inv_mid ]
-    [ subdir-run-with-no public_function : decl_entry_static_inv_none ]
+    [ subdir-run public_function : decl_entry_static_inv_all ]
+    [ subdir-run public_function : decl_entry_static_inv_ends ]
+    [ subdir-run public_function : decl_entry_static_inv_mid ]
+    [ subdir-run public_function : decl_entry_static_inv_none ]
     
-    [ subdir-run-with-no public_function : decl_exit_static_inv_all ]
-    [ subdir-run-with-no public_function : decl_exit_static_inv_ends ]
-    [ subdir-run-with-no public_function : decl_exit_static_inv_mid ]
-    [ subdir-run-with-no public_function : decl_exit_static_inv_none ]
+    [ subdir-run public_function : decl_exit_static_inv_all ]
+    [ subdir-run public_function : decl_exit_static_inv_ends ]
+    [ subdir-run public_function : decl_exit_static_inv_mid ]
+    [ subdir-run public_function : decl_exit_static_inv_none ]
     
-    [ subdir-run-with-no public_function : decl_entry_inv_all ]
-    [ subdir-run-with-no public_function : decl_entry_inv_ends ]
-    [ subdir-run-with-no public_function : decl_entry_inv_mid ]
-    [ subdir-run-with-no public_function : decl_entry_inv_none ]
+    [ subdir-run public_function : decl_entry_inv_all ]
+    [ subdir-run public_function : decl_entry_inv_ends ]
+    [ subdir-run public_function : decl_entry_inv_mid ]
+    [ subdir-run public_function : decl_entry_inv_none ]
     
-    [ subdir-run-with-no public_function : decl_exit_inv_all ]
-    [ subdir-run-with-no public_function : decl_exit_inv_ends ]
-    [ subdir-run-with-no public_function : decl_exit_inv_mid ]
-    [ subdir-run-with-no public_function : decl_exit_inv_none ]
+    [ subdir-run public_function : decl_exit_inv_all ]
+    [ subdir-run public_function : decl_exit_inv_ends ]
+    [ subdir-run public_function : decl_exit_inv_mid ]
+    [ subdir-run public_function : decl_exit_inv_none ]
     
-    [ subdir-run-with-no public_function : contracts ]
+    [ subdir-run public_function : contracts ]
 
-    [ subdir-run-with-no public_function : virtual ]
-    [ subdir-run-with-no public_function : virtual_branch ]
-    [ subdir-run-with-no public_function : virtual_sparse ]
-    [ subdir-run-with-no public_function : virtual_access ]
-    [ subdir-run-with-no public_function : virtual_access_multi ]
+    [ subdir-run public_function : virtual ]
+    [ subdir-run public_function : virtual_branch ]
+    [ subdir-run public_function : virtual_sparse ]
+    [ subdir-run public_function : virtual_access ]
+    [ subdir-run public_function : virtual_access_multi ]
 
-    [ subdir-run-with-no public_function : protected ]
+    [ subdir-run public_function : protected ]
     [ subdir-compile-fail public_function : protected_error ]
     
-    [ subdir-run-with-no public_function : access ]
-    [ subdir-run-with-no public_function : ifdef_contracts ]
+    [ subdir-run public_function : access ]
+    [ subdir-run public_function : ifdef_contracts ]
     
-    [ subdir-run-with-no public_function : body_throw ]
-    [ subdir-run-with-no public_function : old_throw ]
+    [ subdir-run public_function : body_throw ]
+    [ subdir-run public_function : old_throw ]
     
-    [ subdir-run-with-no public_function : max_args0 ]
-    [ subdir-run-with-no public_function : max_args0_no_tva ]
-    [ subdir-run-with-no public_function : max_args1 ]
-    [ subdir-run-with-no public_function : max_args1_no_tva ]
-    [ subdir-run-with-no public_function : max_args2 ]
-    [ subdir-run-with-no public_function : max_args2_no_tva ]
-    [ subdir-run-with-no public_function : max_args ]
-    [ subdir-run-with-no public_function : max_args_no_tva ]
+    [ subdir-run public_function : max_args0 ]
+    [ subdir-run public_function : max_args0_no_tva ]
+    [ subdir-run public_function : max_args1 ]
+    [ subdir-run public_function : max_args1_no_tva ]
+    [ subdir-run public_function : max_args2 ]
+    [ subdir-run public_function : max_args2_no_tva ]
+    [ subdir-run public_function : max_args ]
+    [ subdir-run public_function : max_args_no_tva ]
     
-    [ subdir-run-with-no public_function : max_bases ]
+    [ subdir-run public_function : max_bases ]
     
-    [ subdir-run-with-no public_function : overload ]
-    [ subdir-run-with-no public_function : overload_no_tva ]
+    [ subdir-run public_function : overload ]
+    [ subdir-run public_function : overload_no_tva ]
 
     [ subdir-compile-fail public_function : override_error ]
-    [ subdir-run-with-no public_function : override_permissive ]
+    [ subdir-run public_function : override_permissive ]
     
-    [ subdir-run-with-no public_function : static ]
-    [ subdir-run-with-no public_function : static_body_throw ]
-    [ subdir-run-with-no public_function : static_old_throw ]
-    [ subdir-run-with-no public_function : static_no_contracts ]
+    [ subdir-run public_function : static ]
+    [ subdir-run public_function : static_body_throw ]
+    [ subdir-run public_function : static_old_throw ]
+    [ subdir-run public_function : static_no_contracts ]
 ;
     
 test-suite invariant :
-    [ subdir-run-with-no invariant : decl_static_cv_const ]
-    [ subdir-run-with-no invariant : decl_static_cv ]
-    [ subdir-run-with-no invariant : decl_cv_const ]
-    [ subdir-run-with-no invariant : decl_static_const ]
-    [ subdir-run-with-no invariant : decl_static ]
-    [ subdir-run-with-no invariant : decl_cv ]
-    [ subdir-run-with-no invariant : decl_const ]
-    [ subdir-run-with-no invariant : decl_nothing ]
+    [ subdir-run invariant : decl_static_cv_const ]
+    [ subdir-run invariant : decl_static_cv ]
+    [ subdir-run invariant : decl_cv_const ]
+    [ subdir-run invariant : decl_static_const ]
+    [ subdir-run invariant : decl_static ]
+    [ subdir-run invariant : decl_cv ]
+    [ subdir-run invariant : decl_const ]
+    [ subdir-run invariant : decl_nothing ]
 
     [ subdir-compile-fail invariant : static_mutable_error ]
-    [ subdir-run-with-no invariant : static_mutable_permissive ]
+    [ subdir-run invariant : static_mutable_permissive ]
     [ subdir-compile-fail invariant : static_const_error ]
-    [ subdir-run-with-no invariant : static_const_permissive ]
+    [ subdir-run invariant : static_const_permissive ]
     [ subdir-compile-fail invariant : static_volatile_error ]
-    [ subdir-run-with-no invariant : static_volatile_permissive ]
+    [ subdir-run invariant : static_volatile_permissive ]
     [ subdir-compile-fail invariant : static_cv_error ]
-    [ subdir-run-with-no invariant : static_cv_permissive ]
+    [ subdir-run invariant : static_cv_permissive ]
     
     [ subdir-compile-fail invariant : static_error ]
-    [ subdir-run-with-no invariant : static_permissive ]
+    [ subdir-run invariant : static_permissive ]
     [ subdir-compile-fail invariant : mutable_error ]
-    [ subdir-run-with-no invariant : mutable_permissive ]
+    [ subdir-run invariant : mutable_permissive ]
     [ subdir-compile-fail invariant : volatile_error ]
-    [ subdir-run-with-no invariant : volatile_permissive ]
+    [ subdir-run invariant : volatile_permissive ]
 ;
 
 test-suite function :
-    [ subdir-run-with-no function : decl_pre_all ]
-    [ subdir-run-with-no function : decl_pre_none ]
+    [ subdir-run function : decl_pre_all ]
+    [ subdir-run function : decl_pre_none ]
     
-    [ subdir-run-with-no function : decl_post_all ]
-    [ subdir-run-with-no function : decl_post_none ]
+    [ subdir-run function : decl_post_all ]
+    [ subdir-run function : decl_post_none ]
     
-    [ subdir-run-with-no function : contracts ]
-    [ subdir-run-with-no function : ifdef_contracts ]
+    [ subdir-run function : contracts ]
+    [ subdir-run function : ifdef_contracts ]
 
-    [ subdir-run-with-no function : body_throw ]
-    [ subdir-run-with-no function : old_throw ]
+    [ subdir-run function : body_throw ]
+    [ subdir-run function : old_throw ]
 ;
 
 test-suite check :
-    [ subdir-run-with-no check : decl_class ]
-    [ subdir-run-with-no check : decl_macro ]
+    [ subdir-run check : decl_class ]
+    [ subdir-run check : decl_macro ]
 ;
 
 test-suite result :
-    [ subdir-run-with-no result : mixed_optional ]
-    [ subdir-run-with-no result : mixed_optional_ref ]
+    [ subdir-run result : mixed_optional ]
+    [ subdir-run result : mixed_optional_ref ]
 
     [ subdir-compile-fail result : type_mismatch_error ]
 ;
 
 test-suite old :
-    [ subdir-run-with-no old : auto ]
+    [ subdir-run old : auto ]
 
-    [ subdir-run-with-no old : no_macros ]
-    [ subdir-run-with-no old : no_macros_if_copyable ]
+    [ subdir-run old : no_macros ]
+    [ subdir-run old : no_macros_if_copyable ]
 
     [ subdir-compile-fail old : no_make_old_error ]
     [ subdir-compile-fail old : no_make_old_if_copyable_error ]
 
-    [ subdir-run-with-no old : if_copyable ]
+    [ subdir-run old : if_copyable ]
     [ subdir-compile-fail old : if_copyable_error ]
 ;
 
 test-suite disable :
-    [ subdir-run-with-no disable : prog ]
-    [ subdir-run-with-no disable : prog_pre_disable_nothing ]
+    [ subdir-run disable : prog ]
+    [ subdir-run disable : prog_pre_disable_nothing ]
 
     [ subdir-lib disable : lib_a :
             <link>shared:<define>BOOST_CONTRACT_TEST_LIB_A_DYN_LINK ]
     [ subdir-lib disable : lib_b : <library>disable-lib_a
             <link>shared:<define>BOOST_CONTRACT_TEST_LIB_B_DYN_LINK ]
-    [ subdir-run-with-no disable : lib_ab :
+    [ subdir-run disable : lib_ab :
             <library>disable-lib_a <library>disable-lib_b ]
     
     [ subdir-lib disable : lib_x :
             <link>shared:<define>BOOST_CONTRACT_TEST_LIB_X_DYN_LINK ]
     [ subdir-lib disable : lib_y : <library>disable-lib_x
             <link>shared:<define>BOOST_CONTRACT_TEST_LIB_Y_DYN_LINK ]
-    [ subdir-run-with-no disable : lib_xy :
+    [ subdir-run disable : lib_xy :
             <library>disable-lib_x <library>disable-lib_y ]
 ;
 
 test-suite specify :
-    [ subdir-run-with-no specify : pre_old_post ]
-    [ subdir-run-with-no specify : pre_old ]
-    [ subdir-run-with-no specify : old_post ]
-    [ subdir-run-with-no specify : pre_post ]
-    [ subdir-run-with-no specify : pre ]
-    [ subdir-run-with-no specify : old ]
-    [ subdir-run-with-no specify : post ]
-    [ subdir-run-with-no specify : nothing ]
+    [ subdir-run specify : pre_old_post_except ]
     
-    [ subdir-run-with-no specify : missing_check_decl ]
+    [ subdir-run specify : pre_old_post ]
+    [ subdir-run specify : pre_old_except ]
+    [ subdir-run specify : pre_post_except ]
+    [ subdir-run specify : old_post_except ]
 
-    [ subdir-compile-fail specify : old_pre_error ]
+    [ subdir-run specify : pre_old ]
+    [ subdir-run specify : pre_post ]
+    [ subdir-run specify : pre_except ]
+    [ subdir-run specify : old_post ]
+    [ subdir-run specify : old_except ]
+    [ subdir-run specify : post_except ]
+
+    [ subdir-run specify : pre ]
+    [ subdir-run specify : old ]
+    [ subdir-run specify : post ]
+    [ subdir-run specify : except ]
+
+    [ subdir-run specify : nothing ]
+    
+    [ subdir-compile-fail specify : except_post_error ]
+    [ subdir-compile-fail specify : except_old_error ]
+    [ subdir-compile-fail specify : except_pre_error ]
     [ subdir-compile-fail specify : post_old_error ]
     [ subdir-compile-fail specify : post_pre_error ]
+    [ subdir-compile-fail specify : old_pre_error ]
+    
+    [ subdir-run specify : missing_check_decl ]
 ;
 
 test-suite call_if :
@@ -260,13 +276,10 @@ test-suite call_if :
     [ subdir-run call_if : false_void ]
     
     [ subdir-run call_if : equal_to ]
+    [ subdir-run call_if : equal_to_cxx14 : # Requires C++14.
+            <toolset>clang:<cxxflags>-std=c++1y ]
     
-    [ subdir-run-with-no call_if : condition_if ]
+    [ subdir-run call_if : condition_if ]
     [ subdir-compile-fail call_if : no_condition_if_error ]
 ;
-test-suite call_if-cxx14 : # Requires C++14.
-    [ subdir-run call_if : equal_to_cxx14 :
-            <toolset>clang:<cxxflags>-std=c++1y ]
-;
-explicit call_if-cxx14 ;
 

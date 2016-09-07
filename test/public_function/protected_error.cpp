@@ -19,6 +19,7 @@ protected:
     
     friend class boost::contract::access; // Test this cannot prevent error.
 };
+
 struct a
     #define BASES public b
     : BASES
@@ -28,13 +29,16 @@ struct a
 
     void f(boost::contract::virtual_* v = 0) /* override */ {
         boost::contract::check c = boost::contract::public_function<override_f>(
-                v, &a::f, this);
+                v, &a::f, this); // Error (override cannot access b::f).
+        #ifdef BOOST_CONTRACT_NO_PUBLIC_FUNCTIONS
+            #error "Forcing error even when public functions not checked"
+        #endif
     }
 
-    // GCC and CLang cannot correctly even see b::f as part of overloaded bases
-    // because it is protected. MSVC at least still fails compilation where
-    // override_f below tries to call b::f because it is protected so it cannot
-    // be seen from within override_f.
+    // Correctly, GCC and CLang cannot even see b::f as part of overloaded bases
+    // because it is protected. MSVC also fails compilation but only when
+    // override_f below tries to call b::f (because it is protected so it cannot
+    // be seen from within override_f).
     BOOST_CONTRACT_OVERRIDE(f)
     
     friend class boost::contract::access; // Test this cannot prevent error.

@@ -12,7 +12,7 @@
 #include <boost/contract/check.hpp>
 
 struct a {
-    void static_invariant() {}
+    void static_invariant() {} // Error (unless PERMISSIVE).
 
     void f() {
         // Same for ctor and dtor (because they all use check_pre_post_inv).

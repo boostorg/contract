@@ -5,6 +5,8 @@
 // See: http://www.boost.org/doc/libs/release/libs/contract/doc/html/index.html
 
 #include <boost/contract.hpp>
+#include <vector>
+#include <algorithm>
 #include <cassert>
 
 template<typename T>

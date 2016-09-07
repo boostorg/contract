@@ -97,10 +97,12 @@ protected:
         }
     #endif
 
-    #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
+    #if     !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
+            !defined(BOOST_CONTRACT_NO_EXCEPTS)
         void copy_old() {
             if(failed()) return;
             try { if(old_) old_(); }
+            // TODO: This is no longer correct because old can fail for either postconditions or excepts... should this just call its own failure handler old_failure?
             catch(...) { fail(&boost::contract::postcondition_failure); }
         }
     #endif
@@ -141,7 +143,8 @@ private:
     #ifndef BOOST_CONTRACT_NO_PRECONDITIONS
         boost::function<void ()> pre_;
     #endif
-    #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
+    #if     !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
+            !defined(BOOST_CONTRACT_NO_EXCEPTS)
         boost::function<void ()> old_;
     #endif
     #ifndef BOOST_CONTRACT_NO_EXCEPTS

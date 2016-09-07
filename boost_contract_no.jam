@@ -1,0 +1,72 @@
+
+# Generated file `python boost_contract_no.jam-gen.py > boost_contract_no.jam`.
+
+module boost_contract_no {
+
+rule defs_entryinv { return  <define>BOOST_CONTRACT_NO_ENTRY_INVARIANTS ; }
+
+rule defs_pre { return  <define>BOOST_CONTRACT_NO_PRECONDITIONS ; }
+
+rule defs_exitinv { return  <define>BOOST_CONTRACT_NO_EXIT_INVARIANTS ; }
+
+rule defs_post { return  <define>BOOST_CONTRACT_NO_POSTCONDITIONS ; }
+
+rule defs_except { return  <define>BOOST_CONTRACT_NO_EXCEPTS ; }
+
+rule defs_entryinv_pre { return  <define>BOOST_CONTRACT_NO_ENTRY_INVARIANTS <define>BOOST_CONTRACT_NO_PRECONDITIONS ; }
+
+rule defs_entryinv_exitinv { return  <define>BOOST_CONTRACT_NO_ENTRY_INVARIANTS <define>BOOST_CONTRACT_NO_EXIT_INVARIANTS ; }
+
+rule defs_entryinv_post { return  <define>BOOST_CONTRACT_NO_ENTRY_INVARIANTS <define>BOOST_CONTRACT_NO_POSTCONDITIONS ; }
+
+rule defs_entryinv_except { return  <define>BOOST_CONTRACT_NO_ENTRY_INVARIANTS <define>BOOST_CONTRACT_NO_EXCEPTS ; }
+
+rule defs_pre_exitinv { return  <define>BOOST_CONTRACT_NO_PRECONDITIONS <define>BOOST_CONTRACT_NO_EXIT_INVARIANTS ; }
+
+rule defs_pre_post { return  <define>BOOST_CONTRACT_NO_PRECONDITIONS <define>BOOST_CONTRACT_NO_POSTCONDITIONS ; }
+
+rule defs_pre_except { return  <define>BOOST_CONTRACT_NO_PRECONDITIONS <define>BOOST_CONTRACT_NO_EXCEPTS ; }
+
+rule defs_exitinv_post { return  <define>BOOST_CONTRACT_NO_EXIT_INVARIANTS <define>BOOST_CONTRACT_NO_POSTCONDITIONS ; }
+
+rule defs_exitinv_except { return  <define>BOOST_CONTRACT_NO_EXIT_INVARIANTS <define>BOOST_CONTRACT_NO_EXCEPTS ; }
+
+rule defs_post_except { return  <define>BOOST_CONTRACT_NO_POSTCONDITIONS <define>BOOST_CONTRACT_NO_EXCEPTS ; }
+
+rule defs_entryinv_pre_exitinv { return  <define>BOOST_CONTRACT_NO_ENTRY_INVARIANTS <define>BOOST_CONTRACT_NO_PRECONDITIONS <define>BOOST_CONTRACT_NO_EXIT_INVARIANTS ; }
+
+rule defs_entryinv_pre_post { return  <define>BOOST_CONTRACT_NO_ENTRY_INVARIANTS <define>BOOST_CONTRACT_NO_PRECONDITIONS <define>BOOST_CONTRACT_NO_POSTCONDITIONS ; }
+
+rule defs_entryinv_pre_except { return  <define>BOOST_CONTRACT_NO_ENTRY_INVARIANTS <define>BOOST_CONTRACT_NO_PRECONDITIONS <define>BOOST_CONTRACT_NO_EXCEPTS ; }
+
+rule defs_entryinv_exitinv_post { return  <define>BOOST_CONTRACT_NO_ENTRY_INVARIANTS <define>BOOST_CONTRACT_NO_EXIT_INVARIANTS <define>BOOST_CONTRACT_NO_POSTCONDITIONS ; }
+
+rule defs_entryinv_exitinv_except { return  <define>BOOST_CONTRACT_NO_ENTRY_INVARIANTS <define>BOOST_CONTRACT_NO_EXIT_INVARIANTS <define>BOOST_CONTRACT_NO_EXCEPTS ; }
+
+rule defs_entryinv_post_except { return  <define>BOOST_CONTRACT_NO_ENTRY_INVARIANTS <define>BOOST_CONTRACT_NO_POSTCONDITIONS <define>BOOST_CONTRACT_NO_EXCEPTS ; }
+
+rule defs_pre_exitinv_post { return  <define>BOOST_CONTRACT_NO_PRECONDITIONS <define>BOOST_CONTRACT_NO_EXIT_INVARIANTS <define>BOOST_CONTRACT_NO_POSTCONDITIONS ; }
+
+rule defs_pre_exitinv_except { return  <define>BOOST_CONTRACT_NO_PRECONDITIONS <define>BOOST_CONTRACT_NO_EXIT_INVARIANTS <define>BOOST_CONTRACT_NO_EXCEPTS ; }
+
+rule defs_pre_post_except { return  <define>BOOST_CONTRACT_NO_PRECONDITIONS <define>BOOST_CONTRACT_NO_POSTCONDITIONS <define>BOOST_CONTRACT_NO_EXCEPTS ; }
+
+rule defs_exitinv_post_except { return  <define>BOOST_CONTRACT_NO_EXIT_INVARIANTS <define>BOOST_CONTRACT_NO_POSTCONDITIONS <define>BOOST_CONTRACT_NO_EXCEPTS ; }
+
+rule defs_entryinv_pre_exitinv_post { return  <define>BOOST_CONTRACT_NO_ENTRY_INVARIANTS <define>BOOST_CONTRACT_NO_PRECONDITIONS <define>BOOST_CONTRACT_NO_EXIT_INVARIANTS <define>BOOST_CONTRACT_NO_POSTCONDITIONS ; }
+
+rule defs_entryinv_pre_exitinv_except { return  <define>BOOST_CONTRACT_NO_ENTRY_INVARIANTS <define>BOOST_CONTRACT_NO_PRECONDITIONS <define>BOOST_CONTRACT_NO_EXIT_INVARIANTS <define>BOOST_CONTRACT_NO_EXCEPTS ; }
+
+rule defs_entryinv_pre_post_except { return  <define>BOOST_CONTRACT_NO_ENTRY_INVARIANTS <define>BOOST_CONTRACT_NO_PRECONDITIONS <define>BOOST_CONTRACT_NO_POSTCONDITIONS <define>BOOST_CONTRACT_NO_EXCEPTS ; }
+
+rule defs_entryinv_exitinv_post_except { return  <define>BOOST_CONTRACT_NO_ENTRY_INVARIANTS <define>BOOST_CONTRACT_NO_EXIT_INVARIANTS <define>BOOST_CONTRACT_NO_POSTCONDITIONS <define>BOOST_CONTRACT_NO_EXCEPTS ; }
+
+rule defs_pre_exitinv_post_except { return  <define>BOOST_CONTRACT_NO_PRECONDITIONS <define>BOOST_CONTRACT_NO_EXIT_INVARIANTS <define>BOOST_CONTRACT_NO_POSTCONDITIONS <define>BOOST_CONTRACT_NO_EXCEPTS ; }
+
+rule defs_entryinv_pre_exitinv_post_except { return  <define>BOOST_CONTRACT_NO_ENTRY_INVARIANTS <define>BOOST_CONTRACT_NO_PRECONDITIONS <define>BOOST_CONTRACT_NO_EXIT_INVARIANTS <define>BOOST_CONTRACT_NO_POSTCONDITIONS <define>BOOST_CONTRACT_NO_EXCEPTS ; }
+
+
+rule conds { return  entryinv pre exitinv post except entryinv_pre entryinv_exitinv entryinv_post entryinv_except pre_exitinv pre_post pre_except exitinv_post exitinv_except post_except entryinv_pre_exitinv entryinv_pre_post entryinv_pre_except entryinv_exitinv_post entryinv_exitinv_except entryinv_post_except pre_exitinv_post pre_exitinv_except pre_post_except exitinv_post_except entryinv_pre_exitinv_post entryinv_pre_exitinv_except entryinv_pre_post_except entryinv_exitinv_post_except pre_exitinv_post_except entryinv_pre_exitinv_post_except ; }
+
+} # module
+

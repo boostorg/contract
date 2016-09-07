@@ -13,9 +13,10 @@ Facility to declare invariants, base types, etc all as private members.
 
 #include <boost/contract/core/config.hpp>
 #include <boost/contract/detail/decl.hpp>
-#if !defined(BOOST_CONTRACT_NO_PRECONDITIONS) || \
+#if     !defined(BOOST_CONTRACT_NO_INVARIANTS) || \
+        !defined(BOOST_CONTRACT_NO_PRECONDITIONS) || \
         !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
-        !defined(BOOST_CONTRACT_NO_INVARIANTS)
+        !defined(BOOST_CONTRACT_NO_EXCEPTS)
     #include <boost/contract/detail/type_traits/introspection.hpp>
 #endif
 #ifndef BOOST_CONTRACT_NO_INVARIANTS
@@ -66,9 +67,10 @@ class access : private boost::noncopyable {
 /** @cond */
     // No public APIs (so users cannot use it directly by mistake).
 
-    #if !defined(BOOST_CONTRACT_NO_PRECONDITIONS) || \
+    #if     !defined(BOOST_CONTRACT_NO_INVARIANTS) || \
+            !defined(BOOST_CONTRACT_NO_PRECONDITIONS) || \
             !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
-            !defined(BOOST_CONTRACT_NO_INVARIANTS)
+            !defined(BOOST_CONTRACT_NO_EXCEPTS)
         BOOST_CONTRACT_DETAIL_INTROSPECTION_HAS_TYPE(has_base_types,
                 BOOST_CONTRACT_BASE_TYPEDEF)
 

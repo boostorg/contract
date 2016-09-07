@@ -4,19 +4,48 @@
 # file LICENSE_1_0.txt or a copy at http://www.boost.org/LICENSE_1_0.txt).
 # See: http://www.boost.org/doc/libs/release/libs/contract/doc/html/index.html
 
+import boost_contract_no ;
 import testing ;
 import os ;
 import feature ;
 
-if ! [ os.environ BOOST_ROOT ] {
+BOOST_ROOT = [ os.environ BOOST_ROOT ] ;
+if ! $(BOOST_ROOT) {
     exit "Error: set BOOST_ROOT environment variable to Boost root directory" ;
 }
-local BOOST_ROOT = [ os.environ BOOST_ROOT ] ;
-echo "Using Boost libraries from \"$(BOOST_ROOT)\" (see $BOOST_ROOT)" ;
-use-project boost : $(BOOST_ROOT) ;
 
-project
-:
+rule help_exit ( targets * : sources * : properties * ) {
+    all_nos = "" ;
+    sep = "" ;
+    for local cond in [ boost_contract_no.conds ] {
+        all_nos = "$(all_nos)$(sep)$(cond)" ;
+        sep = "," ;
+    }
+    echo "
+Usage: bjam [OPTION]... DIR[-CPP_FILE_NAME]
+Build and run Boost.Contract tests and examples.
+Using Boost libraries from environment variable: $BOOST_ROOT = $(BOOST_ROOT)
+
+Options:
+  boost_contract_link=shared,        build Boost.Contract library as shared,
+                      static,header  static, or header-only (shared by default)
+  boost_contract_no=all_yes,         contract checking off (all_yea by default)
+                    $(all_nos)
+
+Examples (on Linux-based bash):
+  Build just \"test/public_function/body_throw.cpp\":
+    [test]$ bjam public_function-body_throw
+  Build all targets using MSVC, GCC, and CLang compilers:
+          $ time bjam -q toolset=msvc,gcc,clang ; echo $?
+  Build with all linkages on multiple compilers:
+          $ time bjam -q toolset=msvc,gcc,clang boost_contract_link=static,header ; echo $?
+  Build with all contract checking combinations on multiple compilers:
+          $ time bjam -q toolset=msvc,gcc,clang boost_contract_no=$(all_nos) ; echo $?
+"   ;
+    exit ;
+}
+
+project :
     requirements
     <toolset>gcc:<cxxflags>-std=c++11
     <toolset>clang:<cxxflags>-std=c++11
@@ -28,28 +57,10 @@ project
     <toolset>gcc:<library>/boost/system//boost_system
     <toolset>clang:<library>/boost/system//boost_system
 ;
-
-rule subdir-usage ( ) {
-    echo "
-Usage: [time] bjam [-aq] [OPTION]... DIR[-CPP_FILE_NAME] [--clean] [; echo $?]
-Build and run Boost.Contract tests and examples.
-
-Options:
-  toolset=msvc,gcc,clang                use different compilers
-  boost_contract-link=shared,static,    compile Boost.Contract lib as shared,
-                      header            static, or header-only
-  boost_contract-no=all_on,entryinv,    selectively turn off contract checking
-                    pre,exitinv,post,
-                    entryinv_pre,entryinv_exitinv,entryinv_post,pre_exitinv,
-                    pre_post,exitinv_post,pre_exitinv_post,
-                    entryinv_exitinv_post,entryinv_pre_post,
-                    entryinv_pre_exitinv,entryinv_pre_exitinv_post
-" ;
-}
+use-project boost : $(BOOST_ROOT) ;
 
 rule subdir-compile-fail ( subdir : cpp_fname : requirements * ) {
-    compile-fail $(subdir)/$(cpp_fname).cpp
-    :
+    compile-fail $(subdir)/$(cpp_fname).cpp :
         <link>shared:<library>../build//boost_contract
         <link>static:<library>../build//boost_contract
         <include>$(subdir)
@@ -60,8 +71,7 @@ rule subdir-compile-fail ( subdir : cpp_fname : requirements * ) {
 }
 
 rule subdir-run ( subdir : cpp_fname : requirements * ) {
-    run $(subdir)/$(cpp_fname).cpp : :
-    :
+    run $(subdir)/$(cpp_fname).cpp : : :
         <link>shared:<library>../build//boost_contract
         <link>static:<library>../build//boost_contract
         <include>$(subdir)
@@ -69,59 +79,10 @@ rule subdir-run ( subdir : cpp_fname : requirements * ) {
     :
         $(subdir)-$(cpp_fname)
     ;
-}
-
-rule subdir-run-with-no ( subdir : cpp_fname : requirements * ) {
-    # Aliases explicitly built or implicitly when building all tests...
-    alias $(subdir)-$(cpp_fname)-no_entryinv : $(subdir)-$(cpp_fname) :
-            <boost_contract-no>entryinv ;
-    alias $(subdir)-$(cpp_fname)-no_pre : $(subdir)-$(cpp_fname) :
-            <boost_contract-no>pre ;
-    alias $(subdir)-$(cpp_fname)-no_exitinv : $(subdir)-$(cpp_fname) :
-            <boost_contract-no>exitinv ;
-    alias $(subdir)-$(cpp_fname)-no_post : $(subdir)-$(cpp_fname) :
-            <boost_contract-no>post ;
-    alias $(subdir)-$(cpp_fname)-no_entryinv_pre : $(subdir)-$(cpp_fname) :
-            <boost_contract-no>entryinv_pre ;
-    alias $(subdir)-$(cpp_fname)-no_entryinv_exitinv : $(subdir)-$(cpp_fname) :
-            <boost_contract-no>entryinv_exitinv ;
-    alias $(subdir)-$(cpp_fname)-no_entryinv_post : $(subdir)-$(cpp_fname) :
-            <boost_contract-no>entryinv_post ;
-    alias $(subdir)-$(cpp_fname)-no_pre_exitinv : $(subdir)-$(cpp_fname) :
-            <boost_contract-no>pre_exitinv ;
-    alias $(subdir)-$(cpp_fname)-no_pre_post : $(subdir)-$(cpp_fname) :
-            <boost_contract-no>pre_post ;
-    alias $(subdir)-$(cpp_fname)-no_exitinv_post : $(subdir)-$(cpp_fname) :
-            <boost_contract-no>exitinv_post ;
-    alias $(subdir)-$(cpp_fname)-no_pre_exitinv_post : $(subdir)-$(cpp_fname) :
-            <boost_contract-no>pre_exitinv_post ;
-    alias $(subdir)-$(cpp_fname)-no_entryinv_exitinv_post
-    :
-        $(subdir)-$(cpp_fname)
-    :
-        <boost_contract-no>entryinv_exitinv_post
-    ;
-    alias $(subdir)-$(cpp_fname)-no_entry_pre_post : $(subdir)-$(cpp_fname) :
-            <boost_contract-no>entryinv_pre_post ;
-    alias $(subdir)-$(cpp_fname)-no_entryinv_pre_exitinv
-    :
-        $(subdir)-$(cpp_fname)
-    :
-        <boost_contract-no>entryinv_pre_exitinv
-    ;
-    alias $(subdir)-$(cpp_fname)-no_entryinv_pre_exitinv_post
-    :
-        $(subdir)-$(cpp_fname)
-    :
-        <boost_contract-no>entryinv_pre_exitinv_post
-    ;
-    # ...otherwise only this is built when building just subdir.
-    subdir-run $(subdir) : $(cpp_fname) : $(requirements) ;
 }
 
 rule subdir-lib ( subdir : cpp_fname : requirements * ) {
-    lib $(subdir)-$(cpp_fname) : $(subdir)/$(cpp_fname).cpp
-    :
+    lib $(subdir)-$(cpp_fname) : $(subdir)/$(cpp_fname).cpp :
         <link>shared:<library>../build//boost_contract
         <link>static:<library>../build//boost_contract
         <include>$(subdir)
@@ -129,101 +90,17 @@ rule subdir-lib ( subdir : cpp_fname : requirements * ) {
     ;
 }
 
-feature.feature boost_contract-link : shared static header :
+feature.feature boost_contract_link : shared static header :
         composite propagated link-incompatible ;
-feature.compose <boost_contract-link>shared : <link>shared ;
-feature.compose <boost_contract-link>static : <link>static ;
-feature.compose <boost_contract-link>header :
+feature.compose <boost_contract_link>shared : <link>shared ;
+feature.compose <boost_contract_link>static : <link>static ;
+feature.compose <boost_contract_link>header :
         <define>BOOST_CONTRACT_HEADER_ONLY ;
 
-feature.feature boost_contract-no
-: 
-    all_on entryinv pre exitinv post entryinv_pre entryinv_exitinv
-    entryinv_post pre_exitinv pre_post exitinv_post pre_exitinv_post
-    entryinv_exitinv_post entryinv_pre_post entryinv_pre_exitinv
-    entryinv_pre_exitinv_post
-:
-    composite propagated link-incompatible
-;
-# 1 contract off.
-feature.compose <boost_contract-no>entryinv
-:
-    <define>BOOST_CONTRACT_NO_ENTRY_INVARIANTS
-;
-feature.compose <boost_contract-no>pre
-:
-    <define>BOOST_CONTRACT_NO_PRECONDITIONS
-;
-feature.compose <boost_contract-no>exitinv
-:
-    <define>BOOST_CONTRACT_NO_EXIT_INVARIANTS
-;
-feature.compose <boost_contract-no>post
-:
-    <define>BOOST_CONTRACT_NO_POSTCONDITIONS
-;
-# 2 contracts off.
-feature.compose <boost_contract-no>entryinv_pre
-:
-    <define>BOOST_CONTRACT_NO_ENTRY_INVARIANTS
-    <define>BOOST_CONTRACT_NO_PRECONDITIONS
-;
-feature.compose <boost_contract-no>entryinv_exitinv
-:
-    <define>BOOST_CONTRACT_NO_ENTRY_INVARIANTS
-    <define>BOOST_CONTRACT_NO_EXIT_INVARIANTS
-;
-feature.compose <boost_contract-no>entryinv_post
-:
-    <define>BOOST_CONTRACT_NO_ENTRY_INVARIANTS
-    <define>BOOST_CONTRACT_NO_POSTCONDITIONS
-;
-feature.compose <boost_contract-no>pre_exitinv
-:
-    <define>BOOST_CONTRACT_NO_PRECONDITIONS
-    <define>BOOST_CONTRACT_NO_EXIT_INVARIANTS
-;
-feature.compose <boost_contract-no>pre_post
-:
-    <define>BOOST_CONTRACT_NO_PRECONDITIONS
-    <define>BOOST_CONTRACT_NO_POSTCONDITIONS
-;
-feature.compose <boost_contract-no>exitinv_post
-:
-    <define>BOOST_CONTRACT_NO_EXIT_INVARIANTS
-    <define>BOOST_CONTRACT_NO_POSTCONDITIONS
-;
-# 3 contracts off.
-feature.compose <boost_contract-no>pre_exitinv_post
-:
-    <define>BOOST_CONTRACT_NO_PRECONDITIONS
-    <define>BOOST_CONTRACT_NO_EXIT_INVARIANTS
-    <define>BOOST_CONTRACT_NO_POSTCONDITIONS
-;
-feature.compose <boost_contract-no>entryinv_exitinv_post
-:
-    <define>BOOST_CONTRACT_NO_ENTRY_INVARIANTS
-    <define>BOOST_CONTRACT_NO_EXIT_INVARIANTS
-    <define>BOOST_CONTRACT_NO_POSTCONDITIONS
-;
-feature.compose <boost_contract-no>entryinv_pre_post
-:
-    <define>BOOST_CONTRACT_NO_ENTRY_INVARIANTS
-    <define>BOOST_CONTRACT_NO_PRECONDITIONS
-    <define>BOOST_CONTRACT_NO_POSTCONDITIONS
-;
-feature.compose <boost_contract-no>entryinv_pre_exitinv
-:
-    <define>BOOST_CONTRACT_NO_ENTRY_INVARIANTS
-    <define>BOOST_CONTRACT_NO_PRECONDITIONS
-    <define>BOOST_CONTRACT_NO_EXIT_INVARIANTS
-;
-# All 4 contracts oof.
-feature.compose <boost_contract-no>entryinv_pre_exitinv_post
-:
-    <define>BOOST_CONTRACT_NO_ENTRY_INVARIANTS
-    <define>BOOST_CONTRACT_NO_PRECONDITIONS
-    <define>BOOST_CONTRACT_NO_EXIT_INVARIANTS
-    <define>BOOST_CONTRACT_NO_POSTCONDITIONS
-;
+feature.feature boost_contract_no : all_yes [ boost_contract_no.conds ] :
+        composite propagated link-incompatible ;
+for local cond in [ boost_contract_no.conds ] {
+    feature.compose <boost_contract_no>$(cond) :
+            [ boost_contract_no.defs_$(cond) ] ;
+}
 

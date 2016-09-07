@@ -4,7 +4,7 @@
 // file LICENSE_1_0.txt or a copy at http://www.boost.org/LICENSE_1_0.txt).
 // See: http://www.boost.org/doc/libs/release/libs/contract/doc/html/index.html
 
-// Test specifying old, no pre, post, or except (same if not free func).
+// Test specifying old and except, no pre or post (same if not free func).
 
 #include "../detail/oteststream.hpp"
 #include <boost/contract/function.hpp>
@@ -17,6 +17,7 @@ boost::contract::test::detail::oteststream out;
 void f() {
     boost::contract::check c = boost::contract::function()
         .old([] { out << "f::old" << std::endl; })
+        .except([] { out << "f::except" << std::endl; })
     ;
     out << "f::body" << std::endl;
 }
@@ -26,7 +27,8 @@ int main() {
 
     out.str("");
     f();
-    ok.str(""); ok
+    ok.str("");
+    ok
         #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
             << "f::old" << std::endl
         #endif

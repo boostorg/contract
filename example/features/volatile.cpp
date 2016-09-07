@@ -44,36 +44,41 @@ void a::invariant() const volatile { cv_invariant_checked = true; }
 void a::invariant() const { const_invariant_checked = true; }
 
 int main() {
-    {
-        cv_invariant_checked = const_invariant_checked = false;
-        a x;
-        assert(cv_invariant_checked);
-        assert(const_invariant_checked);
+    // These failures properly handled only when invariants checked.
+    #ifndef BOOST_CONTRACT_NO_EXIT_INVARIANTS
+        {
+            cv_invariant_checked = const_invariant_checked = false;
+            a x;
+            assert(cv_invariant_checked);
+            assert(const_invariant_checked);
 
-        cv_invariant_checked = const_invariant_checked = false;
-        x.m();
-        assert(!cv_invariant_checked);
-        assert(const_invariant_checked);
+            cv_invariant_checked = const_invariant_checked = false;
+            x.m();
+            assert(!cv_invariant_checked);
+            assert(const_invariant_checked);
+            
+            cv_invariant_checked = const_invariant_checked = false;
+            x.c();
+            assert(!cv_invariant_checked);
+            assert(const_invariant_checked);
+            
+            cv_invariant_checked = const_invariant_checked = false;
+            x.v();
+            assert(cv_invariant_checked);
+            assert(!const_invariant_checked);
+            
+            cv_invariant_checked = const_invariant_checked = false;
+            x.cv();
+            assert(cv_invariant_checked);
+            assert(!const_invariant_checked);
         
-        cv_invariant_checked = const_invariant_checked = false;
-        x.c();
-        assert(!cv_invariant_checked);
-        assert(const_invariant_checked);
-        
-        cv_invariant_checked = const_invariant_checked = false;
-        x.v();
-        assert(cv_invariant_checked);
-        assert(!const_invariant_checked);
-        
-        cv_invariant_checked = const_invariant_checked = false;
-        x.cv();
-        assert(cv_invariant_checked);
-        assert(!const_invariant_checked);
-    
-        cv_invariant_checked = const_invariant_checked = false;
-    } // Call destructor.
-    assert(cv_invariant_checked);
-    assert(const_invariant_checked);
+            cv_invariant_checked = const_invariant_checked = false;
+        } // Call destructor.
+        #ifndef BOOST_CONTRACT_NO_ENTRY_INVARIANTS
+            assert(cv_invariant_checked);
+            assert(const_invariant_checked);
+        #endif
+    #endif
 
     return 0;
 }

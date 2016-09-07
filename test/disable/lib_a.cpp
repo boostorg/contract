@@ -4,7 +4,7 @@
 // file LICENSE_1_0.txt or a copy at http://www.boost.org/LICENSE_1_0.txt).
 // See: http://www.boost.org/doc/libs/release/libs/contract/doc/html/index.html
 
-// Test other contract checking disabled within contract checking [among libs].
+// Test other contract checking disabled within contract checking (among libs).
 
 #define BOOST_CONTRACT_TEST_LIB_A_SOURCE
 #include "lib_a_inlined.hpp"

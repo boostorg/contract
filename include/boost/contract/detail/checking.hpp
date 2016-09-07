@@ -45,7 +45,7 @@ private:
 
 /** @cond Needed because this header included by other public headers. */
 #if BOOST_CONTRACT_HEADER_ONLY
-    #include <boost/contract/detail/inlined/detail/check_guard.hpp>
+    #include <boost/contract/detail/inlined/detail/checking.hpp>
 #endif
 /** @endcond */
 

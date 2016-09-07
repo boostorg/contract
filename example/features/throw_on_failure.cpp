@@ -90,19 +90,24 @@ int main() {
         assert(s.size() == 3);
     }
 
-    try {
-        char* c = 0;
-        cstring<3> s(c);
-        assert(false);
-    } catch(boost::contract::assertion_failure const& error) { // OK (expected).
-        std::clog << "ignored: " << error.what() << std::endl;
-    } catch(...) { assert(false); }
-    
-    try {
-        cstring<3> s("abcd");
-        assert(false);
-    } catch(too_large_error const&) {} // OK (expected).
-    catch(...) { assert(false); }
+    #ifndef BOOST_CONTRACT_NO_PRECONDITIONS
+        // These failures properly handled only when preconditions checked.
+
+        try {
+            char* c = 0;
+            cstring<3> s(c);
+            assert(false);
+        } catch(boost::contract::assertion_failure const& error) {
+            // OK (expected).
+            std::clog << "ignored: " << error.what() << std::endl;
+        } catch(...) { assert(false); }
+        
+        try {
+            cstring<3> s("abcd");
+            assert(false);
+        } catch(too_large_error const&) {} // OK (expected).
+        catch(...) { assert(false); }
+    #endif
 
     return 0;
 }

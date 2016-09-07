@@ -6,6 +6,13 @@
 
 // Test call_if equality check with C++14 generic lambdas.
 
+#include <boost/config.hpp>
+#ifdef BOOST_NO_CXX14_GENERIC_LAMBDAS
+
+int main() { return 0; } // Test trivially always pass.
+
+#else // This test requires C++14 generic lambdas.
+
 #include "../detail/oteststream.hpp"
 #include <boost/contract/call_if.hpp>
 #include <boost/type_traits/has_equal_to.hpp>
@@ -50,4 +57,6 @@ int main() {
 
     return boost::report_errors();
 }
+
+#endif // BOOST_NO_CXX14_GENERIC_LAMBDAS
 

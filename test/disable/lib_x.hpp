@@ -7,7 +7,7 @@
 // file LICENSE_1_0.txt or a copy at http://www.boost.org/LICENSE_1_0.txt).
 // See: http://www.boost.org/doc/libs/release/libs/contract/doc/html/index.html
 
-// Test contracts in .cpp so never has post (because NO_POST in its Jamfile).
+// Test contracts in .cpp compiled to never check post/except.
 
 #include "../detail/oteststream.hpp"
 #include <boost/config.hpp>

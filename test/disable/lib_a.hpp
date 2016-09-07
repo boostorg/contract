@@ -12,7 +12,7 @@
 #include <boost/config.hpp>
 #include <string>
 
-// Test other contract checking disabled within contract checking [among libs].
+// Test other contract checking disabled within contract checking (among libs).
 
 #ifdef BOOST_CONTRACT_TEST_LIB_A_DYN_LINK
     #ifdef BOOST_CONTRACT_TEST_LIB_A_SOURCE

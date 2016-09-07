@@ -15,9 +15,11 @@ Facility to assert contract conditions.
 
 /* PUBLIC */
 
-#if !defined(BOOST_CONTRACT_NO_PRECONDITIONS) || \
+#if     !defined(BOOST_CONTRACT_NO_INVARIANTS) || \
+        !defined(BOOST_CONTRACT_NO_PRECONDITIONS) || \
         !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
-        !defined(BOOST_CONTRACT_NO_INVARIANTS)
+        !defined(BOOST_CONTRACT_NO_EXCEPTS) || \
+        !defined(BOOST_CONTRACT_NO_CHECKS)
     #include <boost/contract/detail/assert.hpp>
     #define BOOST_CONTRACT_ASSERT(condition) \
         BOOST_CONTRACT_DETAIL_ASSERT(condition) /* no `;`  here */

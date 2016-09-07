@@ -4,7 +4,7 @@
 // file LICENSE_1_0.txt or a copy at http://www.boost.org/LICENSE_1_0.txt).
 // See: http://www.boost.org/doc/libs/release/libs/contract/doc/html/index.html
 
-// Test both old and post (for free func, but same for all contracts).
+// Test specifying old and post, no pre or except (same if not free func).
 
 #include "../detail/oteststream.hpp"
 #include <boost/contract/function.hpp>

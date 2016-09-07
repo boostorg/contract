@@ -44,7 +44,8 @@ Facilities to specify preconditions, old value assignments, and postconditions.
     
     #define BOOST_CONTRACT_SPECIFY_COND_RELEASE_ cond_.release()
 #else
-    #define BOOST_CONTRACT_SPECIFY_COND_CTOR_(cond_type) /* nothing */
+    #define BOOST_CONTRACT_SPECIFY_COND_CTOR_(ctor_name, cond_type) \
+        /* nothing */
 
     #define BOOST_CONTRACT_SPECIFY_COND_RELEASE_ /* nothing */
 #endif

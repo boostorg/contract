@@ -8,4 +8,7 @@
 
 #undef BOOST_CONTRACT_PERMISSIVE
 #include "override.hpp"
+#ifdef BOOST_CONTRACT_NO_PUBLIC_FUNCTIONS
+    #error "Forcing error even when public functions not checked"
+#endif
 

@@ -61,7 +61,7 @@ private:
                     #endif
             #endif
             #if     !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
-                    !defined(BOOST_CONTRACT_EXCEPTS)
+                    !defined(BOOST_CONTRACT_NO_EXCEPTS)
                 this->copy_old();
             #endif
         }

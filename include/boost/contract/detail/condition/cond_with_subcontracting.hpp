@@ -224,7 +224,8 @@ protected:
         }
     #endif
 
-    #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
+    #if     !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
+            !defined(BOOST_CONTRACT_NO_EXCEPTS)
         void copy_subcontracted_old() {
             exec_and(boost::contract::virtual_::call_old_copy,
                     &cond_with_subcontracting::copy_virtual_old);
@@ -245,7 +246,7 @@ protected:
         }
     #endif
 
-    #ifndef BOOST_CONTRAT_NO_EXCEPTS
+    #ifndef BOOST_CONTRACT_NO_EXCEPTS
         void check_subcontracted_except() {
             exec_and(boost::contract::virtual_::check_except,
                     &cond_with_subcontracting::check_except);

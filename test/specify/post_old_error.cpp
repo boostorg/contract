@@ -4,15 +4,15 @@
 // file LICENSE_1_0.txt or a copy at http://www.boost.org/LICENSE_1_0.txt).
 // See: http://www.boost.org/doc/libs/release/libs/contract/doc/html/index.html
 
-// Test post before old error (for free func, but same for all contracts).
+// Test old after post error (same if not free func).
 
 #include <boost/contract/function.hpp>
 #include <boost/contract/check.hpp>
 
 void f() {
     boost::contract::check c = boost::contract::function()
-        .postcondition([] {}) // Error (post before old).
-        .old([] {})
+        .postcondition([] {})
+        .old([] {}) // Error (old after post).
     ;
 }
 
