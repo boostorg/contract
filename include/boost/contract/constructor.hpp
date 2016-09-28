@@ -41,7 +41,7 @@ postconditions when the enclosing class has no invariants.
 template<class Class>
 specify_old_postcondition_except<> constructor(Class* obj) {
     // Must #if also on ..._PRECONDITIONS here because specify_... is generic.
-    #if !defined(BOOST_CONTRACT_NO_CONSTRUCTORS) || \
+    #if     !defined(BOOST_CONTRACT_NO_CONSTRUCTORS) || \
             !defined(BOOST_CONTRACT_NO_PRECONDITIONS)
         return specify_old_postcondition_except<>(
                 new boost::contract::detail::constructor<Class>(obj));

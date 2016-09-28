@@ -97,19 +97,29 @@ programmers can manually copy old value expressions without using this macro
 
 /* CODE */
 
-/** @cond */
-namespace boost {
-    namespace contract {
-        class old_value;
-    }
+namespace boost { namespace contract {
 
-    // Needed because `old_value` incomplete type when trait used.
-    template<>
-    struct is_copy_constructible<contract::old_value> : true_type {};
-}
+template<typename T>
+struct is_old_value_copyable : boost::is_copy_constructible<T> {};
+
+/** @cond */
+class old_value;
+
+template<> // Needed because `old_value` incomplete type when trait first used.
+struct is_old_value_copyable<old_value> : boost::true_type {};
 /** @endcond */
 
-namespace boost { namespace contract {
+template<typename T> // Used only if is_old_value_copyable<T>.
+class old_value_copy {
+public:
+    explicit old_value_copy(T const& value) :
+            value_(value) {} // This makes the one single copy of T.
+
+    T const& value() const { return value_; }
+
+private:
+    T const value_;
+};
 
 template<typename T>
 class old_ptr_if_copyable;
@@ -144,11 +154,12 @@ public:
     */
     T const& operator*() const {
         BOOST_STATIC_ASSERT_MSG(
-            boost::is_copy_constructible<T>::value,
-"old_ptr<T> requires T copy constructor, otherwise use old_ptr_if_copyable<T>"
+            boost::contract::is_old_value_copyable<T>::value,
+            "old_ptr<T> requires T copy constructible (see "
+            "is_old_value_copyable<T>), otherwise use old_ptr_if_copyable<T>"
         );
-        BOOST_CONTRACT_DETAIL_DEBUG(ptr_);
-        return *ptr_;
+        BOOST_CONTRACT_DETAIL_DEBUG(typed_copy_);
+        return typed_copy_->value();
     }
 
     /**
@@ -161,14 +172,17 @@ public:
     */
     T const* const operator->() const {
         BOOST_STATIC_ASSERT_MSG(
-            boost::is_copy_constructible<T>::value,
-"old_ptr<T> requires T copy constructor, otherwise use old_ptr_if_copyable<T>"
+            boost::contract::is_old_value_copyable<T>::value,
+            "old_ptr<T> requires T copy constructible (see "
+            "is_old_value_copyable<T>), otherwise use old_ptr_if_copyable<T>"
         );
-        return ptr_.operator->();
+        if(typed_copy_) return &typed_copy_->value();
+        return 0;
     }
 
     #ifndef DOXYGEN
-        BOOST_CONTRACT_DETAIL_OPERATOR_SAFE_BOOL(old_ptr<T>, !!ptr_)
+        BOOST_CONTRACT_DETAIL_OPERATOR_SAFE_BOOL(old_ptr<T>,
+                !!typed_copy_)
     #else
         /**
         Check if this old value pointer is null or not (safe-bool operator).
@@ -179,19 +193,18 @@ public:
 
 /** @cond */
 private:
-    #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
-        explicit old_ptr(boost::shared_ptr<T const> ptr) :
-                ptr_(ptr) {}
+    #if     !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
+            !defined(BOOST_CONTRACT_NO_EXCEPTS)
+        explicit old_ptr(boost::shared_ptr<old_value_copy<T> > old)
+                : typed_copy_(old) {}
     #endif
 
-    boost::shared_ptr<T const> ptr_;
+    boost::shared_ptr<old_value_copy<T> > typed_copy_;
 
     friend class old_pointer;
     friend class old_ptr_if_copyable<T>;
 /** @endcond */
 };
-
-// TODO: Rename this old_ptr_ifcopyable<T>.
 
 /**
 Old value pointer (that does not require the pointed old value type to be copy
@@ -211,6 +224,8 @@ public:
 
     /** Construct this object as a null old value pointer. */
     old_ptr_if_copyable() {}
+
+    // TODO: Document that auto old_x = BOOST_CONTRACT_OLD(...) will use old_ptr and not old_ptr_if_copyable (auto will by default not use old_ptr_if_conpyable because old_ptr is more stringent from a type requirement prospective, if users want to relax the copyable type requirements they need to explicitly use old_ptr_if_copyable instead of using auto).
     
     /**
     Construct this object from an old value pointer of copyable-only types.
@@ -219,7 +234,7 @@ public:
     @param other Copyable-only old value pointer.
     */
     /* implicit */ old_ptr_if_copyable(old_ptr<T> const& other) :
-            ptr_(other.ptr_) {}
+            typed_copy_(other.typed_copy_) {}
 
     /**
     Dereference this old value pointer.
@@ -230,8 +245,8 @@ public:
             old vale as a constant reference).
     */
     T const& operator*() const {
-        BOOST_CONTRACT_DETAIL_DEBUG(ptr_);
-        return *ptr_;
+        BOOST_CONTRACT_DETAIL_DEBUG(typed_copy_);
+        return typed_copy_->value();
     }
 
     /**
@@ -243,11 +258,13 @@ public:
             old value as a constant pointer to a constant object).
     */
     T const* const operator->() const {
-        return ptr_.operator->();
+        if(typed_copy_) return &typed_copy_->value();
+        return 0;
     }
 
     #ifndef DOXYGEN
-        BOOST_CONTRACT_DETAIL_OPERATOR_SAFE_BOOL(old_ptr_if_copyable<T>, !!ptr_)
+        BOOST_CONTRACT_DETAIL_OPERATOR_SAFE_BOOL(old_ptr_if_copyable<T>,
+                !!typed_copy_)
     #else
         /**
         Check if this old value pointer is null or not (safe-bool operator).
@@ -258,12 +275,13 @@ public:
 
 /** @cond */
 private:
-    #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
-        explicit old_ptr_if_copyable(boost::shared_ptr<T const> ptr) :
-                ptr_(ptr) {}
+    #if     !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
+            !defined(BOOST_CONTRACT_NO_EXCEPTS)
+        explicit old_ptr_if_copyable(boost::shared_ptr<old_value_copy<T> > old)
+                : typed_copy_(old) {}
     #endif
 
-    boost::shared_ptr<T const> ptr_;
+    boost::shared_ptr<old_value_copy<T> > typed_copy_;
 
     friend class old_pointer;
 /** @endcond */
@@ -296,11 +314,14 @@ public:
     template<typename T>
     /* implicit */ old_value(
         T const& old,
-        typename boost::enable_if<boost::is_copy_constructible<T> >::type* = 0
+        typename boost::enable_if<boost::contract::is_old_value_copyable<T>
+                >::type* = 0
     )
-        #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
-            : ptr_(boost::make_shared<T>(old)) // The one single T's copy.
-        #endif // Else, leave ptr_ null (and no copy of T).
+        #if     !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
+                !defined(BOOST_CONTRACT_NO_EXCEPTS)
+            // TODO: Will this shared_ptr<void> destroy old_value_copy given its type is erased to void*?? Test it!
+            : untyped_copy_(new old_value_copy<T>(old))
+        #endif // Else, leave ptr_ null (thus no copy of T).
     {}
     
     /**
@@ -314,15 +335,17 @@ public:
     template<typename T>
     /* implicit */ old_value(
         T const& old,
-        typename boost::disable_if<boost::is_copy_constructible<T> >::type* = 0
-    ) {} // Leave ptr_ null (and no copy of T).
+        typename boost::disable_if<boost::contract::is_old_value_copyable<T>
+                >::type* = 0
+    ) {} // Leave ptr_ null (thus no copy of T).
 
 /** @cond */
 private:
     explicit old_value() {}
     
-    #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
-        boost::shared_ptr<void> ptr_;
+    #if     !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
+            !defined(BOOST_CONTRACT_NO_EXCEPTS)
+        boost::shared_ptr<void> untyped_copy_; // Type erasure.
     #endif
 
     friend class old_pointer;
@@ -350,7 +373,7 @@ public:
     */
     template<typename T>
     /* implicit */ operator old_ptr_if_copyable<T>() {
-        return ptr<old_ptr_if_copyable<T> >();
+        return get<old_ptr_if_copyable<T> >();
     }
     
     /**
@@ -364,73 +387,72 @@ public:
     */
     template<typename T>
     /* implicit */ operator old_ptr<T>() {
-        return ptr<old_ptr<T> >();
+        return get<old_ptr<T> >();
     }
 
 /** @cond */
 private:
     explicit old_pointer(virtual_* v, old_value const& old)
-        #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
-            : v_(v), ptr_(old.ptr_)
+        #if     !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
+                !defined(BOOST_CONTRACT_NO_EXCEPTS)
+            : v_(v), untyped_copy_(old.untyped_copy_)
         #endif
     {}
     
     template<typename Ptr>
-    Ptr ptr() {
-        #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
-            if(!boost::is_copy_constructible<
-                    typename Ptr::element_type>::value) {
-                BOOST_CONTRACT_DETAIL_DEBUG(!ptr_); // Non-copyable so no old...
-                return Ptr(); // ...and return null.
+    Ptr get() {
+        #if     !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
+                !defined(BOOST_CONTRACT_NO_EXCEPTS)
+            if(!boost::contract::is_old_value_copyable<typename
+                    Ptr::element_type>::value) {
+                BOOST_CONTRACT_DETAIL_DEBUG(!untyped_copy_);
+                return Ptr(); // Non-copyable so no old value and return null.
             } else if(!v_ && boost::contract::detail::checking::already()) {
-                // Return null shared ptr (see after if statement).
+                return Ptr(); // Not checking (so return null).
             } else if(!v_) {
-                BOOST_CONTRACT_DETAIL_DEBUG(ptr_);
-                boost::shared_ptr<typename Ptr::element_type const> old =
-                    boost::static_pointer_cast<
-                            typename Ptr::element_type const>(ptr_)
-                ;
-                BOOST_CONTRACT_DETAIL_DEBUG(old);
-                return Ptr(old);
+                BOOST_CONTRACT_DETAIL_DEBUG(untyped_copy_);
+                typedef old_value_copy<typename Ptr::element_type> copied_type;
+                boost::shared_ptr<copied_type> typed_copy = // Un-erase type.
+                        boost::static_pointer_cast<copied_type>(untyped_copy_);
+                BOOST_CONTRACT_DETAIL_DEBUG(typed_copy);
+                return Ptr(typed_copy);
             } else if(v_->action_ == boost::contract::virtual_::push_old_init ||
                     v_->action_ == boost::contract::virtual_::push_old_copy) {
-                BOOST_CONTRACT_DETAIL_DEBUG(ptr_);
+                BOOST_CONTRACT_DETAIL_DEBUG(untyped_copy_);
                 if(v_->action_ == boost::contract::virtual_::push_old_init) {
-                    v_->old_inits_.push(ptr_);
+                    v_->old_inits_.push(untyped_copy_);
                 } else {
-                    v_->old_copies_.push(ptr_);
+                    v_->old_copies_.push(untyped_copy_);
                 }
-                return Ptr();
-            } else if(v_->action_ == boost::contract::virtual_::pop_old_init ||
+                return Ptr(); // Push (so return null).
+            } else if(boost::contract::virtual_::pop_old_init(v_->action_) ||
                     v_->action_ == boost::contract::virtual_::pop_old_copy) {
-                BOOST_CONTRACT_DETAIL_DEBUG(!ptr_);
-                boost::shared_ptr<void> ptr;
-                if(v_->action_ == boost::contract::virtual_::pop_old_init) {
-                    ptr = v_->old_inits_.front();
-                } else {
-                    ptr = v_->old_copies_.top();
-                }
-                BOOST_CONTRACT_DETAIL_DEBUG(ptr);
-                if(v_->action_ == boost::contract::virtual_::pop_old_init) {
+                BOOST_CONTRACT_DETAIL_DEBUG(!untyped_copy_); // Copy not null...
+                boost::shared_ptr<void> untyped_copy; // ...but still pop this.
+                if(boost::contract::virtual_::pop_old_init(v_->action_)) {
+                    untyped_copy = v_->old_inits_.front();
+                    BOOST_CONTRACT_DETAIL_DEBUG(untyped_copy);
                     v_->old_inits_.pop();
                 } else {
+                    untyped_copy = v_->old_copies_.top();
+                    BOOST_CONTRACT_DETAIL_DEBUG(untyped_copy);
                     v_->old_copies_.pop();
                 }
-                boost::shared_ptr<typename Ptr::element_type const> old =
-                    boost::static_pointer_cast<
-                            typename Ptr::element_type const>(ptr)
-                ;
-                BOOST_CONTRACT_DETAIL_DEBUG(old);
-                return Ptr(old);
+                typedef old_value_copy<typename Ptr::element_type> copied_type;
+                boost::shared_ptr<copied_type> typed_copy = // Un-erase type.
+                        boost::static_pointer_cast<copied_type>(untyped_copy);
+                BOOST_CONTRACT_DETAIL_DEBUG(typed_copy);
+                return Ptr(typed_copy);
             }
-            BOOST_CONTRACT_DETAIL_DEBUG(!ptr_);
+            BOOST_CONTRACT_DETAIL_DEBUG(!untyped_copy_);
         #endif
         return Ptr();
     }
 
-    #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
+    #if     !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
+            !defined(BOOST_CONTRACT_NO_EXCEPTS)
         virtual_* v_;
-        boost::shared_ptr<void> ptr_;
+        boost::shared_ptr<void> untyped_copy_; // Type erasure.
     #endif
     
     friend old_pointer make_old(old_value const&);
@@ -490,7 +512,8 @@ being checked (see @RefMacro{BOOST_CONTRACT_NO_POSTCONDITIONS}).
 @return True if old values are being copied, false otherwise.
 */
 bool copy_old() {
-    #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
+    #if     !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
+            !defined(BOOST_CONTRACT_NO_EXCEPTS)
         return !boost::contract::detail::checking::already();
     #else
         return false; // Post checking disabled, so never copy old values.
@@ -509,7 +532,8 @@ being checked (see @RefMacro{BOOST_CONTRACT_NO_POSTCONDITIONS}).
 @return True if old values are being copied, false otherwise.
 */
 bool copy_old(virtual_* v) {
-    #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
+    #if     !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
+            !defined(BOOST_CONTRACT_NO_EXCEPTS)
         if(!v) return !boost::contract::detail::checking::already();
         return v->action_ == boost::contract::virtual_::push_old_init ||
                 v->action_ == boost::contract::virtual_::push_old_copy;

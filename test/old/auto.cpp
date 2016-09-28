@@ -11,21 +11,28 @@
     #include <boost/contract/old.hpp>
     #include <boost/type_traits.hpp>
     #include <boost/static_assert.hpp>
+    #include <boost/detail/lightweight_test.hpp>
 #endif
 
 int main() {
     #ifndef BOOST_NO_CXX11_AUTO_DECLARATIONS
-        int x = 0;
+        int x = -123;
         auto old_x = BOOST_CONTRACT_OLD(x);
+        x = 123;
         BOOST_STATIC_ASSERT(boost::is_same<decltype(old_x),
                 boost::contract::old_ptr<int> >::value);
+        BOOST_TEST_EQ(*old_x, -123);
+        BOOST_TEST_EQ(x, 123);
 
         boost::contract::virtual_* v = 0;
-        char y = 'a';
+        char y = 'j';
         auto old_y = BOOST_CONTRACT_OLD(v, y);
+        y = 'k';
         BOOST_STATIC_ASSERT(boost::is_same<decltype(old_y),
                 boost::contract::old_ptr<char> >::value);
+        BOOST_TEST_EQ(*old_y, 'j');
+        BOOST_TEST_EQ(y, 'k');
     #endif // Else, nothing to test.
-    return 0;
+    return boost::report_errors();
 }
 

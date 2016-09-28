@@ -7,6 +7,10 @@
 // file LICENSE_1_0.txt or a copy at http://www.boost.org/LICENSE_1_0.txt).
 // See: http://www.boost.org/doc/libs/release/libs/contract/doc/html/index.html
 
+// TODO: See if it is possible to move most/all config macros to header files so to allow to config the lib without recompile the lib .cpp, just from user code. But rebuild all tests/examples for all compilers to make sure this does not slow down compilation/runtime.
+
+// TODO: Find out the C++ example that gives linker error on global variables that are not static/extern and then test this library against that example (for all boost_link mode: shared, static, and header-only).
+
 /** @file
 Facilities to configure this library compile-time and run-time behaviour.
 */
@@ -183,6 +187,10 @@ Facilities to configure this library compile-time and run-time behaviour.
     @see @RefSect{contract_programming_overview, Contract Programming Overview}
     */
     #define BOOST_CONTRACT_PRECONDITIONS_DISABLE_NO_ASSERTION
+#endif
+
+#ifdef DOXYGEN
+    #define BOOST_CONTRACT_ALL_DISABLE_NO_ASSERTION
 #endif
 
 #ifdef DOXYGEN

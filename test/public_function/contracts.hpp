@@ -24,6 +24,8 @@ boost::contract::test::detail::oteststream out;
 struct s_tag;
 typedef boost::contract::test::detail::counter<s_tag, std::string> s_type;
 
+struct except_error {};
+
 struct result_type {
     std::string value;
     explicit result_type(std::string const& s) : value(s) {}
@@ -53,7 +55,7 @@ struct t {
     virtual result_type& f(s_type& s, boost::contract::virtual_* v = 0) = 0;
 };
 
-template<char Id>
+template<char Id> // Requires: Only pass lower case Id so it'll never be 'X'.
 result_type& t<Id>::f(s_type& s, boost::contract::virtual_* v) {
     std::ostringstream r; r << "none-" << Id;
     static result_type result(r.str());
@@ -63,7 +65,7 @@ result_type& t<Id>::f(s_type& s, boost::contract::virtual_* v) {
     boost::contract::check c = boost::contract::public_function(v, result, this)
         .precondition([&] {
             out << Id << "::f::pre" << std::endl;
-            BOOST_CONTRACT_ASSERT(s.value[0] == Id);
+            BOOST_CONTRACT_ASSERT(s.value[0] == Id || s.value[0] == 'X');
         })
         .old([&] {
             out << Id << "::f::old" << std::endl;
@@ -76,8 +78,14 @@ result_type& t<Id>::f(s_type& s, boost::contract::virtual_* v) {
                     std::string::npos);
             BOOST_CONTRACT_ASSERT(result.value == old_s->value);
         })
+        .except([&] {
+            out << Id << "::f::except" << std::endl;
+            BOOST_CONTRACT_ASSERT(z.value == old_z->value);
+            BOOST_CONTRACT_ASSERT(s.value == old_s->value);
+        })
     ;
     out << "t<" << Id << ">::f::body" << std::endl;
+    if(s.value == "X") throw except_error();
     return result;
 }
 
@@ -113,7 +121,7 @@ struct c
                 override_f>(v, result, &c::f, this, s)
             .precondition([&] {
                 out << "c::f::pre" << std::endl;
-                BOOST_CONTRACT_ASSERT(s.value == "C");
+                BOOST_CONTRACT_ASSERT(s.value == "C" || s.value == "X");
             })
             .old([&] {
                 out << "c::f::old" << std::endl;
@@ -126,9 +134,15 @@ struct c
                         std::string::npos);
                 BOOST_CONTRACT_ASSERT(result.value == old_s->value);
             })
+            .except([&] {
+                out << "c::f::except" << std::endl;
+                BOOST_CONTRACT_ASSERT(y.value == old_y->value);
+                BOOST_CONTRACT_ASSERT(s.value == old_s->value);
+            })
         ;
 
         out << "c::f::body" << std::endl;
+        if(s.value == "X") throw except_error();
         std::string save_s = s.value;
 
         std::string save = y.value;
@@ -197,7 +211,7 @@ struct a
                 override_f>(v, result, &a::f, this, s)
             .precondition([&] {
                 out << "a::f::pre" << std::endl;
-                BOOST_CONTRACT_ASSERT(s.value == "A");
+                BOOST_CONTRACT_ASSERT(s.value == "A" || s.value == "X");
             })
             .old([&] {
                 out << "a::f::old" << std::endl;
@@ -210,9 +224,15 @@ struct a
                         std::string::npos);
                 BOOST_CONTRACT_ASSERT(result.value == old_s->value);
             })
+            .except([&] {
+                out << "a::f::except" << std::endl;
+                BOOST_CONTRACT_ASSERT(x.value == old_x->value);
+                BOOST_CONTRACT_ASSERT(s.value == old_s->value);
+            })
         ;
 
         out << "a::f::body" << std::endl;
+        if(s.value == "X") throw except_error();
         std::string save_s = s.value;
 
         std::string save = x.value;

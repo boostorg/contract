@@ -4,7 +4,7 @@
 // file LICENSE_1_0.txt or a copy at http://www.boost.org/LICENSE_1_0.txt).
 // See: http://www.boost.org/doc/libs/release/libs/contract/doc/html/index.html
 
-// Test public member function body throws with subcontracting.
+// Test virt pub func body throws with subcontr from middle of inheritance tree.
 
 #include "contracts.hpp"
 #include <boost/optional.hpp>
@@ -15,12 +15,12 @@
 int main() {
     std::ostringstream ok;
     
-    a aa; // Test call to derived out-most leaf.
+    c cc; // Test call to class at mid- inheritance tree (as base with bases).
     s_type s; s.value = "X"; // So body will throw.
     out.str("");
     boost::optional<result_type&> r;
     try {
-        r = aa.f(s);
+        r = cc.f(s);
         BOOST_TEST(false);
     } catch(except_error const&) {
         ok.str(""); ok
@@ -31,8 +31,6 @@ int main() {
                 << "e::inv" << std::endl
                 << "c::static_inv" << std::endl
                 << "c::inv" << std::endl
-                << "a::static_inv" << std::endl
-                << "a::inv" << std::endl
             #endif
             #ifndef BOOST_CONTRACT_NO_PRECONDITIONS
                 << "d::f::pre" << std::endl
@@ -41,9 +39,8 @@ int main() {
                 << "d::f::old" << std::endl
                 << "e::f::old" << std::endl
                 << "c::f::old" << std::endl
-                << "a::f::old" << std::endl
             #endif
-            << "a::f::body" << std::endl
+            << "c::f::body" << std::endl
             #ifndef BOOST_CONTRACT_NO_EXIT_INVARIANTS
                 << "d::static_inv" << std::endl
                 << "d::inv" << std::endl
@@ -51,18 +48,14 @@ int main() {
                 << "e::inv" << std::endl
                 << "c::static_inv" << std::endl
                 << "c::inv" << std::endl
-                << "a::static_inv" << std::endl
-                << "a::inv" << std::endl
             #endif
             #ifndef BOOST_CONTRACT_NO_EXCEPTS
                 << "d::f::old" << std::endl
                 << "d::f::except" << std::endl
                 << "e::f::old" << std::endl
                 << "e::f::except" << std::endl
-                << "c::f::old" << std::endl
-                << "c::f::except" << std::endl
                 // No old call here because not a base object.
-                << "a::f::except" << std::endl
+                << "c::f::except" << std::endl
             #endif
         ;
         BOOST_TEST(out.eq(ok.str()));
@@ -76,38 +69,31 @@ int main() {
         BOOST_TEST(!r); // Boost.Optional result not init (as body threw).
         BOOST_TEST_EQ(s.value, "X");
         BOOST_TEST_EQ(s.copies(),
-                BOOST_PP_IIF(BOOST_CONTRACT_TEST_except, 4u, 0u));
+                BOOST_PP_IIF(BOOST_CONTRACT_TEST_except, 3u, 0u));
         BOOST_TEST_EQ(s.evals(),
-                BOOST_PP_IIF(BOOST_CONTRACT_TEST_except, 4u, 0u));
+                BOOST_PP_IIF(BOOST_CONTRACT_TEST_except, 3u, 0u));
         BOOST_TEST_EQ(s.ctors(), s.dtors() + 1); // 1 for local var.
 
-        BOOST_TEST_EQ(aa.x.value, "a");
-        BOOST_TEST_EQ(aa.x.copies(),
+        BOOST_TEST_EQ(cc.y.value, "c");
+        BOOST_TEST_EQ(cc.y.copies(),
                 BOOST_PP_IIF(BOOST_CONTRACT_TEST_except, 1u, 0u));
-        BOOST_TEST_EQ(aa.x.evals(),
+        BOOST_TEST_EQ(cc.y.evals(),
                 BOOST_PP_IIF(BOOST_CONTRACT_TEST_except, 1u, 0u));
-        BOOST_TEST_EQ(aa.x.ctors(), aa.x.dtors() + 1); // 1 for member var.
-
-        BOOST_TEST_EQ(aa.y.value, "c");
-        BOOST_TEST_EQ(aa.y.copies(),
-                BOOST_PP_IIF(BOOST_CONTRACT_TEST_except, 1u, 0u));
-        BOOST_TEST_EQ(aa.y.evals(),
-                BOOST_PP_IIF(BOOST_CONTRACT_TEST_except, 1u, 0u));
-        BOOST_TEST_EQ(aa.y.ctors(), aa.y.dtors() + 1); // 1 for member var.
+        BOOST_TEST_EQ(cc.y.ctors(), cc.y.dtors() + 1); // 1 for member var.
         
-        BOOST_TEST_EQ(aa.t<'d'>::z.value, "d");
-        BOOST_TEST_EQ(aa.t<'d'>::z.copies(),
+        BOOST_TEST_EQ(cc.t<'d'>::z.value, "d");
+        BOOST_TEST_EQ(cc.t<'d'>::z.copies(),
                 BOOST_PP_IIF(BOOST_CONTRACT_TEST_except, 1u, 0u));
-        BOOST_TEST_EQ(aa.t<'d'>::z.evals(),
+        BOOST_TEST_EQ(cc.t<'d'>::z.evals(),
                 BOOST_PP_IIF(BOOST_CONTRACT_TEST_except, 1u, 0u));
-        BOOST_TEST_EQ(aa.t<'d'>::z.ctors(), aa.t<'d'>::z.dtors() + 1); // 1 mem.
+        BOOST_TEST_EQ(cc.t<'d'>::z.ctors(), cc.t<'d'>::z.dtors() + 1); // 1 mem.
 
-        BOOST_TEST_EQ(aa.t<'e'>::z.value, "e");
-        BOOST_TEST_EQ(aa.t<'e'>::z.copies(),
+        BOOST_TEST_EQ(cc.t<'e'>::z.value, "e");
+        BOOST_TEST_EQ(cc.t<'e'>::z.copies(),
                 BOOST_PP_IIF(BOOST_CONTRACT_TEST_except, 1u, 0u));
-        BOOST_TEST_EQ(aa.t<'e'>::z.evals(),
+        BOOST_TEST_EQ(cc.t<'e'>::z.evals(),
                 BOOST_PP_IIF(BOOST_CONTRACT_TEST_except, 1u, 0u));
-        BOOST_TEST_EQ(aa.t<'e'>::z.ctors(), aa.t<'e'>::z.dtors() + 1); // 1 mem.
+        BOOST_TEST_EQ(cc.t<'e'>::z.ctors(), cc.t<'e'>::z.dtors() + 1); // 1 mem.
 
         #undef BOOST_CONTRACT_TEST_except
     }

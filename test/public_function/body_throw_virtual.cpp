@@ -4,7 +4,7 @@
 // file LICENSE_1_0.txt or a copy at http://www.boost.org/LICENSE_1_0.txt).
 // See: http://www.boost.org/doc/libs/release/libs/contract/doc/html/index.html
 
-// Test public member function body throws with subcontracting.
+// Test virtual public member function body throws with subcontracting.
 
 #include "contracts.hpp"
 #include <boost/optional.hpp>
@@ -16,11 +16,12 @@ int main() {
     std::ostringstream ok;
     
     a aa; // Test call to derived out-most leaf.
+    c& ca = aa; // Test polymorphic virtual call (via reference to base c).
     s_type s; s.value = "X"; // So body will throw.
     out.str("");
     boost::optional<result_type&> r;
     try {
-        r = aa.f(s);
+        r = ca.f(s);
         BOOST_TEST(false);
     } catch(except_error const&) {
         ok.str(""); ok
@@ -81,6 +82,7 @@ int main() {
                 BOOST_PP_IIF(BOOST_CONTRACT_TEST_except, 4u, 0u));
         BOOST_TEST_EQ(s.ctors(), s.dtors() + 1); // 1 for local var.
 
+        // Cannot access x via ca, but only via aa.
         BOOST_TEST_EQ(aa.x.value, "a");
         BOOST_TEST_EQ(aa.x.copies(),
                 BOOST_PP_IIF(BOOST_CONTRACT_TEST_except, 1u, 0u));
@@ -88,26 +90,26 @@ int main() {
                 BOOST_PP_IIF(BOOST_CONTRACT_TEST_except, 1u, 0u));
         BOOST_TEST_EQ(aa.x.ctors(), aa.x.dtors() + 1); // 1 for member var.
 
-        BOOST_TEST_EQ(aa.y.value, "c");
-        BOOST_TEST_EQ(aa.y.copies(),
+        BOOST_TEST_EQ(ca.y.value, "c");
+        BOOST_TEST_EQ(ca.y.copies(),
                 BOOST_PP_IIF(BOOST_CONTRACT_TEST_except, 1u, 0u));
-        BOOST_TEST_EQ(aa.y.evals(),
+        BOOST_TEST_EQ(ca.y.evals(),
                 BOOST_PP_IIF(BOOST_CONTRACT_TEST_except, 1u, 0u));
-        BOOST_TEST_EQ(aa.y.ctors(), aa.y.dtors() + 1); // 1 for member var.
+        BOOST_TEST_EQ(ca.y.ctors(), aa.y.dtors() + 1); // 1 for member var.
         
-        BOOST_TEST_EQ(aa.t<'d'>::z.value, "d");
-        BOOST_TEST_EQ(aa.t<'d'>::z.copies(),
+        BOOST_TEST_EQ(ca.t<'d'>::z.value, "d");
+        BOOST_TEST_EQ(ca.t<'d'>::z.copies(),
                 BOOST_PP_IIF(BOOST_CONTRACT_TEST_except, 1u, 0u));
-        BOOST_TEST_EQ(aa.t<'d'>::z.evals(),
+        BOOST_TEST_EQ(ca.t<'d'>::z.evals(),
                 BOOST_PP_IIF(BOOST_CONTRACT_TEST_except, 1u, 0u));
-        BOOST_TEST_EQ(aa.t<'d'>::z.ctors(), aa.t<'d'>::z.dtors() + 1); // 1 mem.
+        BOOST_TEST_EQ(ca.t<'d'>::z.ctors(), aa.t<'d'>::z.dtors() + 1); // 1 mem.
 
-        BOOST_TEST_EQ(aa.t<'e'>::z.value, "e");
-        BOOST_TEST_EQ(aa.t<'e'>::z.copies(),
+        BOOST_TEST_EQ(ca.t<'e'>::z.value, "e");
+        BOOST_TEST_EQ(ca.t<'e'>::z.copies(),
                 BOOST_PP_IIF(BOOST_CONTRACT_TEST_except, 1u, 0u));
-        BOOST_TEST_EQ(aa.t<'e'>::z.evals(),
+        BOOST_TEST_EQ(ca.t<'e'>::z.evals(),
                 BOOST_PP_IIF(BOOST_CONTRACT_TEST_except, 1u, 0u));
-        BOOST_TEST_EQ(aa.t<'e'>::z.ctors(), aa.t<'e'>::z.dtors() + 1); // 1 mem.
+        BOOST_TEST_EQ(ca.t<'e'>::z.ctors(), aa.t<'e'>::z.dtors() + 1); // 1 mem.
 
         #undef BOOST_CONTRACT_TEST_except
     }

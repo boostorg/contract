@@ -6,6 +6,7 @@
 
 // Test old values of non-copyable types.
 
+#include "if_copyable.hpp"
 #include <boost/contract/public_function.hpp>
 #include <boost/contract/function.hpp>
 #include <boost/contract/base_types.hpp>
@@ -26,7 +27,7 @@ struct b {
         boost::contract::check c = boost::contract::public_function(v, this)
             .postcondition([&] {
                 if(old_x) {
-                    BOOST_CONTRACT_ASSERT(x > *old_x);
+                    BOOST_CONTRACT_ASSERT(x == *old_x + T(1));
                     ++old_checks;
                 }
             })
@@ -51,7 +52,7 @@ struct a
                 override_next>(v, &a::next, this, x)
             .postcondition([&] {
                 if(old_x) {
-                    BOOST_CONTRACT_ASSERT(x > *old_x);
+                    BOOST_CONTRACT_ASSERT(x == *old_x + T(1));
                     ++old_checks;
                 }
             })
@@ -67,40 +68,14 @@ void next(T& x) {
     boost::contract::check c = boost::contract::function()
         .postcondition([&] {
             if(old_x) {
-                BOOST_CONTRACT_ASSERT(x > *old_x);
+                BOOST_CONTRACT_ASSERT(x == *old_x + T(1));
                 ++old_checks;
             }
         })
     ;
     ++x;
 }
-
-struct cp {
-    explicit cp(int value) : value_(value) {}
-
-    friend cp& operator++(cp& me) { ++me.value_; return me; }
-
-    friend bool operator>(cp const& left, cp const& right) {
-        return left.value_ > right.value_;
-    }
-
-private:
-    int value_;
-};
-
-struct ncp : private boost::noncopyable {
-    explicit ncp(int value) : value_(value) {}
-
-    friend ncp& operator++(ncp& me) { ++me.value_; return me; }
-
-    friend bool operator>(ncp const& left, ncp const& right) {
-        return left.value_ > right.value_;
-    }
-
-private:
-    int value_;
-};
-
+    
 int main() {
     int i = 1; // Test built-in copyable type.
     cp c(1); // Test custom copyable type.

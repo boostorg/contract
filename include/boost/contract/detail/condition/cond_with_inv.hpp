@@ -126,13 +126,14 @@ protected:
 
 private:
     #ifndef BOOST_CONTRACT_NO_INVARIANTS
-        void check_inv(bool on_entry, bool static_only, bool both_const_cv) {
+        // Static, cv, and const inv in that order as strongest qualifier first.
+        void check_inv(bool on_entry, bool static_only, bool const_and_cv) {
             if(this->failed()) return;
             try {
                 // Static members only check static inv.
                 check_static_inv<C>();
                 if(!static_only) {
-                    if(both_const_cv) {
+                    if(const_and_cv) {
                         check_cv_inv<C>();
                         check_const_inv<C>();
                     } else if(boost::is_volatile<C>::value) {

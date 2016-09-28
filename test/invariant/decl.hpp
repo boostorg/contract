@@ -428,7 +428,7 @@ int main() {
     { // Test non-volatile call with bases.
         out.str("");
         a aa;
-        ok.str(""); ok
+        ok.str(""); ok // Ctors always check cv_inv (even if not volatile).
             #ifndef BOOST_CONTRACT_NO_PRECONDITIONS
                 << "a::ctor::pre" << std::endl
                 << "b::ctor::pre" << std::endl
@@ -486,7 +486,7 @@ int main() {
 
         out.str("");
         aa.f('a');
-        ok.str(""); ok // Mutable checks static and const (but not cv) inv.
+        ok.str(""); ok // Non-cv checks static and const (but not cv) inv.
             #ifndef BOOST_CONTRACT_NO_ENTRY_INVARIANTS
                 #ifdef BOOST_CONTRACT_TEST_STATIC_INV
                     << "b::static_inv" << std::endl
@@ -592,7 +592,7 @@ int main() {
 
         out.str("");
     } // Call a's destructor.
-    ok.str(""); ok
+    ok.str(""); ok // Dtors always check cv_inv (even if not volatile).
         #ifndef BOOST_CONTRACT_NO_ENTRY_INVARIANTS
             #ifdef BOOST_CONTRACT_TEST_STATIC_INV
                 << "a::static_inv" << std::endl
@@ -742,7 +742,7 @@ int main() {
     { // Test non-volatile call with no bases.
         out.str("");
         b bb;
-        ok.str(""); ok
+        ok.str(""); ok // Ctors always check cv_inv (even if not volatile).
             #ifndef BOOST_CONTRACT_NO_PRECONDITIONS
                 << "b::ctor::pre" << std::endl
             #endif
@@ -775,7 +775,7 @@ int main() {
 
         out.str("");
         bb.f('b');
-        ok.str(""); ok // Mutable checks static and const (but not cv) inv.
+        ok.str(""); ok // Non-cv checks static and const (but not cv) inv.
             #ifndef BOOST_CONTRACT_NO_ENTRY_INVARIANTS
                 #ifdef BOOST_CONTRACT_TEST_STATIC_INV
                     << "b::static_inv" << std::endl
@@ -807,7 +807,7 @@ int main() {
         
         out.str("");
     } // Call b's destructor.
-    ok.str(""); ok
+    ok.str(""); ok // Dtors always check cv_inv (even if not volatile).
         #ifndef BOOST_CONTRACT_NO_ENTRY_INVARIANTS
             #ifdef BOOST_CONTRACT_TEST_STATIC_INV
                 << "b::static_inv" << std::endl

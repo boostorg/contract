@@ -102,7 +102,8 @@ void assertion_failure::init() {
 
 namespace exception_ {
     enum failure_key {
-        entry_inv_key, exit_inv_key, pre_key, post_key, except_key, check_key
+        entry_inv_key, exit_inv_key, pre_key, post_key, old_key, except_key,
+                check_key
     };
 
     template<failure_key Key>
@@ -113,6 +114,7 @@ namespace exception_ {
             case exit_inv_key: k = "exit invariant "; break;
             case pre_key: k = "precondition "; break;
             case post_key: k = "postcondition "; break;
+            case old_key: k = "old copy "; break;
             case except_key: k = "except "; break;
             case check_key: k = "check "; break;
             // No default (so compiler warning/error on missing enum case).
@@ -121,7 +123,7 @@ namespace exception_ {
         catch(boost::contract::assertion_failure const& error) {
             // what = "assertion '...' failed: ...".
             std::cerr << k << error.what() << std::endl;
-        } catch(...) {
+        } catch(...) { // old_key prints this, not above.
             std::cerr << k << "threw following exception:" << std::endl
                     << boost::current_exception_diagnostic_information();
         }
@@ -152,6 +154,11 @@ namespace exception_ {
         boost::mutex post_failure_mutex;
     #endif
     from_failure_handler post_failure_handler = &default_from_handler<post_key>;
+    
+    #ifndef BOOST_CONTRACT_DISABLE_THREADS
+        boost::mutex old_failure_mutex;
+    #endif
+    from_failure_handler old_failure_handler = &default_from_handler<old_key>;
     
     #ifndef BOOST_CONTRACT_DISABLE_THREADS
         boost::mutex except_failure_mutex;
@@ -214,6 +221,22 @@ from_failure_handler get_postcondition_failure() BOOST_NOEXCEPT_OR_NOTHROW {
 void postcondition_failure(from where) /* can throw */ {
     BOOST_CONTRACT_EXCEPTION_HANDLER_(exception_::post_failure_mutex,
             exception_::post_failure_handler, where);
+}
+
+from_failure_handler set_old_failure(from_failure_handler const& f)
+        BOOST_NOEXCEPT_OR_NOTHROW {
+    BOOST_CONTRACT_EXCEPTION_HANDLER_SET_(exception_::old_failure_mutex,
+            from_failure_handler, exception_::old_failure_handler, f);
+}
+
+from_failure_handler get_old_failure() BOOST_NOEXCEPT_OR_NOTHROW {
+    BOOST_CONTRACT_EXCEPTION_HANDLER_GET_(exception_::old_failure_mutex,
+            exception_::old_failure_handler);
+}
+
+void old_failure(from where) /* can throw */ {
+    BOOST_CONTRACT_EXCEPTION_HANDLER_(exception_::old_failure_mutex,
+            exception_::old_failure_handler, where);
 }
 
 from_failure_handler set_except_failure(from_failure_handler const& f)

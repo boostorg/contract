@@ -36,8 +36,7 @@ struct a {
 int main() {
     std::ostringstream ok;
 
-    boost::contract::set_postcondition_failure(
-            [] (boost::contract::from) { throw; });
+    boost::contract::set_old_failure([] (boost::contract::from) { throw; });
 
     try {
         out.str("");

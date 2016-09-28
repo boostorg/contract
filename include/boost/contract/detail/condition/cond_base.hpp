@@ -7,7 +7,14 @@
 // file LICENSE_1_0.txt or a copy at http://www.boost.org/LICENSE_1_0.txt).
 // See: http://www.boost.org/doc/libs/release/libs/contract/doc/html/index.html
 
-// TODO: Try to see if *all* inheritance can be replaced with some static polymorphism (strategies, policies, etc.) so I will have no virtual functions at all. Then I could measure if there is any compile/run-time change by compiling and running all examples (or tests) on MSVC, GCC, and CLang...
+// NOTE: It seemed not possible to implement this library without inheritance
+// here because some sort of base type needs to be used to hold contract objects
+// in instances of boost::contract::check while polymorphically calling
+// init and destructor functions to check contracts at entry and exit. This
+// could be possible without inheritance only if boost::contract::check was made
+// a template type but that would complicate user code. In any case, early
+// experimentation with removing this base class and its virtual methods did not
+// seem to reduce compilation and/or run time.
 
 #include <boost/contract/core/exception.hpp>
 #include <boost/contract/core/config.hpp>
@@ -102,8 +109,7 @@ protected:
         void copy_old() {
             if(failed()) return;
             try { if(old_) old_(); }
-            // TODO: This is no longer correct because old can fail for either postconditions or excepts... should this just call its own failure handler old_failure?
-            catch(...) { fail(&boost::contract::postcondition_failure); }
+            catch(...) { fail(&boost::contract::old_failure); }
         }
     #endif
 

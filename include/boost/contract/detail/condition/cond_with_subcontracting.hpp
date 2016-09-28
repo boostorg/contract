@@ -249,7 +249,7 @@ protected:
     #ifndef BOOST_CONTRACT_NO_EXCEPTS
         void check_subcontracted_except() {
             exec_and(boost::contract::virtual_::check_except,
-                    &cond_with_subcontracting::check_except);
+                    &cond_with_subcontracting::check_virtual_except);
         }
     #endif
 
@@ -282,17 +282,20 @@ private:
             this->copy_old();
             if(base_call_) v_->action_ = a;
         }
-    #endif
-    
-    #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
-        void check_virtual_post() {
+            
+        void pop_base_old() {
             if(base_call_) {
                 boost::contract::virtual_::action_enum a = v_->action_;
                 v_->action_ = boost::contract::virtual_::pop_old_copy;
                 this->copy_old();
                 v_->action_ = a;
-            }
-
+            } // Else, do nothing (for base calls only).
+        }
+    #endif
+    
+    #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
+        void check_virtual_post() {
+            pop_base_old();
             typedef typename boost::remove_reference<typename
                     optional_value_type<VR>::type>::type r_type;
             boost::optional<r_type const&> r; // No result copy in this code.
@@ -331,13 +334,22 @@ private:
 
         template<typename R_, typename Result>
         typename boost::enable_if<is_optional<R_> >::type
-        check_virtual_post_with_result(Result const& r) { this->check_post(r); }
+        check_virtual_post_with_result(Result const& r) {
+            this->check_post(r);
+        }
         
         template<typename R_, typename Result>
         typename boost::disable_if<is_optional<R_> >::type
         check_virtual_post_with_result(Result const& r) {
             BOOST_CONTRACT_DETAIL_DEBUG(r);
             this->check_post(*r);
+        }
+    #endif
+    
+    #ifndef BOOST_CONTRACT_NO_EXCEPTS
+        void check_virtual_except() {
+            pop_base_old();
+            this->check_except();
         }
     #endif
 

@@ -44,8 +44,8 @@ RAII object to check contracts.
             try { \
                 if(!boost::contract::detail::checking::already()) { \
                     /* this name somewhat unique to min var shadow warnings */ \
-                    boost::contract::detail::checking\
-                            BOOST_CONTRACT_DETAIL_NAME2(chk, __LINE__); \
+                    boost::contract::detail::checking \
+                            BOOST_CONTRACT_DETAIL_NAME2(k, __LINE__); \
                     { assertion; } \
                 } \
             } catch(...) { boost::contract::check_failure(); } \

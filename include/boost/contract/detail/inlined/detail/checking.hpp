@@ -15,24 +15,32 @@
 namespace boost { namespace contract { namespace detail {
 
 checking::checking() {
-    #ifndef BOOST_CONTRACT_DISABLE_THREADS
-        boost::lock_guard<boost::mutex> lock(mutex_);
-    #endif
-    checking_ = true;
+    #ifndef BOOST_CONTRACT_ALL_DISABLE_NO_ASSERTION
+        #ifndef BOOST_CONTRACT_DISABLE_THREADS
+            boost::lock_guard<boost::mutex> lock(mutex_);
+        #endif
+        checking_ = true;
+    #endif // Else, do nothing.
 }
 
 checking::~checking() {
-    #ifndef BOOST_CONTRACT_DISABLE_THREADS
-        boost::lock_guard<boost::mutex> lock(mutex_);
-    #endif
-    checking_ = false;
+    #ifndef BOOST_CONTRACT_ALL_DISABLE_NO_ASSERTION
+        #ifndef BOOST_CONTRACT_DISABLE_THREADS
+            boost::lock_guard<boost::mutex> lock(mutex_);
+        #endif
+        checking_ = false;
+    #endif // Else, do nothing.
 }
 
 bool checking::already() {
-    #ifndef BOOST_CONTRACT_DISABLE_THREADS
-        boost::lock_guard<boost::mutex> lock(mutex_);
+    #ifndef BOOST_CONTRACT_ALL_DISABLE_NO_ASSERTION
+        #ifndef BOOST_CONTRACT_DISABLE_THREADS
+            boost::lock_guard<boost::mutex> lock(mutex_);
+        #endif
+        return checking_;
+    #else
+        return false; // Never already checking (so no assertion ever disabled).
     #endif
-    return checking_;
 }
 
 bool checking::checking_ = false;

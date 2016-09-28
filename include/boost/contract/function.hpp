@@ -2,8 +2,6 @@
 #ifndef BOOST_CONTRACT_FUNCTION_HPP_
 #define BOOST_CONTRACT_FUNCTION_HPP_
 
-// TODO: Document that boost::contract::function can also be used to program contracts for lambda functions.
-
 // Copyright (C) 2008-2016 Lorenzo Caminiti
 // Distributed under the Boost Software License, Version 1.0 (see accompanying
 // file LICENSE_1_0.txt or a copy at http://www.boost.org/LICENSE_1_0.txt).

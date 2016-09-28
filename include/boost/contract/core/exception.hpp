@@ -316,6 +316,16 @@ void /** @cond */ BOOST_CONTRACT_DETAIL_DECLSPEC /** @endcond */
 postcondition_failure(from where) /* can throw */;
 
 from_failure_handler /** @cond */ BOOST_CONTRACT_DETAIL_DECLSPEC /** @endcond */
+set_old_failure(from_failure_handler const& f)
+        /** @cond */ BOOST_NOEXCEPT_OR_NOTHROW /** @endcond */;
+
+from_failure_handler /** @cond */ BOOST_CONTRACT_DETAIL_DECLSPEC /** @endcond */
+get_old_failure() /** @cond */ BOOST_NOEXCEPT_OR_NOTHROW /** @endcond */;
+
+void /** @cond */ BOOST_CONTRACT_DETAIL_DECLSPEC /** @endcond */
+old_failure(from where) /* can throw */;
+
+from_failure_handler /** @cond */ BOOST_CONTRACT_DETAIL_DECLSPEC /** @endcond */
 set_except_failure(from_failure_handler const& f)
         /** @cond */ BOOST_NOEXCEPT_OR_NOTHROW /** @endcond */;
 

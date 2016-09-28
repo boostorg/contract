@@ -47,8 +47,7 @@ public:
     explicit cond_with_post(boost::contract::from from) : cond_base(from) {}
     
     #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
-private:
-        typedef typename boost::mpl::if_<is_optional<VR>,
+        private: typedef typename boost::mpl::if_<is_optional<VR>,
             boost::optional<typename boost::remove_reference<typename
                     optional_value_type<VR>::type>::type const&> const&
         ,

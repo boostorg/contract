@@ -126,6 +126,8 @@ test-suite public_function :
     [ subdir-run public_function : ifdef_contracts ]
     
     [ subdir-run public_function : body_throw ]
+    [ subdir-run public_function : body_throw_virtual ]
+    [ subdir-run public_function : body_throw_virtual_branch ]
     [ subdir-run public_function : old_throw ]
     
     [ subdir-run public_function : max_args0 ]
@@ -279,7 +281,8 @@ test-suite call_if :
     [ subdir-run call_if : equal_to_cxx14 : # Requires C++14.
             <toolset>clang:<cxxflags>-std=c++1y ]
     
-    [ subdir-run call_if : condition_if ]
-    [ subdir-compile-fail call_if : no_condition_if_error ]
+    [ subdir-run call_if : no_equal_condition_if ]
+    [ subdir-run call_if : no_equal_call_if ]
+    [ subdir-compile-fail call_if : no_equal_error ]
 ;
 

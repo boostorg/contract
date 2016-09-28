@@ -25,12 +25,6 @@ never be used directly by programmers.
 @see @RefSect{getting_started, Getting Started}
 */
 
-// TODO: Clearly separate const and const volatile inv checked by mutable+const and volatile+const_volatile func respectively (see related email to Boost).
-
-// TODO: Add a macro ALL_DISABLE_NOTHING to turn-off disabling assertions within assertions for all contracts, not just preconditions (do I still need PRECONDITIONS_DISABLE_NOTHING then?).
-
-// TODO: Consider using a trait like boost::contract::is_copy_constructible<T> (or has_old<T>) instead of boost::is_copy_constructible<T> directly (so programmers can specialize it to avoid old copies of specify types T without affecting other parts of the program that might be using boost::is_copy_constructible). Then maybe I should also introduce a trait to make the copy instead of directly using the copy constructor... so to allow for maximum customization..
-
 // TODO: Document that boost::contract::function() can be used to program contracts for lambda functions. And also "abused" a bit to program pre/postconditions for any arbitrary scope of code in function body.
 
 // TODO: Document that friends do not in general check invariants so their contracts are usually programmed using function(). But if a function friend of an object takes an instance of that object as a parameter and therefore is essentially part of the object's public API, then programmers can make that explicit by using public_function(obj) after function() to program the friend function contract (but note that in general friends functions can take instances of multiple different objects because the same function can be friend of different classes). Also add a test (under test/public_function/...) and an example for friend.

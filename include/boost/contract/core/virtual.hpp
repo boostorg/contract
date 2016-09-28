@@ -70,8 +70,8 @@ class virtual_ : private boost::noncopyable { // Avoid copy queue, stack, etc.
                 !defined(BOOST_CONTRACT_NO_EXCEPTS)
             no_action,
         #endif
-        #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
-            push_old_init,
+        #if     !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
+                !defined(BOOST_CONTRACT_NO_EXCEPTS)
         #endif
         #ifndef BOOST_CONTRACT_NO_ENTRY_INVARIANTS
             check_entry_inv,
@@ -79,23 +79,42 @@ class virtual_ : private boost::noncopyable { // Avoid copy queue, stack, etc.
         #ifndef BOOST_CONTRACT_NO_PRECONDITIONS
             check_pre,
         #endif
-        #if     !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
-                !defined(BOOST_CONTRACT_NO_EXCEPTS)
-            call_old_copy,
-            push_old_copy,
-        #endif
         #ifndef BOOST_CONTRACT_NO_EXIT_INVARIANTS
             check_exit_inv,
         #endif
         #if     !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
                 !defined(BOOST_CONTRACT_NO_EXCEPTS)
+            push_old_init,
+            call_old_copy,
+            push_old_copy,
             pop_old_copy,
+        #endif
+        #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
             check_post,
-            // TODO: Why would this need to have the same value and check_post but not of check_except? There might be a bug here...
-            pop_old_init = check_post, // These must be the same value.
+        #endif
+        #ifndef BOOST_CONTRACT_NO_EXCEPTS
             check_except,
         #endif
     };
+
+    #if     !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
+            !defined(BOOST_CONTRACT_NO_EXCEPTS)
+        // Not just an enum value because the logical combination of two values.
+        inline static bool pop_old_init(action_enum a) {
+            return
+                #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
+                    a == check_post
+                #endif
+                #if     !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) && \
+                        !defined(BOOST_CONTRACT_NO_EXCEPTS)
+                    ||
+                #endif
+                #ifndef BOOST_CONTRACT_NO_EXCEPTS
+                    a == check_except
+                #endif
+            ;
+        }
+    #endif
 
     #if     !defined(BOOST_CONTRACT_NO_INVARIANTS) || \
             !defined(BOOST_CONTRACT_NO_PRECONDITIONS) || \
