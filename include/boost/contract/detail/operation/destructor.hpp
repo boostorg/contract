@@ -11,9 +11,10 @@
 #include <boost/contract/core/config.hpp>
 #include <boost/contract/detail/condition/cond_with_inv.hpp>
 #include <boost/contract/detail/none.hpp>
-#if     !defined(BOOST_CONTRACT_NO_INVARIANTS) || \
+#if     !defined(BOOST_CONTRACT_ALL_DISABLE_NO_ASSERTION) && ( \
+        !defined(BOOST_CONTRACT_NO_INVARIANTS) || \
         !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
-        !defined(BOOST_CONTRACT_NO_EXCEPTS)
+        !defined(BOOST_CONTRACT_NO_EXCEPTS))
     #include <boost/contract/detail/checking.hpp>
 #endif
 #if     !defined(BOOST_CONTRACT_NO_EXIT_INVARIANTS) || \
@@ -37,11 +38,15 @@ private:
             !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
             !defined(BOOST_CONTRACT_NO_EXCEPTS)
         void init() /* override */ {
-            if(checking::already()) return;
+            #ifndef BOOST_CONTRACT_ALL_DISABLE_NO_ASSERTION
+                if(checking::already()) return;
+            #endif
 
             #ifndef BOOST_CONTRACT_NO_ENTRY_INVARIANTS
                 {
-                    checking k;
+                    #ifndef BOOST_CONTRACT_ALL_DISABLE_NO_ASSERTION
+                        checking k;
+                    #endif
                     // Obj exists (before dtor body), check static and non- inv.
                     this->check_entry_all_inv();
                     // Dtor cannot have pre because it has no parameters.
@@ -60,8 +65,10 @@ public:
             !defined(BOOST_CONTRACT_NO_EXCEPTS)
         ~destructor() BOOST_NOEXCEPT_IF(false) {
             this->assert_initialized();
-            if(checking::already()) return;
-            checking k;
+            #ifndef BOOST_CONTRACT_ALL_DISABLE_NO_ASSERTION
+                if(checking::already()) return;
+                checking k;
+            #endif
 
             // If dtor body threw, obj still exists so check subcontracted
             // static and non- inv (but no post because of throw). Otherwise,

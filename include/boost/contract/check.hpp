@@ -7,6 +7,8 @@
 // file LICENSE_1_0.txt or a copy at http://www.boost.org/LICENSE_1_0.txt).
 // See: http://www.boost.org/doc/libs/release/libs/contract/doc/html/index.html
 
+// TODO: Experiment some more so see if using auto instead of explicit boost::checking can generate a compile time error (instead of just a run-time uninitialized error).
+
 /** @file
 RAII object to check contracts.
 */
@@ -14,7 +16,9 @@ RAII object to check contracts.
 #include <boost/contract/detail/all_core_headers.hpp>
 #include <boost/contract/detail/condition/cond_base.hpp>
 #include <boost/contract/detail/assert.hpp>
-#include <boost/contract/detail/checking.hpp>
+#ifndef BOOST_CONTRACT_ALL_DISABLE_NO_ASSERTION
+    #include <boost/contract/detail/checking.hpp>
+#endif
 #include <boost/contract/detail/auto_ptr.hpp>
 #include <boost/contract/detail/debug.hpp>
 #include <boost/contract/detail/name.hpp>
@@ -29,7 +33,7 @@ RAII object to check contracts.
         !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
         !defined(BOOST_CONTRACT_NO_EXCEPTS)
     #define BOOST_CONTRACT_CHECK_CTOR_DEF_(contract_type) \
-            : cond_(const_cast<contract_type&>(contract).cond_.release()) \
+        : cond_(const_cast<contract_type&>(contract).cond_.release()) \
         { \
             BOOST_CONTRACT_DETAIL_DEBUG(cond_); \
             cond_->initialize(); \
@@ -37,15 +41,26 @@ RAII object to check contracts.
 #else
     #define BOOST_CONTRACT_CHECK_CTOR_DEF_(contract_type) {}
 #endif
+
+#ifndef BOOST_CONTRACT_ALL_DISABLE_NO_ASSERTION
+    #define BOOST_CONTRACT_CHECK_IF_NOT_CHECKING_ALREADY_ \
+        if(!boost::contract::detail::checking::already())
+    #define BOOST_CONTRACT_CHECK_CHECKING_VAR_(guard) \
+        /* this name somewhat unique to min var shadow warnings */ \
+        boost::contract::detail::checking BOOST_CONTRACT_DETAIL_NAME2( \
+                guard, __LINE__);
+#else
+    #define BOOST_CONTRACT_CHECK_IF_NOT_CHECKING_ALREADY_ /* nothing */
+    #define BOOST_CONTRACT_CHECK_CHECKING_VAR_(guard) /* nothing */
+#endif
         
 #ifndef BOOST_CONTRACT_NO_CHECKS
     #define BOOST_CONTRACT_CHECK_(assertion) \
         { \
             try { \
-                if(!boost::contract::detail::checking::already()) { \
-                    /* this name somewhat unique to min var shadow warnings */ \
-                    boost::contract::detail::checking \
-                            BOOST_CONTRACT_DETAIL_NAME2(k, __LINE__); \
+                BOOST_CONTRACT_CHECK_IF_NOT_CHECKING_ALREADY_ \
+                { \
+                    BOOST_CONTRACT_CHECK_CHECKING_VAR_(k) \
                     { assertion; } \
                 } \
             } catch(...) { boost::contract::check_failure(); } \
@@ -87,7 +102,7 @@ public:
     /**
     Construct this object copying it from the specified one.
     This object will check the contract, the copied-from object will not (i.e.,
-    contract checking ownership is transfered from the copied object to this
+    contract check ownership is transfered from the copied object to this
     object).
     */
     check(check const& other) // Copy ctor moves cond_ pointer to dest.

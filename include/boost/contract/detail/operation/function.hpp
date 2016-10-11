@@ -10,9 +10,10 @@
 #include <boost/contract/core/exception.hpp>
 #include <boost/contract/core/config.hpp>
 #include <boost/contract/detail/condition/cond_with_post.hpp>
-#if     !defined(BOOST_CONTRACT_NO_PRECONDITIONS) || \
+#if     !defined(BOOST_CONTRACT_ALL_DISABLE_NO_ASSERTION) && ( \
+        !defined(BOOST_CONTRACT_NO_PRECONDITIONS) || \
         !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
-        !defined(BOOST_CONTRACT_NO_EXCEPTS)
+        !defined(BOOST_CONTRACT_NO_EXCEPTS))
     #include <boost/contract/detail/checking.hpp>
 #endif
 #if     !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
@@ -34,10 +35,14 @@ private:
             !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
             !defined(BOOST_CONTRACT_NO_EXCEPTS)
         void init() /* override */ {
-            if(checking::already()) return;
+            #ifndef  BOOST_CONTRACT_ALL_DISABLE_NO_ASSERTION
+                if(checking::already()) return;
+            #endif
             #ifndef BOOST_CONTRACT_NO_PRECONDITIONS
                 {
-                    #ifndef BOOST_CONTRACT_PRECONDITIONS_DISABLE_NO_ASSERTION
+                    #if !defined(BOOST_CONTRACT_ALL_DISABLE_NO_ASSERTION) && \
+                        !defined( \
+                            BOOST_CONTRACT_PRECONDITIONS_DISABLE_NO_ASSERTION)
                         checking k;
                     #endif
                     this->check_pre();
@@ -55,8 +60,10 @@ public:
             !defined(BOOST_CONTRACT_NO_EXCEPTS)
         ~function() BOOST_NOEXCEPT_IF(false) {
             this->assert_initialized();
-            if(checking::already()) return;
-            checking k;
+            #ifndef  BOOST_CONTRACT_ALL_DISABLE_NO_ASSERTION
+                if(checking::already()) return;
+                checking k;
+            #endif
             
             if(std::uncaught_exception()) {
                 #ifndef BOOST_CONTRACT_NO_EXCEPTS

@@ -12,7 +12,9 @@ Facilities to support old values.
 */
 
 #include <boost/contract/detail/all_core_headers.hpp>
-#include <boost/contract/detail/checking.hpp>
+#ifndef BOOST_CONTRACT_ALL_DISABLE_NO_ASSERTION
+    #include <boost/contract/detail/checking.hpp>
+#endif
 #include <boost/contract/detail/operator_safe_bool.hpp>
 #include <boost/contract/detail/debug.hpp>
 #include <boost/make_shared.hpp>
@@ -407,8 +409,10 @@ private:
                     Ptr::element_type>::value) {
                 BOOST_CONTRACT_DETAIL_DEBUG(!untyped_copy_);
                 return Ptr(); // Non-copyable so no old value and return null.
+        #ifndef BOOST_CONTRACT_ALL_DISABLE_NO_ASSERTION
             } else if(!v_ && boost::contract::detail::checking::already()) {
                 return Ptr(); // Not checking (so return null).
+        #endif
             } else if(!v_) {
                 BOOST_CONTRACT_DETAIL_DEBUG(untyped_copy_);
                 typedef old_value_copy<typename Ptr::element_type> copied_type;
@@ -514,9 +518,13 @@ being checked (see @RefMacro{BOOST_CONTRACT_NO_POSTCONDITIONS}).
 bool copy_old() {
     #if     !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
             !defined(BOOST_CONTRACT_NO_EXCEPTS)
-        return !boost::contract::detail::checking::already();
+        #ifndef BOOST_CONTRACT_ALL_DISABLE_NO_ASSERTION
+            return !boost::contract::detail::checking::already();
+        #else
+            return true;
+        #endif
     #else
-        return false; // Post checking disabled, so never copy old values.
+        return false; // No post checking, so never copy old values.
     #endif
 }
 
@@ -534,11 +542,17 @@ being checked (see @RefMacro{BOOST_CONTRACT_NO_POSTCONDITIONS}).
 bool copy_old(virtual_* v) {
     #if     !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
             !defined(BOOST_CONTRACT_NO_EXCEPTS)
-        if(!v) return !boost::contract::detail::checking::already();
+        if(!v) {
+            #ifndef BOOST_CONTRACT_ALL_DISABLE_NO_ASSERTION
+                return !boost::contract::detail::checking::already();
+            #else
+                return true;
+            #endif
+        }
         return v->action_ == boost::contract::virtual_::push_old_init ||
                 v->action_ == boost::contract::virtual_::push_old_copy;
     #else
-        return false; // Post checking disabled, so never copy old values.
+        return false; // No post checking, so never copy old values.
     #endif
 }
 

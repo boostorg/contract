@@ -11,10 +11,11 @@
 #include <boost/contract/core/config.hpp>
 #include <boost/contract/detail/condition/cond_with_inv.hpp>
 #include <boost/contract/detail/none.hpp>
-#if     !defined(BOOST_CONTRACT_NO_INVARIANTS) || \
+#if     !defined(BOOST_CONTRACT_ALL_DISABLE_NO_ASSERTION) && ( \
+        !defined(BOOST_CONTRACT_NO_INVARIANTS) || \
         !defined(BOOST_CONTRACT_NO_PRECONDITIONS) || \
         !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
-        !defined(BOOST_CONTRACT_NO_EXCEPTS)
+        !defined(BOOST_CONTRACT_NO_EXCEPTS))
     #include <boost/contract/detail/checking.hpp>
 #endif
 #if     !defined(BOOST_CONTRACT_NO_EXIT_INVARIANTS) || \
@@ -39,21 +40,25 @@ private:
             !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
             !defined(BOOST_CONTRACT_NO_EXCEPTS)
         void init() /* override */ {
-            if(checking::already()) return;
+            #ifndef BOOST_CONTRACT_ALL_DISABLE_NO_ASSERTION
+                if(checking::already()) return;
+            #endif
             #if !defined(BOOST_CONTRACT_NO_ENTRY_INVARIANTS) || \
                     !defined(BOOST_CONTRACT_NO_PRECONDITIONS)
                 { // Acquire checking guard.
-                    checking k;
+                    #ifndef BOOST_CONTRACT_ALL_DISABLE_NO_ASSERTION
+                        checking k;
+                    #endif
                     #ifndef BOOST_CONTRACT_NO_ENTRY_INVARIANTS
                         this->check_entry_static_inv();
                     #endif
                     #ifndef BOOST_CONTRACT_NO_PRECONDITIONS
                         #ifndef \
   BOOST_CONTRACT_PRECONDITIONS_DISABLE_NO_ASSERTION
-                                this->check_pre();
-                            } // Release checking guard.
+                            this->check_pre();
+                            } // Release checking guard (after pre check).
                         #else
-                            } // Release checking guard.
+                            } // Release checking guard (before pre check).
                             this->check_pre();
                         #endif
                     #else
@@ -73,8 +78,10 @@ public:
             !defined(BOOST_CONTRACT_NO_EXCEPTS)
         ~public_static_function() BOOST_NOEXCEPT_IF(false) {
             this->assert_initialized();
-            if(checking::already()) return;
-            checking k;
+            #ifndef BOOST_CONTRACT_ALL_DISABLE_NO_ASSERTION
+                if(checking::already()) return;
+                checking k;
+            #endif
 
             #ifndef BOOST_CONTRACT_NO_EXIT_INVARIANTS
                 this->check_exit_static_inv();

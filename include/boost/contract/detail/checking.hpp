@@ -7,10 +7,9 @@
 // file LICENSE_1_0.txt or a copy at http://www.boost.org/LICENSE_1_0.txt).
 // See: http://www.boost.org/doc/libs/release/libs/contract/doc/html/index.html
 
+#include <boost/contract/core/config.hpp>
 #include <boost/contract/detail/declspec.hpp>
-#ifndef BOOST_CONTRACT_DISABLE_THREADS
-    #include <boost/thread/mutex.hpp>
-#endif
+#include <boost/thread/mutex.hpp>
 #include <boost/noncopyable.hpp>
 
 namespace boost { namespace contract { namespace detail {
@@ -25,16 +24,41 @@ class BOOST_CONTRACT_DETAIL_DECLSPEC checking :
     private boost::noncopyable // Non-copyable resource (might use mutex, etc.).
 {
 public:
-    explicit checking();
-    ~checking();
+    explicit checking() {
+        #ifndef BOOST_CONTRACT_DISABLE_THREADS
+            init_locked();
+        #else
+            init_unlocked();
+        #endif
+    }
+
+    ~checking() {
+        #ifndef BOOST_CONTRACT_DISABLE_THREADS
+            done_locked();
+        #else
+            done_unlocked();
+        #endif
+    }
     
-    static bool already();
+    static bool already() {
+        #ifndef BOOST_CONTRACT_DISABLE_THREADS
+            return already_locked();
+        #else
+            return already_unlocked();
+        #endif
+    }
 
 private:
+    void init_unlocked();
+    void done_unlocked();
+    static bool already_unlocked();
+
+    void init_locked();
+    void done_locked();
+    static bool already_locked();
+
     static bool checking_;
-    #ifndef BOOST_CONTRACT_DISABLE_THREADS
-        static boost::mutex mutex_;
-    #endif
+    static boost::mutex mutex_; // Decl regardless of DISABLE_THREADS.
 };
 
 #ifdef BOOST_MSVC

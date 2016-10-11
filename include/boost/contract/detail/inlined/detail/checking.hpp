@@ -7,46 +7,36 @@
 // file LICENSE_1_0.txt or a copy at http://www.boost.org/LICENSE_1_0.txt).
 // See: http://www.boost.org/doc/libs/release/libs/contract/doc/html/index.html
 
+// IMPORTANT: Do NOT use config macros BOOST_CONTRACT_... in .cpp files so this
+// lib does not need recompiling if config changes (recompile only user code).
+
 #include <boost/contract/detail/checking.hpp>
-#ifndef BOOST_CONTRACT_DISABLE_THREADS
-    #include <boost/thread/lock_guard.hpp>
-#endif
+#include <boost/thread/lock_guard.hpp>
 
 namespace boost { namespace contract { namespace detail {
 
-checking::checking() {
-    #ifndef BOOST_CONTRACT_ALL_DISABLE_NO_ASSERTION
-        #ifndef BOOST_CONTRACT_DISABLE_THREADS
-            boost::lock_guard<boost::mutex> lock(mutex_);
-        #endif
-        checking_ = true;
-    #endif // Else, do nothing.
+void checking::init_unlocked() { checking_ = true; }
+void checking::done_unlocked() { checking_ = false; }
+bool checking::already_unlocked() { return checking_; }
+
+void checking::init_locked() {
+    boost::lock_guard<boost::mutex> lock(mutex_);
+    init_unlocked();
 }
 
-checking::~checking() {
-    #ifndef BOOST_CONTRACT_ALL_DISABLE_NO_ASSERTION
-        #ifndef BOOST_CONTRACT_DISABLE_THREADS
-            boost::lock_guard<boost::mutex> lock(mutex_);
-        #endif
-        checking_ = false;
-    #endif // Else, do nothing.
+void checking::done_locked() {
+    boost::lock_guard<boost::mutex> lock(mutex_);
+    done_unlocked();
+}
+    
+bool checking::already_locked() {
+    boost::lock_guard<boost::mutex> lock(mutex_);
+    return already_unlocked();
 }
 
-bool checking::already() {
-    #ifndef BOOST_CONTRACT_ALL_DISABLE_NO_ASSERTION
-        #ifndef BOOST_CONTRACT_DISABLE_THREADS
-            boost::lock_guard<boost::mutex> lock(mutex_);
-        #endif
-        return checking_;
-    #else
-        return false; // Never already checking (so no assertion ever disabled).
-    #endif
-}
-
+// Shared state decl (below) and accessed (above) only in .cpp (for DLL).
 bool checking::checking_ = false;
-#ifndef BOOST_CONTRACT_DISABLE_THREADS
-    boost::mutex checking::mutex_;
-#endif
+boost::mutex checking::mutex_;
 
 } } } // namespace
 

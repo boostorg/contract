@@ -11,9 +11,10 @@
 #include <boost/contract/core/config.hpp>
 #include <boost/contract/detail/condition/cond_with_inv.hpp>
 #include <boost/contract/detail/none.hpp>
-#if     !defined(BOOST_CONTRACT_NO_INVARIANTS) || \
+#if     !defined(BOOST_CONTRACT_ALL_DISABLE_NO_ASSERTION) && ( \
+        !defined(BOOST_CONTRACT_NO_INVARIANTS) || \
         !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
-        !defined(BOOST_CONTRACT_NO_EXCEPTS)
+        !defined(BOOST_CONTRACT_NO_EXCEPTS))
     #include <boost/contract/detail/checking.hpp>
 #endif
 #if     !defined(BOOST_CONTRACT_NO_EXIT_INVARIANTS) || \
@@ -37,11 +38,15 @@ private:
             !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
             !defined(BOOST_CONTRACT_NO_EXCEPTS)
         void init() /* override */ {
-            if(checking::already()) return;
+            #ifndef BOOST_CONTRACT_ALL_DISABLE_NO_ASSERTION
+                if(checking::already()) return;
+            #endif
 
             #ifndef BOOST_CONTRACT_NO_ENTRY_INVARIANTS
                 {
-                    checking k;
+                    #ifndef BOOST_CONTRACT_ALL_DISABLE_NO_ASSERTION
+                        checking k;
+                    #endif
                     this->check_entry_static_inv();
                     // No object before ctor body so check only static inv at
                     // entry. Ctor pre checked by constructor_precondition.
@@ -60,8 +65,10 @@ public:
             !defined(BOOST_CONTRACT_NO_EXCEPTS)
         ~constructor() BOOST_NOEXCEPT_IF(false) {
             this->assert_initialized();
-            if(checking::already()) return;
-            checking k;
+            #ifndef BOOST_CONTRACT_ALL_DISABLE_NO_ASSERTION
+                if(checking::already()) return;
+                checking k;
+            #endif
 
             // If ctor body threw, no obj so check only static inv. Otherwise,
             // obj constructed so check static inv, non-static inv, and post.

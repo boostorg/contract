@@ -16,7 +16,8 @@ Program contracts for constructors.
         !defined(BOOST_CONTRACT_NO_PRECONDITIONS)
     #include <boost/contract/detail/operation/constructor.hpp>
 #endif
-#ifndef BOOST_CONTRACT_NO_PRECONDITIONS
+#if     !defined(BOOST_CONTRACT_ALL_DISABLE_NO_ASSERTION) && \
+        !defined(BOOST_CONTRACT_NO_PRECONDITIONS)
     #include <boost/contract/detail/checking.hpp>
 #endif
 
@@ -88,10 +89,12 @@ public:
     template<typename F>
     explicit constructor_precondition(F const& f) {
         #ifndef BOOST_CONTRACT_NO_PRECONDITIONS
-            if(boost::contract::detail::checking::already()) return;
             try {
-                #ifndef BOOST_CONTRACT_PRECONDITIONS_DISABLE_NO_ASSERTION
-                    boost::contract::detail::checking k;
+                #ifndef BOOST_CONTRACT_ALL_DISABLE_NO_ASSERTION
+                    if(boost::contract::detail::checking::already()) return;
+                    #ifndef BOOST_CONTRACT_PRECONDITIONS_DISABLE_NO_ASSERTION
+                        boost::contract::detail::checking k;
+                    #endif
                 #endif
                 f();
             } catch(...) { precondition_failure(from_constructor); }
