@@ -20,10 +20,10 @@
 
 // Following should list all <boost/contract/core/*.hpp>.
 #include <boost/contract/core/access.hpp>
-#include <boost/contract/core/config.hpp>
-#include <boost/contract/core/exception.hpp>
 #include <boost/contract/core/specify.hpp>
 #include <boost/contract/core/virtual.hpp>
+#include <boost/contract/core/exception.hpp>
+#include <boost/contract/core/config.hpp>
 
 #endif // #include guard
 

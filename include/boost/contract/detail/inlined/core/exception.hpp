@@ -7,44 +7,17 @@
 // file LICENSE_1_0.txt or a copy at http://www.boost.org/LICENSE_1_0.txt).
 // See: http://www.boost.org/doc/libs/release/libs/contract/doc/html/index.html
 
+// IMPORTANT: Do NOT use config macros BOOST_CONTRACT_... in this file so lib
+// .cpp does not need recompiling if config changes (recompile only user code).
+
 #include <boost/contract/core/exception.hpp>
-#ifndef BOOST_CONTRACT_DISABLE_THREADS
-    #include <boost/thread/lock_guard.hpp>
-    #include <boost/thread/mutex.hpp>
-#endif
+#include <boost/thread/lock_guard.hpp>
+#include <boost/thread/mutex.hpp>
 #include <boost/exception/diagnostic_information.hpp>
-#include <boost/preprocessor/facilities/empty.hpp>
 #include <string>
 #include <sstream>
 #include <iostream>
 #include <exception>
-
-/* PRIVATE */
-
-#ifndef BOOST_CONTRACT_DISABLE_THREADS
-    #define BOOST_CONTRACT_EXCEPTION_HANDLER_SCOPED_LOCK_(handler_mutex) \
-        boost::lock_guard<boost::mutex> lock(handler_mutex);
-#else
-    #define BOOST_CONTRACT_EXCEPTION_HANDLER_SCOPED_LOCK_(handler_mutex) \
-        /* nothing */
-#endif
-
-#define BOOST_CONTRACT_EXCEPTION_HANDLER_SET_(handler_mutex, handler_type, \
-        handler, f) \
-    BOOST_CONTRACT_EXCEPTION_HANDLER_SCOPED_LOCK_(handler_mutex); \
-    handler_type result = handler; \
-    handler = f; \
-    return result;
-    
-#define BOOST_CONTRACT_EXCEPTION_HANDLER_GET_(handler_mutex, handler) \
-    BOOST_CONTRACT_EXCEPTION_HANDLER_SCOPED_LOCK_(handler_mutex); \
-    return handler;
-    
-#define BOOST_CONTRACT_EXCEPTION_HANDLER_(handler_mutex, handler, where) \
-    BOOST_CONTRACT_EXCEPTION_HANDLER_SCOPED_LOCK_(handler_mutex); \
-    handler(where);
-
-/* CODE */
 
 namespace boost { namespace contract {
 
@@ -102,28 +75,33 @@ void assertion_failure::init() {
 
 namespace exception_ {
     enum failure_key {
-        entry_inv_key, exit_inv_key, pre_key, post_key, old_key, except_key,
-                check_key
+        check_failure_key,
+        entry_inv_failure_key,
+        pre_failure_key,
+        old_failure_key,
+        exit_inv_failure_key,
+        post_failure_key,
+        except_failure_key
     };
 
     template<failure_key Key>
     void default_handler() {
         std::string k = "";
         switch(Key) {
-            case entry_inv_key: k = "entry invariant "; break;
-            case exit_inv_key: k = "exit invariant "; break;
-            case pre_key: k = "precondition "; break;
-            case post_key: k = "postcondition "; break;
-            case old_key: k = "old copy "; break;
-            case except_key: k = "except "; break;
-            case check_key: k = "check "; break;
+            case check_failure_key: k = "check "; break;
+            case entry_inv_failure_key: k = "entry invariant "; break;
+            case pre_failure_key: k = "precondition "; break;
+            case old_failure_key: k = "old copy "; break;
+            case exit_inv_failure_key: k = "exit invariant "; break;
+            case post_failure_key: k = "postcondition "; break;
+            case except_failure_key: k = "except "; break;
             // No default (so compiler warning/error on missing enum case).
         }
         try { throw; }
         catch(boost::contract::assertion_failure const& error) {
             // what = "assertion '...' failed: ...".
             std::cerr << k << error.what() << std::endl;
-        } catch(...) { // old_key prints this, not above.
+        } catch(...) { // old_failure_key prints this, not above.
             std::cerr << k << "threw following exception:" << std::endl
                     << boost::current_exception_diagnostic_information();
         }
@@ -133,172 +111,268 @@ namespace exception_ {
     template<failure_key Key>
     void default_from_handler(from) { default_handler<Key>(); }
 
-    #ifndef BOOST_CONTRACT_DISABLE_THREADS
-        boost::mutex entry_inv_failure_mutex;
-    #endif
+    // Check failure.
+
+    boost::mutex check_failure_mutex;
+    failure_handler check_failure_handler = &default_handler<check_failure_key>;
+
+    failure_handler set_check_failure_unlocked(failure_handler const& f)
+            BOOST_NOEXCEPT_OR_NOTHROW {
+        failure_handler result = check_failure_handler;
+        check_failure_handler = f;
+        return result;
+    }
+    
+    failure_handler set_check_failure_locked(failure_handler const& f)
+            BOOST_NOEXCEPT_OR_NOTHROW {
+        boost::lock_guard<boost::mutex> lock(check_failure_mutex);
+        return set_check_failure_unlocked(f);
+    }
+
+    failure_handler get_check_failure_unlocked() BOOST_NOEXCEPT_OR_NOTHROW {
+        return check_failure_handler;
+    }
+
+    failure_handler get_check_failure_locked() BOOST_NOEXCEPT_OR_NOTHROW {
+        boost::lock_guard<boost::mutex> lock(check_failure_mutex);
+        return get_check_failure_unlocked();
+    }
+
+    void check_failure_unlocked() /* can throw */ {
+        check_failure_handler();
+    }
+    
+    void check_failure_locked() /* can throw */ {
+        boost::lock_guard<boost::mutex> lock(check_failure_mutex);
+        check_failure_unlocked();
+    }
+    
+    // Entry invariant failure.
+
+    boost::mutex entry_inv_failure_mutex;
     from_failure_handler entry_inv_failure_handler =
-            &default_from_handler<entry_inv_key>;
+            &default_from_handler<entry_inv_failure_key>;
+
+    from_failure_handler set_entry_inv_failure_unlocked(
+            from_failure_handler const& f) BOOST_NOEXCEPT_OR_NOTHROW {
+        from_failure_handler result = entry_inv_failure_handler;
+        entry_inv_failure_handler = f;
+        return result;
+    }
     
-    #ifndef BOOST_CONTRACT_DISABLE_THREADS
-        boost::mutex exit_inv_failure_mutex;
-    #endif
+    from_failure_handler set_entry_inv_failure_locked(
+            from_failure_handler const& f) BOOST_NOEXCEPT_OR_NOTHROW {
+        boost::lock_guard<boost::mutex> lock(entry_inv_failure_mutex);
+        return set_entry_inv_failure_unlocked(f);
+    }
+
+    from_failure_handler get_entry_inv_failure_unlocked()
+            BOOST_NOEXCEPT_OR_NOTHROW {
+        return entry_inv_failure_handler;
+    }
+
+    from_failure_handler get_entry_inv_failure_locked()
+            BOOST_NOEXCEPT_OR_NOTHROW {
+        boost::lock_guard<boost::mutex> lock(entry_inv_failure_mutex);
+        return get_entry_inv_failure_unlocked();
+    }
+
+    void entry_inv_failure_unlocked(from where) /* can throw */ {
+        entry_inv_failure_handler(where);
+    }
+    
+    void entry_inv_failure_locked(from where) /* can throw */ {
+        boost::lock_guard<boost::mutex> lock(entry_inv_failure_mutex);
+        entry_inv_failure_unlocked(where);
+    }
+    
+    // Precondition failure.
+
+    boost::mutex pre_failure_mutex;
+    from_failure_handler pre_failure_handler =
+            &default_from_handler<pre_failure_key>;
+
+    from_failure_handler set_pre_failure_unlocked(from_failure_handler const& f)
+            BOOST_NOEXCEPT_OR_NOTHROW {
+        from_failure_handler result = pre_failure_handler;
+        pre_failure_handler = f;
+        return result;
+    }
+    
+    from_failure_handler set_pre_failure_locked(from_failure_handler const& f)
+            BOOST_NOEXCEPT_OR_NOTHROW {
+        boost::lock_guard<boost::mutex> lock(pre_failure_mutex);
+        return set_pre_failure_unlocked(f);
+    }
+
+    from_failure_handler get_pre_failure_unlocked() BOOST_NOEXCEPT_OR_NOTHROW {
+        return pre_failure_handler;
+    }
+
+    from_failure_handler get_pre_failure_locked() BOOST_NOEXCEPT_OR_NOTHROW {
+        boost::lock_guard<boost::mutex> lock(pre_failure_mutex);
+        return get_pre_failure_unlocked();
+    }
+
+    void pre_failure_unlocked(from where) /* can throw */ {
+        pre_failure_handler(where);
+    }
+    
+    void pre_failure_locked(from where) /* can throw */ {
+        boost::lock_guard<boost::mutex> lock(pre_failure_mutex);
+        pre_failure_unlocked(where);
+    }
+    
+    // Old-copy failure.
+
+    boost::mutex old_failure_mutex;
+    from_failure_handler old_failure_handler =
+            &default_from_handler<old_failure_key>;
+
+    from_failure_handler set_old_failure_unlocked(from_failure_handler const& f)
+            BOOST_NOEXCEPT_OR_NOTHROW {
+        from_failure_handler result = old_failure_handler;
+        old_failure_handler = f;
+        return result;
+    }
+    
+    from_failure_handler set_old_failure_locked(from_failure_handler const& f)
+            BOOST_NOEXCEPT_OR_NOTHROW {
+        boost::lock_guard<boost::mutex> lock(old_failure_mutex);
+        return set_old_failure_unlocked(f);
+    }
+
+    from_failure_handler get_old_failure_unlocked() BOOST_NOEXCEPT_OR_NOTHROW {
+        return old_failure_handler;
+    }
+
+    from_failure_handler get_old_failure_locked() BOOST_NOEXCEPT_OR_NOTHROW {
+        boost::lock_guard<boost::mutex> lock(old_failure_mutex);
+        return get_old_failure_unlocked();
+    }
+
+    void old_failure_unlocked(from where) /* can throw */ {
+        old_failure_handler(where);
+    }
+    
+    void old_failure_locked(from where) /* can throw */ {
+        boost::lock_guard<boost::mutex> lock(old_failure_mutex);
+        old_failure_unlocked(where);
+    }
+    
+    // Exit invariant failure.
+
+    boost::mutex exit_inv_failure_mutex;
     from_failure_handler exit_inv_failure_handler =
-            &default_from_handler<exit_inv_key>;
+            &default_from_handler<exit_inv_failure_key>;
 
-    #ifndef BOOST_CONTRACT_DISABLE_THREADS
-        boost::mutex pre_failure_mutex;
-    #endif
-    from_failure_handler pre_failure_handler = &default_from_handler<pre_key>;
+    from_failure_handler set_exit_inv_failure_unlocked(
+            from_failure_handler const& f) BOOST_NOEXCEPT_OR_NOTHROW {
+        from_failure_handler result = exit_inv_failure_handler;
+        exit_inv_failure_handler = f;
+        return result;
+    }
     
-    #ifndef BOOST_CONTRACT_DISABLE_THREADS
-        boost::mutex post_failure_mutex;
-    #endif
-    from_failure_handler post_failure_handler = &default_from_handler<post_key>;
+    from_failure_handler set_exit_inv_failure_locked(
+            from_failure_handler const& f) BOOST_NOEXCEPT_OR_NOTHROW {
+        boost::lock_guard<boost::mutex> lock(exit_inv_failure_mutex);
+        return set_exit_inv_failure_unlocked(f);
+    }
+
+    from_failure_handler get_exit_inv_failure_unlocked()
+            BOOST_NOEXCEPT_OR_NOTHROW {
+        return exit_inv_failure_handler;
+    }
+
+    from_failure_handler get_exit_inv_failure_locked()
+            BOOST_NOEXCEPT_OR_NOTHROW {
+        boost::lock_guard<boost::mutex> lock(exit_inv_failure_mutex);
+        return get_exit_inv_failure_unlocked();
+    }
+
+    void exit_inv_failure_unlocked(from where) /* can throw */ {
+        exit_inv_failure_handler(where);
+    }
     
-    #ifndef BOOST_CONTRACT_DISABLE_THREADS
-        boost::mutex old_failure_mutex;
-    #endif
-    from_failure_handler old_failure_handler = &default_from_handler<old_key>;
+    void exit_inv_failure_locked(from where) /* can throw */ {
+        boost::lock_guard<boost::mutex> lock(exit_inv_failure_mutex);
+        exit_inv_failure_unlocked(where);
+    }
     
-    #ifndef BOOST_CONTRACT_DISABLE_THREADS
-        boost::mutex except_failure_mutex;
-    #endif
+    // Postcondition failure.
+
+    boost::mutex post_failure_mutex;
+    from_failure_handler post_failure_handler =
+            &default_from_handler<post_failure_key>;
+
+    from_failure_handler set_post_failure_unlocked(
+            from_failure_handler const& f) BOOST_NOEXCEPT_OR_NOTHROW {
+        from_failure_handler result = post_failure_handler;
+        post_failure_handler = f;
+        return result;
+    }
+    
+    from_failure_handler set_post_failure_locked(from_failure_handler const& f)
+            BOOST_NOEXCEPT_OR_NOTHROW {
+        boost::lock_guard<boost::mutex> lock(post_failure_mutex);
+        return set_post_failure_unlocked(f);
+    }
+
+    from_failure_handler get_post_failure_unlocked() BOOST_NOEXCEPT_OR_NOTHROW {
+        return post_failure_handler;
+    }
+
+    from_failure_handler get_post_failure_locked() BOOST_NOEXCEPT_OR_NOTHROW {
+        boost::lock_guard<boost::mutex> lock(post_failure_mutex);
+        return get_post_failure_unlocked();
+    }
+
+    void post_failure_unlocked(from where) /* can throw */ {
+        post_failure_handler(where);
+    }
+    
+    void post_failure_locked(from where) /* can throw */ {
+        boost::lock_guard<boost::mutex> lock(post_failure_mutex);
+        post_failure_unlocked(where);
+    }
+    
+    // Except failure.
+
+    boost::mutex except_failure_mutex;
     from_failure_handler except_failure_handler =
-            &default_from_handler<except_key>;
+            &default_from_handler<except_failure_key>;
+
+    from_failure_handler set_except_failure_unlocked(
+            from_failure_handler const& f) BOOST_NOEXCEPT_OR_NOTHROW {
+        from_failure_handler result = except_failure_handler;
+        except_failure_handler = f;
+        return result;
+    }
     
-    #ifndef BOOST_CONTRACT_DISABLE_THREAD
-        boost::mutex check_failure_mutex;
-    #endif
-    failure_handler check_failure_handler = &default_handler<check_key>;
-}
+    from_failure_handler set_except_failure_locked(
+            from_failure_handler const& f) BOOST_NOEXCEPT_OR_NOTHROW {
+        boost::lock_guard<boost::mutex> lock(except_failure_mutex);
+        return set_except_failure_unlocked(f);
+    }
 
-// IMPORTANT: Following func cannot be declared inline (on GCC, Clang, etc.) and
-// their definition code should not be changed by contract on/off macros.
+    from_failure_handler get_except_failure_unlocked()
+            BOOST_NOEXCEPT_OR_NOTHROW {
+        return except_failure_handler;
+    }
 
-failure_handler set_check_failure(failure_handler const& f)
-        BOOST_NOEXCEPT_OR_NOTHROW {
-    BOOST_CONTRACT_EXCEPTION_HANDLER_SET_(exception_::check_failure_mutex,
-            failure_handler, exception_::check_failure_handler, f);
-}
+    from_failure_handler get_except_failure_locked() BOOST_NOEXCEPT_OR_NOTHROW {
+        boost::lock_guard<boost::mutex> lock(except_failure_mutex);
+        return get_except_failure_unlocked();
+    }
 
-failure_handler get_check_failure() BOOST_NOEXCEPT_OR_NOTHROW {
-    BOOST_CONTRACT_EXCEPTION_HANDLER_GET_(exception_::check_failure_mutex,
-            exception_::check_failure_handler);
-}
-
-void check_failure() /* can throw */ {
-    BOOST_CONTRACT_EXCEPTION_HANDLER_(exception_::check_failure_mutex,
-            exception_::check_failure_handler, BOOST_PP_EMPTY())
-}
-
-from_failure_handler set_precondition_failure(from_failure_handler const& f)
-        BOOST_NOEXCEPT_OR_NOTHROW {
-    BOOST_CONTRACT_EXCEPTION_HANDLER_SET_(exception_::pre_failure_mutex,
-            from_failure_handler, exception_::pre_failure_handler, f);
-}
-
-from_failure_handler get_precondition_failure() BOOST_NOEXCEPT_OR_NOTHROW {
-    BOOST_CONTRACT_EXCEPTION_HANDLER_GET_(exception_::pre_failure_mutex,
-            exception_::pre_failure_handler);
-}
-
-void precondition_failure(from where) /* can throw */ {
-    BOOST_CONTRACT_EXCEPTION_HANDLER_(exception_::pre_failure_mutex,
-            exception_::pre_failure_handler, where)
-}
-
-from_failure_handler set_postcondition_failure(from_failure_handler const& f)
-        BOOST_NOEXCEPT_OR_NOTHROW {
-    BOOST_CONTRACT_EXCEPTION_HANDLER_SET_(exception_::post_failure_mutex,
-            from_failure_handler, exception_::post_failure_handler, f);
-}
-
-from_failure_handler get_postcondition_failure() BOOST_NOEXCEPT_OR_NOTHROW {
-    BOOST_CONTRACT_EXCEPTION_HANDLER_GET_(exception_::post_failure_mutex,
-            exception_::post_failure_handler);
-}
-
-void postcondition_failure(from where) /* can throw */ {
-    BOOST_CONTRACT_EXCEPTION_HANDLER_(exception_::post_failure_mutex,
-            exception_::post_failure_handler, where);
-}
-
-from_failure_handler set_old_failure(from_failure_handler const& f)
-        BOOST_NOEXCEPT_OR_NOTHROW {
-    BOOST_CONTRACT_EXCEPTION_HANDLER_SET_(exception_::old_failure_mutex,
-            from_failure_handler, exception_::old_failure_handler, f);
-}
-
-from_failure_handler get_old_failure() BOOST_NOEXCEPT_OR_NOTHROW {
-    BOOST_CONTRACT_EXCEPTION_HANDLER_GET_(exception_::old_failure_mutex,
-            exception_::old_failure_handler);
-}
-
-void old_failure(from where) /* can throw */ {
-    BOOST_CONTRACT_EXCEPTION_HANDLER_(exception_::old_failure_mutex,
-            exception_::old_failure_handler, where);
-}
-
-from_failure_handler set_except_failure(from_failure_handler const& f)
-        BOOST_NOEXCEPT_OR_NOTHROW {
-    BOOST_CONTRACT_EXCEPTION_HANDLER_SET_(exception_::except_failure_mutex,
-            from_failure_handler, exception_::except_failure_handler, f);
-}
-
-from_failure_handler get_except_failure() BOOST_NOEXCEPT_OR_NOTHROW {
-    BOOST_CONTRACT_EXCEPTION_HANDLER_GET_(exception_::except_failure_mutex,
-            exception_::except_failure_handler);
-}
-
-void except_failure(from where) /* can throw */ {
-    BOOST_CONTRACT_EXCEPTION_HANDLER_(exception_::except_failure_mutex,
-            exception_::except_failure_handler, where);
-}
-
-from_failure_handler set_entry_invariant_failure(from_failure_handler const& f)
-        BOOST_NOEXCEPT_OR_NOTHROW {
-    BOOST_CONTRACT_EXCEPTION_HANDLER_SET_(exception_::entry_inv_failure_mutex,
-            from_failure_handler, exception_::entry_inv_failure_handler, f);
-}
-
-from_failure_handler get_entry_invariant_failure() BOOST_NOEXCEPT_OR_NOTHROW {
-    BOOST_CONTRACT_EXCEPTION_HANDLER_GET_(exception_::entry_inv_failure_mutex,
-            exception_::entry_inv_failure_handler);
-}
-
-void entry_invariant_failure(from where) /* can throw */ {
-    BOOST_CONTRACT_EXCEPTION_HANDLER_(exception_::entry_inv_failure_mutex,
-            exception_::entry_inv_failure_handler, where);
-}
-
-from_failure_handler set_exit_invariant_failure(from_failure_handler const& f)
-        BOOST_NOEXCEPT_OR_NOTHROW {
-    BOOST_CONTRACT_EXCEPTION_HANDLER_SET_(exception_::exit_inv_failure_mutex,
-            from_failure_handler, exception_::exit_inv_failure_handler, f);
-}
-
-from_failure_handler get_exit_invariant_failure() BOOST_NOEXCEPT_OR_NOTHROW {
-    BOOST_CONTRACT_EXCEPTION_HANDLER_GET_(exception_::exit_inv_failure_mutex,
-            exception_::exit_inv_failure_handler);
-}
-
-void exit_invariant_failure(from where) /* can throw */ {
-    BOOST_CONTRACT_EXCEPTION_HANDLER_(exception_::exit_inv_failure_mutex,
-            exception_::exit_inv_failure_handler, where);
-}
-
-void set_invariant_failure(from_failure_handler const& f)
-        BOOST_NOEXCEPT_OR_NOTHROW {
-    set_entry_invariant_failure(f);
-    set_exit_invariant_failure(f);
-}
-
-void set_specification_failure(from_failure_handler const& f)
-        BOOST_NOEXCEPT_OR_NOTHROW {
-    set_precondition_failure(f);
-    set_postcondition_failure(f);
-    set_entry_invariant_failure(f);
-    set_exit_invariant_failure(f);
+    void except_failure_unlocked(from where) /* can throw */ {
+        except_failure_handler(where);
+    }
+    
+    void except_failure_locked(from where) /* can throw */ {
+        boost::lock_guard<boost::mutex> lock(except_failure_mutex);
+        except_failure_unlocked(where);
+    }
 }
 
 } } // namespace

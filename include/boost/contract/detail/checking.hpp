@@ -50,15 +50,16 @@ public:
 
 private:
     void init_unlocked();
-    void done_unlocked();
-    static bool already_unlocked();
-
     void init_locked();
+
+    void done_unlocked();
     void done_locked();
+
+    static bool already_unlocked();
     static bool already_locked();
 
+    static boost::mutex mutex_;
     static bool checking_;
-    static boost::mutex mutex_; // Decl regardless of DISABLE_THREADS.
 };
 
 #ifdef BOOST_MSVC
@@ -67,11 +68,9 @@ private:
 
 } } } // namespace
 
-/** @cond Needed because this header included by other public headers. */
 #if BOOST_CONTRACT_HEADER_ONLY
     #include <boost/contract/detail/inlined/detail/checking.hpp>
 #endif
-/** @endcond */
 
 #endif // #include guard
 
