@@ -74,7 +74,6 @@ result_type& t<Id>::f(s_type& s, boost::contract::virtual_* v) {
         .postcondition([&] (result_type const& result) {
             out << Id << "::f::post" << std::endl;
             BOOST_CONTRACT_ASSERT(z.value == old_z->value + old_s->value);
-            std::clog << Id << "::f::post OUT" << std::endl;
             BOOST_CONTRACT_ASSERT(s.value.find(old_z->value) !=
                     std::string::npos);
             BOOST_CONTRACT_ASSERT(result.value == old_s->value);
@@ -89,15 +88,6 @@ result_type& t<Id>::f(s_type& s, boost::contract::virtual_* v) {
     if(s.value == "X") throw except_error();
     return result;
 }
-
-struct u {
-    u() { std::cout << "!!!!! u default ctor" << std::endl; }
-    u(u const&) { std::cout << "!!!!! u copy ctor" << std::endl; }
-    ~u() { std::cout << "!!!!! u dtor" << std::endl; }
-private:
-    u& operator=(u const&);
-
-};
 
 // Test base with other bases, multiple inheritance, and no subcontracting from
 // protected and private bases (even if fully contracted).
@@ -119,9 +109,7 @@ struct c
     typedef boost::contract::test::detail::counter<y_tag, std::string> y_type;
     y_type y;
 
-    c() : uu() { y.value = "c"; }
-
-    u uu;
+    c() { y.value = "c"; }
 
     virtual result_type& f(s_type& s, boost::contract::virtual_* v = 0)
             /* override */ {
@@ -129,7 +117,6 @@ struct c
         boost::contract::old_ptr<y_type> old_y =
                 BOOST_CONTRACT_OLD(v, y_type::eval(y));
         boost::contract::old_ptr<s_type> old_s;
-        boost::contract::old_ptr<u> old_u;
         boost::contract::check c = boost::contract::public_function<
                 override_f>(v, result, &c::f, this, s)
             .precondition([&] {
@@ -139,11 +126,9 @@ struct c
             .old([&] {
                 out << "c::f::old" << std::endl;
                 old_s = BOOST_CONTRACT_OLD(v, s_type::eval(s));
-                old_u = BOOST_CONTRACT_OLD(v, uu);
             })
             .postcondition([&] (result_type const& result) {
                 out << "c::f::post" << std::endl;
-                std::clog << "c::f::post OUT" << std::endl;
                 BOOST_CONTRACT_ASSERT(y.value == old_y->value + old_s->value);
                 BOOST_CONTRACT_ASSERT(s.value.find(old_y->value) !=
                         std::string::npos);
