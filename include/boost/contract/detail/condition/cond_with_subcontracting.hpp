@@ -292,14 +292,14 @@ private:
             } // Else, do nothing (for base calls only).
         }
     #endif
-    
+
     #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
         void check_virtual_post() {
             pop_base_old();
             typedef typename boost::remove_reference<typename
                     optional_value_type<VR>::type>::type r_type;
             boost::optional<r_type const&> r; // No result copy in this code.
-            if(!base_call_) r = r_;
+            if(!base_call_) r = optional_ref(r_);
             else if(v_->result_optional_) {
                 try {
                     r = **boost::any_cast<boost::optional<r_type>*>(
