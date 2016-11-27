@@ -118,6 +118,7 @@ test-suite public_function :
     [ subdir-run public_function : virtual_sparse ]
     [ subdir-run public_function : virtual_access ]
     [ subdir-run public_function : virtual_access_multi ]
+    [ subdir-run public_function : old_virtual ]
 
     [ subdir-run public_function : protected ]
     [ subdir-compile-fail public_function : protected_error ]

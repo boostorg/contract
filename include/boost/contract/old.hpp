@@ -24,6 +24,7 @@ Facilities to support old values.
 #include <boost/static_assert.hpp>
 #include <boost/preprocessor/control/expr_iif.hpp>
 #include <boost/preprocessor/config/config.hpp>
+#include <queue>
 
 #if !BOOST_PP_VARIADICS
 
@@ -321,7 +322,6 @@ public:
     )
         #if     !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
                 !defined(BOOST_CONTRACT_NO_EXCEPTS)
-            // TODO: Will this shared_ptr<void> destroy old_value_copy given its type is erased to void*?? Test it!
             : untyped_copy_(new old_value_copy<T>(old))
         #endif // Else, leave ptr_ null (thus no copy of T).
     {}
@@ -420,28 +420,36 @@ private:
                         boost::static_pointer_cast<copied_type>(untyped_copy_);
                 BOOST_CONTRACT_DETAIL_DEBUG(typed_copy);
                 return Ptr(typed_copy);
-            } else if(v_->action_ == boost::contract::virtual_::push_old_init ||
-                    v_->action_ == boost::contract::virtual_::push_old_copy) {
+            } else if(
+                v_->action_ == boost::contract::virtual_::push_old_init_copy ||
+                v_->action_ == boost::contract::virtual_::push_old_ftor_copy
+            ) {
                 BOOST_CONTRACT_DETAIL_DEBUG(untyped_copy_);
-                if(v_->action_ == boost::contract::virtual_::push_old_init) {
-                    v_->old_inits_.push(untyped_copy_);
-                } else {
-                    v_->old_copies_.push(untyped_copy_);
-                }
-                return Ptr(); // Push (so return null).
-            } else if(boost::contract::virtual_::pop_old_init(v_->action_) ||
-                    v_->action_ == boost::contract::virtual_::pop_old_copy) {
-                BOOST_CONTRACT_DETAIL_DEBUG(!untyped_copy_); // Copy not null...
-                boost::shared_ptr<void> untyped_copy; // ...but still pop this.
-                if(boost::contract::virtual_::pop_old_init(v_->action_)) {
-                    untyped_copy = v_->old_inits_.front();
-                    BOOST_CONTRACT_DETAIL_DEBUG(untyped_copy);
-                    v_->old_inits_.pop();
-                } else {
-                    untyped_copy = v_->old_copies_.top();
-                    BOOST_CONTRACT_DETAIL_DEBUG(untyped_copy);
-                    v_->old_copies_.pop();
-                }
+                std::queue<boost::shared_ptr<void> >& copies = v_->action_ ==
+                        boost::contract::virtual_::push_old_ftor_copy ?
+                    v_->old_ftor_copies_
+                :
+                    v_->old_init_copies_
+                ;
+                copies.push(untyped_copy_);
+                return Ptr(); // Pushed (so return null).
+            } else if(
+                boost::contract::virtual_::pop_old_init_copy(v_->action_) ||
+                v_->action_ == boost::contract::virtual_::pop_old_ftor_copy
+            ) {
+                // Copy not null, but still pop it from the queue.
+                BOOST_CONTRACT_DETAIL_DEBUG(!untyped_copy_);
+
+                std::queue<boost::shared_ptr<void> >& copies = v_->action_ ==
+                        boost::contract::virtual_::pop_old_ftor_copy ?
+                    v_->old_ftor_copies_
+                :
+                    v_->old_init_copies_
+                ;
+                boost::shared_ptr<void> untyped_copy = copies.front();
+                BOOST_CONTRACT_DETAIL_DEBUG(untyped_copy);
+                copies.pop();
+
                 typedef old_value_copy<typename Ptr::element_type> copied_type;
                 boost::shared_ptr<copied_type> typed_copy = // Un-erase type.
                         boost::static_pointer_cast<copied_type>(untyped_copy);
@@ -549,8 +557,8 @@ bool copy_old(virtual_* v) {
                 return true;
             #endif
         }
-        return v->action_ == boost::contract::virtual_::push_old_init ||
-                v->action_ == boost::contract::virtual_::push_old_copy;
+        return v->action_ == boost::contract::virtual_::push_old_init_copy ||
+                v->action_ == boost::contract::virtual_::push_old_ftor_copy;
     #else
         return false; // No post checking, so never copy old values.
     #endif

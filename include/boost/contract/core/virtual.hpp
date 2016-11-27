@@ -21,7 +21,6 @@ Facility to declare virtual public functions with contracts.
         !defined(BOOST_CONTRACT_NO_EXCEPTS)
     #include <boost/shared_ptr.hpp>
     #include <queue>
-    #include <stack>
 #endif
 
 namespace boost {
@@ -84,10 +83,13 @@ class virtual_ : private boost::noncopyable { // Avoid copy queue, stack, etc.
         #endif
         #if     !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
                 !defined(BOOST_CONTRACT_NO_EXCEPTS)
-            push_old_init,
-            call_old_copy,
-            push_old_copy,
-            pop_old_copy,
+            // For outside .old(...).
+            push_old_init_copy,
+            // pop_old_init_copy as static function below.
+            // For inside .old(...).
+            call_old_ftor,
+            push_old_ftor_copy,
+            pop_old_ftor_copy,
         #endif
         #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
             check_post,
@@ -100,7 +102,7 @@ class virtual_ : private boost::noncopyable { // Avoid copy queue, stack, etc.
     #if     !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
             !defined(BOOST_CONTRACT_NO_EXCEPTS)
         // Not just an enum value because the logical combination of two values.
-        inline static bool pop_old_init(action_enum a) {
+        inline static bool pop_old_init_copy(action_enum a) {
             return
                 #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
                     a == check_post
@@ -139,8 +141,8 @@ class virtual_ : private boost::noncopyable { // Avoid copy queue, stack, etc.
     #endif
     #if     !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
             !defined(BOOST_CONTRACT_NO_EXCEPTS)
-        std::queue<boost::shared_ptr<void> > old_inits_;
-        std::stack<boost::shared_ptr<void> > old_copies_;
+        std::queue<boost::shared_ptr<void> > old_init_copies_;
+        std::queue<boost::shared_ptr<void> > old_ftor_copies_;
     #endif
     #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
         boost::any result_ptr_; // Result for virtual and overriding functions.

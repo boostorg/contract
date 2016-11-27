@@ -203,7 +203,7 @@ protected:
     #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
         void init_subcontracted_old() {
             // Old values of overloaded func on stack (so no `f` param here).
-            exec_and(boost::contract::virtual_::push_old_init);
+            exec_and(boost::contract::virtual_::push_old_init_copy);
         }
     #endif
     
@@ -227,7 +227,7 @@ protected:
     #if     !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
             !defined(BOOST_CONTRACT_NO_EXCEPTS)
         void copy_subcontracted_old() {
-            exec_and(boost::contract::virtual_::call_old_copy,
+            exec_and(boost::contract::virtual_::call_old_ftor,
                     &cond_with_subcontracting::copy_virtual_old);
         }
     #endif
@@ -277,7 +277,7 @@ private:
             boost::contract::virtual_::action_enum a;
             if(base_call_) {
                 a = v_->action_;
-                v_->action_ = boost::contract::virtual_::push_old_copy;
+                v_->action_ = boost::contract::virtual_::push_old_ftor_copy;
             }
             this->copy_old();
             if(base_call_) v_->action_ = a;
@@ -286,7 +286,7 @@ private:
         void pop_base_old() {
             if(base_call_) {
                 boost::contract::virtual_::action_enum a = v_->action_;
-                v_->action_ = boost::contract::virtual_::pop_old_copy;
+                v_->action_ = boost::contract::virtual_::pop_old_ftor_copy;
                 this->copy_old();
                 v_->action_ = a;
             } // Else, do nothing (for base calls only).
