@@ -221,7 +221,8 @@ int main() {
                     << "b::static_inv" << std::endl
                 #endif
             #endif
-            #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
+            #if     !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
+                    !defined(BOOST_CONTRACT_NO_EXCEPTS)
                 << "b::ctor::old" << std::endl
             #endif
             << "b::ctor::body" << std::endl
@@ -245,7 +246,8 @@ int main() {
                     << "a::static_inv" << std::endl
                 #endif
             #endif
-            #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
+            #if     !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
+                    !defined(BOOST_CONTRACT_NO_EXCEPTS)
                 << "a::ctor::old" << std::endl
             #endif
             << "a::ctor::body" << std::endl
@@ -287,7 +289,8 @@ int main() {
                 << "b::f::volatile_pre" << std::endl
                 << "a::f::volatile_pre" << std::endl
             #endif
-            #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
+            #if     !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
+                    !defined(BOOST_CONTRACT_NO_EXCEPTS)
                 << "b::f::volatile_old" << std::endl
                 << "a::f::volatile_old" << std::endl
             #endif
@@ -325,7 +328,8 @@ int main() {
             #ifndef BOOST_CONTRACT_NO_PRECONDITIONS
                 << "a::s::pre" << std::endl
             #endif
-            #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
+            #if     !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
+                    !defined(BOOST_CONTRACT_NO_EXCEPTS)
                 << "a::s::old" << std::endl
             #endif
             << "a::s::body" << std::endl
@@ -346,7 +350,8 @@ int main() {
             #ifndef BOOST_CONTRACT_NO_PRECONDITIONS
                 << "a::p::volatile_pre" << std::endl
             #endif
-            #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
+            #if     !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
+                    !defined(BOOST_CONTRACT_NO_EXCEPTS)
                 << "a::p::volatile_old" << std::endl
             #endif
             << "a::p::volatile_body" << std::endl
@@ -362,7 +367,8 @@ int main() {
             #ifndef BOOST_CONTRACT_NO_PRECONDITIONS
                 << "a::q::volatile_pre" << std::endl
             #endif
-            #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
+            #if     !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
+                    !defined(BOOST_CONTRACT_NO_EXCEPTS)
                 << "a::q::volatile_old" << std::endl
             #endif
             << "a::q::volatile_body" << std::endl
@@ -386,7 +392,8 @@ int main() {
                 << "a::const_inv" << std::endl
             #endif
         #endif
-        #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
+        #if     !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
+                !defined(BOOST_CONTRACT_NO_EXCEPTS)
             << "a::dtor::old" << std::endl
         #endif
         << "a::dtor::body" << std::endl
@@ -410,7 +417,8 @@ int main() {
                 << "b::const_inv" << std::endl
             #endif
         #endif
-        #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
+        #if     !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
+                !defined(BOOST_CONTRACT_NO_EXCEPTS)
             << "b::dtor::old" << std::endl
         #endif
         << "b::dtor::body" << std::endl
@@ -439,7 +447,8 @@ int main() {
                     << "b::static_inv" << std::endl
                 #endif
             #endif
-            #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
+            #if     !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
+                    !defined(BOOST_CONTRACT_NO_EXCEPTS)
                 << "b::ctor::old" << std::endl
             #endif
             << "b::ctor::body" << std::endl
@@ -463,7 +472,8 @@ int main() {
                     << "a::static_inv" << std::endl
                 #endif
             #endif
-            #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
+            #if     !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
+                    !defined(BOOST_CONTRACT_NO_EXCEPTS)
                 << "a::ctor::old" << std::endl
             #endif
             << "a::ctor::body" << std::endl
@@ -505,7 +515,8 @@ int main() {
                 << "b::f::pre" << std::endl
                 << "a::f::pre" << std::endl
             #endif
-            #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
+            #if     !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
+                    !defined(BOOST_CONTRACT_NO_EXCEPTS)
                 << "b::f::old" << std::endl
                 << "a::f::old" << std::endl
             #endif
@@ -543,7 +554,8 @@ int main() {
             #ifndef BOOST_CONTRACT_NO_PRECONDITIONS
                 << "a::s::pre" << std::endl
             #endif
-            #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
+            #if     !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
+                    !defined(BOOST_CONTRACT_NO_EXCEPTS)
                 << "a::s::old" << std::endl
             #endif
             << "a::s::body" << std::endl
@@ -564,7 +576,8 @@ int main() {
             #ifndef BOOST_CONTRACT_NO_PRECONDITIONS
                 << "a::p::pre" << std::endl
             #endif
-            #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
+            #if     !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
+                    !defined(BOOST_CONTRACT_NO_EXCEPTS)
                 << "a::p::old" << std::endl
             #endif
             << "a::p::body" << std::endl
@@ -580,7 +593,8 @@ int main() {
             #ifndef BOOST_CONTRACT_NO_PRECONDITIONS
                 << "a::q::pre" << std::endl
             #endif
-            #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
+            #if     !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
+                    !defined(BOOST_CONTRACT_NO_EXCEPTS)
                 << "a::q::old" << std::endl
             #endif
             << "a::q::body" << std::endl
@@ -604,7 +618,8 @@ int main() {
                 << "a::const_inv" << std::endl
             #endif
         #endif
-        #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
+        #if     !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
+                !defined(BOOST_CONTRACT_NO_EXCEPTS)
             << "a::dtor::old" << std::endl
         #endif
         << "a::dtor::body" << std::endl
@@ -628,7 +643,8 @@ int main() {
                 << "b::const_inv" << std::endl
             #endif
         #endif
-        #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
+        #if     !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
+                !defined(BOOST_CONTRACT_NO_EXCEPTS)
             << "b::dtor::old" << std::endl
         #endif
         << "b::dtor::body" << std::endl
@@ -657,7 +673,8 @@ int main() {
                     << "b::static_inv" << std::endl
                 #endif
             #endif
-            #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
+            #if     !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
+                    !defined(BOOST_CONTRACT_NO_EXCEPTS)
                 << "b::ctor::old" << std::endl
             #endif
             << "b::ctor::body" << std::endl
@@ -692,7 +709,8 @@ int main() {
             #ifndef BOOST_CONTRACT_NO_PRECONDITIONS
                 << "b::f::volatile_pre" << std::endl
             #endif
-            #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
+            #if     !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
+                    !defined(BOOST_CONTRACT_NO_EXCEPTS)
                 << "b::f::volatile_old" << std::endl
             #endif
             << "b::f::volatile_body" << std::endl
@@ -724,7 +742,8 @@ int main() {
                 << "b::const_inv" << std::endl
             #endif
         #endif
-        #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
+        #if     !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
+                !defined(BOOST_CONTRACT_NO_EXCEPTS)
             << "b::dtor::old" << std::endl
         #endif
         << "b::dtor::body" << std::endl
@@ -752,7 +771,8 @@ int main() {
                     << "b::static_inv" << std::endl
                 #endif
             #endif
-            #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
+            #if     !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
+                    !defined(BOOST_CONTRACT_NO_EXCEPTS)
                 << "b::ctor::old" << std::endl
             #endif
             << "b::ctor::body" << std::endl
@@ -787,7 +807,8 @@ int main() {
             #ifndef BOOST_CONTRACT_NO_PRECONDITIONS
                 << "b::f::pre" << std::endl
             #endif
-            #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
+            #if     !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
+                    !defined(BOOST_CONTRACT_NO_EXCEPTS)
                 << "b::f::old" << std::endl
             #endif
             << "b::f::body" << std::endl
@@ -819,7 +840,8 @@ int main() {
                 << "b::const_inv" << std::endl
             #endif
         #endif
-        #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
+        #if     !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
+                !defined(BOOST_CONTRACT_NO_EXCEPTS)
             << "b::dtor::old" << std::endl
         #endif
         << "b::dtor::body" << std::endl

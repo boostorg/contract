@@ -239,7 +239,8 @@ int main() {
             << "b::f::pre" << std::endl
             << "a::f::pre" << std::endl
         #endif
-        #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
+        #if     !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
+                !defined(BOOST_CONTRACT_NO_EXCEPTS)
             << "d::f::old" << std::endl
             << "c::f::old" << std::endl
             << "b::f::old" << std::endl
@@ -289,7 +290,8 @@ int main() {
             << "c::f::pre" << std::endl
             << "b::f::pre" << std::endl
         #endif
-        #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
+        #if     !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
+                !defined(BOOST_CONTRACT_NO_EXCEPTS)
             << "d::f::old" << std::endl
             << "c::f::old" << std::endl
             << "b::f::old" << std::endl
@@ -331,7 +333,8 @@ int main() {
             << "d::f::pre" << std::endl
             << "c::f::pre" << std::endl
         #endif
-        #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
+        #if     !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
+                !defined(BOOST_CONTRACT_NO_EXCEPTS)
             << "d::f::old" << std::endl
             << "c::f::old" << std::endl
         #endif
@@ -374,7 +377,8 @@ int main() {
             << "b::f::pre" << std::endl
             << "e::f::pre" << std::endl
         #endif
-        #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
+        #if     !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
+                !defined(BOOST_CONTRACT_NO_EXCEPTS)
             << "d::f::old" << std::endl
             << "c::f::old" << std::endl
             << "b::f::old" << std::endl

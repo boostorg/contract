@@ -9,7 +9,7 @@
 
 #include <boost/contract/core/exception.hpp>
 #include <boost/contract/core/config.hpp>
-#include <boost/contract/detail/condition/cond_with_inv.hpp>
+#include <boost/contract/detail/condition/cond_inv.hpp>
 #include <boost/contract/detail/none.hpp>
 #if     !defined(BOOST_CONTRACT_ALL_DISABLE_NO_ASSERTION) && ( \
         !defined(BOOST_CONTRACT_NO_INVARIANTS) || \
@@ -29,9 +29,9 @@ namespace boost { namespace contract { namespace detail {
 
 // No subcontracting because static so no obj and no substitution principle.
 template<class C> // Non-copyable base.
-class public_static_function : public cond_with_inv</* VR = */ none, C> {
+class public_static_function : public cond_inv</* VR = */ none, C> {
 public:
-    explicit public_static_function() : cond_with_inv</* VR = */ none, C>(
+    explicit public_static_function() : cond_inv</* VR = */ none, C>(
             boost::contract::from_function, /* obj = */ 0) {}
 
 private:

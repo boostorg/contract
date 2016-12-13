@@ -234,7 +234,8 @@ std::string ok_args(std::string const& args) {
         #ifndef BOOST_CONTRACT_NO_PRECONDITIONS
             << "b::f(" << args << ")::pre" << std::endl
         #endif
-        #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
+        #if     !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
+                !defined(BOOST_CONTRACT_NO_EXCEPTS)
             << "b::f(" << args << ")::old" << std::endl
             << "a::f(" << args << ")::old" << std::endl
         #endif
@@ -284,7 +285,8 @@ int main() {
         #ifndef BOOST_CONTRACT_NO_PRECONDITIONS
             << "a::f(T)::pre" << std::endl
         #endif
-        #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
+        #if     !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
+                !defined(BOOST_CONTRACT_NO_EXCEPTS)
             << "a::f(T)::old" << std::endl
         #endif
         << "a::f(T)::body" << std::endl
@@ -313,7 +315,8 @@ int main() {
         #ifndef BOOST_CONTRACT_NO_PRECONDITIONS
             << "a::f(bool)::pre" << std::endl
         #endif
-        #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
+        #if     !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
+                !defined(BOOST_CONTRACT_NO_EXCEPTS)
             << "a::f(bool)::old" << std::endl
         #endif
         << "a::f(bool)::body" << std::endl

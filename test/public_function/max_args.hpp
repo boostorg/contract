@@ -116,25 +116,31 @@ int main() {
     std::ostringstream ok;
     a aa;
 
-    #ifdef BOOST_CONTRACT_NO_ENTRY_INVARIANTS
-        #define BOOST_CONTRACT_TEST_entry_inv 0
-    #else
+    #ifndef BOOST_CONTRACT_NO_ENTRY_INVARIANTS
         #define BOOST_CONTRACT_TEST_entry_inv 1
-    #endif
-    #ifdef BOOST_CONTRACT_NO_PRECONDITIONS
-        #define BOOST_CONTRACT_TEST_pre 0
     #else
+        #define BOOST_CONTRACT_TEST_entry_inv 0
+    #endif
+    #ifndef BOOST_CONTRACT_NO_PRECONDITIONS
         #define BOOST_CONTRACT_TEST_pre 1
-    #endif
-    #ifdef BOOST_CONTRACT_NO_EXIT_INVARIANTS
-        #define BOOST_CONTRACT_TEST_exit_inv 0
     #else
+        #define BOOST_CONTRACT_TEST_pre 0
+    #endif
+    #ifndef BOOST_CONTRACT_NO_EXIT_INVARIANTS
         #define BOOST_CONTRACT_TEST_exit_inv 1
-    #endif
-    #ifdef BOOST_CONTRACT_NO_POSTCONDITIONS
-        #define BOOST_CONTRACT_TEST_post 0
     #else
+        #define BOOST_CONTRACT_TEST_exit_inv 0
+    #endif
+    #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
         #define BOOST_CONTRACT_TEST_post 1
+    #else
+        #define BOOST_CONTRACT_TEST_post 0
+    #endif
+    #if     !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
+            !defined(BOOST_CONTRACT_NO_EXCEPTS)
+        #define BOOST_CONTRACT_TEST_old 1
+    #else
+        #define BOOST_CONTRACT_TEST_old 0
     #endif
     
     #define BOOST_CONTRACT_TEST_MAX_ARGS_TEST_(z, n, unused) \
@@ -152,7 +158,7 @@ int main() {
                 << "b::" << BOOST_PP_STRINGIZE(BOOST_PP_CAT(f, n)) << \
                         "::pre\n" \
             ) \
-            BOOST_PP_EXPR_IIF(BOOST_CONTRACT_TEST_post, \
+            BOOST_PP_EXPR_IIF(BOOST_CONTRACT_TEST_old, \
                 << "b::" << BOOST_PP_STRINGIZE(BOOST_PP_CAT(f, n)) << \
                         "::old\n" \
                 << "a::" << BOOST_PP_STRINGIZE(BOOST_PP_CAT(f, n)) << \
@@ -183,6 +189,7 @@ int main() {
     #undef BOOST_CONTRACT_TEST_pre
     #undef BOOST_CONTRACT_TEST_exit_inv
     #undef BOOST_CONTRACT_TEST_post
+    #undef BOOST_CONTRACT_TEST_old
     return boost::report_errors();
 }
 

@@ -9,7 +9,7 @@
 
 #include <boost/contract/core/exception.hpp>
 #include <boost/contract/core/config.hpp>
-#include <boost/contract/detail/condition/cond_with_inv.hpp>
+#include <boost/contract/detail/condition/cond_inv.hpp>
 #include <boost/contract/detail/none.hpp>
 #if     !defined(BOOST_CONTRACT_ALL_DISABLE_NO_ASSERTION) && ( \
         !defined(BOOST_CONTRACT_NO_INVARIANTS) || \
@@ -28,9 +28,9 @@ namespace boost { namespace contract { namespace detail {
 
 // Dtor subcontracting impl via C++ obj destruction mechanism.
 template<class C> // Non-copyable base.
-class destructor : public cond_with_inv</* VR = */ none, C> {
+class destructor : public cond_inv</* VR = */ none, C> {
 public:
-    explicit destructor(C* obj) : cond_with_inv</* VR = */ none, C>(
+    explicit destructor(C* obj) : cond_inv</* VR = */ none, C>(
             boost::contract::from_destructor, obj) {}
 
 private:

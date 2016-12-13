@@ -9,7 +9,7 @@
 
 #include <boost/contract/core/exception.hpp>
 #include <boost/contract/core/config.hpp>
-#include <boost/contract/detail/condition/cond_with_post.hpp>
+#include <boost/contract/detail/condition/cond_post.hpp>
 #if     !defined(BOOST_CONTRACT_ALL_DISABLE_NO_ASSERTION) && ( \
         !defined(BOOST_CONTRACT_NO_PRECONDITIONS) || \
         !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
@@ -25,9 +25,9 @@
 namespace boost { namespace contract { namespace detail {
 
 // Used for free function, private and protected member functions.
-class function : public cond_with_post</* VR = */ none> { // Non-copyable base.
+class function : public cond_post</* VR = */ none> { // Non-copyable base.
 public:
-    explicit function() : cond_with_post</* VR = */ none>(
+    explicit function() : cond_post</* VR = */ none>(
             boost::contract::from_function) {}
 
 private:

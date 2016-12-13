@@ -173,7 +173,8 @@ int main() {
             << "a::static_inv" << std::endl
             << "a::inv" << std::endl
         #endif
-        #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
+        #if     !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
+                !defined(BOOST_CONTRACT_NO_EXCEPTS)
             << "a::dtor::old" << std::endl
         #endif
         << "a::dtor::body" << std::endl
@@ -189,7 +190,8 @@ int main() {
             << "c::static_inv" << std::endl
             << "c::inv" << std::endl
         #endif
-        #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
+        #if     !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
+                !defined(BOOST_CONTRACT_NO_EXCEPTS)
             << "c::dtor::old" << std::endl
         #endif
         << "c::dtor::body" << std::endl
@@ -204,7 +206,8 @@ int main() {
             << "e::static_inv" << std::endl
             << "e::inv" << std::endl
         #endif
-        #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
+        #if     !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
+                !defined(BOOST_CONTRACT_NO_EXCEPTS)
             << "e::dtor::old" << std::endl
         #endif
         << "e::dtor::body" << std::endl
@@ -220,7 +223,8 @@ int main() {
             << "q::static_inv" << std::endl
             << "q::inv" << std::endl
         #endif
-        #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
+        #if     !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
+                !defined(BOOST_CONTRACT_NO_EXCEPTS)
             << "q::dtor::old" << std::endl
         #endif
         << "q::dtor::body" << std::endl
@@ -236,7 +240,8 @@ int main() {
             << "p::static_inv" << std::endl
             << "p::inv" << std::endl
         #endif
-        #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
+        #if     !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
+                !defined(BOOST_CONTRACT_NO_EXCEPTS)
             << "p::dtor::old" << std::endl
         #endif
         << "p::dtor::body" << std::endl
@@ -251,7 +256,8 @@ int main() {
             << "d::static_inv" << std::endl
             << "d::inv" << std::endl
         #endif
-        #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
+        #if     !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
+                !defined(BOOST_CONTRACT_NO_EXCEPTS)
             << "d::dtor::old" << std::endl
         #endif
         << "d::dtor::body" << std::endl
@@ -264,51 +270,40 @@ int main() {
     ;
     BOOST_TEST(out.eq(ok.str()));
 
-    #ifdef BOOST_CONTRACT_NO_POSTCONDITIONS
-        #define BOOST_CONTRACT_TEST_post 0
+    #if     !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
+            !defined(BOOST_CONTRACT_NO_EXCEPTS)
+        #define BOOST_CONTRACT_TEST_old 1u
     #else
-        #define BOOST_CONTRACT_TEST_post 1
+        #define BOOST_CONTRACT_TEST_old 0u
     #endif
 
     // Followings destroy only copies (actual objects are static data members).
 
-    BOOST_TEST_EQ(a::n_type::copies(),
-            BOOST_PP_IIF(BOOST_CONTRACT_TEST_post, 1u, 0u));
-    BOOST_TEST_EQ(a::n_type::evals(),
-            BOOST_PP_IIF(BOOST_CONTRACT_TEST_post, 1u, 0u));
+    BOOST_TEST_EQ(a::n_type::copies(), BOOST_CONTRACT_TEST_old);
+    BOOST_TEST_EQ(a::n_type::evals(), BOOST_CONTRACT_TEST_old);
     BOOST_TEST_EQ(a::n_type::copies(), a::n_type::dtors()); // No leak.
     
-    BOOST_TEST_EQ(c::m_type::copies(),
-            BOOST_PP_IIF(BOOST_CONTRACT_TEST_post, 1u, 0u));
-    BOOST_TEST_EQ(c::m_type::evals(),
-            BOOST_PP_IIF(BOOST_CONTRACT_TEST_post, 1u, 0u));
+    BOOST_TEST_EQ(c::m_type::copies(), BOOST_CONTRACT_TEST_old);
+    BOOST_TEST_EQ(c::m_type::evals(), BOOST_CONTRACT_TEST_old);
     BOOST_TEST_EQ(c::m_type::copies(), c::m_type::dtors()); // No leak.
     
-    BOOST_TEST_EQ(t<'d'>::l_type::copies(),
-            BOOST_PP_IIF(BOOST_CONTRACT_TEST_post, 1u, 0u));
-    BOOST_TEST_EQ(t<'d'>::l_type::evals(),
-            BOOST_PP_IIF(BOOST_CONTRACT_TEST_post, 1u, 0u));
+    BOOST_TEST_EQ(t<'d'>::l_type::copies(), BOOST_CONTRACT_TEST_old);
+    BOOST_TEST_EQ(t<'d'>::l_type::evals(), BOOST_CONTRACT_TEST_old);
     BOOST_TEST_EQ(t<'d'>::l_type::copies(), t<'d'>::l_type::dtors()); // No leak
     
-    BOOST_TEST_EQ(t<'p'>::l_type::copies(),
-            BOOST_PP_IIF(BOOST_CONTRACT_TEST_post, 1u, 0u));
-    BOOST_TEST_EQ(t<'p'>::l_type::evals(),
-            BOOST_PP_IIF(BOOST_CONTRACT_TEST_post, 1u, 0u));
+    BOOST_TEST_EQ(t<'p'>::l_type::copies(), BOOST_CONTRACT_TEST_old);
+    BOOST_TEST_EQ(t<'p'>::l_type::evals(), BOOST_CONTRACT_TEST_old);
     BOOST_TEST_EQ(t<'p'>::l_type::copies(), t<'p'>::l_type::dtors()); // No leak
     
-    BOOST_TEST_EQ(t<'q'>::l_type::copies(),
-            BOOST_PP_IIF(BOOST_CONTRACT_TEST_post, 1u, 0u));
-    BOOST_TEST_EQ(t<'q'>::l_type::evals(),
-            BOOST_PP_IIF(BOOST_CONTRACT_TEST_post, 1u, 0u));
+    BOOST_TEST_EQ(t<'q'>::l_type::copies(), BOOST_CONTRACT_TEST_old);
+    BOOST_TEST_EQ(t<'q'>::l_type::evals(), BOOST_CONTRACT_TEST_old);
     BOOST_TEST_EQ(t<'q'>::l_type::copies(), t<'q'>::l_type::dtors()); // No leak
     
-    BOOST_TEST_EQ(t<'e'>::l_type::copies(),
-            BOOST_PP_IIF(BOOST_CONTRACT_TEST_post, 1u, 0u));
-    BOOST_TEST_EQ(t<'e'>::l_type::evals(),
-            BOOST_PP_IIF(BOOST_CONTRACT_TEST_post, 1u, 0u));
+    BOOST_TEST_EQ(t<'e'>::l_type::copies(), BOOST_CONTRACT_TEST_old);
+    BOOST_TEST_EQ(t<'e'>::l_type::evals(), BOOST_CONTRACT_TEST_old);
     BOOST_TEST_EQ(t<'e'>::l_type::copies(), t<'e'>::l_type::dtors()); // No leak
 
-    #undef BOOST_CONTRACT_TEST_post
+    #undef BOOST_CONTRACT_TEST_old
     return boost::report_errors();
 }
 

@@ -1,6 +1,6 @@
 
-#ifndef BOOST_CONTRACT_DETAIL_COND_WITH_SUBCONTRACTING_HPP_
-#define BOOST_CONTRACT_DETAIL_COND_WITH_SUBCONTRACTING_HPP_
+#ifndef BOOST_CONTRACT_DETAIL_COND_SUBCONTRACTING_HPP_
+#define BOOST_CONTRACT_DETAIL_COND_SUBCONTRACTING_HPP_
 
 // Copyright (C) 2008-2016 Lorenzo Caminiti
 // Distributed under the Boost Software License, Version 1.0 (see accompanying
@@ -13,7 +13,7 @@
         !defined(BOOST_CONTRACT_NO_EXCEPTS)
     #include <boost/contract/core/exception.hpp>
 #endif
-#include <boost/contract/detail/condition/cond_with_inv.hpp>
+#include <boost/contract/detail/condition/cond_inv.hpp>
 #include <boost/contract/detail/decl.hpp>
 #include <boost/contract/detail/tvariadic.hpp>
 #if     !defined(BOOST_CONTRACT_NO_INVARIANTS) || \
@@ -65,15 +65,15 @@
 
 namespace boost { namespace contract { namespace detail {
 
-namespace cond_with_subcontracting_ {
+namespace cond_subcontracting_ {
     // Exception signals (must not inherit).
     class signal_no_error {};
     class signal_not_checked {};
 }
 
 // O, VR, F, and Args-i can be none types (but C cannot).
-BOOST_CONTRACT_DETAIL_DECL_DETAIL_COND_WITH_SUBCONTRACTING_Z(1,
-        /* is_friend = */ 0, O, VR, F, C, Args) : public cond_with_inv<VR, C>
+BOOST_CONTRACT_DETAIL_DECL_DETAIL_COND_SUBCONTRACTING_Z(1,
+        /* is_friend = */ 0, O, VR, F, C, Args) : public cond_inv<VR, C>
 { // Non-copyable base.
     #if     !defined(BOOST_CONTRACT_NO_INVARIANTS) || \
             !defined(BOOST_CONTRACT_NO_PRECONDITIONS) || \
@@ -145,7 +145,7 @@ BOOST_CONTRACT_DETAIL_DECL_DETAIL_COND_WITH_SUBCONTRACTING_Z(1,
     #endif
 
 public:
-    explicit cond_with_subcontracting(
+    explicit cond_subcontracting(
         boost::contract::from from,
         boost::contract::virtual_* v,
         C* obj,
@@ -154,7 +154,7 @@ public:
         BOOST_CONTRACT_DETAIL_TVARIADIC_FPARAMS_Z(1,
                 BOOST_CONTRACT_MAX_ARGS, Args, &, args)
     ) :
-        cond_with_inv<VR, C>(from, obj)
+        cond_inv<VR, C>(from, obj)
         #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
             , r_(r)
         #endif
@@ -194,13 +194,14 @@ public:
             !defined(BOOST_CONTRACT_NO_PRECONDITIONS) || \
             !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
             !defined(BOOST_CONTRACT_NO_EXCEPTS)
-        virtual ~cond_with_subcontracting() BOOST_NOEXCEPT_IF(false) {
+        virtual ~cond_subcontracting() BOOST_NOEXCEPT_IF(false) {
             if(!base_call_) delete v_;
         }
     #endif
 
 protected:
-    #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
+    #if     !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
+            !defined(BOOST_CONTRACT_NO_EXCEPTS)
         void init_subcontracted_old() {
             // Old values of overloaded func on stack (so no `f` param here).
             exec_and(boost::contract::virtual_::push_old_init_copy);
@@ -210,7 +211,7 @@ protected:
     #ifndef BOOST_CONTRACT_NO_ENTRY_INVARIANTS
         void check_subcontracted_entry_inv() {
             exec_and(boost::contract::virtual_::check_entry_inv,
-                    &cond_with_subcontracting::check_entry_inv);
+                    &cond_subcontracting::check_entry_inv);
         }
     #endif
     
@@ -218,7 +219,7 @@ protected:
         void check_subcontracted_pre() {
             exec_or(
                 boost::contract::virtual_::check_pre,
-                &cond_with_subcontracting::check_pre,
+                &cond_subcontracting::check_pre,
                 &boost::contract::precondition_failure
             );
         }
@@ -228,28 +229,28 @@ protected:
             !defined(BOOST_CONTRACT_NO_EXCEPTS)
         void copy_subcontracted_old() {
             exec_and(boost::contract::virtual_::call_old_ftor,
-                    &cond_with_subcontracting::copy_virtual_old);
+                    &cond_subcontracting::copy_virtual_old);
         }
     #endif
 
     #ifndef BOOST_CONTRACT_NO_EXIT_INVARIANTS
         void check_subcontracted_exit_inv() {
             exec_and(boost::contract::virtual_::check_exit_inv,
-                    &cond_with_subcontracting::check_exit_inv);
+                    &cond_subcontracting::check_exit_inv);
         }
     #endif
 
     #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
         void check_subcontracted_post() {
             exec_and(boost::contract::virtual_::check_post,
-                    &cond_with_subcontracting::check_virtual_post);
+                    &cond_subcontracting::check_virtual_post);
         }
     #endif
 
     #ifndef BOOST_CONTRACT_NO_EXCEPTS
         void check_subcontracted_except() {
             exec_and(boost::contract::virtual_::check_except,
-                    &cond_with_subcontracting::check_virtual_except);
+                    &cond_subcontracting::check_virtual_except);
         }
     #endif
 
@@ -299,7 +300,7 @@ private:
             typedef typename boost::remove_reference<typename
                     optional_value_type<VR>::type>::type r_type;
             boost::optional<r_type const&> r; // No result copy in this code.
-            if(!base_call_) r = optional_ref(r_);
+            if(!base_call_) r = optional_get(r_);
             else if(v_->result_optional_) {
                 try {
                     r = **boost::any_cast<boost::optional<r_type>*>(
@@ -358,7 +359,7 @@ private:
             !defined(BOOST_CONTRACT_NO_EXCEPTS)
         void exec_and( // Execute action in short-circuit logic-and with bases.
             boost::contract::virtual_::action_enum a,
-            void (cond_with_subcontracting::* f)() = 0
+            void (cond_subcontracting::* f)() = 0
         ) {
             if(failed()) return;
             if(!base_call_ || v_->action_ == a) {
@@ -368,7 +369,7 @@ private:
                 }
                 if(f) (this->*f)();
                 if(base_call_) {
-                    throw cond_with_subcontracting_::signal_no_error();
+                    throw cond_subcontracting_::signal_no_error();
                 }
             }
         }
@@ -377,7 +378,7 @@ private:
     #ifndef BOOST_CONTRACT_NO_PRECONDITIONS
         void exec_or( // Execute action in short-circuit logic-or with bases.
             boost::contract::virtual_::action_enum a,
-            bool (cond_with_subcontracting::* f)(bool) = 0,
+            bool (cond_subcontracting::* f)(bool) = 0,
             void (*h)(boost::contract::from) = 0
         ) {
             if(failed()) return;
@@ -401,9 +402,9 @@ private:
                         (this->*f)(/* throw_on_failure = */ base_call_) : false;
                 if(base_call_) {
                     if(!checked) {
-                        throw cond_with_subcontracting_::signal_not_checked();
+                        throw cond_subcontracting_::signal_not_checked();
                     }
-                    throw cond_with_subcontracting_::signal_no_error();
+                    throw cond_subcontracting_::signal_no_error();
                 }
             }
         }
@@ -418,7 +419,7 @@ private:
             if(boost::mpl::empty<Bases>::value) return false;
             try {
                 call_base(*this)(typename boost::mpl::front<Bases>::type());
-            } catch(cond_with_subcontracting_::signal_not_checked const&) {
+            } catch(cond_subcontracting_::signal_not_checked const&) {
                 return exec_or_bases<
                         typename boost::mpl::pop_front<Bases>::type>();
             } catch(...) {
@@ -439,7 +440,7 @@ private:
             !defined(BOOST_CONTRACT_NO_EXCEPTS)
         class call_base { // Copyable (as &).
         public:
-            explicit call_base(cond_with_subcontracting& me) : me_(me) {}
+            explicit call_base(cond_subcontracting& me) : me_(me) {}
 
             template<class B>
             void operator()(B*) {
@@ -450,7 +451,7 @@ private:
                 try {
                     call<B>(BOOST_CONTRACT_DETAIL_TVARIADIC_TUPLE_INDEXES_OF(
                             Args));
-                } catch(cond_with_subcontracting_::signal_no_error const&) {
+                } catch(cond_subcontracting_::signal_no_error const&) {
                     // No error (do not throw).
                 }
             }
@@ -474,7 +475,7 @@ private:
                 );
             }
             
-            cond_with_subcontracting& me_;
+            cond_subcontracting& me_;
         };
     #endif
 

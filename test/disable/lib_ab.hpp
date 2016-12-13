@@ -23,7 +23,8 @@ std::string ok_f() {
         #ifndef BOOST_CONTRACT_NO_PRECONDITIONS
             << "a::f::pre" << std::endl
         #endif
-        #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
+        #if     !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
+                !defined(BOOST_CONTRACT_NO_EXCEPTS)
             << "a::f::old" << std::endl
         #endif
         << "a::f::body" << std::endl
@@ -63,7 +64,8 @@ int main() {
                 << "a::f::body" << std::endl
             #endif
         #endif
-        #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
+        #if     !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
+                !defined(BOOST_CONTRACT_NO_EXCEPTS)
             << "b::g::old" << std::endl
         #endif
         << "b::g::body" << std::endl
@@ -86,17 +88,19 @@ int main() {
     BOOST_TEST(boost::contract::test::detail::oteststream::eq(out(), ok.str()));
 
     // Test old values not copied for disabled contracts.
-    unsigned const cnt =
-        #if defined(BOOST_CONTRACT_PRECONDITIONS_DISABLE_NO_ASSERTION) && \
-                !defined(BOOST_CONTRACT_NO_PRECONDITIONS) && \
-                !defined(BOOST_CONTRACT_NO_POSTCONDITIONS)
-            1
-        #else
-            0
-        #endif
+    #if     defined(BOOST_CONTRACT_PRECONDITIONS_DISABLE_NO_ASSERTION) && \
+            !defined(BOOST_CONTRACT_NO_PRECONDITIONS) && \
+            ( \
+                !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
+                !defined(BOOST_CONTRACT_NO_EXCEPTS) \
+            )
+        #define BOOST_CONTRACT_TEST_old 1u
+    #else
+        #define BOOST_CONTRACT_TEST_old 0u
+    #endif
     ;
-    BOOST_TEST_EQ(a::x_type::copies(), cnt);
-    BOOST_TEST_EQ(a::x_type::evals(), cnt);
+    BOOST_TEST_EQ(a::x_type::copies(), BOOST_CONTRACT_TEST_old);
+    BOOST_TEST_EQ(a::x_type::evals(), BOOST_CONTRACT_TEST_old);
     BOOST_TEST_EQ(a::x_type::ctors(), a::x_type::dtors());
 
     // Double check a call to f outside another contract checks f's contracts.
@@ -167,6 +171,7 @@ int main() {
     BOOST_TEST(b::test_disable_inv_failure());
     BOOST_TEST(b::test_disable_failure());
     
+    #undef BOOST_CONTRACT_TEST_old
     return boost::report_errors();
 }
 

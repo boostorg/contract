@@ -99,7 +99,7 @@
         )
 #endif
 
-#define BOOST_CONTRACT_DETAIL_DECL_DETAIL_COND_WITH_SUBCONTRACTING_Z( \
+#define BOOST_CONTRACT_DETAIL_DECL_DETAIL_COND_SUBCONTRACTING_Z( \
         z, is_friend, O, VR, F, C, Args) \
     template< \
         class O, typename VR, typename F, class C \
@@ -112,7 +112,7 @@
     , \
         class \
     ) \
-    cond_with_subcontracting
+    cond_subcontracting
 
 /* CODE */
 

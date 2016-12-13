@@ -64,7 +64,8 @@ int main() {
             #ifndef BOOST_CONTRACT_NO_PRECONDITIONS
                 << "swap::pre" << std::endl
             #endif
-            #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
+            #if     !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
+                    !defined(BOOST_CONTRACT_NO_EXCEPTS)
                 << "swap::old" << std::endl
             #endif
             << "swap::body" << std::endl
@@ -79,25 +80,22 @@ int main() {
         BOOST_TEST_EQ(y.value, 123);
     }
 
-    #ifdef BOOST_CONTRACT_NO_POSTCONDITIONS
-        #define BOOST_CONTRACT_TEST_post 0
+    #if     !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
+            !defined(BOOST_CONTRACT_NO_EXCEPTS)
+        #define BOOST_CONTRACT_TEST_old 1u
     #else
-        #define BOOST_CONTRACT_TEST_post 1
+        #define BOOST_CONTRACT_TEST_old 0u
     #endif
 
-    BOOST_TEST_EQ(x_type::copies(),
-            BOOST_PP_IIF(BOOST_CONTRACT_TEST_post, 1u, 0u));
-    BOOST_TEST_EQ(x_type::evals(),
-            BOOST_PP_IIF(BOOST_CONTRACT_TEST_post, 1u, 0u));
+    BOOST_TEST_EQ(x_type::copies(), BOOST_CONTRACT_TEST_old);
+    BOOST_TEST_EQ(x_type::evals(), BOOST_CONTRACT_TEST_old);
     BOOST_TEST_EQ(x_type::ctors(), x_type::dtors()); // No leak.
     
-    BOOST_TEST_EQ(y_type::copies(),
-        BOOST_PP_IIF(BOOST_CONTRACT_TEST_post, 1u, 0u));
-    BOOST_TEST_EQ(y_type::evals(),
-        BOOST_PP_IIF(BOOST_CONTRACT_TEST_post, 1u, 0u));
+    BOOST_TEST_EQ(y_type::copies(), BOOST_CONTRACT_TEST_old);
+    BOOST_TEST_EQ(y_type::evals(), BOOST_CONTRACT_TEST_old);
     BOOST_TEST_EQ(y_type::ctors(), y_type::dtors()); // No leak.
 
-    #undef BOOST_CONTRACT_TEST_post
+    #undef BOOST_CONTRACT_TEST_old
     return boost::report_errors();
 }
 

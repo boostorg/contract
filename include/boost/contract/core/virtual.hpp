@@ -26,7 +26,7 @@ Facility to declare virtual public functions with contracts.
 namespace boost {
     namespace contract {
         namespace detail {
-            BOOST_CONTRACT_DETAIL_DECL_DETAIL_COND_WITH_SUBCONTRACTING_Z(1,
+            BOOST_CONTRACT_DETAIL_DECL_DETAIL_COND_SUBCONTRACTING_Z(1,
                     /* is_friend = */ 0, OO, RR, FF, CC, AArgs);
         }
     }
@@ -155,7 +155,7 @@ class virtual_ : private boost::noncopyable { // Avoid copy queue, stack, etc.
     friend bool copy_old(virtual_*);
     friend class old_pointer;
 
-    BOOST_CONTRACT_DETAIL_DECL_DETAIL_COND_WITH_SUBCONTRACTING_Z(1,
+    BOOST_CONTRACT_DETAIL_DECL_DETAIL_COND_SUBCONTRACTING_Z(1,
             /* is_friend = */ 1, OO, RR, FF, CC, AArgs);
 /** @endcond */
 };

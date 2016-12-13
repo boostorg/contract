@@ -67,7 +67,8 @@ int main() {
             << "a::static_inv" << std::endl
             << "a::inv" << std::endl
         #endif
-        #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
+        #if     !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
+                !defined(BOOST_CONTRACT_NO_EXCEPTS)
             << "a::dtor::old" << std::endl
         #endif
         << "a::dtor::body" << std::endl
@@ -82,7 +83,8 @@ int main() {
             << "b::static_inv" << std::endl
             << "b::inv" << std::endl
         #endif
-        #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
+        #if     !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
+                !defined(BOOST_CONTRACT_NO_EXCEPTS)
             << "b::dtor::old" << std::endl
         #endif
         << "b::dtor::body" << std::endl
@@ -104,7 +106,8 @@ int main() {
             << "b::static_inv" << std::endl
             << "b::inv" << std::endl
         #endif
-        #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
+        #if     !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
+                !defined(BOOST_CONTRACT_NO_EXCEPTS)
             << "b::dtor::old" << std::endl
         #endif
         << "b::dtor::body" << std::endl

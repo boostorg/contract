@@ -84,7 +84,8 @@ int main() {
             a aa;
             out.str("");
         }
-        #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
+        #if     !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
+                !defined(BOOST_CONTRACT_NO_EXCEPTS)
                 BOOST_TEST(false);
             } catch(b::err const&) {
         #endif
@@ -93,7 +94,8 @@ int main() {
                 << "a::static_inv" << std::endl
                 << "a::inv" << std::endl
             #endif
-            #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
+            #if     !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
+                    !defined(BOOST_CONTRACT_NO_EXCEPTS)
                 << "a::dtor::old" << std::endl
             #endif
             << "a::dtor::body" << std::endl
@@ -109,7 +111,8 @@ int main() {
                 << "b::static_inv" << std::endl
                 << "b::inv" << std::endl
             #endif
-            #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
+            #if     !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
+                    !defined(BOOST_CONTRACT_NO_EXCEPTS)
                 << "b::dtor::old" << std::endl // Test this threw.
             #else
                 << "b::dtor::body" << std::endl
@@ -122,13 +125,15 @@ int main() {
                 << "c::static_inv" << std::endl
                 << "c::inv" << std::endl
             #endif
-            #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
+            #if     !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
+                    !defined(BOOST_CONTRACT_NO_EXCEPTS)
                 << "c::dtor::old" << std::endl
             #endif
             << "c::dtor::body" << std::endl
             #ifndef BOOST_CONTRACT_NO_EXIT_INVARIANTS
                 << "c::static_inv" << std::endl
-                #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
+                #if     !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
+                        !defined(BOOST_CONTRACT_NO_EXCEPTS)
                     // Test c not destructed (so both static_inv and inv).
                     << "c::inv" << std::endl
                 #endif

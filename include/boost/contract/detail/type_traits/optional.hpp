@@ -30,9 +30,11 @@ struct remove_value_reference_if_optional<boost::optional<T> >
         { typedef typename boost::remove_reference<T>::type type; };
 
 template<typename T>
-T& optional_ref(T& x) { return x; }
+T& optional_get(T& x) { return x; }
 template<typename T>
-T& optional_ref(boost::optional<T>& x) { return *x; }
+T& optional_get(boost::optional<T>& x) { return x.get(); }
+template<typename T>
+T& optional_get(boost::optional<T&>& x) { return x.get(); }
 
 } } } // namespace
 

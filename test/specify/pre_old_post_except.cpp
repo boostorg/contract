@@ -34,7 +34,8 @@ int main() {
         #ifndef BOOST_CONTRACT_NO_PRECONDITIONS
             << "f::pre" << std::endl
         #endif
-        #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
+        #if     !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
+                !defined(BOOST_CONTRACT_NO_EXCEPTS)
             << "f::old" << std::endl
         #endif
         << "f::body" << std::endl

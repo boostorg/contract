@@ -1,6 +1,6 @@
 
-#ifndef BOOST_CONTRACT_DETAIL_COND_WITH_INV_HPP_
-#define BOOST_CONTRACT_DETAIL_COND_WITH_INV_HPP_
+#ifndef BOOST_CONTRACT_DETAIL_COND_INV_HPP_
+#define BOOST_CONTRACT_DETAIL_COND_INV_HPP_
 
 // Copyright (C) 2008-2016 Lorenzo Caminiti
 // Distributed under the Boost Software License, Version 1.0 (see accompanying
@@ -9,7 +9,7 @@
 
 #include <boost/contract/core/exception.hpp>
 #include <boost/contract/core/config.hpp>
-#include <boost/contract/detail/condition/cond_with_post.hpp>
+#include <boost/contract/detail/condition/cond_post.hpp>
 #ifndef BOOST_CONTRACT_NO_INVARIANTS
     #include <boost/contract/core/access.hpp>
     #include <boost/type_traits/add_pointer.hpp>
@@ -32,7 +32,7 @@
 namespace boost { namespace contract { namespace detail {
 
 template<typename VR, class C>
-class cond_with_inv : public cond_with_post<VR> { // Non-copyable base.
+class cond_inv : public cond_post<VR> { // Non-copyable base.
     #if     !defined(BOOST_CONTRACT_NO_INVARIANTS) && \
             !defined(BOOST_CONTRACT_PERMISSIVE)
         BOOST_STATIC_ASSERT_MSG(
@@ -94,8 +94,8 @@ class cond_with_inv : public cond_with_post<VR> { // Non-copyable base.
 
 public:
     // obj can be 0 for static member functions.
-    explicit cond_with_inv(boost::contract::from from, C* obj) :
-        cond_with_post<VR>(from)
+    explicit cond_inv(boost::contract::from from, C* obj) :
+        cond_post<VR>(from)
         #if     !defined(BOOST_CONTRACT_NO_INVARIANTS) || \
                 !defined(BOOST_CONTRACT_NO_PRECONDITIONS) || \
                 !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \

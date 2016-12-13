@@ -127,7 +127,8 @@ int main() {
         #ifndef BOOST_CONTRACT_NO_PRECONDITIONS
             << "swap::pre" << std::endl
         #endif
-        #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
+        #if     !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
+                !defined(BOOST_CONTRACT_NO_EXCEPTS)
             << "swap::old" << std::endl
         #endif
         << "swap::body" << std::endl
@@ -137,22 +138,21 @@ int main() {
     ;
     BOOST_TEST(out.eq(ok.str()));
 
-    unsigned const cnt =
-        #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
-            1
-        #else
-            0
-        #endif
-    ;
+    #if     !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
+            !defined(BOOST_CONTRACT_NO_EXCEPTS)
+        #define BOOST_CONTRACT_TEST_old 1u
+    #else
+        #define BOOST_CONTRACT_TEST_old 0u
+    #endif
     
     BOOST_TEST_EQ(x.value, 'b');
-    BOOST_TEST_EQ(x.copies(), cnt);
-    BOOST_TEST_EQ(x.evals(), cnt);
+    BOOST_TEST_EQ(x.copies(), BOOST_CONTRACT_TEST_old);
+    BOOST_TEST_EQ(x.evals(), BOOST_CONTRACT_TEST_old);
     BOOST_TEST_EQ(x.ctors(), x.dtors() + 1); // 1 for local var.
     
     BOOST_TEST_EQ(y.value, 'a');
-    BOOST_TEST_EQ(y.copies(), cnt);
-    BOOST_TEST_EQ(y.evals(), cnt);
+    BOOST_TEST_EQ(y.copies(), BOOST_CONTRACT_TEST_old);
+    BOOST_TEST_EQ(y.evals(), BOOST_CONTRACT_TEST_old);
     BOOST_TEST_EQ(y.ctors(), y.dtors() + 1); // 1 for local var.
 
     a aa;
@@ -165,7 +165,8 @@ int main() {
         #ifndef BOOST_CONTRACT_NO_PRECONDITIONS
             << "b::swap::pre" << std::endl
         #endif
-        #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
+        #if     !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
+                !defined(BOOST_CONTRACT_NO_EXCEPTS)
             << "b::swap::old" << std::endl
         #endif
         << "a::swap::body" << std::endl
@@ -177,15 +178,16 @@ int main() {
     BOOST_TEST(out.eq(ok.str()));
     
     BOOST_TEST_EQ(i.value, 2);
-    BOOST_TEST_EQ(i.copies(), cnt);
-    BOOST_TEST_EQ(i.evals(), cnt);
+    BOOST_TEST_EQ(i.copies(), BOOST_CONTRACT_TEST_old);
+    BOOST_TEST_EQ(i.evals(), BOOST_CONTRACT_TEST_old);
     BOOST_TEST_EQ(i.ctors(), i.dtors() + 1); // 1 for local var.
     
     BOOST_TEST_EQ(j.value, 1);
-    BOOST_TEST_EQ(j.copies(), cnt);
-    BOOST_TEST_EQ(j.evals(), cnt);
+    BOOST_TEST_EQ(j.copies(), BOOST_CONTRACT_TEST_old);
+    BOOST_TEST_EQ(j.evals(), BOOST_CONTRACT_TEST_old);
     BOOST_TEST_EQ(j.ctors(), j.dtors() + 1); // 1 for local var.
 
+    #undef BOOST_CONTRACT_TEST_old
     return boost::report_errors();
 }
 

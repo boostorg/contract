@@ -25,7 +25,8 @@ int main() {
             << "a::inv" << std::endl
         #endif
         // No preconditions here.
-        #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
+        #if     !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
+                !defined(BOOST_CONTRACT_NO_EXCEPTS)
             << "c::f::old" << std::endl
             << "b::f::old" << std::endl
             << "a::f::old" << std::endl
@@ -40,7 +41,7 @@ int main() {
             << "a::inv" << std::endl
         #endif
         #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
-            << "c::f::old" << std::endl
+            << "c::f::old" << std::endl // Old only if post (or except) run.
             << "c::f::post" << std::endl
             << "b::f::old" << std::endl
             << "b::f::post" << std::endl

@@ -63,7 +63,8 @@ public:
         void set_pre(F const& f) { pre_ = f; }
     #endif
 
-    #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
+    #if     !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
+            !defined(BOOST_CONTRACT_NO_EXCEPTS)
         template<typename F>
         void set_old(F const& f) { old_ = f; }
     #endif

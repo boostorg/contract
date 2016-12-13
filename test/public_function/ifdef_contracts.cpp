@@ -72,7 +72,7 @@ struct a
                 #ifndef BOOST_CONTRACT_NO_PRECONDITIONS
                     .precondition([] { out << "a::f::pre" << std::endl; })
                 #endif
-                #ifndef OOST_CONTRACT_NO_POSTCONDITIONS
+                #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
                     .old([] { out << "a::f::old" << std::endl; })
                     .postcondition([] { out << "a::f::post" << std::endl; })
                 #endif

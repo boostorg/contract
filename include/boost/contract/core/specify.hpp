@@ -18,7 +18,7 @@ Facilities to specify preconditions, old value assignments, and postconditions.
         !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
         !defined(BOOST_CONTRACT_NO_EXCEPTS)
     #include <boost/contract/detail/condition/cond_base.hpp>
-    #include <boost/contract/detail/condition/cond_with_post.hpp>
+    #include <boost/contract/detail/condition/cond_post.hpp>
     #include <boost/contract/detail/auto_ptr.hpp>
     #include <boost/contract/detail/none.hpp>
 #endif
@@ -62,7 +62,8 @@ Facilities to specify preconditions, old value assignments, and postconditions.
                 BOOST_CONTRACT_SPECIFY_COND_RELEASE_);
 #endif
         
-#ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
+#if     !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
+        !defined(BOOST_CONTRACT_NO_EXCEPTS)
     #define BOOST_CONTRACT_SPECIFY_OLD_IMPL_ \
         BOOST_CONTRACT_DETAIL_DEBUG(cond_); \
         cond_->set_old(f); \
@@ -237,7 +238,7 @@ public:
 private:
     BOOST_CONTRACT_SPECIFY_COND_CTOR_(
         specify_postcondition_except,
-        boost::contract::detail::cond_with_post<typename
+        boost::contract::detail::cond_post<typename
                 boost::contract::detail::none_if_void<VirtualResult>::type>
     )
 
@@ -330,7 +331,7 @@ public:
 private:
     BOOST_CONTRACT_SPECIFY_COND_CTOR_(
         specify_old_postcondition_except,
-        boost::contract::detail::cond_with_post<typename
+        boost::contract::detail::cond_post<typename
                 boost::contract::detail::none_if_void<VirtualResult>::type>
     )
 
@@ -453,7 +454,7 @@ public:
 private:
     BOOST_CONTRACT_SPECIFY_COND_CTOR_(
         specify_precondition_old_postcondition_except,
-        boost::contract::detail::cond_with_post<typename
+        boost::contract::detail::cond_post<typename
                 boost::contract::detail::none_if_void<VirtualResult>::type>
     )
 

@@ -22,8 +22,9 @@ int main() {
             << "b::ctor::pre" << std::endl
             << "c::ctor::pre" << std::endl
         #endif
-        
-        #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
+
+        #if     !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
+                !defined(BOOST_CONTRACT_NO_EXCEPTS)
             << "c::ctor::old" << std::endl
         #endif
         << "c::ctor::body" << std::endl
@@ -34,7 +35,8 @@ int main() {
             << "c::ctor::post" << std::endl
         #endif
             
-        #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
+        #if     !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
+                !defined(BOOST_CONTRACT_NO_EXCEPTS)
             << "b::ctor::old" << std::endl
         #endif
         << "b::ctor::body" << std::endl
@@ -45,7 +47,8 @@ int main() {
             << "b::ctor::post" << std::endl
         #endif
 
-        #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
+        #if     !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
+                !defined(BOOST_CONTRACT_NO_EXCEPTS)
             << "a::ctor::old" << std::endl
         #endif
         << "a::ctor::body" << std::endl

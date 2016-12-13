@@ -41,7 +41,8 @@ int main() {
     try {
         out.str("");
         a::f();
-        #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
+        #if     !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
+                !defined(BOOST_CONTRACT_NO_EXCEPTS)
                 BOOST_TEST(false);
             } catch(a::err const&) {
         #endif
@@ -52,7 +53,8 @@ int main() {
             #ifndef BOOST_CONTRACT_NO_PRECONDITIONS
                 << "a::f::pre" << std::endl
             #endif
-            #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
+            #if     !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
+                    !defined(BOOST_CONTRACT_NO_EXCEPTS)
                 << "a::f::old" << std::endl // Test this threw.
             #else
                 << "a::f::body" << std::endl

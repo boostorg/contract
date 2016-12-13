@@ -1,6 +1,6 @@
 
-#ifndef BOOST_CONTRACT_DETAIL_COND_WITH_POST_HPP_
-#define BOOST_CONTRACT_DETAIL_COND_WITH_POST_HPP_
+#ifndef BOOST_CONTRACT_DETAIL_COND_POST_HPP_
+#define BOOST_CONTRACT_DETAIL_COND_POST_HPP_
 
 // Copyright (C) 2008-2016 Lorenzo Caminiti
 // Distributed under the Boost Software License, Version 1.0 (see accompanying
@@ -21,7 +21,7 @@
 
 /* PRIVATE */
 
-#define BOOST_CONTRACT_DETAIL_COND_WITH_POST_DEF_( \
+#define BOOST_CONTRACT_DETAIL_COND_POST_DEF_( \
         result_type, result_param, ftor_type, ftor_var, ftor_call) \
     public: \
         template<typename F> \
@@ -42,9 +42,9 @@
 namespace boost { namespace contract { namespace detail {
 
 template<typename VR>
-class cond_with_post : public cond_base { // Non-copyable base.
+class cond_post : public cond_base { // Non-copyable base.
 public:
-    explicit cond_with_post(boost::contract::from from) : cond_base(from) {}
+    explicit cond_post(boost::contract::from from) : cond_base(from) {}
     
     #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
         private: typedef typename boost::mpl::if_<is_optional<VR>,
@@ -54,7 +54,7 @@ public:
             VR const&
         >::type r_type;
 
-        BOOST_CONTRACT_DETAIL_COND_WITH_POST_DEF_(
+        BOOST_CONTRACT_DETAIL_COND_POST_DEF_(
             r_type,
             r,
             void (r_type),
@@ -66,12 +66,12 @@ public:
 };
 
 template<>
-class cond_with_post<none> : public cond_base { // Non-copyable base.
+class cond_post<none> : public cond_base { // Non-copyable base.
 public:
-    explicit cond_with_post(boost::contract::from from) : cond_base(from) {}
+    explicit cond_post(boost::contract::from from) : cond_base(from) {}
     
     #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
-        BOOST_CONTRACT_DETAIL_COND_WITH_POST_DEF_(
+        BOOST_CONTRACT_DETAIL_COND_POST_DEF_(
             none,
             unused,
             void (),
