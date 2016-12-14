@@ -4,7 +4,7 @@
 // file LICENSE_1_0.txt or a copy at http://www.boost.org/LICENSE_1_0.txt).
 // See: http://www.boost.org/doc/libs/release/libs/contract/doc/html/index.html
 
-// Test throw form constructor .old() (in middle branch of inheritance tree).
+// Test throw form constructor .post() (in middle branch of inheritance tree).
 
 #include "../detail/oteststream.hpp"
 #include <boost/contract/constructor.hpp>
@@ -33,6 +33,7 @@ struct c
         boost::contract::check c = boost::contract::constructor(this)
             .old([] { out << "c::ctor::old" << std::endl; })
             .postcondition([] { out << "c::ctor::post" << std::endl; })
+            .except([] { out << "c::ctor::except" << std::endl; })
         ;
         out << "c::ctor::body" << std::endl;
         // Do not throw (from inheritance root).
@@ -57,11 +58,12 @@ struct b
         })
     {
         boost::contract::check c = boost::contract::constructor(this)
-            .old([] {
-                out << "b::ctor::old" << std::endl;
-                throw b::err(); // Test .old() throws (from mid branch).
+            .old([] { out << "b::ctor::old" << std::endl; })
+            .postcondition([] {
+                out << "b::ctor::post" << std::endl;
+                throw b::err(); // Test this throws (from mid branch).
             })
-            .postcondition([] { out << "b::ctor::post" << std::endl; })
+            .except([] { out << "b::ctor::except" << std::endl; })
         ;
         out << "b::ctor::body" << std::endl;
     }
@@ -85,6 +87,7 @@ struct a
         boost::contract::check c = boost::contract::constructor(this)
             .old([] { out << "a::ctor::old" << std::endl; })
             .postcondition([] { out << "a::ctor::post" << std::endl; })
+            .except([] { out << "a::ctor::except" << std::endl; })
         ;
         out << "a::ctor::body" << std::endl;
         // Do not throw (from inheritance leaf).
@@ -94,16 +97,16 @@ struct a
 int main() {
     std::ostringstream ok;
 
-    boost::contract::set_old_failure([] (boost::contract::from) { throw; });
+    boost::contract::set_postcondition_failure(
+            [] (boost::contract::from) { throw; });
     
     try {
         out.str("");
         a aa;
-        #if     !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
-                !defined(BOOST_CONTRACT_NO_EXCEPTS)
-                BOOST_TEST(false);
-            } catch(b::err const&) {
-        #endif
+#ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
+        BOOST_TEST(false);
+    } catch(b::err const&) {
+#endif
         ok.str(""); ok
             #ifndef BOOST_CONTRACT_NO_PRECONDITIONS
                 << "a::ctor::pre" << std::endl
@@ -132,16 +135,22 @@ int main() {
             #endif
             #if     !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
                     !defined(BOOST_CONTRACT_NO_EXCEPTS)
-                << "b::ctor::old" << std::endl // Test this threw.
+                << "b::ctor::old" << std::endl
+            #endif
+            << "b::ctor::body" << std::endl
+            #ifndef BOOST_CONTRACT_NO_EXIT_INVARIANTS
+                << "b::static_inv" << std::endl
+                << "b::inv" << std::endl
+            #endif
+            #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
+                << "b::ctor::post" << std::endl // Test this threw.
             #else
-                << "b::ctor::body" << std::endl
-                #ifndef BOOST_CONTRACT_NO_EXIT_INVARIANTS
-                    << "b::static_inv" << std::endl
-                    << "b::inv" << std::endl
-                #endif
-
                 #ifndef BOOST_CONTRACT_NO_ENTRY_INVARIANTS
                     << "a::static_inv" << std::endl
+                #endif
+                #if     !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
+                        !defined(BOOST_CONTRACT_NO_EXCEPTS)
+                    << "a::ctor::old" << std::endl
                 #endif
                 << "a::ctor::body" << std::endl
                 #ifndef BOOST_CONTRACT_NO_EXIT_INVARIANTS

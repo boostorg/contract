@@ -39,8 +39,11 @@ test-suite constructor :
     [ subdir-run constructor : access ]
     [ subdir-run constructor : ifdef_contracts ]
 
-    [ subdir-run constructor : body_throw ]
-    [ subdir-run constructor : old_throw ]
+    [ subdir-run constructor : throwing_pre ]
+    [ subdir-run constructor : throwing_old ]
+    [ subdir-run constructor : throwing_body ]
+    [ subdir-run constructor : throwing_post ]
+    # No throwing_except test (because throwing twice calls terminate).
     
     [ subdir-compile-fail constructor : pre_error ]
 ;
@@ -74,8 +77,11 @@ test-suite destructor :
     [ subdir-run destructor : access ]
     [ subdir-run destructor : ifdef_contracts ]
 
-    [ subdir-run destructor : body_throw ]
-    [ subdir-run destructor : old_throw ]
+    # No throwing_pre test (because dtors have no preconditions).
+    [ subdir-run destructor : throwing_old ]
+    [ subdir-run destructor : throwing_body ]
+    [ subdir-run destructor : throwing_post ]
+    # No throwing_except test (because throwing twice calls terminate).
 
     [ subdir-compile-fail destructor : pre_error ]
 ;
@@ -126,10 +132,13 @@ test-suite public_function :
     [ subdir-run public_function : access ]
     [ subdir-run public_function : ifdef_contracts ]
     
-    [ subdir-run public_function : body_throw ]
-    [ subdir-run public_function : body_throw_virtual ]
-    [ subdir-run public_function : body_throw_virtual_branch ]
-    [ subdir-run public_function : old_throw ]
+    [ subdir-run public_function : throwing_pre ]
+    [ subdir-run public_function : throwing_old ]
+    [ subdir-run public_function : throwing_body ]
+    [ subdir-run public_function : throwing_body_virtual ]
+    [ subdir-run public_function : throwing_body_virtual_branch ]
+    [ subdir-run public_function : throwing_post ]
+    # No throwing_except test (because throwing twice calls terminate).
     
     [ subdir-run public_function : max_args0 ]
     [ subdir-run public_function : max_args0_no_tva ]
@@ -149,9 +158,13 @@ test-suite public_function :
     [ subdir-run public_function : override_permissive ]
     
     [ subdir-run public_function : static ]
-    [ subdir-run public_function : static_body_throw ]
-    [ subdir-run public_function : static_old_throw ]
-    [ subdir-run public_function : static_no_contracts ]
+    [ subdir-run public_function : static_ifdef ]
+
+    [ subdir-run public_function : static_throwing_pre ]
+    [ subdir-run public_function : static_throwing_old ]
+    [ subdir-run public_function : static_throwing_body ]
+    [ subdir-run public_function : static_throwing_post ]
+    # No throwing_except test (because throwing twice calls terminate).
 ;
     
 test-suite invariant :
@@ -191,8 +204,11 @@ test-suite function :
     [ subdir-run function : contracts ]
     [ subdir-run function : ifdef_contracts ]
 
-    [ subdir-run function : body_throw ]
-    [ subdir-run function : old_throw ]
+    [ subdir-run function : throwing_pre ]
+    [ subdir-run function : throwing_old ]
+    [ subdir-run function : throwing_body ]
+    [ subdir-run function : throwing_post ]
+    # No throwing_except test (because throwing twice calls terminate).
 ;
 
 test-suite check :

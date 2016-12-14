@@ -4,7 +4,7 @@
 // file LICENSE_1_0.txt or a copy at http://www.boost.org/LICENSE_1_0.txt).
 // See: http://www.boost.org/doc/libs/release/libs/contract/doc/html/index.html
 
-// Test throw from destructor .old() (in middle branch of inheritance tree).
+// Test throw from destructor .post() (in middle branch of inheritance tree).
 
 #include "../detail/oteststream.hpp"
 #include <boost/contract/destructor.hpp>
@@ -24,6 +24,7 @@ struct c {
         boost::contract::check c = boost::contract::destructor(this)
             .old([] { out << "c::dtor::old" << std::endl; })
             .postcondition([] { out << "c::dtor::post" << std::endl; })
+            .except([] { out << "c::dtor::except" << std::endl; })
         ;
         out << "c::dtor::body" << std::endl;
         // Do not throw (from inheritance root).
@@ -44,11 +45,12 @@ struct b
 
     ~b() BOOST_NOEXCEPT_IF(false) {
         boost::contract::check c = boost::contract::destructor(this)
-            .old([] {
-                out << "b::dtor::old" << std::endl;
-                throw b::err(); // Test .old() throw (from mid branch).
+            .old([] { out << "b::dtor::old" << std::endl; })
+            .postcondition([] {
+                out << "b::dtor::post" << std::endl;
+                throw b::err(); // Test this throws (from mid branch).
             })
-            .postcondition([] { out << "b::dtor::post" << std::endl; })
+            .except([] { out << "b::dtor::except" << std::endl; })
         ;
         out << "b::dtor::body" << std::endl;
     }
@@ -68,6 +70,7 @@ struct a
         boost::contract::check c = boost::contract::destructor(this)
             .old([] { out << "a::dtor::old" << std::endl; })
             .postcondition([] { out << "a::dtor::post" << std::endl; })
+            .except([] { out << "a::dtor::except" << std::endl; })
         ;
         out << "a::dtor::body" << std::endl;
         // Do not throw (from inheritance leaf).
@@ -77,18 +80,18 @@ struct a
 int main() {
     std::ostringstream ok;
 
-    boost::contract::set_old_failure([] (boost::contract::from) { throw; });
+    boost::contract::set_postcondition_failure(
+            [] (boost::contract::from) { throw; });
 
     try {
         {
             a aa;
             out.str("");
         }
-        #if     !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
-                !defined(BOOST_CONTRACT_NO_EXCEPTS)
-                BOOST_TEST(false);
-            } catch(b::err const&) {
-        #endif
+#ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
+        BOOST_TEST(false);
+    } catch(b::err const&) {
+#endif
         ok.str(""); ok
             #ifndef BOOST_CONTRACT_NO_ENTRY_INVARIANTS
                 << "a::static_inv" << std::endl
@@ -113,12 +116,14 @@ int main() {
             #endif
             #if     !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
                     !defined(BOOST_CONTRACT_NO_EXCEPTS)
-                << "b::dtor::old" << std::endl // Test this threw.
-            #else
-                << "b::dtor::body" << std::endl
-                #ifndef BOOST_CONTRACT_NO_EXIT_INVARIANTS
-                    << "b::static_inv" << std::endl
-                #endif
+                << "b::dtor::old" << std::endl
+            #endif
+            << "b::dtor::body" << std::endl
+            #ifndef BOOST_CONTRACT_NO_EXIT_INVARIANTS
+                << "b::static_inv" << std::endl
+            #endif
+            #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
+                << "b::dtor::post" << std::endl // Test this threw.
             #endif
 
             #ifndef BOOST_CONTRACT_NO_ENTRY_INVARIANTS
@@ -132,10 +137,12 @@ int main() {
             << "c::dtor::body" << std::endl
             #ifndef BOOST_CONTRACT_NO_EXIT_INVARIANTS
                 << "c::static_inv" << std::endl
-                #if     !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
-                        !defined(BOOST_CONTRACT_NO_EXCEPTS)
-                    // Test c not destructed (so both static_inv and inv).
+                #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
+                    // Test c not destructed (so both inv and except).
                     << "c::inv" << std::endl
+                    #ifndef BOOST_CONTRACT_NO_EXCEPTS
+                        << "c::dtor::except" << std::endl
+                    #endif
                 #endif
             #endif
         ;

@@ -27,8 +27,6 @@ never be used directly by programmers.
 
 // TODO: Make all tests pass also with link=static and link=header (some tests fails now...).
 
-// TODO: Test interaction between throwing contract handlers and .except(). For example, a throwing handler is set for all contracts, a precondition throws for a function that has .except()... will .except() be called... (it should, correct?), what is .except() contract fails and it also throws an exception?
-
 // TODO: Document that boost::contract::function() can be used to program contracts for lambda functions. And also "abused" a bit to program pre/postconditions for any arbitrary scope of code in function body.
 
 // TODO: Document that friends do not in general check invariants so their contracts are usually programmed using function(). But if a function friend of an object takes an instance of that object as a parameter and therefore is essentially part of the object's public API, then programmers can make that explicit by using public_function(obj) after function() to program the friend function contract (but note that in general friends functions can take instances of multiple different objects because the same function can be friend of different classes). Also add a test (under test/public_function/...) and an example for friend.

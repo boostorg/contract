@@ -4,7 +4,7 @@
 // file LICENSE_1_0.txt or a copy at http://www.boost.org/LICENSE_1_0.txt).
 // See: http://www.boost.org/doc/libs/release/libs/contract/doc/html/index.html
 
-// Test throw from public static member function .old().
+// Test public static member function throwing.
 
 #include "../detail/oteststream.hpp"
 #include <boost/contract/public_function.hpp>
@@ -23,29 +23,23 @@ struct a {
     static void f() {
         boost::contract::check c = boost::contract::public_function<a>()
             .precondition([] { out << "a::f::pre" << std::endl; })
-            .old([] {
-                out << "a::f::old" << std::endl;
-                throw a::err();
-            })
+            .old([] { out << "a::f::old" << std::endl; })
             .postcondition([] { out << "a::f::post" << std::endl; })
+            .except([] { out << "a::f::except" << std::endl; })
         ;
         out << "a::f::body" << std::endl;
+        throw a::err(); // Test this throws.
     }
 };
 
 int main() {
     std::ostringstream ok;
 
-    boost::contract::set_old_failure([] (boost::contract::from) { throw; });
-
     try {
         out.str("");
         a::f();
-        #if     !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
-                !defined(BOOST_CONTRACT_NO_EXCEPTS)
-                BOOST_TEST(false);
-            } catch(a::err const&) {
-        #endif
+        BOOST_TEST(false);
+    } catch(a::err const&) {
         ok.str(""); ok
             #ifndef BOOST_CONTRACT_NO_ENTRY_INVARIANTS
                 << "a::static_inv" << std::endl
@@ -55,13 +49,15 @@ int main() {
             #endif
             #if     !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
                     !defined(BOOST_CONTRACT_NO_EXCEPTS)
-                << "a::f::old" << std::endl // Test this threw.
-            #else
-                << "a::f::body" << std::endl
-                // Test no post (but still static inv) because .old() threw.
-                #ifndef BOOST_CONTRACT_NO_EXIT_INVARIANTS
-                    << "a::static_inv" << std::endl
-                #endif
+                << "a::f::old" << std::endl
+            #endif
+            << "a::f::body" << std::endl // Test this threw.
+            // Test no post (but still static inv) because body threw.
+            #ifndef BOOST_CONTRACT_NO_EXIT_INVARIANTS
+                << "a::static_inv" << std::endl
+            #endif
+            #ifndef BOOST_CONTRACT_NO_EXCEPTS
+                << "a::f::except" << std::endl
             #endif
         ;
         BOOST_TEST(out.eq(ok.str()));

@@ -7,6 +7,8 @@
 // file LICENSE_1_0.txt or a copy at http://www.boost.org/LICENSE_1_0.txt).
 // See: http://www.boost.org/doc/libs/release/libs/contract/doc/html/index.html
 
+// TODO: Document that if destructor contract throws (set_post_failure and/or set_old_failure configured to throw) for a derived class, the base class object it still constructed so it will base's check inv (not just static) and also base's .except() (see destructor-throwing_old and destructor-throwing_post tests).
+
 /** @file
 Program contracts for destructors.
 */
