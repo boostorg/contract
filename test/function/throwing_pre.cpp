@@ -42,7 +42,7 @@ int main() {
         BOOST_TEST(false);
     } catch(err const&) {
 #endif
-        ok.str(""); ok <<
+        ok.str(""); ok
             #ifndef BOOST_CONTRACT_NO_PRECONDITIONS
                 << "f::pre" << std::endl // Test this threw.
             #else

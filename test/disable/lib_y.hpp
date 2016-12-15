@@ -7,8 +7,6 @@
 // file LICENSE_1_0.txt or a copy at http://www.boost.org/LICENSE_1_0.txt).
 // See: http://www.boost.org/doc/libs/release/libs/contract/doc/html/index.html
 
-// Test contracts in .cpp compiled to never check post/except.
-
 #include "lib_x.hpp"
 #include <boost/contract/function.hpp>
 #include <boost/contract/check.hpp>
@@ -29,6 +27,7 @@ namespace lib_y_ { // Internal namepsace.
 }
 
 inline void y() {
+    using boost::contract::test::detail::out;
     boost::contract::check c = boost::contract::function()
         .precondition([] { out("y::pre\n"); })
         .old([] { out("y::old\n"); })

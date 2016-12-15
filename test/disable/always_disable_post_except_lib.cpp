@@ -8,12 +8,14 @@
 
 #include "lib_x.hpp"
 #include "lib_y.hpp"
+#include "../detail/oteststream.hpp"
 #include <boost/contract/function.hpp>
 #include <boost/contract/check.hpp>
 #include <boost/detail/lightweight_test.hpp>
 #include <sstream>
 
 void f() {
+    using boost::contract::test::detail::out;
     boost::contract::check c = boost::contract::function()
         .precondition([] { out("f::pre\n"); })
         .old([] { out("f::old\n"); })
@@ -23,6 +25,7 @@ void f() {
 }
 
 int main() {
+    using boost::contract::test::detail::out;
     std::ostringstream ok;
 
     out("");

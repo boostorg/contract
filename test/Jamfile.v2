@@ -158,7 +158,7 @@ test-suite public_function :
     [ subdir-run public_function : override_permissive ]
     
     [ subdir-run public_function : static ]
-    [ subdir-run public_function : static_ifdef ]
+    [ subdir-run public_function : static_ifdef_contracts ]
 
     [ subdir-run public_function : static_throwing_pre ]
     [ subdir-run public_function : static_throwing_old ]
@@ -237,21 +237,21 @@ test-suite old :
 ;
 
 test-suite disable :
-    [ subdir-run disable : prog ]
-    [ subdir-run disable : prog_pre_disable_nothing ]
+    [ subdir-run disable : pre_disable_no_assertion_prog ]
+    [ subdir-run disable : assertions_disable_assertions_prog ]
 
     [ subdir-lib disable : lib_a :
             <link>shared:<define>BOOST_CONTRACT_TEST_LIB_A_DYN_LINK ]
     [ subdir-lib disable : lib_b : <library>disable-lib_a
             <link>shared:<define>BOOST_CONTRACT_TEST_LIB_B_DYN_LINK ]
-    [ subdir-run disable : lib_ab :
+    [ subdir-run disable : assertions_disable_assertions_lib :
             <library>disable-lib_a <library>disable-lib_b ]
     
     [ subdir-lib disable : lib_x :
             <link>shared:<define>BOOST_CONTRACT_TEST_LIB_X_DYN_LINK ]
     [ subdir-lib disable : lib_y : <library>disable-lib_x
             <link>shared:<define>BOOST_CONTRACT_TEST_LIB_Y_DYN_LINK ]
-    [ subdir-run disable : lib_xy :
+    [ subdir-run disable : always_disable_post_except_lib :
             <library>disable-lib_x <library>disable-lib_y ]
 ;
 

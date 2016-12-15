@@ -25,7 +25,7 @@ never be used directly by programmers.
 @see @RefSect{getting_started, Getting Started}
 */
 
-// TODO: Make all tests pass also with link=static and link=header (some tests fails now...).
+// TODO: Document that this lib will not work in general if link!=shared (link=static and link=header only provided for convenience because they might work OK in simple cases of a single program, but won't work in general with multiple programs/libs so only link=shared should be used in real code).
 
 // TODO: Document that boost::contract::function() can be used to program contracts for lambda functions. And also "abused" a bit to program pre/postconditions for any arbitrary scope of code in function body.
 

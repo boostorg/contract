@@ -7,8 +7,6 @@
 // file LICENSE_1_0.txt or a copy at http://www.boost.org/LICENSE_1_0.txt).
 // See: http://www.boost.org/doc/libs/release/libs/contract/doc/html/index.html
 
-// TODO: Find out the C++ example that gives linker error on global variables that are not static/extern and then test this library against that example (for all boost_link mode: shared, static, and header-only).
-
 /** @file
 Facilities to configure this library compile-time and run-time behaviour.
 */

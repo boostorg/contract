@@ -7,12 +7,9 @@
 // file LICENSE_1_0.txt or a copy at http://www.boost.org/LICENSE_1_0.txt).
 // See: http://www.boost.org/doc/libs/release/libs/contract/doc/html/index.html
 
-#include "../detail/oteststream.hpp"
 #include "../detail/counter.hpp"
 #include <boost/config.hpp>
 #include <string>
-
-// Test other contract checking disabled within contract checking (among libs).
 
 #ifdef BOOST_CONTRACT_TEST_LIB_A_DYN_LINK
     #ifdef BOOST_CONTRACT_TEST_LIB_A_SOURCE
@@ -24,8 +21,9 @@
     #define BOOST_CONTRACT_TEST_LIB_A_DECLSPEC /* nothing */
 #endif
 
-BOOST_CONTRACT_TEST_DETAIL_OTESTSTREAM_STR_DECL(
-        BOOST_CONTRACT_TEST_LIB_A_DECLSPEC, out)
+#define BOOST_CONTRACT_TEST_DETAIL_OUT_DECLSPEC \
+    BOOST_CONTRACT_TEST_LIB_A_DECLSPEC
+#include "../detail/out.hpp"
 
 struct BOOST_CONTRACT_TEST_LIB_A_DECLSPEC a {
     static void static_invariant();
@@ -43,6 +41,10 @@ struct BOOST_CONTRACT_TEST_LIB_A_DECLSPEC a {
     static void disable_inv_failure();
     static void disable_failure();
 };
+
+#ifdef BOOST_CONTRACT_HEADER_ONLY
+    #include "lib_a_inlined.hpp"
+#endif
 
 #endif // #include guard
 

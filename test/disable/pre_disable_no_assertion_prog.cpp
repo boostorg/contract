@@ -4,7 +4,8 @@
 // file LICENSE_1_0.txt or a copy at http://www.boost.org/LICENSE_1_0.txt).
 // See: http://www.boost.org/doc/libs/release/libs/contract/doc/html/index.html
 
-// Test other contract checking disabled within contract checking (among libs).
+// Test pre disable no assertion (in programs, but same for libraries).
 
-#include "lib_ab.hpp"
+#define BOOST_CONTRACT_PRECONDITIONS_DISABLE_NO_ASSERTION
+#include "prog.hpp"
 

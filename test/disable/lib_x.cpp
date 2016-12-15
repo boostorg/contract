@@ -4,8 +4,6 @@
 // file LICENSE_1_0.txt or a copy at http://www.boost.org/LICENSE_1_0.txt).
 // See: http://www.boost.org/doc/libs/release/libs/contract/doc/html/index.html
 
-// Test contracts in .cpp compiled to never check post/except.
-
 // Force .cpp never check post/except.
 #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
     #define BOOST_CONTRACT_NO_POSTCONDITIONS
@@ -18,10 +16,10 @@
 #include "lib_x.hpp"
 #include <boost/contract/function.hpp>
 #include <boost/contract/check.hpp>
-
-BOOST_CONTRACT_TEST_DETAIL_OTESTSTREAM_STR_DEF(out)
+#include "../detail/out_inlined.hpp"
 
 void x() {
+    using boost::contract::test::detail::out;
     boost::contract::check c = boost::contract::function()
         .precondition([] { out("x::pre\n"); })
         .old([] { out("x::old\n"); })

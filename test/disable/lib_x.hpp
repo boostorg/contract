@@ -7,9 +7,6 @@
 // file LICENSE_1_0.txt or a copy at http://www.boost.org/LICENSE_1_0.txt).
 // See: http://www.boost.org/doc/libs/release/libs/contract/doc/html/index.html
 
-// Test contracts in .cpp compiled to never check post/except.
-
-#include "../detail/oteststream.hpp"
 #include <boost/config.hpp>
 #include <string>
 
@@ -23,8 +20,9 @@
     #define BOOST_CONTRACT_TEST_LIB_X_DECLSPEC /* nothing */
 #endif
 
-BOOST_CONTRACT_TEST_DETAIL_OTESTSTREAM_STR_DECL(
-        BOOST_CONTRACT_TEST_LIB_X_DECLSPEC, out)
+#define BOOST_CONTRACT_TEST_DETAIL_OUT_DECLSPEC \
+    BOOST_CONTRACT_TEST_LIB_X_DECLSPEC
+#include "../detail/out.hpp"
 
 void BOOST_CONTRACT_TEST_LIB_X_DECLSPEC x();
 

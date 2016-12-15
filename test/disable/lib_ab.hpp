@@ -4,10 +4,9 @@
 // file LICENSE_1_0.txt or a copy at http://www.boost.org/LICENSE_1_0.txt).
 // See: http://www.boost.org/doc/libs/release/libs/contract/doc/html/index.html
 
-// Test other contract checking disabled within contract checking (among libs).
-
 #include "lib_a.hpp"
 #include "lib_b.hpp"
+#include "../detail/oteststream.hpp"
 #include <boost/contract/core/exception.hpp>
 #include <boost/contract/core/config.hpp>
 #include <boost/detail/lightweight_test.hpp>
@@ -40,6 +39,7 @@ std::string ok_f() {
 }
 
 int main() {
+    using boost::contract::test::detail::out;
     std::ostringstream ok;
     b bb;
 
@@ -52,11 +52,7 @@ int main() {
         #endif
         #ifndef BOOST_CONTRACT_NO_PRECONDITIONS
             << "b::g::pre" << std::endl
-            #ifdef BOOST_CONTRACT_HEADER_ONLY
-                // Test preconditions have disabled no contract (incorrect, but
-                // only possible behaviour if shared linking not used ad doc).
-                << ok_f()
-            #elif defined(BOOST_CONTRACT_PRECONDITIONS_DISABLE_NO_ASSERTION)
+            #ifdef BOOST_CONTRACT_PRECONDITIONS_DISABLE_NO_ASSERTION
                 // Test preconditions have disabled no contract.
                 << ok_f()
             #else
@@ -75,19 +71,14 @@ int main() {
         #endif 
         #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
             << "b::g::post" << std::endl
-            #ifdef BOOST_CONTRACT_HEADER_ONLY
-                // Test preconditions have disabled no contract (incorrect, but
-                // only possible behaviour if shared linking not used ad doc).
-                << ok_f()
-            #else
-                // Test call while checking executes body (but no contracts).
-                << "a::f::body" << std::endl
-            #endif
+            // Test call while checking executes body (but no contracts).
+            << "a::f::body" << std::endl
         #endif
     ;
     BOOST_TEST(boost::contract::test::detail::oteststream::eq(out(), ok.str()));
 
     // Test old values not copied for disabled contracts.
+
     #if     defined(BOOST_CONTRACT_PRECONDITIONS_DISABLE_NO_ASSERTION) && \
             !defined(BOOST_CONTRACT_NO_PRECONDITIONS) && \
             ( \
@@ -98,12 +89,13 @@ int main() {
     #else
         #define BOOST_CONTRACT_TEST_old 0u
     #endif
-    ;
+    
     BOOST_TEST_EQ(a::x_type::copies(), BOOST_CONTRACT_TEST_old);
     BOOST_TEST_EQ(a::x_type::evals(), BOOST_CONTRACT_TEST_old);
     BOOST_TEST_EQ(a::x_type::ctors(), a::x_type::dtors());
 
     // Double check a call to f outside another contract checks f's contracts.
+    
     out("");
     call_f();
     BOOST_TEST(boost::contract::test::detail::oteststream::eq(out(), ok_f()));

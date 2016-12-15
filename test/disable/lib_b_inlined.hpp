@@ -1,16 +1,15 @@
 
-#ifndef BOOST_TEST_LIB_B_INLINED_HPP_
-#define BOOST_TEST_LIB_B_INLINED_HPP_
+#ifndef BOOST_CONTRACT_TEST_LIB_B_INLINED_HPP_
+#define BOOST_CONTRACT_TEST_LIB_B_INLINED_HPP_
 
 // Copyright (C) 2008-2016 Lorenzo Caminiti
 // Distributed under the Boost Software License, Version 1.0 (see accompanying
 // file LICENSE_1_0.txt or a copy at http://www.boost.org/LICENSE_1_0.txt).
 // See: http://www.boost.org/doc/libs/release/libs/contract/doc/html/index.html
 
-// Test other contract checking disabled within contract checking (among libs).
-
 #include "lib_b.hpp"
 #include "lib_a.hpp"
+#include "../detail/oteststream.hpp"
 #include <boost/contract/public_function.hpp>
 #include <boost/contract/check.hpp>
 #include <boost/contract/assert.hpp>
@@ -21,10 +20,18 @@ bool call_f() {
     return aa.f(x) == -123;
 }
 
-void b::static_invariant() { out("b::static_inv\n"); }
-void b::invariant() const { out("b::inv\n"); }
+void b::static_invariant() {
+    using boost::contract::test::detail::out;
+    out("b::static_inv\n");
+}
+
+void b::invariant() const {
+    using boost::contract::test::detail::out;
+    out("b::inv\n");
+}
     
 void b::g() {
+    using boost::contract::test::detail::out;
     boost::contract::check c = boost::contract::public_function(this)
         .precondition([&] {
             out("b::g::pre\n");
@@ -40,6 +47,7 @@ void b::g() {
 }
 
 bool b::test_disable_pre_failure() {
+    using boost::contract::test::detail::out;
     a::disable_pre_failure();
     out("");
     boost::contract::precondition_failure(boost::contract::from());
@@ -48,6 +56,7 @@ bool b::test_disable_pre_failure() {
 }
 
 bool b::test_disable_post_failure() {
+    using boost::contract::test::detail::out;
     a::disable_post_failure();
     out("");
     boost::contract::postcondition_failure(boost::contract::from());
@@ -56,6 +65,7 @@ bool b::test_disable_post_failure() {
 }
     
 bool b::test_disable_entry_inv_failure() {
+    using boost::contract::test::detail::out;
     a::disable_entry_inv_failure();
     out("");
     boost::contract::entry_invariant_failure(boost::contract::from());
@@ -64,6 +74,7 @@ bool b::test_disable_entry_inv_failure() {
 }
     
 bool b::test_disable_exit_inv_failure() {
+    using boost::contract::test::detail::out;
     a::disable_exit_inv_failure();
     out("");
     boost::contract::exit_invariant_failure(boost::contract::from());
@@ -72,6 +83,8 @@ bool b::test_disable_exit_inv_failure() {
 }
     
 bool b::test_disable_inv_failure() {
+    using boost::contract::test::detail::out;
+    
     a::disable_inv_failure();
     out("");
     boost::contract::entry_invariant_failure(boost::contract::from());
@@ -81,10 +94,13 @@ bool b::test_disable_inv_failure() {
     boost::contract::exit_invariant_failure(boost::contract::from());
     bool exit_inv = boost::contract::test::detail::oteststream::eq(out(),
             "a::inv_failure\n");
+    
     return entry_inv && exit_inv;
 }
     
 bool b::test_disable_failure() {
+    using boost::contract::test::detail::out;
+
     a::disable_failure();
     out("");
     boost::contract::precondition_failure(boost::contract::from());
@@ -102,6 +118,7 @@ bool b::test_disable_failure() {
     boost::contract::exit_invariant_failure(boost::contract::from());
     bool exit_inv = boost::contract::test::detail::oteststream::eq(out(),
             "a::failure\n");
+
     return pre && post && entry_inv && exit_inv;
 }
 
