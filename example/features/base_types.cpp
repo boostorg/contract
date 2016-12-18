@@ -19,13 +19,13 @@ public:
     virtual void push_back(T x, boost::contract::virtual_* v = 0) = 0;
 
 protected:
-    virtual int capacity() const = 0;
-    virtual int max_size() const = 0;
+    virtual unsigned capacity() const = 0;
+    virtual unsigned max_size() const = 0;
 };
 
 template<typename T>
 void pushable<T>::push_back(T x, boost::contract::virtual_* v) {
-    boost::contract::old_ptr<int> old_capacity =
+    boost::contract::old_ptr<unsigned> old_capacity =
             BOOST_CONTRACT_OLD(v, capacity());
     boost::contract::check c = boost::contract::public_function(v, this)
         .precondition([&] {
@@ -38,7 +38,7 @@ void pushable<T>::push_back(T x, boost::contract::virtual_* v) {
     assert(false); // Shall never execute this body.
 }
 
-struct has_size { virtual int size() const = 0; };
+struct has_size { virtual unsigned size() const = 0; };
 struct has_empty { virtual bool empty() const = 0; };
 
 class unique_chars
@@ -56,7 +56,7 @@ public:
     {
         boost::contract::check c = boost::contract::constructor(this)
             .postcondition([&] {
-                BOOST_CONTRACT_ASSERT(size() == (to - from + 1));
+                BOOST_CONTRACT_ASSERT(int(size()) == (to - from + 1));
             })
         ;
 
@@ -67,7 +67,7 @@ public:
         boost::contract::check c = boost::contract::destructor(this);
     }
 
-    int size() const {
+    unsigned size() const {
         boost::contract::check c = boost::contract::public_function(this);
         return vect_.size();
     }
@@ -86,7 +86,8 @@ public:
     virtual void push_back(char x, boost::contract::virtual_* v = 0) {
         boost::contract::old_ptr<bool> old_find =
                 BOOST_CONTRACT_OLD(v, find(x));
-        boost::contract::old_ptr<int> old_size = BOOST_CONTRACT_OLD(v, size());
+        boost::contract::old_ptr<unsigned> old_size =
+                BOOST_CONTRACT_OLD(v, size());
         boost::contract::check c = boost::contract::public_function(v, this)
             .precondition([&] {
                 BOOST_CONTRACT_ASSERT(!find(x));
@@ -105,10 +106,10 @@ public:
 protected:
     unique_chars() {}
 
-    std::vector<int> const& vect() const { return vect_; }
+    std::vector<char> const& vect() const { return vect_; }
 
 private:
-    std::vector<int> vect_;
+    std::vector<char> vect_;
 };
 
 //[base_types
@@ -143,13 +144,14 @@ public:
     {
         boost::contract::check c = boost::contract::constructor(this);
 
-        for(int i = 0; c_str[i] != '\0'; ++i) push_back(c_str[i]);
+        for(unsigned i = 0; c_str[i] != '\0'; ++i) push_back(c_str[i]);
     }
     
     void push_back(char x, boost::contract::virtual_* v = 0) /* override */ {
         boost::contract::old_ptr<bool> old_find =
                 BOOST_CONTRACT_OLD(v, find(x));
-        boost::contract::old_ptr<int> old_size = BOOST_CONTRACT_OLD(v, size());
+        boost::contract::old_ptr<unsigned> old_size =
+                BOOST_CONTRACT_OLD(v, size());
         boost::contract::check c = boost::contract::public_function<
                 override_push_back>(v, &chars::push_back, this, x)
             .precondition([&] {
@@ -169,11 +171,11 @@ public:
         return size() == 0;
     }
 
-    int size() const { return unique_chars::size(); }
+    unsigned size() const { return unique_chars::size(); }
 
 protected:
-    int max_size() const { return vect().max_size(); }
-    int capacity() const { return vect().capacity(); }
+    unsigned max_size() const { return vect().max_size(); }
+    unsigned capacity() const { return vect().capacity(); }
 };
     
 int main() {

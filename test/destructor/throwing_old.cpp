@@ -135,13 +135,15 @@ int main() {
             << "c::dtor::body" << std::endl
             #ifndef BOOST_CONTRACT_NO_EXIT_INVARIANTS
                 << "c::static_inv" << std::endl
-                #if     !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
-                        !defined(BOOST_CONTRACT_NO_EXCEPTS)
-                    // Test c not destructed (so both inv and except).
+            #endif
+            #if     !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
+                    !defined(BOOST_CONTRACT_NO_EXCEPTS)
+                // Test c not destructed (so both inv and except).
+                #ifndef BOOST_CONTRACT_NO_EXIT_INVARIANTS
                     << "c::inv" << std::endl
-                    #ifndef BOOST_CONTRACT_NO_EXCEPTS
-                        << "c::dtor::except" << std::endl
-                    #endif
+                #endif
+                #ifndef BOOST_CONTRACT_NO_EXCEPTS
+                    << "c::dtor::except" << std::endl
                 #endif
             #endif
         ;
