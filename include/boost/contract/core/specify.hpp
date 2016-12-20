@@ -15,7 +15,8 @@ Facilities to specify preconditions, old value assignments, and postconditions.
 
 #include <boost/contract/core/config.hpp>
 #include <boost/contract/detail/decl.hpp>
-#if     !defined(BOOST_CONTRACT_NO_INVARIANTS) || \
+#if     defined(BOOST_CONTRACT_STATIC_LINK) || \
+        !defined(BOOST_CONTRACT_NO_INVARIANTS) || \
         !defined(BOOST_CONTRACT_NO_PRECONDITIONS) || \
         !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
         !defined(BOOST_CONTRACT_NO_EXCEPTS)
@@ -31,23 +32,35 @@ Facilities to specify preconditions, old value assignments, and postconditions.
 #endif
 #include <boost/config.hpp>
 
-// NOTE: Do not use inheritance here to avoid extra runtime costs (code
-// duplication avoid via macros instead).
+// NOTE: No inheritance for faster run-times (macros to avoid duplicated code).
 
 /* PRIVATE */
-        
-#if     !defined(BOOST_CONTRACT_NO_INVARIANTS) || \
+
+#if     defined(BOOST_CONTRACT_STATIC_LINK) || \
+        !defined(BOOST_CONTRACT_NO_INVARIANTS) || \
         !defined(BOOST_CONTRACT_NO_PRECONDITIONS) || \
         !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
         !defined(BOOST_CONTRACT_NO_EXCEPTS)
-    #define BOOST_CONTRACT_SPECIFY_COND_CTOR_(ctor_name, cond_type) \
-        explicit ctor_name(cond_type* cond) : cond_(cond) {} \
-        boost::contract::detail::auto_ptr<cond_type> cond_;
+    #define BOOST_CONTRACT_SPECIFY_CLASS_IMPL_(class_type, cond_type) \
+        /* data member */ \
+        boost::contract::detail::auto_ptr<cond_type> cond_; \
+        /* constructor */ \
+        explicit class_type(cond_type* cond) : cond_(cond) {} \
+        /* copy operations (private to force `auto c = ...` error) */ \
+        class_type(class_type const& other) : cond_(other.cond_) {} \
+        class_type& operator=(class_type const& other) { \
+            cond_ = other.cond_; \
+            return *this; \
+        }
     
     #define BOOST_CONTRACT_SPECIFY_COND_RELEASE_ cond_.release()
 #else
-    #define BOOST_CONTRACT_SPECIFY_COND_CTOR_(ctor_name, cond_type) \
-        /* nothing */
+    #define BOOST_CONTRACT_SPECIFY_CLASS_IMPL_(class_type, cond_type) \
+        /* (default) constructor */ \
+        class_type() {} \
+        /* copy operations (private to force `auto c = ...` error) */ \
+        class_type(class_type const&) {} \
+        class_type& operator=(class_type const&) {}
 
     #define BOOST_CONTRACT_SPECIFY_COND_RELEASE_ /* nothing */
 #endif
@@ -124,7 +137,7 @@ This class has no member function so it is used to prevent specifying contract
 functors.
 @see @RefSect{tutorial, Tutorial}
 */
-class specify_nothing { // Copyable (as *).
+class specify_nothing { // Privately copyable (as *).
 public:
     /**
     Destruct this object.
@@ -139,7 +152,7 @@ public:
 
 /** @cond */
 private:
-    BOOST_CONTRACT_SPECIFY_COND_CTOR_(specify_nothing,
+    BOOST_CONTRACT_SPECIFY_CLASS_IMPL_(specify_nothing,
             boost::contract::detail::cond_base)
 
     // Friends (used to limit library's public API).
@@ -159,7 +172,7 @@ private:
 /** @endcond */
 };
 
-class specify_except { // Copyable (as *).
+class specify_except { // Privately copyable (as *).
 public:
     ~specify_except() BOOST_NOEXCEPT_IF(false) {}
 
@@ -170,10 +183,11 @@ public:
 
 /** @cond */
 private:
-    BOOST_CONTRACT_SPECIFY_COND_CTOR_(specify_except,
+    BOOST_CONTRACT_SPECIFY_CLASS_IMPL_(specify_except,
             boost::contract::detail::cond_base)
 
     // Friends (used to limit library's public API).
+
     friend class check;
 
     template<typename VR>
@@ -196,7 +210,7 @@ Allow to program functors this library will call to check postconditions.
                         this is always @c void.
 */
 template<typename VirtualResult = void>
-class specify_postcondition_except { // Copyable (as *).
+class specify_postcondition_except { // Privately copyable (as *).
 public:
     /**
     Destruct this object.
@@ -238,13 +252,14 @@ public:
 
 /** @cond */
 private:
-    BOOST_CONTRACT_SPECIFY_COND_CTOR_(
+    BOOST_CONTRACT_SPECIFY_CLASS_IMPL_(
         specify_postcondition_except,
         boost::contract::detail::cond_post<typename
                 boost::contract::detail::none_if_void<VirtualResult>::type>
     )
 
     // Friends (used to limit library's public API).
+
     friend class check;
     friend class specify_precondition_old_postcondition_except<VirtualResult>;
     friend class specify_old_postcondition_except<VirtualResult>;
@@ -261,7 +276,7 @@ body execution and to check postconditions.
                         this is always @c void.
 */
 template<typename VirtualResult = void>
-class specify_old_postcondition_except { // Copyable (as *).
+class specify_old_postcondition_except { // Privately copyable (as *).
 public:
     /**
     Destruct this object.
@@ -331,7 +346,7 @@ public:
 
 /** @cond */
 private:
-    BOOST_CONTRACT_SPECIFY_COND_CTOR_(
+    BOOST_CONTRACT_SPECIFY_CLASS_IMPL_(
         specify_old_postcondition_except,
         boost::contract::detail::cond_post<typename
                 boost::contract::detail::none_if_void<VirtualResult>::type>
@@ -365,7 +380,7 @@ template<
         = void
     #endif
 >
-class specify_precondition_old_postcondition_except { // Copyable (as *).
+class specify_precondition_old_postcondition_except { // Priv. copyable (as *).
 public:
     /**
     Destruct this object.
@@ -454,7 +469,7 @@ public:
 
 /** @cond */
 private:
-    BOOST_CONTRACT_SPECIFY_COND_CTOR_(
+    BOOST_CONTRACT_SPECIFY_CLASS_IMPL_(
         specify_precondition_old_postcondition_except,
         boost::contract::detail::cond_post<typename
                 boost::contract::detail::none_if_void<VirtualResult>::type>

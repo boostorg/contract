@@ -284,7 +284,13 @@ test-suite specify :
     [ subdir-compile-fail specify : post_pre_error ]
     [ subdir-compile-fail specify : old_pre_error ]
     
-    [ subdir-run specify : missing_check_decl ]
+    [ subdir-run specify : missing_check ]
+
+    [ subdir-compile-fail specify : auto_error ]
+    [ subdir-compile-fail specify : auto_pre_error ]
+    [ subdir-compile-fail specify : auto_pre_old_error ]
+    [ subdir-compile-fail specify : auto_pre_old_post_error ]
+    [ subdir-compile-fail specify : auto_pre_old_post_except_error ]
 ;
 
 test-suite call_if :

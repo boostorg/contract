@@ -12,7 +12,8 @@ Program contracts for constructors.
 */
 
 #include <boost/contract/detail/all_core_headers.hpp>
-#if     !defined(BOOST_CONTRACT_NO_CONSTRUCTORS) || \
+#if     defined(BOOST_CONTRACT_STATIC_LINK) || \
+        !defined(BOOST_CONTRACT_NO_CONSTRUCTORS) || \
         !defined(BOOST_CONTRACT_NO_PRECONDITIONS)
     #include <boost/contract/detail/operation/constructor.hpp>
 #endif
@@ -42,7 +43,8 @@ postconditions when the enclosing class has no invariants.
 template<class Class>
 specify_old_postcondition_except<> constructor(Class* obj) {
     // Must #if also on ..._PRECONDITIONS here because specify_... is generic.
-    #if     !defined(BOOST_CONTRACT_NO_CONSTRUCTORS) || \
+    #if     defined(BOOST_CONTRACT_STATIC_LINK) || \
+            !defined(BOOST_CONTRACT_NO_CONSTRUCTORS) || \
             !defined(BOOST_CONTRACT_NO_PRECONDITIONS)
         return specify_old_postcondition_except<>(
                 new boost::contract::detail::constructor<Class>(obj));

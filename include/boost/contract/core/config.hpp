@@ -17,18 +17,11 @@ Facilities to configure this library compile-time and run-time behaviour.
 // compilation overhead.
 
 #ifdef DOXYGEN
-    /**
-    Define this macro to compile this library as a shared library or DLL
-    (undefined by default).
-    In general, this library must be compiled as a shared library (a.k.a.,
-    Dynamically Linked Library (DLL)) by defining this macro. That is necessary
-    when the same library instance is used by multiple programs (otherwise the
-    contracts will not necessarily be checked correctly at run-time).
-
-    @b Rationale: Named after @c BOOST_ALL_DYN_LINK.
-    @see @RefSect{getting_started, Getting Started}
-    */
-    #define BOOST_CONTRACT_DYN_LINK
+    #define BOOST_CONTRACT_STATIC_LINK
+#elif   defined(BOOST_CONTRACT_STATIC_LINK) && ( \
+        defined(BOOST_CONTRACT_HEADER_ONLY) || \
+        defined(BOOST_ALL_DYN_LINK) )
+    #error "STATIC_LINK defined with HEADER_ONLY and/or ALL_DYN_LINK"
 #endif
 
 #ifdef DOXYGEN
@@ -47,6 +40,10 @@ Facilities to configure this library compile-time and run-time behaviour.
     @see @RefSect{getting_started, Getting Started}
     */
     #define BOOST_CONTRACT_HEADER_ONLY
+#elif   defined(BOOST_CONTRACT_HEADER_ONLY) && ( \
+        defined(BOOST_CONTRACT_STATIC_LINK) || \
+        defined(BOOST_ALL_DYN_LINK) )
+    #error "HEADER_ONLY defined with STATIC_LINK and/or ALL_DYN_LINK"
 #endif
 
 #ifdef DOXYGEN
@@ -395,6 +392,25 @@ Facilities to configure this library compile-time and run-time behaviour.
     @see @RefSect{advanced_topics, Advanced Topics}
     */
     #define BOOST_CONTRACT_NO_ALL
+#endif
+
+#ifdef BOOST_CONTRACT_DYN_LINK
+    #error "define STATIC_LINK, HEADER_ONLY, or ALL_DYN_LINK instead"
+#elif   defined(BOOST_ALL_DYN_LINK) || ( \
+        !defined(BOOST_CONTRACT_STATIC_LINK) && \
+        !defined(BOOST_CONTRACT_HEADER_ONLY) )
+    /**
+    Define this macro to compile this library as a shared library or DLL
+    (undefined by default).
+    In general, this library must be compiled as a shared library (a.k.a.,
+    Dynamically Linked Library (DLL)) by defining this macro. That is necessary
+    when the same library instance is used by multiple programs (otherwise the
+    contracts will not necessarily be checked correctly at run-time).
+
+    @b Rationale: Named after @c BOOST_ALL_DYN_LINK.
+    @see @RefSect{getting_started, Getting Started}
+    */
+    #define BOOST_CONTRACT_DYN_LINK
 #endif
 
 #endif // #include guard

@@ -4,8 +4,15 @@
 // file LICENSE_1_0.txt or a copy at http://www.boost.org/LICENSE_1_0.txt).
 // See: http://www.boost.org/doc/libs/release/libs/contract/doc/html/index.html
 
-#ifndef BOOST_CONTRACT_HEADER_ONLY // For shared (default) and static libs only.
-    #define BOOST_CONTRACT_DETAIL_SOURCE
-    #include <boost/contract/detail/inlined.hpp>
-#endif
+// Test auto error after old (for free func, but same for all contracts).
+
+#include <boost/contract/function.hpp>
+
+int main() {
+    auto c = boost::contract::function() // Error (can't use auto).
+        .precondition([] {})
+        .old([] {})
+    ;
+    return 0;
+}
 

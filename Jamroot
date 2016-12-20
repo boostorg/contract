@@ -93,9 +93,13 @@ rule subdir-lib ( subdir : cpp_fname : requirements * ) {
 feature.feature boost_contract_link : shared static header :
         composite propagated link-incompatible ;
 feature.compose <boost_contract_link>shared : <link>shared ;
-feature.compose <boost_contract_link>static : <link>static ;
+feature.compose <boost_contract_link>static :
+    <link>static
+    <define>BOOST_CONTRACT_STATIC_LINK
+;
 feature.compose <boost_contract_link>header :
-        <define>BOOST_CONTRACT_HEADER_ONLY ;
+    <define>BOOST_CONTRACT_HEADER_ONLY
+;
 
 feature.feature boost_contract_no : all_yes [ boost_contract_no.conds ] :
         composite propagated link-incompatible ;

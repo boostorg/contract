@@ -7,6 +7,7 @@
 // file LICENSE_1_0.txt or a copy at http://www.boost.org/LICENSE_1_0.txt).
 // See: http://www.boost.org/doc/libs/release/libs/contract/doc/html/index.html
 
+#include <boost/contract/core/config.hpp>
 #include <boost/config.hpp>
 
 /* PUBLIC */
@@ -14,7 +15,7 @@
 // IMPORTANT: In general, this library should always and only be compiled and
 // used as a shared library. Otherwise, lib's state won't be shared among
 // different user programs and user libraries.
-#if defined(BOOST_ALL_DYN_LINK) || defined(BOOST_CONTRACT_DYN_LINK)
+#ifdef BOOST_CONTRACT_DYN_LINK
     #ifdef BOOST_CONTRACT_DETAIL_SOURCE
         #define BOOST_CONTRACT_DETAIL_DECLSPEC BOOST_SYMBOL_EXPORT
     #else

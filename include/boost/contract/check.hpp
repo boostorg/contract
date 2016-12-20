@@ -7,7 +7,7 @@
 // file LICENSE_1_0.txt or a copy at http://www.boost.org/LICENSE_1_0.txt).
 // See: http://www.boost.org/doc/libs/release/libs/contract/doc/html/index.html
 
-// TODO: Experiment some more so see if using auto instead of explicit boost::checking can generate a compile time error (instead of just a run-time uninitialized error).
+// TODO: Document that using an auto declaration instead of check will cause a compile-time error (instead missing check and using no declaration at all will cause a run-time error--as already documented).
 
 /** @file
 RAII object to check contracts.
@@ -28,7 +28,8 @@ RAII object to check contracts.
 
 /** @cond */
 
-#if     !defined(BOOST_CONTRACT_NO_INVARIANTS) || \
+#if     defined(BOOST_CONTRACT_STATIC_LINK) || \
+        !defined(BOOST_CONTRACT_NO_INVARIANTS) || \
         !defined(BOOST_CONTRACT_NO_PRECONDITIONS) || \
         !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
         !defined(BOOST_CONTRACT_NO_EXCEPTS)
@@ -106,7 +107,8 @@ public:
     object).
     */
     check(check const& other) // Copy ctor moves cond_ pointer to dest.
-        #if     !defined(BOOST_CONTRACT_NO_INVARIANTS) || \
+        #if     defined(BOOST_CONTRACT_STATIC_LINK) || \
+                !defined(BOOST_CONTRACT_NO_INVARIANTS) || \
                 !defined(BOOST_CONTRACT_NO_PRECONDITIONS) || \
                 !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
                 !defined(BOOST_CONTRACT_NO_EXCEPTS)
@@ -236,7 +238,8 @@ public:
 private:
     check& operator=(check const&); // Cannot copy outside of `check c = ...`.
 
-    #if     !defined(BOOST_CONTRACT_NO_INVARIANTS) || \
+    #if     defined(BOOST_CONTRACT_STATIC_LINK) || \
+            !defined(BOOST_CONTRACT_NO_INVARIANTS) || \
             !defined(BOOST_CONTRACT_NO_PRECONDITIONS) || \
             !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
             !defined(BOOST_CONTRACT_NO_EXCEPTS)

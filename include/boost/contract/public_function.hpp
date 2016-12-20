@@ -14,9 +14,16 @@ overriding void, and override non-void public functions.
 */
 
 #include <boost/contract/detail/all_core_headers.hpp>
+// Needed within macro expansions below instead of defined(...) (PRIVATE macro).
+#if     defined(BOOST_CONTRACT_STATIC_LINK) || \
+        !defined(BOOST_CONTRACT_NO_PUBLIC_FUNCTIONS)
+    #define BOOST_CONTRACT_PUBLIC_FUNCTIONS_IMPL_ 1
+#else
+    #define BOOST_CONTRACT_PUBLIC_FUNCTIONS_IMPL_ 0
+#endif
 #include <boost/contract/detail/decl.hpp>
 #include <boost/contract/detail/tvariadic.hpp>
-#ifndef BOOST_CONTRACT_NO_PUBLIC_FUNCTIONS
+#if BOOST_CONTRACT_PUBLIC_FUNCTIONS_IMPL_
     #include <boost/contract/detail/operation/public_static_function.hpp>
     #include <boost/contract/detail/operation/public_function.hpp>
     #include <boost/contract/detail/type_traits/optional.hpp>
@@ -75,7 +82,7 @@ invariants.
 */
 template<class Class>
 specify_precondition_old_postcondition_except<> public_function() {
-    #ifndef BOOST_CONTRACT_NO_PUBLIC_FUNCTIONS
+    #if BOOST_CONTRACT_PUBLIC_FUNCTIONS_IMPL_
         return specify_precondition_old_postcondition_except<>(
             new boost::contract::detail::public_static_function<Class>());
     #else
@@ -106,7 +113,7 @@ invariants.
 */
 template<class Class>
 specify_precondition_old_postcondition_except<> public_function(Class* obj) {
-    #ifndef BOOST_CONTRACT_NO_PUBLIC_FUNCTIONS
+    #if BOOST_CONTRACT_PUBLIC_FUNCTIONS_IMPL_
         return specify_precondition_old_postcondition_except<>(
             new boost::contract::detail::public_function<
                 boost::contract::detail::none,
@@ -138,13 +145,6 @@ specify_precondition_old_postcondition_except<> public_function(Class* obj) {
 
 /** @cond */
 
-// To use within macro expansions instead of defined(...) (PRIVATE macro).
-#ifdef BOOST_CONTRACT_NO_PUBLIC_FUNCTIONS
-    #define BOOST_CONTRACT_PUBLIC_FUNCTIONS_ 0
-#else
-    #define BOOST_CONTRACT_PUBLIC_FUNCTIONS_ 1
-#endif
-
 // For non-static, virtual, and non-overriding public functions (PRIVATE macro).
 #define BOOST_CONTRACT_PUBLIC_FUNCTION_VIRTUAL_NO_OVERRIDE_( \
         has_virtual_result) \
@@ -161,7 +161,7 @@ specify_precondition_old_postcondition_except<> public_function(Class* obj) {
         BOOST_PP_EXPR_IIF(has_virtual_result, VirtualResult& r) \
         , Class* obj \
     ) { \
-        BOOST_PP_IIF(BOOST_CONTRACT_PUBLIC_FUNCTIONS_, \
+        BOOST_PP_IIF(BOOST_CONTRACT_PUBLIC_FUNCTIONS_IMPL_, \
             /* no F... so cannot enforce contracted F returns VirtualResult */ \
             return (specify_precondition_old_postcondition_except< \
                     BOOST_PP_EXPR_IIF(has_virtual_result, VirtualResult)>( \
@@ -291,7 +291,7 @@ specify_precondition_old_postcondition_except<> public_function(Class* obj) {
         Override, VirtualResult, F, Class, Args, \
         v, r, f, obj, args \
     ) { \
-        BOOST_PP_IIF(BOOST_CONTRACT_PUBLIC_FUNCTIONS_, \
+        BOOST_PP_IIF(BOOST_CONTRACT_PUBLIC_FUNCTIONS_IMPL_, \
             /* this assert not strictly necessary as compilation will fail */ \
             /* anyways, but helps limiting cryptic compiler's errors */ \
             BOOST_STATIC_ASSERT_MSG( \
