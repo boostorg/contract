@@ -9,6 +9,7 @@ explicit help ;
 
 test-suite features :
     [ subdir-run features : introduction ]
+    [ subdir-run features : introduction_comments ]
 
     [ subdir-run features : function_comments ]
     [ subdir-run features : function ]

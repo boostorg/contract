@@ -15,7 +15,7 @@ doxygen reference
     ../include/boost/contract/function.hpp
     ../include/boost/contract/base_types.hpp
     ../include/boost/contract/override.hpp
-    ../include/boost/contract/guard.hpp
+    ../include/boost/contract/check.hpp
     ../include/boost/contract/assert.hpp
     ../include/boost/contract/old.hpp
     ../include/boost/contract/call_if.hpp

@@ -9,6 +9,7 @@
 #include <boost/config.hpp>
 #ifdef BOOST_MSVC
 
+// TODO: Document following warning about MSVC in lib docs.
 // WARNING: MSVC (at least up to VS 2015) gives a compile-time error if SFINAE
 // cannot introspect a member because of its private or protected access level.
 // That is incorrect, SFINAE should fail in these cases without generating
@@ -16,7 +17,7 @@
 // possible to override a member that is public in one base but private or
 // protected in other base using this library on MSVC (that can be done instead
 // using this library on GCC or CLang).
-int main() { return 0; } // Test trivially passes on MSVC.
+int main() { return 0; } // This test trivially passes on MSVC.
 
 #else
 
@@ -164,7 +165,8 @@ int main() {
         #ifndef BOOST_CONTRACT_NO_PRECONDITIONS
             << "b::f::pre" << std::endl
         #endif
-        #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
+        #if     !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
+                !defined(BOOST_CONTRACT_NO_EXCEPTS)
             << "b::f::old" << std::endl
         #endif
         << "b::f::body" << std::endl
@@ -178,7 +180,8 @@ int main() {
         #ifndef BOOST_CONTRACT_NO_PRECONDITIONS
             << "b::g::pre" << std::endl
         #endif
-        #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
+        #if     !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
+                !defined(BOOST_CONTRACT_NO_EXCEPTS)
             << "b::g::old" << std::endl
         #endif
         << "b::g::body" << std::endl
@@ -189,7 +192,8 @@ int main() {
         #ifndef BOOST_CONTRACT_NO_PRECONDITIONS
             << "b::h::pre" << std::endl
         #endif
-        #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
+        #if     !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
+                !defined(BOOST_CONTRACT_NO_EXCEPTS)
             << "b::h::old" << std::endl
         #endif
         << "b::h::body" << std::endl
@@ -211,7 +215,8 @@ int main() {
         #ifndef BOOST_CONTRACT_NO_PRECONDITIONS
             << "b::f::pre" << std::endl
         #endif
-        #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
+        #if     !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
+                !defined(BOOST_CONTRACT_NO_EXCEPTS)
             << "b::f::old" << std::endl
             << "c::f::old" << std::endl
             << "a::f::old" << std::endl
@@ -237,7 +242,8 @@ int main() {
         #ifndef BOOST_CONTRACT_NO_PRECONDITIONS
             << "c::g::pre" << std::endl
         #endif
-        #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
+        #if     !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
+                !defined(BOOST_CONTRACT_NO_EXCEPTS)
             << "c::g::old" << std::endl
             << "a::g::old" << std::endl
         #endif
@@ -259,7 +265,8 @@ int main() {
         #ifndef BOOST_CONTRACT_NO_PRECONDITIONS
             << "c::h::pre" << std::endl
         #endif
-        #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
+        #if     !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
+                !defined(BOOST_CONTRACT_NO_EXCEPTS)
             << "c::h::old" << std::endl
             << "a::h::old" << std::endl
         #endif

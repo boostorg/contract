@@ -7,57 +7,56 @@
 [section Introduction]
 
 Contract Programming allows to specify preconditions, postconditions, and class invariants that are automatically checked when functions are executed at run-time.
-These conditions assert program specifications within the source code itself allowing to find bugs more quickly during testing, making the code self-documenting, and increasing overall software quality.
+These conditions assert program specifications within the source code itself allowing to find bugs more quickly during testing, making the code self-documenting, and increasing overall software quality (see __Contract_Programming_Overview__).
 
-The following example shows how to use this library to program contracts for a member function similar to `std::vector::push_back` (the somewhat arbitrary `pushable` base class is introduced here just to illustrate subcontracting, see [@../../example/features/introduction.cpp =introduction.cpp=]):
-[footnote
-For simplicity, the full contracts of the `vector` class are not programmed here (see the __Examples__ section for a much more comprehensive version of `vector`'s contracts).
-]
+For example, consider the following function `inc` that increments its argument `x` by `1` and let's write its contract using code comments (see also [@../../example/features/introduction_comments.cpp =introduction_comments.cpp=]):
+
+[import ../example/features/introduction_comments.cpp]
+[introduction_comments]
+
+The precondition states that at function entry the argument `x` must be strictly smaller than the maximum allowable value of its type (so it can be increased by `1` without overflowing).
+The postcondition states that at function exit the argument `x` must be incremented by `1` with respect to the value it had before executing the function `old(x)` (but nothing that postconditions are checked only when the execution of the function body did not throw an exception).
+
+Now let's program this function and its contract using this library (see also [@../../example/features/introduction.cpp introduction.cpp]):
 
 [import ../example/features/introduction.cpp]
 [introduction]
 
-This library executes the following steps when the `vector::push_back` function above is called at run-time (see __Contract_Programming_Overview__):
+When the above function `inc` is called, this library will:
 
-* First, the class invariants and the function preconditions are checked.
-* Then, the function body following the contract declaration is executed.
-* Last, the class invariants and the function postconditions are checked.
-* When subcontracting (like in the example above), this library will automatically check derived and base preconditions in __OR__, derived and base postconditions in __AND__, derived and base class invariants in __AND__.
+* First, execute the functor passed to `.precondition(...)` that asserts `inc` preconditions.
+* Then, execute `inc` body (i.e., all the code that follows the `boost::contract::check c = ...` declaration).
+* Last, execute the functor passed to `.postcondition(...)` that asserts `inc` postconditions (unless `inc` body threw an exception).
 
-For example, if there is a bug in the function caller for which `push_back` is called when `size` is equal to `max_size` then the execution of the program will terminate with an error message similar to the following (so it will be evident that the bug is in the caller):
-
-[pre
-    precondition assertion "size() < max_size()" failed: file "introduction.cpp", line 35
-]
-
-Instead, if there is a bug in the `push_back` implementation for which `size` is not increased by `1` after `value` is added to `vector` by the function body then the execution will terminate with an error message similar to the following (so it will be evident that the bug is in the `push_back` body):
+For example, if there is a bug in the code calling `inc` so that the function is called with `x` greater than or equal to `std::numeric_limits<int>::max()` then the program will terminate with an error message similar to the following (so it will be evident the bug is in the calling code):
 
 [pre
-    postcondition assertion "size() == *old_size + 1" failed: file "introduction.cpp", line 38
+precondition assertion "x < std::numeric_limits<int>::max()" failed: file "introduction.cpp", line 17
 ]
 
-Similarly, if there is a bug in the `push_back` implementation for which `size` is not kept greater or equal than `capacity` then the execution will terminate with an error message similar to the following:
+Instead, if there is a bug in the implementation of `inc` so that `x` is not increased by `1` after the execution of the function body then the program will terminate with an error message similar to the following (so it will be evident the bug is in `inc` body):
+[footnote
+In this example the function body is composed of a single trivial instruction `++x` so it easy to check by visual inspection that it does not contain any bug and it will always increment `x` by `1` thus the function postcondition will never fail.
+In real code, function bodies are rarely this simple and can hide bugs that make checking postconditions useful.
+]
 
 [pre
-    exit invariant assertion "size() <= capacity()" failed: file "introduction.cpp", line 25
+postcondition assertion "x == *old_x + 1" failed: file "introduction.cpp", line 20
 ]
 
-Finally, if the class invariant check failed on entering the `push_back` function call, before executing the `push_back` implementation, then the execution will terminate with an error message similar to the following:
-
-[pre
-    entry invariant assertion "size() <= capacity()" failed: file "introduction.cpp", line 25
-]
-
-By default, when an assertion fails this library prints an error message to the standard error `std::cerr` and terminates the program calling `std::terminate` (this behaviour can be customized to take any user-defined action including throwing exceptions, see the __Throw_on_Failure__ section).
-Note that the error message printed by this library contains information to easily and uniquely identify the point in the program at which the assertion failed.
+By default, when an assertion fails this library prints an error message such the above to the standard error `std::cerr` and terminates the program calling `std::terminate` (but this behaviour can be customized to take any user-specified action including throwing exceptions, see __Throw_on_Failure__).
+Note that the error messages printed by this library contain all the information necessary to easily and uniquely identify the point in the code at which the contract assertions fail.
 [footnote
 *Rationale:*
-The assertion failure messages generated by this library follows a format similar to the messages printed by Clang when the C-style `assert` macro fails.
+The assertion failure message printed by this library follows a format similar to the message printed by Clang when the C-style `assert` macro fails.
 ]
 
+In addition to contracts for simple non-member functions as shown the in the example above, this library allows to program contracts for constructors, destructors, and member functions.
+These can check class invariants and can also /subcontract/ inheriting and extending contracts for derived classes (see __Tutorial__ and also __Advanced_Topics__).
+
 [note
-C++11 lambda functions are necessary to use this library without having to manually program a significant amount of boiler-plate code (but see the __No_Lambda_Functions__ section).
-All other C++11 features (like `auto` declarations) are not really necessary even if they are sometimes used in this documentation for convenience.
+C++11 lambda functions are necessary to use this library without having to manually program a significant amount of boiler-plate code (see __No_Lambda_Functions__).
+Otherwise this library does not use other C++11 features and should work on most modern C++ compilers (see __Getting_Started__).
 ]
 
 [endsect]

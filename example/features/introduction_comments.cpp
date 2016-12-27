@@ -4,9 +4,21 @@
 // file LICENSE_1_0.txt or a copy at http://www.boost.org/LICENSE_1_0.txt).
 // See: http://www.boost.org/doc/libs/release/libs/contract/doc/html/index.html
 
-#ifndef BOOST_CONTRACT_HEADER_ONLY // This is not an #include guard.
-    // For shared (default) and static lib only.
-    #define BOOST_CONTRACT_DETAIL_SOURCE
-    #include <boost/contract/detail/inlined.hpp>
-#endif // Else (header-only), make sure nothing is compiled here.
+#include <cassert>
+
+//[introduction_comments
+void inc(int& x)
+    // Precondition:    x < std::numeric_limit<int>::max()
+    // Postcondition:   x == old(x) + 1
+{
+    ++x; // Function body.
+}
+//]
+
+int main() {
+    int x = 10;
+    inc(x);
+    assert(x == 11);
+    return 0;
+}
 

@@ -13,7 +13,8 @@ Facility to declare invariants, base types, etc all as private members.
 
 #include <boost/contract/core/config.hpp>
 #include <boost/contract/detail/decl.hpp>
-#if     !defined(BOOST_CONTRACT_NO_INVARIANTS) || \
+#if     defined(BOOST_CONTRACT_STATIC_LINK) || \
+        !defined(BOOST_CONTRACT_NO_INVARIANTS) || \
         !defined(BOOST_CONTRACT_NO_PRECONDITIONS) || \
         !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
         !defined(BOOST_CONTRACT_NO_EXCEPTS)
@@ -32,7 +33,7 @@ namespace boost {
 
         namespace detail {
             BOOST_CONTRACT_DETAIL_DECL_DETAIL_COND_SUBCONTRACTING_Z(1,
-                /* is_friend = */ 0, OO, RR, FF, CC, AArgs);
+                    /* is_friend = */ 0, OO, RR, FF, CC, AArgs);
             
             template<typename RR, class CC>
             class cond_inv;
@@ -67,7 +68,8 @@ class access : private boost::noncopyable {
 /** @cond */
     // No public APIs (so users cannot use it directly by mistake).
 
-    #if     !defined(BOOST_CONTRACT_NO_INVARIANTS) || \
+    #if     defined(BOOST_CONTRACT_STATIC_LINK) || \
+            !defined(BOOST_CONTRACT_NO_INVARIANTS) || \
             !defined(BOOST_CONTRACT_NO_PRECONDITIONS) || \
             !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
             !defined(BOOST_CONTRACT_NO_EXCEPTS)

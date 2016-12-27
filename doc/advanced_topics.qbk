@@ -326,7 +326,7 @@ Programmers can do this by using [classref boost::contract::old_ptr_noncopyable]
 
 For example, consider the following `accumulate` function template that could in general be instantiated for types `T` that are not copy constructible, that is when `boost::is_copy_constructible<T>::value` is `false` (see also [@../../example/features/old_noncopyable.cpp =noncopyable.cpp=]):
 
-[import ../example/features/old_noncopyable.cpp]
+[/ import ../example/features/old_noncopyable.cpp]
 [old_noncopyable]
 
 The old value pointer `old_total` is programmed using [classref boost::contract::old_ptr_noncopyable] so if `T` is not copy constructible then `total` will simply not be copied and `old_total` will be left as a null pointer (in these cases `old_total` must be checked to be not null `if(old_total) ...` before it can be dereferenced in the postconditions).
@@ -364,7 +364,7 @@ However, the contracts of the `vector<T>::push_back(value)` member function incl
 Programmers can specify this postcondition as usual `BOOST_CONTRACT_ASSERT(back() == value)` an let the program fail to compile when users instantiate this template with a type `T` that does not provide an equality operator `==`.
 Otherwise, programmers can specify this postcondition using [funcref boost::contract::check_if] to check the assertion only for types `T` that have an equality operator `==` and trivially check `true` otherwise, for example (see also [@../../example/features/check_if.cpp =check_if.cpp=]):
 
-[import ../example/features/check_if.cpp]
+[/ import ../example/features/check_if.cpp]
 [check_if]
 
 The [funcref boost::contract::check_if] function template is a special case of the more general facility [funcref boost::contract::call_if]:
