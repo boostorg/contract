@@ -25,11 +25,11 @@ Contract Programming is characterized by the following assertion mechanisms:
 * /Preconditions/: These are logical conditions that programmers expect to be true when a function is called (e.g., to check constraints on function arguments).
 * /Postconditions/: These are logical conditions that programmers expect to be true when a function exits without throwing an exception (e.g., to check the result and any side effect that a function might have).
 Postconditions can access the function return value (for non-void functions) and /old values/ that expressions had before the function body was executed.
-* /Exception specifications/: These are logical conditions that programmers except to be true when a function exits throwing an exception.
+* /Exception guarantees/: These are logical conditions that programmers except to be true when a function exits throwing an exception.
 Exceptions specifications can access old values (but not the function return value).
 [footnote
 *Rationale:*
-Exception specifications have long been part of C++ documentation, but they were first introduced by this library as formal assertions to be checked as part of contracts.
+Exception guarantees have long been part of C++ documentation, but they were first introduced by this library as formal assertions to be checked as part of contracts.
 Checking of exception specification assertions is not part of __N1962__ or other references listed in the __Bibliography__.
 ]
 * /Class invariants/: These are logical conditions that programmers expect to be true after a constructor exits without throwing an exception, before and after the execution of every public non-static member function (even if they throw exceptions), before the destructor is executed and if the destructor throws an exception (e.g, class invariants can define valid states for all objects of a given class).
@@ -128,11 +128,11 @@ Programmers will have to decide based on the performance trade-offs required by 
 
 * Always write contracts to clarify the semantics of the design embedding the specifications directly in the code and making the code self-documenting.
 * Enable preconditions, postconditions, and class invariants checking during initial testing.
-* Enable only preconditions (and possibly class invariants, but not postconditions and exception specifications) checking during release testing and for the final release (see __Disable_Contract_Checking__).
+* Enable only preconditions (and possibly class invariants, but not postconditions and exception guarantees) checking during release testing and for the final release (see __Disable_Contract_Checking__).
 
 This approach is usually reasonable because in well-tested production code, validating the function body implementation using postconditions (and possibly class invariants) is rarely needed since the function has shown itself to be ["correct] during testing.
 On the other hand, checking function arguments using preconditions is always needed because of changes that can be made to the calling code (without having to necessarily re-test and re-release the called code).
-Furthermore, postconditions and also exception specifications (with related old value copies) are often computationally more expensive to check than preconditions and even class invariants.
+Furthermore, postconditions and also exception guarantees (with related old value copies) are often computationally more expensive to check than preconditions and even class invariants.
 
 [endsect]
 
@@ -145,7 +145,7 @@ A call to a non-member function with a contract executes the following steps (se
 # Check function preconditions.
 # Execute the function body.
 # If the body did not throw an exception, check function postconditions.
-# Else, check function exception specifications.
+# Else, check function exception guarantees.
 
 [heading Private and Protected Member Functions]
 
@@ -174,7 +174,7 @@ A call to the overriding public member function with a contract executes the fol
 # Execute the overriding function body.
 # Check static class invariants __AND__ non-static class invariants for all overridden bases, __AND__ then check the derived class static __AND__ non-static invariants (even if the body threw an exception).
 # If the body did not throw an exception, check postconditions of overridden public member functions from all overridden bases in __AND__ with each other, __AND__ then check the overriding function postconditions in the derived class.
-# Else, check exception specifications of overridden public member functions from all overridden bases in __AND__ with each other, __AND__ then check the overriding function exception specifications in the derived class.
+# Else, check exception guarantees of overridden public member functions from all overridden bases in __AND__ with each other, __AND__ then check the overriding function exception guarantees in the derived class.
 
 Volatile member functions check static class invariants __AND__ /volatile/ class invariants instead.
 Preconditions and postconditions of volatile member functions and volatile class invariants access the object as `volatile`.
@@ -197,7 +197,7 @@ A call to a public non-static member function with a contract (that is not overr
 # Executed the function body.
 # Check the class static __AND__ non-static invariants (even if the body threw an exception, but none of the invariants from base classes).
 # If the body did not throw an exception, check function postconditions (but none of the postconditions from functions in base classes).
-# Else, check function exception specifications (but none of the exception specifications from functions in base classes).
+# Else, check function exception guarantees (but none of the exception guarantees from functions in base classes).
 
 Volatile member functions check static class invariants __AND__ /volatile/ class invariants instead.
 Preconditions and postconditions of volatile member functions and volatile class invariants access the object as `volatile`.
@@ -214,7 +214,7 @@ A call to a public static member function with a contract executes the following
 # Executed the function body.
 # Check static class invariants (even if the body threw an exception, but not the non-static invariants and none of the invariants from base classes).
 # If the body did not throw an exception, check function postconditions (but none of the postconditions from functions in base classes).
-# Else, check function exception specifications (but none of the exception specifications from functions in base classes).
+# Else, check function exception guarantees (but none of the exception guarantees from functions in base classes).
 
 Class invariants are checked because this function is part of the class public API, but only static class invariants can be checked (because this is a static function so it cannot access the object that would instead be required to check non-static class invariants, volatile or not).
 Furthermore, static functions cannot override any function so the __substitution_principle__ does not apply and they do not subcontract.
@@ -236,7 +236,7 @@ A call to a constructor with a contract executes the following steps (see also [
 # If the body did not throw an exception:
     # Check non-static __AND__ volatile class invariants (because the object is now successfully constructed).
     # Check constructor postconditions (but these cannot access the object old value [^['old]]`(this)` because there was no object before the execution of the constructor body).
-# Else, check constructor exception specifications (but these cannot access the object old value [^['old]]`(this)` because there was no object before the execution of the constructor body, plus they can only access class static members because the object was not successfully constructed upon the constructor body throwing an exception).
+# Else, check constructor exception guarantees (but these cannot access the object old value [^['old]]`(this)` because there was no object before the execution of the constructor body, plus they can only access class static members because the object was not successfully constructed upon the constructor body throwing an exception).
 
 Constructor preconditions are checked before executing the member initialization list so the programming of these initializations can be simplified assuming the constructor preconditions are satisfied (e.g., constructor arguments can be validated by the constructor preconditions before they are used to initialize bases and data members).
 
@@ -262,7 +262,7 @@ Of course, after destructor body execution there is no object anymore so destruc
     # Destroy any base class (public or not) according with C++ destruction mechanism and also check the contracts of these base destructors (according with steps similar to the ones listed here).
 # Else:
     # Check non-static class invariants (because the object was not successfully destructed so it still exists and should satisfy its invariants).
-    # Check destructor exception specifications (even if destructors should never be programmed to throw in C++).
+    # Check destructor exception guarantees (even if destructors should never be programmed to throw in C++).
 
 As indicated in step 4.b. above, C++ object destruction mechanism will automatically check base class contracts when the destructor exits without throwing an exception (no explicit subcontracting behaviour is required here).
 
@@ -329,7 +329,7 @@ Specifically, destructors check class invariants so they will throw if programme
 Furthermore, programming an exception specification failure handler to throw will throw an exception (the one reporting the contract failure) while there is already an active exception (the one that caused the exception specification assertions to be checked in the first place), and this leads to undefined behavior in C++.
 ]
 
-Therefore, it is recommended to terminate the program at least for contract failures from destructors and because when checking exception specifications (if not in all other cases of contract failures as it is done by default by this library).
+Therefore, it is recommended to terminate the program at least for contract failures from destructors and because when checking exception guarantees (if not in all other cases of contract failures as it is done by default by this library).
 This library contract failure handlers report information about the failure that allow programmers to granularly distinguish all these cases and therefore decide when it is appropriate to terminate, trow, or take some other user-specific action depending on the application domain.
 
 [endsect]

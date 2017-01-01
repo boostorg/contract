@@ -13,6 +13,13 @@ This section gives preliminary information to get oriented in using this library
 Programmers should be able to start using this library after reading the __Introduction__, __Getting_Started__, and __Tutorial__ sections.
 The __Advanced_Topics__ and other sections of this documentation can be consulted at a later point to gain a more in-depth knowledge of the library.
 
+Some of the source code of the examples linked by this documentation contains special code comments of the form `//[...` and `//]`.
+These mark sections of the code that are automatically extracted from the source and presented as part of this documentation.
+[footnote
+*Rationale:*
+This allows to make sure that most of the example code presented in this documentation is always up-to-date, builds and runs with the latest implementation of the library.
+]
+
 Some footnotes are marked by the word "*Rationale*".
 These explain reasons behind decisions made during the design and implementation of this library.
 

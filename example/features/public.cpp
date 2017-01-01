@@ -9,11 +9,14 @@
 #include <algorithm>
 #include <cassert>
 
-//[public_constructor
+//[public_class_begin
 class unique_identifiers
     : private boost::contract::constructor_precondition<unique_identifiers>
 {
+//]
+//[public_constructor
 public:
+    // Contract for a constructor.
     unique_identifiers(int from, int to) :
         boost::contract::constructor_precondition<unique_identifiers>([&] {
             BOOST_CONTRACT_ASSERT(from <= to);
@@ -28,18 +31,18 @@ public:
         // Constructor body.
         for(int id = from; id <= to; ++id) vect_.push_back(id);
     }
-
-    /* ... */
 //]
     
-    //[public_destructor
+//[public_destructor
+public:
+    // Contract for a destructor.
     virtual ~unique_identifiers() {
         // Following contract checks invariants.
         boost::contract::check c = boost::contract::destructor(this);
 
         // Destructor body here... (do nothing in this example).
     }
-    //]
+//]
 
     int size() const {
         // Following contract checks invariants.
@@ -47,7 +50,9 @@ public:
         return vect_.size();
     }
 
-    //[public_function
+//[public_function
+public:
+    // Contract for a public (non-virtual) function.
     bool find(int id) const {
         bool result;
         boost::contract::check c = boost::contract::public_function(this)
@@ -60,10 +65,11 @@ public:
         return result = std::find(vect_.begin(), vect_.end(), id) !=
                 vect_.end();
     }
-    //]
+//]
 
-    //[public_virtual_function
-    // Specified identifier must not already be in container.
+//[public_virtual_function
+public:
+    // Contract for a public virtual function.
     virtual int push_back(int id, boost::contract::virtual_* v = 0) {
         int result;
         boost::contract::old_ptr<bool> old_find =
@@ -73,6 +79,7 @@ public:
         boost::contract::check c = boost::contract::public_function(
                 v, result, this) // Pass `v` and `result`.
             .precondition([&] {
+                // Specified identifier must not already be in container.
                 BOOST_CONTRACT_ASSERT(!find(id));
             })
             .postcondition([&] (int const result) {
@@ -88,15 +95,18 @@ public:
         vect_.push_back(id);
         return result = id;
     }
-    //]
+//]
     
     void invariant() const { BOOST_CONTRACT_ASSERT(size() >= 0); }
 
 private:
     std::vector<int> vect_;
+//[public_class_end
+    /* ... */
 };
+//]
 
-//[public_function_override
+//[public_derived_class_begin
 class identifiers
     #define BASES public unique_identifiers
     : BASES
@@ -108,8 +118,11 @@ public:
     void invariant() const { // Check in AND with bases.
         BOOST_CONTRACT_ASSERT(empty() == (size() == 0));
     }
+//]
     
-    // Do nothing if specified identifier already in container.
+//[public_function_override
+public:
+    // Contract for a public function override.
     int push_back(int id, boost::contract::virtual_* v = 0) /* override */ {
         int result;
         boost::contract::old_ptr<bool> old_find =
@@ -119,6 +132,7 @@ public:
             override_push_back // Pass override plus below function pointer...
         >(v, result, &identifiers::push_back, this, id) // ...and arguments.
             .precondition([&] { // Check in OR with bases.
+                // Do nothing if specified identifier already in container.
                 BOOST_CONTRACT_ASSERT(find(id));
             })
             .postcondition([&] (int const result) { // Check in AND with bases.
@@ -131,8 +145,6 @@ public:
         return result = id;
     }
     BOOST_CONTRACT_OVERRIDE(push_back); // Define `override_push_back`.
-
-    /* ... */
 //]
     
     bool empty() const {
@@ -145,7 +157,11 @@ public:
         // Following contract checks invariants.
         boost::contract::check c = boost::contract::constructor(this);
     }
+
+//[public_derived_class_end
+    /* ... */
 };
+//]
     
 int main() {
     unique_identifiers uids(1, 4);

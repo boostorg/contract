@@ -10,6 +10,7 @@
 //[function
 #include <boost/contract.hpp>
 
+// Contract for a non-member function.
 int inc(int& x) {
     int result;
     boost::contract::old_ptr<int> old_x = BOOST_CONTRACT_OLD(x);
@@ -20,6 +21,9 @@ int inc(int& x) {
         .postcondition([&] {
             BOOST_CONTRACT_ASSERT(x == *old_x + 1);
             BOOST_CONTRACT_ASSERT(result == *old_x);
+        })
+        .except([&] {
+            BOOST_CONTRACT_ASSERT(x == *old_x);
         })
     ;
 

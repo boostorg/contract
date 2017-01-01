@@ -11,8 +11,9 @@ test-suite features :
     [ subdir-run features : introduction ]
     [ subdir-run features : introduction_comments ]
 
-    [ subdir-run features : function_comments ]
     [ subdir-run features : function ]
+    [ subdir-run features : lambda_function ]
+    [ subdir-run features : code_block ]
     [ subdir-run features : public ]
     [ subdir-run features : base_types ]
     [ subdir-run features : static_public ]

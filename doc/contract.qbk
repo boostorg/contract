@@ -29,7 +29,7 @@
 [def __Constructor_Calls__ [link boost_contract.contract_programming_overview.constructor_calls Constructor Calls]]
 [def __Destructor_Calls__ [link boost_contract.contract_programming_overview.destructor_calls Destructor Calls]]
 [def __Constant_Correctness__ [link boost_contract.contract_programming_overview.constant_correctness Constant-Correctness]]
-[def __Specification_and_Implementation__ [link boost_contract.contract_programming_overview.specification_and_implementation Specification and Implementation]]
+[def __Specification_vs_Implementation__ [link boost_contract.contract_programming_overview.specification_vs__implementation Specification vs. Implementation]]
 
 [def __Tutorial__ [link boost_contract.tutorial Tutorial]]
 [def __Non_Member_Functions__ [link boost_contract.tutorial.non_member_functions Non-Member Functions]]
@@ -37,6 +37,7 @@
 [def __Postconditions__ [link boost_contract.tutorial.postconditions Postconditions]]
 [def __Return_Value__ [link boost_contract.tutorial.return_value Return Value]]
 [def __Old_Values__ [link boost_contract.tutorial.old_values Old Values]]
+[def __Exception_Guarantees__ [link boost_contract.tutorial.exception_guarantees Exception Guarantees]]
 [def __Class_Invariants__ [link boost_contract.tutorial.class_invariants Class Invariants]]
 [def __Static_Class_Invariants__ [link boost_contract.tutorial.class_invariants.static_class_invariants Static Class Invariants]]
 [def __Constructors__ [link boost_contract.tutorial.constructors Constructors]]
