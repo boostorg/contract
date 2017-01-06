@@ -29,7 +29,7 @@ Postconditions can access the function return value (for non-void functions) and
 Exceptions specifications can access old values (but not the function return value).
 [footnote
 *Rationale:*
-Exception guarantees have long been part of C++ documentation, but they were first introduced by this library as formal assertions to be checked as part of contracts.
+Exception (safety) guarantees have long been part of C++ documentation, but they were first introduced by this library as formal assertions to be checked as part of contracts.
 Checking of exception specification assertions is not part of __N1962__ or other references listed in the __Bibliography__.
 ]
 * /Class invariants/: These are logical conditions that programmers expect to be true after a constructor exits without throwing an exception, before and after the execution of every public non-static member function (even if they throw exceptions), before the destructor is executed and if the destructor throws an exception (e.g, class invariants can define valid states for all objects of a given class).
@@ -120,8 +120,15 @@ However, while performance trade-offs should be carefully considered depending o
 The run-time performances are negatively impacted by Contract Programming mainly because of extra time require to:
 
 * Check the asserted conditions.
-* Call additional functions that specify preconditions, postconditions, class invariants, etc. (especially for subcontracting).
 * Copy old and return values when these are used in postconditions.
+* Call additional functions that specify preconditions, postconditions, exception guarantees, class invariants, etc. (especially for subcontracting):
+
+[note
+In general, contracts introduce at least three extra (functor) calls to check preconditions, postconditions, and exception guarantees for any given non-member function call.
+Public member functions introduce also two more (function) calls to check class invariants (at entry and at exit).
+For subcontracting, these extra calls (some of which become virtual calls) are repeated for the number of functions being overridden from the base classes (possibly deep in the inheritance tree).
+In addition to that, this library introduces a number of internal calls to its implementation in order to properly check the contracts.
+]
 
 To mitigate the run-time performance impact, programmers can selectively disable run-time checking of some of the contract assertions.
 Programmers will have to decide based on the performance trade-offs required by their applications, but a reasonable approach often is to:
@@ -202,7 +209,7 @@ A call to a public non-static member function with a contract (that is not overr
 Volatile member functions check static class invariants __AND__ /volatile/ class invariants instead.
 Preconditions and postconditions of volatile member functions and volatile class invariants access the object as `volatile`.
 
-Class invariants are checked because this function is part of the class public API.
+Class invariants are checked because this function is part of the class public interface.
 However, none of the contracts of the base classes are checked because this function is not overriding functions from any of the public base classes (so the __substitution_principle__ does not require non-overriding functions to subcontract).
 
 [heading Static Public Member Functions]
@@ -216,7 +223,7 @@ A call to a public static member function with a contract executes the following
 # If the body did not throw an exception, check function postconditions (but none of the postconditions from functions in base classes).
 # Else, check function exception guarantees (but none of the exception guarantees from functions in base classes).
 
-Class invariants are checked because this function is part of the class public API, but only static class invariants can be checked (because this is a static function so it cannot access the object that would instead be required to check non-static class invariants, volatile or not).
+Class invariants are checked because this function is part of the class public interface, but only static class invariants can be checked (because this is a static function so it cannot access the object that would instead be required to check non-static class invariants, volatile or not).
 Furthermore, static functions cannot override any function so the __substitution_principle__ does not apply and they do not subcontract.
 
 Preconditions and postconditions of static member functions and static class invariants cannot access the object (because they are checked by `static` members).

@@ -13,7 +13,12 @@
 class unique_identifiers
     : private boost::contract::constructor_precondition<unique_identifiers>
 {
+public:
+    void invariant() const {
+        BOOST_CONTRACT_ASSERT(size() >= 0);
+    }
 //]
+
 //[public_constructor
 public:
     // Contract for a constructor.
@@ -37,7 +42,7 @@ public:
 public:
     // Contract for a destructor.
     virtual ~unique_identifiers() {
-        // Following contract checks invariants.
+        // Following contract checks class invariants.
         boost::contract::check c = boost::contract::destructor(this);
 
         // Destructor body here... (do nothing in this example).
@@ -52,7 +57,7 @@ public:
 
 //[public_function
 public:
-    // Contract for a public (non-virtual) function.
+    // Contract for a public function (but no static, virtual, or override).
     bool find(int id) const {
         bool result;
         boost::contract::check c = boost::contract::public_function(this)
@@ -69,13 +74,13 @@ public:
 
 //[public_virtual_function
 public:
-    // Contract for a public virtual function.
+    // Contract for a public virtual function (but no override).
     virtual int push_back(int id, boost::contract::virtual_* v = 0) {
         int result;
         boost::contract::old_ptr<bool> old_find =
-                    BOOST_CONTRACT_OLD(v, find(id)); // Pass `v`.
-        boost::contract::old_ptr<int> old_size =
-                    BOOST_CONTRACT_OLD(v, size()); // Pass `v`.
+                BOOST_CONTRACT_OLD(v, find(id)); // Pass `v`.
+        boost::contract::old_ptr<int> old_sizs =
+                BOOST_CONTRACT_OLD(v, size()); // Pass `v`.
         boost::contract::check c = boost::contract::public_function(
                 v, result, this) // Pass `v` and `result`.
             .precondition([&] {
@@ -97,8 +102,6 @@ public:
     }
 //]
     
-    void invariant() const { BOOST_CONTRACT_ASSERT(size() >= 0); }
-
 private:
     std::vector<int> vect_;
 //[public_class_end
@@ -144,7 +147,7 @@ public:
         if(!find(id)) unique_identifiers::push_back(id); // Else, do nothing.
         return result = id;
     }
-    BOOST_CONTRACT_OVERRIDE(push_back); // Define `override_push_back`.
+    BOOST_CONTRACT_OVERRIDE(push_back) // Define `override_push_back`.
 //]
     
     bool empty() const {

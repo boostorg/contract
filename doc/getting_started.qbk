@@ -33,9 +33,8 @@ This library requires Boost (Boost.Optional, Boost.Thread, Boost.FunctionTypes, 
 It is possible to use this library without C++11 lambda functions but a large amount of boiler-plate code is required to manually program separate functions to specify preconditions and postconditions (so using this library without C++11 lambda functions is possible but not recommended, see __No_Lambda_Functions__).
 It is also possible to use this library without variadic macros by manually programming a small amount of boiler-plate code (but most modern C++ compilers support variadic macros even before C++99 and C++11, see __No_Macros__).
 
-Some parts of this documentation use an operator [^['typeof](...)].
-This is just to indicate an operator equivalent to C++11 `decltype(...)` in this documentation.
-Internally this library does not actually use type deduction in these cases (because the library already knows the type in question) so C++11 `decltype` and other type-of implementations are not required to compile this library (and that is why [^['typeof]] and not `decltype` is used in this documentation).
+Some parts of this documentation use an operator [^['type-of](...)] to indicate an operator equivalent to C++11 `decltype(...)`.
+However, this library does not actually use type deduction in these cases (because the library already knows the types in question) so C++11 `decltype` and other type-of implementations are not required to compile this library (that is why [^['type-of]] and not the actual `decltype` operator is used in these cases).
 
 This library has been developed and tested using:
 

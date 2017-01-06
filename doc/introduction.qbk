@@ -15,7 +15,7 @@ For example, consider the following function `inc` that increments its argument 
 [introduction_comments]
 
 The precondition states that at function entry the argument `x` must be strictly smaller than the maximum allowable value of its type (so it can be increased by `1` without overflowing).
-The postcondition states that at function exit the argument `x` must be incremented by `1` with respect to the value it had before executing the function `old(x)` (but nothing that postconditions are checked only when the execution of the function body did not throw an exception).
+The postcondition states that at function exit the argument `x` must be incremented by `1` with respect to the value it had before executing the function `old(x)` (but noting that postconditions are checked only when the execution of the function body did not throw an exception).
 
 Now let's program this function and its contract using this library (see also [@../../example/features/introduction.cpp introduction.cpp]):
 
@@ -28,13 +28,13 @@ When the above function `inc` is called, this library will:
 * Then, execute `inc` body (i.e., all the code that follows the `boost::contract::check c = ...` declaration).
 * Last, execute the functor passed to `.postcondition(...)` that asserts `inc` postconditions (unless `inc` body threw an exception).
 
-For example, if there is a bug in the code calling `inc` so that the function is called with `x` greater than or equal to `std::numeric_limits<int>::max()` then the program will terminate with an error message similar to the following (so it will be evident the bug is in the calling code):
+For example, if there is a bug in the code calling `inc` so that the function is called with `x` greater than or equal to `std::numeric_limits<int>::max()` then the program will terminate with an error message similar to the following (so it will be evident that the bug is in the calling code):
 
 [pre
 precondition assertion "x < std::numeric_limits<int>::max()" failed: file "introduction.cpp", line 17
 ]
 
-Instead, if there is a bug in the implementation of `inc` so that `x` is not increased by `1` after the execution of the function body then the program will terminate with an error message similar to the following (so it will be evident the bug is in `inc` body):
+Instead, if there is a bug in the implementation of `inc` so that `x` is not increased by `1` after the execution of the function body then the program will terminate with an error message similar to the following (so it will be evident that the bug is in `inc` body):
 [footnote
 In this example the function body is composed of a single trivial instruction `++x` so it easy to check by visual inspection that it does not contain any bug and it will always increment `x` by `1` thus the function postcondition will never fail.
 In real code, function bodies are rarely this simple and can hide bugs that make checking postconditions useful.

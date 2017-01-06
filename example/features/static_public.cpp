@@ -15,8 +15,9 @@ public:
         BOOST_CONTRACT_ASSERT(instances() >= 0);
     }
 
+    // Contract for a static public function.
     static int instances() {
-        // Explicit template parameter `make` (to check static invariants).
+        // Explicit template parameter `make` (check static invariants).
         boost::contract::check c = boost::contract::public_function<make>();
 
         return instances_; // Function body.
