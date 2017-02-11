@@ -8,7 +8,7 @@
 #include <boost/optional.hpp>
 #include <cassert>
 
-//[pure_virtual_public
+//[pure_virtual_public_base
 struct surface {
     int area;
     int perimeter;
@@ -21,11 +21,15 @@ class shape {
 public:
     virtual surface get_surface(boost::contract::virtual_* v = 0) const = 0;
 };
+//]
 
+//[pure_virtual_public_impl
 // Pure-virtual function definition (and contract) out-of-line (usual in C++).
 surface shape::get_surface(boost::contract::virtual_* v) const {
     boost::optional<surface> result;
+    // Pass `result` right after `v`...
     boost::contract::check c = boost::contract::public_function(v, result, this)
+        // ...and postconditions take `result` as parameter (not capture).
         .postcondition([&] (boost::optional<surface const&> const& result) {
             BOOST_CONTRACT_ASSERT(result->area > 0);
             BOOST_CONTRACT_ASSERT(result->perimeter > 0);
@@ -35,7 +39,9 @@ surface shape::get_surface(boost::contract::virtual_* v) const {
     assert(false); // Pure function body (never executed by this library).
     return *result;
 }
+//]
 
+//[pure_virtual_public_derived
 class square
     #define BASES private boost::contract::constructor_precondition<square>, \
             public shape

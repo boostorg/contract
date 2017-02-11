@@ -11,7 +11,8 @@
 Program contracts for non-member, private, and protected functions.
 */
 
-#include <boost/contract/detail/all_core_headers.hpp>
+#include <boost/contract/core/config.hpp>
+#include <boost/contract/core/specify.hpp>
 #if     defined(BOOST_CONTRACT_STATIC_LINK) || \
         !defined(BOOST_CONTRACT_NO_FUNCTIONS) || \
         !defined(BOOST_CONTRACT_NO_INVARIANTS)

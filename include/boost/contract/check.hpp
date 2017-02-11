@@ -13,15 +13,20 @@
 RAII object to check contracts.
 */
 
-#include <boost/contract/detail/all_core_headers.hpp>
-#include <boost/contract/detail/condition/cond_base.hpp>
-#include <boost/contract/detail/assert.hpp>
-#ifndef BOOST_CONTRACT_ALL_DISABLE_NO_ASSERTION
-    #include <boost/contract/detail/checking.hpp>
+#include <boost/contract/core/config.hpp>
+#include <boost/contract/core/check_macro.hpp>
+#include <boost/contract/core/specify.hpp>
+#include <boost/contract/core/exception.hpp> // For set_... (if always in code).
+#if     defined(BOOST_CONTRACT_STATIC_LINK) || \
+        !defined(BOOST_CONTRACT_NO_INVARIANTS) || \
+        !defined(BOOST_CONTRACT_NO_PRECONDITIONS) || \
+        !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
+        !defined(BOOST_CONTRACT_NO_EXCEPTS)
+    #include <boost/contract/detail/condition/cond_base.hpp>
+    #include <boost/contract/detail/auto_ptr.hpp>
+    #include <boost/contract/detail/debug.hpp>
 #endif
-#include <boost/contract/detail/auto_ptr.hpp>
-#include <boost/contract/detail/debug.hpp>
-#include <boost/contract/detail/name.hpp>
+#include <boost/contract/detail/check.hpp>
 #include <boost/config.hpp>
 
 /* PRIVATE */
@@ -43,40 +48,7 @@ RAII object to check contracts.
     #define BOOST_CONTRACT_CHECK_CTOR_DEF_(contract_type) {}
 #endif
 
-#ifndef BOOST_CONTRACT_ALL_DISABLE_NO_ASSERTION
-    #define BOOST_CONTRACT_CHECK_IF_NOT_CHECKING_ALREADY_ \
-        if(!boost::contract::detail::checking::already())
-    #define BOOST_CONTRACT_CHECK_CHECKING_VAR_(guard) \
-        /* this name somewhat unique to min var shadow warnings */ \
-        boost::contract::detail::checking BOOST_CONTRACT_DETAIL_NAME2( \
-                guard, __LINE__);
-#else
-    #define BOOST_CONTRACT_CHECK_IF_NOT_CHECKING_ALREADY_ /* nothing */
-    #define BOOST_CONTRACT_CHECK_CHECKING_VAR_(guard) /* nothing */
-#endif
-        
-#ifndef BOOST_CONTRACT_NO_CHECKS
-    #define BOOST_CONTRACT_CHECK_(assertion) \
-        { \
-            try { \
-                BOOST_CONTRACT_CHECK_IF_NOT_CHECKING_ALREADY_ \
-                { \
-                    BOOST_CONTRACT_CHECK_CHECKING_VAR_(k) \
-                    { assertion; } \
-                } \
-            } catch(...) { boost::contract::check_failure(); } \
-        }
-#else
-    #define BOOST_CONTRACT_CHECK_(assertion) {}
-#endif
-
 /** @endcond */
-
-/* PUBLIC */
-
-// Requires trailing semicolon to be consistent with ASSERT.
-#define BOOST_CONTRACT_CHECK(condition) \
-    BOOST_CONTRACT_CHECK_(BOOST_CONTRACT_DETAIL_ASSERT(condition))
 
 /* CODE */
 
@@ -98,7 +70,7 @@ class check { // Copy ctor only (as move via ptr release).
 public:
     // f must be a valid callable object (not null func ptr, empty ftor, etc.
     template<typename F> // Cannot check `if(f) ...` as f can be a lambda.
-    /* implicit */ check(F const& f) { BOOST_CONTRACT_CHECK_({ f(); }) }
+    /* implicit */ check(F const& f) { BOOST_CONTRACT_DETAIL_CHECK({ f(); }) }
 
     /**
     Construct this object copying it from the specified one.

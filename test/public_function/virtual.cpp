@@ -6,7 +6,7 @@
 
 // Test public function subcontracting via virtual functions.
 
-#include "contracts.hpp"
+#include "basic.hpp"
 #include <boost/preprocessor/control/iif.hpp>
 #include <boost/detail/lightweight_test.hpp>
 #include <sstream>

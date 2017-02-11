@@ -10,6 +10,7 @@
 #include <boost/contract/core/exception.hpp>
 #include <boost/preprocessor/stringize.hpp>
 
+// In detail because used by both ASSERT and CHECK.
 // Use ternary operator `?:` and no trailing `;` here to allow `if(...) ASSERT(
 // ...); else ...` (won't compile if expands using an if statement instead even
 // if wrapped by {}, and else won't compile if expands trailing `;`).

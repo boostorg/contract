@@ -11,13 +11,14 @@
 Facility to declare invariants, base types, etc all as private members.
 */
 
+// IMPORTANT: Included by contract_macro.hpp so must #if-guard all its includes.
 #include <boost/contract/core/config.hpp>
-#include <boost/contract/detail/decl.hpp>
 #if     defined(BOOST_CONTRACT_STATIC_LINK) || \
         !defined(BOOST_CONTRACT_NO_INVARIANTS) || \
         !defined(BOOST_CONTRACT_NO_PRECONDITIONS) || \
         !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
         !defined(BOOST_CONTRACT_NO_EXCEPTS)
+    #include <boost/contract/detail/decl.hpp>
     #include <boost/contract/detail/type_traits/introspection.hpp>
 #endif
 #ifndef BOOST_CONTRACT_NO_INVARIANTS
@@ -25,23 +26,27 @@ Facility to declare invariants, base types, etc all as private members.
     #include <boost/function_types/property_tags.hpp>
     #include <boost/mpl/vector.hpp>
 #endif
-#include <boost/noncopyable.hpp>
-
-namespace boost {
-    namespace contract {
-        class virtual_;
-
-        namespace detail {
-            BOOST_CONTRACT_DETAIL_DECL_DETAIL_COND_SUBCONTRACTING_Z(1,
-                    /* is_friend = */ 0, OO, RR, FF, CC, AArgs);
-            
-            template<typename RR, class CC>
-            class cond_inv;
-        }
-    }
-}
 
 namespace boost { namespace contract {
+        
+#if     defined(BOOST_CONTRACT_STATIC_LINK) || \
+        !defined(BOOST_CONTRACT_NO_INVARIANTS) || \
+        !defined(BOOST_CONTRACT_NO_PRECONDITIONS) || \
+        !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
+        !defined(BOOST_CONTRACT_NO_EXCEPTS)
+    class virtual_;
+
+    namespace detail {
+        BOOST_CONTRACT_DETAIL_DECL_DETAIL_COND_SUBCONTRACTING_Z(1,
+                /* is_friend = */ 0, OO, RR, FF, CC, AArgs);
+    }
+#endif
+#ifndef BOOST_CONTRACT_NO_INVARIANTS
+    namespace detail {
+        template<typename RR, class CC>
+        class cond_inv;
+    }
+#endif
 
 /**
 Friend this class to declare invariants and base types as private members.
@@ -64,30 +69,37 @@ member and it is not copyable).
         base types @c typedef as public members or to make this class a friend.
 @see @RefSect{advanced_topics, Advanced Topics}
 */
-class access : private boost::noncopyable {
+class access { // Non-copyable (see below).
 /** @cond */
     // No public APIs (so users cannot use it directly by mistake).
 
+    access(); // Should never be constructed (not even internally).
+    ~access();
+    
+    // No boost::noncopyable to avoid its overhead when contracts disabled.
+    access(access&);
+    access& operator=(access&);
+    
     #if     defined(BOOST_CONTRACT_STATIC_LINK) || \
             !defined(BOOST_CONTRACT_NO_INVARIANTS) || \
             !defined(BOOST_CONTRACT_NO_PRECONDITIONS) || \
             !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
             !defined(BOOST_CONTRACT_NO_EXCEPTS)
         BOOST_CONTRACT_DETAIL_INTROSPECTION_HAS_TYPE(has_base_types,
-                BOOST_CONTRACT_BASE_TYPEDEF)
+                BOOST_CONTRACT_BASES_TYPEDEF)
 
         template<class C>
         struct base_types_of {
-            typedef typename C::BOOST_CONTRACT_BASE_TYPEDEF type;
+            typedef typename C::BOOST_CONTRACT_BASES_TYPEDEF type;
         };
     #endif
-    
+
     #ifndef BOOST_CONTRACT_NO_INVARIANTS
         BOOST_CONTRACT_DETAIL_INTROSPECTION_HAS_MEMBER_FUNCTION(
-                has_static_invariant_f, BOOST_CONTRACT_STATIC_INVARIANT)
+                has_static_invariant_f, BOOST_CONTRACT_STATIC_INVARIANT_FUNC)
         
         BOOST_CONTRACT_DETAIL_INTROSPECTION_HAS_STATIC_MEMBER_FUNCTION(
-                has_static_invariant_s, BOOST_CONTRACT_STATIC_INVARIANT)
+                has_static_invariant_s, BOOST_CONTRACT_STATIC_INVARIANT_FUNC)
 
         template<class C>
         struct has_static_invariant : has_static_invariant_s<C, void,
@@ -95,7 +107,7 @@ class access : private boost::noncopyable {
 
         template<class C>
         static void static_invariant() {
-            C::BOOST_CONTRACT_STATIC_INVARIANT();
+            C::BOOST_CONTRACT_STATIC_INVARIANT_FUNC();
         }
 
         template<class C>
@@ -103,15 +115,15 @@ class access : private boost::noncopyable {
             typedef void (*func_ptr)();
         public:
             static func_ptr apply() {
-                return &C::BOOST_CONTRACT_STATIC_INVARIANT;
+                return &C::BOOST_CONTRACT_STATIC_INVARIANT_FUNC;
             }
         };
 
         BOOST_CONTRACT_DETAIL_INTROSPECTION_HAS_MEMBER_FUNCTION(
-                has_invariant_f, BOOST_CONTRACT_INVARIANT)
+                has_invariant_f, BOOST_CONTRACT_INVARIANT_FUNC)
         
         BOOST_CONTRACT_DETAIL_INTROSPECTION_HAS_STATIC_MEMBER_FUNCTION(
-                has_invariant_s, BOOST_CONTRACT_INVARIANT)
+                has_invariant_s, BOOST_CONTRACT_INVARIANT_FUNC)
 
         template<class C>
         struct has_cv_invariant : has_invariant_f<C, void, boost::mpl::vector<>,
@@ -124,30 +136,35 @@ class access : private boost::noncopyable {
         template<class C>
         static void cv_invariant(C const volatile* obj) {
             BOOST_CONTRACT_DETAIL_DEBUG(obj);
-            obj->BOOST_CONTRACT_INVARIANT();
+            obj->BOOST_CONTRACT_INVARIANT_FUNC();
         }
         
         template<class C>
         static void const_invariant(C const* obj) {
             BOOST_CONTRACT_DETAIL_DEBUG(obj);
-            obj->BOOST_CONTRACT_INVARIANT();
+            obj->BOOST_CONTRACT_INVARIANT_FUNC();
         }
     #endif
     
     // Friends (used to limit library's public API).
-
-    // NOTE: Using friends here and in all other places in this library does not
-    // increase compilation times (I experimented replacing all friends with
-    // public and got the same compilation times).
-
-    BOOST_CONTRACT_DETAIL_DECL_DETAIL_COND_SUBCONTRACTING_Z(1,
-            /* is_friend = */ 1, OO, RR, FF, CC, AArgs);
+    // NOTE: Using friends here and in all other places in this library
+    // does not increase compilation times (I experimented replacing all
+    // friends with public and got the same compilation times).
+    #if     defined(BOOST_CONTRACT_STATIC_LINK) || \
+            !defined(BOOST_CONTRACT_NO_INVARIANTS) || \
+            !defined(BOOST_CONTRACT_NO_PRECONDITIONS) || \
+            !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
+            !defined(BOOST_CONTRACT_NO_EXCEPTS)
+        BOOST_CONTRACT_DETAIL_DECL_DETAIL_COND_SUBCONTRACTING_Z(1,
+                /* is_friend = */ 1, OO, RR, FF, CC, AArgs);
             
-    template<typename RR, class CC>
-    friend class boost::contract::detail::cond_inv;
-        
-    BOOST_CONTRACT_DETAIL_DECL_FRIEND_OVERRIDING_PUBLIC_FUNCTIONS_Z(1,
-            OO, RR, FF, CC, AArgs, vv, rr, ff, oobj, aargs)
+        BOOST_CONTRACT_DETAIL_DECL_FRIEND_OVERRIDING_PUBLIC_FUNCTIONS_Z(1,
+                OO, RR, FF, CC, AArgs, vv, rr, ff, oobj, aargs)
+    #endif
+    #ifndef BOOST_CONTRACT_NO_INVARIANTS
+        template<typename RR, class CC>
+        friend class boost::contract::detail::cond_inv;
+    #endif
 /** @endcond */
 };
 

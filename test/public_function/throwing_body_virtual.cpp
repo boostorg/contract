@@ -6,7 +6,7 @@
 
 // Test virtual public member function body throws with subcontracting.
 
-#include "contracts.hpp"
+#include "basic.hpp"
 #include <boost/optional.hpp>
 #include <boost/preprocessor/control/iif.hpp>
 #include <boost/detail/lightweight_test.hpp>

@@ -6,7 +6,7 @@
 
 // Test public function subcontracting from middle branch of inheritance tree.
 
-#include "contracts.hpp"
+#include "basic.hpp"
 #include <boost/detail/lightweight_test.hpp>
 #include <sstream>
 

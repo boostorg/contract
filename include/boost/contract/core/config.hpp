@@ -87,7 +87,7 @@ Facilities to configure this library compile-time and run-time behaviour.
     #define BOOST_CONTRACT_MAX_ARGS 10
 #endif
 
-#ifndef BOOST_CONTRACT_BASE_TYPEDEF
+#ifndef BOOST_CONTRACT_BASES_TYPEDEF
     /**
     Define the name of the base type @c typedef (@c base_types by default).
     This macro can be defined if the @c typedef declared using
@@ -96,16 +96,16 @@ Facilities to configure this library compile-time and run-time behaviour.
     
     @b Rationale:   This macro cannot be called @c BOOST_CONTRACT_BASE_TYPES
                     because that is already the name of the macro that extracts
-                    public bases. Then @c BOOST_CONTRACT_BASE_TYPEDEF is a
+                    public bases. Then @c BOOST_CONTRACT_BASES_TYPEDEF is a
                     reasonable name (but without changing this macro default
                     definition to @c base_typedef because @c base_types is
                     remains the preferred syntax for user code).
     @see @RefSect{tutorial, Tutorial}
     */
-    #define BOOST_CONTRACT_BASE_TYPEDEF base_types
+    #define BOOST_CONTRACT_BASES_TYPEDEF base_types
 #endif
 
-#ifndef BOOST_CONTRACT_INVARIANT
+#ifndef BOOST_CONTRACT_INVARIANT_FUNC
     /**
     Define the name of the invariant member functions (@c invariant by defult).
     This macro expands to the name of the @c const and <c>const volatile</c>
@@ -114,10 +114,10 @@ Facilities to configure this library compile-time and run-time behaviour.
     be named differently from @c invariant.
     @see @RefSect{tutorial, Tutorial}
     */
-    #define BOOST_CONTRACT_INVARIANT invariant
+    #define BOOST_CONTRACT_INVARIANT_FUNC invariant
 #endif
 
-#ifndef BOOST_CONTRACT_STATIC_INVARIANT
+#ifndef BOOST_CONTRACT_STATIC_INVARIANT_FUNC
     /**
     Define the name of the static invariant member function (@c static_invariant
     by defult).
@@ -131,7 +131,7 @@ Facilities to configure this library compile-time and run-time behaviour.
                     used here.
     @see @RefSect{tutorial, Tutorial}
     */
-    #define BOOST_CONTRACT_STATIC_INVARIANT static_invariant
+    #define BOOST_CONTRACT_STATIC_INVARIANT_FUNC static_invariant
 #endif
 
 #ifdef DOXYGEN
@@ -186,6 +186,13 @@ Facilities to configure this library compile-time and run-time behaviour.
     #define BOOST_CONTRACT_ALL_DISABLE_NO_ASSERTION
 #endif
 
+// TODO: Add NO_CHECK to boost_contract_no build for tests, etc.
+#ifdef DOXYGEN
+    /**
+    */
+    #define BOOST_CONTRACT_NO_CHECKS
+#endif
+
 #ifdef DOXYGEN
     /**
     If defined, this library does not check preconditions at run-time (undefined
@@ -212,6 +219,12 @@ Facilities to configure this library compile-time and run-time behaviour.
     @see @RefSect{advanced_topics, Advanced Topics}
     */
     #define BOOST_CONTRACT_NO_POSTCONDITIONS
+#endif
+
+#ifdef DOXYGEN
+    /**
+    */
+    #define BOOST_CONTRACT_NO_EXCEPTS
 #endif
 
 #if defined(DOXYGEN) || (!defined(BOOST_CONTRACT_NO_ENTRY_INVARIANTS) && \
@@ -267,6 +280,13 @@ Facilities to configure this library compile-time and run-time behaviour.
 #endif
 
 // Following are NOT configuration macros.
+
+#ifdef BOOST_CONTRACT_NO_OLDS
+    #error "define NO_POSTCONDITIONS and NO_EXCEPTS instead"
+#elif   defined(BOOST_CONTRACT_NO_POSTCONDITIONS) && \
+        defined(BOOST_CONTRACT_NO_EXCEPTS)
+    #define BOOST_CONTRACT_NO_OLDS
+#endif
 
 // Ctor pre checked separately and outside RAII so not part of this #define.
 #ifdef BOOST_CONTRACT_NO_CONSTRUCTORS
@@ -371,10 +391,11 @@ Facilities to configure this library compile-time and run-time behaviour.
 
 #ifdef BOOST_CONTRACT_NO_ALL
     #error "define NO_ENTRY_INVARIANTS, NO_PRECONDITIONS, NO_EXIT_INVARIANTS, NO_POSTCONDITIONS, and NO_EXCEPTS instead"
-#elif   defined(BOOST_CONTRACT_NO_CONSTRUCTORS) && \
-        defined(BOOST_CONTRACT_NO_DESTRUCTORS) && \
-        defined(BOOST_CONTRACT_NO_PUBLIC_FUNCTIONS) && \
-        defined(BOOST_CONTRACT_NO_FUNCTIONS)
+#elif   defined(BOOST_CONTRACT_NO_INVARIANTS) && \
+        defined(BOOST_CONTRACT_NO_PRECONDITIONS) && \
+        defined(BOOST_CONTRACT_NO_POSTCONDITIONS) && \
+        defined(BOOST_CONTRACT_NO_EXCEPTS) && \
+        defined(BOOST_CONTRACT_NO_CHECKS)
     /**
     Defined by this library if no contracts (for any operation) are being
     checked.
@@ -397,8 +418,9 @@ Facilities to configure this library compile-time and run-time behaviour.
 #ifdef BOOST_CONTRACT_DYN_LINK
     #error "define STATIC_LINK, HEADER_ONLY, or ALL_DYN_LINK instead"
 #elif   defined(BOOST_ALL_DYN_LINK) || ( \
-        !defined(BOOST_CONTRACT_STATIC_LINK) && \
-        !defined(BOOST_CONTRACT_HEADER_ONLY) )
+            !defined(BOOST_CONTRACT_STATIC_LINK) && \
+            !defined(BOOST_CONTRACT_HEADER_ONLY) \
+        )
     /**
     Define this macro to compile this library as a shared library or DLL
     (undefined by default).

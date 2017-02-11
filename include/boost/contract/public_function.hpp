@@ -13,7 +13,10 @@ Overloads are provided to handle static, virtual void, virtual non-void,
 overriding void, and override non-void public functions.
 */
 
-#include <boost/contract/detail/all_core_headers.hpp>
+#include <boost/contract/core/config.hpp>
+#include <boost/contract/core/specify.hpp>
+#include <boost/contract/core/access.hpp>
+#include <boost/contract/core/virtual.hpp>
 // Needed within macro expansions below instead of defined(...) (PRIVATE macro).
 #if     defined(BOOST_CONTRACT_STATIC_LINK) || \
         !defined(BOOST_CONTRACT_NO_PUBLIC_FUNCTIONS)

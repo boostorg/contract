@@ -17,7 +17,7 @@ struct surface {
     surface(int area, int perimeter) : area(area), perimeter(perimeter) {}
 };
 
-surface square_surface(int edge) {
+surface squared_surface(int edge) {
     boost::optional<surface> result; // No default constructor so use optional.
     boost::contract::check c = boost::contract::function()
         .precondition([&] {
@@ -34,7 +34,7 @@ surface square_surface(int edge) {
 //]
 
 int main() {
-    surface s = square_surface(10);
+    surface s = squared_surface(10);
     assert(s.area == 100);
     assert(s.perimeter == 40);
     return 0;

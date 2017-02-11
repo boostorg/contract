@@ -10,52 +10,44 @@ This section illustrates more advanced uses of this library.
 
 [section Optional Return Value]
 
-It is possible to use `boost::optional` to handle the return value when programmers cannot construct the result variable at its point of declaration before the contract (e.g., because an appropriate constructor for the return type is not available at that point, or just because it would be too expensive to execute an extra initialization of the result value at run-time).
+It is possible to use `boost::optional` to handle the return value when programmers cannot construct the result variable at its point of declaration before the contract (e.g., because an appropriate constructor for the return type is not available at that point, or just because it would be too expensive to execute an extra initialization of the return value at run-time).
 [footnote
 *Rationale:*
-`boost::optional` was used instead of `std::optional` because this library is designed to work well with Boost and because `std::optional` is not part of the C++ standard yet.
+`boost::optional` is used instead of `std::optional` because this library is designed to work well with Boost and because `std::optional` is not part of the C++ standard yet.
 ]
 For example (see also [@../../example/features/optional_result.cpp =optional_result.cpp=]):
 
 [import ../example/features/optional_result.cpp]
 [optional_result]
 
-In this example the return type `surface` does not have a default constructor that can be used to initialize `result` when it is first declared.
-The `surface` non-default constructor should not be used to initialize `result` by passing it `edge * edge` and `edge * 4` because such operations are logically the responsibility of the function body (in fact, it makes logical sense to do such multiplications only after `edge` has been checked to be positive by the preconditions).
-Therefore, instead of initializing `result` with some arbitrary `area` and `perimeter` values (e.g., `0` and `0`, or `-1` and `-1`), `boost::optional` is used in this example to not initialize `result` with a return value when it is first declared before the contract.
+In this example the return type `surface` does not have a default constructor that can be used to initialize `result` when it is declared before the contract.
+The `surface` non-default constructor is not used to initialize `result` by passing it `edge * edge` and `edge * 4` because such operations are logically the responsibility of the function body (e.g., it makes logical sense to do such multiplications only after `edge` has been checked to be positive by the preconditions).
+Therefore, instead of initializing `result` with some arbitrary `area` and `perimeter` values (e.g., `0` and `0`), `boost::optional` is used in this example to not initialize `result` with a return value when it is declared before the contract.
 `result` is initialized later in the function body when the function is about to return and directly using the correct return value `result = surface(edge * edge, edge * 4)`.
 
-When this technique is used, programmers have to make sure that each return statement in the function is of the form:
+As seen in __Return_Value__, it is the responsibility of the programmers to ensure that `result` is always set to the return value when the function exits without trowing an exception.
+This also ensures that `result` is always set before the postconditions are checked so programmers can always dereference `result` in postconditions to access the return value (using `operator*` and `operator->` as usual with `boost::optional`, and without having to explicitly check if `result` is an empty `boost::optional` object).
+This can be easily done by making sure that /all/ return statements in the function are of the form:
     
     boost::optional<...> result;
     ...
-    return *(result = ...);
+    return *(result = ...); // Assign `result` at each return.
 
-This also ensures that `result` is always set to the return value before the postconditions are checked.
-Therefore, programmers can always dereference `result` in postconditions to access the return value (using `operator*` and `operator->` as usual with `boost::optional`, and without having to explicitly check if `result` is an empty `boost::optional` object).
+[heading Virtual Public Functions and Public Function Overrides]
 
-[heading Virtual and Overriding Public Functions]
+Similarly, `boost::optional` can be used to handle the return value passed to contracts of virtual public functions and public function overrides.
+As seen in __Virtual_Public_Functions__ and __Public_Function_Overrides__, in these cases the return value `result` must be passed as a parameter to [funcref boost::contract::public_function] right after the [classref boost::contract::virtual_]`*` parameter `v`.
+Then the functor passed to `.postcondition(...)` takes one single parameter of type `boost::optional<`[^['result-type]]` const&> const&`.
+For example (see also __Pure_Virtual_Public_Functions__ and [@../../example/features/pure_virtual_public.cpp =pure_virtual_public.cpp=]):
 
-Similarly, `boost::optional` can be used for return values of virtual and overriding public functions.
-As usual with non-void virtual and overriding public functions the return value `result` must be passed as a parameter to [funcref boost::contract::public_function] right after `v` (see also __Virtual_Public_Functions__).
-This this case the functor passed to `.postcondition(...)` takes a parameter of type `boost::optional<`[^['result-type]]` const&> const&` (see __Pure_Virtual_Public_Functions__ for an example):
+[import ../example/features/pure_virtual_public.cpp]
+[pure_virtual_public_impl]
     
-    boost::optional<``[^['return-type]]``> result;
-    ...
-    boost::contract::guard c = boost::contract::public_function(v, result, ...)
-        ...
-        .postcondition([&] (boost::optional<``[^['return-type]]`` const&> const& result) {
-            ...
-        }
-    ;
-    ...
-    return *(result = ...);
-
-The inner `const&` in the postcondition functor parameter type `boost::optional<... const&>` is mandatory (the outer `const&` in the postcondition functor parameter type `boost::optional<... const&> const&` is not).
+The inner `const&` in the postcondition functor parameter type `boost::optional<... const&> ...` is mandatory (the outer `const&` in the postcondition functor parameter type `boost::optional<...> const&` is not).
 [footnote
 *Rationale:*
 This library requires the postcondition functor parameter to be of type `boost::optional<... const&>` so the return value does not have to be copied (because of `&`) while postconditions are still prevented from changing it (because of `const`, see also __Constant_Correctness__).
-Note that the library cannot require the actual functor parameter `result` to be `const&` instead (because programmers can always program the functor without specifying the `const&` outside the `boost::optional<... const&>` type).
+In addition, programmers are encouraged to declare the postcondition functor to take its argument also as a (constant) reference `boost::optional<... const&> const&` to avoid possibly expensive copies of the `boost::optional` type.
 ]
 
 [endsect]
@@ -68,8 +60,9 @@ However, in this case contracts are always programmed out-of-line, in the defaul
 
 For example, note how the following `shape::get_surface` default implementation (which is used to program the pure virtual function contract) must be defined out-of-line and therefore outside the `shape` class declaration (see also [@../../example/features/pure_virtual_public.cpp =pure_virtual_public.cpp=]):
 
-[import ../example/features/pure_virtual_public.cpp]
-[pure_virtual_public]
+[pure_virtual_public_base]
+[pure_virtual_public_impl]
+[pure_virtual_public_derived]
 
 This library will never actually execute the pure virtual function body while it is calling the pure virtual function default implementation to check its contract for subcontracting.
 Therefore, programmers can safely `assert(false)` at the beginning of the body if they intend for that body to never be executed (or they can program a working body in case they need to use C++ pure virtual function default implementation outside of what strictly required by this library).
@@ -123,7 +116,13 @@ Instead, GCC and Clang correctly implement SFINAE failures due to private and pr
 
 [endsect]
 
-[section Overloaded Functions]
+[section Friend Functions]
+
+TODO
+
+[endsect]
+
+[section Function Overloads]
 
 As seen in __Public_Function_Overrides__, [funcref boost::contract::public_function] takes a pointer to the enclosing function as a parameter when used in overriding public functions.
 When an overriding public function is overloaded, the function pointer cannot be automatically deduced by the compiler so programmers have to use `static_cast` to resolve ambiguities (as usual with pointers to overloaded functions in C++).
@@ -362,10 +361,10 @@ For example, let's consider the following `vector<T>` class template.
 This class template does not usually require that `T` has an equality operator `==` (it only requires `T` to be copy constructible, see `std::vector` documentation).
 However, the contracts of the `vector<T>::push_back(value)` member function include a postcondition `back() == value` which introduces the new requirement that `T` must also have an equality operator `==`.
 Programmers can specify this postcondition as usual `BOOST_CONTRACT_ASSERT(back() == value)` an let the program fail to compile when users instantiate this template with a type `T` that does not provide an equality operator `==`.
-Otherwise, programmers can specify this postcondition using [funcref boost::contract::check_if] to check the assertion only for types `T` that have an equality operator `==` and trivially check `true` otherwise, for example (see also [@../../example/features/check_if.cpp =check_if.cpp=]):
+Otherwise, programmers can specify this postcondition using [funcref boost::contract::check_if] to check the assertion only for types `T` that have an equality operator `==` and trivially check `true` otherwise, for example (see also [@../../example/features/condition_if.cpp =condition_if.cpp=]):
 
-[/ import ../example/features/check_if.cpp]
-[check_if]
+[import ../example/features/condition_if.cpp]
+[condition_if]
 
 The [funcref boost::contract::check_if] function template is a special case of the more general facility [funcref boost::contract::call_if]:
 Specifically, `boost::contract::check_if<`[^['condition]]`>(`[^['check]]`)` is equivalent to:

@@ -13,7 +13,9 @@
 Program contracts for destructors.
 */
 
-#include <boost/contract/detail/all_core_headers.hpp>
+#include <boost/contract/core/config.hpp>
+#include <boost/contract/core/specify.hpp>
+#include <boost/contract/core/access.hpp>
 #if     defined(BOOST_CONTRACT_STATIC_LINK) || \
         !defined(BOOST_CONTRACT_NO_DESTRUCTORS) || \
         !defined(BOOST_CONTRACT_NO_PRECONDITIONS)

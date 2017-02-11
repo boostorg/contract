@@ -12,13 +12,15 @@ Facilities to specify contracts for overriding public functions (to support
 subcontracting).
 */
 
-#include <boost/contract/detail/all_core_headers.hpp>
-#include <boost/contract/detail/tvariadic.hpp>
+// IMPORTANT: Included by contract_macro.hpp so must #if-guard all its includes.
+#include <boost/contract/core/config.hpp>
 #include <boost/preprocessor/cat.hpp>
+#include <boost/preprocessor/config/config.hpp>
 
-    
 #ifndef BOOST_CONTRACT_NO_PUBLIC_FUNCTIONS
+    #include <boost/contract/core/virtual.hpp>
     #include <boost/contract/detail/type_traits/introspection.hpp>
+    #include <boost/contract/detail/tvariadic.hpp>
     #include <boost/contract/detail/none.hpp>
     #include <boost/contract/detail/name.hpp>
 
@@ -117,7 +119,7 @@ Declare the override type to be passed as an explicit template parameter to
     BOOST_CONTRACT_NAMED_OVERRIDE(BOOST_PP_CAT(override_, function_name), \
             function_name)
     
-#if BOOST_CONTRACT_DETAIL_TVARIADIC
+#if BOOST_PP_VARIADICS
     #include <boost/preprocessor/seq/for_each.hpp>
     #include <boost/preprocessor/variadic/to_seq.hpp>
     

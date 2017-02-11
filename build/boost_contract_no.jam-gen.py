@@ -4,13 +4,14 @@ print '''
 '''
 
 # NOTE: Other macros symbols can be added here as needed.
-conds = ['entryinv', 'pre', 'exitinv', 'post', 'except']
+conds = ['entryinv', 'pre', 'exitinv', 'post', 'except', 'check']
 defs = {
     'entryinv': 'BOOST_CONTRACT_NO_ENTRY_INVARIANTS',
     'pre':      'BOOST_CONTRACT_NO_PRECONDITIONS',
     'exitinv':  'BOOST_CONTRACT_NO_EXIT_INVARIANTS',
     'post':     'BOOST_CONTRACT_NO_POSTCONDITIONS',
-    'except':   'BOOST_CONTRACT_NO_EXCEPTS'
+    'except':   'BOOST_CONTRACT_NO_EXCEPTS',
+    'check':    'BOOST_CONTRACT_NO_CHECKS'
 }
 
 import itertools

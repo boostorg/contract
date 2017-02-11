@@ -11,7 +11,6 @@
 Statically disable compilation and execution of functor calls.
 */
 
-// Do not include all_core_headers here (call_if is essentially standalone).
 #include <boost/contract/detail/none.hpp>
 #include <boost/make_shared.hpp>
 #include <boost/shared_ptr.hpp>

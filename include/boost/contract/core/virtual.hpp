@@ -11,9 +11,14 @@
 Facility to declare virtual public functions with contracts.
 */
 
+// IMPORTANT: Included by contract_macro.hpp so must #if-guard all its includes.
 #include <boost/contract/core/config.hpp>
-#include <boost/contract/detail/decl.hpp>
-#include <boost/noncopyable.hpp>
+#if     !defined(BOOST_CONTRACT_NO_INVARIANTS) || \
+        !defined(BOOST_CONTRACT_NO_PRECONDITIONS) || \
+        !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
+        !defined(BOOST_CONTRACT_NO_EXCEPTS)
+    #include <boost/contract/detail/decl.hpp>
+#endif
 #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
     #include <boost/any.hpp>
 #endif
@@ -23,16 +28,17 @@ Facility to declare virtual public functions with contracts.
     #include <queue>
 #endif
 
-namespace boost {
-    namespace contract {
-        namespace detail {
-            BOOST_CONTRACT_DETAIL_DECL_DETAIL_COND_SUBCONTRACTING_Z(1,
-                    /* is_friend = */ 0, OO, RR, FF, CC, AArgs);
-        }
-    }
-}
-
 namespace boost { namespace contract {
+        
+#if     !defined(BOOST_CONTRACT_NO_INVARIANTS) || \
+        !defined(BOOST_CONTRACT_NO_PRECONDITIONS) || \
+        !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
+        !defined(BOOST_CONTRACT_NO_EXCEPTS)
+    namespace detail {
+        BOOST_CONTRACT_DETAIL_DECL_DETAIL_COND_SUBCONTRACTING_Z(1,
+                /* is_friend = */ 0, OO, RR, FF, CC, AArgs);
+    }
+#endif
 
 /**
 Class to mark declarations of virtual public functions.
@@ -57,47 +63,56 @@ this class does not have any public member and it is not copyable).
                 meta-programming techniques in C++).
 @see @RefSect{tutorial, Tutorial}
 */
-class virtual_ : private boost::noncopyable { // Avoid copy queue, stack, etc.
+class virtual_ { // Non-copyable (see below) to avoid copy queue, stack, etc.
 /** @cond */
     // No public API (so users cannot use it directly by mistake).
 
-    enum action_enum {
-        // virtual_ always hold/passed by ptr so null ptr used for user call.
-        #if     !defined(BOOST_CONTRACT_NO_INVARIANTS) || \
-                !defined(BOOST_CONTRACT_NO_PRECONDITIONS) || \
-                !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
-                !defined(BOOST_CONTRACT_NO_EXCEPTS)
-            no_action,
-        #endif
-        #if     !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
-                !defined(BOOST_CONTRACT_NO_EXCEPTS)
-        #endif
-        #ifndef BOOST_CONTRACT_NO_ENTRY_INVARIANTS
-            check_entry_inv,
-        #endif
-        #ifndef BOOST_CONTRACT_NO_PRECONDITIONS
-            check_pre,
-        #endif
-        #ifndef BOOST_CONTRACT_NO_EXIT_INVARIANTS
-            check_exit_inv,
-        #endif
-        #if     !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
-                !defined(BOOST_CONTRACT_NO_EXCEPTS)
-            // For outside .old(...).
-            push_old_init_copy,
-            // pop_old_init_copy as static function below.
-            // For inside .old(...).
-            call_old_ftor,
-            push_old_ftor_copy,
-            pop_old_ftor_copy,
-        #endif
-        #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
-            check_post,
-        #endif
-        #ifndef BOOST_CONTRACT_NO_EXCEPTS
-            check_except,
-        #endif
-    };
+    // No boost::noncopyable to avoid its overhead when contracts disabled.
+    virtual_(virtual_&);
+    virtual_& operator=(virtual_&);
+
+    #if     !defined(BOOST_CONTRACT_NO_INVARIANTS) || \
+            !defined(BOOST_CONTRACT_NO_PRECONDITIONS) || \
+            !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
+            !defined(BOOST_CONTRACT_NO_EXCEPTS)
+        enum action_enum {
+            // virtual_ always held/passed as ptr so nullptr used for user call.
+            #if     !defined(BOOST_CONTRACT_NO_INVARIANTS) || \
+                    !defined(BOOST_CONTRACT_NO_PRECONDITIONS) || \
+                    !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
+                    !defined(BOOST_CONTRACT_NO_EXCEPTS)
+                no_action,
+            #endif
+            #if     !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
+                    !defined(BOOST_CONTRACT_NO_EXCEPTS)
+            #endif
+            #ifndef BOOST_CONTRACT_NO_ENTRY_INVARIANTS
+                check_entry_inv,
+            #endif
+            #ifndef BOOST_CONTRACT_NO_PRECONDITIONS
+                check_pre,
+            #endif
+            #ifndef BOOST_CONTRACT_NO_EXIT_INVARIANTS
+                check_exit_inv,
+            #endif
+            #if     !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
+                    !defined(BOOST_CONTRACT_NO_EXCEPTS)
+                // For outside .old(...).
+                push_old_init_copy,
+                // pop_old_init_copy as static function below.
+                // For inside .old(...).
+                call_old_ftor,
+                push_old_ftor_copy,
+                pop_old_ftor_copy,
+            #endif
+            #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
+                check_post,
+            #endif
+            #ifndef BOOST_CONTRACT_NO_EXCEPTS
+                check_except,
+            #endif
+        };
+    #endif
 
     #if     !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
             !defined(BOOST_CONTRACT_NO_EXCEPTS)
@@ -151,12 +166,18 @@ class virtual_ : private boost::noncopyable { // Avoid copy queue, stack, etc.
     #endif
 
     // Friends (used to limit library's public API).
-
-    friend bool copy_old(virtual_*);
-    friend class old_pointer;
-
-    BOOST_CONTRACT_DETAIL_DECL_DETAIL_COND_SUBCONTRACTING_Z(1,
-            /* is_friend = */ 1, OO, RR, FF, CC, AArgs);
+    #if     !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
+            !defined(BOOST_CONTRACT_NO_EXCEPTS)
+        friend bool copy_old(virtual_*);
+        friend class old_pointer;
+    #endif
+    #if     !defined(BOOST_CONTRACT_NO_INVARIANTS) || \
+            !defined(BOOST_CONTRACT_NO_PRECONDITIONS) || \
+            !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
+            !defined(BOOST_CONTRACT_NO_EXCEPTS)
+        BOOST_CONTRACT_DETAIL_DECL_DETAIL_COND_SUBCONTRACTING_Z(1,
+                /* is_friend = */ 1, OO, RR, FF, CC, AArgs);
+    #endif
 /** @endcond */
 };
 

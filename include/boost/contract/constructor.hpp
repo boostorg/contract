@@ -11,15 +11,14 @@
 Program contracts for constructors.
 */
 
-#include <boost/contract/detail/all_core_headers.hpp>
+#include <boost/contract/core/config.hpp>
+#include <boost/contract/core/specify.hpp>
+#include <boost/contract/core/access.hpp>
+#include <boost/contract/core/constructor_precondition.hpp>
 #if     defined(BOOST_CONTRACT_STATIC_LINK) || \
         !defined(BOOST_CONTRACT_NO_CONSTRUCTORS) || \
         !defined(BOOST_CONTRACT_NO_PRECONDITIONS)
     #include <boost/contract/detail/operation/constructor.hpp>
-#endif
-#if     !defined(BOOST_CONTRACT_ALL_DISABLE_NO_ASSERTION) && \
-        !defined(BOOST_CONTRACT_NO_PRECONDITIONS)
-    #include <boost/contract/detail/checking.hpp>
 #endif
 
 namespace boost { namespace contract {
@@ -52,59 +51,6 @@ specify_old_postcondition_except<> constructor(Class* obj) {
         return specify_old_postcondition_except<>();
     #endif
 }
-
-/**
-Program preconditions for constructors.
-This class must be the very first base class of the contracted class. Also the
-contracted class shall privately inherit from this base class (to not alter the
-contracted class public interface).
-
-Unions cannot have base classes in C++ so this class can be used to declare a
-local object within the constructor function just before
-@RefFunc{boost::contract::constructor} is used (see
-@RefSect{advanced_topics, Advanced Topics}).
-@see @RefSect{tutorial, Tutorial}
-@tparam Class Class of contracted constructor.
-*/
-template<class Class>
-class constructor_precondition { // Copyable (has no data).
-public:
-    /**
-    Construct this object without specifying constructor preconditions.
-    This is implicitly called for those constructors of the contracted class
-    that do not specify preconditions.
-    */
-    constructor_precondition() {}
-
-    /**
-    Construct this object specifying constructor preconditions.
-    @param f    Functor called by this library to check constructor
-                preconditions @c f(). Precondition assertions within this
-                functor call are usually programmed using
-                @RefMacro{BOOST_CONTRACT_ASSERT}, but any exception thrown by a
-                call to this functor indicates a precondition failure (and will
-                result in this library calling
-                @RefFunc{boost::contract::precondition_failure}). This functor
-                must be a nullary functor. This functor can capture variables by
-                value, or better by (constant) reference to avoid extra copies.
-    */
-    template<typename F>
-    explicit constructor_precondition(F const& f) {
-        #ifndef BOOST_CONTRACT_NO_PRECONDITIONS
-            try {
-                #ifndef BOOST_CONTRACT_ALL_DISABLE_NO_ASSERTION
-                    if(boost::contract::detail::checking::already()) return;
-                    #ifndef BOOST_CONTRACT_PRECONDITIONS_DISABLE_NO_ASSERTION
-                        boost::contract::detail::checking k;
-                    #endif
-                #endif
-                f();
-            } catch(...) { precondition_failure(from_constructor); }
-        #endif
-    }
-
-    // Default copy operations (so user's derived classes can be copied, etc.).
-};
 
 } } // namespace
 

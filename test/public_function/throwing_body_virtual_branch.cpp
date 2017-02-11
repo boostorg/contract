@@ -6,7 +6,7 @@
 
 // Test virt pub func body throws with subcontr from middle of inheritance tree.
 
-#include "contracts.hpp"
+#include "basic.hpp"
 #include <boost/optional.hpp>
 #include <boost/preprocessor/control/iif.hpp>
 #include <boost/detail/lightweight_test.hpp>

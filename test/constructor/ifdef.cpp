@@ -8,7 +8,9 @@
 
 #include "../detail/oteststream.hpp"
 #include <boost/contract/core/config.hpp>
-#include <boost/contract/constructor.hpp> // Outside #if below for ctor pre.
+#ifndef BOOST_CONTRACT_NO_PRECONDITIONS
+    #include <boost/contract/constructor.hpp>
+#endif
 #ifndef BOOST_CONTRACT_NO_CONSTRUCTORS
     #include <boost/contract/check.hpp>
     #include <boost/contract/old.hpp>
@@ -30,9 +32,9 @@ struct b
 
     explicit b(int x)
         #ifndef BOOST_CONTRACT_NO_PRECONDITIONS
-            : boost::contract::constructor_precondition<b>(
-                [] { out << "b::ctor::pre" << std::endl; }
-            )
+            : boost::contract::constructor_precondition<b>([] {
+                out << "b::ctor::pre" << std::endl;
+            })
         #endif
     {
         #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
@@ -63,9 +65,9 @@ struct a :
 
     explicit a(int x) :
         #ifndef BOOST_CONTRACT_NO_PRECONDITIONS
-            boost::contract::constructor_precondition<a>(
-                [] { out << "a::ctor::pre" << std::endl; }
-            ),
+            boost::contract::constructor_precondition<a>([] {
+                out << "a::ctor::pre" << std::endl;
+            }),
         #endif
         b(x)
     {
