@@ -45,7 +45,6 @@ never be used directly by programmers.
 
 // TODO: Documentation updates based on all n-papers that I read recently (review notes I wrote on all papers), add those n-papers to the Bibliography section, and add P0380 (the most recent proposal) to the feature comparison table.
 
-#include <boost/contract/detail/all_core_headers.hpp>
 #include <boost/contract/assert.hpp>
 #include <boost/contract/base_types.hpp>
 #include <boost/contract/call_if.hpp>

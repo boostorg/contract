@@ -6,7 +6,7 @@
 
 // Test public member function subcontracting.
 
-#include "basic.hpp"
+#include "smoke.hpp"
 #include <boost/preprocessor/control/iif.hpp>
 #include <boost/detail/lightweight_test.hpp>
 #include <sstream>

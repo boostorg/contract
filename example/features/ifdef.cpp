@@ -9,14 +9,15 @@
 #include <cassert>
 
 //[ifdef_function
+// Use #ifdef to selectively disable contract compilation.
 #ifndef BOOST_CONTRACT_NO_ALL
     #include <boost/contract.hpp>
 #endif
 
 int inc(int& x) {
     int result;
-    #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
-        boost::contract::old_ptr<int> old_x = BOOST_CONTRACT_OLD(x);
+    #ifndef BOOST_CONTRACT_NO_OLDS
+        boost::contract::old_ptr<int> old_x = BOOST_CONTRACT_OLDOF(x);
     #endif
     #ifndef BOOST_CONTRACT_NO_FUNCTIONS
         boost::contract::check c = boost::contract::function()
@@ -63,16 +64,16 @@ protected:
     virtual unsigned max_size() const = 0;
 };
 
-template<typename T> // Contract for pure virtual function.
+template<typename T>
 void pushable<T>::push_back(
     T const& x
     #ifndef BOOST_CONTRACT_NO_PUBLIC_FUNCTIONS
         , boost::contract::virtual_* v
     #endif
 ) {
-    #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
+    #ifndef BOOST_CONTRACT_NO_OLDS
         boost::contract::old_ptr<unsigned> old_capacity =
-                BOOST_CONTRACT_OLD(v, capacity());
+                BOOST_CONTRACT_OLDOF(v, capacity());
     #endif
     #ifndef BOOST_CONTRACT_NO_PUBLIC_FUNCTIONS
         boost::contract::check c = boost::contract::public_function(v, this)
@@ -121,8 +122,7 @@ public:
         #ifndef BOOST_CONTRACT_NO_PRECONDITIONS
             boost::contract::constructor_precondition<integers>([&] {
                 BOOST_CONTRACT_ASSERT(from <= to);
-            })
-            ,
+            }),
         #endif
         vect_(to - from + 1)
     {
@@ -152,7 +152,7 @@ public:
             , boost::contract::virtual_* v = 0
         #endif
     ) /* override */ {
-        #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
+        #ifndef BOOST_CONTRACT_NO_OLDS
             boost::contract::old_ptr<unsigned> old_size;
         #endif
         #ifndef BOOST_CONTRACT_NO_PUBLIC_FUNCTIONS
@@ -163,12 +163,19 @@ public:
                         BOOST_CONTRACT_ASSERT(size() < max_size());
                     })
                 #endif
-                #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
+                #ifndef BOOST_CONTRACT_NO_OLDS
                     .old([&] {
-                        old_size = BOOST_CONTRACT_OLD(v, size());
+                        old_size = BOOST_CONTRACT_OLDOF(v, size());
                     })
+                #endif
+                #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
                     .postcondition([&] {
                         BOOST_CONTRACT_ASSERT(size() == *old_size + 1);
+                    })
+                #endif
+                #ifndef BOOST_CONTRACT_NO_EXCEPTS
+                    .except([&] {
+                        BOOST_CONTRACT_ASSERT(size() == *old_size);
                     })
                 #endif
             ;

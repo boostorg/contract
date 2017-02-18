@@ -24,7 +24,12 @@
     #include <boost/contract/assert.hpp>
 #endif
 
-// TODO: Document this will cause all pre, post, inv assertions to have the same line number (but different code text) in the error message.
+// TODO: Document these macros will cause all pre, post, inv assertions to have the same line number (but different code text) in the error message. And that is bad for compiler errors while programming contracts as well (all on same line... and more cryptic).
+
+// TODO: Add tests for all variadic macros defined here (with unwrapped commas in code, types, etc.).
+
+// TODO: Make sure there are test for /all/ these macros (OLD_PTR_IF_COPYABLE, EXPECT, INVARIANT_VOLATILE, etc.).
+
 // PRECONDITION(ftor,,,)
 #ifndef BOOST_CONTRACT_NO_PRECONDITIONS
     #define BOOST_CONTRACT_PRECONDITION(...) .precondition(__VA_ARGS__)
@@ -34,7 +39,7 @@
 
 // OLD(ftor,,,)
 //
-// OLD_PTR[_IF_COPYABLE](type,,,)(name);
+// OLD_PTR[_IF_COPYABLE](type,,,)(name); // This is never (v, name)!!
 // OLD_PTR[_IF_COPYABLE](type,,,)(name, value);
 // OLD_PTR[_IF_COPYABLE](type,,,)(v, name, value);
 #ifndef BOOST_CONTRACT_NO_OLDS
@@ -77,7 +82,6 @@
     #define BOOST_CONTRACT_POSTCONDITION(...) /* nothing */
 #endif
 
-// TODO: Added .except and EXCEPT to ifdef and ifdef_macro tests.
 // EXCEPT(ftor,,,)
 #ifndef BOOST_CONTRACT_NO_EXCEPTS
     #define BOOST_CONTRACT_EXCEPT(...) .except(__VA_ARGS__)

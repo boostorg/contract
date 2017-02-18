@@ -9,6 +9,8 @@
 
 // TODO: Document that using an auto declaration instead of check will cause a compile-time error (instead missing check and using no declaration at all will cause a run-time error--as already documented).
 
+// TODO: Document check (class) and CHECK (macro) to program implementation assertions (for loops, code blocks, etc.) similar to C-style assert() but can be disabled, calls check_failure hander, etc.
+
 /** @file
 RAII object to check contracts.
 */

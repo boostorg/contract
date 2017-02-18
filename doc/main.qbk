@@ -10,13 +10,7 @@
     [authors [Caminiti <email>lorcaminiti@gmail.com</email>, Lorenzo]]
     [copyright 2008-2016 Lorenzo Caminiti]
     [license Distributed under the Boost Software License, Version 1.0 (see accompanying file LICENSE_1_0.txt or a copy at [@http://www.boost.org/LICENSE_1_0.txt])]
-    [/ purpose Contract Programming for C++]
-    [/ category Correctness and Testing]
 ]
-
-[template file[dir name] '''<ulink url="../../'''[dir]'''/'''[name]'''">'''[^[name]]'''</ulink>''']
-
-[def __substitution_principle__ [@http://en.wikipedia.org/wiki/Liskov_substitution_principle substitution principle]]
 
 [def __Introduction__ [link boost_contract.introduction Introduction]]
 [def __Getting_Started__ [link boost_contract.getting_started Getting Started]]
@@ -99,6 +93,8 @@
 [def __Stroustrup13__ [link Stroustrup13_anchor \[Stroustrup13\]]]
 [def __Tandin04__ [link Tandin04_anchor \[Tandin04\]]]
 
+[def __substitution_principle__ [@http://en.wikipedia.org/wiki/Liskov_substitution_principle substitution principle]]
+
 [:['["Our field needs more formality, but the profession has not realized it yet.]]]
 [:['-- Bertrand Meyer (see __Meyer97__ page 400)]]
 
@@ -122,6 +118,7 @@ This library source is hosted at [@https://github.com/lcaminiti/boost-contract].
 [include contract_programming_overview.qbk]
 [include tutorial.qbk]
 [include advanced_topics.qbk]
+[include extras.qbk]
 [xinclude reference.xml]
 [include examples.qbk]
 [include release_notes.qbk]

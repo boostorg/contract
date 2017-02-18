@@ -8,6 +8,8 @@ make help : : help_exit ;
 explicit help ;
 
 test-suite constructor :
+    [ subdir-run constructor : smoke ]
+
     [ subdir-run constructor : decl_pre_all ]
     [ subdir-run constructor : decl_pre_ends ]
     [ subdir-run constructor : decl_pre_mid ]
@@ -35,9 +37,8 @@ test-suite constructor :
     [ subdir-run constructor : decl_exit_inv_mid ]
     [ subdir-run constructor : decl_exit_inv_none ]
     
-    [ subdir-run constructor : basic ]
     [ subdir-run constructor : access ]
-
+    
     [ subdir-run constructor : ifdef ]
     [ subdir-run constructor : ifdef_macro ]
 
@@ -51,6 +52,8 @@ test-suite constructor :
 ;
 
 test-suite destructor :
+    [ subdir-run destructor : smoke ]
+
     # No decl_pre_... for destructors.
     
     [ subdir-run destructor : decl_post_all ]
@@ -74,8 +77,7 @@ test-suite destructor :
     [ subdir-run destructor : decl_entry_inv_none ]
 
     # No decl_exit_inv_... for destructors.
-
-    [ subdir-run destructor : basic ]
+    
     [ subdir-run destructor : access ]
 
     [ subdir-run destructor : ifdef ]
@@ -91,6 +93,8 @@ test-suite destructor :
 ;
 
 test-suite public_function :
+    [ subdir-run public_function : smoke ]
+
     [ subdir-run public_function : decl_pre_all ]
     [ subdir-run public_function : decl_pre_ends ]
     [ subdir-run public_function : decl_pre_mid ]
@@ -121,9 +125,8 @@ test-suite public_function :
     [ subdir-run public_function : decl_exit_inv_mid ]
     [ subdir-run public_function : decl_exit_inv_none ]
     
-    [ subdir-run public_function : basic ]
     [ subdir-run public_function : access ]
-
+    
     [ subdir-run public_function : ifdef ]
     [ subdir-run public_function : ifdef_macro ]
 
@@ -202,13 +205,13 @@ test-suite invariant :
 ;
 
 test-suite function :
+    [ subdir-run function : smoke ]
+
     [ subdir-run function : decl_pre_all ]
     [ subdir-run function : decl_pre_none ]
     
     [ subdir-run function : decl_post_all ]
     [ subdir-run function : decl_post_none ]
-    
-    [ subdir-run function : basic ]
 
     [ subdir-run function : ifdef ]
     [ subdir-run function : ifdef_macro ]
