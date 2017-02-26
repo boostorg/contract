@@ -112,7 +112,7 @@ private:
     std::vector<char> vect_;
 };
 
-//[base_types_no_macros
+//[base_types_no_macro
 #include <boost/mpl/vector.hpp>
 
 class chars :

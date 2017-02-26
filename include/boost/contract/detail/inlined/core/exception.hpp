@@ -118,9 +118,7 @@ namespace exception_ {
 
     failure_handler set_check_failure_unlocked(failure_handler const& f)
             BOOST_NOEXCEPT_OR_NOTHROW {
-        failure_handler result = check_failure_handler;
-        check_failure_handler = f;
-        return result;
+        return check_failure_handler = f;
     }
     
     failure_handler set_check_failure_locked(failure_handler const& f)
@@ -155,9 +153,7 @@ namespace exception_ {
 
     from_failure_handler set_entry_inv_failure_unlocked(
             from_failure_handler const& f) BOOST_NOEXCEPT_OR_NOTHROW {
-        from_failure_handler result = entry_inv_failure_handler;
-        entry_inv_failure_handler = f;
-        return result;
+        return entry_inv_failure_handler = f;
     }
     
     from_failure_handler set_entry_inv_failure_locked(
@@ -194,9 +190,7 @@ namespace exception_ {
 
     from_failure_handler set_pre_failure_unlocked(from_failure_handler const& f)
             BOOST_NOEXCEPT_OR_NOTHROW {
-        from_failure_handler result = pre_failure_handler;
-        pre_failure_handler = f;
-        return result;
+        return pre_failure_handler = f;
     }
     
     from_failure_handler set_pre_failure_locked(from_failure_handler const& f)
@@ -231,9 +225,7 @@ namespace exception_ {
 
     from_failure_handler set_old_failure_unlocked(from_failure_handler const& f)
             BOOST_NOEXCEPT_OR_NOTHROW {
-        from_failure_handler result = old_failure_handler;
-        old_failure_handler = f;
-        return result;
+        return old_failure_handler = f;
     }
     
     from_failure_handler set_old_failure_locked(from_failure_handler const& f)
@@ -268,9 +260,7 @@ namespace exception_ {
 
     from_failure_handler set_exit_inv_failure_unlocked(
             from_failure_handler const& f) BOOST_NOEXCEPT_OR_NOTHROW {
-        from_failure_handler result = exit_inv_failure_handler;
-        exit_inv_failure_handler = f;
-        return result;
+        return exit_inv_failure_handler = f;
     }
     
     from_failure_handler set_exit_inv_failure_locked(
@@ -307,9 +297,7 @@ namespace exception_ {
 
     from_failure_handler set_post_failure_unlocked(
             from_failure_handler const& f) BOOST_NOEXCEPT_OR_NOTHROW {
-        from_failure_handler result = post_failure_handler;
-        post_failure_handler = f;
-        return result;
+        return post_failure_handler = f;
     }
     
     from_failure_handler set_post_failure_locked(from_failure_handler const& f)
@@ -344,9 +332,7 @@ namespace exception_ {
 
     from_failure_handler set_except_failure_unlocked(
             from_failure_handler const& f) BOOST_NOEXCEPT_OR_NOTHROW {
-        from_failure_handler result = except_failure_handler;
-        except_failure_handler = f;
-        return result;
+        return except_failure_handler = f;
     }
     
     from_failure_handler set_except_failure_locked(

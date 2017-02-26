@@ -47,12 +47,12 @@ used via its specializations.
 Usually this class template is instantiated only via the return value of
 @RefFunc{boost::contract::call_if} and @RefFunc{boost::contract::call_if_c}.
 @see @RefSect{advanced_topics, Advanced Topics}
-@tparam Cond    Static boolean condition selecting which functor call to compile
+@tparam Pred    Static boolean condition selecting which functor call to compile
                 and execute.
 @tparam Then Type of functor to call when the static condition if true.
 @tparam ThenResult Return type of then-branch functor call.
 */
-template<bool Cond, typename Then, typename ThenResult =
+template<bool Pred, typename Then, typename ThenResult =
     #ifndef DOXYGEN
         boost::contract::detail::none
     #else
@@ -368,20 +368,20 @@ condition.
 Make a call-if object with the specified then-branch functor.
 @see @RefSect{advanced_topics, Advanced Topics}
 @param f    Then-branch nullary templated functor. The functor call @c f() is
-            compiled and executed if and only if @c Cond if @c true. The return
+            compiled and executed if and only if @c Pred if @c true. The return
             type of other functor calls specified for this call-if statement
             (else-branches, else-if-branches, etc.) must be the same as (or
             implicitly convertible to) the return type of then-branch functor
             call @c f().
-@tparam Cond    Static boolean condition selecting which functor call to compile
+@tparam Pred    Static boolean condition selecting which functor call to compile
                 and execute.
 @return A call-if statement so else and else-if statements can be specified if
         needed. Ultimately this will return the return value of the
         functor call being compiled and executed.
 */
-template<bool Cond, typename Then>
-call_if_statement<Cond, Then> call_if_c(Then f) {
-    return call_if_statement<Cond, Then>(f);
+template<bool Pred, typename Then>
+call_if_statement<Pred, Then> call_if_c(Then f) {
+    return call_if_statement<Pred, Then>(f);
 }
 
 /**
@@ -390,20 +390,20 @@ meta-function.
 Make a call-if object with the specified then-branch functor.
 @see @RefSect{advanced_topics, Advanced Topics}
 @param f    Then-branch nullary templated functor. The functor call @c f() is
-            compiled and executed if and only if @c Cond::value if @c true. The
+            compiled and executed if and only if @c Pred::value if @c true. The
             return type of other functor calls specified for this call-if
             statement (else-branches, else-if-branches, etc.) must be the same
             as (or implicitly convertible to) the return type of then-branch
             functor call @c f().
-@tparam Cond    Static boolean nullary meta-function selecting which functor
+@tparam Pred    Static boolean nullary meta-function selecting which functor
                 call to compile and execute.
 @return A call-if statement so else and else-if statements can be specified if
         needed. Ultimately this will return the return value of the
         functor call being compiled and executed.
 */
-template<class Cond, typename Then>
-call_if_statement<Cond::value, Then> call_if(Then f) {
-    return call_if_statement<Cond::value, Then>(f);
+template<class Pred, typename Then>
+call_if_statement<Pred::value, Then> call_if(Then f) {
+    return call_if_statement<Pred::value, Then>(f);
 }
 
 /**
@@ -413,18 +413,18 @@ Compile and execute a boolean nullary functor call if and only if the specified
 static condition is true, otherwise trivially return @c true.
 @see @RefSect{advanced_topics, Advanced Topics}
 @param f    Boolean nullary templated functor. The functor call @c f() is
-            compiled and executed if and only if @c Cond is @c true.
-@tparam Cond    Static boolean condition selecting when the functor call should
+            compiled and executed if and only if @c Pred is @c true.
+@tparam Pred    Static boolean condition selecting when the functor call should
                 be compiled and executed.
 @return Boolean value returned by @c f() if the static condition if true,
         otherwise simply return @c true (i.e., check trivially passed).
 */
-template<bool Cond, typename Then>
-typename boost::enable_if_c<Cond, bool>::type
+template<bool Pred, typename Then>
+typename boost::enable_if_c<Pred, bool>::type
 condition_if_c(Then f, bool else_ = true) { return f(); }
 
-template<bool Cond, typename Then>
-typename boost::disable_if_c<Cond, bool>::type
+template<bool Pred, typename Then>
+typename boost::disable_if_c<Pred, bool>::type
 condition_if_c(Then f, bool else_ = true) { return else_; }
 
 /**
@@ -434,15 +434,15 @@ Compile and execute a boolean nullary functor call if and only if the specified
 static condition is true, otherwise trivially return @c true.
 @see @RefSect{advanced_topics, Advanced Topics}
 @param f    Boolean nullary templated functor. The functor call @c f() is
-            compiled and executed if and only if @c Cond::value is @c true.
-@tparam Cond    Static boolean nullary meta-function selecting when the functor
+            compiled and executed if and only if @c Pred::value is @c true.
+@tparam Pred    Static boolean nullary meta-function selecting when the functor
                 call should be compiled and executed.
 @return Boolean value returned by @c f() if the static condition if true,
         otherwise simply return @c true (i.e., check trivially passed).
 */
-template<class Cond, typename Then>
+template<class Pred, typename Then>
 bool condition_if(Then f, bool else_ = true) {
-    return condition_if_c<Cond::value>(f, else_);
+    return condition_if_c<Pred::value>(f, else_);
 }
 
 } } // namespace

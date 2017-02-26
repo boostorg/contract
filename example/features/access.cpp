@@ -53,7 +53,7 @@ private:
     typedef BOOST_CONTRACT_BASE_TYPES(BASES) base_types; // ...private bases.
     #undef BASES
     
-    BOOST_CONTRACT_OVERRIDE(push_back) // ..private overrides.
+    BOOST_CONTRACT_OVERRIDE(push_back) // ...private overrides.
 
     void invariant() const { // ...private invariants.
         BOOST_CONTRACT_ASSERT(size() <= capacity());

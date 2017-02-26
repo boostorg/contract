@@ -7,6 +7,10 @@
 // file LICENSE_1_0.txt or a copy at http://www.boost.org/LICENSE_1_0.txt).
 // See: http://www.boost.org/doc/libs/release/libs/contract/doc/html/index.html
 
+/** @file
+Class to check constructor preconditions.
+*/
+
 // IMPORTANT: Included by contract_macro.hpp so must #if-guard all its includes.
 #include <boost/contract/core/config.hpp>
 #ifndef BOOST_CONTRACT_NO_PRECONDITIONS

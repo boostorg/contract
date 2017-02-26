@@ -31,7 +31,7 @@ int inc(int& x) {
 
 template<typename T>
 class pushable {
-    friend class boost::contract::access; // OK if this always left in code.
+    friend class boost::contract::access; // Almost no overhead, always in code.
 
     BOOST_CONTRACT_INVARIANT({
         BOOST_CONTRACT_ASSERT(capacity() <= max_size());
@@ -40,7 +40,7 @@ class pushable {
 public:
     virtual void push_back(
         T const& x,
-        boost::contract::virtual_* v = 0 // OK if this always left in code.
+        boost::contract::virtual_* v = 0 // Almost no overhead, always in code.
     ) = 0;
 
 protected:
@@ -66,11 +66,11 @@ void pushable<T>::push_back(T const& x, boost::contract::virtual_* v) {
 class integers
     #define BASES public pushable<int>
     :
-        // OK if following extra base class always left in code.
+        // Almost no overhead for this extra base, always in code.
         private boost::contract::constructor_precondition<integers>,
         BASES
 {
-    // OK if followings always left in code.
+    // Almost no overhead for followings, always in code.
     friend class boost::contract::access;
     typedef BOOST_CONTRACT_BASE_TYPES(BASES) base_types;
     #undef BASES
@@ -122,7 +122,7 @@ public:
     }
 
 private:
-    BOOST_CONTRACT_OVERRIDE(push_back) // OK if always left in code.
+    BOOST_CONTRACT_OVERRIDE(push_back) // About no overhead, always in code.
 
     /* ... */
 //]

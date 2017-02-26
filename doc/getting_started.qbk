@@ -19,6 +19,7 @@ These mark sections of the code that are automatically extracted from the source
 *Rationale:*
 This allows to make sure that most of the example code presented in this documentation is always up-to-date, builds and runs with the latest implementation of the library.
 ]
+Also the purpose of these examples is to illustrate how to use this library and not to represent real product code.
 
 Some footnotes are marked by the word "*Rationale*".
 These explain reasons behind decisions made during the design and implementation of this library.
@@ -79,7 +80,7 @@ Names starting with `BOOST_CONTRACT_ERROR...` are used by this library to report
 
 [endsect]
 
-[section Installation and Compilation]
+[section Install and Compile]
 
 Let [^['lib-root]] be the directory under which this library source files have been installed.
 Let [^['boost-root]] be the directory under which Boost source code has been installed and compiled following Boost's documentation (if pre-compiled Boost distributions are used instead, the [^['lib-boost]\/include] and [^['lib-boost]\/stage\/lib] directories below might be replaced by =/usr/include= and =/usr/lib= or similar directories depending on the specific Boost distribution, OS, etc.).

@@ -10,12 +10,23 @@
 
 //[private_protected_virtual_counter
 class counter {
-    // Private and protected virtual functions declare extra `virtual_* = 0`
-    // parameter (otherwise they cannot be overridden).
+    // Virtual private and protected functions still declare extra
+    // `virtual_* = 0` parameter (otherwise they cannot be overridden).
+protected:
+    virtual void set(int n, boost::contract::virtual_* = 0) {
+        boost::contract::check c = boost::contract::function()
+            .precondition([&] {
+                BOOST_CONTRACT_ASSERT(n <= 0);
+            })
+            .postcondition([&] {
+                BOOST_CONTRACT_ASSERT(get() == n);
+            })
+        ;
+
+        n_ = n;
+    }
 
 private:
-    int n_;
-    
     virtual void dec(boost::contract::virtual_* = 0) {
         boost::contract::old_ptr<int> old_get = BOOST_CONTRACT_OLD(get());
         boost::contract::check c = boost::contract::function()
@@ -30,20 +41,8 @@ private:
 
         set(get() - 1);
     }
-
-protected:
-    virtual void set(int n, boost::contract::virtual_* = 0) {
-        boost::contract::check c = boost::contract::function()
-            .precondition([&] {
-                BOOST_CONTRACT_ASSERT(n <= 0);
-            })
-            .postcondition([&] {
-                BOOST_CONTRACT_ASSERT(get() == n);
-            })
-        ;
-
-        n_ = n;
-    }
+    
+    int n_;
 
     /* ... */
 //]
@@ -80,9 +79,22 @@ public:
     typedef BOOST_CONTRACT_BASE_TYPES(BASES) base_types;
     #undef BASES
     
-    // Not overriding from public members so no `override_...`.
+    // Overriding from non-public members so no subcontracting, no override_...
+    
+    virtual void set(int n, boost::contract::virtual_* v = 0) /* override */ {
+        boost::contract::check c = boost::contract::public_function(v, this)
+            .precondition([&] {
+                BOOST_CONTRACT_ASSERT(n % 10 == 0);
+            })
+            .postcondition([&] {
+                BOOST_CONTRACT_ASSERT(get() == n);
+            })
+        ;
 
-    virtual void dec(boost::contract::virtual_* v = 0) {
+        counter::set(n);
+    }
+
+    virtual void dec(boost::contract::virtual_* v = 0) /* override */ {
         boost::contract::old_ptr<int> old_get = BOOST_CONTRACT_OLD(v, get());
         boost::contract::check c = boost::contract::public_function(v, this)
             .precondition([&] {
@@ -97,19 +109,6 @@ public:
         set(get() - 10);
     }
     
-    virtual void set(int n, boost::contract::virtual_* v = 0) {
-        boost::contract::check c = boost::contract::public_function(v, this)
-            .precondition([&] {
-                BOOST_CONTRACT_ASSERT(n % 10 == 0);
-            })
-            .postcondition([&] {
-                BOOST_CONTRACT_ASSERT(get() == n);
-            })
-        ;
-
-        counter::set(n);
-    }
-
     /* ... */
 //]
     

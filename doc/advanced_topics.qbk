@@ -8,22 +8,53 @@
 
 This section illustrates more advanced uses of this library.
 
+[section Pure Virtual Public Functions]
+
+In C++, pure virtual functions are allowed to have a /default implementation/ as long as such implementation is programmed out-of-line so defined outside the class declaring the `virtual ... = 0;` pure virtual function.
+
+Contracts for pure virtual public functions are programmed using the [funcref boost::contract::public_function] function like for (non-pure) virtual public functions (all consideration made in __Virtual_Public_Functions__ apply).
+However, contracts have to be programmed out-of-line, in the default implementation of the pure virtual function.
+For example (see also [@../../example/features/pure_virtual_public.cpp =pure_virtual_public.cpp=]):
+
+[import ../example/features/pure_virtual_public.cpp]
+[pure_virtual_public_base]
+[pure_virtual_public_impl]
+[pure_virtual_public_derived]
+
+This library will never actually execute the pure virtual function body while it is calling the pure virtual function default implementation to check contracts for subcontracting.
+Therefore, programmers can safely `assert(false)` at the beginning of the body if they intend for that body to never be executed (or they can program a working body in case they need to use C++ pure virtual function default implementation outside of what strictly required by this library).
+
+[import ../example/features/named_override.cpp]
+[note
+As seen in __Public_Function_Overrides__, preconditions of overriding public functions are checked in __OR__ with preconditions of overridden virtual public functions.
+Therefore, if a virtual public function in a base class specifies no precondition then preconditions specified by all its overriding functions in derived classes will have no effect (because when checked in __OR__ with the overridden function from the base class that has no preconditions, they will always pass).
+This correctly reflects the fact that the overridden function in the base class can be called from any context (because it has no precondition) and so must all its overriding functions in all derived classes in accordance with the __substitution_principle__.
+
+That said, it is sometimes useful for a base class to declare a pure virtual function with a single precondition `BOOST_CONTRACT_ASSERT(false)` that will always fail.
+This indicates that the pure virtual function can never be called unless it is redefined in a derived class (which is always the case with C++ pure virtual functions) and also that the base class designer has intentionally left it up to derived classes to specify preconditions for the pure virtual function in question.
+This technique makes sense only for preconditions of pure virtual public functions (otherwise `BOOST_CONTRACT_ASSERT(false)` will prevent calling virtual public functions in concrete bases).
+For example (see also [@../../example/features/named_override.cpp =named_override.cpp=]):
+
+[named_override_pure_virtual_assert_false]
+]
+
+[endsect]
+
 [section Optional Return Value]
 
-It is possible to use `boost::optional` to handle the return value when programmers cannot construct the result variable at its point of declaration before the contract (e.g., because an appropriate constructor for the return type is not available at that point, or just because it would be too expensive to execute an extra initialization of the return value at run-time).
+It is possible to use `boost::optional` to handle return values when programmers cannot construct the result variable at its point of declaration before the contract (e.g., because an appropriate constructor for the return type is not available at that point, or just because it would be too expensive to execute an extra initialization of the return value at run-time).
 [footnote
 *Rationale:*
-`boost::optional` is used instead of `std::optional` because this library is designed to work well with Boost and because `std::optional` is not part of the C++ standard yet.
+`boost::optional` is used instead of `std::optional` because `std::optional` is not part of C++ standards prior to C++17.
 ]
 For example (see also [@../../example/features/optional_result.cpp =optional_result.cpp=]):
 
 [import ../example/features/optional_result.cpp]
 [optional_result]
 
-In this example the return type `surface` does not have a default constructor that can be used to initialize `result` when it is declared before the contract.
-The `surface` non-default constructor is not used to initialize `result` by passing it `edge * edge` and `edge * 4` because such operations are logically the responsibility of the function body (e.g., it makes logical sense to do such multiplications only after `edge` has been checked to be positive by the preconditions).
-Therefore, instead of initializing `result` with some arbitrary `area` and `perimeter` values (e.g., `0` and `0`), `boost::optional` is used in this example to not initialize `result` with a return value when it is declared before the contract.
-`result` is initialized later in the function body when the function is about to return and directly using the correct return value `result = surface(edge * edge, edge * 4)`.
+In this example the return type is a reference so it does not have default constructor that can be used to initialize `result` when it is declared before the contract declaration.
+In addition, `Index` needs to be validated to be smaller than `size()` by the precondition before it can be used to retrieve the reference to be assigned to `result` so `vect[Index]` cannot be used either to initialize `result` when it is declared before the contract declaration.
+Therefore, `boost::optional` is used to defer `result` proper initialization until the execution of the function body after the contract declaration when `Index` has been validated by the preconditions and `vect[Index]` can be safely evaluated to initialize `result`.
 
 As seen in __Return_Value__, it is the responsibility of the programmers to ensure that `result` is always set to the return value when the function exits without trowing an exception.
 This also ensures that `result` is always set before the postconditions are checked so programmers can always dereference `result` in postconditions to access the return value (using `operator*` and `operator->` as usual with `boost::optional`, and without having to explicitly check if `result` is an empty `boost::optional` object).
@@ -33,15 +64,15 @@ This can be easily done by making sure that /all/ return statements in the funct
     ...
     return *(result = ...); // Assign `result` at each return.
 
-[heading Virtual Public Functions and Public Function Overrides]
+[heading Virtual Public Functions]
 
-Similarly, `boost::optional` can be used to handle the return value passed to contracts of virtual public functions and public function overrides.
-As seen in __Virtual_Public_Functions__ and __Public_Function_Overrides__, in these cases the return value `result` must be passed as a parameter to [funcref boost::contract::public_function] right after the [classref boost::contract::virtual_]`*` parameter `v`.
+Similarly, `boost::optional` can be used to handle the return value passed to contracts of virtual public functions (pure or not) and of public function overrides.
+As seen in __Pure_Virtual_Public_Functions__, __Virtual_Public_Functions__, and __Public_Function_Overrides__, in these cases the return value `result` must be passed as a parameter to [funcref boost::contract::public_function] right after the parameter `v` of type [classref boost::contract::virtual_]`*`.
 Then the functor passed to `.postcondition(...)` takes one single parameter of type `boost::optional<`[^['result-type]]` const&> const&`.
-For example (see also __Pure_Virtual_Public_Functions__ and [@../../example/features/pure_virtual_public.cpp =pure_virtual_public.cpp=]):
+For example (see also [@../../example/features/optional_result_virtual.cpp =optional_result_virtual.cpp=]):
 
-[import ../example/features/pure_virtual_public.cpp]
-[pure_virtual_public_impl]
+[import ../example/features/optional_result_virtual.cpp]
+[optional_result_virtual]
     
 The inner `const&` in the postcondition functor parameter type `boost::optional<... const&> ...` is mandatory (the outer `const&` in the postcondition functor parameter type `boost::optional<...> const&` is not).
 [footnote
@@ -52,143 +83,198 @@ In addition, programmers are encouraged to declare the postcondition functor to 
 
 [endsect]
 
-[section Pure Virtual Public Functions]
-
-In C++, pure virtual functions are allowed to have a /default implementation/ as long as such implementation is programmed out-of-line so defined outside the class declaring the pure virtual function as `virtual ... = 0;`.
-Contracts for pure virtual public functions are programmed using the [funcref boost::contract::public_function] function like for (non-pure) virtual public functions, so all consideration made in __Virtual_Public_Functions__ apply.
-However, in this case contracts are always programmed out-of-line, in the default implementation of the pure virtual function.
-
-For example, note how the following `shape::get_surface` default implementation (which is used to program the pure virtual function contract) must be defined out-of-line and therefore outside the `shape` class declaration (see also [@../../example/features/pure_virtual_public.cpp =pure_virtual_public.cpp=]):
-
-[pure_virtual_public_base]
-[pure_virtual_public_impl]
-[pure_virtual_public_derived]
-
-This library will never actually execute the pure virtual function body while it is calling the pure virtual function default implementation to check its contract for subcontracting.
-Therefore, programmers can safely `assert(false)` at the beginning of the body if they intend for that body to never be executed (or they can program a working body in case they need to use C++ pure virtual function default implementation outside of what strictly required by this library).
-
-Note that because of subcontracting, preconditions of derived class functions are checked in __OR__ with preconditions of base class functions (see __Public_Function_Overrides__).
-If base class member functions specify no precondition then preconditions specified by overriding functions in derived classes will have no effect (because when checked in __OR__ with the base class function that has no precondition they will always pass).
-This correctly reflects the fact that the base class member function can be called in any context (because it has no precondition) and so must all its overriding function in derived classes in order for the derived class to act like the base class in virtue of inheritance.
-However, it is sometimes acceptable for a base class to declare a pure virtual function with a precondition `BOOST_CONTRACT_ASSERT(false)` indicating that the pure virtual function must be redefined by derived classes (as always with pure virtual functions) and also that derived classes will be responsible to specify preconditions (this technique makes sense only for preconditions of pure virtual functions otherwise it will prevent a concrete base function from being ever called successfully).
-For example (see also [@../../example/features/named_override.cpp =named_override.cpp=]):
-
-[import ../example/features/named_override.cpp]
-[named_override_pure_virtual_assert_false]
-
-[endsect]
-
 [section Private and Protected Functions]
 
 Private and protected member functions do not check class invariants (because they are not part of the public class interface) and they do not subcontract (because they are not accessible at the calling site where the __substitution_principle__ applies, see also __Function_Calls__).
-However, programmers can still choose to specify preconditions and postconditions for private and protected member functions if they want to check correctness of implementations and usage of base member functions in derived classes.
-Therefore, when programmers decide to specify contracts for private and protected member functions, they can use [funcref boost::contract::function] (like for non-member functions).
+However, programmers may still want to specify preconditions and postconditions for private and protected member functions if they want to check correctness of their implementation and use from within the class, base classes, and friend classes or functions.
+When programmers decide to specify contracts for private and protected member functions, they can use [funcref boost::contract::function] (like for non-member functions).
 For example (see also [@../../example/features/private_protected.cpp =private_protected.cpp=]):
 
 [import ../example/features/private_protected.cpp]
 [private_protected]
 
 The same considerations made in __Non_Member_Functions__ apply.
-See __Constructors__ and __Destructors__ for notes on how to program contracts for private and protected constructors and destructors respectively.
+See __Constructors__ and __Destructors__ for notes on how to program contracts for private and protected constructors and destructors instead.
 
-When private and protected member functions are virtual they should declare the extra parameter of type [classref boost::contract::virtual_]`*` with default value `0` (see __Virtual_Public_Functions__) even if [funcref boost::contract::function] never accepts that as an argument so this parameter will remain unused and it need not a name.
-Otherwise, these private and protected virtual functions cannot be overridden by public functions in the derived classes that specifies contracts for the overriding functions (because C++ uses also default parameters to match signatures of overriding functions).
-In this case, overriding public functions in derived classes will not specify the extra `override_...` parameter to [funcref boost::contract::public_function] (because the overridden functions are private or protected and not being public they do not participate to subcontracting).
+[heading Virtual Private and Protected Functions]
+
+When private and protected member functions are virtual they should still declare the extra parameter of type [classref boost::contract::virtual_]`*` with default value `0` (see __Virtual_Public_Functions__) even if [funcref boost::contract::function] never accepts that parameter as an argument (so this parameter will remain unused and it does not need a name).
+Otherwise, the private and protected virtual functions cannot be overridden by public functions in the derived classes that specify contracts for the overriding functions (because C++ uses also default parameters to match signatures of overriding functions).
 For example (see also [@../../example/features/private_protected_virtual.cpp =private_protected_virtual.cpp=]):
 
 [import ../example/features/private_protected_virtual.cpp]
 [private_protected_virtual_counter]
+
+However, public functions in derived classes overriding private or protected virtual functions from base classes will not specify the extra `override_...` template parameter to [funcref boost::contract::public_function] (because the overridden functions are private or protected thus not being public they do not participate to subcontracting), for example (see also [@../../example/features/private_protected_virtual.cpp =private_protected_virtual.cpp=]):
+
 [private_protected_virtual_counter10]
 
-Finally, using multiple inheritance it is also possible to override functions that are private or protected from one base but public from another base.
-In this case, overriding public functions in derived classes will specify the extra `override_...` parameter to [funcref boost::contract::public_function] (because the overridden functions private or protected in one base and those do not participate to subcontracting, but public in another base and these participate to subcontracting).
+Furthermore, using multiple inheritance it is possible to override functions that are private or protected from one base but public from another base.
+In this case, overriding public functions in derived classes will specify the extra `override_...` template parameter to [funcref boost::contract::public_function] (because the overridden functions are private or protected in one base and those do not participate to subcontracting, but public in another base and these participate to subcontracting instead).
 For example (see also [@../../example/features/private_protected_virtual_multi.cpp =private_protected_virtual_multi.cpp=]):
 
 [import ../example/features/private_protected_virtual_multi.cpp]
-[private_protected_virtual_multi_counter]
 [private_protected_virtual_multi_countable]
 [private_protected_virtual_multi_counter10]
 
 [warning
 Unfortunately, the code above does not compile on MSVC (at least up to Visual Studio 2015) because MSVC incorrectly gives a compile-time error when SFINAE fails due to private or protected access levels.
-Instead, GCC and Clang correctly implement SFINAE failures due to private and protected member functions so they successfully compile the code above.
+Instead, GCC and Clang correctly implement SFINAE failures due to private and protected member functions so the code above correctly complies on GCC and Clang.
 ]
 
 [endsect]
 
 [section Friend Functions]
 
-TODO
+Friend functions are not member functions so [funcref boost::contract::function] can used to program contracts for them and all considerations made in __Non_Member_Functions__ apply.
+For example (see also [@../../example/features/friend.cpp =friend.cpp=]):
+
+[import ../example/features/friend.cpp]
+[friend_byte]
+[friend_bytes]
+
+However, in some cases a friend function might take an object as parameter and it can be logically considered an extension of the object's public interface (essentially at the same level as the object's public member functions).
+In these cases, programmers might chose to program the friend function contracts using [funcref boost::contract::public_function] (instead of [funcref boost::contract::function]) so to also check the class invariants of the object (and not just the pre- and postconditions of the friend function).
+For example (see also [@../../example/features/friend_invariant.cpp =friend_invariant.cpp=]):
+[footnote
+*Rationale:*
+Contract programming proposals for C++ like __N1962__ do not provide a mechanism for friend functions to check class invariants of objects passed as parameters.
+In other words, these proposals do not allow contracts to recognize that some friend functions logically act as if they were part of the public interface of the objects they take as parameters.
+This is reasonable for proposals that add contracts to the core language because friend functions are not always meant to extend an object public interface and C++ does not provide a mechanism to programmatically specify when they do.
+However, this library (not being meant to be a revision of the C++ standard itself) has the flexibility to let programmers manually specify when friend functions should also check class invariants of the objects they take as parameters.
+]
+
+[import ../example/features/friend_invariant.cpp]
+[friend_invariant]
+
+This technique can also be extended to friend functions that take multiple objects as parameters and can be logically considered extensions to the public interfaces of each of these objects, for example:
+
+    friend void f(class1& object1, class2* object2, type3& value3) {
+        // Check just preconditions.
+        boost::contract::check pre = boost::contract::function()
+            .precondition([&] {
+                BOOST_CONTRACT_ASSERT(object2 != nullptr);
+                ...
+            })
+        ;
+        // Check class invariants for each object (programmers chose the order).
+        boost::contract::check inv1 = boost::contract::public_function(&object1);
+        boost::contract::check inv2 = boost::contract::public_function(object2);
+        // Check just postconditions.
+        boost::contract::check post = boost::contract::function()
+            .postcondition(...)
+        ;
+
+        ... // Function body.
+    }
+
+Changing the order of the [classref boost::contract::check] declarations above, programmers can chose the order for checking class invariants among the different objects passed to the friend function and also whether to check these invariants before or after pre- and postconditions at function entry and exit respectively (see __Non_Member_Functions__ and __Public_Functions__ for information on how the RAII objects returned by [funcref boost::contract::function] and [funcref boost::contract::public_function] check contract conditions).
+The example above is programmed to check `class1` invariants before `class2` invariants (but the order could have been inverted if programmers so chose).
+Also the example above is programmed to check preconditions before class invariants so the objects passed to the friend function can be validated by the preconditions before they are passed as pointers to [funcref boost::contract::public_function] (e.g., check `object2` is not null).
+[footnote
+Within member functions instead the object pointer `this` is always well-formed, its validation is never needed, and [funcref boost::contract::public_function] checks class invariants before checking preconditions so programming preconditions can be simplified assuming the class invariants are satisfied already (see __Public_Function_Calls__).
+]
 
 [endsect]
 
 [section Function Overloads]
 
-As seen in __Public_Function_Overrides__, [funcref boost::contract::public_function] takes a pointer to the enclosing function as a parameter when used in overriding public functions.
-When an overriding public function is overloaded, the function pointer cannot be automatically deduced by the compiler so programmers have to use `static_cast` to resolve ambiguities (as usual with pointers to overloaded functions in C++).
+As seen in __Public_Function_Overrides__, [funcref boost::contract::public_function] takes a pointer to the enclosing function as a parameter when used in public function overrides.
+When names of public function overrides are overloaded, the function pointer cannot be automatically deduced by the compiler so programmers have to use `static_cast` to resolve ambiguities (as usual with pointers to overloaded functions in C++).
 [footnote
 *Rationale:*
-In oder to avoid copies, this library takes all contracted function arguments and the return value as references when passed to [funcref boost::contract::public_function] for overriding public functions.
-Therefore, the library cannot differentiate the actual argument and return types of the contracted functions when they are passed by reference and when they are not.
-As a result, the library cannot automatically reconstruct the contracted function pointer type which must be instead deduced from the function pointer explicitly passed by programmers to [funcref boost::contract::public_function] (in turn this requires using `static_cast` to resolve ambiguities as usual in C++ when obtaining the pointer of overloaded functions).
+In order to avoid copies, this library takes all function arguments and the return value passed to [funcref boost::contract::public_function] as references when used within public function overrides.
+Therefore, the library cannot differentiate when the actual function argument and return types are passed by reference and when they are not.
+As a result, the library cannot automatically reconstruct the type of the enclosing public function so this type must be deduced from the function pointer explicitly passed by programmers to [funcref boost::contract::public_function].
+When this automatic deduction is not possible due to overloaded function names, programmers must explicitly use `static_cast` to resolve ambiguities as usual in C++ with pointers to overloaded functions.
 ]
 For example, note how `static_cast` is used in the following calls to [funcref boost::contract::public_function] (see also [@../../example/features/overload.cpp =overload.cpp=]):
 
 [import ../example/features/overload.cpp]
 [overload]
 
-Overloaded functions have the same function name so the same [^override_['function-name]] type can be used as template parameter of [funcref boost::contract::public_function].
+Overloaded functions have the same function name so the same [^override_['function-name]] type can be used as template parameter for all [funcref boost::contract::public_function] calls.
 Therefore, [macroref BOOST_CONTRACT_OVERRIDE] only needs to be invoked once for any given function name even when the function name is overloaded (as shown in the example above).
 
 [endsect]
 
-[section Named Overrides]
+[section Lambdas, Code Blocks, Loops, Etc.]
 
-The function name passed to [macroref BOOST_CONTRACT_OVERRIDE] should never start with an underscore to avoid generating names containing double underscores `override__...` that are reserved by the C++ standard.
-There is a separate macro [macroref BOOST_CONTRACT_NAMED_OVERRIDE] that can be used to explicitly specify the name of the type that will be passed to [funcref boost::contract::public_function] as a template argument:
-[footnote
-*Rationale:*
-A different macro [macroref BOOST_CONTRACT_NAMED_OVERRIDE] is used instead of overloading [macroref BOOST_CONTRACT_OVERRIDE] using variadic macros because the override macros cannot be programmed manually by the users so making them variadic would prevent the use of this library on compilers that do not support variadic macros (see also __No_Macros__).
-]
+So far we have been focused on specifying contracts for function and class interfaces.
+While contracts are in general most useful when used to specify interfaces, this library also allows to check contract conditions for implementation code (lambda functions, code blocks, loops, etc.).
 
-    BOOST_CONTRACT_OVERRIDE(``[^['function-name]]``)                  // Generate `override_...`.
-    BOOST_CONTRACT_NAMED_OVERRIDE(``[^['type-name]]``, ``[^['function-name]]``) // Generate `type-name`.
+Lambda functions are not member functions, they are not part of a class public interface so they do not check class invariants or participate int subcontracting, but they can use [funcref boost::contract::function] to specify preconditions, postconditions, and exception guarantees (all considerations made in __Non_Member_Functions__ apply).
+For example (see also [@../../example/features/lambda.cpp =lambda.cpp=]):
 
-For example, the following overriding member function is named `_1` so `BOOST_CONTRACT_OVERRIDE(_1)` would generate a type named `override__1` (which is reserved in C++ because it contains double underscores `__`), `BOOST_CONTRACT_NAMED_OVERRIDE(override1, _1)` is used to name the type `override1` instead (see also [@../../example/features/named_override.cpp =named_override.cpp=]):
+[import ../example/features/lambda.cpp]
+[lambda]
 
-[named_override]
+Similarly, [funcref boost::contract::function] can be used to program preconditions, postconditions, and exception guarantees for loops.
+For example, for a for-loop but same for while- and all other loops (see also [@../../example/features/loop.cpp =loop.cpp=]):
 
-The [macroref BOOST_CONTRACT_NAMED_OVERRIDE] macro can be used for function names that start with an underscore `_...`, when the name `override_`[^['function-name]] generated by [macroref BOOST_CONTRACT_OVERRIDE] would clash with other names in the user code, to generate names in CamelCase or any other style, in any other case when programmers need or want to generate names different than `override_...`.
+[import ../example/features/loop.cpp]
+[loop]
+
+More in general, [funcref boost::contract::function] can be used to program preconditions, postconditions, and exception guarantees of any block of code in a function implementation.
+For example (see also [@../../example/features/code_block.cpp =code_block.cpp=]):
+
+[import ../example/features/code_block.cpp]
+[code_block]
+
+[endsect]
+
+[section Implementation Checks]
+
+This library provides a mechanism to check assertions within implementation code outside of preconditions, postconditions, exceptions guarantees, and class invariants.
+These implementation checks can be programmed using [macroref BOOST_CONTRACT_ASSERT] in a nullary functor that is directly assigned to [classref boost::contract::check] at the place within the code where the checks have to be executed, for example (see also [@ ../../example/features/check.cpp =check.cpp=]):
+
+[import ../example/features/check.cpp]
+[check_class]
+
+Alternatively, this library provides the [macroref BOOST_CONTRACT_CHECK] macro that allows to completely remove compile-time and run-time overhead of implementation checks when [macroref BOOST_CONTRAT_NO_CHECKS] is defined (see __Disable_Contract_Checking__ and __Disable_Contract_Compilation__ for similar considerations for all other contract conditions supported by this library), for example (see also [@ ../../example/features/check.cpp =check.cpp=]):
+
+[check_macro]
+
+These implementation checks are essentially equivalent to using the C-style `assert` macro but with the following differences:
+
+* A failure of these implementation checks will call [funcref boost::contract::check_failure] (see also [funcref boost::contract::set_check_failure] and [funcref boost::contract::get_check_failure]).
+* These implementation checks are automatically disabled when other contract conditions specified using this libraries are being checked already (to avoid infinite recursion).
+* These implementation checks are disabled defining [macroref BOOST_CONTRACT_NO_CHECKS] (instead of `NDEBUG` for disabling `assert`).
 
 [endsect]
 
 [section Old Values at Body]
 
 In the examples seen so far old value variables of type [classref boost::contract::old_ptr] are initialized to a copy of the expression passed to [macroref BOOST_CONTRACT_OLDOF] at the point of their declaration.
-This correctly is before the function body is executed but also before the contract is executed, therefore even before class invariants at function entry and preconditions are checked.
+This is correctly done before the function body is executed but it is also done before the contract is executed, therefore even before class invariants at function entry and preconditions are checked.
 
-This is convenient and might be sufficient in most cases.
-However, in general old values should be copied before executing the function body but after checking entry class invariants and preconditions (see __Assertions__).
-There can be cases in which the expression passed to [macroref BOOST_CONTRACT_OLDOF] should be evaluated only if the assertions in class invariants and preconditions are checked to be true.
+This might work well in most cases, however in general old values should be copied before executing the function body but after checking entry class invariants and preconditions (see __Assertions__).
+There can be cases in which it makes sense to evaluate the expressions passed to [macroref BOOST_CONTRACT_OLDOF] only assuming that the assertions programmed in the class invariants and preconditions are first checked to be true.
 
-This library allows to construct [classref boost::contract::old_ptr] variables using their default constructor (equivalent to a null pointer) and then assign them later to a copy of the expression passed to [macroref BOOST_CONTRACT_OLDOF] in a functor with no parameter [^['h]]`()` passed to `.old(`[^['h]]`)`.
-The nullary functor [^['h]]`()` is called by this library before the function body is executed but only after class invariants and preconditions are checked:
+For that, this library also allows to construct [classref boost::contract::old_ptr] variables using their default constructor (equivalent to a null pointer) and to assign them later to a copy of the expression passed to [macroref BOOST_CONTRACT_OLDOF] in a nullary functor [^['h]]`()` passed to `.old(`[^['h]]`)`.
+The functor [^['h]]`()` is called by this library before the function body is executed but only after class invariants and preconditions are checked:
 [footnote
 *Rationale:*
-Functors for preconditions, old value assignments, and postconditions are all optional but when specified, they must be specified in this order.
-Such order is enforced by the fact that [classref boost::contract::specify_precondition_old_postconditions], [classref boost::contract::specify_old_postcondition], [classref boost::contract::specify_postcondition_only], and [classref boost::contract::specify_nothing] provide a progressively decreasing subset of the `.precondition(...)`, `.old(...)` and `.postcondition(...)` member functions.
-The enforced order of preconditions, old value assignments, and postconditions is logical because it reflects the order in which they are executed at run-time.
-Other contract programming frameworks allow to mix this order, that could have been implemented for this library too but it would have complicated a somewhat the library implementation while adding no real value (arguably creating confusion because allowing for less logical orderings).
+Functors for preconditions, old value assignments, postconditions, and exception guarantees are all optional but when specified, they must be specified in that order.
+Such order is enforced by the fact that [classref boost::contract::specify_precondition_old_postcondition_except], [classref boost::contract::specify_old_postcondition_except], [classref boost::contract::specify_postcondition_except], [classref boost::contract::specify_except], and [classref boost::contract::specify_nothing] provide a progressively decreasing subset of the `.precondition(...)`, `.old(...)`, `.postcondition(...)`, and `.except(...)` member functions.
+The enforced order for specifying preconditions, old value assignments, postconditions, and exception guarantees makes logical sense because it follows the order at which these are executed at run-time.
+Other contract programming frameworks allow to mix this order, that could have been implemented for this library as well but it would have complicated somewhat the library implementation while adding no real value (arguably creating confusion in user code by not enforcing a consistent order for specifying contract conditions).
 ]
 
-    boost::contract::old_ptr<...> old_``[^['name]]``;                 // Use default constructor.
+    boost::contract::old_ptr<...> old_``[^['name]]``;                 // Default constructor (i.e., null pointer).
+    ...
     boost::contract::guard c = boost::contract::function()  // Same for all other contracts.
         ...
         .old([&] {                                          // Capture by reference...
             old_``[^['name]]`` = BOOST_CONTRACT_OLDOF(``[^['expression]]``);    // ...but modify only old values.
+            ...
         })
         .postcondition([&] {
-            BOOST_CONTRACT_ASSERT(*old_``[^['name]]`` ...);
+            BOOST_CONTRACT_ASSERT(*old_``[^['name]]`` ...);           // Never null here.
+            ...
+        })
+        .except([&] {
+            BOOST_CONTRACT_ASSERT(*old_``[^['name]]`` ...);           // Never null here.
             ...
         })
     ;
@@ -200,131 +286,53 @@ Therefore, `old_y` is first declared using its default constructor (i.e., initia
 [old]
 
 The functor passed to `.old(...)` should capture all variables it needs to evaluate and copy old value expressions.
-In general, these variables should be captured by reference and not by value (because old values need to copy values the variables will have just before executing the function body, and not the value these variables had when the functor passed to `.old(...)` was first declared).
-In any case, this functor should modify only old values and not the value of other captured variables (see also __Constant_Correctness__).
+In general, these variables should be captured by reference and not by value (because old values need to make copies of the values the captured variables will have just before executing the function body, and not copy the values these variables had when the functor passed to `.old(...)` was first declared).
+In any case, the functor passed to `.old(...)` should modify only old values and not the values of other captured variables (see also __Constant_Correctness__).
 
-This library will automatically call [funcref boost::contract::postcondition_failure] if calling the functor specified via `.old(...)` throws an exception (by default, this terminates the program calling `std::terminate`, but see __Throw_on_Failure__ to throw exceptions, exit the program with an error code, etc.).
+This library will automatically call the failure handler [funcref boost::contract::old_failure] if calling the functor specified via `.old(...)` throws an exception (by default, this handler prints an error message to `std::cerr` and terminates the program calling `std::terminate`, but see __Throw_on_Failure__ to throw exceptions, exit the program with an error code, etc.).
+
+[note
+If old value pointers are initialized at the point of their construction instead of using `.old(...)` then an exception thrown by the old value expression [macroref BOOST_CONTRACT_OLDOF], or more in general any exception thrown by the old value pointer initialization, will result in that exception being thrown up the stack by the enclosing user-defined function.
+This is arguably less correct than calling [funcref boost::contract::old_failure] because an exception thrown by an old value copy causes the program to fail checking its postconditions and exception guarantees but should not automatically causes the enclosing user-defined function to thrown an exception (this might not be a significant difference in practice, or it could be an additional reason to use `.old(...)` instead of copying old values when they are declared before the contract).
 [footnote
 *Rationale:*
-If old value pointers are assigned at the point of their construction instead of using `.old(...)` then an exception thrown by the old value expression [macroref BOOST_CONTRACT_OLDOF] or more in general any exception thrown by the old value pointer initialization will result in that exception being thrown up the stack by the contracted function.
-This is arguably less correct than calling [funcref boost::contract::postcondition_failure] because an exception thrown by an old value copy causes the program to fail checking its postconditions and should not technically causes the contracted function to thrown an exception (however, this might not be a significant difference in practice).
-Note that while it would be possible to wrap all old value operations ([refclass boost::contract::old_ptr] copy constructor, [funcref boost::contract::make_old], etc.) in try-catch statements so this library will call [funcref boost::contract::postcondition_failure] also when old values are copied when they are constructed outside `.old(...)`, that will prevent this library from knowing the [enumref boost::contract::from] parameter which is not acceptable (specifically because destructors can have postconditions).
+It would be possible to wrap all old value operations ([classref boost::contract::old_ptr] copy constructor, [funcref boost::contract::make_old], etc.) in try-catch statements so this library will call [funcref boost::contract::postcondition_failure] also when old values are copied when they are constructed outside `.old(...)`.
+However, that will prevent this library from knowing the [enumref boost::contract::from] parameter which will not be viable (specifically because destructors can have postconditions so that parameter is necessary to make sure user-defined failure handlers can be programmed to never throw from destructors as C++ requires).
+]
 ]
 
 [endsect]
 
-[section Old Value Requirements]
+[section Named Overrides]
 
-Old values require copying the expression passed to [macroref BOOST_CONTRACT_OLDOF] so the type of that expression must be copy constructible.
-More precisely, dereferencing an old value pointer of type [classref boost::contract::old_ptr]`<T>` requires `boost::is_copy_constructible<T>::value` to be `true` (otherwise this library will generate a compile-time error).
-
-* In some cases it might be acceptable, or even desirable, to cause a compile-time error when a program uses old value types that are not copy constructible (because it is not possible to fully check the correctness of the program as stated by the contract assertions that use these old values).
-In these cases, programmers can declare old values using [classref boost::contract::old_ptr] as seen so far (or equivalently using C++11 `auto` declarations `auto ... = BOOST_CONTRACT_OLDOF(...)`).
+The function names passed to [macroref BOOST_CONTRACT_OVERRIDE] and [macroref BOOST_CONTRACT_OVERRIDES] should never start with an underscore to avoid generating names containing double underscores `override__...` (which are reserved by the C++ standard).
+There is a separate macro [macroref BOOST_CONTRACT_NAMED_OVERRIDE] that can be used to explicitly specify the name of the type that will be passed to [funcref boost::contract::public_function] as a template argument:
 [footnote
 *Rationale:*
-When C++11 `auto` declarations are used, this library defaults the type of [macroref BOOST_CONTRACT_OLDOF] to [classref boost::contract::old_ptr] because it generates a compile-time error for non-copyable types so it is in general more conservative than [classref boost::contract::old_ptr_noncopyable].
+A different macro [macroref BOOST_CONTRACT_NAMED_OVERRIDE] is used instead of overloading [macroref BOOST_CONTRACT_OVERRIDE] using variadic macros because the override macros cannot be programmed manually by the users so making them variadic would prevent to use this library on compilers that do not support variadic macros (see also __No_Macros__).
 ]
-* However, in other cases it might be desirable to simply not check assertions that use some old values when the related old value types are not copy constructible.
-Programmers can do this by using [classref boost::contract::old_ptr_noncopyable] instead of [classref boost::contract::old_ptr] to program these old values (and by checking if the old value pointer is not null before dereferencing it in postconditions).
 
-For example, consider the following `accumulate` function template that could in general be instantiated for types `T` that are not copy constructible, that is when `boost::is_copy_constructible<T>::value` is `false` (see also [@../../example/features/old_noncopyable.cpp =noncopyable.cpp=]):
+    BOOST_CONTRACT_OVERRIDE(``[^['function-name]]``)                  // Generate `override_...`.
+    BOOST_CONTRACT_NAMED_OVERRIDE(``[^['type-name]]``, ``[^['function-name]]``) // Generate `type-name`.
 
-[/ import ../example/features/old_noncopyable.cpp]
-[old_noncopyable]
+For example, the following public function override is named `_1` so `BOOST_CONTRACT_OVERRIDE(_1)` would generate a type named `override__1` (which is reserved in C++ because it contains double underscores `__`), `BOOST_CONTRACT_NAMED_OVERRIDE(override1, _1)` is used to name the type `override1` instead (see also [@../../example/features/named_override.cpp =named_override.cpp=]):
 
-The old value pointer `old_total` is programmed using [classref boost::contract::old_ptr_noncopyable] so if `T` is not copy constructible then `total` will simply not be copied and `old_total` will be left as a null pointer (in these cases `old_total` must be checked to be not null `if(old_total) ...` before it can be dereferenced in the postconditions).
-If the above example used [classref boost::contract::old_ptr] instead then the library would have generated a compile-time error if `accumulate` is instantiated for types `T` that are not copy constructible (but only if `old_total` is actually dereferenced in the contract assertions somewhere `*old_total ...`).
+[named_override]
 
-The `..._noncopyable` postfix in the type name [classref boost::contract::old_ptr_noncopyable]`<T>` refers to the pointed type `T` that may or not be copy constructible without causing a compile-time error in this case (the old value pointer itself is always copyable, or at least copy assignable).
+The [macroref BOOST_CONTRACT_NAMED_OVERRIDE] macro can also be used when the name `override_`[^['function-name]] generated by [macroref BOOST_CONTRACT_OVERRIDE] would clash with other names in user code, to generate names in CamelCase or in any other style, in any other case when programmers need or want to generate names different from `override_...`.
 
-[heading No C++11]
-
-In general, the `boost::is_copy_constructible` type trait requires C++11 for full support.
-On non-C++11 compilers, it is possible to inherit the old value type from `boost::noncopyable`, or use `BOOST_MOVABLE_BUT_NOT_COPYABLE`, or explicitly specialize the `boost::is_copy_constructible` template (see [@http://www.boost.org/doc/libs/release/libs/type_traits/doc/html/boost_typetraits/reference/is_copy_constructible.html boost::is_copy_constrictible] for more information):
-
-    #include <boost/type_traits/is_copy_constructible.hpp>
-
-    namespace boost {
-        template<>
-        struct is_copy_constructible<``[^['old-value-type]]``> : false_type {};
-    }
-
-[endsect]
-
-[section Assertion Requirements (Static-If)]
-
-In general, assertions can introduce a new set of requirements on the types used by the program.
-Some of these type requirements might be necessary only to check the assertions and they would not be required by the program otherwise.
-
-* In some cases it might be acceptable, or even desirable, to cause a compile-time error when a program uses types that do not provide all the operations needed to check contract assertions (because it is not possible to fully check the correctness of the program as stated by the contracts).
-In these cases, programmers can specify contract assertions as we have seen so far, compilation will fail if user types do not provide all operations necessary to check the contracts.
-* However, in other cases it might be desirable that adding contracts to a program does not alter its type requirements and that assertions are simply not checked when user types do not provide all the operations necessary to check them.
-Programmers can do this by using [funcref boost::contract::check_if] (and [funcref boost::contract::check_if_c]) within the contract assertions.
-
-For example, let's consider the following `vector<T>` class template.
-This class template does not usually require that `T` has an equality operator `==` (it only requires `T` to be copy constructible, see `std::vector` documentation).
-However, the contracts of the `vector<T>::push_back(value)` member function include a postcondition `back() == value` which introduces the new requirement that `T` must also have an equality operator `==`.
-Programmers can specify this postcondition as usual `BOOST_CONTRACT_ASSERT(back() == value)` an let the program fail to compile when users instantiate this template with a type `T` that does not provide an equality operator `==`.
-Otherwise, programmers can specify this postcondition using [funcref boost::contract::check_if] to check the assertion only for types `T` that have an equality operator `==` and trivially check `true` otherwise, for example (see also [@../../example/features/condition_if.cpp =condition_if.cpp=]):
-
-[import ../example/features/condition_if.cpp]
-[condition_if]
-
-The [funcref boost::contract::check_if] function template is a special case of the more general facility [funcref boost::contract::call_if]:
-Specifically, `boost::contract::check_if<`[^['condition]]`>(`[^['check]]`)` is equivalent to:
-
-    boost::contract::call_if<``[^['condition]]``>(
-        ``[^['check]]``
-    ).else_(
-        [] { return true; }
-    )
-
-Where [^['condition]] is a nullary boolean meta-function and [^['check]] is a nullary boolean functor.
-If [^['condition]]`::value` is statically evaluated to be `true` at compile-time then [^['check]]`()` is called at run-time and its boolean result is returned by the enclosing `call_if`.
-Otherwise, if [^['condition]]`::value` is statically evaluated to be `false` at compile-time then `[] { return true; }()` is called at run-time and `true` is trivially returned by the enclosing `call_if`.
-Note that [^['check]] must be a functor template (and not just a functor) so its code that contains the assertion operations with the extra type requirements (e.g., the operator `==`) will not be instantiated and compiled for specific types unless the compiler determines it will be actually called at run-time (C++14 generic lambdas and functor templates like `std::equal_to` can be used to program [^['check]], but C++11 lambdas cannot).
-    
-More in general, [funcref boost::contract::call_if] accepts a number of optional else-if and one optional else statement:
-
-    boost::contract::call_if<``[^['condition1]]``>(
-        ``[^['then1]]``
-    ).template else_if<``[^['condition2]]``>(       // Optional.
-        ``[^['then2]]``
-    )
-    ...                                   // Optionally, other `else_if`.
-    .else_(                               // Optional for `void` functors, otherwise required.
-        ``[^['else]]``
-    )
-
-Where [^['condition1]], [^['condition2]], ... are nullary boolean meta-functions and [^['then1]], [^['then2]], ..., [^['else]] are nullary functors.
-The return types of the functor calls [^['then1]]`()`, [^['then2]]`()`, ..., [^['esle]]`()` must either all be the same (possibly all `void`) or be of types implicitly convertible into one another.
-At run-time [funcref boost::contract::call_if] will call the functor [^['then1]]`()`, or [^['then2]]`()`, ..., or [^['else]]`()` depending on which meta-function [^['condition1]]`::value`, [^['condition2]]`::value`, ... is evaluated to be `true` or `false` at compile-time, at it will return the value returned by the functor being called 
-If [^['then1]], [^['then2]], ..., [^['else]] are nullary functor templates (not just nullary functors) then their code will only be compiled if the compiler determines they need to be actually called at run-time (so only if the related [^['condition1]]`::value`, [^['condition2]]`::value`, ... are evaluated to be `true` or `false` at compile-time).
-All the `esle_if<...>(...)` statements are optional, the `else_(...)` statement is optional if the functor calls return `void` but it is required otherwise.
-
-In general, [funcref boost::contract::call_if] can be used to program contract assertions that compile and check different functor templates depending on related conditions being evaluated to be `true` at compile-time (but in most cases [funcref boost::contract::check_if] should be sufficient, simpler and less verbose to use).
-
-The [funcref boost::contract::check_if_c], [funcref boost::contract::call_if_c], and `.else_if_c` function templates work similarly to their counterparts without the `..._c` postfix above, but they take their condition template parameters as static boolean values instead of nullary boolean meta-functions.
-
-[heading Static-If (C++14)]
-
-The [funcref boost::contract::call_if] function template is a general facility and its use is not limited to programming contracts.
-In fact, [funcref boost::contract::call_if] can be used together with C++14 generic lambdas to program statements similar to the `static if` proposal (at least at function scope, see also [@http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2013/n3613.pdf N3613]).
-For example, consider the following implementation of `std::advance` that uses `static if`-like statements programmed via [funcref boost::contract::call_if] (see also [@../../example/features/call_if_cxx14.cpp =call_if_cxx14.cpp=]):
-
-[import ../example/features/call_if_cxx14.cpp]
-[call_if_cxx14]
-
-This implementation is much more concise, easy to read and maintain than the usual implementation of `std::advance` that uses tag dispatching.
+Note that there is not a `BOOST_CONTRACT_NAMED_OVERRIDES` macro so [macroref BOOST_CONTRACT_NAMED_OVERRIDE] needs to be invoked separately on each function name (there is instead a [macroref BOOST_CONTRACT_OVERRIDES] macro as seen in __Public_Function_Overrides__).
 [footnote
-`boost::hana::if_` can also be used to emulate function scope `static if` with C++14 generic lambdas.
+*Rationale:*
+The syntax for invoking a possible `BOOST_CONTRACT_NAMED_OVERRIDES` macro would need to be something like `BOOST_CONTRACT_NAMED_OVERRIDES((`[^['type-name1]]`, `[^['function-name1]]`), (`[^['type-name2]]`, `[^['function-name2]]`), ...)`.
+The authors felt this syntax is more cumbersome than repeating single `BOOST_CONTRACT_NAMED_OVERRIDE` invocations `BOOST_CONTRACT_NAMED_OVERRIDE(`[^['type-name1]]`, `[^['function-name1]]`) BOOST_CONTRACT_NAMED_OVERRIDE(`[^['type-name2]]`, `[^['function-name2]]`) ...` so decided not to provide the `BOOST_CONTRACT_NAMED_OVERRIDES` macro.
 ]
 
 [endsect]
 
 [section Access Specifiers]
 
-As seen so far, programmers are required to decorate their classes declaring extra members that are internally used by this library to check contracts:
+As we have seen so far, programmers are required to decorate their classes declaring extra members that are internally used by this library to check contracts:
 
 * The `invariant` and `static_invariant` member functions (used to check class invariants, see also __Class_Invariants__).
 * The `base_types` member type declared via [macroref BOOST_CONTRACT_BASE_TYPES] (used to implement subcontracting, see also __Public_Function_Overrides__).
@@ -344,7 +352,7 @@ the `override_...` member types do not have to be declared `public` on any compi
 In any case, declaring the [classref boost::contract::access] class `friend` allows to always declare all these extra members `private` on all compilers.
 ]
 However, programmers might need to more precisely control the public members of their classes to prevent incorrect access of encapsulated members.
-All these members can be declared `private` as long as the [classref boost::contract::access] class is declared as `friend`, for example (see also [@../../example/features/access.cpp =access.cpp=]):
+All these members can be declared `private` as long as the [classref boost::contract::access] class is declared as `friend` of the user class, for example (see also [@../../example/features/access.cpp =access.cpp=]):
 
 [import ../example/features/access.cpp]
 [access]
@@ -355,46 +363,61 @@ This technique is not used in most examples of this documentation only for brevi
 
 [section Throw on Failure]
 
-If a condition checked using [macroref BOOST_CONTRACT_ASSERT] is `false` or if code specified in preconditions, postconditions, and class invariants throws an exception, this library calls the /contract failure handler/ functions [funcref boost::contract::precondition_failure], [funcref boost::contract::postcondition_failure], [funcref boost::contract::entry_invariant_failure], or [funcref boost::contract::exit_invariant_failure] respectively (in fact, [macroref BOOST_CONTRACT_ASSERT] simply expands to code that throws a [classref boost::contract::assertion_failure] exception, see also __No_Macros__).
+If a conditions checked using [macroref BOOST_CONTRACT_ASSERT] is evaluated to be `false` or more in general if any of the specified contract code throws an exception (in fact, [macroref BOOST_CONTRACT_ASSERT] simply expands to code that throws a [classref boost::contract::assertion_failure] exception, see also __No_Macros__), this library will call an appropriate /contract failure handler/ function as follow:
 
-By default, the contract failure handler functions print a message to the standard error `std::cerr` and then terminate the program calling `std::terminate`.
+# False [macroref BOOST_CONTRACT_ASSERT] assertions and exceptions thrown from preconditions `.precondition(...)` call [funcref boost::contract::precondition_failure].
+# False [macroref BOOST_CONTRACT_ASSERT] assertions and exceptions thrown from postconditions `.postcondition(...)` call [funcref boost::contract::postcondition_failure].
+# False [macroref BOOST_CONTRACT_ASSERT] assertions and exceptions thrown from exception guarantees `.except(...)` call [funcref boost::contract::except_failure].
+# False [macroref BOOST_CONTRACT_ASSERT] assertions and exceptions thrown from class invariants `invariant()` and `static_invariant()` call [funcref boost::contract::entry_invariant_failure] when checked at function entry and [funcref boost::contract::exit_invariant_failure] when checked at function exit.
+# Exceptions thrown from old value copies at body `.old(...)` call [funcref boost::contract::old_failure].
+# False [macroref BOOST_CONTRACT_ASSERT] assertions and exceptions thrown from implementation checks `boost::contract::check c = `[^['nullary-functor]] and [macroref BOOST_CONTRACT_CHECK] call [funcref boost::contract::check_failure].
+
+By default, these contract failure handlers print a message to the standard error `std::cerr` and then terminate the program calling `std::terminate`.
 [footnote
 *Rationale:*
-In general, when a contract fails the only safe thing to do is to terminate the program execution (because the contract failure indicates a bug in the program, and in general the program is in a state for which no operation can be successfully performed, so the program should be stopped).
+In general, when a contract fails the only safe thing to do is to terminate program execution (because the contract failure indicates a bug in the program, and in general the program is in a state for which no operation can be successfully performed, so the program should be stopped).
 Therefore, this library terminates the program by default.
 However, for specific applications, programmers could implement some fail-safe mechanism for which some mission-critical operation can always be performed upon handling failures so this library allows programmers to override the default contract failure handlers to fully customize how to handle contract failures.
 ]
-However, programmers can override the default contract failure handlers to perform any custom action on contract failure using [funcref boost::contract::set_precondition_failure], [funcref boost::contract::set_postcondition_failure], [funcref boost::contract::set_entry_invariant_failure], [funcref boost::contract::set_exit_invariant_failure], [funcref boost::contract::set_invariant_failure] (to set both entry and exit invariant failure handlers at once for convenience), or [funcref boost::contract::set_failure] (to set all failure handlers at once for convenience).
+However, programmers can override the default contract failure handlers to perform any custom action on contract failure using the following functions respectively:
+
+# [funcref boost::contract::set_precondition_failure]
+# [funcref boost::contract::set_postcondition_failure]
+# [funcref boost::contract::set_except_failure]
+# [funcref boost::contract::set_entry_invariant_failure] and [funcref boost::contract::set_exit_invariant_failure], or [funcref boost::contract::set_invariant_failure] (to set both entry and exit invariant failure handlers at once for convenience)
+# [funcref boost::contract::set_old_failure]
+# [funcref boost::contract::set_check_failure]
+
+These `set_..._failure(`[^['f]]`)` function calls return the contract failure handler functor [^['f]] that they take as input parameter so these calls can be concatenated.
 For example (see also [@../../example/features/throw_on_failure.cpp =throw_on_failure.cpp=]):
 
 [import ../example/features/throw_on_failure.cpp]
 [throw_on_failure_handler]
 
-Note that in order to comply with C++ and STL exception safety rules, destructors should never throw.
-This library passes a [classref boost::contract::from] parameter to the contract failure handler functions that indicates if the contract failure occurred in a destructor, constructor, or function call.
-This way programmers can ensure to never throw from a destructor call (in the example above, contract failures from destructors are simply ignored even if that is probably never a safe thing to do in real code).
-[footnote
-It is the responsibility of the programmers to decide how to handle contract failures from destructors when they reprogram the contract failure handlers to throw exceptions instead of terminating the program (given that C++ and STL exception safety rules requires destructors to never throw).
-This is not a simple dilemma and it might be one more reason to terminate the program instead of throwing exceptions when contract assertions fail (as this library does by default).
+When programming custom failure handlers that trow exceptions instead of terminating the program, programmers should be wary of the following:
+
+* In order to comply with C++ and STL exception safety, destructors should never throw.
+This library passes a [classref boost::contract::from] parameter to the contract failure handlers for preconditions ([funcref boost::contract::precondition_failure]), postconditions ([funcref boost::contract::postcondition_failure]), class invariants ([funcref boost::contract::entry_invariant_failure] and [funcref boost::contract::exit_invariant_failure]), and old value copies at body ([funcref boost::contract::old_failure]).
+This [classref boost::contract::from] parameter indicates if the contract failure occurred in a destructor, constructor, or function call so programmers can use it code custom contract failure hander functions that never throw from destructors (in the example above, contract failures from destructors are simply ignored even if that is probably never a safe thing to do in real code).
+* Implementation checks can appear in any code, including destructor implementation code, so [funcref boost::contract::check_failure] should also never throw, or implementation checks should never be used in destructors.
+* The contract failure handler for exception guarantees [funcref boost::contract::except_failure] should also never throw (regardless of its [classref boost::contract::from] parameter).
+That is because when [funcref boost::contract::except_failure] is called there is already an active exception on the stack, the exception that triggered the exception guarantees to be checked in the first place (throwing an exception while there is already an active exception leads to undefined behaviour in C++, most programs will segfault).
+
+[note
+It is the responsibility of the programmers to decide how to handle contract failures from destructors when they program custom contract failure handlers that throw exceptions instead of terminating the program (given that C++ and STL exception safety rules requires destructors to never throw).
+This is not a simple dilemma and it might be one more reason to terminate the program instead of throwing exceptions when assertions fail in C++ (as this library and also the C-style `assert` do by default).
 ]
 
-The contract assertions can be programmed to throw [classref boost::contract::assertion_failure] using [macroref BOOST_CONTRACT_ASSERT] (see also __No_Macros__) or to throw any other exception using code similar to:
+Contract assertions can be programmed to throw [classref boost::contract::assertion_failure] using [macroref BOOST_CONTRACT_ASSERT]`(`[^['condition]]`)` as we have seen so far (see also __No_Macros__).
+Alternatively, contract assertions can be programmed to throw any other exception (including user-defined exceptions) using code similar to the following:
 
-    if(``[^['error-condition]]``) throw ``[^['exception-object]]``;
+    if(!``[^['condition]]``) throw ``[^['exception-object]]``;
 
 For example (see also [@../../example/features/throw_on_failure.cpp =throw_on_failure.cpp=]):
 
 [throw_on_failure_cstring]
 
-[endsect]
-
-[section Disable Contract Checking]
-
-Checking contracts adds run-time overhead and can slow down program execution (see also __Benefits_and_Costs__).
-Therefore, programmers can define the following macros (`-D` option in Clang and GCC, `/D` option in MSVC, etc.) to instruct this library to not check specific set of contracts at run-time: [macroref BOOST_CONTRACT_NO_PRECONDITIONS] (do not check preconditions), [macroref BOOST_CONTRACT_NO_POSTCONDITIONS] (do not check postconditions), [macroref BOOST_CONTRACT_NO_ENTRY_INVARIANTS] (do not check invariants at call entry), [macroref BOOST_CONTRACT_NO_EXIT_INVARIANTS] (do not check invariants at call exit), and [macroref BOOST_CONTRACT_NO_INVARIANTS] (do not check invariants at both call entry and exit).
-By default, none of these macros are defined so this library checks all contracts.
-
-For example, programmers could decide to check all contracts during early development builds, but later check only preconditions and maybe entry invariants for release builds by defining [macroref BOOST_CONTRACT_NO_POSTCONDITIONS] and [macroref BOOST_CONTRACT_NO_EXIT_INVARIANTS].
+In the example above, [funcref boost::contract::precondition_failure] will be called if the precondition functor throws the user-defined exception `too_large_error` (exactly the same as when a precondition programmed using [macroref BOOST_CONTRACT_ASSERT] fails).
 
 [endsect]
 

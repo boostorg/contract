@@ -8,7 +8,7 @@
 #include <cassert>
 #include <vector>
 
-//[old_no_macros
+//[old_no_macro
 template<typename T>
 class vector {
 public:

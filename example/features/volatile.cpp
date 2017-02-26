@@ -21,19 +21,19 @@ public:
         boost::contract::check c = boost::contract::destructor(this);
     }
 
-    void m() { // Check const invariant (at entry and exit if no throw).
+    void m() { // Check const invariant (at entry and exit).
         boost::contract::check c = boost::contract::public_function(this);
     }
 
-    void c() const { // Check const invariant (at entry and exit if no throw).
+    void c() const { // Check const invariant (at entry and exit).
         boost::contract::check c = boost::contract::public_function(this);
     }
     
-    void v() volatile { // Check cv invariant (at entry and exit if no throw).
+    void v() volatile { // Check cv invariant (at entry and exit).
         boost::contract::check c = boost::contract::public_function(this);
     }
     
-    void cv() const volatile { // Check cv inv. (at entry and exit if no throw).
+    void cv() const volatile { // Check cv invariant (at entry and exit).
         boost::contract::check c = boost::contract::public_function(this);
     }
 };

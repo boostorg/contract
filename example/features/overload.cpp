@@ -83,15 +83,18 @@ public:
     typedef BOOST_CONTRACT_BASE_TYPES(BASES) base_types;
     #undef BASES
     
-    BOOST_CONTRACT_OVERRIDES(str) // Used only once for all `str` overloads.
+    BOOST_CONTRACT_OVERRIDES(str) // Invoked only once for all `str` overloads.
     
     std::string str(boost::contract::virtual_* v = 0) const /* override */ {
         std::string result;
         boost::contract::check c = boost::contract::public_function<
-            override_str
-        // Note the use of `static_cast` (and same in other overloads below).
-        >(v, result, static_cast<std::string (string_lines::*)(
-                boost::contract::virtual_*) const>(&string_lines::str), this);
+                override_str>(
+            v, result,
+            // `static_cast` resolves overloaded function pointer ambiguities.
+            static_cast<std::string (string_lines::*)(
+                    boost::contract::virtual_*) const>(&string_lines::str),
+            this
+        );
 
         return result = str_;
     }
@@ -99,23 +102,31 @@ public:
     // Overload on (absence of) `const` qualifier.
     std::string& str(boost::contract::virtual_* v = 0) /* override */ {
         boost::contract::check c = boost::contract::public_function<
-            override_str
-        >(v, str_, static_cast<std::string& (string_lines::*)(
-                boost::contract::virtual_*)>(&string_lines::str), this);
+                override_str>(
+            v, str_,
+            // `static_cast` resolves overloaded function pointer ambiguities.
+            static_cast<std::string& (string_lines::*)(
+                    boost::contract::virtual_*)>(&string_lines::str),
+            this
+        );
 
         return str_;
     }
     
-    BOOST_CONTRACT_OVERRIDES(put) // Used only once for all `put` overloads.
+    BOOST_CONTRACT_OVERRIDES(put) // Invoked only once for all `put` overloads.
 
     void put(std::string const& x,
             boost::contract::virtual_* v = 0) /* override */ {
         boost::contract::old_ptr<std::string> old_str =
                 BOOST_CONTRACT_OLD(v, str());
         boost::contract::check c = boost::contract::public_function<
-            override_put
-        >(v, static_cast<void (string_lines::*)(std::string const&,
-                boost::contract::virtual_*)>(&string_lines::put), this, x)
+                override_put>(
+            v,
+            // `static_cast` resolves overloaded function pointer ambiguities.
+            static_cast<void (string_lines::*)(std::string const&,
+                    boost::contract::virtual_*)>(&string_lines::put),
+            this, x
+        )
             .postcondition([&] {
                 BOOST_CONTRACT_ASSERT(str() == *old_str + x + '\n');
             })
@@ -129,9 +140,13 @@ public:
         boost::contract::old_ptr<std::string> old_str =
                 BOOST_CONTRACT_OLD(v, str());
         boost::contract::check c = boost::contract::public_function<
-            override_put
-        >(v, static_cast<void (string_lines::*)(char, boost::contract::
-                virtual_*)>(&string_lines::put), this, x)
+                override_put>(
+            v,
+            // `static_cast` resolves overloaded function pointer ambiguities.
+            static_cast<void (string_lines::*)(char,
+                    boost::contract::virtual_*)>(&string_lines::put),
+            this, x
+        )
             .postcondition([&] {
                 BOOST_CONTRACT_ASSERT(str() == *old_str + x + '\n');
             })
@@ -146,9 +161,13 @@ public:
         boost::contract::old_ptr<std::string> old_str =
                 BOOST_CONTRACT_OLD(v, str());
         boost::contract::check c = boost::contract::public_function<
-            override_put
-        >(v, static_cast<void (string_lines::*)(int, bool, boost::contract::
-                virtual_*)>(&string_lines::put), this, x, tab)
+                override_put>(
+            v,
+            // `static_cast` resolves overloaded function pointer ambiguities.
+            static_cast<void (string_lines::*)(int, bool,
+                    boost::contract::virtual_*)>(&string_lines::put),
+            this, x, tab
+        )
             .postcondition([&] {
                 std::ostringstream s;
                 s << x;

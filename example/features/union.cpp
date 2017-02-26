@@ -14,16 +14,17 @@
 
 //[union
 union positive {
-    static void static_invariant() {
+public:
+    static void static_invariant() { // Static class invariants.
         BOOST_CONTRACT_ASSERT(instances() >= 0);
     }
     
-    void invariant() const {
+    void invariant() const { // Class invariants.
         BOOST_CONTRACT_ASSERT(i_ > 0);
         BOOST_CONTRACT_ASSERT(d_ > 0);
     }
 
-    explicit positive(int x) {
+    explicit positive(int x) { // Contracts for a constructor.
         // Unions cannot have bases so ctor preconditions here.
         boost::contract::constructor_precondition<positive> pre([&] {
             BOOST_CONTRACT_ASSERT(x > 0);
@@ -40,6 +41,41 @@ union positive {
         ++instances_;
     }
     
+    ~positive() { // Contracts for the destructor.
+        boost::contract::old_ptr<int> old_instances =
+                BOOST_CONTRACT_OLD(instances());
+        boost::contract::check c = boost::contract::destructor(this)
+            .postcondition([&] {
+                BOOST_CONTRACT_ASSERT(instances() == *old_instances - 1);
+            })
+        ;
+
+        --instances_;
+    }
+    
+    void get(int& x) { // Contracts for a public function.
+        boost::contract::check c = boost::contract::public_function(this)
+            .postcondition([&] {
+                BOOST_CONTRACT_ASSERT(x > 0);
+            });
+        ;
+        
+        x = i_;
+    }
+    
+    static int instances() { // Contracts for a static public function.
+        boost::contract::check c = boost::contract::public_function<positive>();
+        return instances_;
+    }
+
+private:
+    int i_;
+    double d_;
+    
+    /* ... */
+//]
+
+public:
     explicit positive(double x) {
         // Unions cannot have bases so ctor preconditions here.
         boost::contract::constructor_precondition<positive> pre([&] {
@@ -56,28 +92,6 @@ union positive {
         d_ = x;
         ++instances_;
     }
-
-    ~positive() {
-        boost::contract::old_ptr<int> old_instances =
-                BOOST_CONTRACT_OLD(instances());
-        boost::contract::check c = boost::contract::destructor(this)
-            .postcondition([&] {
-                BOOST_CONTRACT_ASSERT(instances() == *old_instances - 1);
-            })
-        ;
-
-        --instances_;
-    }
-
-    void get(int& x) {
-        boost::contract::check c = boost::contract::public_function(this)
-            .postcondition([&] {
-                BOOST_CONTRACT_ASSERT(x > 0);
-            });
-        ;
-        
-        x = i_;
-    }
     
     void get(double& x) {
         boost::contract::check c = boost::contract::public_function(this)
@@ -89,17 +103,6 @@ union positive {
         x = d_;
     }
 
-    static int instances() {
-        boost::contract::check c = boost::contract::public_function<positive>();
-        return instances_;
-    }
-
-private:
-    int i_;
-    double d_;
-    
-    /* ... */
-//]
     #ifndef BOOST_GCC // G++ does not support static union members yet.
         static int instances_;
     #endif

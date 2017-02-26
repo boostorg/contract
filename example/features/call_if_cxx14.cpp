@@ -40,7 +40,7 @@ struct is_input_iterator : std::is_same<
 //[call_if_cxx14
 template<typename Iter, typename Dist>
 void myadvance(Iter& i, Dist n) {
-    Iter *p = &i; // So captures change actual pointed iterator value.
+    Iter* p = &i; // So captures change actual pointed iterator value.
     boost::contract::call_if<is_random_access_iterator<Iter> >(
         std::bind([] (auto p, auto n) { // C++14 generic lambda.
             *p += n;

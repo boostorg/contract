@@ -36,15 +36,28 @@ private:
 };
 
 // Specialize `boost::is_copy_constructible<n>` trait (not needed on C++11):
+#include <boost/config.hpp>
+#ifdef BOOST_NO_CXX11_DELETED_FUNCTIONS
+
+//[old_if_copyable_specialization
+#include <boost/type_traits/is_copy_constructible.hpp>
+
+namespace boost {
+    template<>
+    struct is_copy_constructible<n> : false_type {};
+}
+//]
+
+#endif
 
 int main() {
-    n j, k;
+    n j, k; // Non copyable (no compiler error but no old-value checks).
     j.value = 1;
     k.value = 2;
     accumulate(j, k);
     assert(j.value == 3);
 
-    int i = 1;
+    int i = 1; // Copyable (check old values).
     accumulate(i, 2);
     assert(i == 3);
 

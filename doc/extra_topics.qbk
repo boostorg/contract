@@ -1,0 +1,446 @@
+
+[/ Copyright (C) 2008-2016 Lorenzo Caminiti]
+[/ Distributed under the Boost Software License, Version 1.0 (see accompanying]
+[/ file LICENSE_1_0.txt or a copy at http://www.boost.org/LICENSE_1_0.txt).]
+[/ See: http://www.boost.org/doc/libs/release/libs/contract/doc/html/index.html]
+
+[section Extra Topics]
+
+This section can be consulted selectively for specific topics of interest.
+
+[section Old Value Requirements (Templates)]
+
+Old values require to copy the expression passed to [macroref BOOST_CONTRACT_OLDOF] thus the type of that expression must be copy constructible.
+More precisely, dereferencing an old value pointer of type [classref boost::contract::old_ptr]`<T>` requires `boost::is_copy_constructible<T>::value` to be `true` (otherwise this library will generate a compile-time error).
+
+In some cases it might be acceptable, or even desirable, to cause a compile-time error when a program uses old value types that are not copy constructible (because it is not possible to fully check the correctness of the program as stated by the contract assertions that use the old values).
+In these cases, programmers can declare old values using [classref boost::contract::old_ptr] as seen so far.
+
+However, in other cases it might be desirable to simply not check assertions that use old values when the respective old value types are not copy constructible.
+Programmers can do this by using [classref boost::contract::old_ptr_if_copyable] instead of [classref boost::contract::old_ptr] to program these old values (and by checking if the old value pointer is not null before dereferencing it in postconditions).
+For example, consider the following function template that could in general be instantiated for types `T` that are not copy constructible (that is for which `boost::is_copy_constructible<T>::value` is `false`, see also [@../../example/features/old_if_copyable.cpp =old_if_copyable.cpp=]):
+[footnote
+*Rationale:*
+__N1962__ and other proposals to add contracts to C++ do not provide a mechanism to selectively disable copies for only old value types that are not copy constructible.
+However, this library provides such a mechanism to allow to program contracts for template code without necessarily adding extra copy constructible type requirements that would not be present if it were not for copying the old values (so compiling the code with and without contracts will not necessarily alter the type requirements of the program).
+As for extending the C++ language, something similar could be achieved by combing both __N1962__ (contracts) and __N3613__ (`static if`) so that old value expressions within template code could be guarded by `static if` statements checking if the old value types are copyable or not.
+]
+
+[import ../example/features/old_if_copyable.cpp]
+[old_if_copyable]
+
+The old value pointer `old_total` is programmed using [classref boost::contract::old_ptr_if_copyable] so if `T` is not copy constructible then `total` will simply not be copied and `old_total` will be left as a null pointer (in these cases `old_total` must be checked to be not null `if(old_total) ...` before it can be dereferenced in postconditions and exception guarantees).
+If the above example used [classref boost::contract::old_ptr] instead then the library would have generated a compile-time error when `accumulate` is instantiated with types `T` that are not copy constructible (but only if `old_total` is actually dereferenced somewhere in the contract assertions using `*old_total ...`, `old_total->...`, etc.).
+
+[note
+The `..._if_copyable` postfix in the type name [classref boost::contract::old_ptr_if_copyable]`<T>` refers to the pointed type `T` which might or not be copy constructible without causing a compile-time error in this case (the old value pointer itself is always copyable, or at least copy-assignable).
+]
+
+When C++11 `auto` declarations are used with [macroref BOOST_CONTRACT_OLDOF], this library always defaults to using the [classref boost::contract::old_ptr] type (because this type requirements are more stringent than the requirements of [classref boost::contract::old_ptr_if_copyable]).
+For example, the following will use [classref boost::contract::old_ptr] and not [classref boost::contract::old_ptr_if_copyable] to declare `old_x`:
+
+    auto old_x = BOOST_CONTRACT_OLDOF(x); // C++11 auto declarations.
+
+[heading No C++11]
+
+In general, the `boost::is_copy_constructible` type trait requires C++11 for full support.
+On non-C++11 compilers, it is possible to inherit the old value type from `boost::noncopyable`, or use `BOOST_MOVABLE_BUT_NOT_COPYABLE`, or explicitly specialize the `boost::is_copy_constructible` template (see [@http://www.boost.org/doc/libs/release/libs/type_traits/doc/html/boost_typetraits/reference/is_copy_constructible.html boost::is_copy_constrictible] for more information).
+For example, for some non-copyable old value type `n` (see also [@../../example/features/old_if_copyable.cpp =old_if_copyable.cpp=]):
+
+[old_if_copyable_specialization]
+
+[endsect]
+
+[section Assertion Requirements (Templates)]
+
+In general, assertions can introduce a new set of requirements on the types used by the program.
+Some of these type requirements might be necessary only to check the assertions and they would not be required by the program otherwise.
+
+In some cases it might be acceptable, or even desirable, to cause a compile-time error when a program uses types that do not provide all the operations needed to check contract assertions (because it is not possible to fully check the correctness of the program as stated by the contracts).
+In these cases, programmers can specify contract assertions as we have seen so far, compilation will fail if user types do not provide all operations necessary to check the contracts.
+
+However, in other cases it might be desirable that adding contracts to a program does not alter its type requirements and that assertions are simply not checked when user types do not provide all the operations necessary to check the assertions.
+Programmers can do this by using [funcref boost::contract::condition_if] (or [funcref boost::contract::condition_if_c]) within the contract assertions.
+
+For example, let's consider the following `vector<T>` class template.
+This class template does not usually require that its type parameter `T` has an equality operator `==` (it only requires `T` to be copy constructible, see `std::vector` documentation).
+However, the contracts of the `vector<T>::push_back(value)` member function include a postcondition `back() == value` which introduces the new requirement that `T` must also have an equality operator `==`.
+Programmers can specify this postcondition as usual with `BOOST_CONTRACT_ASSERT(back() == value)` an let the program fail to compile when users instantiate `vector<T>` with a type `T` that does not provide an equality operator `==`.
+Otherwise, programmers can specify this postcondition using [funcref boost::contract::condition_if] to evaluate the asserted condition only for types `T` that have an equality operator `==` and trivially evaluate to `true` otherwise, for example (see also [@../../example/features/condition_if.cpp =condition_if.cpp=]):
+
+[import ../example/features/condition_if.cpp]
+[condition_if]
+
+The [funcref boost::contract::condition_if] function template is a special case of the more general facility [funcref boost::contract::call_if]:
+Specifically, `boost::contract::condition_if<`[^['Predicate]]`>(`[^['condition]]`)` is equivalent to:
+
+    boost::contract::call_if<``[^['Predicate]]``>(
+        ``[^['condition]]``
+    ).else_(
+        [] { return true; }
+    )
+
+Where [^['Predicate]] is a nullary boolean meta-function and [^['condition]] is a nullary boolean functor.
+If [^['Predicate]]`::value` is statically evaluated to be `true` at compile-time then [^['condition]]`()` is called at run-time and its boolean result is returned by the enclosing `call_if`.
+Otherwise, if [^['Predicate]]`::value` is statically evaluated to be `false` at compile-time then the lambda function `[] { return true; }()` is called at run-time and `true` is trivially returned by the enclosing `call_if`.
+Note that [^['condition]] must be a functor template (and not just a functor) so its code that contains the assertion operations with the extra type requirements (e.g., the equality operator `==`) will not be instantiated and compiled for specific types unless the compiler determines that [^['condition]]`()` needs to be actually called at run-time (functor templates like `std::equal_to` and C++14 generic lambdas can be used to program [^['condition]], but C++11 lambdas cannot).
+
+More in general, [funcref boost::contract::call_if] accepts a number of optional /else-if/ statements and one optional /else/ statement:
+
+    boost::contract::call_if<``[^['Predicate1]]``>(
+        ``[^['then1]]``
+    ).template else_if<``[^['Predicate2]]``>(       // Optional.
+        ``[^['then2]]``
+    )
+    ...                                   // Optionally, other `else_if` statements.
+    .else_(                               // Optional for `void` functors, otherwise required.
+        ``[^['else]]``
+    )
+
+Where [^['Predicate1]], [^['Predicate2]], ... are nullary boolean meta-functions and [^['then1]], [^['then2]], ..., [^['else]] are nullary functors.
+The return types of the functor calls [^['then1]]`()`, [^['then2]]`()`, ..., [^['else]]`()` must either be all the same (including all `void`) or be of types implicitly convertible into one another.
+At run-time [funcref boost::contract::call_if] will call the functor [^['then1]]`()`, or [^['then2]]`()`, ..., or [^['else]]`()` depending on which meta-function [^['Predicate1]]`::value`, [^['Predicate2]]`::value`, ... is statically evaluated to be `true` or `false` at compile-time, and it will return the value returned by the functor being called. 
+If [^['then1]], [^['then2]], ..., [^['else]] are nullary functor templates (not just nullary functors) then their code will only be compiled if the compiler determines they need to be actually called at run-time (so only if the related [^['Predicate1]]`::value`, [^['Predicate2]]`::value`, ... are evaluated to be `true` or `false` at compile-time).
+All the `else_if<...>(...)` statements are optional, the `else_(...)` statement is optional if the functor calls return `void` but it is required otherwise.
+
+In general, [funcref boost::contract::call_if] can be used to program contract assertions that compile and check different functor templates depending on related conditions being statically evaluated to be `true` or `false` at compile-time (but in most cases [funcref boost::contract::condition_if] should be sufficient, simpler and less verbose to use).
+
+The [funcref boost::contract::condition_if_c], [funcref boost::contract::call_if_c], and `.else_if_c` function templates work similarly to their counterparts without the `..._c` postfix above, but they take their condition template parameters as static boolean values instead of nullary boolean meta-functions.
+
+[heading Static-If Emulation (C++14)]
+
+The [funcref boost::contract::call_if] function template is a general facility and its use is not limited to programming contracts.
+In fact, [funcref boost::contract::call_if] can be used together with C++14 generic lambdas to program statements similar to `static if` at least a function scope (`static if` was unsuccessfully proposed for addition to the C++ standard a number of different times, see __N3613__).
+For example, consider the following implementation of `std::advance` that uses statements similar to `static if` but programmed via [funcref boost::contract::call_if] (see also [@../../example/features/call_if_cxx14.cpp =call_if_cxx14.cpp=]):
+
+[import ../example/features/call_if_cxx14.cpp]
+[call_if_cxx14]
+
+This implementation is more concise, easier to read and maintain than the usual implementation of `std::advance` that uses tag dispatching.
+[footnote
+Boost.Hana (`boost::hana::if_`) can also be used to emulate function scope `static if` with C++14 generic lambdas.
+]
+
+[endsect]
+
+[section Volatile Public Functions]
+
+This library allows to specify a different set of class invariants to be checked for volatile public member functions.
+These /volatile class invariants/ are programmed in a public `const volatile` member function, named `invariant`, taking no argument, and returning `void` (see [macroref BOOST_CONTRACT_INVARIANT_FUNC] to name the invariant function differently from `invariant` and __Access_Specifiers__ to not have to declare it public).
+Classes that do no have invariants to check for their volatile public functions, simply do not declare the `invariant() const volatile` member function.
+
+In general, `const volatile` qualified invariants work the same as `const` qualified invariant (see __Class_Invariants__) with the only difference that `volatile` and `const volatile` member functions check `const volatile` invariants while mutable (i.e., neither `const` nor `volatile` qualified) and `const` member functions check `const` invariants.
+A given class can specify both `const volatile` and `const` qualified invariant member functions:
+[footnote
+*Rationale:*
+Constructors and destructors check `const volatile` and `const` invariants in that order because the qualifier that limits the calls the least is checked first (note that a `const volatile` calls can be made on any object while `const` calls cannot be made on `volatile` non-`const` objects, in that sense the `const volatile` qualifier limits calls on an object less than `const` alone does).
+This is consistent with `static` class invariants that are checked even before `const volatile` invariants (the `static` classifier limits calls even less than `const volatile` in the sense that an object is not even needed to make static calls).
+]
+
+* Constructors check both `const volatile` and `const` qualified invariants in that order (at exit but only if no exception is thrown).
+* Destructors check both `const volatile` and `const` qualified invariants (at entry).
+* Both mutable and `const` public member functions check `const` qualified invariants (at entry and at exit).
+* Both `volatile` and `const volatile` public member functions check `const volatile` qualified invariants (at entry and at exit).
+
+The above rules ensure that volatile class invariants are correctly checked (see also __Constructor_Calls__, __Destructor_Calls__, and __Public_Function_Calls__).
+For example (see also [@../../example/features/volatile.cpp =volatile.cpp=]):
+
+[import ../example/features/volatile.cpp]
+[volatile]
+
+While this library does not automatically check `const volatile` invariants for non-volatile functions, programmers can explicitly call the `const volatile` invariant function from the `const` invariant function if that makes sense for the contracts being specified (that way all public member functions `volatile` and not will check `const volatile` invariants):
+[footnote
+*Rationale:*
+Note that while all public member functions can be made to check `const volatile` invariants, it is never possible to make volatile public member functions check `const` non-volatile invariants.
+That is because both `const` and `volatile` can always be added but never stripped in C++ (a part from forcefully via `const_cast`) but `const` is always automatically added by this library in order to enforce contract constant-correctness (see __Constant_Correctness__).
+That said, it would be incorrect for this library to also automatically add `volatile` and require all functions to check `const volatile` (not just `const`) invariants because only `volatile` members can be accessed from `const volatile` invariants so there could be many `const` (but not `const volatile`) members that are accessible from `const` invariants but not from `const volatile` invariants.
+To avoid this confusion, this library has chosen to draw a clear dichotomy between `const` and `const volatile` invariants so that only volatile members check `const volatile` invariants and only non-volatile members check `const` (but not `const volatile`) invariants.
+This is simple and should serve most cases.
+If programmers need non-volatile members to also check `const volatile` invariants, they can explicitly do so by calling the `const volatile` invariant function from the `const` invariant function as shown in this documentation.
+]
+
+    class ``[^['class-type]]`` {
+    public:
+        void invariant() const {
+            ``[^['class-type]]`` const volatile& cv = *this;
+            cv.invariant(); // Call `void invariant() const volatile` below.
+            ...
+        }
+
+        void invariant() const volatile {
+            ...
+        }
+
+        ...
+    };
+
+As usual, static class invariants can also be specified (see __Class_Invariants__) and private and protected member functions do not check any invariant (see __Private_and_Protected_Functions__).
+
+[endsect]
+
+[section Move Operations]
+
+As with all public operations of a class, also move operations should maintain class invariants (see also __Stroustrup13__, p. 520).
+Specifically, C++ requires the following:
+
+* The moved-from object can be copy assigned.
+* The moved-from object can be move assigned.
+* The moved-from object can be destroyed (if not for anything else, this requires that class invariants are maintained by move operations because the destructor of the moved-from object requires class invariants to be satisfied at its destructor entry, as always with destructors see also __Destructor_Calls__).
+
+Thus both the move constructor and the move assignment operator need to maintain the class invariants of the moved-from object and their contracts can be programmed using [funcref boost::contract::constructor] and [funcref boost::contract::public_function] as always for constructors and public member functions, for example (see also [@../../example/features/move.cpp =move.cpp=]):
+
+[import ../example/features/move.cpp]
+[move]
+
+This example assumes that it is possible to call the public member function `moved()` on the moved-from object.
+This allows to make explicit the precondition that except for destructor, copy and move assignments all other public member functions cannot be called on a moved-from object.
+This precondition is usually implicit in C++ (i.e., documented by the standard but not checked by the language at run-time).
+If it is is not possible (e.g., due to some optimized implementation of the move operations) to have such a public `moved()` member function, the private `moved_` member (or similar) can be used to program class invariants and preconditions (and that will just relay on the usual implicit C++ assumption on moved-from object because users will not be able to fully check preconditions and class invariants before calling functions of a moved-from object).
+
+[note
+The default move constructor and move assignment operator automatically generated by C++ will not check contracts.
+Therefore, unless these operations are not public or they have no preconditions, no postconditions, and the class has no invariants, programmers should manually define them using [funcref boost::contract::constructor], [classref boost::contract::constructor_precondition], and [funcref boost::contract::public_function].
+(Same as for all other automatically generated operations.)
+]
+
+[endsect]
+
+[section Unions]
+
+In C++, a `union` cannot have virtual member functions, bases classes, and cannot be used as a base class thus subcontracting ([classref boost::contract::virtual_], [macroref BOOST_CONTRACT_OVERRIDE], etc.) do not apply to unions.
+Also a `union` cannot inherit from [classref boost::contract::constructor_precondition] (because it cannot have base classes) so such a class is used to declare a local object that checks constructor preconditions (see `pre` in the example below).
+A part from that, this library is used as usual to program contracts for unions, for example (see also [@../../example/features/union.cpp =union.cpp=]):
+
+[import ../example/features/union.cpp]
+[union]
+
+[endsect]
+
+[section Disable Contract Checking]
+
+Checking contracts adds run-time overhead and can slow down program execution (see also __Benefits_and_Costs__).
+Therefore, programmers can define the following configuration macros (`-D` option in Clang and GCC, `/D` option in MSVC, etc.) to instruct this library to not check specific kind of contract conditions at run-time:
+
+* Define the [macroref BOOST_CONTRACT_NO_PRECONDITIONS] macro to not check preconditions.
+* Define the [macroref BOOST_CONTRACT_NO_POSTCONDITIONS] macro to not check postconditions.
+* Define the [macroref BOOST_CONTRACT_NO_EXCEPTS] macro to not check exception guarantees.
+* Define the [macroref BOOST_CONTRACT_NO_ENTRY_INVARIANTS] macro to not check class invariants at call entries.
+* Define the [macroref BOOST_CONTRACT_NO_EXIT_INVARIANTS] macro to not check class invariants at call exits.
+* Or, define the [macroref BOOST_CONTRACT_NO_INVARIANTS] macro to not check class invariants at neither call entries or exits (provided for convenience, equivalent to defining both [macroref BOOST_CONTRACT_NO_ENTRY_INVARIANTS] and [macroref BOOST_CONTRACT_NO_EXIT_INVARIANTS]).
+* Define the [macroref BOOST_CONTRACT_NO_CHECKS] macro to not check implementation checks.
+
+By default, none of these macros are defined so this library checks all contracts.
+However, when the above macros are defined by the user, the implementation code of this library is internally optimized to minimize as much as possible any run-time and compile-time overhead associated with checking and compiling contracts (see __Disable_Contract_Compilation__ for techniques to completely remove any run-time and compile-time overhead associated with contract code).
+
+For example, programmers could decide to check all contracts during early development builds, but later check only preconditions and maybe entry invariants for release builds by defining [macroref BOOST_CONTRACT_NO_POSTCONDITIONS], [macroref BOOST_CONTRACT_NO_EXCEPTS], [macroref BOOST_CONTRACT_NO_EXIT_INVARIANTS], and [macroref BOOST_CONTRACT_NO_CHECKS].
+
+[note
+Old values can be used by both postconditions and exception guarantees so it is necessary to define both [macroref BOOST_CONTRACT_NO_POSTCONDITIONS] and [macroref BOOST_CONTRACT_NO_EXCEPTS] to disable old value copies.
+]
+
+[endsect]
+
+[section Disable Contract Compilation (Macro Interface)]
+
+This library provides macros that can be used to completely disable compile-time overhead introduced by contracts but at the cost of manually programming `#ifndef` statements around contract code:
+
+* This library defines the [macroref BOOST_CONTRACT_NO_CONSTRUCTORS] macro if contract checking is disabled for constructors.
+* This library defines the [macroref BOOST_CONTRACT_NO_DESTRUCTORS] macro if contract checking is disabled for destructors.
+* This library defines the [macroref BOOST_CONTRACT_NO_PUBLIC_FUNCTIONS] macro if contract checking is disabled for public functions.
+* This library defines the [macroref BOOST_CONTRACT_NO_FUNCTIONS] macro if contract checking is disabled for (non-public) functions.
+* This library defines the [macroref BOOST_CONTRACT_NO_OLDS] macro if old value copies are disabled.
+* This library defines the [macroref BOOST_CONTRACT_NO_ALL] macro if all kinds of contract checking are disabled.
+
+These macros are not configuration macros and they should not be defined directly by the user (otherwise this library will generate a compile-time error).
+Instead, these macros are automatically defined by this library based on users defining the `BOOST_CONTRACT_NO_...` macros listed in __Disable_Contract_Checking__.
+
+Alternatively, this library provides a macro-based interface [headerref boost/contract_macro.hpp] that can also be used to completely disable compile-time overhead of contract code.
+The macro interface is more concise than using `#ifndef` statements but it makes the contract code and eventual compiler errors more cryptic (because all the macro code will expand on a single line number, etc. as always with C++ macros).
+
+The following example illustrates both the use of the macro interface and of `#ifndef` statements to selectively disable not just contract checking at run-time but contract code compilation altogether (see also [@../../example/features/ifdef_macro.cpp =ifdef_macro.cpp=] and [@../../example/features/ifdef.pp =ifdef.cpp=]):
+
+[import ../example/features/ifdef_macro.cpp]
+[import ../example/features/ifdef.cpp]
+[table
+[ [Macro Interface] [Code Interface] ]
+[ [[ifdef_macro_function]] [[ifdef_function]] ]
+]
+
+The same is done to disable contract code complication for private and protected functions.
+The [macroref BOOST_CONTRACT_OLD_PTR_IF_COPYABLE] macro is provided to handle non-copyable old value types.
+For constructors, destructors, and public functions instead (see also [@../../example/features/ifdef_macro.cpp =ifdef_macro.cpp=] and [@../../example/features/ifdef.pp =ifdef.cpp=]):
+
+[table
+[ [Macro Interface] [Code Interface] ]
+[ [[ifdef_macro_class]] [[ifdef_class]] ]
+]
+
+The authors of this library do not recommend to use these techniques unless strictly necessary because they both make the contract code more verbose, less readable, and can cause cryptic compiler error messages.
+In most cases, the compile-time overhead of contracts should not represent an issue and it should be sufficient to disable contract checking at run-time as indicated in __Disable_Contract_Checking__.
+
+[endsect]
+
+[section Separate Body Implementation]
+
+Contracts are part of the program specification and not of its implementation (see also __Specification_vs_Implementation__).
+However, this library uses function definitions to program the contracts so contract code appears together with the function implementation code.
+This is not ideal (even if contract code programmed with this library must always appear at the very top of the function definition so programmers will easily be able to distinguish it from the rest of function implementation so this might not be real problem in practise).
+
+In some cases, it might be desirable to completely separate the contract code (function specification) from the function body code (function implementation).
+For example, this could be necessary for software that ships only header files and pre-compiled source code to its users (notably, that cannot be done for template code in C++).
+If the contracts are programmed in the function definitions that are pre-compiled with the source code, users will not be able to inspect the contract code to understand semantics and usage of the functions (again, this might not be a real problem in practice for example if contract code is already somehow extracted from the source code and presented as part of the documentation of the shipped software).
+
+In such cases, the function implementation can be programmed in an extra /body function/ (e.g., named `..._body`) that is defined in the source code.
+The original function definition remains in the header files instead, it contains the contract and then simply calls the extra body function.
+This technique allows to keep the contract code in header files while separating the body implementation code to source files but at the cost of programmers writing an extra function declaration for the body function (with the limitation that constructor member initialization lists must also be programmed in the header files because that is where the constructors that call their extra body functions will be actually defined).
+
+For example, the following header file only contains function declarations and contract code (function specifications) and constructor member initializations (see also [@../../example/features/separate_body.hpp =separate_body.hpp=]):
+
+[import ../example/features/separate_body.hpp]
+[separate_body_hpp]
+
+Instead, the function bodies (function implementations) is programmed in a separate source file (see also [@../../example/features/separate_body.cpp =separate_body.cpp=]):
+
+[import ../example/features/separate_body.cpp]
+[separate_body_cpp]
+
+The same technique can be used for non-member, private, protected functions, etc.
+
+[note
+When contracts are programmed in separate =.cpp= files and also /all/ this library headers are `#include`d only from the users' =.cpp= files, then these =.cpp= files can be compiled disabling specific contract checking (for example, [macroref BOOST_CONTRACT_NO_POSTCONDITIONS], [macroref BOOST_CONTRACT_NO_EXCEPTS], and [macroref BOOST_CONTRACT_NO_EXIT_INVARIANTS], see __Disable_Contract_Checking__).
+Then the code in these =.cpp= files will always have such contract checking disabled even when linked to some other user code that might have been compiled with a different set of contracts disabled (i.e., a different set of `BOOST_CONTRACT_NO_...` macros defined).
+This technique might be useful to ship pre-compiled object files (e.g., for a library) that will never check some contracts (e.g., postconditions, exception guarantees, and exit invariants) regardless of the definition of the `BOOST_CONTRACT_NO_...` macros used to compile code that links against the shipped object files.
+
+On the contrary, if contracts are programmed in header files and this library headers are `#include`d in the header files that are being shipped, then end users can enable or disables contract checking of the shipped code by defining the `BOOST_CONTRACT_NO_...` macros when they compile the shipped header files as part of their code.
+This technique might be useful in other situations when programmers that ship code want to leave it up the their end users to decide which contracts of the shipped code should be checked at run-time.
+]
+
+[endsect]
+
+[section No Lambda Functions (No C++11)]
+
+This section shows how to use this library without C++11 lambda functions.
+This has some advantages:
+
+* It allows to use this library on compilers that do not support C++11 lambda functions (essentially most C++03 compilers can be used in that case, see __No_Macros__ to also avoid using variadic macros).
+* Contract functions (see the `..._precondition`, `..._old`, and `..._postcondition` functions in the example below) can be programmed to fully enforce constant-correctness and other contract requirements at compile-time (see also __Constant_Correctness__).
+[footnote
+If C++ allowed lambda functions to capture variables by constant reference (e.g., `[const&] (...) { ... }` or `[const& `[^['variable-name]]`] (...) { ... }`) also lambdas could be used to program contract functors that fully enforce __Constant_Correctness__ at compile-time.
+Note that C++11 lambda allows to capture variables by value (`[=] (...) { ... }` and `[`[^['variable-name]]`] (...) { ... }`), these value captures are `const` (unless the lambda is explicitly declared `mutable`) but they are not suitable to program postconditions and exception guarantees using this library (because those require capturing by reference, see __Postconditions__ and __Exception_Guarantees__), plus they introduce an extra copy that might be too expensive in general.
+]
+* Contract specifications are automatically separated from function body implementations (see __Separate_Body_Implementation__).
+
+However, not using C++11 lambda functions comes to the significant cost of having to manually write a great deal of boiler-plate code, for example (see also [@../../example/features/no_lambdas.hpp =no_lambdas.hpp=] and [@../../example/features/no_lambdas.cpp =no_lambdas.cpp=]):
+
+[import ../example/features/no_lambdas.hpp]
+[no_lambdas_hpp]
+
+[import ../example/features/no_lambdas.cpp]
+[no_lambdas_cpp]
+
+If programmers also want to fully enforce all contract programming constant-correctness requirements at compile-time, they should follow these rules when programming the contract functions (see also __Constant_Correctness__):
+
+* Precondition functions (i.e., the `..._precondition` functions in the example above) can take their arguments either by `const` value or by `const&`, and they should be either `static` or `const` member functions.
+* Postcondition functions (i.e., the `..._postcondition` functions in the example above) should take their arguments by `const&`, and they should be either `static` or `const` member functions.
+* Old value functions (i.e., the `..._old` functions in the example above) should take their arguments by `const&` a part from old value pointers that should be taken by `&` (so only old value pointers can be modified), and they should be either `static` or `const` member functions.
+* Constructor precondition and old value functions should be `static` (because constructor preconditions and old values cannot access the object `this`, see also __Constructor_Calls__).
+* Destructor postcondition functions should be `static` (because destructor postconditions cannot access the object `this`, see also __Destructor_Calls__).
+
+Note that the extra contract functions also allow to program only the contract code in the header file (see also __Specification_vs_Implementation__).
+All function body implementation code was instead programmed in the source file (including the constructor member initialization list, that could not be done with the technique shown in __Separate_Body_Implementation__).
+[footnote
+In this example, `bind` was used to generate nullary functors from the contract functions.
+As always with `bind`, `cref` and `ref` must be used to bind arguments by `const&` and `&` respectively, plus it might be necessary to explicitly `static_cast` the function pointer passed to `bind` in case the bound function name is overloaded.
+]
+Also note that the contract functions can always be declared `private` if programmers need to exactly control the public members of the class (this was not done in this example only for brevity, see also __Access_Specifiers__).
+
+Alternatively, on compilers that do not support C++11 lambda functions but that support type-of (either native as an extension or via emulation, these should be most recent C++03 compilers), [@http://www.boost.org/doc/libs/release/libs/local_function/doc/html/index.html Boost.LocalFunction] can be used to program the contract functions, for example (see also [@../../example/features/no_lambdas_local_func.cpp =no_lambda_local_func.cpp=]):
+
+[import ../example/features/no_lambdas_local_func.cpp]
+[no_lambdas_local_func]
+
+This code is somewhat less verbose than the previous example (about 30% less lines of code) but the contract code is hard to ready.
+Other libraries could also be used to program the contract functions without C++11 lambda functions (Boost.Lambda, Boost.Fusion, etc.) but like the techniques shown above, they will all result in contract code more verbose, or harder to read and maintain than the contract code programmed using C++11 lambda functions.
+
+The authors think this library is most useful when used together with C++11 lambda functions.
+
+[endsect]
+
+[section No Macros (No C++11)]
+
+It is possible to specify contracts without using most of this library macros and programming the related code manually instead.
+The only macro that cannot be programmed manually is [macroref BOOST_CONTRACT_OVERRIDE] (and the similar [macroref BOOST_CONTRACT_OVERRIDES] and [macroref BOOST_CONTRACT_NAMED_OVERRIDE]).
+
+[note
+Some of this library macros are variadic macros, others are not (see below).
+Variadic macros were officially added to the language since C++11 but most compilers have been supporting variadic macros as an extension for a long time, plus essentially all compilers that support C++11 lambda functions also support C++11 variadic macros (and this library might rarely be used without the convenience of C++11 lambda functions, see also __No_Lambda_Functions__).
+Therefore, the following can be considered mainly a curiosity because programmers should seldom need to use this library without using its macros.
+]
+
+[heading Overrides]
+
+As shown in __Public_Function_Overrides__ and __Named_Overrides__, this library provides the [macroref BOOST_CONTRACT_OVERRIDE] and [macroref BOOST_CONTRACT_NAMED_OVERRIDE] macros to program contracts for overriding public functions.
+These macros cannot be programmed manually but they are not variadic macros so programmers should be able to use them on all C++ compilers.
+[footnote
+*Rationale:*
+These macros expand SFINAE-based introspection templates that are too complex to be programmed manually by users (that remains the case even if C++14 generic lambdas were to be used here).
+]
+The [macroref BOOST_CONTRACT_OVERRIDES] macro is a variadic macro instead but programmes can manually repeat the non-variadic macro [macroref BOOST_CONTRACT_OVERRIDE] for each overriding public function name on compilers that do not support variadic macros.
+
+[heading Assertions (Not Variadic)]
+
+As shown in __Preconditions__, __Postconditions__, __Exception_Guarantees__, __Class_Invariants__, etc. this library provides the [macroref BOOST_CONTRACT_ASSERT] macro to assert contract conditions.
+This is not a variadic macro and programmers should be able to use it on all C++ compilers.
+In any case, the invocation `BOOST_CONTRACT_ASSERT(`[^['condition]]`)` simply expands to code equivalent to the following:
+
+    if(!(``[^['condition]]``)) {
+        throw boost::contract::assertion_failure(__FILE__, __LINE__,
+                BOOST_PP_STRINGIZE(``[^['condition]]``));
+    }
+
+In fact, this library considers any exception thrown from within preconditions, postconditions, exception guarantees, and class invariants as a contract failure and reports it calling the related contract failure handler ([funcref boost::contract::precondition_failure], etc., see also __Throw_on_Failure__).
+If there is a need for it, programmers can always program contract assertions that throw specific exceptions as follow (see [@../../example/features/throw_on_failure.cpp =throw_on_failure.cpp=] for an example):
+
+    if(!``[^['condition]]``) throw ``[^['exception-object]]``;
+
+However, using [macroref BOOST_CONTRACT_ASSERT] is convenient because it always allows this library to show an informative message in case of assertion failure containing the assertion code, file name and line number, etc.
+
+[heading Base Types (Variadic)]
+
+As shown in __Base_Classes__, this library provides the [macroref BOOST_CONTRACT_BASE_TYPES] variadic macro to declare the `base_types` member type that lists all public bases of a derived class.
+Programmers can also declare `base_types` without using [macroref BOOST_CONTRACT_BASE_TYPES] at the cost of writing a bit more code manually, for example (see also [@../../example/features/base_types_no_macro.cpp =base_types_no_macro.cpp=]):
+
+[import ../example/features/base_types_no_macro.cpp]
+[base_types_no_macro]
+
+The `base_types` member type must be a `boost::mpl::vector` which must list /only/ `public` base classes (because only public bases subcontract, see also __Function_Calls__), and in the same order these public base classes appear in the derived class inheritance list.
+If the [macroref BOOST_CONTRACT_BASE_TYPES] macro is not used, it is the responsibility of the programmers to maintain the correct list of bases in the `boost::mpl::vector` each time the derived class inheritance list changes (this might complicate maintenance).
+
+In general, it is recommended to use the [macroref BOOST_CONTRACT_BASE_TYPES] macro whenever possible.
+
+[heading Old Values (Variadic)]
+
+As shown in __Old_Values__, this library provides the [macroref BOOST_CONTRACT_OLDOF] variadic macro to assign old value copies.
+Programmers can also assign old values without using [macroref BOOST_CONTRACT_OLDOF] at the cost of writing a bit more code manually, for example (see also [@../../example/features/old_no_macro.cpp =old_no_macro.cpp=]):
+
+[import ../example/features/old_no_macro.cpp]
+[old_no_macro]
+
+The ternary operator `boost::contract::copy_old(v) ? size() : boost::contract::null_old()` must be used here to avoid evaluating and copying the old value expression `size()` when [funcref boost::contract::copy_old] returns `false` because old values are not being copied (postcondition and exception guarantees checking is disabled at run-time, an overridden virtual function call is not checking postconditions or exception guarantees yet, etc.).
+The enclosing [funcref boost::contract::make_old] copies the old value expression and creates an old value pointer.
+Otherwise, [funcref boost::contract::null_old] indicates that a null old value pointer should be created.
+
+The [funcref boost::contract::make_old] and [funcref boost::contract::copy_old] functions are used exactly as above but without the extra `v` parameter when they are called from within non-virtual functions (see also __Public_Function_Overrides__).
+The old value pointer returned by [funcref boost::contract::make_old] can be assigned to either [classref boost::contract::old_ptr] or [classref boost::contract::old_ptr_if_copyable] (see also __Old_Value_Requirements__).
+
+In general, it is recommended to use the [macroref BOOST_CONTRACT_OLDOF] macro whenever possible.
+
+[heading Macro Interface (Variadic)]
+
+Almost all macros defined in [headerref boost/contract_macro.hpp] are variadic macros.
+On compilers that do not support variadic macros, programmers can manually disable contract code compilation using `#ifndef BOOST_CONTRACT_NO_...` statements as shown in __Disable_Contract_Compilation__.
+
+[endsect]
+
+[endsect]
+

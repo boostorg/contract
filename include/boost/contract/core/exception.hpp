@@ -266,7 +266,6 @@ namespace exception_ {
             /* can throw */;
     void BOOST_CONTRACT_DETAIL_DECLSPEC entry_inv_failure_locked(from where)
             /* can throw */;
-    
 
     // Precondition failure.
 
@@ -424,7 +423,7 @@ Set a new entry invariant failure handler and return the old one.
 
 @b Throws: @c noexcept (or @c throw() if no C++11).
 @param f New entry invariant failure handler functor.
-@return Old entry invariant failure handler functor.
+@return New failure handler @c f (for concatenating function calls).
 @see @RefSect{advanced_topics, Advanced Topics}
 */
 inline from_failure_handler set_entry_invariant_failure(from_failure_handler
@@ -478,7 +477,7 @@ Set a new precondition failure handler and return the old one.
 
 @b Throws: @c noexcept (or @c throw() if no C++11).
 @param f New precondition failure handler functor.
-@return Old precondition failure handler functor.
+@return New failure handler @c f (for concatenating function calls).
 @see @RefSect{advanced_topics, Advanced Topics}
 */
 inline from_failure_handler set_precondition_failure(from_failure_handler
@@ -557,7 +556,7 @@ Set a new exit invariant failure handler and return the old one.
 
 @b Throws: @c noexcept (or @c throw() if no C++11).
 @param f New exit invariant failure handler functor.
-@return Old exit invariant failure handler functor.
+@return New failure handler @c f (for concatenating function calls).
 @see @RefSect{advanced_topics, Advanced Topics}
 */
 inline from_failure_handler set_exit_invariant_failure(from_failure_handler
@@ -611,7 +610,7 @@ Set a new postcondition failure handler and return the old one.
 
 @b Throws: @c noexcept (or @c throw() if no C++11).
 @param f New postcondition failure handler functor.
-@return Old postcondition failure handler functor.
+@return New failure handler @c f (for concatenating function calls).
 @see @RefSect{advanced_topics, Advanced Topics}
 */
 inline from_failure_handler set_postcondition_failure(from_failure_handler
@@ -693,25 +692,13 @@ This is equivalent to calling both
 
 @b Throws: @c noexcept (or @c throw() if no C++11).
 @param f New invariant failure handler functor.
+@return New failure handler @c f (for concatenating function calls).
 @see @RefSect{advanced_topics, Advanced Topics}
 */
-inline void set_invariant_failure(from_failure_handler const& f)
+inline from_failure_handler set_invariant_failure(from_failure_handler const& f)
         /** @cond */ BOOST_NOEXCEPT_OR_NOTHROW /** @endcond */ {
     // This must be impl here for header-only linkage (HEADER_ONLY defined).
-    set_entry_invariant_failure(f);
-    set_exit_invariant_failure(f);
-}
-
-// Cannot provide a `set_all_failures` because check handler has no `from`.
-inline void set_specification_failure(from_failure_handler const& f)
-        /** @cond */ BOOST_NOEXCEPT_OR_NOTHROW /** @endcond */ {
-    // This must be impl here for header-only linkage (HEADER_ONLY defined).
-    set_entry_invariant_failure(f);
-    set_precondition_failure(f);
-    set_old_failure(f);
-    set_exit_invariant_failure(f);
-    set_postcondition_failure(f);
-    set_except_failure(f);
+    return set_entry_invariant_failure(set_exit_invariant_failure(f));
 }
 
 } } // namespace

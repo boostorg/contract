@@ -10,26 +10,7 @@
 
 //[private_protected
 class counter {
-    // Private and protected functions use `function()` like non-members.
-
-private:
-    int n_;
-
-    void dec() {
-        boost::contract::old_ptr<int> old_get = BOOST_CONTRACT_OLD(get());
-        boost::contract::check c = boost::contract::function()
-            .precondition([&] {
-                BOOST_CONTRACT_ASSERT(
-                        get() + 1 >= std::numeric_limits<int>::min());
-            })
-            .postcondition([&] {
-                BOOST_CONTRACT_ASSERT(get() == *old_get - 1);
-            })
-        ;
-
-        set(get() - 1);
-    }
-
+    // Private and protected functions use `function()` (like non-members).
 protected:
     virtual void set(int n, boost::contract::virtual_* = 0) {
         boost::contract::check c = boost::contract::function()
@@ -44,6 +25,24 @@ protected:
         n_ = n;
     }
 
+private:
+    void dec() {
+        boost::contract::old_ptr<int> old_get = BOOST_CONTRACT_OLD(get());
+        boost::contract::check c = boost::contract::function()
+            .precondition([&] {
+                BOOST_CONTRACT_ASSERT(
+                        get() + 1 >= std::numeric_limits<int>::min());
+            })
+            .postcondition([&] {
+                BOOST_CONTRACT_ASSERT(get() == *old_get - 1);
+            })
+        ;
+
+        set(get() - 1);
+    }
+    
+    int n_;
+    
     /* ... */
 //]
 

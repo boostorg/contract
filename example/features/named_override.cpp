@@ -20,8 +20,7 @@ template<typename T>
 void generic_unary_pack<T>::_1(T const& value, boost::contract::virtual_* v) {
     boost::contract::check c = boost::contract::public_function(v, this)
         .precondition([&] {
-            // Derived concrete classes will enforce preconditions.
-            BOOST_CONTRACT_ASSERT(false);
+            BOOST_CONTRACT_ASSERT(false); // Defer preconditions to overrides.
         })
     ;
     assert(false);
@@ -54,7 +53,7 @@ public:
     #undef BASES
     
     // BOOST_CONTRACT_OVERRIDE(_1) would generate reserved symbol `override__1`.
-    BOOST_CONTRACT_NAMED_OVERRIDE(override1, _1)
+    BOOST_CONTRACT_NAMED_OVERRIDE(override1, _1) // Generate `override1`.
 
     virtual void _1(T const& value, boost::contract::virtual_* v = 0)
             /* override */ {

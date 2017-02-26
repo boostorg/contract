@@ -17,8 +17,59 @@ public:
         if(!moved()) { // Do not check (some) invariants for moved-from objects.
             BOOST_CONTRACT_ASSERT(index() < size());
         }
+        // More invariants here (that must hold also for moved-from objects).
+    }
+    
+    // Move constructor.
+    /* implicit */ circular_buffer(circular_buffer&& other) :
+        boost::contract::constructor_precondition<circular_buffer>([&] {
+            BOOST_CONTRACT_ASSERT(!other.moved());
+        })
+    {
+        boost::contract::check c = boost::contract::constructor(this)
+            .postcondition([&] {
+                BOOST_CONTRACT_ASSERT(!moved());
+                BOOST_CONTRACT_ASSERT(other.moved());
+            })
+        ;
+
+        move(std::forward<circular_buffer>(other));
+    }
+    
+    // Move assignment.
+    circular_buffer& operator=(circular_buffer&& other) {
+        // Moved-from can be (move) assigned (so no pre `!moved()` here).
+        boost::contract::check c = boost::contract::public_function(this)
+            .precondition([&] {
+                BOOST_CONTRACT_ASSERT(!other.moved());
+            })
+            .postcondition([&] {
+                BOOST_CONTRACT_ASSERT(!moved());
+                BOOST_CONTRACT_ASSERT(other.moved());
+            })
+        ;
+
+        return move(std::forward<circular_buffer>(other));
+    }
+    
+    ~circular_buffer() {
+        // Moved-from can always be destroyed (in fact no preconditions).
+        boost::contract::check c = boost::contract::destructor(this);
+    }
+    
+    bool moved() const {
+        boost::contract::check c = boost::contract::public_function(this);
+        return moved_;
     }
 
+private:
+    
+    bool moved_;
+
+    /* ... */
+//]
+
+public:
     explicit circular_buffer(std::vector<char> const& data,
             unsigned start = 0) :
         boost::contract::constructor_precondition<circular_buffer>([&] {
@@ -35,11 +86,6 @@ public:
         ;
     }
 
-    ~circular_buffer() {
-        // Moved-from can always be destroyed (so no pre `!moved()` here).
-        boost::contract::check c = boost::contract::destructor(this);
-    }
-    
     // Copy constructor.
     /* implicit */ circular_buffer(circular_buffer const& other) :
         boost::contract::constructor_precondition<circular_buffer>([&] {
@@ -70,38 +116,6 @@ public:
         return copy(other);
     }
 
-    // Move constructor.
-    /* implicit */ circular_buffer(circular_buffer&& other) :
-        boost::contract::constructor_precondition<circular_buffer>([&] {
-            BOOST_CONTRACT_ASSERT(!other.moved());
-        })
-    {
-        boost::contract::check c = boost::contract::constructor(this)
-            .postcondition([&] {
-                BOOST_CONTRACT_ASSERT(!moved());
-                BOOST_CONTRACT_ASSERT(other.moved());
-            })
-        ;
-
-        move(std::forward<circular_buffer>(other));
-    }
-
-    // Move assignment.
-    circular_buffer& operator=(circular_buffer&& other) {
-        // Moved-from can be (move) assigned (so no pre `!moved()` here).
-        boost::contract::check c = boost::contract::public_function(this)
-            .precondition([&] {
-                BOOST_CONTRACT_ASSERT(!other.moved());
-            })
-            .postcondition([&] {
-                BOOST_CONTRACT_ASSERT(!moved());
-                BOOST_CONTRACT_ASSERT(other.moved());
-            })
-        ;
-
-        return move(std::forward<circular_buffer>(other));
-    }
-
     char read() {
         boost::contract::check c = boost::contract::public_function(this)
             .precondition([&] {
@@ -112,11 +126,6 @@ public:
         unsigned i = index_++;
         if(index_ == data_.size()) index_ = 0; // Circular.
         return data_.at(i);
-    }
-
-    bool moved() const {
-        boost::contract::check c = boost::contract::public_function(this);
-        return moved_;
     }
 
 private:
@@ -137,10 +146,6 @@ private:
 
     std::vector<char> data_;
     unsigned index_;
-    bool moved_;
-
-    /* ... */
-//]
 
 public:
     unsigned index() const {

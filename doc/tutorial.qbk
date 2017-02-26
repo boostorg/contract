@@ -8,13 +8,13 @@
 
 This section illustrates basic uses of this library.
 
-[section Non-Member Functions (Lambdas, Code Blocks, Etc.)]
+[section Non-Member Functions]
 
 Contracts for non-member functions are programmed using [funcref boost::contract::function].
-For example (see also [@../../example/features/function.cpp =function.cpp=]):
+For example (see also [@../../example/features/non_member.cpp =non_member.cpp=]):
 
-[import ../example/features/function.cpp]
-[function]
+[import ../example/features/non_member.cpp]
+[non_member]
 
 All necessary header files of this library are included by `#include <boost/contract.hpp>`.
 Alternatively, programmers can selectively include only the header files they actually need among =boost/contract/*.hpp= (see __Getting_Started__).
@@ -49,18 +49,6 @@ This ensures that non-member function contracts are correctly checked at run-tim
 [note
 A non-member function can avoid calling [funcref boost::contract::function] for efficiency but only when it has no preconditions, no postconditions, and no exception guarantees.
 ]
-
-Similarly, contracts for lambda functions are also programmed using [funcref boost::contract::function].
-For example (see also [@../../example/features/lambda_function.cpp =lambda_function.cpp=]):
-
-[import ../example/features/lambda_function.cpp]
-[lambda_function]
-
-Furthermore, [funcref boost::contract::function] can also be used to program contracts of code blocks within the implementation of a function (including code blocks defining `for`-loops, etc.).
-For example (see also [@../../example/features/code_block.cpp =code_block.cpp=]):
-
-[import ../example/features/code_block.cpp]
-[code_block]
 
 [endsect]
 

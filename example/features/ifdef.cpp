@@ -10,6 +10,7 @@
 
 //[ifdef_function
 // Use #ifdef to selectively disable contract compilation.
+#include <boost/contract/core/config.hpp>
 #ifndef BOOST_CONTRACT_NO_ALL
     #include <boost/contract.hpp>
 #endif

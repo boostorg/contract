@@ -9,23 +9,27 @@ using boostbook ;
 
 doxygen reference
 :
+    ../include/boost/contract.hpp
+    ../include/boost/contract_macro.hpp
+    
+    ../include/boost/contract/assert.hpp
+    ../include/boost/contract/base_types.hpp
+    ../include/boost/contract/call_if.hpp
+    ../include/boost/contract/check.hpp
     ../include/boost/contract/constructor.hpp
     ../include/boost/contract/destructor.hpp
-    ../include/boost/contract/public_function.hpp
     ../include/boost/contract/function.hpp
-    ../include/boost/contract/base_types.hpp
-    ../include/boost/contract/override.hpp
-    ../include/boost/contract/check.hpp
-    ../include/boost/contract/assert.hpp
     ../include/boost/contract/old.hpp
-    ../include/boost/contract/call_if.hpp
+    ../include/boost/contract/override.hpp
+    ../include/boost/contract/public_function.hpp
 
-    ../include/boost/contract/core/specify.hpp
     ../include/boost/contract/core/access.hpp
-    ../include/boost/contract/core/virtual.hpp
+    ../include/boost/contract/core/check_macro.hpp
     ../include/boost/contract/core/config.hpp
-    
-    ../include/boost/contract.hpp
+    ../include/boost/contract/core/constructor_precondition.hpp
+    ../include/boost/contract/core/exception.hpp
+    ../include/boost/contract/core/specify.hpp
+    ../include/boost/contract/core/virtual.hpp
 :   
     <reftitle>"Reference"
     # Quickbook's Doxygen does not show destructor exception specs.
@@ -53,5 +57,6 @@ boostbook doc : contract
     <xsl:param>boost.root=../../
     <xsl:param>admon.graphics.path=../../doc/src/images/
     <xsl:param>html.stylesheet=../../doc/src/boostbook.css
+    <xsl:param>toc.max.depth=1
 ;
 

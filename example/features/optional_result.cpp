@@ -6,37 +6,36 @@
 
 #include <boost/contract.hpp>
 #include <boost/optional.hpp>
+#include <vector>
 #include <cassert>
 
 //[optional_result
-struct surface {
-    int area;
-    int perimeter;
-
-    // No default constructor.
-    surface(int area, int perimeter) : area(area), perimeter(perimeter) {}
-};
-
-surface squared_surface(int edge) {
-    boost::optional<surface> result; // No default constructor so use optional.
+template<unsigned Index, typename T>
+T& get(std::vector<T>& vect) {
+    boost::optional<T&> result; // Result not initialized here...
     boost::contract::check c = boost::contract::function()
         .precondition([&] {
-            BOOST_CONTRACT_ASSERT(edge > 0);
+            BOOST_CONTRACT_ASSERT(Index < vect.size());
         })
         .postcondition([&] {
-            BOOST_CONTRACT_ASSERT(result->area == edge * edge);
-            BOOST_CONTRACT_ASSERT(result->perimeter == edge * 4);
+            BOOST_CONTRACT_ASSERT(*result == vect[Index]);
         })
     ;
-
-    return *(result = surface(edge * edge, edge * 4));
+    
+    // Function body (executed after preconditions checked).
+    return *(result = vect[Index]); // ...result initialized here instead.
 }
 //]
 
 int main() {
-    surface s = squared_surface(10);
-    assert(s.area == 100);
-    assert(s.perimeter == 40);
+    std::vector<int> v;
+    v.push_back(123);
+    v.push_back(456);
+    v.push_back(789);
+    int& x = get<1>(v);
+    assert(x == 456);
+    x = -456;
+    assert(v[1] == -456);
     return 0;
 }
 

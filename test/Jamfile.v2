@@ -241,8 +241,8 @@ test-suite result :
 test-suite old :
     [ subdir-run old : auto ]
 
-    [ subdir-run old : no_macros ]
-    [ subdir-run old : no_macros_if_copyable ]
+    [ subdir-run old : no_macro ]
+    [ subdir-run old : no_macro_if_copyable ]
 
     [ subdir-compile-fail old : no_make_old_error ]
     [ subdir-compile-fail old : no_make_old_if_copyable_error ]

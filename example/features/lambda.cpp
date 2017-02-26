@@ -10,11 +10,11 @@ int main() {
     v.push_back(2);
     v.push_back(3);
 
-    //[lambda_function
+    //[lambda
     int total = 0;
     std::for_each(v.cbegin(), v.cend(),
-        // Contract for a lambda function.
         [&total] (int const x) {
+            // Contract for a lambda function.
             boost::contract::old_ptr<int> old_total = BOOST_CONTRACT_OLD(total);
             boost::contract::check c = boost::contract::function()
                 .precondition([&] {

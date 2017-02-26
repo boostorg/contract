@@ -9,26 +9,27 @@ int main() {
     v.push_back(1);
     v.push_back(2);
     v.push_back(3);
-    int total = 10;
-    
-    //[code_block
-    {
-        // Contract for a code block.
+
+    //[loop
+    int total = 0;
+    for(std::vector<int>::const_iterator i = v.begin(); i != v.end(); ++i) {
+        // Contract for a for-loop (same for while- and all other loops).
         boost::contract::old_ptr<int> old_total = BOOST_CONTRACT_OLD(total);
         boost::contract::check c = boost::contract::function()
             .precondition([&] {
-                BOOST_CONTRACT_ASSERT(v.size() == 3);
+                BOOST_CONTRACT_ASSERT(
+                        total + *i <= std::numeric_limits<int>::max());
             })
             .postcondition([&] {
-                BOOST_CONTRACT_ASSERT(total == *old_total + v[0] + v[1] + v[2]);
+                BOOST_CONTRACT_ASSERT(total == *old_total + *i);
             })
         ;
 
-        total += v[0] + v[1] + v[2]; // Code block body.
+        total += *i; // For-loop body.
     }
     //]
 
-    assert(total == 16);
+    assert(total == 6);
     return 0;
 }
 

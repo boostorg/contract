@@ -7,7 +7,7 @@
 #include <limits>
 #include <cassert>
 
-//[function
+//[non_member
 #include <boost/contract.hpp>
 
 // Contract for a non-member function.

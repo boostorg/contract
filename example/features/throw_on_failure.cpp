@@ -12,7 +12,7 @@
 //[throw_on_failure_cstring
 struct too_large_error {};
 
-template<std::size_t MaxSize>
+template<unsigned MaxSize>
 class cstring
     #define BASES private boost::contract::constructor_precondition<cstring< \
             MaxSize> >
@@ -39,7 +39,7 @@ public:
         ;
 
         size_ = std::strlen(chars);
-        for(std::size_t i = 0; i < size_; ++i) chars_[i] = chars[i];
+        for(unsigned i = 0; i < size_; ++i) chars_[i] = chars[i];
         chars_[size_] = '\0';
     }
 
@@ -47,8 +47,8 @@ public:
         // Check invariants.
         boost::contract::check c = boost::contract::destructor(this);
     }
-    
-    std::size_t size() const {
+
+    unsigned size() const {
         // Check invariants.
         boost::contract::check c = boost::contract::public_function(this);
         return size_;
@@ -62,23 +62,32 @@ public:
 
 private:
     char chars_[MaxSize + 1];
-    std::size_t size_;
+    unsigned size_;
 };
 
 //[throw_on_failure_handler
 int main() {
-    boost::contract::set_specification_failure(
-        [] (boost::contract::from context) {
-            if(context == boost::contract::from_destructor) {
-                // Ignore exception because destructors should never throw.
-                std::clog << "destructor contract failed (ignored)" <<
-                        std::endl;
-            } else throw; // Rethrow (assertion_failure, too_large_error, etc.).
+    boost::contract::set_precondition_failure(
+    boost::contract::set_postcondition_failure(
+    boost::contract::set_invariant_failure(
+    boost::contract::set_old_failure(
+        [] (boost::contract::from where) {
+            if(where == boost::contract::from_destructor) {
+                // Cannot throw from destructors in C++.
+                std::clog << "ignored destructor contract failure" << std::endl;
+            } else throw; // Re-throw (assertion_failure, user-defined, etc.).
+        }
+    ))));
+    boost::contract::set_except_failure(
+        [] (boost::contract::from where) {
+            // Already an active exception so can't throw another in C++.
+            std::clog << "ignored exception guarantee failure" << std::endl;
         }
     );
-    boost::contract::set_check_failure( // Then do not use CHECK in destructors.
+    boost::contract::set_check_failure(
         [] {
-            throw; // Rethrow (assertion_failure, too_large_error, etc.).
+            // But now CHECK cannot be used within destructor implementations.
+            throw; // Re-throw (assertion_failure, user-defined, etc.).
         }
     );
 

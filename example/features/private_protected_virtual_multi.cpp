@@ -22,29 +22,9 @@ int main() { return 0; } // Trivial program for MSVC.
 #include <limits>
 #include <cassert>
 
-//[private_protected_virtual_multi_counter
 class counter {
-    // Private and protected virtual functions declare extra `virtual_* = 0`
-    // parameter (otherwise they cannot be overridden).
-
-private:
-    int n_;
-    
-    virtual void dec(boost::contract::virtual_* = 0) {
-        boost::contract::old_ptr<int> old_get = BOOST_CONTRACT_OLD(get());
-        boost::contract::check c = boost::contract::function()
-            .precondition([&] {
-                BOOST_CONTRACT_ASSERT(
-                        get() + 1 >= std::numeric_limits<int>::min());
-            })
-            .postcondition([&] {
-                BOOST_CONTRACT_ASSERT(get() == *old_get - 1);
-            })
-        ;
-
-        set(get() - 1);
-    }
-
+    // Virtual private and protected functions still declare extra
+    // `virtual_* = 0` parameter (otherwise they cannot be overridden).
 protected:
     virtual void set(int n, boost::contract::virtual_* = 0) {
         boost::contract::check c = boost::contract::function()
@@ -59,8 +39,23 @@ protected:
         n_ = n;
     }
 
-    /* ... */
-//]
+private:
+    virtual void dec(boost::contract::virtual_* = 0) {
+        boost::contract::old_ptr<int> old_get = BOOST_CONTRACT_OLD(get());
+        boost::contract::check c = boost::contract::function()
+            .precondition([&] {
+                BOOST_CONTRACT_ASSERT(
+                        get() + 1 >= std::numeric_limits<int>::min());
+            })
+            .postcondition([&] {
+                BOOST_CONTRACT_ASSERT(get() == *old_get - 1);
+            })
+        ;
+
+        set(get() - 1);
+    }
+    
+    int n_;
 
 public:
     virtual int get(boost::contract::virtual_* v = 0) const {
@@ -135,7 +130,7 @@ int countable::get(boost::contract::virtual_* v) const {
 
 //[private_protected_virtual_multi_counter10
 class counter10 
-    #define BASES public countable, public counter
+    #define BASES public countable, public counter // Multiple inheritance.
     : BASES
 {
 public:
@@ -144,7 +139,21 @@ public:
 
     // Overriding from public members from `countable` so use `override_...`.
 
-    virtual void dec(boost::contract::virtual_* v = 0) {
+    virtual void set(int n, boost::contract::virtual_* v = 0) /* override */ {
+        boost::contract::check c = boost::contract::public_function<
+                override_set>(v, &counter10::set, this, n)
+            .precondition([&] {
+                BOOST_CONTRACT_ASSERT(n % 10 == 0);
+            })
+            .postcondition([&] {
+                BOOST_CONTRACT_ASSERT(get() == n);
+            })
+        ;
+
+        counter::set(n);
+    }
+    
+    virtual void dec(boost::contract::virtual_* v = 0) /* override */ {
         boost::contract::old_ptr<int> old_get = BOOST_CONTRACT_OLD(v, get());
         boost::contract::check c = boost::contract::public_function<
                 override_dec>(v, &counter10::dec, this)
@@ -160,21 +169,7 @@ public:
         set(get() - 10);
     }
     
-    virtual void set(int n, boost::contract::virtual_* v = 0) {
-        boost::contract::check c = boost::contract::public_function<
-                override_set>(v, &counter10::set, this, n)
-            .precondition([&] {
-                BOOST_CONTRACT_ASSERT(n % 10 == 0);
-            })
-            .postcondition([&] {
-                BOOST_CONTRACT_ASSERT(get() == n);
-            })
-        ;
-
-        counter::set(n);
-    }
-    
-    BOOST_CONTRACT_OVERRIDES(dec, set)
+    BOOST_CONTRACT_OVERRIDES(set, dec)
 
     /* ... */
 //]

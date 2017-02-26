@@ -341,7 +341,7 @@ This library contract failure handlers report information about the failure that
 
 [endsect]
 
-[section Features]
+[section Feature Summary]
 
 The Contract Programming features supported by this library are largely based on __N1962__ and on the Eiffel programming language.
 The following table compares Contract Programming features among this library, the __N1962__ proposal (unfortunately the C++ standard committee rejected this proposal commenting on a general lack of need for adding Contract Programming to C++ at the time, even if __N1962__ itself is sound), a more recent proposal __P0186__ (which unfortunately only supports preconditions and postconditions, but does not support class invariants, subcontracting, and not even old values for postconditions), the Eiffel and D programming languages:
