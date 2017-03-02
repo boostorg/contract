@@ -8,8 +8,7 @@
 // See: http://www.boost.org/doc/libs/release/libs/contract/doc/html/index.html
 
 /** @file
-Facilities to specify contracts for overriding public functions (to support
-subcontracting).
+Handle public function overrides (for subcontracting).
 */
 
 // IMPORTANT: Included by contract_macro.hpp so must #if-guard all its includes.

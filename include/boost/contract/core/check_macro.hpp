@@ -20,6 +20,23 @@ Macro for implementation checks.
     #define BOOST_CONTRACT_CHECK(condition) \
         BOOST_CONTRACT_DETAIL_CHECK(BOOST_CONTRACT_DETAIL_ASSERT(condition))
 #else
+    /**
+    Preferred way to assert implementation check conditions.
+    
+    It is preferred to use this macro instead of programming implementation
+    checks in a nullary functor passed to @RefClass{boost::contract::check}
+    constructor because this macro will completely remove implementation checks
+    from the code when @RefMacro{BOOST_CONTRACT_NO_CHECKS} is defined.
+
+    @see @RefSect{advanced_topics.implementation_checks, Implementation Checks}
+
+    @param condition    The condition to be asserted within implementation code
+                        (function body, etc.).
+                        This is not a variadic macro parameter so any comma it
+                        might contain must be protected by round parenthesis
+                        (i.e., @c BOOST_CONTRACT_CHECK((condition)) will always
+                        work).
+    */
     #define BOOST_CONTRACT_CHECK(condition) /* nothing */
 #endif
 

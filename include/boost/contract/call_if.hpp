@@ -9,6 +9,9 @@
 
 /** @file
 Statically disable compilation and execution of functor calls.
+
+Emulates <c>static if</c> statements when used together with functor
+templates (and C++14 generic lambdas).
 */
 
 #include <boost/contract/detail/none.hpp>

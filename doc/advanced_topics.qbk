@@ -359,6 +359,12 @@ All these members can be declared `private` as long as the [classref boost::cont
 
 This technique is not used in most examples of this documentation only for brevity, but programmers are encouraged to use it in real code.
 
+[warning
+Not declaring this class friend of user-defined classes will cause compiler errors on some compilers (e.g., MSVC) because the private members needed to check the contracts will not be accessible.
+On other compilers (e.g., GCC and CLang), the private access will instead fail SFINAE and no compiler error will be reported while invariants and subcontracting will be silently skipped at run-time.
+Therefore, programmers must make sure to either declare invariant functions and base types @c typedef as public members or to declare this class as friend.
+]
+
 [endsect]
 
 [section Throw on Failure]
@@ -388,8 +394,12 @@ However, programmers can override the default contract failure handlers to perfo
 # [funcref boost::contract::set_old_failure]
 # [funcref boost::contract::set_check_failure]
 
-These `set_..._failure(`[^['f]]`)` function calls return the contract failure handler functor [^['f]] that they take as input parameter so these calls can be concatenated.
-For example (see also [@../../example/features/throw_on_failure.cpp =throw_on_failure.cpp=]):
+These `set_..._failure(`[^['f]]`)` function calls return the contract failure handler functor [^['f]] that they take as input parameter, for example (see also [@../../example/features/throw_on_failure.cpp =throw_on_failure.cpp=]):
+[footnote
+*Rationale:*
+Even if somewhat different from `std::set_terminate`, the `set_..._failure` functions take a functor as parameter (so to handle not just function pointers, but also lambdas, binds, etc.) and return this same functor as result (so they can be concatenated).
+The related `get_..._failure` functions can be used to query the functors currently set for each contract.
+]
 
 [import ../example/features/throw_on_failure.cpp]
 [throw_on_failure_handler]

@@ -9,8 +9,7 @@
 
 /** @file
 Program contracts for public member functions.
-Overloads are provided to handle static, virtual void, virtual non-void,
-overriding void, and override non-void public functions.
+Overloads handle public functions that are static, virtual void, virtual non-void, overriding void, and overriding non-void.
 */
 
 #include <boost/contract/core/config.hpp>
@@ -18,12 +17,14 @@ overriding void, and override non-void public functions.
 #include <boost/contract/core/access.hpp>
 #include <boost/contract/core/virtual.hpp>
 // Needed within macro expansions below instead of defined(...) (PRIVATE macro).
+/** @cond */
 #if     defined(BOOST_CONTRACT_STATIC_LINK) || \
         !defined(BOOST_CONTRACT_NO_PUBLIC_FUNCTIONS)
     #define BOOST_CONTRACT_PUBLIC_FUNCTIONS_IMPL_ 1
 #else
     #define BOOST_CONTRACT_PUBLIC_FUNCTIONS_IMPL_ 0
 #endif
+/** @endcond */
 #include <boost/contract/detail/decl.hpp>
 #include <boost/contract/detail/tvariadic.hpp>
 #if BOOST_CONTRACT_PUBLIC_FUNCTIONS_IMPL_

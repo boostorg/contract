@@ -10,6 +10,8 @@ This section can be consulted selectively for specific topics of interest.
 
 [section Old Value Requirements (Templates)]
 
+TODO: This now uses boost::contract::is_old_value_copyable instead of using boost::is_copyable directly, update this doc.
+
 Old values require to copy the expression passed to [macroref BOOST_CONTRACT_OLDOF] thus the type of that expression must be copy constructible.
 More precisely, dereferencing an old value pointer of type [classref boost::contract::old_ptr]`<T>` requires `boost::is_copy_constructible<T>::value` to be `true` (otherwise this library will generate a compile-time error).
 
@@ -374,7 +376,13 @@ The only macro that cannot be programmed manually is [macroref BOOST_CONTRACT_OV
 [note
 Some of this library macros are variadic macros, others are not (see below).
 Variadic macros were officially added to the language since C++11 but most compilers have been supporting variadic macros as an extension for a long time, plus essentially all compilers that support C++11 lambda functions also support C++11 variadic macros (and this library might rarely be used without the convenience of C++11 lambda functions, see also __No_Lambda_Functions__).
-Therefore, the following can be considered mainly a curiosity because programmers should seldom need to use this library without using its macros.
+[footnote
+In any case, compilation times of this library were measured to be comparable between compilers that support variadic macros and compilers that do not.
+See also [macroref BOOST_CONTRACT_MAX_ARGS] on compilers that do not support variadic macros.
+*Rationale:*
+[macroref BOOST_CONTRACT_MAX_ARGS] is named after `BOOST_FUNCTION_MAX_ARGS`.
+]
+Therefore, the rest of this section can be considered mainly a curiosity because programmers should seldom need to use this library without using its macros.
 ]
 
 [heading Overrides]
@@ -392,6 +400,10 @@ The [macroref BOOST_CONTRACT_OVERRIDES] macro is a variadic macro instead but pr
 As shown in __Preconditions__, __Postconditions__, __Exception_Guarantees__, __Class_Invariants__, etc. this library provides the [macroref BOOST_CONTRACT_ASSERT] macro to assert contract conditions.
 This is not a variadic macro and programmers should be able to use it on all C++ compilers.
 In any case, the invocation `BOOST_CONTRACT_ASSERT(`[^['condition]]`)` simply expands to code equivalent to the following:
+[footnote
+*Rationale:*
+No need to also support C++11 `__func__` because it always expands to `operator()` for lambdas functions (which are typically used to program contract assertions).
+]
 
     if(!(``[^['condition]]``)) {
         throw boost::contract::assertion_failure(__FILE__, __LINE__,

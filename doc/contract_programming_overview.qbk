@@ -47,6 +47,8 @@ Furthermore, it is a common requirement for Contract Programming to automaticall
 [note
 This library implements this requirement but it should be noted that, in order to globally disable assertions while checking another assertion, some kind of global arbitrating variable needs to be used by the library implementation.
 This library will automatically protect such a global variable from race conditions in multi-threated programs, but this will effectively introduce a global lock in the program (the [macroref BOOST_CONTRACT_DISABLE_THREADS] macro can be defined to disable this global lock but at the risk of incurring in race conditions).
+*Rationale:*
+[macroref BOOST_CONTRACT_DISABLE_THREADS] is named similarly to `BOOST_DISABLE_THREADS`.
 ]
 
 In general, it is recommended to specify different contract conditions using separate assertion statements and not to group them together into a single condition using logical operators (`&&`, `||`, etc.).
@@ -479,7 +481,7 @@ Furthermore, subcontracting preconditions is soundly defined by the __substituti
 ][
     [['Disable assertion checking within assertions checking (to avoid infinite recursion when checking contracts)]]
     [
-Yes, but use [macroref BOOST_CONTRACT_PRECONDITIONS_DISABLE_NO_ASSERTION] to disable no assertion while checking preconditions.
+Yes, but use [macroref BOOST_CONTRACT_PRECONDITIONS_DISABLE_NO_ASSERTION] to disable no assertion while checking preconditions (see also [macroref BOOST_CONTRACT_ALL_DISABLE_NO_ASSERTION]).
 [footnote
 *Rationale:*
 Theoretically, it can be shown that an incorrect argument might be passed to the function body when assertion checking is disabled while checking preconditions (see [@http://lists.boost.org/Archives/boost/2010/04/164862.php Re: \[boost\] \[contract\] diff n1962]).

@@ -8,7 +8,7 @@
 // See: http://www.boost.org/doc/libs/release/libs/contract/doc/html/index.html
 
 /** @file
-Facility to declare invariants, base types, etc all as private members.
+Allow to declare invariants, base types, etc all as private members.
 */
 
 // IMPORTANT: Included by contract_macro.hpp so must #if-guard all its includes.
@@ -50,28 +50,31 @@ namespace boost { namespace contract {
 
 /**
 Friend this class to declare invariants and base types as private members.
+
 Declare this class as friend of the contracted class in order to declare
 the invariants functions and the base types @c typedef as non-public members.
 In real code, programmers will likely chose to declare this class as friend so
-to fully control the contracted class public interface.
+to fully control public interfaces of their user-defined classes.
 
 This class is not intended to be directly used by programmers a part from
 declaring it @c friend (and that is why this class does not have any public
 member and it is not copyable).
 
-@note   Not making this class friend of the contracted class will cause
-        compiler errors on some compilers (e.g., MSVC) because the private
-        members needed to check the contracts will not be accessible. On other
-        compilers (e.g., GCC and CLang), the private access will instead fail
-        SFINAE and no compiler error will be reported while invariants and
-        subcontracting will be silently skipped at run-time. Therefore,
-        programmers must make sure to either declare invariant functions and
-        base types @c typedef as public members or to make this class a friend.
-@see @RefSect{advanced_topics, Advanced Topics}
+@warning    Not declaring this class friend of user-defined classes will cause
+            compiler errors on some compilers (e.g., MSVC) because the private
+            members needed to check the contracts will not be accessible.
+            On other compilers (e.g., GCC and CLang), the private access will
+            instead fail SFINAE and no compiler error will be reported while
+            invariants and subcontracting will be silently skipped at run-time.
+            Therefore, programmers must make sure to either declare invariant
+            functions and base types @c typedef as public members or to declare
+            this class as friend.
+
+@see @RefSect{advanced_topics.access_specifiers, Access Specifiers}
 */
 class access { // Non-copyable (see below).
 /** @cond */
-    // No public APIs (so users cannot use it directly by mistake).
+private: // No public APIs (so users cannot use it directly by mistake).
 
     access(); // Should never be constructed (not even internally).
     ~access();

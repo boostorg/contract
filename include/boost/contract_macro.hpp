@@ -8,12 +8,11 @@
 // See: http://www.boost.org/doc/libs/release/libs/contract/doc/html/index.html
 
 /** @file
-Macro interface to completely disable contract code run-time and compile-time
-overhead.
+Completely disable run-time and compile-time overheads of contract code.
 
 Almost all the macros defined in this header file are variadic macros. On
 compilers that do not support variadic macros, programmers can manually code
-<c>#ifndef BOOST_CONTRACT_NO_...</c> statements (see
+<c>#ifndef BOOST_CONTRACT_NO_...</c> statements instead (see
 @RefSect{extra_topics, Extra Topics}).
 */
 
@@ -51,14 +50,12 @@ compilers that do not support variadic macros, programmers can manually code
     /**
     Macro to program preconditions that can be completely disabled at
     compile-time.
-
-    <c>BOOST_CONTRACT_PRECONDITION(f)</c> expands to code equivalent to:
+    @c BOOST_CONTRACT_PRECONDITION(f) expands to code equivalent to:
     @code
     #ifndef BOOST_CONTRACT_NO_PRECONDITIONS
         .precondition(f)
     #endif
     @endcode
-    
     Where:
     @arg    @b f is a nullary functor that checks preconditions. This is a
             variadic macro parameter so it can contain commas not protected by
@@ -99,7 +96,6 @@ compilers that do not support variadic macros, programmers can manually code
 
     /**
     Macro to program old values that can be completely disabled at compile-time.
-
     This is an overloaded variadic macro and it can be used in a number of
     different ways:
 
@@ -110,7 +106,6 @@ compilers that do not support variadic macros, programmers can manually code
         boost::contract::old_ptr<T> ptr // Never requires `v`.
     #endif
     @endcode
-
     2\. <c>BOOST_CONTRACT_OLD_PTR(T)(ptr, expr)</c> expands to code
         equivalent to:
     @code
@@ -118,7 +113,6 @@ compilers that do not support variadic macros, programmers can manually code
         boost::contract::old_ptr<T> ptr = BOOST_CONTRACT_OLDOF(expr)
     #endif
     @endcode
-
     3\. <c>BOOST_CONTRACT_OLD_PTR(T)(v, ptr, expr)</c> expands to code
         equivalent to:
     @code
@@ -126,10 +120,9 @@ compilers that do not support variadic macros, programmers can manually code
         boost::contract::old_ptr<T> ptr = BOOST_CONTRACT_OLDOF(v, expr)
     #endif
     @endcode
-    
     Where:
     @arg    @b T is the old value type. This type must be copy constructible
-            (i.e., <c>boost::is_copy_constructible<T>::value</c> must be
+            (i.e., @c boost::contract::is_old_value_copyable<T>::value must be
             @c true), otherwise this library will generate a compile-time error
             if the old value pointer is dereferenced. This is a variadic macro
             parameter so it can contain commas not protected by round
@@ -140,7 +133,7 @@ compilers that do not support variadic macros, programmers can manually code
     @arg    @b ptr is the name of the old value pointer variable.
     @arg    @b expr is the expression to be evaluated and copied in the old
             value. This is not a variadic macro parameter so any comma it might
-            contain must be protected by round parenthesis (this
+            contain must be protected by round parenthesis (i.e.,
             <c>BOOST_CONTRACT_OLD_PTR(T)(v, ptr, (expr))<c/> will always work).
     
     @see @RefSect{tutorial, Tutorial}, @RefSect{extra_topics, Extra Topics}
@@ -150,7 +143,6 @@ compilers that do not support variadic macros, programmers can manually code
     /**
     Macro to program old values that can be completely disabled at compile-time
     (for old value types that might be non-copyable).
-
     This is an overloaded variadic macro and it can be used in a number of
     different ways:
 
@@ -161,7 +153,6 @@ compilers that do not support variadic macros, programmers can manually code
         boost::contract::old_ptr_if_copyable<T> ptr // Never requires `v`.
     #endif
     @endcode
-
     2\. <c>OOST_CONTRACT_OLD_PTR_IF_COPYABLE(T)(ptr, expr)</c> expands to
         code equivalent to:
     @code
@@ -169,7 +160,6 @@ compilers that do not support variadic macros, programmers can manually code
         boost::contract::old_ptr_if_copyable<T> ptr = BOOST_CONTRACT_OLDOF(expr)
     #endif
     @endcode
-
     3\. <c>BOOST_CONTRACT_OLD_PTR_IF_COPYABLE(T)(v, ptr, expr)</c> expands
         to code equivalent to:
     @code
@@ -178,11 +168,10 @@ compilers that do not support variadic macros, programmers can manually code
                 BOOST_CONTRACT_OLDOF(v, expr)
     #endif
     @endcode
-    
     Where:
-    @arg    @b T is the old value type. If this type is not copy
-            constructible (i.e., <c>boost::is_copy_constructible<T>::value</c>
-            is @c false), the old value pointer will be set to null. This is a
+    @arg    @b T is the old value type. If this type is not copy constructible
+            (i.e., @c boost::contract::is_old_value_copyable<T>::value is
+            @c false), the old value pointer will be set to null. This is a
             variadic macro parameter so it can contain commas not protected by
             round parenthesis.
     @arg    @b v is the extra parameter of type
@@ -191,7 +180,7 @@ compilers that do not support variadic macros, programmers can manually code
     @arg    @b ptr is the name of the old value pointer variable.
     @arg    @b expr is the expression to be evaluated and copied in the old
             value. This is not a variadic macro parameter so any comma it might
-            contain must be protected by round parenthesis (but this
+            contain must be protected by round parenthesis (i.e.,
             <c>BOOST_CONTRACT_OLD_PTR(T)(v, ptr, (expr));<c/> will always
             work).
     
@@ -202,14 +191,12 @@ compilers that do not support variadic macros, programmers can manually code
     /**
     Macro to program old value copies at body that can be completely disabled at
     compile-time.
-
     @c BOOST_CONTRACT_OLD(f) expands to code equivalent to:
     @code
     #ifndef BOOST_CONTRACT_NO_OLDS
         .old(f)
     #endif
     @endcode
-    
     Where:
     @arg    @b f is a nullary functor that assigns old pointers to old value
             copies. This is a variadic macro parameter so it can contain commas
@@ -227,14 +214,12 @@ compilers that do not support variadic macros, programmers can manually code
     /**
     Macro to program postconditions that can be completely disabled at
     compile-time.
-
-    <c>BOOST_CONTRACT_POSTCONDITION(f)</c> expands to code equivalent to:
+    @c BOOST_CONTRACT_POSTCONDITION(f) expands to code equivalent to:
     @code
     #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
         .postcondition(f)
     #endif
     @endcode
-    
     Where:
     @arg    @b f is a functor that checks postconditions. This function takes
             the return value as its one single parameter but only for virtual
@@ -253,14 +238,12 @@ compilers that do not support variadic macros, programmers can manually code
     /**
     Macro to program exception guarantees that can be completely disabled at
     compile-time.
-
-    <c>BOOST_CONTRACT_EXCEPT(f)</c> expands to code equivalent to:
+    @c BOOST_CONTRACT_EXCEPT(f) expands to code equivalent to:
     @code
     #ifndef BOOST_CONTRACT_NO_EXCEPTS
         .except(f)
     #endif
     @endcode
-    
     Where:
     @arg    @b f is a nullary functor that checks exception guarantees.
             This is a variadic macro parameter so it can contain commas not
@@ -284,8 +267,7 @@ compilers that do not support variadic macros, programmers can manually code
     /**
     Macro to program (constant) class invariants that can be completely disabled
     at compile-time.
-
-    <c>BOOST_CONTRACT_INVARIANT({ ... })</c> expands to code equivalent to:
+    @c BOOST_CONTRACT_INVARIANT({ ... }) expands to code equivalent to:
     @code
         #ifndef BOOST_CONTRACT_NO_INVARIANTS
             void BOOST_CONTRACT_INVARIANT_FUNC() const {
@@ -293,7 +275,6 @@ compilers that do not support variadic macros, programmers can manually code
             }
         #endif
     @endcode
-
     Where:
     @arg    <b>{ ... }</b> is the definition of the function that checks class
             invariants (this can be a semicolon @c ; to separate this function
@@ -308,8 +289,7 @@ compilers that do not support variadic macros, programmers can manually code
     /**
     Macro to program volatile class invariants that can be completely disabled
     at compile-time.
-
-    <c>BOOST_CONTRACT_INVARIANT_VOLATILE({ ... })</c> expands to code equivalent
+    @c BOOST_CONTRACT_INVARIANT_VOLATILE({ ... }) expands to code equivalent
     to:
     @code
         #ifndef BOOST_CONTRACT_NO_INVARIANTS
@@ -318,7 +298,6 @@ compilers that do not support variadic macros, programmers can manually code
             }
         #endif
     @endcode
-
     Where:
     @arg    <b>{ ... }</b> is the definition of the function that checks
             volatile class invariants (this can be a semicolon @c ; to separate
@@ -333,8 +312,7 @@ compilers that do not support variadic macros, programmers can manually code
     /**
     Macro to program static class invariants that can be completely disabled
     at compile-time.
-
-    <c>BOOST_CONTRACT_STATIC_INVARIANT({ ... })</c> expands to code equivalent
+    @c BOOST_CONTRACT_STATIC_INVARIANT({ ... }) expands to code equivalent
     to:
     @code
         #ifndef BOOST_CONTRACT_NO_INVARIANTS
@@ -343,7 +321,6 @@ compilers that do not support variadic macros, programmers can manually code
             }
         #endif
     @endcode
-
     Where:
     @arg    <b>{ ... }</b> is the definition of the function that checks static
             class invariants (this can be a semicolon @c ; to separate this
@@ -368,15 +345,13 @@ compilers that do not support variadic macros, programmers can manually code
     /**
     Macro to program contracts that can be completely disabled at compile-time
     for constructors.
-
-    <c>BOOST_CONTRACT_CONSTRUCTOR(obj)</c> expands to code equivalent to:
+    @c BOOST_CONTRACT_CONSTRUCTOR(obj) expands to code equivalent to:
     @code
         #ifndef BOOST_CONTRACT_NO_CONSTRUCTORS
             boost::contract::check internal_identifier =
                     boost::contract::constructor(obj)
         #endif
     @endcode
-
     Where:
     @arg    @b obj is a pointer to the object of from the enclosing constructor
             scope (typically @c this).
@@ -400,24 +375,22 @@ compilers that do not support variadic macros, programmers can manually code
     /**
     Macro to program preconditions that can be completely disabled at
     compile-time for constructors.
-
-    <c>BOOST_CONTRACT_CONSTRUCTOR_PRECONDITION(Class)(r)</c> expands
+    <c>BOOST_CONTRACT_CONSTRUCTOR_PRECONDITION(Class)(f)</c> expands
     to code equivalent to:
     @code
     #if     !defined(BOOST_CONTRACT_NO_CONSTRUCTORS) && \
             !defined(BOOST_CONTRACT_NO_PRECONDITIONS)
-        boost::contract::constructor_precondition<Class>(r)
+        boost::contract::constructor_precondition<Class>(f)
     #else
         // No-op call (likely optimized away, minimal to no overhead).
         boost::contract::constructor_precondition<Class>()
     #endif
     @endcode
-    
     Where:
     @arg    @b Class is the type of the enclosing constructor class. This is a
             variadic macro parameter so it can contain commas not protected by
             round parenthesis.
-    @arg    @b r is a nullary functor that checks preconditions. This is handled
+    @arg    @b f is a nullary functor that checks preconditions. This is handled
             as a variadic macro parameter so it can contain commas not protected
             by round parenthesis.
 
@@ -441,15 +414,13 @@ compilers that do not support variadic macros, programmers can manually code
     /**
     Macro to program contracts that can be completely disabled at compile-time
     for destructors.
-
-    <c>BOOST_CONTRACT_DESTRUCTOR(obj)</c> expands to code equivalent to:
+    @c BOOST_CONTRACT_DESTRUCTOR(obj) expands to code equivalent to:
     @code
         #ifndef BOOST_CONTRACT_NO_DESTRUCTORS
             boost::contract::check internal_identifier =
                     boost::contract::destructor(obj)
         #endif
     @endcode
-
     Where:
     @arg    @b obj is a pointer to the object of from the enclosing destructor
             scope (typically @c this).
@@ -484,8 +455,7 @@ compilers that do not support variadic macros, programmers can manually code
     /**
     Macro to program contracts that can be completely disabled at compile-time
     for (non-static and not overriding) public functions.
-
-    <c>BOOST_CONTRACT_PUBLIC_FUNCTION(param_list)</c> expands to
+    @c BOOST_CONTRACT_PUBLIC_FUNCTION(param_list) expands to
     code equivalent to:
     @code
         #ifndef BOOST_CONTRACT_NO_PUBLIC_FUNCTIONS
@@ -493,7 +463,6 @@ compilers that do not support variadic macros, programmers can manually code
                     boost::contract::public_function(param_list)
         #endif
     @endcode
-
     Where:
     @arg    @b param_list is the (overloaded) list of parameters normally passed
             to @c boost::contract::public_function for non-static public
@@ -511,7 +480,6 @@ compilers that do not support variadic macros, programmers can manually code
     /**
     Macro to program contracts that can be completely disabled at compile-time
     for public functions that override virtual functions.
-
     <c>BOOST_CONTRACT_PUBLIC_FUNCTION_OVERRIDE(Override)(param_list)</c>
     expands to code equivalent to:
     @code
@@ -520,7 +488,6 @@ compilers that do not support variadic macros, programmers can manually code
                     boost::contract::public_function<Override>(param_list)
         #endif
     @endcode
-
     Where:
     @arg    @b Override is the introspection type trait generated using
             @c BOOST_CONTRACT_OVERRIDE, @c BOOST_CONTRACT_OVERRIDES, or
@@ -543,8 +510,7 @@ compilers that do not support variadic macros, programmers can manually code
     /**
     Macro to program contracts that can be completely disabled at compile-time
     for static public functions.
-
-    <c>BOOST_CONTRACT_STATIC_PUBLIC_FUNCTION(Class)</c> expands to
+    @c BOOST_CONTRACT_STATIC_PUBLIC_FUNCTION(Class) expands to
     code equivalent to:
     @code
         #ifndef BOOST_CONTRACT_NO_PUBLIC_FUNCTIONS
@@ -552,7 +518,6 @@ compilers that do not support variadic macros, programmers can manually code
                     boost::contract::public_function<Class>()
         #endif
     @endcode
-
     Where:
     @arg    @b Class is the type of the class of the enclosing static public
             function. This is a variadic macro parameter so it can contain
@@ -580,15 +545,13 @@ compilers that do not support variadic macros, programmers can manually code
     /**
     Macro to program contracts that can be completely disabled at compile-time
     for (non-public) functions.
-
-    <c>BOOST_CONTRACT_FUNCTION()</c> expands to code equivalent to:
+    @c BOOST_CONTRACT_FUNCTION() expands to code equivalent to:
     @code
         #ifndef BOOST_CONTRACT_NO_FUNCTIONS
             boost::contract::check internal_identifier =
                     boost::contract::function()
         #endif
     @endcode
-
     Where:
     @arg    @b internal_identifier is a variable name internally generated by
             this library (this is unique but only on different line numbers so

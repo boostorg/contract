@@ -8,7 +8,7 @@
 // See: http://www.boost.org/doc/libs/release/libs/contract/doc/html/index.html
 
 /** @file
-Facility to declare virtual public functions with contracts.
+Handle virtual public functions for contracts (for subcontracting).
 */
 
 // IMPORTANT: Included by contract_macro.hpp so must #if-guard all its includes.
@@ -41,31 +41,35 @@ namespace boost { namespace contract {
 #endif
 
 /**
-Class to mark declarations of virtual public functions.
-Virtual public functions (and therefore overriding public functions) contracted
-using this library must have an extra parameter at the very end of their
-parameter list. This parameter must be a pointer to this class and it must have
-default value @c 0 (i.e., null). (This extra parameter is often named @c v in
-this documentation, but any name can be used.)
+Type of extra function parameter to handle contracts for virtual public
+functions (for subcontracting).
 
-This extra parameter does not alter the calling interface of the contracted
-function because it is always the last parameter and it has a default value (so
-it is always omitted when users call the contracted function). This extra
-parameter must be passed to @RefFunc{boost::contract::public_function},
-@RefMacro{BOOST_CONTRACT_OLDOF}, and all other operations of this library that
-require a pointer to @RefClass{boost::contract::virtual_}. A part from that,
-this class is not intended to be directly used by programmers (and that is why
-this class does not have any public member and it is not copyable).
+Virtual public functions (and therefore also public function overrides)
+declaring contracts using this library must specify an extra function parameter
+at the very end of the parameter list.
+This parameter must be a pointer to this class and it must have default value
+@c 0 (i.e., @c nullptr).
+(This extra parameter is often named @c v in this documentation, but any name
+can be used.)
 
-@b Rationale:   This extra parameter is internally used by this library to
-                recognize virtual public functions to implement subcontracting
-                (@c virtual cannot be introspected using template
-                meta-programming techniques in C++).
-@see @RefSect{tutorial, Tutorial}
+This extra parameter does not alter the calling interface of the enclosing
+function declaring the contract because it is always the very last parameter and
+it has a default value (so it can always be omitted when users call the
+function).
+This extra parameter must be passed to
+@RefFunc{boost::contract::public_function}, @RefMacro{BOOST_CONTRACT_OLDOF}, and
+all other operations of this library that require a pointer to
+@RefClass{boost::contract::virtual_}.
+A part from that, this class is not intended to be directly used by programmers
+(and that is why this class does not have any public member and it is not
+copyable).
+
+@see    @RefSect{tutorial.virtual_public_functions, Virtual Public Functions},
+        @RefSect{tutorial.public_function_overrides, Public Function Overrides}
 */
 class virtual_ { // Non-copyable (see below) to avoid copy queue, stack, etc.
 /** @cond */
-    // No public API (so users cannot use it directly by mistake).
+private: // No public API (so users cannot use it directly by mistake).
 
     // No boost::noncopyable to avoid its overhead when contracts disabled.
     virtual_(virtual_&);

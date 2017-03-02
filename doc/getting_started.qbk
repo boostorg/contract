@@ -87,14 +87,21 @@ Let [^['boost-root]] be the directory under which Boost source code has been ins
 
 The steps below show how to compile this library as a shared library (a.k.a., Dynamically Linked Library or DLL) and then compile and run a sample program that uses this library (the [@../../example/features/introduction.cpp =introduction.cpp=] program shown in __Introduction__ is used as an example).
 
-[important
+[warning
 By default, this library is compiled as a shared library (in which case this library automatically defines the [macroref BOOST_CONTRACT_DYN_LINK] macro).
+[footnote
+*Rationale:*
+[macroref BOOST_CONTRACT_DYN_LINK] is named similarly to [macroref BOOST_ALL_DYN_LINK].
+]
+
 There are configuration macros [macroref BOOST_CONTRACT_STATIC_LINK] and [macroref BOOST_CONTRACT_HEADER_ONLY] that can be defined to compile this library as a static or header-only library respectively.
+[footnote
+*Rationale:*
+[macroref BOOST_CONTRACT_STATIC_LINK] and [macroref BOOST_CONTRACT_HEADER_ONLY] are named similarly to `BOOST_ALL_DYN_LINK` and `BOOST_CHRONO_HEADER_ONLY`.
+]
 
 However, the use of [macroref BOOST_CONTRACT_STATIC_LINK] and [macroref BOOST_CONTRACT_HEADER_ONLY] is strongly discouraged because this library is not guaranteed to always work correctly at run-time when these macros are defined.
-[footnote
-Specifically, this library will not correctly disable contracts while checking other contracts and call the correct user-defined contract failure handlers unless it is compiled as a shared library when it is being used by different libraries part of the same program.
-]
+Specifically, this library will not correctly disable contracts while checking other contracts and call the correct user-defined contract failure handlers unless it is compiled as a shared library when it is being used by different program units (different programs, different libraries of the same program, etc.).
 ]
 
 Using MSVC on Windows (from a developer command prompt that automatically invokes the correct =vcvarsall.bat=):

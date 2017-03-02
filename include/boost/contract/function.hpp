@@ -8,7 +8,7 @@
 // See: http://www.boost.org/doc/libs/release/libs/contract/doc/html/index.html
 
 /** @file
-Program contracts for non-member, private, and protected functions.
+Program contracts for (non-public) functions.
 */
 
 #include <boost/contract/core/config.hpp>

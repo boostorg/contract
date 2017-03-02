@@ -8,7 +8,7 @@
 // See: http://www.boost.org/doc/libs/release/libs/contract/doc/html/index.html
 
 /** @file
-Facilities to support old values.
+Handle old values.
 */
 
 #include <boost/contract/core/config.hpp>

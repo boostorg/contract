@@ -25,6 +25,7 @@ namespace boost { namespace contract {
 
 /**
 Program contracts for constructors.
+
 This is used to specify postconditions, old value assignments at body, and
 check class invariants for constructors (see
 @RefClass{boost::contract::constructor_precondition} to specify preconditions
@@ -32,12 +33,16 @@ for constructors instead).
 
 For optimization, this can be omitted for constructors that do not have
 postconditions when the enclosing class has no invariants.
-@see @RefSect{tutorial, Tutorial}
-@param obj The object @c this from the scope of the contracted constructor.
-@return The result of this function must be assigned to a variable of type
-        @RefClass{boost::contract::guard} declared locally just before the body
-        of the contracted constructor (otherwise this library will generate a
-        run-time error, see @RefMacro{BOOST_CONTRACT_ON_MISSING_GUARD}).
+
+@see @RefSect{tutorial.constructors, Constructors}
+
+@param obj  The object @c this in scope of the enclosing constructor declaring
+            the contract.
+
+@return The result of this function must be explicitly assigned to a variable of
+        type @RefClass{boost::contract::check} declared locally just before the
+        enclosing constructor body code (otherwise this library will generate a
+        run-time error, see @RefMacro{BOOST_CONTRACT_ON_MISSING_CHECK_DECL}).
 */
 template<class Class>
 specify_old_postcondition_except<> constructor(Class* obj) {

@@ -21,7 +21,7 @@ Alternatively, programmers can selectively include only the header files they ac
 
 It is possible to specify preconditions, postconditions, and exception guarantees for non-member functions (see __Preconditions__, __Postconditions__, and __Exception_Guarantees__).
 
-The [funcref boost::contract::function] function returns an RAII object that must always be assigned to a local variable of type [classref boost::contract::check] (otherwise this library will generate a run-time error).
+The [funcref boost::contract::function] function returns an RAII object that must always be assigned to a local variable of type [classref boost::contract::check] (otherwise this library will generate a run-time error, see also [macroref BOOST_CONTRACT_ON_MISSING_CHECK_DECL]).
 Furthermore, C++11 `auto` declarations cannot be used here and the [classref boost::contract::check] type must be explicitly specified (otherwise this library will generate a compile-time error).
 [footnote
 The name of this local variable is arbitrary, but `c` is often used in this documentation.
@@ -292,7 +292,7 @@ See __Access_Specifiers__ to avoid making the `invariant` member function `publi
 In this documentation the `invariant` member function is often declared `public` for simplicity.
 However, in production code it might not be acceptable to augment the public members of a class adding the `invariant` function (and that can be avoided using [classref boost::contract::access] as explained in __Access_Specifiers__).
 ]
-See [macroref BOOST_CONTRACT_INVARIANT] to use a name different from `invariant` (e.g., because `invariant` clashes with other names in user-defined classes).
+See [macroref BOOST_CONTRACT_INVARIANT_FUNC] to use a name different from `invariant` (e.g., because `invariant` clashes with other names in user-defined classes).
 
 [note
 Contract assertion is checked (not event class invariants) when a data member is accessed directly (this is different from Eiffel where even accessing public data members checks class invariants).
@@ -335,11 +335,11 @@ See __Access_Specifiers__ to avoid making `static_invariant` member function `pu
 In this documentation the `static_invariant` member function is often declared `public` for simplicity.
 However, in production code it might not be acceptable to augment the public members of a class adding the `static_invariant` function (and that can be avoided using [classref boost::contract::access] as explained in __Access_Specifiers__).
 ]
-Set [macroref BOOST_CONTRACT_STATIC_INVARIANT] to use a name different from `static_invariant` (e.g., because `static_invariant` clashes with other names in user-defined classes).
+Set [macroref BOOST_CONTRACT_STATIC_INVARIANT_FUNC] to use a name different from `static_invariant` (e.g., because `static_invariant` clashes with other names in user-defined classes).
 [footnote
 *Rationale:*
 In C++, it is not possible to overload a member function based on the `static` classifier.
-Therefore, this library has to use different names for the member functions checking non-static and static class invariants (namely `invariant` and `static_invariant`).
+Therefore, this library has to use different names for the member functions checking non-static and static class invariants (namely [macroref BOOST_CONTRACT_INVARIANT_FUNC] and [macroref BOOST_CONTRACT_STATIC_INVARIANT_FUNC]).
 ]
 
 Finally, see __Volatile_Class_Invariants__ to program invariants for classes with volatile public member functions.
@@ -663,6 +663,11 @@ As for non-overriding public virtual functions, also overriding functions use th
 In the case of overriding functions this library also has the function pointer so it will generate a compile-time error if the function is non-void and programmers forget to specify the extra return value parameter (this extra error checking is not possible instead for non-overriding public virtual functions because their contracts do not take the function pointer as a parameter, see __Virtual_Public_Functions__).
 ]
 In this case, this library will pass the return value to the postcondition functor (that must therefore take one single argument matching the return type, possibly as a constant reference `const&` to avoid extra copies of the return value).
+This library will throw [classref boost::contract::bad_virtual_result_cast] if programmers specify return values for public function overrides in derived classes that are not consistent with the return types of the virtual public functions being overridden in the base classes.
+[footnote
+*Rationale:*
+The `boost::bad_any_cast` exception could not used here because it does not print the from- and to- type names (so it is not descriptive enough).
+]
 
 [important
 It is the responsibility of the programmers to pass the extra parameter `v` to all [macroref BOOST_CONTRACT_OLD] and [funcref boost::contract::public_function] calls within overriding public functions, and also to pass the return value reference after `v` to [funcref boost::contract::public_function] for non-void overriding public functions.
