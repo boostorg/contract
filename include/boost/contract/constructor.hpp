@@ -26,22 +26,33 @@ namespace boost { namespace contract {
 /**
 Program contracts for constructors.
 
-This is used to specify postconditions, old value assignments at body, and
-check class invariants for constructors (see
+This is used to specify postconditions, exception guarantees, old value copies
+at body, and check class invariants for constructors (see
 @RefClass{boost::contract::constructor_precondition} to specify preconditions
 for constructors instead).
 
 For optimization, this can be omitted for constructors that do not have
-postconditions when the enclosing class has no invariants.
+postconditions and exception guarantees when the enclosing class has no
+invariants.
 
 @see @RefSect{tutorial.constructors, Constructors}
+    
+@param obj  The object @c this from the scope of the enclosing constructor
+            declaring the contract.
+            (Constructors check all class invariants, including static and
+            volatile invariants, see also @RefSect{tutorial.class_invariants,
+            Class Invariants} and
+            @RefSect{advanced_topics.volatile_public_functions,
+            Volatile Public Functions}).
 
-@param obj  The object @c this in scope of the enclosing constructor declaring
-            the contract.
+@tparam Class   The class type of the enclosing constructor declaring the
+                contract.
+                (Usually this template parameter is automatically deduced by C++
+                and it does not need to be explicitly specified by programmers.)
 
 @return The result of this function must be explicitly assigned to a variable of
         type @RefClass{boost::contract::check} declared locally just before the
-        enclosing constructor body code (otherwise this library will generate a
+        code of the constructor body (otherwise this library will generate a
         run-time error, see @RefMacro{BOOST_CONTRACT_ON_MISSING_CHECK_DECL}).
 */
 template<class Class>

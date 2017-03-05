@@ -198,7 +198,7 @@ Therefore, [macroref BOOST_CONTRACT_OVERRIDE] only needs to be invoked once for 
 
 [endsect]
 
-[section Lambdas, Code Blocks, Loops, Etc.]
+[section Lambdas, Loops, Code Blocks, Etc.]
 
 So far we have been focused on specifying contracts for function and class interfaces.
 While contracts are in general most useful when used to specify interfaces, this library also allows to check contract conditions for implementation code (lambda functions, code blocks, loops, etc.).

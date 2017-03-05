@@ -23,18 +23,27 @@ namespace boost { namespace contract {
 
 /**
 Program contracts for non-member, private and protected functions.
-This is used to specify preconditions, postconditions, and old value assignments
-at body for non-member, private and protected functions (these functions never
-check class invariants, see
-@RefSect{contract_programming_overview, Contract Programming Overview}).
 
-For optimization, this can be omitted for functions that do not have
-preconditions and postconditions.
-@see @RefSect{tutorial, Tutorial}
-@return The result of this function must be assigned to a variable of type
-        @RefClass{boost::contract::guard} declared locally just before the body
-        of the contracted function (otherwise this library will generate a
-        run-time error, see @RefMacro{BOOST_CONTRACT_ON_MISSING_GUARD}).
+This is used to specify preconditions, postconditions, exception guarantees, and
+old copies at body for non-member, private and protected functions (these
+functions never check class invariants, see
+@RefSect{contract_programming_overview, Contract Programming Overview}).
+It can be used also to program contracts in implementation code for lambda
+functions, loops, arbitrary blocks of code, etc.
+
+For optimization, this can be omitted for code that does not have preconditions,
+postconditions, and exception guarantees.
+
+@see    @RefSect{tutorial.non_member_functions, Non-Member Functions},
+        @RefSect{advanced_topics.private_and_protected_functions,
+        Private and Protected Functions},
+        @RefSect{advanced_topics.lambdas__loops__code_blocks__etc_,
+        Lambdas\, Loops\, Code Blocks\, Etc.}
+
+@return The result of this function must be explicitly assigned to a variable of
+        type @RefClass{boost::contract::check} declared locally just before the
+        function body code (otherwise this library will generate a run-time
+        error, see @RefMacro{BOOST_CONTRACT_ON_MISSING_CHECK_DECL}).
 */
 inline specify_precondition_old_postcondition_except<> function() {
     // Must #if also on ..._INVARIANTS here because specify_... is generic.

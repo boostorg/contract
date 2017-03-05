@@ -39,7 +39,7 @@ local object within the constructor definition just before
 
 @see @RefSect{tutorial.constructors, Constructors}
 
-@tparam Class   Class declaring the constructor for which preconditions are
+@tparam Class   The class type of the constructor for which preconditions are
                 being programmed.
 */
 template<class Class>
@@ -59,15 +59,16 @@ public:
 
     /**
     Construct this object specifying constructor preconditions.
+
     @param f    Nullary functor called by this library to check constructor
                 preconditions @c f().
-                Precondition assertions within this functor call are usually
-                programmed using @RefMacro{BOOST_CONTRACT_ASSERT}, but any
-                exception thrown by a call to this functor indicates a
-                precondition failure (and will result in this library calling
+                Assertions within this functor call are usually programmed
+                using @RefMacro{BOOST_CONTRACT_ASSERT}, but any exception thrown
+                by a call to this functor indicates a contract failure (and will
+                result in this library calling
                 @RefFunc{boost::contract::precondition_failure}).
-                This functor can capture variables by value, or better by
-                (constant) reference to avoid extra copies.
+                This functor should capture variables by (constant) value, or
+                better by (constant) reference to avoid extra copies.
     */
     template<typename F>
     explicit constructor_precondition(F const& f) {

@@ -67,22 +67,28 @@ namespace boost { namespace contract {
 
 /**
 Program contracts for static public functions.
-This is used to specify preconditions, postconditions, old value assignments at
-body, and check static class invariants for static public functions.
+
+This is used to specify preconditions, postconditions, exception guarantees, old
+value copies at body, and check static class invariants for static public
+functions.
 
 For optimization, this can be omitted for static public functions that do not
-have preconditions and postconditions when the enclosing class has no static
-invariants.
-@see @RefSect{tutorial, Tutorial}
-@tparam Class   The class of the contracted member function. This template
-                parameter must be explicitly specified for static public
-                functions (because they have no object @c this so there is no
-                function argument from which this type template parameter can be
-                automatically deduced).
-@return The result of this function must be assigned to a variable of type
-        @RefClass{boost::contract::guard} declared locally just before the body
-        of the contracted function (otherwise this library will generate a
-        run-time error, see @RefMacro{BOOST_CONTRACT_ON_MISSING_GUARD}).
+have preconditions, postconditions, and exception guarantees when the enclosing
+class has no static invariants.
+
+@see @RefSect{tutorial.static_public_functions, Static Public Functions}
+
+@tparam Class   The class type of the enclosing static public function declaring
+                the contract.
+                This template parameter must be explicitly specified for static
+                public functions (because they have no object @c this so there
+                is no function argument from which this type template parameter
+                can be automatically deduced by C++).
+
+@return The result of this function must be explicitly assigned to a variable of
+        type @RefClass{boost::contract::check} declared locally just before the
+        static function body code (otherwise this library will generate a
+        run-time error, see @RefMacro{BOOST_CONTRACT_ON_MISSING_CHECK_DECL}).
 */
 template<class Class>
 specify_precondition_old_postcondition_except<> public_function() {
@@ -95,25 +101,37 @@ specify_precondition_old_postcondition_except<> public_function() {
 }
 
 /**
-Program contracts for non-static, non-virtual, and not overriding public
-functions.
-This is used to specify preconditions, postconditions, old value assignments at
-body, and check class invariants for public functions that are not static, not
-virtual, and do not override.
+Program contracts for public functions that are not static, not virtual, and do
+not not override.
+
+This is used to specify preconditions, postconditions, exception guarantees, old
+value copies at body, and check class invariants for public functions that are
+not static, not virtual, and do not override.
 
 For optimization, this can be omitted for public functions that do not have
-preconditions and postconditions when the enclosing class has no (non-static)
-invariants.
-@see @RefSect{tutorial, Tutorial}
-@param obj  The object @c this from the scope of the contracted function. This
-            object can be @c const and @c volatile depending on the
-            cv-qualifier for the contracted function (volatile public functions
-            will check volatile class invariants, see also
-            @RefSect{advanced_topics, Advanced Topics}).
-@return The result of this function must be assigned to a variable of type
-        @RefClass{boost::contract::guard} declared locally just before the body
-        of the contracted function (otherwise this library will generate a
-        run-time error, see @RefMacro{BOOST_CONTRACT_ON_MISSING_GUARD}).
+preconditions, postconditions, and exception guarantees when the enclosing class
+has no (non-static) invariants.
+
+@see @RefSect{tutorial.public_functions, Public Functions}
+
+@param obj  The object @c this from the scope of the enclosing public function
+            declaring the contract.
+            This object might be mutable, @c const, @c volatile, or
+            <c>const volatile</c> depending on the cv-qualifier of the enclosing
+            function (volatile virtual public functions will check volatile
+            class invariants, see
+            @RefSect{extra_topics.volatile_public_functions,
+            Volatile Public Functions}).
+
+@tparam Class   The class type of the enclosing public function declaring the
+                contract.
+                (Usually this template parameter is automatically deduced by C++
+                and it does not need to be explicitly specified by programmers.)
+
+@return The result of this function must be explicitly assigned to a variable of
+        type @RefClass{boost::contract::check} declared locally just before the
+        code of the public function body (otherwise this library will generate a
+        run-time error, see @RefMacro{BOOST_CONTRACT_ON_MISSING_CHECK_DECL}).
 */
 template<class Class>
 specify_precondition_old_postcondition_except<> public_function(Class* obj) {
@@ -210,70 +228,103 @@ specify_precondition_old_postcondition_except<> public_function(Class* obj) {
     
 #ifdef DOXYGEN
     /**
-    Program contracts for virtual, not overriding public functions returning
-    void.
-    This is used to specify preconditions, postconditions, old value assignments
-    at body, and check class invariants for public functions that are virtual,
-    do not override, and return @c void.
+    Program contracts for void virtual public functions that do not override.
 
-    For optimization, this can be omitted for public functions that do not have
-    preconditions and postconditions when the enclosing class has no
-    (non-static) invariants.
-    @see @RefSect{tutorial, Tutorial}
-    @param v    The contracted virtual function extra trailing parameter of type
-                @RefClass{boost::contract::virtual_}<c>*</c> and with default
-                value @c 0.
-    @param obj  The object @c this from the scope of the contracted function.
-                This object can be @c const and @c volatile depending on the
-                cv-qualifier for the contracted function (volatile public
-                functions will check volatile class invariants, see also
-                @RefSect{advanced_topics, Advanced Topics}).
-    @return The result of this function must be assigned to a variable of type
-            @RefClass{boost::contract::guard} declared locally just before the
-            body of the contracted function (otherwise this library will
-            generate a run-time error, see
-            @RefMacro{BOOST_CONTRACT_ON_MISSING_GUARD}).
+    This is used to specify preconditions, postconditions, exception guarantees,
+    old value copies at body, and check class invariants for public functions
+    that are virtual, do not override, and return @c void.
+
+    For optimization, this can be omitted for virtual public functions that do
+    not have preconditions, postconditions, and exception guarantees when the
+    enclosing class has no (non-static) invariants.
+
+    @see @RefSect{tutorial.virtual_public_functions, Virtual Public Functions}
+    
+    @param v    The trailing parameter of type
+                @RefClass{boost::contract::virtual_}<c>*</c> and default value
+                @c 0 from the enclosing virtual public function.
+    @param obj  The object @c this from the scope of the enclosing virtual
+                public function declaring the contract.
+                This object might be mutable, @c const, @c volatile, or
+                <c>const volatile</c> depending on the cv-qualifier of the
+                enclosing function (volatile public functions will check
+                volatile class invariants, see
+                @RefSect{extra_topics.volatile_public_functions,
+                Volatile Public Functions}).
+
+    @tparam Class   The class type of the enclosing virtual public function
+                    declaring the contract.
+                    (Usually this template parameter is automatically deduced by
+                    C++ and it does not need to be explicitly specified by
+                    programmers.)
+    
+    @return The result of this function must be explicitly assigned to a
+            variable of type @RefClass{boost::contract::check} declared locally
+            just before the code of the public function body (otherwise this
+            library will generate a run-time error, see
+            @RefMacro{BOOST_CONTRACT_ON_MISSING_CHECK_DECL}).
     */
     template<class Class>
     specify_precondition_old_postcondition_except<> public_function(
             virtual_* v, Class* obj);
     
     /**
-    Program contracts for virtual, not overriding public functions returning
-    non-void.
-    This is used to specify preconditions, postconditions, old value assignments
-    at body, and check class invariants for public functions that are virtual,
-    do not override, and do not return @c void.
+    Program contracts for non-void virtual public functions that do not
+    override.
 
-    For optimization, this can be omitted for public functions that do not have
-    preconditions and postconditions when the enclosing class has no
-    (non-static) invariants.
-    @see @RefSect{tutorial, Tutorial}
-    @param v    The contracted virtual function extra trailing parameter of type
-                @RefClass{boost::contract::virtual_}<c>*</c> and with default
-                value @c 0.
-    @param r    A reference to the contracted virtual function return value
-                (this can be a local variable within the contracted function
-                scope, but it must be set by programmers at each function
-                @c return statement). The type of this parameter must be the
-                same as (or compatible with) the contracted function return type
-                (this library might not be able to raise a compile-time error
-                if that is not the case (because this function does not take a
-                pointer to the contracted function or similar), but in general
-                such a type mismatch will cause a run-time error or undefined
-                behaviour). Alternatively,
-                <c>boost::optional<<i>return_type</i>></c> can be used here (see
-                @RefSect{advanced_topics, Advanced Topics}).
-    @param obj  The object @c this from the scope of the contracted function.
-                This object can be @c const and @c volatile depending on the
-                cv-qualifier for the contracted function (volatile public
-                functions will check volatile class invariants, see also
-                @RefSect{advanced_topics, Advanced Topics}).
-    @return The result of this function must be assigned to a variable of type
-            @RefClass{boost::contract::guard} declared locally just before the
-            body of the contracted function (otherwise this library will
-            generate a run-time error, see
-            @RefMacro{BOOST_CONTRACT_ON_MISSING_GUARD}).
+    This is used to specify preconditions, postconditions, exception guarantees,
+    old value copies at body, and check class invariants for public functions
+    that are virtual, do not override, and do not return @c void.
+
+    For optimization, this can be omitted for virtual public functions that do
+    not have preconditions, postconditions, and exception guarantees when the
+    enclosing class has no (non-static) invariants.
+
+    @see @RefSect{tutorial.virtual_public_functions, Virtual Public Functions}
+    
+    @param v    The trailing parameter of type
+                @RefClass{boost::contract::virtual_}<c>*</c> and default value
+                @c 0 from the enclosing virtual public function.
+    @param r    A reference to the return value of the enclosing virtual public
+                function declaring the contract.
+                This is usually a local variable declared by the enclosing
+                virtual public function just before the contract, but
+                programmers must set it to the actual value being returned by
+                the function at each @c return statement.
+    @param obj  The object @c this from the scope of the enclosing virtual
+                public function declaring the contract.
+                This object might be mutable, @c const, @c volatile, or
+                <c>const volatile</c> depending on the cv-qualifier of the
+                enclosing function (volatile public functions will check
+                volatile class invariants, see
+                @RefSect{extra_topics.volatile_public_functions,
+                Volatile Public Functions}).
+    
+    @tparam VirtualResult   This type must be the same as, or compatible with,
+                            the return type of the enclosing virtual public
+                            function declaring the contract (this library might
+                            not be able to generate a compile-time error if
+                            these types mismatch, but in general that will cause
+                            run-time errors or undefined behaviour).
+                            Alternatively,
+                            <c>boost::optional<<i>return-type</i>></c> can also
+                            be used (see
+                            @RefSect{advanced_topics.optional_return_value,
+                            Optional Return Value}).
+                            (Usually this template parameter is automatically
+                            deduced by C++ and it does not need to be explicitly
+                            specified by programmers.)
+    @tparam Class   The class type of the enclosing virtual public function
+                    declaring the contract.
+                    (Usually this template parameter is automatically deduced by
+                    C++ and it does not need to be explicitly specified by
+                    programmers.)
+    
+    @return The result of this function must be explicitly assigned to a
+            variable of type @RefClass{boost::contract::check} declared locally
+            just before the code of the public function body (otherwise this
+            library will generate a run-time error, see
+            @RefMacro{BOOST_CONTRACT_ON_MISSING_CHECK_DECL}).
     */
     template<typename VirtualResult, class Class>
     specify_precondition_old_postcondition_except<VirtualResult>
@@ -364,95 +415,166 @@ specify_precondition_old_postcondition_except<> public_function(Class* obj) {
 
 #ifdef DOXYGEN
     /**
-    Program contracts for overriding public functions (virtual or not) returning
-    void.
-    This is used to specify preconditions, postconditions, old value assignments
-    at body, and check class invariants for overriding public functions (virtual
-    or not) that return @c void.
+    Program contracts for void public functions overrides (virtual or not).
 
-    For optimization, this can be omitted for public functions that do not have
-    preconditions and postconditions when the enclosing class has no
-    (non-static) invariants.
-    @see @RefSect{tutorial, Tutorial}
-    @param v    The contracted virtual function extra trailing parameter of type
-                @RefClass{boost::contract::virtual_}<c>*</c> and with default
-                value @c 0.
-    @param f    A pointer to the contracted function.
-    @param obj  The object @c this from the scope of the contracted function.
-                This object can be @c const and @c volatile depending on the
-                cv-qualifier for the contracted function (volatile public
-                functions will check volatile class invariants, see also
-                @RefSect{advanced_topics, Advanced Topics}).
-    @param args The contracted function arguments (by reference and in the oder
-                they appear in the contracted function declaration). On
-                compilers that do not support variadic templates, this library
-                internally implements this function using preprocessor
-                meta-programming (in this case, the maximum number of supported
-                arguments @p args is defined by
-                @RefMacro{BOOST_CONTRACT_MAX_ARGS}).
-    @tparam Override    The type @c override_... declared using the
-                        @RefMacro{BOOST_CONTRACT_OVERRIDE} (or similar) macro
-                        using the contracted function name. This template
-                        parameter must be explicitly specified (because there is
-                        no function arguments from which this type template
-                        parameter can be automatically deduced).
-    @return The result of this function must be assigned to a variable of type
-            @RefClass{boost::contract::guard} declared locally just before the
-            body of the contracted function (otherwise this library will
-            generate a run-time error, see
-            @RefMacro{BOOST_CONTRACT_ON_MISSING_GUARD}).
+    This is used to specify preconditions, postconditions, exception guarantees,
+    old value copies at body, and check class invariants for public function
+    overrides (virtual or not) that return @c void.
+
+    For optimization, this can be omitted for public function overrides that do
+    not have preconditions, postconditions, and exception guarantees when the
+    enclosing class has no (non-static) invariants.
+
+    @see    @RefSect{tutorial.public_function_overrides__subcontracting_,
+            Public Function Overrides}
+    
+    @param v    The trailing parameter of type
+                @RefClass{boost::contract::virtual_}<c>*</c> and default value
+                @c 0 from the enclosing public function override.
+    @param f    A pointer to the enclosing public function override declaring
+                the contract.
+    @param obj  The object @c this from the scope of the enclosing public
+                function override declaring the contract.
+                This object might be mutable, @c const, @c volatile, or
+                <c>const volatile</c> depending on the cv-qualifier of the
+                enclosing function (volatile public functions will check
+                volatile class invariants, see
+                @RefSect{extra_topics.volatile_public_functions,
+                Volatile Public Functions}).
+    @param args All arguments passed to the enclosing public function override
+                declaring the contract (by reference and in order they appear in
+                the enclosing function declaration), but excluding the trailing
+                argument @c v.
+
+    @tparam Override    The type <c>override_<i>function-name</i></c> declared
+                        using the @RefMacro{BOOST_CONTRACT_OVERRIDE} (or
+                        equivalent) macro from the enclosing function name.
+                        This template parameter must be explicitly specified
+                        (because there is no function argument from which this
+                        type template parameter can be automatically deduced by
+                        C++).
+    @tparam F   The function pointer type for the enclosing public function
+                override declaring the contract.
+                (Usually this template parameter is automatically deduced by
+                C++ and it does not need to be explicitly specified by
+                programmers, but see
+                @RefSect{advanced_topics.function_overloads,
+                Function Overloads}.)
+    @tparam Class   The class type of the enclosing virtual public function
+                    declaring the contract.
+                    (Usually this template parameter is automatically deduced by
+                    C++ and it does not need to be explicitly specified by
+                    programmers.)
+    @tparam Args    The types of all parameters passed to the enclosing public
+                    function override declaring the contract, but excluding the
+                    trailing parameter type <c>boost::contract::virtual_*</c>.
+                    On compilers that do not support variadic templates, this
+                    library internally implements this function using
+                    preprocessor meta-programming (in this case, the maximum
+                    number of supported arguments is defined by
+                    @RefMacro{BOOST_CONTRACT_MAX_ARGS}).
+                    (Usually these template parameters are automatically deduced
+                    by C++ and they do not need to be explicitly specified by
+                    programmers.)
+
+    @return The result of this function must be explicitly assigned to a
+            variable of type @RefClass{boost::contract::check} declared locally
+            just before the code of the public function body (otherwise this
+            library will generate a run-time error, see
+            @RefMacro{BOOST_CONTRACT_ON_MISSING_CHECK_DECL}).
     */
     template<class Override, typename F, class Class, typename... Args>
     specify_precondition_old_postcondition_except<> public_function(
             virtual_* v, F f, Class* obj, Args&... args);
 
     /**
-    Program contracts for overriding public functions (virtual or not) returning
-    non-void.
-    This is used to specify preconditions, postconditions, old value assignments
-    at body, and check class invariants for overriding public functions (virtual
-    or not) that do not return @c void.
+    Program contracts for non-void public functions overrides (virtual or not).
 
-    For optimization, this can be omitted for public functions that do not have
-    preconditions and postconditions when the enclosing class has no
-    (non-static) invariants.
-    @see @RefSect{tutorial, Tutorial}
-    @param v    The contracted virtual function extra trailing parameter of type
-                @RefClass{boost::contract::virtual_}<c>*</c> and with default
-                value @c 0.
-    @param r    A reference to the contracted virtual function return value
-                (this can be a local variable within the contracted function
-                scope, but it must be set by programmers at each function
-                @c return statement). The type of this parameter must be the
-                same as (or compatible with) the contracted function return type
-                as specified by @c F (this library will generate a compile-time
-                error otherwise) Alternatively,
-                <c>boost::optional<<i>return_type</i>></c> can be used here (see
-                @RefSect{advanced_topics, Advanced Topics}).
-    @param f    A pointer to the contracted function.
-    @param obj  The object @c this from the scope of the contracted function.
-                This object can be @c const and @c volatile depending on the
-                cv-qualifier for the contracted function (volatile public
-                functions will check volatile class invariants, see also
-                @RefSect{advanced_topics, Advanced Topics}).
-    @param args The contracted function arguments (by reference and in the oder
-                they appear in the contracted function declaration). On
-                compilers that do not support variadic templates, this library
-                internally implements this function using preprocessor
-                meta-programming (in this case, the maximum number of supported
-                arguments @p args is defined by
-                @RefMacro{BOOST_CONTRACT_MAX_ARGS}).
-    @tparam Override    The type @c override_... declared using the
-                        @RefMacro{BOOST_CONTRACT_OVERRIDE} (or similar) macro
-                        using the contracted function name. This template
-                        parameter must be explicitly specified (because there is
-                        no function arguments from which this type template
-                        parameter can be automatically deduced).
-    @return The result of this function must be assigned to a variable of type
-            @RefClass{boost::contract::guard} declared locally just before the
-            body of the contracted function (otherwise this library will
-            generate a run-time error, see
-            @RefMacro{BOOST_CONTRACT_ON_MISSING_GUARD}).
+    This is used to specify preconditions, postconditions, exception guarantees,
+    old value copies at body, and check class invariants for public function
+    overrides (virtual or not) that do not return @c void.
+
+    For optimization, this can be omitted for public function overrides that do
+    not have preconditions, postconditions, and exception guarantees when the
+    enclosing class has no (non-static) invariants.
+
+    @see    @RefSect{tutorial.public_function_overrides__subcontracting_,
+            Public Function Overrides}
+    
+    @param v    The trailing parameter of type
+                @RefClass{boost::contract::virtual_}<c>*</c> and default value
+                @c 0 from the enclosing public function override.
+    @param r    A reference to the return value of the enclosing public function
+                override declaring the contract.
+                This is usually a local variable declared by the enclosing
+                public function override just before the contract, but
+                programmers must set it to the actual value being returned by
+                the function at each @c return statement.
+    @param f    A pointer to the enclosing public function override declaring
+                the contract.
+    @param obj  The object @c this from the scope of the enclosing public
+                function override declaring the contract.
+                This object might be mutable, @c const, @c volatile, or
+                <c>const volatile</c> depending on the cv-qualifier of the
+                enclosing function (volatile public functions will check
+                volatile class invariants, see
+                @RefSect{extra_topics.volatile_public_functions,
+                Volatile Public Functions}).
+    @param args All arguments passed to the enclosing public function override
+                declaring the contract (by reference and in order they appear in
+                the enclosing function declaration), but excluding the trailing
+                argument @c v.
+
+    @tparam Override    The type <c>override_<i>function-name</i></c> declared
+                        using the @RefMacro{BOOST_CONTRACT_OVERRIDE} (or
+                        equivalent) macro from the enclosing function name.
+                        This template parameter must be explicitly specified
+                        (because there is no function argument from which this
+                        type template parameter can be automatically deduced by
+                        C++).
+    @tparam VirtualResult   This type must be the same as, or compatible with,
+                            the return type of the enclosing public function
+                            override declaring the contract (this library might
+                            not be able to generate a compile-time error if
+                            these types mismatch, but in general that will cause
+                            run-time errors or undefined behaviour).
+                            Alternatively,
+                            <c>boost::optional<<i>return-type</i>></c> can also
+                            be used (see
+                            @RefSect{advanced_topics.optional_return_value,
+                            Optional Return Value}).
+                            (Usually this template parameter is automatically
+                            deduced by C++ and it does not need to be explicitly
+                            specified by programmers.)
+    @tparam F   The function pointer type for the enclosing public function
+                override declaring the contract.
+                (Usually this template parameter is automatically deduced by
+                C++ and it does not need to be explicitly specified by
+                programmers, but see
+                @RefSect{advanced_topics.function_overloads,
+                Function Overloads}.)
+    @tparam Class   The class type of the enclosing virtual public function
+                    declaring the contract.
+                    (Usually this template parameter is automatically deduced by
+                    C++ and it does not need to be explicitly specified by
+                    programmers.)
+    @tparam Args    The types of all parameters passed to the enclosing public
+                    function override declaring the contract, but excluding the
+                    trailing parameter type <c>boost::contract::virtual_*</c>.
+                    On compilers that do not support variadic templates, this
+                    library internally implements this function using
+                    preprocessor meta-programming (in this case, the maximum
+                    number of supported arguments is defined by
+                    @RefMacro{BOOST_CONTRACT_MAX_ARGS}).
+                    (Usually these template parameters are automatically deduced
+                    by C++ and they do not need to be explicitly specified by
+                    programmers.)
+
+    @return The result of this function must be explicitly assigned to a
+            variable of type @RefClass{boost::contract::check} declared locally
+            just before the code of the public function body (otherwise this
+            library will generate a run-time error, see
+            @RefMacro{BOOST_CONTRACT_ON_MISSING_CHECK_DECL}).
     */
     template<class Override, typename VirtualResult, typename F, class Class,
             typename... Args>

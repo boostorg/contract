@@ -87,15 +87,20 @@ Handle public function overrides (for subcontracting).
 #else
     /**
     Declare an override type with an arbitrary name.
+
     Declare the override type to be passed as an explicit template parameter to
-    @RefFunc{boost::contract::public_function} for overriding public functions.
-    @see @RefSect{tutorial, Tutorial}
-    @param override_name Name of override type to declare.
-    @param function_name    Name of the overriding public function. This macro
-                            is called just once even if the function name is
-                            overloaded and the same override type can be used
-                            for all functions in the same overload set (see
-                            @RefSect{advanced_topics, Advanced Topics}).
+    @RefFunc{boost::contract::public_function} for public function overrides.
+    
+    @see @RefSect{advanced_topics.named_overrides, Named Overrides}
+
+    @param override_name    Name of the override type being declared.
+    @param function_name    Function name of the public function override.
+                            This macro is called just once even if the function
+                            name is overloaded and the same override type is
+                            used for all overloaded functions with the same
+                            name (see
+                            @RefSect{advanced_topics.function_overloads,
+                            Function Overloads}).
     */
     #define BOOST_CONTRACT_NAMED_OVERRIDE(override_name, function_name) \
             struct override_name {}; /* empty (not used), just to compile */
@@ -104,15 +109,21 @@ Handle public function overrides (for subcontracting).
 /* PUBLIC */
 
 /**
-Declare an override type naming it <c>override_<i>function_name</i></c>.
+Declare an override type named <c>override_<i>function_name</i></c>.
+
 Declare the override type to be passed as an explicit template parameter to
-@RefFunc{boost::contract::public_function} for overriding public functions.
-@see @RefSect{tutorial, Tutorial}
-@param function_name    Name of the overriding public function. This macro
-                        is called just once even if the function name is
-                        overloaded and the same override type can be used
-                        for all functions in the same overload set (see
-                        @RefSect{advanced_topics, Advanced Topics}).
+@RefFunc{boost::contract::public_function} for public function overrides.
+
+@see    @RefSect{tutorial.public_function_overrides__subcontracting_,
+        Public Function Overrides}
+
+@param function_name    Function name of the public function override.
+                        This macro is called just once even if the function
+                        name is overloaded and the same override type is
+                        used for all overloaded functions with the same
+                        name (see
+                        @RefSect{advanced_topics.function_overloads,
+                        Function Overloads}).
 */
 #define BOOST_CONTRACT_OVERRIDE(function_name) \
     BOOST_CONTRACT_NAMED_OVERRIDE(BOOST_PP_CAT(override_, function_name), \
@@ -134,12 +145,17 @@ Declare the override type to be passed as an explicit template parameter to
     /**
     Declare multiple override types at once naming them <c>override_...</c> (for
     convenience).
-    This is a variadic macro. On compilers that do not support variadic macros,
-    the override types can be programmed one-by-one calling
+
+    This variadic macro is provided for convenience only.
+    On compilers that do not support variadic macros,
+    the override types can be equivalently programmed one-by-one calling
     @RefMacro{BOOST_CONTRACT_OVERRIDE} for each function name.
-    @see @RefSect{tutorial, Tutorial}
-    @param ...  A comma separated list of one or more names of overriding
-                public functions.
+    
+    @see    @RefSect{tutorial.public_function_overrides__subcontracting_,
+            Public Function Overrides}
+    
+    @param ...  A comma separated list of one or more function names of public
+                function overrides.
     */
     #define BOOST_CONTRACT_OVERRIDES(...) \
         BOOST_PP_SEQ_FOR_EACH(BOOST_CONTRACT_OVERRIDES_SEQ_, ~, \

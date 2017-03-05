@@ -55,7 +55,7 @@
 [def __Private_and_Protected_Functions__ [link boost_contract.advanced_topics.private_and_protected_functions Private and Protected Functions]]
 [def __Friend_Functions__ [link boost_contract.advanced_topics.friend_functions Friend Functions]]
 [def __Function_Overloads__ [link boost_contract.advanced_topics.function_overloads Function Overloads]]
-[def __Lambdas_Code_Blocks_Loops_Etc__ [link boost_contract.advanced_topics.lambdas__code_blocks__loops__etc_ Lambdas, Code Blocks, Loops, Etc.]]
+[def __Lambdas_Loops_Code_Blocks_Etc__ [link boost_contract.advanced_topics.lambdas__loops__code_blocks__etc_ Lambdas, Loops, Code Blocks, Etc.]]
 [def __Implementation_Checks__ [link boost_contract.advanced_topics.implementation_checks Implementation Checks]]
 [def __Old_Values_at_Body__ [link boost_contract.advanced_topics.old_values_at_body Old Values at Body]]
 [def __Named_Overrides__ [link boost_contract.advanced_topics.named_overrides Named Overrides]]

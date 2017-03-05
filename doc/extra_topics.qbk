@@ -11,6 +11,7 @@ This section can be consulted selectively for specific topics of interest.
 [section Old Value Requirements (Templates)]
 
 TODO: This now uses boost::contract::is_old_value_copyable instead of using boost::is_copyable directly, update this doc.
+Actually, add an example that uses both is_old_value_copyable and also old_value_copy for example to copy a type that is declared boost::noncopyable.
 
 Old values require to copy the expression passed to [macroref BOOST_CONTRACT_OLDOF] thus the type of that expression must be copy constructible.
 More precisely, dereferencing an old value pointer of type [classref boost::contract::old_ptr]`<T>` requires `boost::is_copy_constructible<T>::value` to be `true` (otherwise this library will generate a compile-time error).

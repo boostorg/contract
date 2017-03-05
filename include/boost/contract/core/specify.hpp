@@ -214,6 +214,7 @@ public:
                 call to this functor indicates a contract assertion failure (and
                 will result in this library calling
                 @RefFunc{boost::contract::except_failure}).
+                @RefSect{advanced_topics.throw_on_failure, Throw on Failure}).
                 This functor should capture variables by (constant) references
                 (to access the values they will have at function exit).
 
@@ -372,9 +373,8 @@ public:
     @RefSect{advanced_topics.old_values_at_body, Old Values at Body}).
 
     @param f    Nullary functor called by this library @c f() to assign old
-                value copies just before the function body is executed, after
-                entry invariants (for public member functions) and preconditions
-                are checked.
+                value copies just before the body is executed but after entry
+                invariants (when they apply) and preconditions are checked.
                 Old value pointers within this functor call are usually assigned
                 using @RefMacro{BOOST_CONTRACT_OLDOF}.
                 Any exception thrown by a call to this functor will result in
@@ -502,7 +502,7 @@ public:
     /**
     Allow to specify preconditions.
 
-    @param f    Unary functor called by this library to check preconditions
+    @param f    Nullary functor called by this library to check preconditions
                 @c f().
                 Assertions within this functor are usually programmed using
                 @RefMacro{BOOST_CONTRACT_ASSERT}, but any exception thrown by a
@@ -529,9 +529,8 @@ public:
     @RefSect{advanced_topics.old_values_at_body, Old Values at Body}).
 
     @param f    Nullary functor called by this library @c f() to assign old
-                value copies just before the function body is executed, after
-                entry invariants (for public member functions) and preconditions
-                are checked.
+                value copies just before the body is executed but after entry
+                invariants (when they apply) and preconditions are checked.
                 Old value pointers within this functor call are usually assigned
                 using @RefMacro{BOOST_CONTRACT_OLDOF}.
                 Any exception thrown by a call to this functor will result in

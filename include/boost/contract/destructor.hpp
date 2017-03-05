@@ -26,18 +26,35 @@ namespace boost { namespace contract {
 
 /**
 Program contracts for destructors.
-This is used to specify postconditions, old value assignments at body, and check
-class invariants for destructors (destructors cannot not have preconditions, see
+
+This is used to specify postconditions, exception guarantees, old value copies
+at body, and check class invariants for destructors (destructors cannot not have
+preconditions, see
 @RefSect{contract_programming_overview, Contract Programming Overview}).
 
 For optimization, this can be omitted for destructors that do not have
-postconditions when the enclosing class has no invariants.
-@see @RefSect{tutorial, Tutorial}
-@param obj The object @c this from the scope of the contracted destructor.
-@return The result of this function must be assigned to a variable of type
-        @RefClass{boost::contract::guard} declared locally just before the body
-        of the contracted destructor (otherwise this library will generate a
-        run-time error, see @RefMacro{BOOST_CONTRACT_ON_MISSING_GUARD}).
+postconditions and exception guarantees when the enclosing class has no
+invariants.
+
+@see @RefSect{tutorial.destructors, Destructors}
+
+@param obj  The object @c this from the scope of the enclosing destructor
+            declaring the contract.
+            (Destructors check all class invariants, including static and
+            volatile invariants, see also @RefSect{tutorial.class_invariants,
+            Class Invariants} and
+            @RefSect{advanced_topics.volatile_public_functions,
+            Volatile Public Functions}).
+
+@tparam Class   The class type of the enclosing destructor declaring the
+                contract.
+                (Usually this template parameter is automatically deduced by C++
+                and it does not need to be explicitly specified by programmers.)
+
+@return The result of this function must be explicitly assigned to a variable of
+        type @RefClass{boost::contract::check} declared locally just before the
+        code of the destructor body (otherwise this library will generate a
+        run-time error, see @RefMacro{BOOST_CONTRACT_ON_MISSING_CHECK_DECL}).
 */
 template<class Class>
 specify_old_postcondition_except<> destructor(Class* obj) {
