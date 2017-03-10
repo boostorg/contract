@@ -26,7 +26,7 @@ protected:
 template<typename T>
 void pushable<T>::push_back(T x, boost::contract::virtual_* v) {
     boost::contract::old_ptr<unsigned> old_capacity =
-            BOOST_CONTRACT_OLD(v, capacity());
+            BOOST_CONTRACT_OLDOF(v, capacity());
     boost::contract::check c = boost::contract::public_function(v, this)
         .precondition([&] {
             BOOST_CONTRACT_ASSERT(capacity() < max_size());
@@ -85,9 +85,9 @@ public:
 
     virtual void push_back(char x, boost::contract::virtual_* v = 0) {
         boost::contract::old_ptr<bool> old_find =
-                BOOST_CONTRACT_OLD(v, find(x));
+                BOOST_CONTRACT_OLDOF(v, find(x));
         boost::contract::old_ptr<unsigned> old_size =
-                BOOST_CONTRACT_OLD(v, size());
+                BOOST_CONTRACT_OLDOF(v, size());
         boost::contract::check c = boost::contract::public_function(v, this)
             .precondition([&] {
                 BOOST_CONTRACT_ASSERT(!find(x));
@@ -149,9 +149,9 @@ public:
     
     void push_back(char x, boost::contract::virtual_* v = 0) /* override */ {
         boost::contract::old_ptr<bool> old_find =
-                BOOST_CONTRACT_OLD(v, find(x));
+                BOOST_CONTRACT_OLDOF(v, find(x));
         boost::contract::old_ptr<unsigned> old_size =
-                BOOST_CONTRACT_OLD(v, size());
+                BOOST_CONTRACT_OLDOF(v, size());
         boost::contract::check c = boost::contract::public_function<
                 override_push_back>(v, &chars::push_back, this, x)
             .precondition([&] {

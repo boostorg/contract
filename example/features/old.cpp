@@ -17,7 +17,7 @@ char replace(std::string& s, unsigned index, char x) {
             BOOST_CONTRACT_ASSERT(index < s.size());
         })
         .old([&] { // ...after preconditions (and invariants) checked.
-            old_y = BOOST_CONTRACT_OLD(s[index]); // Checked `index` in range.
+            old_y = BOOST_CONTRACT_OLDOF(s[index]); // Checked `index` in range.
         })
         .postcondition([&] {
             BOOST_CONTRACT_ASSERT(s[index] == x);

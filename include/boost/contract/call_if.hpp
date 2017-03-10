@@ -10,9 +10,9 @@
 /** @file
 Statically disable compilation and execution of functor template calls.
 
-@note   This facility also allows to emulate <c>static if</c> statements but
-        only when used together with functor templates (or C++14 generic
-        lambdas).
+@note   This facility also allows to emulate C++17 <c>if constexpr</c>
+        statements but only when used together with functor templates (or C++14
+        generic lambdas).
 */
 
 #include <boost/contract/detail/none.hpp>

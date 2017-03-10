@@ -10,7 +10,7 @@
 #include <boost/optional.hpp>
 #include <cassert>
 
-// NOTE: Incomplete contract assertions, addressing `empty` and `full` only.
+// NOTE: Incomplete contract assertions, addressing only `empty` and `full`.
 template<typename T>
 class abstract_stack {
 public:
@@ -110,7 +110,7 @@ void abstract_stack<T>::push(T const& value, boost::contract::virtual_* v) {
 template<typename T>
 T const& abstract_stack<T>::pop(boost::contract::virtual_* v) {
     boost::optional<T const&> result;
-    boost::contract::old_ptr<T> old_item = BOOST_CONTRACT_OLD(v, item());
+    boost::contract::old_ptr<T> old_item = BOOST_CONTRACT_OLDOF(v, item());
     boost::contract::check c = boost::contract::public_function(v, result, this)
         .precondition([&] {
             BOOST_CONTRACT_ASSERT(!empty());

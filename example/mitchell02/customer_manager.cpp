@@ -79,7 +79,7 @@ public:
     /* Commands */
 
     void add(customer_info const& info) {
-        boost::contract::old_ptr<int> old_count = BOOST_CONTRACT_OLD(count());
+        boost::contract::old_ptr<int> old_count = BOOST_CONTRACT_OLDOF(count());
         boost::contract::check c = boost::contract::public_function(this)
             .precondition([&] {
                 // Not already active.

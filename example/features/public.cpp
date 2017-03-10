@@ -78,9 +78,9 @@ public:
     virtual int push_back(int id, boost::contract::virtual_* v = 0) {
         int result;
         boost::contract::old_ptr<bool> old_find =
-                BOOST_CONTRACT_OLD(v, find(id)); // Pass `v`.
+                BOOST_CONTRACT_OLDOF(v, find(id)); // Pass `v`.
         boost::contract::old_ptr<int> old_sizs =
-                BOOST_CONTRACT_OLD(v, size()); // Pass `v`.
+                BOOST_CONTRACT_OLDOF(v, size()); // Pass `v`.
         boost::contract::check c = boost::contract::public_function(
                 v, result, this) // Pass `v` and `result`.
             .precondition([&] {
@@ -129,8 +129,9 @@ public:
     int push_back(int id, boost::contract::virtual_* v = 0) /* override */ {
         int result;
         boost::contract::old_ptr<bool> old_find =
-                BOOST_CONTRACT_OLD(v, find(id));
-        boost::contract::old_ptr<int> old_size = BOOST_CONTRACT_OLD(v, size());
+                BOOST_CONTRACT_OLDOF(v, find(id));
+        boost::contract::old_ptr<int> old_size =
+                BOOST_CONTRACT_OLDOF(v, size());
         boost::contract::check c = boost::contract::public_function<
             override_push_back // Pass override plus below function pointer...
         >(v, result, &identifiers::push_back, this, id) // ...and arguments.

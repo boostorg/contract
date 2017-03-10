@@ -7,6 +7,7 @@
 // Test public static member function contract compilation on/off (w/ macros).
 
 #include "../detail/oteststream.hpp"
+#include "../detail/unprotected_commas.hpp"
 #include <boost/contract/core/config.hpp>
 #include <boost/contract_macro.hpp>
 #include <boost/detail/lightweight_test.hpp>
@@ -15,15 +16,42 @@
 boost::contract::test::detail::oteststream out;
 
 struct a {
-    BOOST_CONTRACT_STATIC_INVARIANT({ out << "a::static_inv" << std::endl; })
-    BOOST_CONTRACT_INVARIANT({ out << "a::inv" << std::endl; })
+    BOOST_CONTRACT_STATIC_INVARIANT({
+        typedef boost::contract::test::detail::unprotected_commas<void, void,
+                void> t;
+        out << "a::static_inv" << std::endl;
+    })
+    
+    BOOST_CONTRACT_INVARIANT({
+        typedef boost::contract::test::detail::unprotected_commas<void, void,
+                void> t;
+        out << "a::inv" << std::endl;
+    })
 
     static void f(int x) {
-        BOOST_CONTRACT_OLD_PTR(int)(old_x, x);
-        BOOST_CONTRACT_STATIC_PUBLIC_FUNCTION(a)
-            BOOST_CONTRACT_PRECONDITION([] { out << "a::f::pre" << std::endl; })
-            BOOST_CONTRACT_OLD([] { out << "a::f::old" << std::endl; })
+        BOOST_CONTRACT_OLD_PTR(
+            boost::contract::test::detail::unprotected_commas<int, void, void>::
+                    type1
+        )(
+            old_x,
+            (boost::contract::test::detail::unprotected_commas<void, void,
+                    void>::same(x))
+        );
+        BOOST_CONTRACT_STATIC_PUBLIC_FUNCTION(boost::contract::test::detail::
+                unprotected_commas<a, void, void>::type1)
+            BOOST_CONTRACT_PRECONDITION([] {
+                typedef boost::contract::test::detail::unprotected_commas<void,
+                        void, void> t;
+                out << "a::f::pre" << std::endl;
+            })
+            BOOST_CONTRACT_OLD([] {
+                typedef boost::contract::test::detail::unprotected_commas<void,
+                        void, void> t;
+                out << "a::f::old" << std::endl;
+            })
             BOOST_CONTRACT_POSTCONDITION([] {
+                typedef boost::contract::test::detail::unprotected_commas<void,
+                        void, void> t;
                 out << "a::f::post" << std::endl;
             })
         ;

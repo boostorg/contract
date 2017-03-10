@@ -18,6 +18,7 @@
 #include <boost/contract/check.hpp>
 #include <boost/contract/assert.hpp>
 #include <boost/detail/lightweight_test.hpp>
+#include <sstream>
 
 boost::contract::test::detail::oteststream out;
 

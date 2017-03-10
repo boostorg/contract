@@ -5,62 +5,129 @@
 // See: http://www.boost.org/doc/libs/release/libs/contract/doc/html/index.html
 
 #include <boost/contract.hpp>
+#include <boost/type_traits.hpp>
+#include <boost/noncopyable.hpp>
 #include <cassert>
 
-//[old_if_copyable
+//[old_if_copyable_offset
 template<typename T>
-void accumulate(T& total, T const& x) {
+void offset(T& x, int count) {
     // No compiler error if T has no copy constructor...
-    boost::contract::old_ptr_if_copyable<T> old_total =
-            BOOST_CONTRACT_OLD(total);
+    boost::contract::old_ptr_if_copyable<T> old_x = BOOST_CONTRACT_OLDOF(x);
     boost::contract::check c = boost::contract::function()
         .postcondition([&] {
             // ...but old value null if T has no copy constructor.
-            if(old_total) BOOST_CONTRACT_ASSERT(total == *old_total + x);
+            if(old_x) BOOST_CONTRACT_ASSERT(x == *old_x + count);
         })
     ;
     
-    total += x;
+    x += count;
 }
 //]
 
-struct n {
-    int value;
+//[old_if_copyable_w_decl
+// Copyable type but...
+class w {
+public:
+    w(w const&) { /* Some very expensive copy here operation... */ }
 
-    n() : value(0) {}
-    n operator+(n const& r) const { n x; x.value = value + r.value; return x; }
-    n& operator+=(n const& r) { value = value + r.value; return *this; }
-    bool operator==(n const& r) const { return value == r.value; }
+    /* ... */
+//]
+    w() : num_(0) {}
+    int operator+(int i) const { return num_ + i; }
+    w& operator+=(int i) { num_ += i; return *this; }
+    bool operator==(int i) const { return num_ == i; }
 private:
-    n(n const&) {} // Hide copy constructor (non copy-constructible).
+    unsigned long num_;
 };
 
-// Specialize `boost::is_copy_constructible<n>` trait (not needed on C++11):
-#include <boost/config.hpp>
-#ifdef BOOST_NO_CXX11_DELETED_FUNCTIONS
-
-//[old_if_copyable_specialization
-#include <boost/type_traits/is_copy_constructible.hpp>
-
-namespace boost {
+//[old_if_copyable_w_spec
+// ...never copy old values for type `w` (because its copy is too expensive).
+namespace boost { namespace contract {
     template<>
-    struct is_copy_constructible<n> : false_type {};
-}
+    struct is_old_value_copyable<w> : boost::false_type {};
+} } // namespace
 //]
 
-#endif
+//[old_if_copyable_p_decl
+// Non-copyable type but...
+class p : private boost::noncopyable {
+    int* num_;
+    
+    friend struct boost::contract::old_value_copy<p>;
+
+    /* ... */
+//]
+public:
+    p() : num_(new int(0)) {}
+    ~p() { delete num_; }
+    int operator+(int i) const { return *num_ + i; }
+    p& operator+=(int i) { *num_ += i; return *this; }
+    bool operator==(int i) const { return *num_ == i; }
+};
+
+//[old_if_copyable_p_spec
+// ...still copy old values for type `p` (using a deep copy).
+namespace boost { namespace contract {
+    template<>
+    struct old_value_copy<p> {
+        explicit old_value_copy(p const& old) {
+            *old_.num_ = *old.num_; // Deep copy pointed value.
+        }
+
+        p const& old() const { return old_; }
+
+    private:
+        p old_;
+    };
+    
+    template<>
+    struct is_old_value_copyable<p> : boost::true_type {};
+} } // namespace
+//]
+
+//[old_if_copyable_n_decl
+// Non-copyable type so...
+class n {
+    int num_;
+
+    n(n const&); // Unimplemented private copy constructor (not copyable).
+
+    /* ... */
+//]
+
+public:
+    n() : num_(0) {}
+    int operator+(int i) const { return num_ + i; }
+    n& operator+=(int i) { num_ += i; return *this; }
+    bool operator==(int i) const { return num_ == i; }
+};
+
+//[old_if_copyable_n_spec
+// ...specialize `boost::is_copy_constructible` (no need for this on C++11).
+namespace boost { namespace contract {
+    template<>
+    struct is_old_value_copyable<n> : boost::false_type {};
+} } // namespace
+//]
 
 int main() {
-    n j, k; // Non copyable (no compiler error but no old-value checks).
-    j.value = 1;
-    k.value = 2;
-    accumulate(j, k);
-    assert(j.value == 3);
-
-    int i = 1; // Copyable (check old values).
-    accumulate(i, 2);
+    int i = 0; // Copy constructor, copy and check old values.
+    offset(i, 3);
     assert(i == 3);
+    
+    w j; // Expensive copy constructor, so never copy or check old values.
+    offset(j, 3);
+    assert(j == 3);
 
+    p k; // No copy constructor, but still copy and check old values.
+    offset(k, 3);
+    assert(k == 3);
+
+    n h; // No copy constructor, no compiler error but no old value checks.
+    offset(h, 3);
+    assert(h == 3);
+    
     return 0;
 }
 

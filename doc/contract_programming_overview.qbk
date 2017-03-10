@@ -335,7 +335,7 @@ This customizable failure handling mechanism is similar to the one used by `std:
 [note
 In C++ there are a number of issues with programming contract failure handlers that throw exceptions instead of terminating the program.
 Specifically, destructors check class invariants so they will throw if programmers change class invariant failure handlers to throw instead of terminating the program, but in general destructors should not throw in C++ (to comply with STL exception safety, etc.).
-Furthermore, programming an exception specification failure handler to throw will throw an exception (the one reporting the contract failure) while there is already an active exception (the one that caused the exception specification assertions to be checked in the first place), and this leads to undefined behavior in C++.
+Furthermore, programming an exception specification failure handler to throw will throw an exception (the one reporting the contract failure) while there is already an active exception (the one that caused the exception specification assertions to be checked in the first place), and this will force C++ to terminate the program.
 ]
 
 Therefore, it is recommended to terminate the program at least for contract failures from destructors and because when checking exception guarantees (if not in all other cases of contract failures as it is done by default by this library).

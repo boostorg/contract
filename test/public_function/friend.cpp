@@ -1,7 +1,15 @@
 
-#include <boost/contract.hpp>
-#include <cassert>
-#include <iostream>
+// Test friend functions (also forcing them to check invariants).
+
+#include "../detail/oteststream.hpp"
+#include <boost/contract/public_function.hpp>
+#include <boost/contract/function.hpp>
+#include <boost/contract/check.hpp>
+#include <boost/contract/assert.hpp>
+#include <boost/detail/lightweight_test.hpp>
+#include <sstream>
+
+boost::contract::test::detail::oteststream out;
 
 class y;
 class z;
@@ -9,13 +17,14 @@ class z;
 class x {
 public:
     void invariant() const {
-        std::cout << "x::inv" << std::endl;
+        out << "x::inv" << std::endl;
         BOOST_CONTRACT_ASSERT(get() >= 0);
     }
 
     x() : value_(0) {}
     int get() const { return value_; }
-    friend void set_all(x&, y&, int value);
+
+    friend void f(x&, y&, int value);
 
 private:
     int value_;
@@ -24,22 +33,23 @@ private:
 class y {
 public:
     void invariant() const {
-        std::cout << "y::inv" << std::endl;
+        out << "y::inv" << std::endl;
         BOOST_CONTRACT_ASSERT(get() >= 0);
     }
 
     y() : value_(0) {}
     int get() const { return value_; }
-    friend void set_all(x&, y&, int value);
+
+    friend void f(x&, y&, int value);
 
 private:
     int value_;
 };
 
-void set_all(x& a, y& b, int value) {
+void f(x& a, y& b, int value) {
     boost::contract::check post = boost::contract::function()
         .postcondition([&] {
-            std::cout << "f::post" << std::endl;
+            out << "f::post" << std::endl;
             BOOST_CONTRACT_ASSERT(a.get() == value);
             BOOST_CONTRACT_ASSERT(b.get() == value);
         })
@@ -48,21 +58,45 @@ void set_all(x& a, y& b, int value) {
     boost::contract::check inv_a = boost::contract::public_function(&a);
     boost::contract::check pre = boost::contract::function()
         .precondition([&] {
-            std::cout << "f::pre" << std::endl;
+            out << "f::pre" << std::endl;
             BOOST_CONTRACT_ASSERT(value > 0);
         })
     ;
 
-    std::cout << "f::body" << std::endl;
+    out << "f::body" << std::endl;
     a.value_ = b.value_ = value;
 }
 
 int main() {
+    std::ostringstream ok;
+
     x a;
     y b;
-    set_all(a, b, 123); 
-    assert(a.get() == 123);
-    assert(b.get() == 123);
-    return 1;
+    
+    out.str("");
+    f(a, b, 123); 
+    ok.str(""); ok
+        #ifndef BOOST_CONTRACT_NO_INVARIANTS
+            << "y::inv" << std::endl
+            << "x::inv" << std::endl
+        #endif
+        #ifndef BOOST_CONTRACT_NO_PRECONDITIONS
+            << "f::pre" << std::endl
+        #endif
+        << "f::body" << std::endl
+        #ifndef BOOST_CONTRACT_NO_INVARIANTS
+            << "x::inv" << std::endl
+            << "y::inv" << std::endl
+        #endif
+        #ifndef BOOST_CONTRACT_NO_POSTONDITIONS
+            << "f::post" << std::endl
+        #endif
+    ;
+    BOOST_TEST(out.eq(ok.str()));
+    
+    BOOST_TEST_EQ(a.get(), 123);
+    BOOST_TEST_EQ(b.get(), 123);
+
+    return boost::report_errors();
 }
 

@@ -76,25 +76,41 @@ value pointer.
 The expression expanded by this macro should be assigned to an old value
 pointer of type @RefClass{boost::contract::old_ptr} or
 @RefClass{boost::contract::old_ptr_if_copyable}.
+This is an overloaded variadic macro and it can be used in the following
+different ways.
 
-This is a variadic macro.
+1\. From within virtual public functions and public functions overrides:
+
+@code
+BOOST_CONTRACT_OLDOF(v, expr)
+@endcode
+
+2\. From all other operations:
+
+@code
+BOOST_CONTRACT_OLDOF(expr)
+@endcode
+
+Where:
+
+@arg    <c><b>v</b></c> is the extra parameter of type
+        @RefClass{boost::contract::virtual_}<c>*</c> and default value @c 0
+        from the enclosing virtual public function or public function
+        overrides declaring the contract.
+        (This is not a variadic macro parameter so any comma it might contain
+        must be protected by round parenthesis, but
+        <c>BOOST_CONTRACT_OLDOF((v), expr)</c> will always work.)
+@arg    <c><b>expr</b></c> is the expression to be evaluated and copied in
+        the old value pointer.
+        (This is not a variadic macro parameter so any comma it might contain
+        must be protected by round parenthesis, but
+        <c>BOOST_CONTRACT_OLDOF(v, (expr))</c> will always work.)
+
 On compilers that do not support variadic macros, programmers can manually copy
 old value expressions without using this macro (see
 @RefSect{extra_topics.no_macros__no_c__11_, No Macros}).
 
 @see @RefSect{tutorial.old_values, Old Values}
-
-@param ...  This macro usually takes a single parameter as the old value
-            expression to be copied (e.g., @c BOOST_CONTRACT_OLDOF(expr)).
-            However, for virtual public functions and public functions overrides
-            the extra parameter of type
-            @RefClass{boost::contract::virtual_}<c>*</c> must be passed to
-            this macro as well and before the old value expression to be copied
-            (e.g., @c BOOST_CONTRACT_OLDOF(v, expr)).
-            In either case, any comma the old value expression might contain
-            must be protected by round parenthesis (i.e.,
-            @c BOOST_CONTRACT_OLDOF((expr)) and
-            <c>BOOST_CONTRACT_OLDOF(v, ((expr)))</c> will always work).
 */
 #define BOOST_CONTRACT_OLDOF(...) \
     BOOST_PP_CAT( /* CAT(..., EMTPY()) required on MSVC */ \
@@ -175,22 +191,23 @@ that are copyable (i.e., for which
         Old Value Requirements}
 */
 template<typename T> // Used only if is_old_value_copyable<T>.
-class old_value_copy {
-public:
+struct old_value_copy {
     /**
     Construct this object by making a copy of the specified old value.
 
     This is the operation within this library that makes the one single copy of
     old values.
-    */
-    explicit old_value_copy(T const& value) :
-            value_(value) {} // This makes the one single copy of T.
 
-    /** Return a (constant) reference to the old value copy. */
-    T const& value() const { return value_; }
+    @param old The old value to copy.
+    */
+    explicit old_value_copy(T const& old) :
+            old_(old) {} // This makes the one single copy of T.
+
+    /** Return a (constant) reference to the old value that was copied. */
+    T const& old() const { return old_; }
 
 private:
-    T const value_;
+    T const old_;
 };
 
 template<typename T>
@@ -322,8 +339,6 @@ public:
     /** Construct this old value pointer as null. */
     old_ptr_if_copyable() {}
 
-    // TODO: Document that auto old_x = BOOST_CONTRACT_OLDOF(...) will use old_ptr and not old_ptr_if_copyable (auto will by default not use old_ptr_if_conpyable because old_ptr is more stringent from a type requirement prospective, if users want to relax the copyable type requirements they need to explicitly use old_ptr_if_copyable instead of using auto).
-    
     /**
     Construct this old value pointer from from an old value pointer of
     copyable-only type.
@@ -353,7 +368,7 @@ public:
     */
     T const& operator*() const {
         BOOST_CONTRACT_DETAIL_DEBUG(typed_copy_);
-        return typed_copy_->value();
+        return typed_copy_->old();
     }
 
     /**

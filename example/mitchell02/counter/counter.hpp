@@ -48,7 +48,7 @@ public:
 
     // Decrement counter value.
     void decrement() {
-        boost::contract::old_ptr<int> old_value = BOOST_CONTRACT_OLD(value());
+        boost::contract::old_ptr<int> old_value = BOOST_CONTRACT_OLDOF(value());
         boost::contract::check c = boost::contract::public_function(this)
             .postcondition([&] {
                 BOOST_CONTRACT_ASSERT(value() == *old_value - 1); // Decrement.

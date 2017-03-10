@@ -118,7 +118,7 @@ public:
     void put(std::string const& x,
             boost::contract::virtual_* v = 0) /* override */ {
         boost::contract::old_ptr<std::string> old_str =
-                BOOST_CONTRACT_OLD(v, str());
+                BOOST_CONTRACT_OLDOF(v, str());
         boost::contract::check c = boost::contract::public_function<
                 override_put>(
             v,
@@ -138,7 +138,7 @@ public:
     // Overload on argument type.
     void put(char x, boost::contract::virtual_* v = 0) /* override */ {
         boost::contract::old_ptr<std::string> old_str =
-                BOOST_CONTRACT_OLD(v, str());
+                BOOST_CONTRACT_OLDOF(v, str());
         boost::contract::check c = boost::contract::public_function<
                 override_put>(
             v,
@@ -159,7 +159,7 @@ public:
     void put(int x, bool tab = false,
             boost::contract::virtual_* v = 0) /* override */ {
         boost::contract::old_ptr<std::string> old_str =
-                BOOST_CONTRACT_OLD(v, str());
+                BOOST_CONTRACT_OLDOF(v, str());
         boost::contract::check c = boost::contract::public_function<
                 override_put>(
             v,

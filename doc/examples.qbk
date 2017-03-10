@@ -6,12 +6,14 @@
 
 [section Examples]
 
-This section lists examples taken from different Contract Programming sources and re-implemented using this library.
+This section lists examples taken from different sources discussing Contract Programming and re-implemented using this library.
 
-Some of these examples might be from old sources, containing old or obsolete code practices, not optimized for execution speed, and they be more relevant in the context programming languages other than C++.
-Nevertheless, programmers are encouraged to review these examples to see a few diverse usages of this library that might be relevant for the contracts they need to write in their code.
+[note
+Some of these examples might be from old sources, containing old or obsolete code practices, not optimized for execution speed, not complete, and they might be more relevant in the context of programming languages different from C++.
+Nevertheless, programmers are encouraged to review these examples to see a few diverse usages of this library that might be relevant for contracts they need to write in their code.
+]
 
-Sources:
+Sources of the listed examples:
 
 * __N1962__: Examples from the proposal to add Contract Programming to C++11 (unfortunately, this proposal was never accepted into the standard).
 * __Meyer97__: Examples using the Eiffel programming language and reprogrammed using this library for C++.
@@ -27,41 +29,49 @@ A few notable examples:
 * [link Cline90_vector_anchor \[Cline90\] Vector]: Comparison with A++ syntax.
 
 [#N1962_vector_anchor]
-[heading \[N1962\] Vector: STL Vector contracts and comparison with C++ contract proposal syntax]
+[section \[N1962\] Vector: STL Vector contracts and comparison with C++ contract proposal syntax]
 [import ../example/n1962/vector.cpp]
 [import ../example/n1962/vector_n1962.hpp]
 [table
-    [ [This Library] [Contract \[N1962\] and Static-If \[N3613\] Proposals (neither part of C++)] ]
+    [ [This Library] [Contract Programming Proposal \[N1962\] (not part of C++) plus C++17 [^if constexpr]] ]
     [ [[n1962_vector]] [[n1962_vector_n1962]] ]
 ]
 
-[heading \[N1962\] Circle: Subcontracting]
+On compilers that support C++17 `if constexpr`, the above example using this library can be simplified removing [funcref boost::contract::condition_if] and related functor templates `all_of_equal_to`, etc. (making the code to the left more similar to the code to the right).
+[endsect]
+
+[section \[N1962\] Circle: Subcontracting]
 [import ../example/n1962/circle.cpp]
 [n1962_circle]
+[endsect]
 
-[heading \[N1962\] Factorial: Recursion and assertion computational complexity]
+[section \[N1962\] Factorial: Recursion and assertion computational complexity]
 [import ../example/n1962/factorial.cpp]
 [n1962_factorial]
+[endsect]
 
-[heading \[N1962\] Equal: Operators]
+[section \[N1962\] Equal: Operators]
 [import ../example/n1962/equal.cpp]
 [n1962_equal]
+[endsect]
 
-[heading \[N1962\] Sum: Array parameter]
+[section \[N1962\] Sum: Array parameter]
 [import ../example/n1962/sum.cpp]
 [n1962_sum]
+[endsect]
 
 [#N1962_square_root_anchor]
-[heading \[N1962\] Square Root: Default parameters and comparison with D syntax]
+[section \[N1962\] Square Root: Default parameters and comparison with D syntax]
 [import ../example/n1962/sqrt.cpp]
 [import ../example/n1962/sqrt.d]
 [table
     [ [This Library] [The D Programming Language] ]
     [ [[n1962_sqrt]] [[n1962_sqrt_d]] ]
 ]
+[endsect]
 
 [#Meyer97_stack4_anchor]
-[heading \[Meyer97\] Stack4: Comparison with Eiffel syntax]
+[section \[Meyer97\] Stack4: Comparison with Eiffel syntax]
 [import ../example/meyer97/stack4.hpp]
 [import ../example/meyer97/stack4_main.cpp]
 [import ../example/meyer97/stack4.e]
@@ -70,45 +80,54 @@ A few notable examples:
     [ [[meyer97_stack4]] [[meyer97_stack4_e]] ]
     [ [[meyer97_stack4_main]] [] ]
 ]
+[endsect]
 
-[heading \[Meyer97\] Stack3: Error codes instead of preconditions]
+[section \[Meyer97\] Stack3: Error codes instead of preconditions]
 [import ../example/meyer97/stack3.cpp]
 [meyer97_stack3]
+[endsect]
 
-[heading \[Mitchell02\] Name List: Relaxing subcontracts]
+[section \[Mitchell02\] Name List: Relaxed subcontracts]
 [import ../example/mitchell02/name_list.cpp]
 [mitchell02_name_list]
+[endsect]
 
-[heading \[Mitchell02\] Dictionary: Key-value map]
+[section \[Mitchell02\] Dictionary: Key-value map]
 [import ../example/mitchell02/dictionary.cpp]
 [mitchell02_dictionary]
+[endsect]
 
-[heading \[Mitchell02\] Courier: Subcontracting and static class invariants]
+[section \[Mitchell02\] Courier: Subcontracting and static class invariants]
 [import ../example/mitchell02/courier.cpp]
 [mitchell02_courier]
+[endsect]
 
-[heading \[Mitchell02\] Stack: Stack-like container]
+[section \[Mitchell02\] Stack: Stack-like container]
 [import ../example/mitchell02/stack.cpp]
 [mitchell02_stack]
+[endsect]
 
-[heading \[Mitchell02\] Simple Queue: Queue-like container]
+[section \[Mitchell02\] Simple Queue: Queue-like container and assertion big-O complexity]
 [import ../example/mitchell02/simple_queue.cpp]
 [mitchell02_simple_queue]
+[endsect]
 
-[heading \[Mitchell02\] Customer Manager: Contracts instead of Defensive Programming]
+[section \[Mitchell02\] Customer Manager: Contracts instead of Defensive Programming]
 [import ../example/mitchell02/customer_manager.cpp]
 [mitchell02_customer_manager]
+[endsect]
 
-[heading \[Mitchell02\] Observer: Pure virtual functions]
+[section \[Mitchell02\] Observer: Pure virtual functions]
 [import ../example/mitchell02/observer/observer.hpp]
 [mitchell02_observer]
 [import ../example/mitchell02/observer/subject.hpp]
 [mitchell02_subject]
 [import ../example/mitchell02/observer_main.cpp]
 [mitchell02_observer_main]
+[endsect]
 
 [#Mitchell02_counter_anchor]
-[heading \[Mitchell02\] Counter: Subcontracting]
+[section \[Mitchell02\] Counter: Subcontracting]
 [import ../example/mitchell02/counter/push_button.hpp]
 [mitchell02_push_button]
 [import ../example/mitchell02/counter/decrement_button.hpp]
@@ -117,9 +136,10 @@ A few notable examples:
 [mitchell02_counter]
 [import ../example/mitchell02/counter_main.cpp]
 [mitchell02_counter_main]
+[endsect]
 
 [#Cline90_vector_anchor]
-[heading \[Cline90\] Vector: Comparison with A++ proposed syntax]
+[section \[Cline90\] Vector: Comparison with A++ proposed syntax]
 [import ../example/cline90/vector.hpp]
 [import ../example/cline90/vector_main.cpp]
 [import ../example/cline90/vector_axx.hpp]
@@ -128,18 +148,22 @@ A few notable examples:
     [ [[cline90_vector]] [[cline90_vector_axx]] ]
     [ [[cline90_vector_main]] [] ]
 ]
+[endsect]
 
-[heading \[Cline90\] Stack: Stack-like container]
+[section \[Cline90\] Stack: Stack-like container]
 [import ../example/cline90/stack.cpp]
 [cline90_stack]
+[endsect]
 
-[heading \[Cline90\] Vector-Stack: Subcontracting]
+[section \[Cline90\] Vector-Stack: Subcontracting]
 [import ../example/cline90/vstack.cpp]
 [cline90_vstack]
+[endsect]
 
-[heading \[Cline90\] Calendar: A very simple calendar]
+[section \[Cline90\] Calendar: A very simple calendar]
 [import ../example/cline90/calendar.cpp]
 [cline90_calendar]
+[endsect]
 
 [endsect]
 

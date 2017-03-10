@@ -30,7 +30,7 @@ public:
             BOOST_CONTRACT_ASSERT(x > 0);
         });
         boost::contract::old_ptr<int> old_instances =
-                BOOST_CONTRACT_OLD(instances());
+                BOOST_CONTRACT_OLDOF(instances());
         boost::contract::check c = boost::contract::constructor(this)
             .postcondition([&] {
                 BOOST_CONTRACT_ASSERT(instances() == *old_instances + 1);
@@ -43,7 +43,7 @@ public:
     
     ~positive() { // Contracts for the destructor.
         boost::contract::old_ptr<int> old_instances =
-                BOOST_CONTRACT_OLD(instances());
+                BOOST_CONTRACT_OLDOF(instances());
         boost::contract::check c = boost::contract::destructor(this)
             .postcondition([&] {
                 BOOST_CONTRACT_ASSERT(instances() == *old_instances - 1);
@@ -82,7 +82,7 @@ public:
             BOOST_CONTRACT_ASSERT(x > 0);
         });
         boost::contract::old_ptr<int> old_instances =
-                BOOST_CONTRACT_OLD(instances());
+                BOOST_CONTRACT_OLDOF(instances());
         boost::contract::check c = boost::contract::constructor(this)
             .postcondition([&] {
                 BOOST_CONTRACT_ASSERT(instances() == *old_instances + 1);

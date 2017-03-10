@@ -9,7 +9,6 @@
 #include <boost/config.hpp>
 #ifdef BOOST_MSVC
 
-// TODO: Document following warning about MSVC in lib docs.
 // WARNING: MSVC (at least up to VS 2015) gives a compile-time error if SFINAE
 // cannot introspect a member because of its private or protected access level.
 // That is incorrect, SFINAE should fail in these cases without generating

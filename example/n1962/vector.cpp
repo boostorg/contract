@@ -100,7 +100,7 @@ public:
         ;
     }
 
-    vector(size_type count, const T& value, Allocator const& alloc) :
+    vector(size_type count, T const& value, Allocator const& alloc) :
             vect_(count, value, alloc) {
         boost::contract::check c = boost::contract::constructor(this)
             .postcondition([&] {
@@ -111,7 +111,7 @@ public:
                                 boost::cref(value))
                     )
                 );
-                BOOST_CONTRACT_ASSERT(alloc == get_allocator());
+                BOOST_CONTRACT_ASSERT(get_allocator() == alloc);
             })
         ;
     }
@@ -268,7 +268,7 @@ public:
 
     void resize(size_type count, T const& value = T()) {
         boost::contract::old_ptr<size_type> old_size =
-                BOOST_CONTRACT_OLD(size());
+                BOOST_CONTRACT_OLDOF(size());
         boost::contract::check c = boost::contract::public_function(this)
             .postcondition([&] {
                 BOOST_CONTRACT_ASSERT(size() == count);
@@ -398,9 +398,9 @@ public:
 
     void push_back(T const& value) {
         boost::contract::old_ptr<size_type> old_size =
-                BOOST_CONTRACT_OLD(size());
+                BOOST_CONTRACT_OLDOF(size());
         boost::contract::old_ptr<size_type> old_capacity =
-                BOOST_CONTRACT_OLD(capacity());
+                BOOST_CONTRACT_OLDOF(capacity());
         boost::contract::check c = boost::contract::public_function(this)
             .precondition([&] {
                 BOOST_CONTRACT_ASSERT(size() < max_size());
@@ -422,7 +422,7 @@ public:
 
     void pop_back() {
         boost::contract::old_ptr<size_type> old_size =
-                BOOST_CONTRACT_OLD(size());
+                BOOST_CONTRACT_OLDOF(size());
         boost::contract::check c = boost::contract::public_function(this)
             .precondition([&] {
                 BOOST_CONTRACT_ASSERT(!empty());
@@ -469,7 +469,7 @@ public:
     iterator insert(iterator where, T const& value) {
         iterator result;
         boost::contract::old_ptr<size_type> old_size =
-                BOOST_CONTRACT_OLD(size());
+                BOOST_CONTRACT_OLDOF(size());
         boost::contract::check c = boost::contract::public_function(this)
             .precondition([&] {
                 BOOST_CONTRACT_ASSERT(size() < max_size());
@@ -494,11 +494,11 @@ public:
 
     void insert(iterator where, size_type count, T const& value) {
         boost::contract::old_ptr<size_type> old_size =
-                BOOST_CONTRACT_OLD(size());
+                BOOST_CONTRACT_OLDOF(size());
         boost::contract::old_ptr<size_type> old_capacity =
-                BOOST_CONTRACT_OLD(capacity());
+                BOOST_CONTRACT_OLDOF(capacity());
         boost::contract::old_ptr<iterator> old_where =
-                BOOST_CONTRACT_OLD(where);
+                BOOST_CONTRACT_OLDOF(where);
         boost::contract::check c = boost::contract::public_function(this)
             .precondition([&] {
                 BOOST_CONTRACT_ASSERT(size() + count < max_size());
@@ -528,9 +528,9 @@ public:
     template<typename InputIter>
     void insert(iterator where, InputIter first, InputIter last) {
         boost::contract::old_ptr<size_type> old_size =
-                BOOST_CONTRACT_OLD(size());
+                BOOST_CONTRACT_OLDOF(size());
         boost::contract::old_ptr<size_type> old_capacity =
-                BOOST_CONTRACT_OLD(capacity());
+                BOOST_CONTRACT_OLDOF(capacity());
         boost::contract::check c = boost::contract::public_function(this)
             .precondition([&] {
                 BOOST_CONTRACT_ASSERT(size() + std::distance(first, last) <
@@ -550,7 +550,7 @@ public:
     iterator erase(iterator where) {
         iterator result;
         boost::contract::old_ptr<size_type> old_size =
-                BOOST_CONTRACT_OLD(size());
+                BOOST_CONTRACT_OLDOF(size());
         boost::contract::check c = boost::contract::public_function(this)
             .precondition([&] {
                 BOOST_CONTRACT_ASSERT(!empty());
@@ -569,7 +569,7 @@ public:
     iterator erase(iterator first, iterator last) {
         iterator result;
         boost::contract::old_ptr<size_type> old_size =
-                BOOST_CONTRACT_OLD(size());
+                BOOST_CONTRACT_OLDOF(size());
         boost::contract::check c = boost::contract::public_function(this)
             .precondition([&] {
                 BOOST_CONTRACT_ASSERT(size() >= std::distance(first, last));
@@ -596,8 +596,9 @@ public:
     }
 
     void swap(vector& other) {
-        boost::contract::old_ptr<vector> old_me = BOOST_CONTRACT_OLD(*this);
-        boost::contract::old_ptr<vector> old_other = BOOST_CONTRACT_OLD(other);
+        boost::contract::old_ptr<vector> old_me = BOOST_CONTRACT_OLDOF(*this);
+        boost::contract::old_ptr<vector> old_other =
+                BOOST_CONTRACT_OLDOF(other);
         boost::contract::check c = boost::contract::public_function(this)
             .postcondition([&] {
                 BOOST_CONTRACT_ASSERT(

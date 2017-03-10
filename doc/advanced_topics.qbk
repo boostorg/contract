@@ -120,6 +120,8 @@ For example (see also [@../../example/features/private_protected_virtual_multi.c
 [warning
 Unfortunately, the code above does not compile on MSVC (at least up to Visual Studio 2015) because MSVC incorrectly gives a compile-time error when SFINAE fails due to private or protected access levels.
 Instead, GCC and Clang correctly implement SFINAE failures due to private and protected member functions so the code above correctly complies on GCC and Clang.
+
+Therefore, currently it is not possible to override a member that is public in one base but private or protected in other base using this library on MSVC, that can be done instead on GCC or CLang.
 ]
 
 [endsect]
@@ -411,7 +413,7 @@ This library passes a [classref boost::contract::from] parameter to the contract
 This [classref boost::contract::from] parameter indicates if the contract failure occurred in a destructor, constructor, or function call so programmers can use it code custom contract failure hander functions that never throw from destructors (in the example above, contract failures from destructors are simply ignored even if that is probably never a safe thing to do in real code).
 * Implementation checks can appear in any code, including destructor implementation code, so [funcref boost::contract::check_failure] should also never throw, or implementation checks should never be used in destructors.
 * The contract failure handler for exception guarantees [funcref boost::contract::except_failure] should also never throw (regardless of its [classref boost::contract::from] parameter).
-That is because when [funcref boost::contract::except_failure] is called there is already an active exception on the stack, the exception that triggered the exception guarantees to be checked in the first place (throwing an exception while there is already an active exception leads to undefined behaviour in C++, most programs will segfault).
+That is because when [funcref boost::contract::except_failure] is called there is already an active exception on the stack, the exception that triggered the exception guarantees to be checked in the first place (throwing an exception while there is already an active exception will force C++ to terminate the program).
 
 [note
 It is the responsibility of the programmers to decide how to handle contract failures from destructors when they program custom contract failure handlers that throw exceptions instead of terminating the program (given that C++ and STL exception safety rules requires destructors to never throw).

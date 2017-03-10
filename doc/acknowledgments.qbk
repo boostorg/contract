@@ -10,21 +10,21 @@ This section aims to recognize the contributions of /all/ the different people t
 
 Sincere thanks to my parents for their support with my education and my studies in computer science.
 
+Many thanks to Andrzej Krzemienski for reviewing early versions of this library providing valuable insights and exchanging early ideas on assertion requirements.
+
+Many thanks to Vicente J. Botet Escriba for reviewing earlier versions of this library providing valuable insights and for suggesting to use a dedicated trait to copy old values.
+
+Thanks to Steven Watanabe for providing valuable insights on C++, SFINAE, and introspection.
+
+Thanks to Dave Abrahams for moderating the Boost review of this library.
+
+Thanks to David Maley for sharing source code form his inspiring work on emulating Contract Programming and subcontracting in C++ in __Maley99__.
+
+Many thanks to Thorsten Ottosen for his work on the __N1962__ proposal (and its previous revisions) and for clarifying the proposal requirements directly with the library authors when needed.
+
 Many thanks to Bertrand Meyer for his pioneering and thorough work on Contract Programming in __Meyer97__.
 
-Many thanks to Thorsten Ottosen for his work with __N1962__ (and previous revisions) and for clarifying the __N1962__ requirements directly with the library authors when needed.
-
-Many thanks to Andrzej Krzemienski for reviewing earlier versions of this library providing valuable insights, for exchanging ideas on implementing assertion requirements, and for suggesting to support named parameters.
-
-Many thanks to Vicente J. Botet Escriba for reviewing earlier versions of this library providing valuable insights and for suggesting to use `contract::copy`.
-
-Thanks to Steven Watanabe for providing valuable insights on C++ and for hinting to use template meta-programming introspection to detect if a base class has a given member function (technique which turned out to be essential to fully automate subcontracting).
-
-Thanks to Dave Abrahams for providing valuable comments on the library syntax and especially on the syntax to support named parameters.
-
-Thanks to David Maley for having shared source code form his inspiring work in __Maley99__ on emulating Contract Programming in C++.
-
-Finally, many thanks to the entire __Boost__ community and [@http://lists.boost.org mailing list] for providing valuable comments about this library and great insights on the C++ programming language.
+Finally, many thanks to the entire Boost community and [@http://lists.boost.org mailing list] for providing valuable comments about this library and great insights on the C++ programming language.
 
 [endsect]
 

@@ -55,11 +55,11 @@ char const* assertion_failure::what() const BOOST_NOEXCEPT_OR_NOTHROW {
     return what_.c_str();
 }
 
-char const* const assertion_failure::file() const { return file_; }
+char const* assertion_failure::file() const { return file_; }
 
 unsigned long assertion_failure::line() const { return line_; }
 
-char const* const assertion_failure::code() const { return code_; }
+char const* assertion_failure::code() const { return code_; }
 
 void assertion_failure::init() {
     std::ostringstream text;

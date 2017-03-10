@@ -7,6 +7,7 @@
 // Test contract compilation on/off (using macro interface).
 
 #include "../detail/oteststream.hpp"
+#include "../detail/unprotected_commas.hpp"
 #include <boost/contract/core/config.hpp>
 #include <boost/contract/constructor.hpp> // Outside #if below for ctor pre.
 #include <boost/contract_macro.hpp>
@@ -18,18 +19,42 @@ boost::contract::test::detail::oteststream out;
 struct b :
     private boost::contract::constructor_precondition<b> // OK, always in code.
 {
-    BOOST_CONTRACT_STATIC_INVARIANT({ out << "b::static_inv" << std::endl; })
-    BOOST_CONTRACT_INVARIANT({ out << "b::inv" << std::endl; })
+    BOOST_CONTRACT_STATIC_INVARIANT({
+        typedef boost::contract::test::detail::unprotected_commas<void, void,
+                void> t;
+        out << "b::static_inv" << std::endl;
+    })
+
+    BOOST_CONTRACT_INVARIANT({
+        typedef boost::contract::test::detail::unprotected_commas<void, void,
+                void> t;
+        out << "b::inv" << std::endl;
+    })
 
     explicit b(int x) :
         BOOST_CONTRACT_CONSTRUCTOR_PRECONDITION(b)([] {
+            typedef boost::contract::test::detail::unprotected_commas<
+                    void, void, void> t;
             out << "b::ctor::pre" << std::endl;
         })
     {
-        BOOST_CONTRACT_OLD_PTR(int)(old_x, x);
+        BOOST_CONTRACT_OLD_PTR(
+            boost::contract::test::detail::unprotected_commas<int, void,
+                    void>::type1
+        )(
+            old_x,
+            (boost::contract::test::detail::unprotected_commas<void, void,
+                    >void::same(x))
+        );
         BOOST_CONTRACT_CONSTRUCTOR(this)
-            BOOST_CONTRACT_OLD([] { out << "b::f::old" << std::endl; })
+            BOOST_CONTRACT_OLD([] {
+                typedef boost::contract::test::detail::unprotected_commas<
+                        void, void, void> t;
+                out << "b::f::old" << std::endl;
+            })
             BOOST_CONTRACT_POSTCONDITION([] {
+                typedef boost::contract::test::detail::unprotected_commas<
+                        void, void, void> t;
                 out << "b::ctor::post" << std::endl;
             })
         ;
@@ -41,19 +66,44 @@ struct a:
     private boost::contract::constructor_precondition<a>, // OK, always in code.
     public b
 {
-    BOOST_CONTRACT_STATIC_INVARIANT({ out << "a::static_inv" << std::endl; })
-    BOOST_CONTRACT_INVARIANT({ out << "a::inv" << std::endl; })
+    BOOST_CONTRACT_STATIC_INVARIANT({
+        typedef boost::contract::test::detail::unprotected_commas<void, void,
+                void> t;
+        out << "a::static_inv" << std::endl;
+    })
+    
+    BOOST_CONTRACT_INVARIANT({
+        typedef boost::contract::test::detail::unprotected_commas<void, void,
+                void> t;
+        out << "a::inv" << std::endl;
+    })
 
     explicit a(int x) :
         BOOST_CONTRACT_CONSTRUCTOR_PRECONDITION(a)([] {
+            typedef boost::contract::test::detail::unprotected_commas<void,
+                    void, void> t;
             out << "a::ctor::pre" << std::endl; }
         ),
         b(x)
     {
-        BOOST_CONTRACT_OLD_PTR(int)(old_x, x);
-        BOOST_CONTRACT_CONSTRUCTOR(this)
-            BOOST_CONTRACT_OLD([] { out << "a::f::old" << std::endl; })
+        BOOST_CONTRACT_OLD_PTR(
+            boost::contract::test::detail::unprotected_commas<int, void,
+                    void>::type1
+        )(
+            old_x,
+            (boost::contract::test::detail::unprotected_commas<void, void,
+                    void>::same(x))
+        );
+        BOOST_CONTRACT_CONSTRUCTOR(boost::contract::test::detail::
+                unprotected_commas<void, void, void>::same(this))
+            BOOST_CONTRACT_OLD([] {
+                typedef boost::contract::test::detail::unprotected_commas<void,
+                        void, void> t;
+                out << "a::f::old" << std::endl;
+            })
             BOOST_CONTRACT_POSTCONDITION([] {
+                typedef boost::contract::test::detail::unprotected_commas<void,
+                        void, void> t;
                 out << "a::ctor::post" << std::endl;
             })
         ;

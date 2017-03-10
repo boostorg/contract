@@ -7,6 +7,7 @@
 // Test contract compilation on/off (using macro interface).
 
 #include "../detail/oteststream.hpp"
+#include "../detail/unprotected_commas.hpp"
 #include <boost/contract/core/config.hpp>
 #include <boost/contract/core/virtual.hpp>
 #include <boost/contract_macro.hpp>
@@ -16,38 +17,113 @@
 boost::contract::test::detail::oteststream out;
 
 struct b {
-    BOOST_CONTRACT_STATIC_INVARIANT({ out << "b::static_inv" << std::endl; })
-    BOOST_CONTRACT_INVARIANT({ out << "b::inv" << std::endl; })
+    BOOST_CONTRACT_STATIC_INVARIANT({
+        typedef boost::contract::test::detail::unprotected_commas<void, void,
+                void> t;
+        out << "b::static_inv" << std::endl;
+    })
+    
+    BOOST_CONTRACT_INVARIANT({
+        typedef boost::contract::test::detail::unprotected_commas<void, void,
+                void> t;
+        out << "b::inv" << std::endl;
+    })
 
     virtual void f(int x, boost::contract::virtual_* v = 0) = 0;
 };
 
 void b::f(int x, boost::contract::virtual_* v) {
-    BOOST_CONTRACT_OLD_PTR(int)(v, old_x, x);
-    BOOST_CONTRACT_PUBLIC_FUNCTION(v, this)
-        BOOST_CONTRACT_PRECONDITION([] { out << "b::f::pre" << std::endl; })
-        BOOST_CONTRACT_OLD([] { out << "b::f::old" << std::endl; })
-        BOOST_CONTRACT_POSTCONDITION([] { out << "b::f::post" << std::endl; })
+    BOOST_CONTRACT_OLD_PTR(
+        boost::contract::test::detail::unprotected_commas<int, void, void>::
+                type1
+    )(
+        (boost::contract::test::detail::unprotected_commas<void, void, void>::
+                same(v)),
+        old_x,
+        (boost::contract::test::detail::unprotected_commas<void, void, void>::
+                same(x))
+    );
+    BOOST_CONTRACT_PUBLIC_FUNCTION(
+        boost::contract::test::detail::unprotected_commas<void, void, void>::
+                same(v),
+        boost::contract::test::detail::unprotected_commas<void, void, void>::
+                same(this)
+    )
+        BOOST_CONTRACT_PRECONDITION([] {
+            typedef boost::contract::test::detail::unprotected_commas<void,
+                    void, void> t;
+            out << "b::f::pre" << std::endl;
+        })
+        BOOST_CONTRACT_OLD([] {
+            typedef boost::contract::test::detail::unprotected_commas<void,
+                    void, void> t;
+            out << "b::f::old" << std::endl;
+        })
+        BOOST_CONTRACT_POSTCONDITION([] {
+            typedef boost::contract::test::detail::unprotected_commas<void,
+                    void, void> t;
+            out << "b::f::post" << std::endl;
+        })
     ;
     out << "b::f::body" << std::endl;
 }
 
 struct a
-    #define BASES public b
+    #define BASES public boost::contract::test::detail::unprotected_commas< \
+            b, void, void>::type1
     : BASES
 {
-    typedef BOOST_CONTRACT_BASE_TYPES(BASES) base_types; // OK, always in code.
-    BOOST_CONTRACT_OVERRIDE(f) // OK if always in code.
+    typedef BOOST_CONTRACT_BASE_TYPES(BASES) base_types;
+    BOOST_CONTRACT_OVERRIDE(f)
 
-    BOOST_CONTRACT_STATIC_INVARIANT({ out << "a::static_inv" << std::endl; })
-    BOOST_CONTRACT_INVARIANT({ out << "a::inv" << std::endl; })
+    BOOST_CONTRACT_STATIC_INVARIANT({
+        typedef boost::contract::test::detail::unprotected_commas<void, void,
+                void> t;
+        out << "a::static_inv" << std::endl;
+    })
+    
+    BOOST_CONTRACT_INVARIANT({
+        typedef boost::contract::test::detail::unprotected_commas<void, void,
+                void> t;
+        out << "a::inv" << std::endl;
+    })
 
     virtual void f(int x, boost::contract::virtual_* v = 0) {
-        BOOST_CONTRACT_OLD_PTR(int)(v, old_x, x);
-        BOOST_CONTRACT_PUBLIC_FUNCTION_OVERRIDE(override_f)(v, &a::f, this, x)
-            BOOST_CONTRACT_PRECONDITION([] { out << "a::f::pre" << std::endl; })
-            BOOST_CONTRACT_OLD([] { out << "a::f::old" << std::endl; })
+        BOOST_CONTRACT_OLD_PTR(
+            boost::contract::test::detail::unprotected_commas<int, void, void>::
+                    type1
+        )(
+            (boost::contract::test::detail::unprotected_commas<void, void,
+                    void>::same(v)),
+            old_x,
+            (boost::contract::test::detail::unprotected_commas<void, void,
+                    void>::same(x))
+        );
+        BOOST_CONTRACT_PUBLIC_FUNCTION_OVERRIDE(
+            boost::contract::test::detail::unprotected_commas<override_f, void,
+                    void>::type1
+        )(
+            boost::contract::test::detail::unprotected_commas<void, void, void>
+                    ::same(v),
+            &a::f,
+            boost::contract::test::detail::unprotected_commas<void, void, void>
+                    ::same(this),
+            boost::contract::test::detail::unprotected_commas<void, void, void>
+                    ::same(x)
+        )
+            BOOST_CONTRACT_PRECONDITION([] {
+                typedef boost::contract::test::detail::unprotected_commas<void,
+                        void, void> t;
+                out << "a::f::pre" << std::endl;
+            })
+            BOOST_CONTRACT_OLD([] {
+                typedef boost::contract::test::detail::unprotected_commas<void,
+                        void, void> t;
+                out << "a::f::old" << std::endl;
+            })
             BOOST_CONTRACT_POSTCONDITION([] {
+                typedef boost::contract::test::detail::unprotected_commas<void,
+                        void, void> t;
                 out << "a::f::post" << std::endl;
             })
         ;

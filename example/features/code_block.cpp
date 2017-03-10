@@ -14,7 +14,7 @@ int main() {
     //[code_block
     {
         // Contract for a code block.
-        boost::contract::old_ptr<int> old_total = BOOST_CONTRACT_OLD(total);
+        boost::contract::old_ptr<int> old_total = BOOST_CONTRACT_OLDOF(total);
         boost::contract::check c = boost::contract::function()
             .precondition([&] {
                 BOOST_CONTRACT_ASSERT(v.size() == 3);

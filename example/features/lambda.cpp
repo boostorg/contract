@@ -15,7 +15,8 @@ int main() {
     std::for_each(v.cbegin(), v.cend(),
         [&total] (int const x) {
             // Contract for a lambda function.
-            boost::contract::old_ptr<int> old_total = BOOST_CONTRACT_OLD(total);
+            boost::contract::old_ptr<int> old_total =
+                    BOOST_CONTRACT_OLDOF(total);
             boost::contract::check c = boost::contract::function()
                 .precondition([&] {
                     BOOST_CONTRACT_ASSERT(

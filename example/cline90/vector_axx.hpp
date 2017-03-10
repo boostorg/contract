@@ -61,14 +61,14 @@ public:
 
     
     
+    
+    
+    
+    
+    
+    
+    
     T& operator[](int index) { return data_[index]; }
-    
-    
-    
-    
-    
-    
-    
     
     
     

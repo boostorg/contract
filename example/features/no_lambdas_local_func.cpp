@@ -33,7 +33,7 @@ public:
     {
         boost::contract::old_ptr<int> old_instances;
         void BOOST_LOCAL_FUNCTION_TPL(bind& old_instances) {
-            old_instances = BOOST_CONTRACT_OLD(array::instances());
+            old_instances = BOOST_CONTRACT_OLDOF(array::instances());
         } BOOST_LOCAL_FUNCTION_NAME_TPL(old)
         void BOOST_LOCAL_FUNCTION_TPL(const bind this_, const bind& count,
                 const bind& old_instances) { 
@@ -51,7 +51,7 @@ public:
     virtual ~array() {
         boost::contract::old_ptr<int> old_instances;
         void BOOST_LOCAL_FUNCTION_TPL(const bind this_, bind& old_instances) {
-            old_instances = BOOST_CONTRACT_OLD(this_->instances());
+            old_instances = BOOST_CONTRACT_OLDOF(this_->instances());
         } BOOST_LOCAL_FUNCTION_NAME_TPL(old)
         void BOOST_LOCAL_FUNCTION_TPL(const bind& old_instances) {
             BOOST_CONTRACT_ASSERT(array::instances() == *old_instances - 1);
@@ -70,7 +70,7 @@ public:
         } BOOST_LOCAL_FUNCTION_NAME_TPL(pre)
         void BOOST_LOCAL_FUNCTION_TPL(const bind v, const bind this_,
                 bind& old_size) {
-            old_size = BOOST_CONTRACT_OLD(v, this_->size());
+            old_size = BOOST_CONTRACT_OLDOF(v, this_->size());
         } BOOST_LOCAL_FUNCTION_NAME_TPL(old)
         void BOOST_LOCAL_FUNCTION_TPL(const bind this_, const bind& old_size) {
             BOOST_CONTRACT_ASSERT(this_->size() == *old_size + 1);

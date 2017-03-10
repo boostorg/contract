@@ -38,10 +38,10 @@ Assert contract conditions.
             @RefSect{extra_topics.no_macros__no_c__11_, No Macros}
     
     @param condition    The contract condition being checked.
-                        This is not a variadic macro parameter so any comma it
-                        might contain must be protected by round parenthesis
-                        (i.e., @c BOOST_CONTRACT_ASSERT((condition)) will always
-                        work).
+                        (This is not a variadic macro parameter so any comma it
+                        might contain must be protected by round parenthesis,
+                        but @c BOOST_CONTRACT_ASSERT((condition)) will always
+                        work.)
     */
     #define BOOST_CONTRACT_ASSERT(condition) {}
 #endif

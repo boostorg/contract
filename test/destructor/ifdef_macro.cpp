@@ -7,6 +7,7 @@
 // Test contract compilation on/off (using macro interface).
 
 #include "../detail/oteststream.hpp"
+#include "../detail/unprotected_commas.hpp"
 #include <boost/contract/core/config.hpp>
 #include <boost/contract_macro.hpp>
 #include <boost/detail/lightweight_test.hpp>
@@ -15,14 +16,37 @@
 boost::contract::test::detail::oteststream out;
 
 struct b {
-    BOOST_CONTRACT_STATIC_INVARIANT({ out << "b::static_inv" << std::endl; })
-    BOOST_CONTRACT_INVARIANT({ out << "b::inv" << std::endl; })
+    BOOST_CONTRACT_STATIC_INVARIANT({
+        typedef boost::contract::test::detail::unprotected_commas<void, void,
+                void> t;
+        out << "b::static_inv" << std::endl;
+    })
+    
+    BOOST_CONTRACT_INVARIANT({
+        typedef boost::contract::test::detail::unprotected_commas<void, void,
+                void> t;
+        out << "b::inv" << std::endl;
+    })
 
     virtual ~b() {
-        BOOST_CONTRACT_OLD_PTR(int)(old_y, y);
-        BOOST_CONTRACT_DESTRUCTOR(this)
-            BOOST_CONTRACT_OLD([] { out << "b::dtor::old" << std::endl; })
+        BOOST_CONTRACT_OLD_PTR(
+            boost::contract::test::detail::unprotected_commas<void, void,
+                    void>::type1
+        )(
+            old_y,
+            (boost::contract::test::detail::unprotected_commas<void, void,
+                    void>::same(y))
+        );
+        BOOST_CONTRACT_DESTRUCTOR(boost::contract::test::detail::
+                unprotected_commas<void, void, void>::same(this))
+            BOOST_CONTRACT_OLD([] {
+                typedef boost::contract::test::detail::unprotected_commas<void,
+                        void, void> t;
+                out << "b::dtor::old" << std::endl;
+            })
             BOOST_CONTRACT_POSTCONDITION([] {
+                typedef boost::contract::test::detail::unprotected_commas<void,
+                        void, void> t;
                 out << "b::dtor::post" << std::endl;
             })
         ;
@@ -34,14 +58,37 @@ struct b {
 int b::y = 0;
 
 struct a : public b {
-    BOOST_CONTRACT_STATIC_INVARIANT({ out << "a::static_inv" << std::endl; })
-    BOOST_CONTRACT_INVARIANT({ out << "a::inv" << std::endl; })
+    BOOST_CONTRACT_STATIC_INVARIANT({
+        typedef boost::contract::test::detail::unprotected_commas<void, void,
+                void> t;
+        out << "a::static_inv" << std::endl;
+    })
+    
+    BOOST_CONTRACT_INVARIANT({
+        typedef boost::contract::test::detail::unprotected_commas<void, void,
+                void> t;
+        out << "a::inv" << std::endl;
+    })
 
     virtual ~a() {
-        BOOST_CONTRACT_OLD_PTR(int)(old_x, x);
-        BOOST_CONTRACT_DESTRUCTOR(this)
-            BOOST_CONTRACT_OLD([] { out << "a::dtor::old" << std::endl; })
+        BOOST_CONTRACT_OLD_PTR(
+            boost::contract::test::detail:uunprotected_commas<int, void,
+                    void>::type1
+        )(
+            old_x,
+            (boost::contract::test::detail:uunprotected_commas<void, void,
+                    void>::same(x))
+        );
+        BOOST_CONTRACT_DESTRUCTOR(boost::contract::test::detail::
+                unprotected_commas<void, void, void>::same(this))
+            BOOST_CONTRACT_OLD([] {
+                typedef boost::contract::test::detail::unprotected_commas<void,
+                        void, void> t;
+                out << "a::dtor::old" << std::endl;
+            })
             BOOST_CONTRACT_POSTCONDITION([] {
+                typedef boost::contract::test::detail::unprotected_commas<void,
+                        void, void> t;
                 out << "a::dtor::post" << std::endl;
             })
         ;

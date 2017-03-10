@@ -47,7 +47,7 @@ public:
     virtual void on_bn_clicked(boost::contract::virtual_* v = 0)
             /* override */ {
         boost::contract::old_ptr<int> old_value =
-                BOOST_CONTRACT_OLD(v, counter_.value());
+                BOOST_CONTRACT_OLDOF(v, counter_.value());
         boost::contract::check c = boost::contract::public_function<
             override_on_bn_clicked
         >(v, &decrement_button::on_bn_clicked, this)

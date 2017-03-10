@@ -23,7 +23,7 @@ unsigned shape::compute_area(boost::contract::virtual_* v) const {
         })
     ;
     assert(false);
-    return result = 0;
+    return result;
 }
 
 class circle

@@ -20,7 +20,7 @@ class stack3 {
         if(!error()) {
             BOOST_CONTRACT_ASSERT(count() >= 0); // Count non-negative.
             BOOST_CONTRACT_ASSERT(count() <= capacity()); // Count bounded.
-            // Empty if no item.
+            // Empty if no element.
             BOOST_CONTRACT_ASSERT(empty() == (count() == 0));
         }
     }
@@ -35,7 +35,7 @@ public:
 
     /* Initialization */
 
-    // Create stack for max of n items, if n < 0 set error (no preconditions).
+    // Create stack for max of n elems, if n < 0 set error (no preconditions).
     explicit stack3(int n, T const& default_value = T()) :
             stack_(0), error_(no_error) {
         boost::contract::check c = boost::contract::constructor(this)
@@ -55,21 +55,21 @@ public:
 
     /* Access */
 
-    // Max number of stack items.
+    // Max number of stack elements.
     int capacity() const {
         // Check invariants.
         boost::contract::check c = boost::contract::public_function(this);
         return stack_.capacity();
     }
 
-    // Number of stack items.
+    // Number of stack elements.
     int count() const {
         // Check invariants.
         boost::contract::check c = boost::contract::public_function(this);
         return stack_.count();
     }
 
-    // Top item if present, otherwise none and set error (no preconditions).
+    // Top element if present, otherwise none and set error (no preconditions).
     boost::optional<T const&> item() const {
         boost::contract::check c = boost::contract::public_function(this)
             .postcondition([&] {
@@ -110,12 +110,12 @@ public:
         return stack_.full();
     }
 
-    /* Item Change */
+    /* Element Change */
 
     // Add x to top if capacity allows, otherwise set error (no preconditions).
     void put(T const& x) {
-        boost::contract::old_ptr<bool> old_full = BOOST_CONTRACT_OLD(full());
-        boost::contract::old_ptr<int> old_count = BOOST_CONTRACT_OLD(count());
+        boost::contract::old_ptr<bool> old_full = BOOST_CONTRACT_OLDOF(full());
+        boost::contract::old_ptr<int> old_count = BOOST_CONTRACT_OLDOF(count());
         boost::contract::check c = boost::contract::public_function(this)
             .postcondition([&] {
                 // Error if impossible.
@@ -138,10 +138,11 @@ public:
         }
     }
 
-    // Remove top item if possible, otherwise set error (no preconditions).
+    // Remove top element if possible, otherwise set error (no preconditions).
     void remove() {
-        boost::contract::old_ptr<bool> old_empty = BOOST_CONTRACT_OLD(empty());
-        boost::contract::old_ptr<int> old_count = BOOST_CONTRACT_OLD(count());
+        boost::contract::old_ptr<bool> old_empty =
+                BOOST_CONTRACT_OLDOF(empty());
+        boost::contract::old_ptr<int> old_count = BOOST_CONTRACT_OLDOF(count());
         boost::contract::check c = boost::contract::public_function(this)
             .postcondition([&] {
                 // Error if impossible.

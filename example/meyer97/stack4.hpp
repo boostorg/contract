@@ -24,13 +24,13 @@ class stack4
     void invariant() const {
         BOOST_CONTRACT_ASSERT(count() >= 0); // Count non-negative.
         BOOST_CONTRACT_ASSERT(count() <= capacity()); // Count bounded.
-        BOOST_CONTRACT_ASSERT(empty() == (count() == 0)); // Empty if no item.
+        BOOST_CONTRACT_ASSERT(empty() == (count() == 0)); // Empty if no elem.
     }
 
 public:
     /* Initialization */
 
-    // Allocate static from a maximum of n items.
+    // Allocate static from a maximum of n elements.
     explicit stack4(int n) :
         boost::contract::constructor_precondition<stack4>([&] {
             BOOST_CONTRACT_ASSERT(n >= 0); // Non-negative capacity.
@@ -53,7 +53,7 @@ public:
             .postcondition([&] {
                 BOOST_CONTRACT_ASSERT(capacity() == other.capacity());
                 BOOST_CONTRACT_ASSERT(count() == other.count());
-                // All items equal to other's items one by one.
+                // All elements equal to other's elements one by one.
             })
         ;
 
@@ -69,7 +69,7 @@ public:
             .postcondition([&] {
                 BOOST_CONTRACT_ASSERT(capacity() == other.capacity());
                 BOOST_CONTRACT_ASSERT(count() == other.count());
-                // All items euqal to other's items one by one.
+                // All elements equal to other's elements one by one.
             })
         ;
 
@@ -90,25 +90,25 @@ public:
 
     /* Access */
 
-    // Max number of stack items.
+    // Max number of stack elements.
     int capacity() const {
         // Check invariants.
         boost::contract::check c = boost::contract::public_function(this);
         return capacity_;
     }
 
-    // Number of stack items.
+    // Number of stack elements.
     int count() const {
         // Check invariants.
         boost::contract::check c = boost::contract::public_function(this);
         return count_;
     }
 
-    // Top item.
+    // Top element.
     T const& item() const {
         boost::contract::check c = boost::contract::public_function(this)
             .precondition([&] {
-                BOOST_CONTRACT_ASSERT(!empty()); // Not empty (count > 0).
+                BOOST_CONTRACT_ASSERT(!empty()); // Not empty (i.e., count > 0).
             })
         ;
 
@@ -143,11 +143,11 @@ public:
         return result = (count_ == capacity_);
     }
 
-    /* Item Change */
+    /* Element Change */
 
     // Add x on top.
     void put(T const& x) {
-        boost::contract::old_ptr<int> old_count = BOOST_CONTRACT_OLD(count());
+        boost::contract::old_ptr<int> old_count = BOOST_CONTRACT_OLDOF(count());
         boost::contract::check c = boost::contract::public_function(this)
             .precondition([&] {
                 BOOST_CONTRACT_ASSERT(!full()); // Not full.
@@ -162,12 +162,12 @@ public:
         array_[count_++] = x;
     }
 
-    // Remove top item.
+    // Remove top element.
     void remove() {
-        boost::contract::old_ptr<int> old_count = BOOST_CONTRACT_OLD(count());
+        boost::contract::old_ptr<int> old_count = BOOST_CONTRACT_OLDOF(count());
         boost::contract::check c = boost::contract::public_function(this)
             .precondition([&] {
-                BOOST_CONTRACT_ASSERT(!empty()); // Not empty (count > 0).
+                BOOST_CONTRACT_ASSERT(!empty()); // Not empty (i.e., count > 0).
             })
             .postcondition([&] {
                 BOOST_CONTRACT_ASSERT(!full()); // Not full.
@@ -181,7 +181,7 @@ public:
 private:
     int capacity_;
     int count_;
-    T* array_; // Internally using C-style array.
+    T* array_; // Internally use C-style array.
 };
 
 #endif // #include guard

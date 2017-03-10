@@ -11,7 +11,7 @@
 #include <boost/contract.hpp>
 
 void inc(int& x) {
-    boost::contract::old_ptr<int> old_x = BOOST_CONTRACT_OLD(x);
+    boost::contract::old_ptr<int> old_x = BOOST_CONTRACT_OLDOF(x);
     boost::contract::check c = boost::contract::function()
         .precondition([&] {
             BOOST_CONTRACT_ASSERT(x < std::numeric_limits<int>::max()); // Line 17.

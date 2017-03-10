@@ -28,7 +28,7 @@ public:
 
     make() : object() {
         boost::contract::old_ptr<int> old_instances =
-                BOOST_CONTRACT_OLD(instances());
+                BOOST_CONTRACT_OLDOF(instances());
         boost::contract::check c = boost::contract::constructor(this)
             .postcondition([&] {
                 BOOST_CONTRACT_ASSERT(instances() == *old_instances + 1);
@@ -40,7 +40,7 @@ public:
 
     ~make() {
         boost::contract::old_ptr<int> old_instances =
-                BOOST_CONTRACT_OLD(instances());
+                BOOST_CONTRACT_OLDOF(instances());
         boost::contract::check c = boost::contract::destructor(this)
             .postcondition([&] { // (An example of destructor postconditions.)
                 BOOST_CONTRACT_ASSERT(instances() == *old_instances - 1);

@@ -94,6 +94,9 @@ Handle public function overrides (for subcontracting).
     @see @RefSect{advanced_topics.named_overrides, Named Overrides}
 
     @param override_name    Name of the override type being declared.
+                            (This is not a variadic macro parameter but it will
+                            never contain any comma because it is an
+                            identifier.)
     @param function_name    Function name of the public function override.
                             This macro is called just once even if the function
                             name is overloaded and the same override type is
@@ -101,6 +104,9 @@ Handle public function overrides (for subcontracting).
                             name (see
                             @RefSect{advanced_topics.function_overloads,
                             Function Overloads}).
+                            (This is not a variadic macro parameter but it will
+                            never contain any comma because it is an
+                            identifier.)
     */
     #define BOOST_CONTRACT_NAMED_OVERRIDE(override_name, function_name) \
             struct override_name {}; /* empty (not used), just to compile */
@@ -124,6 +130,8 @@ Declare the override type to be passed as an explicit template parameter to
                         name (see
                         @RefSect{advanced_topics.function_overloads,
                         Function Overloads}).
+                        (This is not a variadic macro parameter but it will
+                        never contain any comma because it is an identifier.)
 */
 #define BOOST_CONTRACT_OVERRIDE(function_name) \
     BOOST_CONTRACT_NAMED_OVERRIDE(BOOST_PP_CAT(override_, function_name), \
@@ -156,6 +164,8 @@ Declare the override type to be passed as an explicit template parameter to
     
     @param ...  A comma separated list of one or more function names of public
                 function overrides.
+                (Each function name will never contain any commas because it is
+                an identifier.)
     */
     #define BOOST_CONTRACT_OVERRIDES(...) \
         BOOST_PP_SEQ_FOR_EACH(BOOST_CONTRACT_OVERRIDES_SEQ_, ~, \

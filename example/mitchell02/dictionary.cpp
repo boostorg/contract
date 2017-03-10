@@ -74,7 +74,7 @@ public:
 
     // Add value of a given key.
     void put(K const& key, T const& value) {
-        boost::contract::old_ptr<int> old_count = BOOST_CONTRACT_OLD(count());
+        boost::contract::old_ptr<int> old_count = BOOST_CONTRACT_OLDOF(count());
         boost::contract::check c = boost::contract::public_function(this)
             .precondition([&] {
                 BOOST_CONTRACT_ASSERT(!has(key)); // Has not key already.
@@ -92,7 +92,7 @@ public:
 
     // Remove value for given key.
     void remove(K const& key) {
-        boost::contract::old_ptr<int> old_count = BOOST_CONTRACT_OLD(count());
+        boost::contract::old_ptr<int> old_count = BOOST_CONTRACT_OLDOF(count());
         boost::contract::check c = boost::contract::public_function(this)
             .precondition([&] {
                 BOOST_CONTRACT_ASSERT(has(key)); // Has key.

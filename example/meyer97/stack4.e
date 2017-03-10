@@ -23,7 +23,7 @@ invariant
 
 
 
-feature -- Initialization.
+feature -- Initialization
 
     -- Allocate stack for a maximum of n elements.
     make(n: INTEGER) is
@@ -83,7 +83,7 @@ feature -- Initialization.
 
 
 
-feature -- Access.
+feature -- Access
 
     -- Max number of stack elements.
     capacity: INTEGER
@@ -99,7 +99,7 @@ feature -- Access.
     
     
     
-    -- Top element
+    -- Top element.
     item: G is
         require
             not_empty: not empty -- i.e., count > 0
@@ -110,7 +110,7 @@ feature -- Access.
 
 
 
-feature -- Status report.
+feature -- Status report
     
     -- Is stack empty?
     empty: BOOLEAN is
@@ -138,7 +138,7 @@ feature -- Status report.
 
 
 
-feature -- Element change.
+feature -- Element change
 
     -- Add x on top.
     put(x: G) is

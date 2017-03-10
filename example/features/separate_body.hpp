@@ -39,7 +39,7 @@ public:
 
     virtual void push_back(T const& value, boost::contract::virtual_* v = 0) {
         boost::contract::old_ptr<unsigned> old_size =
-                BOOST_CONTRACT_OLD(v, size());
+                BOOST_CONTRACT_OLDOF(v, size());
         boost::contract::check c = boost::contract::public_function(v, this)
             .precondition([&] {
                 BOOST_CONTRACT_ASSERT(size() < MaxSize);

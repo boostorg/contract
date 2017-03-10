@@ -239,7 +239,6 @@ Configure this library compile-time and run-time behaviours.
     #define BOOST_CONTRACT_ALL_DISABLE_NO_ASSERTION
 #endif
 
-// TODO: Add NO_CHECK to boost_contract_no build for tests, etc.
 #ifdef DOXYGEN
     /**
     If defined, this library does not perform implementation checks (undefined

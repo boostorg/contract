@@ -7,6 +7,7 @@
 // Test contract compilation on/off (using macro interface only).
 
 #include "../detail/oteststream.hpp"
+#include "../detail/unprotected_commas.hpp"
 #include <boost/contract_macro.hpp>
 #include <boost/detail/lightweight_test.hpp>
 #include <sstream>
@@ -14,10 +15,14 @@
 boost::contract::test::detail::oteststream out;
 
 void f(bool check) {
-    BOOST_CONTRACT_CHECK([&] () -> bool {
-        out << "f::check" << std::endl;
-        return check;
-    }());
+    BOOST_CONTRACT_CHECK((
+        [&] () -> bool {
+            typedef boost::contract::test::detail::unprotected_commas<void,
+                    void, void> t1;
+            out << "f::check" << std::endl;
+            return check;
+        }()
+    ));
     out << "f::body" << std::endl;
 }
 

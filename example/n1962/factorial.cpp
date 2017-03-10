@@ -29,12 +29,12 @@ int factorial(int n ) {
                 // Following assertion introduce significant run-time overhead
                 // (same as the function body) so assertion can be selectively
                 // disabled by setting COMPLEXITY_MAX.
-                if(O_SAME_AS_BODY <= COMPLEXITY_MAX) {
+                #if O_SAME_AS_BODY <= COMPLEXITY_MAX
                     // Assertions automatically disabled in other assertions.
                     // Therefore, this postcondition can recursively call the
                     // function without causing infinite recursion.
                     BOOST_CONTRACT_ASSERT(n * factorial(n - 1));
-                }
+                #endif
             }
         })
     ;

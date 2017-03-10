@@ -92,7 +92,7 @@ public:
 
     // Push item to the top.
     void put(T const& new_item) {
-        boost::contract::old_ptr<int> old_count = BOOST_CONTRACT_OLD(count());
+        boost::contract::old_ptr<int> old_count = BOOST_CONTRACT_OLDOF(count());
         boost::contract::check c = boost::contract::public_function(this)
             .postcondition([&] {
                 BOOST_CONTRACT_ASSERT(count() == *old_count + 1); // Count inc.
@@ -105,7 +105,7 @@ public:
 
     // Pop top item.
     void remove() {
-        boost::contract::old_ptr<int> old_count = BOOST_CONTRACT_OLD(count());
+        boost::contract::old_ptr<int> old_count = BOOST_CONTRACT_OLDOF(count());
         boost::contract::check c = boost::contract::public_function(this)
             .precondition([&] {
                 BOOST_CONTRACT_ASSERT(count() > 0); // Not empty.

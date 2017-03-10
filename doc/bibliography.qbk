@@ -60,8 +60,6 @@ This section lists all references consulted while designing and developing this 
 
 [#N2906_anchor] [N2906] B. Stroustrup. [@http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2009/n2906.pdf /Simplifying the sue of concepts/]. The C++ Standards Committee, N2906, 2009.
 
-[#N3613_anchor] [N3613] B. Stroustrup, G. Dos Reis, A. Sutton. [@http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2013/n3613.pdf /"Static If" Considered/]. The C++ Standards Committee, N3613, 2013.  
-
 [#Rosenblum95_anchor] [Rosenblum95] D. S. Rosenblum. [@http://www.cs.toronto.edu/~chechik/courses06/csc410/rosenblum_assert95.pdf /A practical Approach to Programming With Assertions/]. IEEE Transactions on Software Engineering, 1995.
 
 [#SPARKAda_anchor] [SPARKAda] Praxis. [@http://www.praxis-his.com/sparkada/language.asp /SPARKAda (Ada-like Language with Contract Programming)/].

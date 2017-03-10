@@ -27,6 +27,7 @@
 
 
 
+
 template< class T, class Allocator = std::allocator<T> >
 class vector {
     
@@ -75,7 +76,7 @@ public:
     explicit vector(size_type count)
         postcondition { 
             size() == count;
-            static if(boost::has_equal_to<T>::value) {
+            if constexpr(boost::has_equal_to<T>::value) {
                 boost::algorithm::all_of_equal(begin(), end(), T());
             }
         }
@@ -88,13 +89,12 @@ public:
     vector(size_type count, T const& value)
         postcondition {
             size() == count;
-            static if(boost::has_equal_to<T>::value) {
+            if constexpr(boost::has_equal_to<T>::value) {
                 boost::algorithm::all_of_equal(begin(), end(), value);
             }
         }
         : vect_(count, value)
     {}
-
 
     
     
@@ -102,7 +102,7 @@ public:
     vector(size_type count, T const& value, Allocator const& alloc)
         postcondition {
             size() == count;
-            static if(boost::has_equal_to<T>::value) {
+            if constexpr(boost::has_equal_to<T>::value) {
                 boost::algorithm::all_of_equal(begin(), end(), value);
             }
             get_allocator() == alloc;
@@ -139,7 +139,7 @@ public:
     
     /* implicit */ vector(vector const& other)
         postcondition {
-            static if(boost::has_equal_to<T>::value) {
+            if constexpr(boost::has_equal_to<T>::value) {
                 *this == other;
             }
         }
@@ -152,7 +152,7 @@ public:
     
     vector& operator=(vector const& other)
         postcondition(result) {
-            static if(boost::has_equal_to<T>::value) {
+            if constexpr(boost::has_equal_to<T>::value) {
                 *this == other;
                 result == *this;
             }
@@ -165,8 +165,9 @@ public:
 
     
     
-    
-    
+   
+
+
     
     
     
@@ -268,7 +269,7 @@ public:
     void resize(size_type count, T const& value = T())
         postcondition {
             size() == count;
-            static if(boost::has_equal_to<T>::value) {
+            if constexpr(boost::has_equal_to<T>::value) {
                 if(count > oldof size()) {
                     boost::algorithm::all_of_equal(begin() + oldof size(),
                             end(), value);
@@ -377,7 +378,7 @@ public:
     
     reference back()
         precondition {
-            empty();
+            !empty();
         }
     {
         return vect_.back();
@@ -387,7 +388,7 @@ public:
     
     const_reference back() const
         precondition {
-            empty();
+            !empty();
         }
     {
         return vect_.back();
@@ -402,7 +403,7 @@ public:
         postcondition {
             size() == oldof size() + 1;
             capacity() >= oldof capacity()
-            static if(boost::has_equal_to<T>::value) {
+            if constexpr(boost::has_equal_to<T>::value) {
                 back() == value;
             }
         }
@@ -452,7 +453,7 @@ public:
             count <= max_size();
         }
         postcondition {
-            static if(boost::has_equal_to<T>::value) {
+            if constexpr(boost::has_equal_to<T>::value) {
                 boost::algorithm::all_of_equal(begin(), end(), value);
             }
         }
@@ -471,7 +472,7 @@ public:
         }
         postcondition(result) {
             size() == oldof size() + 1;
-            static if(boost::has_equal_to<T>::value) {
+            if constexpr(boost::has_equal_to<T>::value) {
                 *result == value;
             }
             //  if(capacity() > oldof capacity())
@@ -498,7 +499,7 @@ public:
         postcondition {
             size() == oldof size() + count;
             capacity() >= oldof capacity();
-            static if(boost::has_equal_to<T>::value) {
+            if constexpr(boost::has_equal_to<T>::value) {
                 if(capacity() == oldof capacity()) {
                     boost::algorithm::all_of_equal(boost::prior(oldof where),
                             boost::prior(oldof where) + count, value);
@@ -596,7 +597,7 @@ public:
 
     void swap(vector& other)
         postcondition {
-            static if(boost::has_equal_to<T>::value) {
+            if constexpr(boost::has_equal_to<T>::value) {
                 *this == oldof other;
                 other == oldof *this;
             }
@@ -627,6 +628,8 @@ public:
 private:
     std::vector<T, Allocator> vect_;
 };
+
+
 
 
 

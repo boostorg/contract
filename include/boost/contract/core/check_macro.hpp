@@ -32,10 +32,10 @@ Macro for implementation checks.
 
     @param condition    The condition to be asserted within implementation code
                         (function body, etc.).
-                        This is not a variadic macro parameter so any comma it
-                        might contain must be protected by round parenthesis
-                        (i.e., @c BOOST_CONTRACT_CHECK((condition)) will always
-                        work).
+                        (This is not a variadic macro parameter so any comma it
+                        might contain must be protected by round parenthesis,
+                        but @c BOOST_CONTRACT_CHECK((condition)) will always
+                        work.)
     */
     #define BOOST_CONTRACT_CHECK(condition) /* nothing */
 #endif

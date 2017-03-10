@@ -136,8 +136,10 @@ public:
     void remove() {
         // Expensive all_equal postcond. and old_items copy might be skipped.
         boost::contract::old_ptr<std::vector<T> > old_items;
-        if(O_N <= COMPLEXITY_MAX) old_items = BOOST_CONTRACT_OLD(items());
-        boost::contract::old_ptr<int> old_count = BOOST_CONTRACT_OLD(count());
+        #if O_N <= COMPLEXITY_MAX
+            old_items = BOOST_CONTRACT_OLDOF(items());
+        #endif
+        boost::contract::old_ptr<int> old_count = BOOST_CONTRACT_OLDOF(count());
         boost::contract::check c = boost::contract::public_function(this)
             .precondition([&] {
                 BOOST_CONTRACT_ASSERT(!is_empty()); // Not empty.
@@ -155,8 +157,10 @@ public:
     void put(T const& item) {
         // Expensive all_equal postcond. and old_items copy might be skipped.
         boost::contract::old_ptr<std::vector<T> > old_items;
-        if(O_N <= COMPLEXITY_MAX) old_items = BOOST_CONTRACT_OLD(items());
-        boost::contract::old_ptr<int> old_count = BOOST_CONTRACT_OLD(count());
+        #if O_N <= COMPLEXITY_MAX
+            old_items = BOOST_CONTRACT_OLDOF(items());
+        #endif
+        boost::contract::old_ptr<int> old_count = BOOST_CONTRACT_OLDOF(count());
         boost::contract::check c = boost::contract::public_function(this)
             .precondition([&] {
                 BOOST_CONTRACT_ASSERT(count() < capacity()); // Room for add.

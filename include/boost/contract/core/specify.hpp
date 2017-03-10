@@ -7,8 +7,6 @@
 // file LICENSE_1_0.txt or a copy at http://www.boost.org/LICENSE_1_0.txt).
 // See: http://www.boost.org/doc/libs/release/libs/contract/doc/html/index.html
 
-// TODO: Document that set_except_failure shall never be set to throw because that will cause the contract failure handler to throw an exception while there's already an active exception (the reason .except() functor is being executed) so C++ will always call std::terminate in this case (again, not a good idea to throw on contract failures, especially from destructors but also for all .except() failures).
-
 /** @file
 Specify preconditions, old value copies at body, postconditions, and exception
 guarantees
@@ -65,7 +63,7 @@ specified in that order.
     #define BOOST_CONTRACT_SPECIFY_CLASS_IMPL_(class_type, cond_type) \
         /* (default) constructor */ \
         class_type() {} \
-        /* copy operations (private to force `auto c = ...` error) */ \
+        /* copy operations (decl. private to force `auto c = ...` error) */ \
         class_type(class_type const&) {} \
         class_type& operator=(class_type const&) {}
 

@@ -139,6 +139,7 @@ test-suite public_function :
 
     [ subdir-run public_function : protected ]
     [ subdir-compile-fail public_function : protected_error ]
+    [ subdir-run public_function : friend ]
     
     [ subdir-run public_function : throwing_pre ]
     [ subdir-run public_function : throwing_old ]
@@ -186,6 +187,9 @@ test-suite invariant :
     [ subdir-run invariant : decl_cv ]
     [ subdir-run invariant : decl_const ]
     [ subdir-run invariant : decl_nothing ]
+    
+    [ subdir-run invariant : ifdef ]
+    [ subdir-run invariant : ifdef_macro ]
 
     [ subdir-compile-fail invariant : static_mutable_error ]
     [ subdir-run invariant : static_mutable_permissive ]
@@ -249,6 +253,9 @@ test-suite old :
 
     [ subdir-run old : if_copyable ]
     [ subdir-compile-fail old : if_copyable_error ]
+    [ subdir-run old : if_copyable_macro ]
+    
+    [ subdir-run old : copyable_traits ]
 ;
 
 test-suite disable :

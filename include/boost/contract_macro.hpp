@@ -10,6 +10,10 @@
 /** @file
 Completely disable run-time and compile-time overheads of contract code.
 
+This header also includes all headers file <c>boost/contract/\*.hpp</c> are
+necessary to use this macro (including the ones that define ASSERT, virtual_,
+access, OVERRIDE, BASE_TYPES, CHECK, constructor_precondition, etc.)
+
 Almost all the macros defined in this header file are variadic macros. On
 compilers that do not support variadic macros, programmers can manually code
 <c>#ifndef BOOST_CONTRACT_NO_...</c> statements instead (see
@@ -39,12 +43,6 @@ Disable Contract Compilation}).
     #include <boost/contract/assert.hpp>
 #endif
 
-// TODO: Document these macros will cause all pre, post, inv assertions to have the same line number (but different code text) in the error message. And that is bad for compiler errors while programming contracts as well (all on same line... and more cryptic).
-
-// TODO: Add tests for all variadic macros defined here (with unwrapped commas in code, types, etc.).
-
-// TODO: Make sure there are test for /all/ these macros (OLD_PTR_IF_COPYABLE, EXPECT, INVARIANT_VOLATILE, etc.).
-
 #ifndef BOOST_CONTRACT_NO_PRECONDITIONS
     #define BOOST_CONTRACT_PRECONDITION(...) .precondition(__VA_ARGS__)
 #else
@@ -70,8 +68,8 @@ Disable Contract Compilation}).
             @RefFunc{boost::contract::precondition_failure}).
             This functor should capture variables by (constant) value, or better
             by (constant) reference (to avoid extra copies).
-            This is a variadic macro parameter so it can contain commas not
-            protected by round parenthesis.
+            (This is a variadic macro parameter so it can contain commas not
+            protected by round parenthesis.)
 
     @see    @RefSect{tutorial.preconditions, Preconditions},
            @RefSect{extra_topics.disable_contract_compilation__macro_interface_,
@@ -108,8 +106,8 @@ Disable Contract Compilation}).
             This functor takes the return value as its one single parameter but
             only for virtual public functions and public functions overrides,
             otherwise it takes no parameter.
-            This is a variadic macro parameter so it can contain commas not
-            protected by round parenthesis.
+            (This is a variadic macro parameter so it can contain commas not
+            protected by round parenthesis.)
 
     @see    @RefSect{tutorial.postconditions, Postconditions},
            @RefSect{extra_topics.disable_contract_compilation__macro_interface_,
@@ -144,8 +142,8 @@ Disable Contract Compilation}).
             @RefFunc{boost::contract::except_failure}).
             This functor should capture variables by (constant) references (to
             access the values they will have at function exit).
-            This is a variadic macro parameter so it can contain commas not
-            protected by round parenthesis.
+            (This is a variadic macro parameter so it can contain commas not
+            protected by round parenthesis.)
 
     @see    @RefSect{tutorial.exception_guarantees, Exception Guarantees},
            @RefSect{extra_topics.disable_contract_compilation__macro_interface_,
@@ -214,8 +212,8 @@ Disable Contract Compilation}).
             can be assigned (all other variables needed to evaluate old value
             expressions can be captured by (constant) value, or better by
             (constant) reference to avoid extra copies).
-            This is a variadic macro parameter so it can contain commas not
-            protected by round parenthesis.
+            (This is a variadic macro parameter so it can contain commas not
+            protected by round parenthesis.)
 
     @see    @RefSect{advanced_topics.old_values_at_body, Old Values at Body},
            @RefSect{extra_topics.disable_contract_compilation__macro_interface_,
@@ -267,19 +265,23 @@ Disable Contract Compilation}).
             otherwise this pointer will always be null and this library will
             generate a compile-time error when the pointer is dereferenced
             (but see also @c BOOST_CONTRACT_OLD_PTR_IF_COPYABLE).
-            This is a variadic macro
-            parameter so it can contain commas not protected by round
-            parenthesis.
+            (This is a variadic macro parameter so it can contain commas not
+            protected by round parenthesis.)
     @arg    <c><b>v</b></c> is the extra parameter of type
             @RefClass{boost::contract::virtual_}<c>*</c> and default value @c 0
             from the enclosing virtual public function or public function
             overrides declaring the contract.
+            (This is not a variadic macro parameter so any comma it might
+            contain must be protected by round parenthesis, but
+            <c>BOOST_CONTRACT_OLD_PTR(T)((v), ptr, expr)</c> will always work.)
     @arg    <c><b>ptr</b></c> is the name of the old value pointer variable.
+            (This is not a variadic macro parameter but it will never contain
+            any comma because it is an identifier.)
     @arg    <c><b>expr</b></c> is the expression to be evaluated and copied in
             the old value pointer.
-            This is not a variadic macro parameter so any comma it might
-            contain must be protected by round parenthesis (i.e.,
-            <c>BOOST_CONTRACT_OLD_PTR(T)(v, ptr, (expr))</c> will always work).
+            (This is not a variadic macro parameter so any comma it might
+            contain must be protected by round parenthesis, but
+            <c>BOOST_CONTRACT_OLD_PTR(T)(v, ptr, (expr))</c> will always work.)
 
     @see    @RefSect{tutorial.old_values, Old Values},
            @RefSect{extra_topics.disable_contract_compilation__macro_interface_,
@@ -333,19 +335,25 @@ Disable Contract Compilation}).
             @c false), this pointer will always be null, but this library will
             not generate a compile-time error when this pointer is dereferenced
             (see also @c BOOST_CONTRACT_OLD_PTR).
-            This is a variadic macro
-            parameter so it can contain commas not protected by round
-            parenthesis.
-    @arg    <c><b>v</c></b> is the extra parameter of type
+            (This is a variadic macro parameter so it can contain commas not
+            protected by round parenthesis.)
+    @arg    <c><b>v</b></c> is the extra parameter of type
             @RefClass{boost::contract::virtual_}<c>*</c> and default value @c 0
             from the enclosing virtual public function or public function
             overrides declaring the contract.
+            (This is not a variadic macro parameter so any comma it might
+            contain must be protected by round parenthesis, but
+            <c>BOOST_CONTRACT_OLD_PTR_IF_COPYABLE(T)((v), ptr, expr)</c> will
+            always work.)
     @arg    <c><b>ptr</b></c> is the name of the old value pointer variable.
+            (This is not a variadic macro parameter but it will never contain
+            any commas because it is an identifier.)
     @arg    <c><b>expr</b></c> is the expression to be evaluated and copied in
             the old value pointer.
-            This is not a variadic macro parameter so any comma it might
-            contain must be protected by round parenthesis (i.e.,
-            <c>BOOST_CONTRACT_OLD_PTR(T)(v, ptr, (expr))</c> will always work).
+            (This is not a variadic macro parameter so any comma it might
+            contain must be protected by round parenthesis, but
+            <c>BOOST_CONTRACT_OLD_PTR_IF_COPYABLE(T)(v, ptr, (expr))</c> will
+            always work.)
 
     @see    @RefSect{extra_topics.old_value_requirements__templates_,
             Old Value Requirements},
@@ -393,8 +401,8 @@ Disable Contract Compilation}).
             result in this library calling either
             @RefFunc{boost::contract::entry_invariant_failure} or
             @RefFunc{boost::contract::exit_invariant_failure}).
-            This is a variadic macro parameter so it can contain commas not
-            protected by round parenthesis.
+            (This is a variadic macro parameter so it can contain commas not
+            protected by round parenthesis.)
 
     @see    @RefSect{tutorial.class_invariants, Class Invariants},
            @RefSect{extra_topics.disable_contract_compilation__macro_interface_,
@@ -428,8 +436,8 @@ Disable Contract Compilation}).
             result in this library calling either
             @RefFunc{boost::contract::entry_invariant_failure} or
             @RefFunc{boost::contract::exit_invariant_failure}).
-            This is a variadic macro parameter so it can contain commas not
-            protected by round parenthesis.
+            (This is a variadic macro parameter so it can contain commas not
+            protected by round parenthesis.)
 
     @see    @RefSect{extra_topics.volatile_public_functions,
             Volatile Public Functions},
@@ -464,8 +472,8 @@ Disable Contract Compilation}).
             result in this library calling either
             @RefFunc{boost::contract::entry_invariant_failure} or
             @RefFunc{boost::contract::exit_invariant_failure}).
-            This is a variadic macro parameter so it can contain commas not
-            protected by round parenthesis.
+            (This is a variadic macro parameter so it can contain commas not
+            protected by round parenthesis.)
 
     @see    @RefSect{tutorial.class_invariants, Class Invariants},
            @RefSect{extra_topics.disable_contract_compilation__macro_interface_,
@@ -491,8 +499,8 @@ Disable Contract Compilation}).
 
     @code
         #ifndef BOOST_CONTRACT_NO_CONSTRUCTORS
-            boost::contract::check internal_identifier =
-                    boost::contract::constructor(obj)
+            boost::contract::check internal_var = boost::contract::
+                    constructor(obj)
         #endif
     @endcode
 
@@ -500,15 +508,17 @@ Disable Contract Compilation}).
     
     @arg    <c><b>obj</b></c> is the object @c this from the scope of the
             enclosing constructor declaring the contract.
-            (Constructors check all class invariants, including static and
-            volatile invariants, see also @RefSect{tutorial.class_invariants,
+            Constructors check all class invariants, including static and
+            volatile invariants (see also @RefSect{tutorial.class_invariants,
             Class Invariants} and
             @RefSect{advanced_topics.volatile_public_functions,
             Volatile Public Functions}).
-    @arg    <c><b>internal_identifier</b></c> is a variable name internally
-            generated by this library (this is unique but only on different
-            lines so this macro cannot be expanded multiple times on the same
-            line number).
+            (This is a variadic macro parameter so it can contain commas not
+            protected by round parenthesis.)
+    @arg    <c><b>internal_var</b></c> is a variable name internally generated
+            by this library (this name is unique but only on different lines so
+            this macro cannot be expanded multiple times on the same line
+            number).
 
     @see    @RefSect{tutorial.constructors, Constructors},
            @RefSect{extra_topics.disable_contract_compilation__macro_interface_,
@@ -549,8 +559,8 @@ Disable Contract Compilation}).
 
     @arg    <c><b>Class</b></c> is the class type of the constructor for which
             preconditions are being programmed.
-            This is a variadic macro parameter so it can contain commas not
-            protected by round parenthesis.
+            (This is a variadic macro parameter so it can contain commas not
+            protected by round parenthesis.)
     @arg    <c><b>f</b></c> is the nullary functor called by this library to
             check constructor preconditions @c f().
             Assertions within this functor call are usually programmed using
@@ -560,8 +570,8 @@ Disable Contract Compilation}).
             @RefFunc{boost::contract::precondition_failure}).
             This functor should capture variables by (constant) value, or better
             by (constant) reference to avoid extra copies.
-            This is a variadic macro parameter so it can contain commas not
-            protected by round parenthesis.
+            (This is a variadic macro parameter so it can contain commas not
+            protected by round parenthesis.)
 
     @see    @RefSect{tutorial.constructors, Constructors},
            @RefSect{extra_topics.disable_contract_compilation__macro_interface_,
@@ -591,8 +601,8 @@ Disable Contract Compilation}).
     
     @code
         #ifndef BOOST_CONTRACT_NO_DESTRUCTORS
-            boost::contract::check internal_identifier =
-                    boost::contract::destructor(obj)
+            boost::contract::check internal_var = boost::contract::
+                    destructor(obj)
         #endif
     @endcode
 
@@ -600,15 +610,17 @@ Disable Contract Compilation}).
     
     @arg    <c><b>obj</b></c> is the object @c this from the scope of the
             enclosing destructor declaring the contract.
-            (Destructors check all class invariants, including static and
-            volatile invariants, see also @RefSect{tutorial.class_invariants,
+            Destructors check all class invariants, including static and
+            volatile invariants (see also @RefSect{tutorial.class_invariants,
             Class Invariants} and
             @RefSect{advanced_topics.volatile_public_functions,
             Volatile Public Functions}).
-    @arg    <c><b>internal_identifier</b></c> is a variable name internally
-            generated by this library (this is unique but only on different
-            lines so this macro cannot be expanded multiple times on the same
-            line number).
+            (This is a variadic macro parameter so it can contain commas not
+            protected by round parenthesis.)
+    @arg    <c><b>internal_var</b></c> is a variable name internally generated
+            by this library (this name is unique but only on different lines so
+            this macro cannot be expanded multiple times on the same line
+            number).
 
     @see    @RefSect{tutorial.destructors, Destructors},
            @RefSect{extra_topics.disable_contract_compilation__macro_interface_,
@@ -649,8 +661,8 @@ Disable Contract Compilation}).
 
     @code
         #ifndef BOOST_CONTRACT_NO_PUBLIC_FUNCTIONS
-            boost::contract::check internal_identifier =
-                    boost::contract::public_function(obj)
+            boost::contract::check internal_var = boost::contract::
+                    public_function(obj)
         #endif
     @endcode
     
@@ -660,8 +672,8 @@ Disable Contract Compilation}).
 
     @code
         #ifndef BOOST_CONTRACT_NO_PUBLIC_FUNCTIONS
-            boost::contract::check internal_identifier =
-                    boost::contract::public_function(v, obj)
+            boost::contract::check internal_var = boost::contract::
+                    public_function(v, obj)
         #endif
     @endcode
     
@@ -671,13 +683,13 @@ Disable Contract Compilation}).
 
     @code
         #ifndef BOOST_CONTRACT_NO_PUBLIC_FUNCTIONS
-            boost::contract::check internal_identifier =
-                    boost::contract::public_function(v, r, obj)
+            boost::contract::check internal_var = boost::contract::
+                    public_function(v, r, obj)
         #endif
     @endcode
 
-    Where:
-
+    Where (these are all variadic macro parameters so they can contain commas
+    not protected by round parenthesis):
 
     @arg    <c><b>v</b></c> is the extra parameter of type
             @RefClass{boost::contract::virtual_}<c>*</c> and default value @c 0
@@ -695,10 +707,10 @@ Disable Contract Compilation}).
             function (volatile public functions will check volatile class
             invariants, see @RefSect{extra_topics.volatile_public_functions,
             Volatile Public Functions}).
-    @arg    <c><b>internal_identifier</b></c> is a variable name internally
-            generated by this library (this is unique but only on different
-            lines so this macro cannot be expanded multiple times on the same
-            line number).
+    @arg    <c><b>internal_var</b></c> is a variable name internally generated
+            by this library (this name is unique but only on different lines so
+            this macro cannot be expanded multiple times on the same line
+            number).
     
     @see    @RefSect{tutorial.public_functions, Public Functions},
             @RefSect{tutorial.virtual_public_functions,
@@ -721,7 +733,7 @@ Disable Contract Compilation}).
 
     @code
         #ifndef BOOST_CONTRACT_NO_PUBLIC_FUNCTIONS
-            boost::contract::check internal_identifier = boost::contract::
+            boost::contract::check internal_var = boost::contract::
                     public_function<Override>(v, f, obj, ...)
         #endif
     @endcode
@@ -732,19 +744,18 @@ Disable Contract Compilation}).
 
     @code
         #ifndef BOOST_CONTRACT_NO_PUBLIC_FUNCTIONS
-            boost::contract::check internal_identifier = boost::contract::
+            boost::contract::check internal_var = boost::contract::
                     public_function<Override>(v, r, f, obj, ...)
         #endif
     @endcode
 
-    Where:
+    Where (these are all variadic macro parameters so they can contain commas
+    not protected by round parenthesis):
 
     @arg    <c><b>Override</b></c> is the type
             <c>override_<i>function-name</i></c> declared using the
             @RefMacro{BOOST_CONTRACT_OVERRIDE} (or equivalent) macro from the
             enclosing function name.
-            This is a variadic macro parameter so it can contain commas not
-            protected by round parenthesis.
     @arg    <c><b>v</b></c> is the extra parameter of type
             @RefClass{boost::contract::virtual_}<c>*</c> and default value @c 0
             from the enclosing virtual public function declaring the contract.
@@ -767,10 +778,10 @@ Disable Contract Compilation}).
             arguments passed to the enclosing public function override declaring
             the contract (by reference and in order they appear in the enclosing
             function declaration), but excluding the trailing argument @c v.
-    @arg    <c><b>internal_identifier</b></c> is a variable name internally
-            generated by this library (this is unique but only on different
-            lines so this macro cannot be expanded multiple times on the same
-            line number).
+    @arg    <c><b>internal_var</b></c> is a variable name internally generated
+            by this library (this name is unique but only on different lines so
+            this macro cannot be expanded multiple times on the same line
+            number).
     
     @see    @RefSect{tutorial.public_function_overrides,
             Public Function Overrides},
@@ -789,8 +800,8 @@ Disable Contract Compilation}).
     
     @code
         #ifndef BOOST_CONTRACT_NO_PUBLIC_FUNCTIONS
-            boost::contract::check internal_identifier =
-                    boost::contract::public_function<Class>()
+            boost::contract::check internal_var = boost::contract::
+                    public_function<Class>()
         #endif
     @endcode
     
@@ -798,12 +809,12 @@ Disable Contract Compilation}).
     
     @arg    <c><b>Class</b></c> is the class type of the enclosing static
             public function declaring the contract.
-            This is a variadic macro parameter so it can contain commas not
-            protected by round parenthesis.
-    @arg    <c><b>internal_identifier</b></c> is a variable name internally
-            generated by this library (this is unique but only on different
-            lines so this macro cannot be expanded multiple times on the same
-            line number).
+            (This is a variadic macro parameter so it can contain commas not
+            protected by round parenthesis.)
+    @arg    <c><b>internal_var</b></c> is a variable name internally generated
+            by this library (this name is unique but only on different lines so
+            this macro cannot be expanded multiple times on the same line
+            number).
     
     @see    @RefSect{tutorial.static_public_functions, Static Public Functions},
            @RefSect{extra_topics.disable_contract_compilation__macro_interface_,
@@ -835,17 +846,17 @@ Disable Contract Compilation}).
     
     @code
         #ifndef BOOST_CONTRACT_NO_FUNCTIONS
-            boost::contract::check internal_identifier =
-                    boost::contract::function()
+            boost::contract::check internal_var = boost::contract::
+                    function()
         #endif
     @endcode
     
     Where:
     
-    @arg    <c><b>internal_identifier</b></c> is a variable name internally
-            generated by this library (this is unique but only on different
-            lines so this macro cannot be expanded multiple times on the same
-            line number).
+    @arg    <c><b>internal_far</b></c> is a variable name internally generated
+            by this library (this name is unique but only on different lines so
+            this macro cannot be expanded multiple times on the same line
+            number).
     
     @see    @RefSect{tutorial.non_member_functions, Non-Member Functions},
             @RefSect{advanced_topics.private_and_protected_functions,

@@ -28,7 +28,7 @@ protected:
 
 private:
     virtual void dec(boost::contract::virtual_* = 0) {
-        boost::contract::old_ptr<int> old_get = BOOST_CONTRACT_OLD(get());
+        boost::contract::old_ptr<int> old_get = BOOST_CONTRACT_OLDOF(get());
         boost::contract::check c = boost::contract::function()
             .precondition([&] {
                 BOOST_CONTRACT_ASSERT(
@@ -95,7 +95,7 @@ public:
     }
 
     virtual void dec(boost::contract::virtual_* v = 0) /* override */ {
-        boost::contract::old_ptr<int> old_get = BOOST_CONTRACT_OLD(v, get());
+        boost::contract::old_ptr<int> old_get = BOOST_CONTRACT_OLDOF(v, get());
         boost::contract::check c = boost::contract::public_function(v, this)
             .precondition([&] {
                 BOOST_CONTRACT_ASSERT(

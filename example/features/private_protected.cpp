@@ -27,7 +27,7 @@ protected:
 
 private:
     void dec() {
-        boost::contract::old_ptr<int> old_get = BOOST_CONTRACT_OLD(get());
+        boost::contract::old_ptr<int> old_get = BOOST_CONTRACT_OLDOF(get());
         boost::contract::check c = boost::contract::function()
             .precondition([&] {
                 BOOST_CONTRACT_ASSERT(

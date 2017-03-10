@@ -248,7 +248,7 @@ It is also recommended to use [macroref BOOST_CONTRACT_ASSERT] to program except
 This library will automatically call the failure handler [funcref boost::contract::except_failure] if any of the [macroref BOOST_CONTRACT_ASSERT] conditions are `false` and also if calling the functor specified via `.except(...)` throws an exception (by default, this handler prints an error message to `std::cerr` and terminates the program calling `std::terminate`).
 
 [important
-While it is technically possible for programmers to specify an exception-guarantee handler that throws an exception in case of an exception-guarantee failure, this will lead to undefined behaviour in C++.
+While it is technically possible for programmers to specify an exception-guarantee handler that throws an exception in case of an exception-guarantee failure, this will force C++ to terminate the program anyway.
 That is because the handler will throw an exception while there is already an active exception on the stack (the exception thrown by the function body that caused this library to check the exception guarantees in the first place).
 
 Therefore, programmers are strongly advised to not change the exception-guarantee failure handler to throw exceptions instead of terminating the program.
