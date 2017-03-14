@@ -38,7 +38,7 @@ struct b
         #endif
     {
         #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
-            boost::contract::old_ptr<int> old_x = BOOST_CONTRACT_OLD(x);
+            boost::contract::old_ptr<int> old_x = BOOST_CONTRACT_OLDOF(x);
         #endif
         #ifndef BOOST_CONTRACT_NO_CONSTRUCTORS
             boost::contract::check c = boost::contract::constructor(this)
@@ -72,7 +72,7 @@ struct a :
         b(x)
     {
         #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
-            boost::contract::old_ptr<int> old_x = BOOST_CONTRACT_OLD(x);
+            boost::contract::old_ptr<int> old_x = BOOST_CONTRACT_OLDOF(x);
         #endif
         #ifndef BOOST_CONTRACT_NO_CONSTRUCTORS
             boost::contract::check c = boost::contract::constructor(this)

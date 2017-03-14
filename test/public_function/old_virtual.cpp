@@ -47,15 +47,15 @@ private:
 
 struct c {
     virtual void f(int& i, num& n, boost::contract::virtual_* v = 0) {
-        boost::contract::old_ptr<int> old_a = BOOST_CONTRACT_OLD(v, i + 1);
-        boost::contract::old_ptr<num> old_b = BOOST_CONTRACT_OLD(v, n + 2);
+        boost::contract::old_ptr<int> old_a = BOOST_CONTRACT_OLDOF(v, i + 1);
+        boost::contract::old_ptr<num> old_b = BOOST_CONTRACT_OLDOF(v, n + 2);
         boost::contract::old_ptr<int> old_x;
         boost::contract::old_ptr<num> old_y;
         boost::contract::check c = boost::contract::public_function(v, this)
             .old([&] {
                 out << "c::f::old" << std::endl;
-                old_x = BOOST_CONTRACT_OLD(v, i + 3);
-                old_y = BOOST_CONTRACT_OLD(v, n + 4);
+                old_x = BOOST_CONTRACT_OLDOF(v, i + 3);
+                old_y = BOOST_CONTRACT_OLDOF(v, n + 4);
             })
             .postcondition([&] {
                 out << "c::f::post" << std::endl;
@@ -81,16 +81,16 @@ struct b
 
     virtual void f(int& i, num& n, boost::contract::virtual_* v = 0)
             /* override */ {
-        boost::contract::old_ptr<int> old_a = BOOST_CONTRACT_OLD(v, i + 1);
-        boost::contract::old_ptr<num> old_b = BOOST_CONTRACT_OLD(v, n + 2);
+        boost::contract::old_ptr<int> old_a = BOOST_CONTRACT_OLDOF(v, i + 1);
+        boost::contract::old_ptr<num> old_b = BOOST_CONTRACT_OLDOF(v, n + 2);
         boost::contract::old_ptr<int> old_x;
         boost::contract::old_ptr<num> old_y;
         boost::contract::check c = boost::contract::public_function<
                 override_f>(v, &c::f, this, i, n)
             .old([&] {
                 out << "b::f::old" << std::endl;
-                old_x = BOOST_CONTRACT_OLD(v, i + 3);
-                old_y = BOOST_CONTRACT_OLD(v, n + 4);
+                old_x = BOOST_CONTRACT_OLDOF(v, i + 3);
+                old_y = BOOST_CONTRACT_OLDOF(v, n + 4);
             })
             .postcondition([&] {
                 out << "b::f::post" << std::endl;
@@ -117,16 +117,16 @@ struct a
 
     virtual void f(int& i, num& n, boost::contract::virtual_* v = 0)
             /* override */ {
-        boost::contract::old_ptr<int> old_a = BOOST_CONTRACT_OLD(v, i + 1);
-        boost::contract::old_ptr<num> old_b = BOOST_CONTRACT_OLD(v, n + 2);
+        boost::contract::old_ptr<int> old_a = BOOST_CONTRACT_OLDOF(v, i + 1);
+        boost::contract::old_ptr<num> old_b = BOOST_CONTRACT_OLDOF(v, n + 2);
         boost::contract::old_ptr<int> old_x;
         boost::contract::old_ptr<num> old_y;
         boost::contract::check c = boost::contract::public_function<
                 override_f>(v, &c::f, this, i, n)
             .old([&] {
                 out << "a::f::old" << std::endl;
-                old_x = BOOST_CONTRACT_OLD(v, i + 3);
-                old_y = BOOST_CONTRACT_OLD(v, n + 4);
+                old_x = BOOST_CONTRACT_OLDOF(v, i + 3);
+                old_y = BOOST_CONTRACT_OLDOF(v, n + 4);
             })
             .postcondition([&] {
                 out << "a::f::post" << std::endl;

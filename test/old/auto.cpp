@@ -17,7 +17,7 @@
 int main() {
     #ifndef BOOST_NO_CXX11_AUTO_DECLARATIONS
         int x = -123;
-        auto old_x = BOOST_CONTRACT_OLD(x);
+        auto old_x = BOOST_CONTRACT_OLDOF(x);
         x = 123;
         BOOST_STATIC_ASSERT(boost::is_same<decltype(old_x),
                 boost::contract::old_ptr<int> >::value);
@@ -28,7 +28,7 @@ int main() {
 
         boost::contract::virtual_* v = 0;
         char y = 'j';
-        auto old_y = BOOST_CONTRACT_OLD(v, y);
+        auto old_y = BOOST_CONTRACT_OLDOF(v, y);
         y = 'k';
         BOOST_STATIC_ASSERT(boost::is_same<decltype(old_y),
                 boost::contract::old_ptr<char> >::value);

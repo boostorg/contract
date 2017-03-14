@@ -15,7 +15,7 @@
 
 template<typename T>
 void next(T& x) {
-    boost::contract::old_ptr<T> old_x = BOOST_CONTRACT_OLD(x);
+    boost::contract::old_ptr<T> old_x = BOOST_CONTRACT_OLDOF(x);
     boost::contract::check c = boost::contract::function()
         .postcondition([&] {
             // No need to check `if(old_x) ...` here.

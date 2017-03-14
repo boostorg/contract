@@ -69,7 +69,7 @@ result_type& t<Id>::f(s_type& s, boost::contract::virtual_* v) {
         })
         .old([&] {
             out << Id << "::f::old" << std::endl;
-            old_s = BOOST_CONTRACT_OLD(v, s_type::eval(s));
+            old_s = BOOST_CONTRACT_OLDOF(v, s_type::eval(s));
         })
         .postcondition([&] (result_type const& result) {
             out << Id << "::f::post" << std::endl;
@@ -125,7 +125,7 @@ struct c
             })
             .old([&] {
                 out << "c::f::old" << std::endl;
-                old_s = BOOST_CONTRACT_OLD(v, s_type::eval(s));
+                old_s = BOOST_CONTRACT_OLDOF(v, s_type::eval(s));
             })
             .postcondition([&] (result_type const& result) {
                 out << "c::f::post" << std::endl;
@@ -215,7 +215,7 @@ struct a
             })
             .old([&] {
                 out << "a::f::old" << std::endl;
-                old_s = BOOST_CONTRACT_OLD(v, s_type::eval(s));
+                old_s = BOOST_CONTRACT_OLDOF(v, s_type::eval(s));
             })
             .postcondition([&] (result_type const& result) {
                 out << "a::f::post" << std::endl;

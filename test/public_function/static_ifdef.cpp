@@ -26,7 +26,7 @@ struct a {
 
     static void f(int x) {
         #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
-            boost::contract::old_ptr<int> old_x = BOOST_CONTRACT_OLD(x);
+            boost::contract::old_ptr<int> old_x = BOOST_CONTRACT_OLDOF(x);
         #endif
         #ifndef BOOST_CONTRACT_NO_PUBLIC_FUNCTIONS
             boost::contract::check c = boost::contract::public_function<a>()

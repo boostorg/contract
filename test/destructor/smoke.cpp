@@ -42,7 +42,7 @@ struct t {
         boost::contract::check c = boost::contract::destructor(this)
             .old([&] {
                 out << Id << "::dtor::old" << std::endl;
-                old_l = BOOST_CONTRACT_OLD(l_type::eval(l));
+                old_l = BOOST_CONTRACT_OLDOF(l_type::eval(l));
             })
             .postcondition([&old_l] {
                 out << Id << "::dtor::post" << std::endl;
@@ -145,7 +145,7 @@ struct a
         boost::contract::check c = boost::contract::destructor(this)
             .old([&] {
                 out << "a::dtor::old" << std::endl;
-                old_n = BOOST_CONTRACT_OLD(n_type::eval(n));
+                old_n = BOOST_CONTRACT_OLDOF(n_type::eval(n));
             })
             .postcondition([&old_n] {
                 out << "a::dtor::post" << std::endl;

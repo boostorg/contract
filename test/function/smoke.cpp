@@ -33,7 +33,7 @@ bool swap(x_type& x, y_type& y) {
         })
         .old([&] {
             out << "swap::old" << std::endl;
-            old_y = BOOST_CONTRACT_OLD(y_type::eval(y));
+            old_y = BOOST_CONTRACT_OLDOF(y_type::eval(y));
         })
         .postcondition([&] {
             out << "swap::post" << std::endl;

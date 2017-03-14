@@ -32,7 +32,7 @@ struct b {
 
 void b::f(int x, boost::contract::virtual_* v) {
     #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
-        boost::contract::old_ptr<int> old_x = BOOST_CONTRACT_OLD(v, x);
+        boost::contract::old_ptr<int> old_x = BOOST_CONTRACT_OLDOF(v, x);
     #endif
     #ifndef BOOST_CONTRACT_NO_PUBLIC_FUNCTIONS
         boost::contract::check c = boost::contract::public_function(v, this)
@@ -64,7 +64,7 @@ struct a
 
     virtual void f(int x, boost::contract::virtual_* v = 0) {
         #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
-            boost::contract::old_ptr<int> old_x = BOOST_CONTRACT_OLD(v, x);
+            boost::contract::old_ptr<int> old_x = BOOST_CONTRACT_OLDOF(v, x);
         #endif
         #ifndef BOOST_CONTRACT_NO_PUBLIC_FUNCTIONS
             boost::contract::check c = boost::contract::public_function<

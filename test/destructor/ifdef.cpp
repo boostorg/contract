@@ -26,7 +26,7 @@ struct b {
 
     virtual ~b() {
         #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
-            boost::contract::old_ptr<int> old_y = BOOST_CONTRACT_OLD(y);
+            boost::contract::old_ptr<int> old_y = BOOST_CONTRACT_OLDOF(y);
         #endif
         #ifndef BOOST_CONTRACT_NO_DESTRUCTORS
             boost::contract::check c = boost::contract::destructor(this)
@@ -51,7 +51,7 @@ struct a : public b {
 
     virtual ~a() {
         #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
-            boost::contract::old_ptr<int> old_x = BOOST_CONTRACT_OLD(x);
+            boost::contract::old_ptr<int> old_x = BOOST_CONTRACT_OLDOF(x);
         #endif
         #ifndef BOOST_CONTRACT_NO_DESTRUCTORS
             boost::contract::check c = boost::contract::destructor(this)

@@ -20,7 +20,7 @@ boost::contract::test::detail::oteststream out;
 
 void f(int x) {
     #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
-        boost::contract::old_ptr<int> old_x = BOOST_CONTRACT_OLD(x);
+        boost::contract::old_ptr<int> old_x = BOOST_CONTRACT_OLDOF(x);
     #endif
     #ifndef BOOST_CONTRACT_NO_FUNCTIONS
         boost::contract::check c = boost::contract::function()

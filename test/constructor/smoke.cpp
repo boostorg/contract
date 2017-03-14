@@ -57,7 +57,7 @@ struct t
         boost::contract::check c = boost::contract::constructor(this)
             .old([&] {
                 out << Id << "::ctor::old" << std::endl;
-                old_z = BOOST_CONTRACT_OLD(z_type::eval(z));
+                old_z = BOOST_CONTRACT_OLDOF(z_type::eval(z));
             })
             .postcondition([&] {
                 out << Id << "::ctor::post" << std::endl;
@@ -121,7 +121,7 @@ struct c
         boost::contract::check c = boost::contract::constructor(this)
             .old([&] {
                 out << "c::ctor::old" << std::endl;
-                old_m = BOOST_CONTRACT_OLD(m_type::eval(m));
+                old_m = BOOST_CONTRACT_OLDOF(m_type::eval(m));
             })
             .postcondition([&] {
                 out << "c::ctor::post" << std::endl;
@@ -197,7 +197,7 @@ struct a
         boost::contract::check c = boost::contract::constructor(this)
             .old([&] {
                 out << "a::ctor::old" << std::endl;
-                old_x = BOOST_CONTRACT_OLD(x_type::eval(x));
+                old_x = BOOST_CONTRACT_OLDOF(x_type::eval(x));
             })
             .postcondition([&] {
                 out << "a::ctor::post" << std::endl;

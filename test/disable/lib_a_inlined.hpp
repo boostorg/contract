@@ -26,8 +26,8 @@ void a::invariant() const {
 int a::f(x_type& x) {
     using boost::contract::test::detail::out;
     int result;
-    boost::contract::old_ptr<x_type> old_x = BOOST_CONTRACT_OLD(
-            x_type::eval(x));
+    boost::contract::old_ptr<x_type> old_x =
+            BOOST_CONTRACT_OLDOF(x_type::eval(x));
     boost::contract::check c = boost::contract::public_function(this)
         .precondition([] { out("a::f::pre\n"); })
         .old([] { out("a::f::old\n"); })
