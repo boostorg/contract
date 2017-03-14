@@ -86,8 +86,7 @@ int main() {
             << "b::f::pre" << std::endl
             << "a::f::pre" << std::endl
         #endif
-        #if     !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
-                !defined(BOOST_CONTRACT_NO_EXCEPTS)
+        #ifndef BOOST_CONTRACT_NO_OLDS
             << "b::f::old" << std::endl
             << "a::f::old" << std::endl
         #endif
@@ -118,8 +117,7 @@ int main() {
         #ifndef BOOST_CONTRACT_NO_PRECONDITIONS
             << "b::f::pre" << std::endl
         #endif
-        #if     !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
-                !defined(BOOST_CONTRACT_NO_EXCEPTS)
+        #ifndef BOOST_CONTRACT_NO_OLDS
             << "b::f::old" << std::endl
         #endif
         << "b::f::body" << std::endl

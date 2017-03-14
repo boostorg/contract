@@ -97,8 +97,7 @@ private:
                     #else
                         } // Release checking guard.
                     #endif
-                #if     !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
-                        !defined(BOOST_CONTRACT_NO_EXCEPTS)
+                #ifndef BOOST_CONTRACT_NO_OLDS
                     this->copy_subcontracted_old();
                 #endif
             } else {
@@ -108,8 +107,7 @@ private:
                 #ifndef BOOST_CONTRACT_NO_PRECONDITIONS
                     this->check_subcontracted_pre();
                 #endif
-                #if     !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
-                        !defined(BOOST_CONTRACT_NO_EXCEPTS)
+                #ifndef BOOST_CONTRACT_NO_OLDS
                     this->copy_subcontracted_old();
                 #endif
                 #ifndef BOOST_CONTRACT_NO_EXIT_INVARIANTS

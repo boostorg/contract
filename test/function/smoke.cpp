@@ -64,8 +64,7 @@ int main() {
             #ifndef BOOST_CONTRACT_NO_PRECONDITIONS
                 << "swap::pre" << std::endl
             #endif
-            #if     !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
-                    !defined(BOOST_CONTRACT_NO_EXCEPTS)
+            #ifndef BOOST_CONTRACT_NO_OLDS
                 << "swap::old" << std::endl
             #endif
             << "swap::body" << std::endl
@@ -80,8 +79,7 @@ int main() {
         BOOST_TEST_EQ(y.value, 123);
     }
 
-    #if     !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
-            !defined(BOOST_CONTRACT_NO_EXCEPTS)
+    #ifndef BOOST_CONTRACT_NO_OLDS
         #define BOOST_CONTRACT_TEST_old 1u
     #else
         #define BOOST_CONTRACT_TEST_old 0u

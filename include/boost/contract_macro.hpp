@@ -36,10 +36,7 @@ Disable Contract Compilation}).
 #include <boost/contract/base_types.hpp>
 #include <boost/contract/override.hpp>
 
-#if     !defined(BOOST_CONTRACT_NO_INVARIANTS) || \
-        !defined(BOOST_CONTRACT_NO_PRECONDITIONS) || \
-        !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
-        !defined(BOOST_CONTRACT_NO_EXCEPTS)
+#ifndef BOOST_CONTRACT_NO_CONDITIONS
     #include <boost/contract/assert.hpp>
 #endif
 

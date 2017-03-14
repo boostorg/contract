@@ -23,8 +23,7 @@ std::string ok_a(bool failed = false) {
         #endif
     ;
     if(!failed) ok
-        #if     !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
-                !defined(BOOST_CONTRACT_NO_EXCEPTS)
+        #ifndef BOOST_CONTRACT_NO_OLDS
             << "a::dtor::old" << std::endl
         #endif
         << "a::dtor::body" << std::endl
@@ -43,8 +42,7 @@ std::string ok_b(bool threw = false) {
         #ifndef BOOST_CONTRACT_NO_ENTRY_INVARIANTS
             << "b::static_inv" << std::endl
         #endif
-        #if     !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
-                !defined(BOOST_CONTRACT_NO_EXCEPTS)
+        #ifndef BOOST_CONTRACT_NO_OLDS
             << "b::dtor::old" << std::endl
         #endif
         << "b::dtor::body" << std::endl
@@ -69,8 +67,7 @@ std::string ok_c(checked check = passed) {
         #endif
     ;
     if(check != failed) ok
-        #if     !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
-                !defined(BOOST_CONTRACT_NO_EXCEPTS)
+        #ifndef BOOST_CONTRACT_NO_OLDS
             << "c::dtor::old" << std::endl
         #endif
         << "c::dtor::body" << std::endl

@@ -37,17 +37,15 @@ int main() {
     try {
         out.str("");
         f();
-#if     !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
-        !defined(BOOST_CONTRACT_NO_EXCEPTS)
-        BOOST_TEST(false);
-    } catch(err const&) {
-#endif
+        #ifndef BOOST_CONTRACT_NO_OLDS
+                BOOST_TEST(false);
+            } catch(err const&) {
+        #endif
         ok.str(""); ok
             #ifndef BOOST_CONTRACT_NO_PRECONDITIONS
                 << "f::pre" << std::endl
             #endif
-            #if     !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
-                    !defined(BOOST_CONTRACT_NO_EXCEPTS)
+            #ifndef BOOST_CONTRACT_NO_OLDS
                 << "f::old" << std::endl // Test this threw.
             #else
                 << "f::body" << std::endl

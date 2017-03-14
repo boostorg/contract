@@ -16,9 +16,9 @@ Program contracts for destructors.
 #include <boost/contract/core/config.hpp>
 #include <boost/contract/core/specify.hpp>
 #include <boost/contract/core/access.hpp>
-#if     defined(BOOST_CONTRACT_STATIC_LINK) || \
-        !defined(BOOST_CONTRACT_NO_DESTRUCTORS) || \
-        !defined(BOOST_CONTRACT_NO_PRECONDITIONS)
+#if     !defined(BOOST_CONTRACT_NO_DESTRUCTORS) || \
+        !defined(BOOST_CONTRACT_NO_PRECONDITIONS) || \
+         defined(BOOST_CONTRACT_STATIC_LINK)
     #include <boost/contract/detail/operation/destructor.hpp>
 #endif
 
@@ -59,9 +59,9 @@ invariants.
 template<class Class>
 specify_old_postcondition_except<> destructor(Class* obj) {
     // Must #if also on ..._PRECONDITIONS here because specify_... is generic.
-    #if     defined(BOOST_CONTRACT_STATIC_LINK) || \
-            !defined(BOOST_CONTRACT_NO_DESTRUCTORS) || \
-            !defined(BOOST_CONTRACT_NO_PRECONDITIONS)
+    #if     !defined(BOOST_CONTRACT_NO_DESTRUCTORS) || \
+            !defined(BOOST_CONTRACT_NO_PRECONDITIONS) || \
+             defined(BOOST_CONTRACT_STATIC_LINK)
         return specify_old_postcondition_except<>(
                 new boost::contract::detail::destructor<Class>(obj));
     #else

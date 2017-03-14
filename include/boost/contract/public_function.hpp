@@ -16,10 +16,10 @@ Overloads handle public functions that are static, virtual void, virtual non-voi
 #include <boost/contract/core/specify.hpp>
 #include <boost/contract/core/access.hpp>
 #include <boost/contract/core/virtual.hpp>
-// Needed within macro expansions below instead of defined(...) (PRIVATE macro).
 /** @cond */
-#if     defined(BOOST_CONTRACT_STATIC_LINK) || \
-        !defined(BOOST_CONTRACT_NO_PUBLIC_FUNCTIONS)
+// Needed within macro expansions below instead of defined(...) (PRIVATE macro).
+#if !defined(BOOST_CONTRACT_NO_PUBLIC_FUNCTIONS) || \
+        defined(BOOST_CONTRACT_STATIC_LINK)
     #define BOOST_CONTRACT_PUBLIC_FUNCTIONS_IMPL_ 1
 #else
     #define BOOST_CONTRACT_PUBLIC_FUNCTIONS_IMPL_ 0

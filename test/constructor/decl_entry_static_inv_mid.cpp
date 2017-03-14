@@ -30,8 +30,7 @@ std::string ok_c() {
 
 std::string ok_b() {
     std::ostringstream ok; ok
-        #if     !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
-                !defined(BOOST_CONTRACT_NO_EXCEPTS)
+        #ifndef BOOST_CONTRACT_NO_OLDS
             << "c::ctor::old" << std::endl
         #endif
         << "c::ctor::body" << std::endl
@@ -51,8 +50,7 @@ std::string ok_b() {
 
 std::string ok_a() {
     std::ostringstream ok; ok
-        #if     !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
-                !defined(BOOST_CONTRACT_NO_EXCEPTS)
+        #ifndef BOOST_CONTRACT_NO_OLDS
             << "b::ctor::old" << std::endl
         #endif
         << "b::ctor::body" << std::endl
@@ -71,8 +69,7 @@ std::string ok_a() {
 
 std::string ok_end() {
     std::ostringstream ok; ok
-        #if     !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
-                !defined(BOOST_CONTRACT_NO_EXCEPTS)
+        #ifndef BOOST_CONTRACT_NO_OLDS
             << "a::ctor::old" << std::endl
         #endif
         << "a::ctor::body" << std::endl

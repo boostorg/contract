@@ -483,7 +483,6 @@ public:
 private:
     explicit old_value() {}
     
-    // TODO: Double check *all* #if ..._NO_... and make sure to use the less verbose form (instead of using &&, ||, etc. on single NO macros).
     #ifndef BOOST_CONTRACT_NO_OLDS
         boost::shared_ptr<void> untyped_copy_; // Type erasure.
     #endif

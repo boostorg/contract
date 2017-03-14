@@ -102,11 +102,10 @@ int main() {
     try {
         out.str("");
         a aa;
-#if     !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
-        !defined(BOOST_CONTRACT_NO_EXCEPTS)
-        BOOST_TEST(false);
-    } catch(b::err const&) {
-#endif
+        #ifndef BOOST_CONTRACT_NO_OLDS
+                BOOST_TEST(false);
+            } catch(b::err const&) {
+        #endif
         ok.str(""); ok
             #ifndef BOOST_CONTRACT_NO_PRECONDITIONS
                 << "a::ctor::pre" << std::endl
@@ -117,8 +116,7 @@ int main() {
             #ifndef BOOST_CONTRACT_NO_ENTRY_INVARIANTS
                 << "c::static_inv" << std::endl
             #endif
-            #if     !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
-                    !defined(BOOST_CONTRACT_NO_EXCEPTS)
+            #ifndef BOOST_CONTRACT_NO_OLDS
                 << "c::ctor::old" << std::endl
             #endif
             << "c::ctor::body" << std::endl
@@ -133,8 +131,7 @@ int main() {
             #ifndef BOOST_CONTRACT_NO_ENTRY_INVARIANTS
                 << "b::static_inv" << std::endl
             #endif
-            #if     !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
-                    !defined(BOOST_CONTRACT_NO_EXCEPTS)
+            #ifndef BOOST_CONTRACT_NO_OLDS
                 << "b::ctor::old" << std::endl // Test this threw.
             #else
                 << "b::ctor::body" << std::endl

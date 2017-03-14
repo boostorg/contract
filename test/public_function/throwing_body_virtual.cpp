@@ -38,8 +38,7 @@ int main() {
             #ifndef BOOST_CONTRACT_NO_PRECONDITIONS
                 << "d::f::pre" << std::endl
             #endif
-            #if     !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
-                    !defined(BOOST_CONTRACT_NO_EXCEPTS)
+            #ifndef BOOST_CONTRACT_NO_OLDS
                 << "d::f::old" << std::endl
                 << "e::f::old" << std::endl
                 << "c::f::old" << std::endl
@@ -69,8 +68,7 @@ int main() {
         ;
         BOOST_TEST(out.eq(ok.str()));
 
-        #if     !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
-                !defined(BOOST_CONTRACT_NO_EXCEPTS)
+        #ifndef BOOST_CONTRACT_NO_OLDS
             #define BOOST_CONTRACT_TEST_old 1u
         #else
             #define BOOST_CONTRACT_TEST_old 0u

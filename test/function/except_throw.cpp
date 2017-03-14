@@ -44,8 +44,7 @@ int main() {
             #ifndef BOOST_CONTRACT_NO_PRECONDITIONS
                 << "f::pre" << std::endl
             #endif
-            #if     !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
-                    !defined(BOOST_CONTRACT_NO_EXCEPTS)
+            #ifndef BOOST_CONTRACT_NO_OLDS
                 << "f::old" << std::endl // Test this threw.
             #endif
         ;

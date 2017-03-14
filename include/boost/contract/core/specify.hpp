@@ -18,11 +18,8 @@ specified in that order.
 
 #include <boost/contract/core/config.hpp>
 #include <boost/contract/detail/decl.hpp>
-#if     defined(BOOST_CONTRACT_STATIC_LINK) || \
-        !defined(BOOST_CONTRACT_NO_INVARIANTS) || \
-        !defined(BOOST_CONTRACT_NO_PRECONDITIONS) || \
-        !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
-        !defined(BOOST_CONTRACT_NO_EXCEPTS)
+#if !defined(BOOST_CONTRACT_NO_CONDITIONS) || \
+        defined(BOOST_CONTRACT_STATIC_LINK)
     #include <boost/contract/detail/condition/cond_base.hpp>
     #include <boost/contract/detail/condition/cond_post.hpp>
     #include <boost/contract/detail/auto_ptr.hpp>
@@ -41,11 +38,8 @@ specified in that order.
 
 /* @cond */
 
-#if     defined(BOOST_CONTRACT_STATIC_LINK) || \
-        !defined(BOOST_CONTRACT_NO_INVARIANTS) || \
-        !defined(BOOST_CONTRACT_NO_PRECONDITIONS) || \
-        !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
-        !defined(BOOST_CONTRACT_NO_EXCEPTS)
+#if !defined(BOOST_CONTRACT_NO_CONDITIONS) || \
+        defined(BOOST_CONTRACT_STATIC_LINK)
     #define BOOST_CONTRACT_SPECIFY_CLASS_IMPL_(class_type, cond_type) \
         /* data member */ \
         boost::contract::detail::auto_ptr<cond_type> cond_; \
@@ -82,8 +76,7 @@ specified in that order.
                 BOOST_CONTRACT_SPECIFY_COND_RELEASE_);
 #endif
         
-#if     !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
-        !defined(BOOST_CONTRACT_NO_EXCEPTS)
+#ifndef BOOST_CONTRACT_NO_OLDS
     #define BOOST_CONTRACT_SPECIFY_OLD_IMPL_ \
         BOOST_CONTRACT_DETAIL_DEBUG(cond_); \
         cond_->set_old(f); \

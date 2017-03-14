@@ -245,8 +245,7 @@ int main() {
             #ifndef BOOST_CONTRACT_NO_ENTRY_INVARIANTS
                 << "d::static_inv" << std::endl
             #endif
-            #if     !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
-                    !defined(BOOST_CONTRACT_NO_EXCEPTS)
+            #ifndef BOOST_CONTRACT_NO_OLDS
                 << "d::ctor::old" << std::endl
             #endif
             << "d::ctor::body" << std::endl
@@ -265,8 +264,7 @@ int main() {
             #ifndef BOOST_CONTRACT_NO_ENTRY_INVARIANTS
                 << "p::static_inv" << std::endl
             #endif
-            #if     !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
-                    !defined(BOOST_CONTRACT_NO_EXCEPTS)
+            #ifndef BOOST_CONTRACT_NO_OLDS
                 << "p::ctor::old" << std::endl
             #endif
             << "p::ctor::body" << std::endl
@@ -285,8 +283,7 @@ int main() {
             #ifndef BOOST_CONTRACT_NO_ENTRY_INVARIANTS
                 << "q::static_inv" << std::endl
             #endif
-            #if     !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
-                    !defined(BOOST_CONTRACT_NO_EXCEPTS)
+            #ifndef BOOST_CONTRACT_NO_OLDS
                 << "q::ctor::old" << std::endl
             #endif
             << "q::ctor::body" << std::endl
@@ -304,8 +301,7 @@ int main() {
             #ifndef BOOST_CONTRACT_NO_ENTRY_INVARIANTS
                 << "e::static_inv" << std::endl
             #endif
-            #if     !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
-                    !defined(BOOST_CONTRACT_NO_EXCEPTS)
+            #ifndef BOOST_CONTRACT_NO_OLDS
                 << "e::ctor::old" << std::endl
             #endif
             << "e::ctor::body" << std::endl
@@ -320,8 +316,7 @@ int main() {
             #ifndef BOOST_CONTRACT_NO_ENTRY_INVARIANTS
                 << "c::static_inv" << std::endl
             #endif
-            #if     !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
-                    !defined(BOOST_CONTRACT_NO_EXCEPTS)
+            #ifndef BOOST_CONTRACT_NO_OLDS
                 << "c::ctor::old" << std::endl
             #endif
             << "c::ctor::body" << std::endl
@@ -336,8 +331,7 @@ int main() {
             #ifndef BOOST_CONTRACT_NO_ENTRY_INVARIANTS
                 << "a::static_inv" << std::endl
             #endif
-            #if     !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
-                    !defined(BOOST_CONTRACT_NO_EXCEPTS)
+            #ifndef BOOST_CONTRACT_NO_OLDS
                 << "a::ctor::old" << std::endl
             #endif
             << "a::ctor::body" << std::endl
@@ -352,8 +346,7 @@ int main() {
         BOOST_TEST(out.eq(ok.str()));
     }
 
-    #if     !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
-            !defined(BOOST_CONTRACT_NO_EXCEPTS)
+    #ifndef BOOST_CONTRACT_NO_OLDS
         #define BOOST_CONTRACT_TEST_old 1u
     #else
         #define BOOST_CONTRACT_TEST_old 0u

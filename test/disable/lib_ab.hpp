@@ -22,8 +22,7 @@ std::string ok_f() {
         #ifndef BOOST_CONTRACT_NO_PRECONDITIONS
             << "a::f::pre" << std::endl
         #endif
-        #if     !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
-                !defined(BOOST_CONTRACT_NO_EXCEPTS)
+        #ifndef BOOST_CONTRACT_NO_OLDS
             << "a::f::old" << std::endl
         #endif
         << "a::f::body" << std::endl
@@ -60,8 +59,7 @@ int main() {
                 << "a::f::body" << std::endl
             #endif
         #endif
-        #if     !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
-                !defined(BOOST_CONTRACT_NO_EXCEPTS)
+        #ifndef BOOST_CONTRACT_NO_OLDS
             << "b::g::old" << std::endl
         #endif
         << "b::g::body" << std::endl
@@ -79,12 +77,9 @@ int main() {
 
     // Test old values not copied for disabled contracts.
 
-    #if     defined(BOOST_CONTRACT_PRECONDITIONS_DISABLE_NO_ASSERTION) && \
+    #if      defined(BOOST_CONTRACT_PRECONDITIONS_DISABLE_NO_ASSERTION) && \
             !defined(BOOST_CONTRACT_NO_PRECONDITIONS) && \
-            ( \
-                !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
-                !defined(BOOST_CONTRACT_NO_EXCEPTS) \
-            )
+            !defined(BOOST_CONTRACT_NO_OLDS)
         #define BOOST_CONTRACT_TEST_old 1u
     #else
         #define BOOST_CONTRACT_TEST_old 0u

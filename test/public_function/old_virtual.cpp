@@ -155,8 +155,7 @@ int main() {
     out.str("");
     aa.f(i, n);
     ok.str(""); ok
-        #if     !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
-                !defined(BOOST_CONTRACT_NO_EXCEPTS)
+        #ifndef BOOST_CONTRACT_NO_OLDS
             << "c::f::old" << std::endl
             << "b::f::old" << std::endl
             << "a::f::old" << std::endl
@@ -179,8 +178,7 @@ int main() {
     out.str("");
     bb.f(i, n);
     ok.str(""); ok
-        #if     !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
-                !defined(BOOST_CONTRACT_NO_EXCEPTS)
+        #ifndef BOOST_CONTRACT_NO_OLDS
             << "c::f::old" << std::endl
             << "b::f::old" << std::endl
         #endif
@@ -200,8 +198,7 @@ int main() {
     out.str("");
     cc.f(i, n);
     ok.str(""); ok
-        #if     !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
-                !defined(BOOST_CONTRACT_NO_EXCEPTS)
+        #ifndef BOOST_CONTRACT_NO_OLDS
             << "c::f::old" << std::endl
         #endif
         << "c::f::body" << std::endl

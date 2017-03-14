@@ -19,7 +19,7 @@
 #include <boost/contract/core/exception.hpp>
 #include <boost/contract/core/config.hpp>
 #if     !defined(BOOST_CONTRACT_NO_PRECONDITIONS) || \
-        !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
+        !defined(BOOST_CONTRACT_NO_OLDS) || \
         !defined(BOOST_CONTRACT_NO_EXEPTS)
     #include <boost/function.hpp>
 #endif
@@ -38,10 +38,7 @@ public:
     explicit cond_base(boost::contract::from from) :
           BOOST_CONTRACT_ERROR_missing_check_object_declaration(false)
         , init_asserted_(false)
-        #if     !defined(BOOST_CONTRACT_NO_INVARIANTS) || \
-                !defined(BOOST_CONTRACT_NO_PRECONDITIONS) || \
-                !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
-                !defined(BOOST_CONTRACT_NO_EXCEPTS)
+        #ifndef BOOST_CONTRACT_NO_CONDITIONS
             , from_(from)
             , failed_(false)
         #endif
@@ -63,8 +60,7 @@ public:
         void set_pre(F const& f) { pre_ = f; }
     #endif
 
-    #if     !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
-            !defined(BOOST_CONTRACT_NO_EXCEPTS)
+    #ifndef BOOST_CONTRACT_NO_OLDS
         template<typename F>
         void set_old(F const& f) { old_ = f; }
     #endif
@@ -105,8 +101,7 @@ protected:
         }
     #endif
 
-    #if     !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
-            !defined(BOOST_CONTRACT_NO_EXCEPTS)
+    #ifndef BOOST_CONTRACT_NO_OLDS
         void copy_old() {
             if(failed()) return;
             try { if(old_) old_(); }
@@ -122,10 +117,7 @@ protected:
         }
     #endif
     
-    #if     !defined(BOOST_CONTRACT_NO_INVARIANTS) || \
-            !defined(BOOST_CONTRACT_NO_PRECONDITIONS) || \
-            !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
-            !defined(BOOST_CONTRACT_NO_EXCEPTS)
+    #ifndef BOOST_CONTRACT_NO_CONDITIONS
         void fail(void (*h)(boost::contract::from)) {
             failed(true);
             if(h) h(from_);
@@ -139,10 +131,7 @@ protected:
 private:
     bool BOOST_CONTRACT_ERROR_missing_check_object_declaration;
     bool init_asserted_; // Avoid throwing twice from dtors (undef behavior).
-    #if     !defined(BOOST_CONTRACT_NO_INVARIANTS) || \
-            !defined(BOOST_CONTRACT_NO_PRECONDITIONS) || \
-            !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
-            !defined(BOOST_CONTRACT_NO_EXCEPTS)
+    #ifndef BOOST_CONTRACT_NO_CONDITIONS
         boost::contract::from from_;
         bool failed_;
     #endif
@@ -150,8 +139,7 @@ private:
     #ifndef BOOST_CONTRACT_NO_PRECONDITIONS
         boost::function<void ()> pre_;
     #endif
-    #if     !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
-            !defined(BOOST_CONTRACT_NO_EXCEPTS)
+    #ifndef BOOST_CONTRACT_NO_OLDS
         boost::function<void ()> old_;
     #endif
     #ifndef BOOST_CONTRACT_NO_EXCEPTS

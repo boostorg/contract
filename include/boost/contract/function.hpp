@@ -13,9 +13,9 @@ Program contracts for (non-public) functions.
 
 #include <boost/contract/core/config.hpp>
 #include <boost/contract/core/specify.hpp>
-#if     defined(BOOST_CONTRACT_STATIC_LINK) || \
-        !defined(BOOST_CONTRACT_NO_FUNCTIONS) || \
-        !defined(BOOST_CONTRACT_NO_INVARIANTS)
+#if     !defined(BOOST_CONTRACT_NO_FUNCTIONS) || \
+        !defined(BOOST_CONTRACT_NO_INVARIANTS) || \
+         defined(BOOST_CONTRACT_STATIC_LINK)
     #include <boost/contract/detail/operation/function.hpp>
 #endif
 
@@ -47,9 +47,9 @@ postconditions, and exception guarantees.
 */
 inline specify_precondition_old_postcondition_except<> function() {
     // Must #if also on ..._INVARIANTS here because specify_... is generic.
-    #if     defined(BOOST_CONTRACT_STATIC_LINK) || \
-            !defined(BOOST_CONTRACT_NO_FUNCTIONS) || \
-            !defined(BOOST_CONTRACT_NO_INVARIANTS)
+    #if     !defined(BOOST_CONTRACT_NO_FUNCTIONS) || \
+            !defined(BOOST_CONTRACT_NO_INVARIANTS) || \
+             defined(BOOST_CONTRACT_STATIC_LINK)
         return specify_precondition_old_postcondition_except<>(
                 new boost::contract::detail::function());
     #else

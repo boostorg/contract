@@ -16,10 +16,7 @@
 #include <boost/contract/detail/condition/cond_inv.hpp>
 #include <boost/contract/detail/decl.hpp>
 #include <boost/contract/detail/tvariadic.hpp>
-#if     !defined(BOOST_CONTRACT_NO_INVARIANTS) || \
-        !defined(BOOST_CONTRACT_NO_PRECONDITIONS) || \
-        !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
-        !defined(BOOST_CONTRACT_NO_EXCEPTS)
+#ifndef BOOST_CONTRACT_NO_CONDITIONS
     #include <boost/contract/core/virtual.hpp>
     #include <boost/contract/core/access.hpp>
     #include <boost/contract/detail/type_traits/optional.hpp>
@@ -75,10 +72,7 @@ namespace cond_subcontracting_ {
 BOOST_CONTRACT_DETAIL_DECL_DETAIL_COND_SUBCONTRACTING_Z(1,
         /* is_friend = */ 0, O, VR, F, C, Args) : public cond_inv<VR, C>
 { // Non-copyable base.
-    #if     !defined(BOOST_CONTRACT_NO_INVARIANTS) || \
-            !defined(BOOST_CONTRACT_NO_PRECONDITIONS) || \
-            !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
-            !defined(BOOST_CONTRACT_NO_EXCEPTS)
+    #ifndef BOOST_CONTRACT_NO_CONDITIONS
         template<class Class, typename Result = boost::mpl::vector<> >
         class overridden_bases_of {
             struct search_bases {
@@ -158,19 +152,13 @@ public:
         #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
             , r_(r)
         #endif
-        #if     !defined(BOOST_CONTRACT_NO_INVARIANTS) || \
-                !defined(BOOST_CONTRACT_NO_PRECONDITIONS) || \
-                !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
-                !defined(BOOST_CONTRACT_NO_EXCEPTS)
+        #ifndef BOOST_CONTRACT_NO_CONDITIONS
             BOOST_CONTRACT_DETAIL_TVARIADIC_COMMA(BOOST_CONTRACT_MAX_ARGS)
             BOOST_CONTRACT_DETAIL_TVARIADIC_TUPLE_INIT_Z(1,
                     BOOST_CONTRACT_MAX_ARGS, args_, args)
         #endif
     {
-        #if     !defined(BOOST_CONTRACT_NO_INVARIANTS) || \
-                !defined(BOOST_CONTRACT_NO_PRECONDITIONS) || \
-                !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
-                !defined(BOOST_CONTRACT_NO_EXCEPTS)
+        #ifndef BOOST_CONTRACT_NO_CONDITIONS
             if(v) {
                 base_call_ = true;
                 v_ = v; // Invariant: v_ never null if base_call_.
@@ -190,18 +178,14 @@ public:
         #endif
     }
 
-    #if     !defined(BOOST_CONTRACT_NO_INVARIANTS) || \
-            !defined(BOOST_CONTRACT_NO_PRECONDITIONS) || \
-            !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
-            !defined(BOOST_CONTRACT_NO_EXCEPTS)
+    #ifndef BOOST_CONTRACT_NO_CONDITIONS
         virtual ~cond_subcontracting() BOOST_NOEXCEPT_IF(false) {
             if(!base_call_) delete v_;
         }
     #endif
 
 protected:
-    #if     !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
-            !defined(BOOST_CONTRACT_NO_EXCEPTS)
+    #ifndef BOOST_CONTRACT_NO_OLDS
         void init_subcontracted_old() {
             // Old values of overloaded func on stack (so no `f` param here).
             exec_and(boost::contract::virtual_::push_old_init_copy);
@@ -225,8 +209,7 @@ protected:
         }
     #endif
 
-    #if     !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
-            !defined(BOOST_CONTRACT_NO_EXCEPTS)
+    #ifndef BOOST_CONTRACT_NO_OLDS
         void copy_subcontracted_old() {
             exec_and(boost::contract::virtual_::call_old_ftor,
                     &cond_subcontracting::copy_virtual_old);
@@ -254,10 +237,7 @@ protected:
         }
     #endif
 
-    #if     !defined(BOOST_CONTRACT_NO_INVARIANTS) || \
-            !defined(BOOST_CONTRACT_NO_PRECONDITIONS) || \
-            !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
-            !defined(BOOST_CONTRACT_NO_EXCEPTS)
+    #ifndef BOOST_CONTRACT_NO_CONDITIONS
         bool base_call() const { return base_call_; }
 
         bool failed() const /* override */ {
@@ -272,8 +252,7 @@ protected:
     #endif
 
 private:
-    #if     !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
-            !defined(BOOST_CONTRACT_NO_EXCEPTS)
+    #ifndef BOOST_CONTRACT_NO_OLDS
         void copy_virtual_old() {
             boost::contract::virtual_::action_enum a;
             if(base_call_) {
@@ -434,10 +413,7 @@ private:
         }
     #endif
     
-    #if     !defined(BOOST_CONTRACT_NO_INVARIANTS) || \
-            !defined(BOOST_CONTRACT_NO_PRECONDITIONS) || \
-            !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
-            !defined(BOOST_CONTRACT_NO_EXCEPTS)
+    #ifndef BOOST_CONTRACT_NO_CONDITIONS
         class call_base { // Copyable (as &).
         public:
             explicit call_base(cond_subcontracting& me) : me_(me) {}
@@ -482,10 +458,7 @@ private:
     #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
         VR& r_;
     #endif
-    #if     !defined(BOOST_CONTRACT_NO_INVARIANTS) || \
-            !defined(BOOST_CONTRACT_NO_PRECONDITIONS) || \
-            !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
-            !defined(BOOST_CONTRACT_NO_EXCEPTS)
+    #ifndef BOOST_CONTRACT_NO_CONDITIONS
         boost::contract::virtual_* v_;
         bool base_call_;
         BOOST_CONTRACT_DETAIL_TVARIADIC_TUPLE_Z(1,

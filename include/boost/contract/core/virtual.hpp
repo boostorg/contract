@@ -13,27 +13,20 @@ Handle virtual public functions for contracts (for subcontracting).
 
 // IMPORTANT: Included by contract_macro.hpp so must #if-guard all its includes.
 #include <boost/contract/core/config.hpp>
-#if     !defined(BOOST_CONTRACT_NO_INVARIANTS) || \
-        !defined(BOOST_CONTRACT_NO_PRECONDITIONS) || \
-        !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
-        !defined(BOOST_CONTRACT_NO_EXCEPTS)
+#ifndef BOOST_CONTRACT_NO_CONDITIONS
     #include <boost/contract/detail/decl.hpp>
 #endif
 #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
     #include <boost/any.hpp>
 #endif
-#if     !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
-        !defined(BOOST_CONTRACT_NO_EXCEPTS)
+#ifndef BOOST_CONTRACT_NO_OLDS
     #include <boost/shared_ptr.hpp>
     #include <queue>
 #endif
 
 namespace boost { namespace contract {
         
-#if     !defined(BOOST_CONTRACT_NO_INVARIANTS) || \
-        !defined(BOOST_CONTRACT_NO_PRECONDITIONS) || \
-        !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
-        !defined(BOOST_CONTRACT_NO_EXCEPTS)
+#ifndef BOOST_CONTRACT_NO_CONDITIONS
     namespace detail {
         BOOST_CONTRACT_DETAIL_DECL_DETAIL_COND_SUBCONTRACTING_Z(1,
                 /* is_friend = */ 0, OO, RR, FF, CC, AArgs);
@@ -75,21 +68,10 @@ private: // No public API (so users cannot use it directly by mistake).
     virtual_(virtual_&);
     virtual_& operator=(virtual_&);
 
-    #if     !defined(BOOST_CONTRACT_NO_INVARIANTS) || \
-            !defined(BOOST_CONTRACT_NO_PRECONDITIONS) || \
-            !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
-            !defined(BOOST_CONTRACT_NO_EXCEPTS)
+    #ifndef BOOST_CONTRACT_NO_CONDITIONS
         enum action_enum {
             // virtual_ always held/passed as ptr so nullptr used for user call.
-            #if     !defined(BOOST_CONTRACT_NO_INVARIANTS) || \
-                    !defined(BOOST_CONTRACT_NO_PRECONDITIONS) || \
-                    !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
-                    !defined(BOOST_CONTRACT_NO_EXCEPTS)
-                no_action,
-            #endif
-            #if     !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
-                    !defined(BOOST_CONTRACT_NO_EXCEPTS)
-            #endif
+            no_action,
             #ifndef BOOST_CONTRACT_NO_ENTRY_INVARIANTS
                 check_entry_inv,
             #endif
@@ -99,8 +81,7 @@ private: // No public API (so users cannot use it directly by mistake).
             #ifndef BOOST_CONTRACT_NO_EXIT_INVARIANTS
                 check_exit_inv,
             #endif
-            #if     !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
-                    !defined(BOOST_CONTRACT_NO_EXCEPTS)
+            #ifndef BOOST_CONTRACT_NO_OLDS
                 // For outside .old(...).
                 push_old_init_copy,
                 // pop_old_init_copy as static function below.
@@ -118,8 +99,7 @@ private: // No public API (so users cannot use it directly by mistake).
         };
     #endif
 
-    #if     !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
-            !defined(BOOST_CONTRACT_NO_EXCEPTS)
+    #ifndef BOOST_CONTRACT_NO_OLDS
         // Not just an enum value because the logical combination of two values.
         inline static bool pop_old_init_copy(action_enum a) {
             return
@@ -137,10 +117,7 @@ private: // No public API (so users cannot use it directly by mistake).
         }
     #endif
 
-    #if     !defined(BOOST_CONTRACT_NO_INVARIANTS) || \
-            !defined(BOOST_CONTRACT_NO_PRECONDITIONS) || \
-            !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
-            !defined(BOOST_CONTRACT_NO_EXCEPTS)
+    #ifndef BOOST_CONTRACT_NO_CONDITIONS
         explicit virtual_(action_enum a) :
               action_(a)
             , failed_(false)
@@ -151,15 +128,11 @@ private: // No public API (so users cannot use it directly by mistake).
         {}
     #endif
 
-    #if     !defined(BOOST_CONTRACT_NO_INVARIANTS) || \
-            !defined(BOOST_CONTRACT_NO_PRECONDITIONS) || \
-            !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
-            !defined(BOOST_CONTRACT_NO_EXCEPTS)
+    #ifndef BOOST_CONTRACT_NO_CONDITIONS
         action_enum action_;
         bool failed_;
     #endif
-    #if     !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
-            !defined(BOOST_CONTRACT_NO_EXCEPTS)
+    #ifndef BOOST_CONTRACT_NO_OLDS
         std::queue<boost::shared_ptr<void> > old_init_copies_;
         std::queue<boost::shared_ptr<void> > old_ftor_copies_;
     #endif
@@ -170,15 +143,11 @@ private: // No public API (so users cannot use it directly by mistake).
     #endif
 
     // Friends (used to limit library's public API).
-    #if     !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
-            !defined(BOOST_CONTRACT_NO_EXCEPTS)
+    #ifndef BOOST_CONTRACT_NO_OLDS
         friend bool copy_old(virtual_*);
         friend class old_pointer;
     #endif
-    #if     !defined(BOOST_CONTRACT_NO_INVARIANTS) || \
-            !defined(BOOST_CONTRACT_NO_PRECONDITIONS) || \
-            !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
-            !defined(BOOST_CONTRACT_NO_EXCEPTS)
+    #ifndef BOOST_CONTRACT_NO_CONDITIONS
         BOOST_CONTRACT_DETAIL_DECL_DETAIL_COND_SUBCONTRACTING_Z(1,
                 /* is_friend = */ 1, OO, RR, FF, CC, AArgs);
     #endif

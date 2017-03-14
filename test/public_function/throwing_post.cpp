@@ -110,10 +110,10 @@ int main() {
     try {
         out.str("");
         ba.f();
-#ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
-        BOOST_TEST(false);
-    } catch(b::err const&) {
-#endif
+        #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
+                BOOST_TEST(false);
+            } catch(b::err const&) {
+        #endif
         ok.str(""); ok
             #ifndef BOOST_CONTRACT_NO_ENTRY_INVARIANTS
                 << "c::static_inv" << std::endl
@@ -128,8 +128,7 @@ int main() {
                 << "b::f::pre" << std::endl
                 << "a::f::pre" << std::endl
             #endif
-            #if     !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
-                    !defined(BOOST_CONTRACT_NO_EXCEPTS)
+            #ifndef BOOST_CONTRACT_NO_OLDS
                 << "c::f::old" << std::endl
                 << "b::f::old" << std::endl
                 << "a::f::old" << std::endl

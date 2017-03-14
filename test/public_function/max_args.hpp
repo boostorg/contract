@@ -136,8 +136,7 @@ int main() {
     #else
         #define BOOST_CONTRACT_TEST_post 0
     #endif
-    #if     !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
-            !defined(BOOST_CONTRACT_NO_EXCEPTS)
+    #ifndef BOOST_CONTRACT_NO_OLDS
         #define BOOST_CONTRACT_TEST_old 1
     #else
         #define BOOST_CONTRACT_TEST_old 0

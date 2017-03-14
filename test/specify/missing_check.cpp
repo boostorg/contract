@@ -26,7 +26,7 @@ int main() {
             .old([] {})
             .postcondition([] {})
         ;
-        #if !defined(BOOST_CONTRACT_NO_PRECONDITIONS) || \
+        #if     !defined(BOOST_CONTRACT_NO_PRECONDITIONS) || \
                 !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
                 !defined(BOOST_CONTRACT_NO_INVARIANTS)
             BOOST_TEST(false); // Error, must throw.

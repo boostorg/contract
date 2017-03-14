@@ -332,7 +332,7 @@ Configure this library compile-time and run-time behaviours.
 #if     defined(DOXYGEN) || \
         ( \
             !defined(BOOST_CONTRACT_NO_ENTRY_INVARIANTS) && \
-            defined(BOOST_CONTRACT_NO_INVARIANTS) \
+             defined(BOOST_CONTRACT_NO_INVARIANTS) \
         )
     /**
     If defined, this library does not check class invariants at entry (undefined
@@ -362,7 +362,7 @@ Configure this library compile-time and run-time behaviours.
 #if     defined(DOXYGEN) || \
         ( \
             !defined(BOOST_CONTRACT_NO_EXIT_INVARIANTS) && \
-            defined(BOOST_CONTRACT_NO_INVARIANTS) \
+             defined(BOOST_CONTRACT_NO_INVARIANTS) \
         )
     /**
     If defined, this library does not check class invariants at exit (undefined
@@ -390,8 +390,8 @@ Configure this library compile-time and run-time behaviours.
 #endif
 
 #if     !defined(BOOST_CONTRACT_NO_INVARIANTS) && \
-        defined(BOOST_CONTRACT_NO_ENTRY_INVARIANTS) && \
-        defined(BOOST_CONTRACT_NO_EXIT_INVARIANTS)
+         defined(BOOST_CONTRACT_NO_ENTRY_INVARIANTS) && \
+         defined(BOOST_CONTRACT_NO_EXIT_INVARIANTS)
     /**
     If defined, this library does not check class invariants (undefined by
     default).
@@ -571,6 +571,35 @@ Configure this library compile-time and run-time behaviours.
             Disable Contract Compilation}
     */
     #define BOOST_CONTRACT_NO_FUNCTIONS
+#endif
+
+#ifdef BOOST_CONTRACT_NO_CONDITIONS
+    #error "define NO_INVARIANTS, NO_PRECONDITIONS, NO_POSTCONDITIONS, and NO_EXCEPTS instead"
+#elif   defined(BOOST_CONTRACT_NO_INVARIANTS) && \
+        defined(BOOST_CONTRACT_NO_PRECONDITIONS) && \
+        defined(BOOST_CONTRACT_NO_POSTCONDITIONS) && \
+        defined(BOOST_CONTRACT_NO_EXCEPTS)
+    /**
+    Automatically defined by this library when contracts are not to be checked
+    for specification conditions (but excluding implementation checks).
+
+    This library will define this macro when users define all
+    @RefMacro{BOOST_CONTRACT_NO_INVARIANTS},
+    @RefMacro{BOOST_CONTRACT_NO_PRECONDITIONS},
+    @RefMacro{BOOST_CONTRACT_NO_POSTCONDITIONS}, and
+    @RefMacro{BOOST_CONTRACT_NO_EXCEPTS} (this macro is not a configuration
+    macro and this library will generate a compile-time error if users try to
+    define it directly).
+    Users can manually program @c \#ifndef statements in their code using this
+    macro to completely disable compilation of contracts within specifications
+    or use the macros defined in @c boost/contract_macro.hpp (recommended only
+    for applications where it is truly necessary to completely remove contract
+    code compilation from production code).
+
+    @see   @RefSect{extra_topics.disable_contract_compilation__macro_interface_,
+            Disable Contract Compilation}
+    */
+    #define BOOST_CONTRACT_NO_CONDITIONS
 #endif
 
 #ifdef BOOST_CONTRACT_NO_ALL

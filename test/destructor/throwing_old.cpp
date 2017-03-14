@@ -87,18 +87,16 @@ int main() {
             a aa;
             out.str("");
         }
-#if     !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
-        !defined(BOOST_CONTRACT_NO_EXCEPTS)
-        BOOST_TEST(false);
-    } catch(b::err const&) {
-#endif
+        #ifndef BOOST_CONTRACT_NO_OLDS
+                BOOST_TEST(false);
+            } catch(b::err const&) {
+        #endif
         ok.str(""); ok
             #ifndef BOOST_CONTRACT_NO_ENTRY_INVARIANTS
                 << "a::static_inv" << std::endl
                 << "a::inv" << std::endl
             #endif
-            #if     !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
-                    !defined(BOOST_CONTRACT_NO_EXCEPTS)
+            #ifndef BOOST_CONTRACT_NO_OLDS
                 << "a::dtor::old" << std::endl
             #endif
             << "a::dtor::body" << std::endl
@@ -114,8 +112,7 @@ int main() {
                 << "b::static_inv" << std::endl
                 << "b::inv" << std::endl
             #endif
-            #if     !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
-                    !defined(BOOST_CONTRACT_NO_EXCEPTS)
+            #ifndef BOOST_CONTRACT_NO_OLDS
                 << "b::dtor::old" << std::endl // Test this threw.
             #else
                 << "b::dtor::body" << std::endl
@@ -128,16 +125,14 @@ int main() {
                 << "c::static_inv" << std::endl
                 << "c::inv" << std::endl
             #endif
-            #if     !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
-                    !defined(BOOST_CONTRACT_NO_EXCEPTS)
+            #ifndef BOOST_CONTRACT_NO_OLDS
                 << "c::dtor::old" << std::endl
             #endif
             << "c::dtor::body" << std::endl
             #ifndef BOOST_CONTRACT_NO_EXIT_INVARIANTS
                 << "c::static_inv" << std::endl
             #endif
-            #if     !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
-                    !defined(BOOST_CONTRACT_NO_EXCEPTS)
+            #ifndef BOOST_CONTRACT_NO_OLDS
                 // Test c not destructed (so both inv and except).
                 #ifndef BOOST_CONTRACT_NO_EXIT_INVARIANTS
                     << "c::inv" << std::endl

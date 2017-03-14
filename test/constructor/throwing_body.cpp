@@ -110,8 +110,7 @@ int main() {
             #ifndef BOOST_CONTRACT_NO_ENTRY_INVARIANTS
                 << "c::static_inv" << std::endl
             #endif
-            #if     !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
-                    !defined(BOOST_CONTRACT_NO_EXCEPTS)
+            #ifndef BOOST_CONTRACT_NO_OLDS
                 << "c::ctor::old" << std::endl
             #endif
             << "c::ctor::body" << std::endl
@@ -126,8 +125,7 @@ int main() {
             #ifndef BOOST_CONTRACT_NO_ENTRY_INVARIANTS
                 << "b::static_inv" << std::endl
             #endif
-            #if     !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
-                    !defined(BOOST_CONTRACT_NO_EXCEPTS)
+            #ifndef BOOST_CONTRACT_NO_OLDS
                 << "b::ctor::old" << std::endl
             #endif
             << "b::ctor::body" << std::endl // Test this threw...

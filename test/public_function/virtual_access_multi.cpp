@@ -164,8 +164,7 @@ int main() {
         #ifndef BOOST_CONTRACT_NO_PRECONDITIONS
             << "b::f::pre" << std::endl
         #endif
-        #if     !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
-                !defined(BOOST_CONTRACT_NO_EXCEPTS)
+        #ifndef BOOST_CONTRACT_NO_OLDS
             << "b::f::old" << std::endl
         #endif
         << "b::f::body" << std::endl
@@ -179,8 +178,7 @@ int main() {
         #ifndef BOOST_CONTRACT_NO_PRECONDITIONS
             << "b::g::pre" << std::endl
         #endif
-        #if     !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
-                !defined(BOOST_CONTRACT_NO_EXCEPTS)
+        #ifndef BOOST_CONTRACT_NO_OLDS
             << "b::g::old" << std::endl
         #endif
         << "b::g::body" << std::endl
@@ -191,8 +189,7 @@ int main() {
         #ifndef BOOST_CONTRACT_NO_PRECONDITIONS
             << "b::h::pre" << std::endl
         #endif
-        #if     !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
-                !defined(BOOST_CONTRACT_NO_EXCEPTS)
+        #ifndef BOOST_CONTRACT_NO_OLDS
             << "b::h::old" << std::endl
         #endif
         << "b::h::body" << std::endl
@@ -214,8 +211,7 @@ int main() {
         #ifndef BOOST_CONTRACT_NO_PRECONDITIONS
             << "b::f::pre" << std::endl
         #endif
-        #if     !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
-                !defined(BOOST_CONTRACT_NO_EXCEPTS)
+        #ifndef BOOST_CONTRACT_NO_OLDS
             << "b::f::old" << std::endl
             << "c::f::old" << std::endl
             << "a::f::old" << std::endl
@@ -241,8 +237,7 @@ int main() {
         #ifndef BOOST_CONTRACT_NO_PRECONDITIONS
             << "c::g::pre" << std::endl
         #endif
-        #if     !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
-                !defined(BOOST_CONTRACT_NO_EXCEPTS)
+        #ifndef BOOST_CONTRACT_NO_OLDS
             << "c::g::old" << std::endl
             << "a::g::old" << std::endl
         #endif
@@ -264,8 +259,7 @@ int main() {
         #ifndef BOOST_CONTRACT_NO_PRECONDITIONS
             << "c::h::pre" << std::endl
         #endif
-        #if     !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
-                !defined(BOOST_CONTRACT_NO_EXCEPTS)
+        #ifndef BOOST_CONTRACT_NO_OLDS
             << "c::h::old" << std::endl
             << "a::h::old" << std::endl
         #endif

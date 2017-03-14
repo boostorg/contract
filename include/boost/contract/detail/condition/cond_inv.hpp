@@ -96,10 +96,7 @@ public:
     // obj can be 0 for static member functions.
     explicit cond_inv(boost::contract::from from, C* obj) :
         cond_post<VR>(from)
-        #if     !defined(BOOST_CONTRACT_NO_INVARIANTS) || \
-                !defined(BOOST_CONTRACT_NO_PRECONDITIONS) || \
-                !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
-                !defined(BOOST_CONTRACT_NO_EXCEPTS)
+        #ifndef BOOST_CONTRACT_NO_CONDITIONS
             , obj_(obj)
         #endif
     {}
@@ -117,10 +114,7 @@ protected:
         void check_exit_all_inv() { check_inv(false, false, true); }
     #endif
 
-    #if     !defined(BOOST_CONTRACT_NO_INVARIANTS) || \
-            !defined(BOOST_CONTRACT_NO_PRECONDITIONS) || \
-            !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
-            !defined(BOOST_CONTRACT_NO_EXCEPTS)
+    #ifndef BOOST_CONTRACT_NO_CONDITIONS
         C* object() { return obj_; }
     #endif
 
@@ -227,10 +221,7 @@ private:
         };
     #endif
 
-    #if     !defined(BOOST_CONTRACT_NO_INVARIANTS) || \
-            !defined(BOOST_CONTRACT_NO_PRECONDITIONS) || \
-            !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
-            !defined(BOOST_CONTRACT_NO_EXCEPTS)
+    #ifndef BOOST_CONTRACT_NO_CONDITIONS
         C* obj_;
     #endif
 };

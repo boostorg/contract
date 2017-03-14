@@ -173,8 +173,7 @@ int main() {
             << "a::static_inv" << std::endl
             << "a::inv" << std::endl
         #endif
-        #if     !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
-                !defined(BOOST_CONTRACT_NO_EXCEPTS)
+        #ifndef BOOST_CONTRACT_NO_OLDS
             << "a::dtor::old" << std::endl
         #endif
         << "a::dtor::body" << std::endl
@@ -190,8 +189,7 @@ int main() {
             << "c::static_inv" << std::endl
             << "c::inv" << std::endl
         #endif
-        #if     !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
-                !defined(BOOST_CONTRACT_NO_EXCEPTS)
+        #ifndef BOOST_CONTRACT_NO_OLDS
             << "c::dtor::old" << std::endl
         #endif
         << "c::dtor::body" << std::endl
@@ -206,8 +204,7 @@ int main() {
             << "e::static_inv" << std::endl
             << "e::inv" << std::endl
         #endif
-        #if     !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
-                !defined(BOOST_CONTRACT_NO_EXCEPTS)
+        #ifndef BOOST_CONTRACT_NO_OLDS
             << "e::dtor::old" << std::endl
         #endif
         << "e::dtor::body" << std::endl
@@ -223,8 +220,7 @@ int main() {
             << "q::static_inv" << std::endl
             << "q::inv" << std::endl
         #endif
-        #if     !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
-                !defined(BOOST_CONTRACT_NO_EXCEPTS)
+        #ifndef BOOST_CONTRACT_NO_OLDS
             << "q::dtor::old" << std::endl
         #endif
         << "q::dtor::body" << std::endl
@@ -240,8 +236,7 @@ int main() {
             << "p::static_inv" << std::endl
             << "p::inv" << std::endl
         #endif
-        #if     !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
-                !defined(BOOST_CONTRACT_NO_EXCEPTS)
+        #ifndef BOOST_CONTRACT_NO_OLDS
             << "p::dtor::old" << std::endl
         #endif
         << "p::dtor::body" << std::endl
@@ -256,8 +251,7 @@ int main() {
             << "d::static_inv" << std::endl
             << "d::inv" << std::endl
         #endif
-        #if     !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
-                !defined(BOOST_CONTRACT_NO_EXCEPTS)
+        #ifndef BOOST_CONTRACT_NO_OLDS
             << "d::dtor::old" << std::endl
         #endif
         << "d::dtor::body" << std::endl
@@ -270,8 +264,7 @@ int main() {
     ;
     BOOST_TEST(out.eq(ok.str()));
 
-    #if     !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
-            !defined(BOOST_CONTRACT_NO_EXCEPTS)
+    #ifndef BOOST_CONTRACT_NO_OLDS
         #define BOOST_CONTRACT_TEST_old 1u
     #else
         #define BOOST_CONTRACT_TEST_old 0u

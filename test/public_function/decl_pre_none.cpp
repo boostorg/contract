@@ -25,8 +25,7 @@ int main() {
             << "a::inv" << std::endl
         #endif
         // No preconditions here.
-        #if     !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
-                !defined(BOOST_CONTRACT_NO_EXCEPTS)
+        #ifndef BOOST_CONTRACT_NO_OLDS
             << "c::f::old" << std::endl
             << "b::f::old" << std::endl
             << "a::f::old" << std::endl

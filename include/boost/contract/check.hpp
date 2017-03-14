@@ -15,11 +15,8 @@ RAII object to check contracts.
 #include <boost/contract/core/check_macro.hpp>
 #include <boost/contract/core/specify.hpp>
 #include <boost/contract/core/exception.hpp> // For set_... (if always in code).
-#if     defined(BOOST_CONTRACT_STATIC_LINK) || \
-        !defined(BOOST_CONTRACT_NO_INVARIANTS) || \
-        !defined(BOOST_CONTRACT_NO_PRECONDITIONS) || \
-        !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
-        !defined(BOOST_CONTRACT_NO_EXCEPTS)
+#if !defined(BOOST_CONTRACT_NO_CONDITIONS) || \
+        defined(BOOST_CONTRACT_STATIC_LINK)
     #include <boost/contract/detail/condition/cond_base.hpp>
     #include <boost/contract/detail/auto_ptr.hpp>
     #include <boost/contract/detail/debug.hpp>
@@ -31,11 +28,8 @@ RAII object to check contracts.
 
 /** @cond */
 
-#if     defined(BOOST_CONTRACT_STATIC_LINK) || \
-        !defined(BOOST_CONTRACT_NO_INVARIANTS) || \
-        !defined(BOOST_CONTRACT_NO_PRECONDITIONS) || \
-        !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
-        !defined(BOOST_CONTRACT_NO_EXCEPTS)
+#if !defined(BOOST_CONTRACT_NO_CONDITIONS) || \
+        defined(BOOST_CONTRACT_STATIC_LINK)
     #define BOOST_CONTRACT_CHECK_CTOR_DEF_(contract_type) \
         : cond_(const_cast<contract_type&>(contract).cond_.release()) \
         { \
@@ -104,11 +98,8 @@ public:
     @param other    Copied-from object.
     */
     check(check const& other) // Copy ctor moves cond_ pointer to dest.
-        #if     defined(BOOST_CONTRACT_STATIC_LINK) || \
-                !defined(BOOST_CONTRACT_NO_INVARIANTS) || \
-                !defined(BOOST_CONTRACT_NO_PRECONDITIONS) || \
-                !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
-                !defined(BOOST_CONTRACT_NO_EXCEPTS)
+        #if !defined(BOOST_CONTRACT_NO_CONDITIONS) || \
+                defined(BOOST_CONTRACT_STATIC_LINK)
             : cond_(const_cast<check&>(other).cond_.release())
         #endif
     {}
@@ -277,11 +268,8 @@ public:
 private:
     check& operator=(check const&); // Cannot copy outside of `check c = ...`.
 
-    #if     defined(BOOST_CONTRACT_STATIC_LINK) || \
-            !defined(BOOST_CONTRACT_NO_INVARIANTS) || \
-            !defined(BOOST_CONTRACT_NO_PRECONDITIONS) || \
-            !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
-            !defined(BOOST_CONTRACT_NO_EXCEPTS)
+    #if !defined(BOOST_CONTRACT_NO_CONDITIONS) || \
+            defined(BOOST_CONTRACT_STATIC_LINK)
         boost::contract::detail::auto_ptr<boost::contract::detail::cond_base>
                 cond_;
     #endif

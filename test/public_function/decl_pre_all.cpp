@@ -31,8 +31,7 @@ std::string ok_begin() {
         
 std::string ok_end() {
     std::ostringstream ok; ok
-        #if     !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
-                !defined(BOOST_CONTRACT_NO_EXCEPTS)
+        #ifndef BOOST_CONTRACT_NO_OLDS
             << "c::f::old" << std::endl
             << "b::f::old" << std::endl
             << "a::f::old" << std::endl

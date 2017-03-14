@@ -35,8 +35,7 @@ public:
 
 private:
     #if     !defined(BOOST_CONTRACT_NO_ENTRY_INVARIANTS) || \
-            !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
-            !defined(BOOST_CONTRACT_NO_EXCEPTS)
+            !defined(BOOST_CONTRACT_NO_OLDS)
         void init() /* override */ {
             #ifndef BOOST_CONTRACT_ALL_DISABLE_NO_ASSERTION
                 if(checking::already()) return;
@@ -52,8 +51,7 @@ private:
                     // entry. Ctor pre checked by constructor_precondition.
                 }
             #endif
-            #if     !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
-                    !defined(BOOST_CONTRACT_NO_EXCEPTS)
+            #ifndef BOOST_CONTRACT_NO_OLDS
                 this->copy_old();
             #endif
         }

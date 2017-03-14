@@ -21,8 +21,7 @@ int main() {
         x = 123;
         BOOST_STATIC_ASSERT(boost::is_same<decltype(old_x),
                 boost::contract::old_ptr<int> >::value);
-        #if     !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
-                !defined(BOOST_CONTRACT_NO_EXCEPTS)
+        #ifndef BOOST_CONTRACT_NO_OLDS
             BOOST_TEST_EQ(*old_x, -123);
         #endif
         BOOST_TEST_EQ(x, 123);
@@ -33,8 +32,7 @@ int main() {
         y = 'k';
         BOOST_STATIC_ASSERT(boost::is_same<decltype(old_y),
                 boost::contract::old_ptr<char> >::value);
-        #if     !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
-                !defined(BOOST_CONTRACT_NO_EXCEPTS)
+        #ifndef BOOST_CONTRACT_NO_OLDS
             BOOST_TEST_EQ(*old_y, 'j');
         #endif
         BOOST_TEST_EQ(y, 'k');

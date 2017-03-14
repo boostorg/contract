@@ -30,8 +30,7 @@ int main() {
     f();
     ok.str("");
     ok
-        #if     !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
-                !defined(BOOST_CONTRACT_NO_EXCEPTS)
+        #ifndef BOOST_CONTRACT_NO_OLDS
             << "f::old" << std::endl
         #endif
         << "f::body" << std::endl

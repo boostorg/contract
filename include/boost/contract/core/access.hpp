@@ -13,11 +13,8 @@ Allow to declare invariants, base types, etc all as private members.
 
 // IMPORTANT: Included by contract_macro.hpp so must #if-guard all its includes.
 #include <boost/contract/core/config.hpp>
-#if     defined(BOOST_CONTRACT_STATIC_LINK) || \
-        !defined(BOOST_CONTRACT_NO_INVARIANTS) || \
-        !defined(BOOST_CONTRACT_NO_PRECONDITIONS) || \
-        !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
-        !defined(BOOST_CONTRACT_NO_EXCEPTS)
+#if !defined(BOOST_CONTRACT_NO_CONDITIONS) || \
+        defined(BOOST_CONTRACT_STATIC_LINK)
     #include <boost/contract/detail/decl.hpp>
     #include <boost/contract/detail/type_traits/introspection.hpp>
 #endif
@@ -29,11 +26,8 @@ Allow to declare invariants, base types, etc all as private members.
 
 namespace boost { namespace contract {
         
-#if     defined(BOOST_CONTRACT_STATIC_LINK) || \
-        !defined(BOOST_CONTRACT_NO_INVARIANTS) || \
-        !defined(BOOST_CONTRACT_NO_PRECONDITIONS) || \
-        !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
-        !defined(BOOST_CONTRACT_NO_EXCEPTS)
+#if !defined(BOOST_CONTRACT_NO_CONDITIONS) || \
+        defined(BOOST_CONTRACT_STATIC_LINK)
     class virtual_;
 
     namespace detail {
@@ -83,11 +77,8 @@ private: // No public APIs (so users cannot use it directly by mistake).
     access(access&);
     access& operator=(access&);
     
-    #if     defined(BOOST_CONTRACT_STATIC_LINK) || \
-            !defined(BOOST_CONTRACT_NO_INVARIANTS) || \
-            !defined(BOOST_CONTRACT_NO_PRECONDITIONS) || \
-            !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
-            !defined(BOOST_CONTRACT_NO_EXCEPTS)
+    #if !defined(BOOST_CONTRACT_NO_CONDITIONS) || \
+            defined(BOOST_CONTRACT_STATIC_LINK)
         BOOST_CONTRACT_DETAIL_INTROSPECTION_HAS_TYPE(has_base_types,
                 BOOST_CONTRACT_BASES_TYPEDEF)
 
@@ -153,11 +144,8 @@ private: // No public APIs (so users cannot use it directly by mistake).
     // NOTE: Using friends here and in all other places in this library
     // does not increase compilation times (I experimented replacing all
     // friends with public and got the same compilation times).
-    #if     defined(BOOST_CONTRACT_STATIC_LINK) || \
-            !defined(BOOST_CONTRACT_NO_INVARIANTS) || \
-            !defined(BOOST_CONTRACT_NO_PRECONDITIONS) || \
-            !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
-            !defined(BOOST_CONTRACT_NO_EXCEPTS)
+    #if !defined(BOOST_CONTRACT_NO_CONDITIONS) || \
+            defined(BOOST_CONTRACT_STATIC_LINK) || \
         BOOST_CONTRACT_DETAIL_DECL_DETAIL_COND_SUBCONTRACTING_Z(1,
                 /* is_friend = */ 1, OO, RR, FF, CC, AArgs);
             
