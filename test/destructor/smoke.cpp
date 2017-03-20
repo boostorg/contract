@@ -87,7 +87,7 @@ struct c
 
     virtual ~c() {
         boost::contract::old_ptr<m_type> old_m =
-                BOOST_CONTRACT_OLD(m_type::eval(m));
+                BOOST_CONTRACT_OLDOF(m_type::eval(m));
         boost::contract::check c = boost::contract::destructor(this)
             .old([] {
                 out << "c::dtor::old" << std::endl;

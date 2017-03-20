@@ -172,14 +172,14 @@ The default implementation of this trait is equivalent to:
 template<typename T>
 class old_value_copy {
 public:
-    explicit old_value_copy(T const& value) :
-        value_(value) // One single copy of value using T's copy constructor.
+    explicit old_value_copy(T const& old) :
+        old_(value) // One single copy of value using T's copy constructor.
     {}
 
-    T const& value() const { return value_; }
+    T const& old() const { return old_; }
 
 private:
-    T const value_; // The old value copy.
+    T const old_; // The old value copy.
 };
 @endcode
 
@@ -258,7 +258,7 @@ public:
             "otherwise use old_ptr_if_copyable<T>"
         );
         BOOST_CONTRACT_DETAIL_DEBUG(typed_copy_);
-        return typed_copy_->value();
+        return typed_copy_->old();
     }
 
     /**
@@ -281,7 +281,7 @@ public:
             "old_ptr<T> requires T copyble (see is_old_value_copyable<T>), "
             "otherwise use old_ptr_if_copyable<T>"
         );
-        if(typed_copy_) return &typed_copy_->value();
+        if(typed_copy_) return &typed_copy_->old();
         return 0;
     }
 
@@ -386,7 +386,7 @@ public:
             Constant Correctness}).
     */
     T const* const operator->() const {
-        if(typed_copy_) return &typed_copy_->value();
+        if(typed_copy_) return &typed_copy_->old();
         return 0;
     }
 

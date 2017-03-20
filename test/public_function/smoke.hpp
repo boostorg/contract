@@ -60,7 +60,7 @@ result_type& t<Id>::f(s_type& s, boost::contract::virtual_* v) {
     std::ostringstream r; r << "none-" << Id;
     static result_type result(r.str());
     boost::contract::old_ptr<z_type> old_z =
-            BOOST_CONTRACT_OLD(v, z_type::eval(z));
+            BOOST_CONTRACT_OLDOF(v, z_type::eval(z));
     boost::contract::old_ptr<s_type> old_s;
     boost::contract::check c = boost::contract::public_function(v, result, this)
         .precondition([&] {
@@ -115,7 +115,7 @@ struct c
             /* override */ {
         static result_type result("none-c");
         boost::contract::old_ptr<y_type> old_y =
-                BOOST_CONTRACT_OLD(v, y_type::eval(y));
+                BOOST_CONTRACT_OLDOF(v, y_type::eval(y));
         boost::contract::old_ptr<s_type> old_s;
         boost::contract::check c = boost::contract::public_function<
                 override_f>(v, result, &c::f, this, s)
@@ -205,7 +205,7 @@ struct a
             /* override */ {
         static result_type result("none-a");
         boost::contract::old_ptr<x_type> old_x =
-                BOOST_CONTRACT_OLD(v, x_type::eval(x));
+                BOOST_CONTRACT_OLDOF(v, x_type::eval(x));
         boost::contract::old_ptr<s_type> old_s;
         boost::contract::check c = boost::contract::public_function<
                 override_f>(v, result, &a::f, this, s)

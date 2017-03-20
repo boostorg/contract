@@ -15,7 +15,7 @@ Program preconditions for constructors.
 #include <boost/contract/core/config.hpp>
 #ifndef BOOST_CONTRACT_NO_PRECONDITIONS
     #include <boost/contract/core/exception.hpp>
-    #ifdef BOOST_CONTRACT_ALL_DISABLE_NO_ASSERTION
+    #ifndef BOOST_CONTRACT_ALL_DISABLE_NO_ASSERTION
         #include <boost/contract/detail/checking.hpp>
     #endif
 #endif

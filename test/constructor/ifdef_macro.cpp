@@ -44,7 +44,7 @@ struct b :
         )(
             old_x,
             (boost::contract::test::detail::unprotected_commas<void, void,
-                    >void::same(x))
+                    void>::same(x))
         );
         BOOST_CONTRACT_CONSTRUCTOR(this)
             BOOST_CONTRACT_OLD([] {

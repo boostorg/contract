@@ -30,7 +30,7 @@ struct b {
 
     virtual ~b() {
         BOOST_CONTRACT_OLD_PTR(
-            boost::contract::test::detail::unprotected_commas<void, void,
+            boost::contract::test::detail::unprotected_commas<int, void,
                     void>::type1
         )(
             old_y,
@@ -72,11 +72,11 @@ struct a : public b {
 
     virtual ~a() {
         BOOST_CONTRACT_OLD_PTR(
-            boost::contract::test::detail:uunprotected_commas<int, void,
-                    void>::type1
+            boost::contract::test::detail::unprotected_commas<int, void, void>::
+                    type1
         )(
             old_x,
-            (boost::contract::test::detail:uunprotected_commas<void, void,
+            (boost::contract::test::detail::unprotected_commas<void, void,
                     void>::same(x))
         );
         BOOST_CONTRACT_DESTRUCTOR(boost::contract::test::detail::

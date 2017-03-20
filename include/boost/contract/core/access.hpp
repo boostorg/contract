@@ -145,7 +145,7 @@ private: // No public APIs (so users cannot use it directly by mistake).
     // does not increase compilation times (I experimented replacing all
     // friends with public and got the same compilation times).
     #if !defined(BOOST_CONTRACT_NO_CONDITIONS) || \
-            defined(BOOST_CONTRACT_STATIC_LINK) || \
+            defined(BOOST_CONTRACT_STATIC_LINK)
         BOOST_CONTRACT_DETAIL_DECL_DETAIL_COND_SUBCONTRACTING_Z(1,
                 /* is_friend = */ 1, OO, RR, FF, CC, AArgs);
             

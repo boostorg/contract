@@ -79,7 +79,7 @@ public:
         int result;
         boost::contract::old_ptr<bool> old_find =
                 BOOST_CONTRACT_OLDOF(v, find(id)); // Pass `v`.
-        boost::contract::old_ptr<int> old_sizs =
+        boost::contract::old_ptr<int> old_size =
                 BOOST_CONTRACT_OLDOF(v, size()); // Pass `v`.
         boost::contract::check c = boost::contract::public_function(
                 v, result, this) // Pass `v` and `result`.

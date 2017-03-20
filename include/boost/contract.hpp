@@ -25,10 +25,6 @@ never be used directly by programmers.
 @see @RefSect{getting_started, Getting Started}
 */
 
-// TODO: Document that noexcept (and exception throw(...)) specifications of the enclosing function apply to contracts. So if a contract handler is set so contract failures throw, noexcept function will still not throw, they will always terminate (because that's what users of such functions except, even if the function fails in any way, including the function contract fails).
-
-// TODO: Document that contract for constexpr functions cannot be supported at the moment because constexpr functions cannot: (1) declare local variables of (literal) types with non-trivial constexpr destructors (needed by this lib to check inv, post, and except at exit), (2) call other (constexpr) functions with try-catch statements (used by this lib to report assertion failure and catch any other exception that might be thrown by the evaluation of the asserted conditions), (3) use lambda functions (use by this for convenience to program functors that check per and post). Also note that even if supported, contracts for constexpr probably will not use old values (because constexpr prevent the function from having any side effect visible to the caller, variables around such side-effects are usually the candidates for old value copies) and subcontracting (because constexpr functions cannot be virtual).
-
 // TODO: Documentation updates based on all emails to Boost (review all emails).
 
 // TODO: Documentation updates based on all n-papers that I read recently (review notes I wrote on all papers), add those n-papers to the Bibliography section, and add P0380 (the most recent proposal) to the feature comparison table.

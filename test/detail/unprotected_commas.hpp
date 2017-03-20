@@ -14,8 +14,9 @@ template<typename T1, typename Unused2, typename Unused3>
 struct unprotected_commas {
     typedef T1 type1; // For type and code block macro parameters.
 
-    template<typename U>
-    static U& same(U& x) { return x; } // For value macro parameters.
+    // For value macro parameters.
+    template<typename U> static U& same(U& x) { return x; }
+    template<typename U> static U* same(U* x) { return x; }
 };
 
 } } } } // namespace

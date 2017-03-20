@@ -53,7 +53,7 @@ struct t
     {
         boost::contract::old_ptr<z_type> old_z;
         boost::contract::old_ptr<l_type> old_l =
-                BOOST_CONTRACT_OLD(l_type::eval(l));
+                BOOST_CONTRACT_OLDOF(l_type::eval(l));
         boost::contract::check c = boost::contract::constructor(this)
             .old([&] {
                 out << Id << "::ctor::old" << std::endl;
@@ -116,7 +116,7 @@ struct c
         t<'d'>(dz), t<'p'>(pz), t<'q'>(qz), t<'e'>(ez)
     {
         boost::contract::old_ptr<y_type> old_y =
-                BOOST_CONTRACT_OLD(y_type::eval(y));
+                BOOST_CONTRACT_OLDOF(y_type::eval(y));
         boost::contract::old_ptr<m_type> old_m;
         boost::contract::check c = boost::contract::constructor(this)
             .old([&] {
@@ -193,7 +193,7 @@ struct a
     {
         boost::contract::old_ptr<x_type> old_x;
         boost::contract::old_ptr<n_type> old_n =
-                BOOST_CONTRACT_OLD(n_type::eval(n));
+                BOOST_CONTRACT_OLDOF(n_type::eval(n));
         boost::contract::check c = boost::contract::constructor(this)
             .old([&] {
                 out << "a::ctor::old" << std::endl;

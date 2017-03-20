@@ -75,8 +75,13 @@ void a::disable_inv_failure() {
 
 void a::disable_failure() {
     using boost::contract::test::detail::out;
-    boost::contract::set_specification_failure([] (boost::contract::from)
-            { out("a::failure\n"); });
+    boost::contract::set_precondition_failure(
+    boost::contract::set_postcondition_failure(
+    boost::contract::set_except_failure(
+    boost::contract::set_old_failure(
+    boost::contract::set_invariant_failure(
+        [] (boost::contract::from) { out("a::failure\n"); }
+    )))));
 }
 
 #endif // #include guard

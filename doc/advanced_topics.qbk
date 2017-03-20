@@ -223,6 +223,17 @@ For example (see also [@../../example/features/code_block.cpp =code_block.cpp=])
 [import ../example/features/code_block.cpp]
 [code_block]
 
+Finally, this library does not support contracts for functions declared `constexpr`.
+[footnote
+*Rationale:*
+In general, it might be useful to specify contracts for constexpr functions and literal classes.
+However, the implementation of this library cannot support contracts for these functions and classes because C++ does not currently allow constexpr function to do the following:
+Declare local variables of (literal) types with non-trivial constexpr destructors (this RAII technique is used by this library to check invariants, postconditions, and exceptions guarantees at exit);
+Call other constexpr functions using try-catch statements (used by this library to report contract assertion failures and catch any other exception that might be thrown when evaluating the asserted conditions);
+Use lambda functions (used by this library for convenience to program functors that that check preconditions, postconditions, and exception guarantees).
+Also note that even if supported, contracts for constexpr functions probably would not use old values (because `constexpr` prevents functions from having any side effect visible to the caller and variables recording such side-effects are usually the candidates for old value copies) and subcontracting (because constexpr functions cannot be virtual).
+]
+
 [endsect]
 
 [section Implementation Checks]
@@ -404,13 +415,15 @@ The related `get_..._failure` functions can be used to query the functors curren
 ]
 
 [import ../example/features/throw_on_failure.cpp]
-[throw_on_failure_handler]
+[throw_on_failure_handlers]
 
 When programming custom failure handlers that trow exceptions instead of terminating the program, programmers should be wary of the following:
 
 * In order to comply with C++ and STL exception safety, destructors should never throw.
 This library passes a [classref boost::contract::from] parameter to the contract failure handlers for preconditions ([funcref boost::contract::precondition_failure]), postconditions ([funcref boost::contract::postcondition_failure]), class invariants ([funcref boost::contract::entry_invariant_failure] and [funcref boost::contract::exit_invariant_failure]), and old value copies at body ([funcref boost::contract::old_failure]).
 This [classref boost::contract::from] parameter indicates if the contract failure occurred in a destructor, constructor, or function call so programmers can use it code custom contract failure hander functions that never throw from destructors (in the example above, contract failures from destructors are simply ignored even if that is probably never a safe thing to do in real code).
+* C++ stack-unwinding will executed base class destructors even when the derived class destructor trows an exception.
+Therefore, the contracts of base class destructors will continue to be checked when contract failure handlers are programmed to throw exceptions on contract failures from destructors.
 * Implementation checks can appear in any code, including destructor implementation code, so [funcref boost::contract::check_failure] should also never throw, or implementation checks should never be used in destructors.
 * The contract failure handler for exception guarantees [funcref boost::contract::except_failure] should also never throw (regardless of its [classref boost::contract::from] parameter).
 That is because when [funcref boost::contract::except_failure] is called there is already an active exception on the stack, the exception that triggered the exception guarantees to be checked in the first place (throwing an exception while there is already an active exception will force C++ to terminate the program).
@@ -425,11 +438,20 @@ Alternatively, contract assertions can be programmed to throw any other exceptio
 
     if(!``[^['condition]]``) throw ``[^['exception-object]]``;
 
-For example (see also [@../../example/features/throw_on_failure.cpp =throw_on_failure.cpp=]):
+For example, if the following precondition functor throws the user-defined exception `too_large_error` then the contract failure handler [funcref boost::contract::precondition_failure] will be called (same as when preconditions programmed using [macroref BOOST_CONTRACT_ASSERT] fails, see also [@../../example/features/throw_on_failure.cpp =throw_on_failure.cpp=]):
 
-[throw_on_failure_cstring]
+[throw_on_failure_class_begin]
+[throw_on_failure_ctor]
+[throw_on_failure_class_end]
 
-In the example above, [funcref boost::contract::precondition_failure] will be called if the precondition functor throws the user-defined exception `too_large_error` (exactly the same as when a precondition programmed using [macroref BOOST_CONTRACT_ASSERT] fails).
+Finally, note that the exception specifiers `noexcept` (and `throw`, deprecated since C++11) of the enclosing operation declaring the contract apply to the contract code itself.
+Therefore, even if the contract failure handlers are reprogrammed to throw exceptions in case of contract failures, such exception will never be thrown outside the context of the enclosing operation if that is not in accordance with the exception specifiers of such operation (notably all destructors are implicitly declared `noexcept(true)` in C++11).
+For example, the following code will never throw from the destructor, not even if the class invariants checked at destructor entry throw `too_large_error` and the contract failure handlers for invariants are programmed to throw from destructors as well (the program will always terminate in this case instead, see also [@../../example/features/throw_on_failure.cpp =throw_on_failure.cpp=]):
+
+[throw_on_failure_class_begin]
+[throw_on_failure_dtor]
+[throw_on_failure_class_end]
+[throw_on_failure_bad_handler]
 
 [endsect]
 

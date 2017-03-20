@@ -9,7 +9,7 @@
 #include <cstring>
 #include <cassert>
 
-//[throw_on_failure_cstring
+//[throw_on_failure_class_begin
 struct too_large_error {};
 
 template<unsigned MaxSize>
@@ -18,10 +18,13 @@ class cstring
             MaxSize> >
     : BASES
 {
+//]
 public:
     typedef BOOST_CONTRACT_BASE_TYPES(BASES) base_types;
     #undef BASES
 
+//[throw_on_failure_ctor
+public:
     /* implicit */ cstring(char const* chars) :
         boost::contract::constructor_precondition<cstring>([&] {
             BOOST_CONTRACT_ASSERT(chars); // Throw `assertion_failure`.
@@ -29,8 +32,6 @@ public:
             if(std::strlen(chars) > MaxSize) throw too_large_error();
         })
     {
-
-        /* ... */
 //]
         boost::contract::check c = boost::contract::constructor(this)
             .postcondition([&] {
@@ -42,11 +43,20 @@ public:
         for(unsigned i = 0; i < size_; ++i) chars_[i] = chars[i];
         chars_[size_] = '\0';
     }
+    
+//[throw_on_failure_dtor
+public:
+    void invariant() const {
+        if(size() > MaxSize) throw too_large_error(); // Throw user-defined ex.
+        BOOST_CONTRACT_ASSERT(chars_); // Or, throw `assertion_failure`.
+        BOOST_CONTRACT_ASSERT(chars_[size()] == '\0');
+    }
 
-    ~cstring() {
+    ~cstring() noexcept { // Exception specifiers apply to contract code.
         // Check invariants.
         boost::contract::check c = boost::contract::destructor(this);
     }
+//]
 
     unsigned size() const {
         // Check invariants.
@@ -54,18 +64,26 @@ public:
         return size_;
     }
     
-    void invariant() const {
-        if(size() > MaxSize) throw too_large_error(); // Throw user-defined ex.
-        BOOST_CONTRACT_ASSERT(chars_); // Or, throw `assertion_failure`.
-        BOOST_CONTRACT_ASSERT(chars_[size()] == '\0');
-    }
-
 private:
     char chars_[MaxSize + 1];
     unsigned size_;
+//[throw_on_failure_class_end
+    /* ... */
 };
+//]
 
-//[throw_on_failure_handler
+void bad_throwing_handler() { // For docs only (not actually called here).
+    //[throw_on_failure_bad_handler
+    // Warning... might cause destructors to throw (unless declared noexcept).
+    boost::contract::set_invariant_failure(
+        [] (boost::contract::from) {
+            throw; // Throw no matter if from destructor, etc.
+        }
+    );
+    //]
+}
+
+//[throw_on_failure_handlers
 int main() {
     boost::contract::set_precondition_failure(
     boost::contract::set_postcondition_failure(

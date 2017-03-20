@@ -97,7 +97,7 @@ void pushable<T>::push_back(
 class integers
     #define BASES public pushable<int>
     :
-        #ifndef BOOST_CONTRACT_NO_PRECONDITONS
+        #ifndef BOOST_CONTRACT_NO_PRECONDITIONS
             private boost::contract::constructor_precondition<integers>, BASES
         #else
             BASES

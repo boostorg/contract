@@ -24,7 +24,7 @@ struct y_tag; typedef boost::contract::test::detail::counter<y_tag, int> y_type;
 bool swap(x_type& x, y_type& y) {
     bool result;
     boost::contract::old_ptr<x_type> old_x =
-            BOOST_CONTRACT_OLD(x_type::eval(x));
+            BOOST_CONTRACT_OLDOF(x_type::eval(x));
     boost::contract::old_ptr<y_type> old_y;
     boost::contract::check c = boost::contract::function()
         .precondition([&] {
