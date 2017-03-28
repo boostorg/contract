@@ -8,7 +8,8 @@
 
 #include "../detail/oteststream.hpp"
 #include <boost/contract/core/config.hpp>
-#ifndef BOOST_CONTRACT_NO_PRECONDITIONS
+#if !defined(BOOST_CONTRACT_NO_CONSTRUCTORS) || \
+        !defined(BOOST_CONTRACT_NO_PRECONDITIONS)
     #include <boost/contract/constructor.hpp>
 #endif
 #ifndef BOOST_CONTRACT_NO_CONSTRUCTORS

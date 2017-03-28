@@ -71,7 +71,7 @@ int main() {
         #ifndef BOOST_CONTRACT_NO_PRECONDITIONS
             << "a::f::pre" << std::endl
         #endif
-        #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
+        #ifndef BOOST_CONTRACT_NO_OLDS
             << "a::f::old" << std::endl
         #endif
         << "a::f::body" << std::endl

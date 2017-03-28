@@ -124,7 +124,7 @@ int main() {
         #ifndef BOOST_CONTRACT_NO_ENTRY_INVARIANTS
             << "b::static_inv" << std::endl
         #endif
-        #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
+        #ifndef BOOST_CONTRACT_NO_OLDS
             << "b::f::old" << std::endl
         #endif
         << "b::ctor::body" << std::endl
@@ -139,7 +139,7 @@ int main() {
         #ifndef BOOST_CONTRACT_NO_ENTRY_INVARIANTS
             << "a::static_inv" << std::endl
         #endif
-        #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
+        #ifndef BOOST_CONTRACT_NO_OLDS
             << "a::f::old" << std::endl
         #endif
         << "a::ctor::body" << std::endl

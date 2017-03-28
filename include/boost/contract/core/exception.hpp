@@ -11,7 +11,8 @@
 Handle contract assertion failures.
 */
 
-#include <boost/contract/detail/declspec.hpp>
+// IMPORTANT: Included by contract_macro.hpp so trivial headers only.
+#include <boost/contract/detail/declspec.hpp> // No compile-time overhead.
 #include <boost/function.hpp>
 #include <boost/config.hpp>
 #include <exception>

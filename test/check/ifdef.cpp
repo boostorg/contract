@@ -11,6 +11,9 @@
 #ifndef BOOST_CONTRACT_NO_CHECKS
     #include <boost/contract/check.hpp>
     #include <boost/contract/assert.hpp>
+#else
+    #include <boost/contract/core/check_macro.hpp>
+    #include <boost/contract/core/exception.hpp>
 #endif
 #include <boost/detail/lightweight_test.hpp>
 #include <sstream>

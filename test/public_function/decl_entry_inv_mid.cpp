@@ -21,7 +21,7 @@ std::string ok_end() {
         #ifndef BOOST_CONTRACT_NO_PRECONDITIONS
             << "c::f::pre" << std::endl
         #endif
-        #ifndef BOOST_CNTRACT_NO_OLDS
+        #ifndef BOOST_CONTRACT_NO_OLDS
             << "c::f::old" << std::endl
             << "b::f::old" << std::endl
             << "a::f::old" << std::endl

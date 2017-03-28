@@ -147,7 +147,7 @@ int main() {
         #ifndef BOOST_CONTRACT_NO_PRECONDITIONS
             << "b::f::pre" << std::endl
         #endif
-        #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
+        #ifndef BOOST_CONTRACT_NO_OLDS
             << "b::f::old" << std::endl
             << "a::f::old" << std::endl
         #endif
@@ -159,7 +159,7 @@ int main() {
             << "a::inv" << std::endl
         #endif
         #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
-            << "b::f::old" << std::endl
+            << "b::f::old" << std::endl // Called by post (so under NO_POST).
             << "b::f::post" << std::endl
             << "a::f::post" << std::endl
         #endif

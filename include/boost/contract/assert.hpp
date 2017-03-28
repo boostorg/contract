@@ -43,7 +43,10 @@ Assert contract conditions.
                         but @c BOOST_CONTRACT_ASSERT((condition)) will always
                         work.)
     */
-    #define BOOST_CONTRACT_ASSERT(condition) {}
+    // This must be an expression (a trivial one so the compiler can optimize it
+    // away). It cannot an empty code block `{}`, etc. otherwise code like
+    // `if(...) ASSERT(...); else ASSERT(...);` won't work when NO_ALL.
+    #define BOOST_CONTRACT_ASSERT(condition) ((void*)0)
 #endif
 
 #endif // #include guard

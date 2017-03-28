@@ -16,6 +16,9 @@ void push_back(std::vector<T>& vect, T const& value) {
     boost::contract::check c = boost::contract::function()
         .postcondition([&] {
             BOOST_CONTRACT_ASSERT(vect.back() == value); // Error (j has no ==).
+            #ifdef BOOST_CONTRACT_NO_ALL
+                #error "force error if no contracts (ASSERT expands to nothing)"
+            #endif
         })
     ;
     vect.push_back(value);

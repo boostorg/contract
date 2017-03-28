@@ -76,7 +76,7 @@ int main() {
     out.str("");
     f(a, b, 123); 
     ok.str(""); ok
-        #ifndef BOOST_CONTRACT_NO_INVARIANTS
+        #ifndef BOOST_CONTRACT_NO_ENTRY_INVARIANTS
             << "y::inv" << std::endl
             << "x::inv" << std::endl
         #endif
@@ -84,11 +84,11 @@ int main() {
             << "f::pre" << std::endl
         #endif
         << "f::body" << std::endl
-        #ifndef BOOST_CONTRACT_NO_INVARIANTS
+        #ifndef BOOST_CONTRACT_NO_EXIT_INVARIANTS
             << "x::inv" << std::endl
             << "y::inv" << std::endl
         #endif
-        #ifndef BOOST_CONTRACT_NO_POSTONDITIONS
+        #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
             << "f::post" << std::endl
         #endif
     ;

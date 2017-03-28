@@ -7,7 +7,8 @@
 // file LICENSE_1_0.txt or a copy at http://www.boost.org/LICENSE_1_0.txt).
 // See: http://www.boost.org/doc/libs/release/libs/contract/doc/html/index.html
 
-#include <boost/contract/core/config.hpp>
+// IMPORTANT: Indirectly included by contract_macro.hpp so trivial headers only.
+#include <boost/contract/core/config.hpp> // No compile-time overhead.
 #include <boost/config.hpp>
 
 /* PUBLIC */

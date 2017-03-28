@@ -22,19 +22,20 @@ Disable Contract Compilation}).
 */
 
 // IMPORTANT: Following headers can always be #included (without any #if-guard)
-// because they expand to trivial code that does not affect compile-time. 
-// IMPORTANT: Following header must always be #included here (without any
-// #if-guard) because they define types and macros that are typically left in
-// user code even when contracts are disables (these types and macros never
-// affect run-time and their definitions are trivial when contracts are disabled
-// so their impact on compile-time is negligible).
-#include <boost/contract/core/constructor_precondition.hpp>
-#include <boost/contract/core/virtual.hpp>
-#include <boost/contract/core/access.hpp>
-#include <boost/contract/core/check_macro.hpp>
-#include <boost/contract/core/config.hpp>
-#include <boost/contract/base_types.hpp>
+// because they expand to trivial code that does not affect compile-time. These
+// headers must always be #included here (without any #if-guard) because they
+// define types and macros that are typically left in user code even when
+// contracts are disables (these types and macros never affect run-time and
+// their definitions are trivial when contracts are disabled so their impact on
+// compile-time is negligible).
 #include <boost/contract/override.hpp>
+#include <boost/contract/base_types.hpp>
+#include <boost/contract/core/constructor_precondition.hpp>
+#include <boost/contract/core/check_macro.hpp>
+#include <boost/contract/core/access.hpp>
+#include <boost/contract/core/virtual.hpp>
+#include <boost/contract/core/exception.hpp>
+#include <boost/contract/core/config.hpp>
 
 #ifndef BOOST_CONTRACT_NO_CONDITIONS
     #include <boost/contract/assert.hpp>
@@ -524,8 +525,7 @@ Disable Contract Compilation}).
     */
     #define BOOST_CONTRACT_CONSTRUCTOR(...) /* nothing */
 #endif
-#if     !defined(BOOST_CONTRACT_NO_CONSTRUCTORS) && \
-        !defined(BOOST_CONTRACT_NO_PRECONDITIONS)
+#ifndef BOOST_CONTRACT_NO_PRECONDITIONS // Do not check NO_CONSTRUCTORS here.
     // constructor_precondition.hpp already #included at top.
 
     #define BOOST_CONTRACT_CONSTRUCTOR_PRECONDITION(...) \
@@ -542,8 +542,9 @@ Disable Contract Compilation}).
     to code equivalent to:
 
     @code
-    #if     !defined(BOOST_CONTRACT_NO_CONSTRUCTORS) && \
-            !defined(BOOST_CONTRACT_NO_PRECONDITIONS)
+    // Guarded only by NO_PRECONDITIONS (and not also by NO_CONSTRUCTORS)
+    // because for constructor's preconditions (not for postconditions, etc.).
+    #ifndef BOOST_CONTRACT_NO_PRECONDITIONS
         boost::contract::constructor_precondition<Class>(f)
     #else
         // No-op call (likely optimized away, minimal to no overhead).

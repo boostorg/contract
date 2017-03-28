@@ -13,6 +13,7 @@
 #include <boost/contract/assert.hpp>
 #include <boost/noncopyable.hpp>
 
+
 template<typename T>
 void next(T& x) {
     boost::contract::old_ptr<T> old_x = BOOST_CONTRACT_OLDOF(x);
@@ -20,6 +21,9 @@ void next(T& x) {
         .postcondition([&] {
             // No need to check `if(old_x) ...` here.
             BOOST_CONTRACT_ASSERT(x == *old_x + T(1));
+            #ifdef BOOST_CONTRACT_NO_ALL
+                #error "force error if no contracts (ASSERT expands to nothing)"
+            #endif
         })
     ;
     ++x;
