@@ -6,5 +6,5 @@
 
 lib boost_contract : ../src/contract.cpp : <boost_contract_link>shared ;
 lib boost_contract : ../src/contract.cpp : <boost_contract_link>static ;
-# Build nothing for boost_contract_link=header.
+# Build nothing for boost_contract_link=header (ignore errors Bjam gives).
 
