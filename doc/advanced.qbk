@@ -4,7 +4,7 @@
 [/ file LICENSE_1_0.txt or a copy at http://www.boost.org/LICENSE_1_0.txt).]
 [/ See: http://www.boost.org/doc/libs/release/libs/contract/doc/html/index.html]
 
-[section Advanced Topics]
+[section Advanced]
 
 This section illustrates more advanced uses of this library.
 
@@ -200,7 +200,7 @@ Therefore, [macroref BOOST_CONTRACT_OVERRIDE] only needs to be invoked once for 
 
 [endsect]
 
-[section Lambdas, Loops, Code Blocks, Etc.]
+[section Lambdas, Loops, Code Blocks (and `constexpr`)]
 
 So far we have been focused on specifying contracts for function and class interfaces.
 While contracts are in general most useful when used to specify interfaces, this library also allows to check contract conditions for implementation code (lambda functions, code blocks, loops, etc.).
@@ -223,7 +223,7 @@ For example (see also [@../../example/features/code_block.cpp =code_block.cpp=])
 [import ../example/features/code_block.cpp]
 [code_block]
 
-Finally, this library does not support contracts for functions declared `constexpr`.
+Finally, at the moment this library does not support contracts for functions declared `constexpr`.
 [footnote
 *Rationale:*
 In general, it might be useful to specify contracts for constexpr functions and literal classes.
@@ -373,14 +373,14 @@ All these members can be declared `private` as long as the [classref boost::cont
 This technique is not used in most examples of this documentation only for brevity, but programmers are encouraged to use it in real code.
 
 [warning
-Not declaring this class friend of user-defined classes will cause compiler errors on some compilers (e.g., MSVC) because the private members needed to check the contracts will not be accessible.
+Not declaring this class friend of user-defined classes might cause compiler errors on some compilers (e.g., MSVC) because the private members needed to check the contracts will not be accessible.
 On other compilers (e.g., GCC and CLang), the private access will instead fail SFINAE and no compiler error will be reported while invariants and subcontracting will be silently skipped at run-time.
 Therefore, programmers must make sure to either declare invariant functions and base types @c typedef as public members or to declare this class as friend.
 ]
 
 [endsect]
 
-[section Throw on Failure]
+[section Throw on Failure (and `noexcept`)]
 
 If a conditions checked using [macroref BOOST_CONTRACT_ASSERT] is evaluated to be `false` or more in general if any of the specified contract code throws an exception (in fact, [macroref BOOST_CONTRACT_ASSERT] simply expands to code that throws a [classref boost::contract::assertion_failure] exception, see also __No_Macros__), this library will call an appropriate /contract failure handler/ function as follow:
 
@@ -444,7 +444,7 @@ For example, if the following precondition functor throws the user-defined excep
 [throw_on_failure_ctor]
 [throw_on_failure_class_end]
 
-Finally, note that the exception specifiers `noexcept` (and `throw`, deprecated since C++11) of the enclosing operation declaring the contract apply to the contract code itself.
+Finally, note that the exception specifiers `noexcept` (since C++11) and `throw` (deprecated in C++11) of the enclosing operation declaring the contract correctly apply to the contract code itself.
 Therefore, even if the contract failure handlers are reprogrammed to throw exceptions in case of contract failures, such exception will never be thrown outside the context of the enclosing operation if that is not in accordance with the exception specifiers of such operation (notably all destructors are implicitly declared `noexcept(true)` in C++11).
 For example, the following code will never throw from the destructor, not even if the class invariants checked at destructor entry throw `too_large_error` and the contract failure handlers for invariants are programmed to throw from destructors as well (the program will always terminate in this case instead, see also [@../../example/features/throw_on_failure.cpp =throw_on_failure.cpp=]):
 

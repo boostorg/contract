@@ -25,10 +25,6 @@ never be used directly by programmers.
 @see @RefSect{getting_started, Getting Started}
 */
 
-// TODO: Documentation updates based on all emails to Boost (review all emails).
-
-// TODO: Documentation updates based on all n-papers that I read recently (review notes I wrote on all papers), add those n-papers to the Bibliography section, and add P0380 (the most recent proposal) to the feature comparison table.
-
 #include <boost/contract/assert.hpp>
 #include <boost/contract/base_types.hpp>
 #include <boost/contract/call_if.hpp>

@@ -23,6 +23,12 @@ Then, this library aims to be the best and more complete Contract Programming li
 Contract Programming is characterized by the following assertion mechanisms:
 
 * /Preconditions/: These are logical conditions that programmers expect to be true when a function is called (e.g., to check constraints on function arguments).
+Operations that logically have no preconditions (i.e., that are always well-defined for the entire domain of their inputs) are often referred to as having a /wide contract/.
+This is in contrast with operations that have preconditions which are often referred to as having a /narrow contract/ (note that an operation with truly narrow contracts should not throw exceptions).
+[footnote
+The nomenclature of wide and narrow contracts has gained some popularity in recent years in the C++ community (appearing in a number of more recent proposals to add contract programming to the C++ standard, see __Bibliography__).
+This nomenclature is perfectly reasonable but it is not often used in this document because the authors generally prefer to explicit mention "this operation has no preconditions..." or "this operation has preconditions..." just for a matter of clarity and style.
+]
 * /Postconditions/: These are logical conditions that programmers expect to be true when a function exits without throwing an exception (e.g., to check the result and any side effect that a function might have).
 Postconditions can access the function return value (for non-void functions) and /old values/ that expressions had before the function body was executed.
 * /Exception guarantees/: These are logical conditions that programmers except to be true when a function exits throwing an exception.
@@ -40,6 +46,8 @@ It is also possible to specify /static class invariants/ which are excepted to b
 Static and volatile class invariants were first introduced by this library to reflect the fact that C++ supports both static and volatile member functions.
 Static and volatile class invariants are not part of __N1962__ or other references listed in the __Bibliography__.
 ]
+Arguably, class invariants can be used as a criterion for good abstraction: If it is not possible to specify an invariant, it might be an indication that the design abstraction maybe be poor and it should not have been made a class.
+Class invariants can also be used to specify /basic/ exception safety guarantees for an object (because they are checked at exit of public member function even when those throw an exception), while exception guarantees assertions can be used to specify /strong/ exception safety for given operations on the same object.
 * /Subcontracting/: This indicates that preconditions cannot be strengthen, while postconditions and class invariants cannot be weaken when a public function in a derived class overrides public functions in one or more of its base classes (this is formally defined according to the __substitution_principle__).
 
 Furthermore, it is a common requirement for Contract Programming to automatically disable contract checking while already checking assertions from another contract (in order to avoid infinite recursion while checking contract assertions).
@@ -53,6 +61,12 @@ This library will automatically protect such a global variable from race conditi
 
 In general, it is recommended to specify different contract conditions using separate assertion statements and not to group them together into a single condition using logical operators (`&&`, `||`, etc.).
 This is because when contract conditions are programmed together in a single assertion using logical operators, it is not be clear which condition actually failed in case the entire assertion fails at run-time.
+
+Of course, not all formal contract assertions can actually be programmed in C++.
+For example, in C++ is it not possible to assert the validity of an iterator range in the general case because the only way to check if two iterators form a valid range is to keep incrementing the first iterator until we reach the second iterator.
+However, in case the iterator range is invalid, such a code would render undefined behaviour or run forever instead of failing an assertion.
+Nevertheless, a large amount of contract conditions can be successfully programmed in C++ as illustrated by the numerous examples in this documentation and from the literature (see also __Examples__ and __Bibliography__).
+
 
 A limited form of Contract Programming is the use of the C-style `assert` macro.
 Using `assert` is common practice for many programmers but it suffers of the following limitations:
@@ -353,7 +367,7 @@ The following table compares Contract Programming features among this library, t
     [Feature]
     [This Library]
     [__N1962__ Proposal (not part of C++)]
-    [__P0186__ Proposal (being considered for C++1z)]
+    [__P0380__ Proposal (being considered for C++1z)]
     [ISE Eiffel 5.4 (see __Meyer97__)]
     [D (see __Bright04__)]
 ][
@@ -514,13 +528,21 @@ Therefore, this feature was removed in the current revision of this library.
 ][
     [['Disable contract checking]]
     [
-Yes, contract checking can be skipped at run-time by defining combinations of the [macroref BOOST_CONTRACT_NO_PRECONDITIONS], [macroref BOOST_CONTRACT_NO_POSTCONDITIONS], [macroref BOOST_CONTRACT_NO_INVARIANTS], [macroref BOOST_CONTRACT_NO_ENTRY_INVARIANTS], and [macroref BOOST_CONTRACT_NO_EXIT_INVARIANTS] macros.
-(Also removing contract code from compiled object code is possible but requires users to program a fare amount of boiler-plate code, see __Disable_Contract_Checking__.)
+Yes, contract checking can be skipped at run-time by defining combinations of the [macroref BOOST_CONTRACT_NO_PRECONDITIONS], [macroref BOOST_CONTRACT_NO_POSTCONDITIONS], [macroref BOOST_CONTRACT_NO_INVARIANTS], [macroref BOOST_CONTRACT_NO_ENTRY_INVARIANTS], and [macroref BOOST_CONTRACT_NO_EXIT_INVARIANTS] macros (completely removing contract code from compiled object code is possible but requires using macro API, see __Disable_Contract_Compilation__.)
 ]
     [Yes (contract code also removed from compiled object code, but details compiler implementation specific).]
     [Yes (contract code also removed from compiled object code, but details compiler implementation specific).]
     [Yes, but only predefined combinations of preconditions, postconditions, and class invariants can be disabled (contract code also removed from compiled object code).]
     [Yes.]
+][
+    [['Assertion levels]]
+    [
+Yes, programmers can define their own assertion levels as needed (including "audit" and "axiom", see __Disable_Contract_Checking__).
+]
+    [No (but a previous revision of this proposal considered adding assertion levels called "assertion ordering").]
+    [Yes, predefined "audit" and "axiom".]
+    [No.]
+    [No.]
 ]
 ]
 
@@ -570,13 +592,85 @@ This is an Ada-like programming language with support for Contract Programming.
 ] ]
 ]
 
-To the best knowledge of the authors, this the only library that fully supports all Contract Programming features for C++.
+To the best knowledge of the authors, this the only library that fully supports all Contract Programming features for C++:
+
+* Generally speaking, implementing preconditions and postconditions in C++ is not difficult (e.g., using some kind of RAII object).
+* Implementing postcondition old values is also not too difficult usually requiring programmers to copy old values into local variables, but it is already somewhat more difficult to ensure such copies are not performed when postconditions are disabled.
 [footnote
-Generally speaking, implementing preconditions and postconditions in C++ is not difficult (e.g., using some kind of RAII object).
-Implementing postcondition old values is also not too difficult (usually requiring programmers to copy old values into local variables, but it is somewhat more difficult to ensure such copies are not performed when postconditions are disabled).
-Most Contract Programming libraries for C++ stop here because implementing class invariants is already somewhat more involved (especially if done automatically, without requiring programmers to manually invoke an extra function to check invariants).
-After that, implementing subcontracting involves a significant amount of complexity and it seems to not be properly supported by any library other than this one (especially when handling multiple inheritance, correctly copying postcondition old values across all overridden contracts deep in the inheritance tree, and correctly reporting the return value to the postconditions of overridden virtual functions in base classes).
-This library supports all of these features instead.
+For example, the following emulation of old values based on __P0380__ never disables old value copies plus requires boiler-plate code to make sure postconditions are correctly checked in a `scope_exit` RAII object after all other local objects have been destroyed (because some of these destructors contribute to establishing the postconditions) and only if the function did not throw an exception:
+``
+    void fswap(file& x, file& y)
+        [[requires: x.closed()]]
+        [[requires: y.closed()]]
+        // Postconditions in function definition below to emulate old values.
+    {
+        file old_x = x; // Emulate old values with local copies (not disabled).
+        file old_y = y;
+        scope_exit ensures([&] { // Check after local objects destroyed.
+            if(!std::uncaught_exception()) { // Check only if no throw.
+                [[assert: x.closed()]]
+                [[assert: y.closed()]]
+                [[assert: x == old_y]]
+                [[assert: y == old_x]]
+            }
+        });
+
+        x.open();
+        scope_exit close_x([&] { x.close(); });
+        y.open();
+        scope_exit close_y([&] { y.close(); });
+        file t = file::temp();
+        t.open;
+        scope_exit close_t([&] { t.close(); });
+
+        x.mv(t);
+        y.mv(x);
+        t.mv(y);
+    }
+``
+Here `scope_exit` is an RAII object that executes the nullary functor passed to its constructor when it is destroyed.
+]
+
+* Implementing class invariants is more involved (especially if done automatically, without requiring programmers to manually invoke extra functions to check the invariants).
+[footnote
+For example, the following possible emulation of class invariants based on __P0380__ requires boiler-plate code to manually invoke the function that checks the invariants (note that invariants are checked at public function exit regardless of exceptions being thrown while postconditions are not):
+``    
+    template<typename T>
+    class vector {
+        bool invariant() const {        // Check invariants at...
+            [[assert: empty() == (size() == 0)]]
+            [[assert: size() <= capacity()]]
+            return true;
+        }
+
+    public:
+        vector()
+            [[ensures: invariant()]]    // ...constructor exit (only if no throw).
+        { ... }
+
+        ~vector() noexcept
+            [[requires: invariant()]]   // ...destructor entry.
+        { ... }
+
+        void push_back(T const& value)
+            [[requires: invariant()]]   // ...public function entry.
+            [[ensures: invariant()]]    // ...public function exit (if no throw).
+        try {
+            ... // Function body.
+        } catch(...) {
+            invariant();                // ...public function exit (if throw).
+            throw;
+        }
+
+        ...
+    };
+``
+]
+All references reviewed by the authors seem to not consider static and volatile member functions not supporting static and volatile invariants respectively.
+
+* Implementing subcontracting involves a significant amount of complexity and it seems to not be properly supported by any C++ library other than this one (especially when handling multiple inheritance, correctly copying postcondition old values across all overridden contracts deep in the inheritance tree, and correctly reporting the return value to the postconditions of overridden virtual functions in base classes).
+[footnote
+For example, it is not really possible to sketch pseudocode based on __P0380__ that emulates subcontracting in the general case.
 ]
 
 [endsect]

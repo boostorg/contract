@@ -4,7 +4,7 @@
 [/ file LICENSE_1_0.txt or a copy at http://www.boost.org/LICENSE_1_0.txt).]
 [/ See: http://www.boost.org/doc/libs/release/libs/contract/doc/html/index.html]
 
-[section Extra Topics]
+[section Extras]
 
 This section can be consulted selectively for specific topics of interest.
 
@@ -114,7 +114,6 @@ If [^['then1]], [^['then2]], ..., [^['else]] are nullary functor templates (not 
 All the `else_if<...>(...)` statements are optional, the `else_(...)` statement is optional if the functor calls return `void` but it is required otherwise.
 
 In general, [funcref boost::contract::call_if] can be used to program contract assertions that compile and check different functor templates depending on related conditions being statically evaluated to be `true` or `false` at compile-time (but in most cases [funcref boost::contract::condition_if] should be sufficient, simpler and less verbose to use).
-
 The [funcref boost::contract::condition_if_c], [funcref boost::contract::call_if_c], and `.else_if_c` function templates work similarly to their counterparts without the `..._c` postfix above, but they take their condition template parameters as static boolean values instead of nullary boolean meta-functions.
 
 [heading Static-If Emulation (C++14)]
@@ -129,6 +128,25 @@ This implementation is more concise, easier to read and maintain than the usual 
 [footnote
 Boost.Hana (`boost::hana::if_`) can also be used together with C++14 generic lambdas to emulate statements similar to C++17 `if constexpr`.
 ]
+
+[heading Static-If (C++17)]
+
+Another example where assertion requirements might be useful is to disable assertions in that might be constant-correct for specific template types.
+For example, `std::distance` does not alter its iterator arguments but only for forward iterators so the follow template function evaluates its preconditions only for for these types:
+
+    template<typename InputIter>
+    void display_first_second_next(InputIter begin, InputIter end) {
+        boost::contract::check c = boost::contract::function()
+            .precondition([&] {
+                if constexpr(is_forward_iterator<InputIter>::value) {
+                    BOOST_CONTRACT_ASSERT(std::distance(begin, end) >= 2);
+                } // Otherwise, std::distance would change begin and end.
+            })
+        ;
+        ...
+    }
+
+(For convenience this example used C++17 `if constexpr` but it could have been similarly implemented using C++14 generic lambdas or in C++11 using binding to a functor template that calls `std::distance` in its `operator()`.)
 
 [endsect]
 
@@ -225,7 +243,7 @@ A part from that, this library is used as usual to program contracts for unions,
 
 [endsect]
 
-[section Disable Contract Checking]
+[section Disable Contract Checking (and Assertion Levels)]
 
 Checking contracts adds run-time overhead and can slow down program execution (see also __Benefits_and_Costs__).
 Therefore, programmers can define the following configuration macros (`-D` option in Clang and GCC, `/D` option in MSVC, etc.) to instruct this library to not check specific kind of contract conditions at run-time:
@@ -246,6 +264,21 @@ For example, programmers could decide to check all contracts during early develo
 [note
 Old values can be used by both postconditions and exception guarantees so it is necessary to define both [macroref BOOST_CONTRACT_NO_POSTCONDITIONS] and [macroref BOOST_CONTRACT_NO_EXCEPTS] to disable old value copies.
 ]
+
+[heading Assertion Levels]
+
+Programmers can use `#if` (or `if`) statements to implement different contract /assertion levels/ that selectively enable and disable assertion checking at compile-time (or run-time).
+For example, programmers could define an "audit" level for computationally expensive assertions that alter the computational complexity of the enclosing function and an "axiom" level for computationally prohibitive assertions that should always be excluded from program execution (these are similar to the "audit" and "axiom" assertion levels proposed in __P0380__, see also [@../../example/features/ifdef_audit.cpp =ifdef_audit.cpp=]):
+
+[import ../example/features/ifdef_audit.cpp]
+[ifdef_audit]
+
+In this example, assertions are still compiled (e.g., to make sure that they are syntactically correct) even when they are not checked at run-time (because they are asserted using `CONTRACT_ASSERT_AUDIT` when `CONTRACT_AUDIT` is not defined, or because they are asserted using `CONTRACT_ASSERT_AXIOM`).
+See [link N1962_factorial_anchor \[N1962\] Factorial] for a similar example that completely disables assertions at compile-time based on their computational complexity.
+
+This library does not prescribe any specific assertion level.
+However, assertion levels can be very useful in some programs to granularly disable specific assertions (because too expensive or for some other reason specific to that program).
+Programmers can freely implement assertion levels as they see fit for their programs using simple `#if` (or `if`) statements similar to the ones shown in the example above.
 
 [endsect]
 
@@ -377,7 +410,7 @@ The authors think this library is most useful when used together with C++11 lamb
 
 [endsect]
 
-[section No Macros (No C++11)]
+[section No Macros (and No Variadic Macros)]
 
 It is possible to specify contracts without using most of this library macros and programming the related code manually instead.
 The only macro that cannot be programmed manually is [macroref BOOST_CONTRACT_OVERRIDE] (and the similar [macroref BOOST_CONTRACT_OVERRIDES] and [macroref BOOST_CONTRACT_NAMED_OVERRIDE]).

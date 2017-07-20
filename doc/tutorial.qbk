@@ -45,6 +45,7 @@ At destruction instead (enclosing function exit):
     # Check exception guarantees, by calling the nullary functor [^['e]]`()` passed to `.except(`[^['e]]`)`.
 
 This ensures that non-member function contracts are correctly checked at run-time (see __Function_Calls__).
+(Also note that functions will correctly check their contracts even when they are called via function pointers or function objects.)
 
 [note
 A non-member function can avoid calling [funcref boost::contract::function] for efficiency but only when it has no preconditions, no postconditions, and no exception guarantees.
@@ -189,8 +190,8 @@ For example, for [funcref boost::contract::function] (but same for all other con
 Old values are handled by this library using the smart pointer class template [classref boost::contract::old_ptr] (so programmers do not directly manage the allocation and deallocation of the pointed memory).
 [footnote
 *Rationale:*
-Old values are optional values because they need to be left uninitialized in case postconditions and exception guarantees are disabled defining [macroref BOOST_CONTRACT_NO_POSTCONDITIONS] and [macroref BOOST_CONTRACT_NO_EXCEPTS] to avoid old value copies in that case (so a pointer or better a `boost::optional` could be used for that).
-Furthermore, old values need to be pointers internally allocated by this library so that they are never copied twice even when calling an overridden function multiple times to check preconditions, postconditions, etc. to implement subcontracting (so a smart pointer class template was used).
+Old values are optional values because they need to be left uninitialized in case postconditions and exception guarantees are disabled defining [macroref BOOST_CONTRACT_NO_POSTCONDITIONS] and [macroref BOOST_CONTRACT_NO_EXCEPTS] to avoid old value copies in that case (so a pointer or better a `boost::optional` can be used for that).
+In addition, old values need to be pointers internally allocated by this library so that they are never copied twice even when calling an overridden function multiple times to check preconditions, postconditions, etc. to implement subcontracting (so a smart pointer class template was used).
 ]
 The pointed old value is automatically qualified as `const` (so old values cannot be mistakenly changed by the contract assertions, see __Constant_Correctness__).
 This library ensures that old value pointers are always not null by the time postconditions and exception guarantees are checked (so programmers can safely dereference these pointers in postcondition and exception-guarantee assertions using `operator*` or `operator->` without having to check if old value pointers are not null first).

@@ -45,6 +45,7 @@ On compilers that support C++17 `if constexpr`, the above example using this lib
 [n1962_circle]
 [endsect]
 
+[#N1962_factorial_anchor]
 [section \[N1962\] Factorial: Recursion and assertion computational complexity]
 [import ../example/n1962/factorial.cpp]
 [n1962_factorial]

@@ -472,6 +472,7 @@ public:
         }
         postcondition(result) {
             size() == oldof size() + 1;
+            capacity() >= oldof capacity();
             if constexpr(boost::has_equal_to<T>::value) {
                 *result == value;
             }
@@ -485,6 +486,8 @@ public:
     }
 
 
+    
+    
     
     
     
@@ -534,12 +537,27 @@ public:
         postcondition {
             size() == oldof size() + std::distance(first, last);
             capacity() >= oldof capacity();
+            if constexpr(boost::has_equal_to<T>::value) {
+                if(capacity() == oldof capacity()) {
+                    boost::algorithm::all_of_equal(boost::prior(oldof where),
+                            boost::prior(oldof where) + count, value);
+                }
+                // [where, end()) is invalid
+            }
+            // else [begin(), end()) is invalid
         }
     {
         vect_.insert(where, first, last);
     }
 
 
+    
+    
+    
+    
+    
+    
+    
     
     
     
@@ -596,6 +614,9 @@ public:
 
 
     void swap(vector& other)
+        precondition {
+            get_allocator() == other.get_allocator();
+        }
         postcondition {
             if constexpr(boost::has_equal_to<T>::value) {
                 *this == oldof other;

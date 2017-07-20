@@ -470,12 +470,15 @@ public:
         iterator result;
         boost::contract::old_ptr<size_type> old_size =
                 BOOST_CONTRACT_OLDOF(size());
+        boost::contract::old_ptr<size_type> old_capacity =
+                BOOST_CONTRACT_OLDOF(capacity());
         boost::contract::check c = boost::contract::public_function(this)
             .precondition([&] {
                 BOOST_CONTRACT_ASSERT(size() < max_size());
             })
             .postcondition([&] {
                 BOOST_CONTRACT_ASSERT(size() == *old_size + 1);
+                BOOST_CONTRACT_ASSERT(capacity() >= *old_capacity);
                 BOOST_CONTRACT_ASSERT(
                     boost::contract::condition_if<boost::has_equal_to<T> >(
                         boost::bind(std::equal_to<T>(), boost::cref(*result),
@@ -531,6 +534,8 @@ public:
                 BOOST_CONTRACT_OLDOF(size());
         boost::contract::old_ptr<size_type> old_capacity =
                 BOOST_CONTRACT_OLDOF(capacity());
+        boost::contract::old_ptr<iterator> old_where =
+                BOOST_CONTRACT_OLDOF(where);
         boost::contract::check c = boost::contract::public_function(this)
             .precondition([&] {
                 BOOST_CONTRACT_ASSERT(size() + std::distance(first, last) <
@@ -541,6 +546,19 @@ public:
                 BOOST_CONTRACT_ASSERT(size() == *old_size() +
                         std::distance(first, last));
                 BOOST_CONTRACT_ASSERT(capacity() >= *old_capacity);
+                if(capacity() == *old_capacity) {
+                    BOOST_CONTRACT_ASSERT(
+                        boost::contract::condition_if<boost::has_equal_to<T> >(
+                            boost::bind(all_of_equal_to(),
+                                boost::prior(*old_where),
+                                boost::prior(*old_where) + count,
+                                boost::cref(value)
+                            )
+                        )
+                    );
+                    // [where, end()) is invalid
+                }
+                // else [begin(), end()) is invalid
             })
         ;
 
@@ -600,6 +618,9 @@ public:
         boost::contract::old_ptr<vector> old_other =
                 BOOST_CONTRACT_OLDOF(other);
         boost::contract::check c = boost::contract::public_function(this)
+            .precondition([&] {
+                BOOST_CONTRACT_ASSERT(get_allocator() == other.get_allocator());
+            })
             .postcondition([&] {
                 BOOST_CONTRACT_ASSERT(
                     boost::contract::condition_if<boost::has_equal_to<

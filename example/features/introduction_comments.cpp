@@ -9,7 +9,7 @@
 //[introduction_comments
 void inc(int& x)
     // Precondition:    x < std::numeric_limit<int>::max()
-    // Postcondition:   x == old(x) + 1
+    // Postcondition:   x == oldof(x) + 1
 {
     ++x; // Function body.
 }

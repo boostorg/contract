@@ -15,9 +15,9 @@ For example, consider the following function `inc` that increments its argument 
 [introduction_comments]
 
 The precondition states that at function entry the argument `x` must be strictly smaller than the maximum allowable value of its type (so it can be increased by `1` without overflowing).
-The postcondition states that at function exit the argument `x` must be incremented by `1` with respect to the value it had before executing the function `old(x)` (but noting that postconditions are checked only when the execution of the function body did not throw an exception).
+The postcondition states that at function exit the argument `x` must be incremented by `1` with respect to the value it had before executing the function indicated with `oldof(x)` (note that postconditions should be checked only when the execution of the function body did not throw an exception).
 
-Now let's program this function and its contract using this library (see also [@../../example/features/introduction.cpp introduction.cpp]):
+Now let's program this function and its contract using this library (see also [@../../example/features/introduction.cpp =introduction.cpp=]):
 
 [import ../example/features/introduction.cpp]
 [introduction]
@@ -51,13 +51,30 @@ Note that the error messages printed by this library contain all the information
 The assertion failure message printed by this library follows a format similar to the message printed by Clang when the C-style `assert` macro fails.
 ]
 
-In addition to contracts for simple non-member functions as shown the in the example above, this library allows to program contracts for constructors, destructors, and member functions.
-These can check class invariants and can also /subcontract/ inheriting and extending contracts for derived classes (see __Tutorial__ and also __Advanced_Topics__).
-
 [note
 C++11 lambda functions are necessary to use this library without having to manually program a significant amount of boiler-plate code (see __No_Lambda_Functions__).
-Otherwise this library does not use other C++11 features and should work on most modern C++ compilers (see __Getting_Started__).
+Otherwise, this library does not use other C++11 features and should work on most modern C++ compilers (see __Getting_Started__).
 ]
+
+In addition to contracts for simple non-member functions as shown the in the example above, this library allows to program contracts for constructors, destructors, and member functions.
+These can check class invariants and can also /subcontract/ inheriting and extending contracts for derived classes (see also [@../../example/features/introduction_public.cpp =introduction_public.cpp=] and __Public_Function_Overrides__):
+[footnote
+The `pushable` base class is used here just to exercise subcontracting, it is somewhat arbitrary and it would likely not appear in real production code.
+]
+
+[import ../example/features/introduction_public.cpp]
+[introduction_public]
+
+[heading Language Support]
+
+The authors of this library advocate for contracts to be added to the core language.
+Adding contract programming to the C++ standard has a number of advantages over any library implementation (shorter and more concise syntax to program contracts, specify contracts in declarations instead of definitions, enforce contract constant-correctness, expected faster compile and run times, vendors could develop static analysis tools to recognize and check contracts statically when possible, compiler optimization could be improved based on contract conditions, etc.).
+
+Unfortunately, detailed and complete proposals to add contracts to the C++ standard such as __N1962__ were rejected by the C++ standard committee and it is not clear if the current proposal for adding contracts to C++ __P0380R1__ will actually be accepted by the standard.
+[footnote
+The authors find attractive the idea of using C++ attributes to specify contracts as indicated in __P0380R1__.
+]
+In any case, __P0380R1__ only supports pre- and postconditions while lacking basic features such as class invariants and old values in postconditions, not to mention the lack of more advanced features like subcontracting, all these features are instead supported by this library (see __Feature_Summary__ for a detailed comparison between the features supported by this library and the ones listed in different contract programming proposals, see also __Bibliography__ for a list of references considered in designing and implementing this library including the vast majority of contract programming proposals submitted to the C++ standard committee).
 
 [endsect]
 
