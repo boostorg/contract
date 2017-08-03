@@ -8,40 +8,40 @@
 #include <vector>
 #include <cassert>
 
-//[pure_virtual_public_base
+//[pure_virtual_public_base_begin
 template<typename Iterator>
 class range {
 public:
-    // Pure virtual function declaration (contract not here, below instead).
+    // Pure virtual function declaration (contract in definition below).
     virtual Iterator begin(boost::contract::virtual_* v = 0) = 0;
-
-    /* ... */
 //]
 
     // Could program class invariants and contracts for the following too.
     virtual Iterator end() = 0;
     virtual bool empty() const = 0;
-};
 
-//[pure_virtual_public_impl
+//[pure_virtual_public_base_end
+    /* ... */
+};
+//]
+
+//[pure_virtual_public_base_impl
 // Pure virtual function default implementation (out-of-line in C++).
 template<typename Iterator>
 Iterator range<Iterator>::begin(boost::contract::virtual_* v) {
-    Iterator result;
-    // Pass `result` right after `v`...
+    Iterator result; // As usual, virtual pass `result` right after `v`...
     boost::contract::check c = boost::contract::public_function(v, result, this)
-        // ...plus postconditions take `result` as parameter (not capture).
         .postcondition([&] (Iterator const& result) {
             if(empty()) BOOST_CONTRACT_ASSERT(result == end());
         })
     ;
 
-    assert(false); // Pure function body never executed by this library.
+    // Pure function body (never executed by this library).
+    assert(false);
     return result;
 }
 //]
 
-//[pure_virtual_public_derived
 template<typename T>
 class vector
     #define BASES public range<typename std::vector<T>::iterator>
@@ -65,17 +65,13 @@ public:
 
         return result = vect_.begin();
     }
-
-    /* ... */
-//]
+    BOOST_CONTRACT_OVERRIDE(begin)
 
     // Could program class invariants and contracts for the following too.
     iterator end() { return vect_.end(); }
     bool empty() const { return vect_.empty(); }
     T const& front() const { return vect_.front(); }
     void push_back(T const& value) { vect_.push_back(value); }
-
-    BOOST_CONTRACT_OVERRIDE(begin)
 
 private:
     std::vector<T> vect_;

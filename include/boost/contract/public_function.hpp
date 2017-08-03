@@ -226,7 +226,7 @@ specify_precondition_old_postcondition_except<> public_function(Class* obj) {
 
 /** @endcond */
     
-#ifdef DOXYGEN
+#ifdef BOOST_CONTRACT_DETAIL_DOXYGEN
     /**
     Program contracts for void virtual public functions that do not override.
 
@@ -413,7 +413,7 @@ specify_precondition_old_postcondition_except<> public_function(Class* obj) {
 
 /** @endcond */
 
-#ifdef DOXYGEN
+#ifdef BOOST_CONTRACT_DETAIL_DOXYGEN
     /**
     Program contracts for void public functions overrides (virtual or not).
 

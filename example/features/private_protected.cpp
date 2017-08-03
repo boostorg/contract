@@ -10,9 +10,8 @@
 
 //[private_protected
 class counter {
-    // Private and protected functions use `function()` (like non-members).
-protected:
-    virtual void set(int n, boost::contract::virtual_* = 0) {
+protected: // Protected functions use `function()` (like non-members).
+    void set(int n) {
         boost::contract::check c = boost::contract::function()
             .precondition([&] {
                 BOOST_CONTRACT_ASSERT(n <= 0);
@@ -25,7 +24,7 @@ protected:
         n_ = n;
     }
 
-private:
+private: // Private functions use `function()` (like non-members).
     void dec() {
         boost::contract::old_ptr<int> old_get = BOOST_CONTRACT_OLDOF(get());
         boost::contract::check c = boost::contract::function()
@@ -47,7 +46,7 @@ private:
 //]
 
 public:
-    virtual int get(boost::contract::virtual_* v = 0) const {
+    int get() const {
         int result;
         boost::contract::check c = boost::contract::public_function(
                 v, result, this)

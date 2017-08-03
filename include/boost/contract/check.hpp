@@ -126,7 +126,7 @@ public:
     template<typename VirtualResult>
     /* implicit */ check(specify_precondition_old_postcondition_except<
             VirtualResult> const& contract)
-    #ifndef DOXYGEN
+    #ifndef BOOST_CONTRACT_DETAIL_DOXYGEN
         BOOST_CONTRACT_CHECK_CTOR_DEF_(
                 specify_precondition_old_postcondition_except<VirtualResult>)
     #else
@@ -156,7 +156,7 @@ public:
     template<typename VirtualResult>
     /* implicit */ check(specify_old_postcondition_except<VirtualResult> const&
             contract)
-    #ifndef DOXYGEN
+    #ifndef BOOST_CONTRACT_DETAIL_DOXYGEN
         BOOST_CONTRACT_CHECK_CTOR_DEF_(
                 specify_old_postcondition_except<VirtualResult>)
     #else
@@ -186,7 +186,7 @@ public:
     template<typename VirtualResult>
     /* implicit */ check(specify_postcondition_except<VirtualResult> const&
             contract)
-    #ifndef DOXYGEN
+    #ifndef BOOST_CONTRACT_DETAIL_DOXYGEN
         BOOST_CONTRACT_CHECK_CTOR_DEF_(
                 specify_postcondition_except<VirtualResult>)
     #else
@@ -215,7 +215,7 @@ public:
                             Otherwise, this is always @c void.
     */
     /* implicit */ check(specify_except const& contract)
-    #ifndef DOXYGEN
+    #ifndef BOOST_CONTRACT_DETAIL_DOXYGEN
         BOOST_CONTRACT_CHECK_CTOR_DEF_(specify_except)
     #else
         ;
@@ -243,7 +243,7 @@ public:
                             Otherwise, this is always @c void.
     */
     /* implicit */ check(specify_nothing const& contract)
-    #ifndef DOXYGEN
+    #ifndef BOOST_CONTRACT_DETAIL_DOXYGEN
         BOOST_CONTRACT_CHECK_CTOR_DEF_(specify_nothing)
     #else
         ;

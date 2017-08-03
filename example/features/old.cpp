@@ -11,13 +11,13 @@
 //[old
 char replace(std::string& s, unsigned index, char x) {
     char result;
-    boost::contract::old_ptr<char> old_y; // But old value copied later...
+    boost::contract::old_ptr<char> old_y; // Null, old value copied later...
     boost::contract::check c = boost::contract::function()
         .precondition([&] {
             BOOST_CONTRACT_ASSERT(index < s.size());
         })
         .old([&] { // ...after preconditions (and invariants) checked.
-            old_y = BOOST_CONTRACT_OLDOF(s[index]); // Checked `index` in range.
+            old_y = BOOST_CONTRACT_OLDOF(s[index]);
         })
         .postcondition([&] {
             BOOST_CONTRACT_ASSERT(s[index] == x);

@@ -75,7 +75,7 @@ public:
 //[public_virtual_function
 public:
     // Contract for a public virtual function (but no override).
-    virtual int push_back(int id, boost::contract::virtual_* v = 0) {
+    virtual int push_back(int id, boost::contract::virtual_* v = 0) { // Extra `v`.
         int result;
         boost::contract::old_ptr<bool> old_find =
                 BOOST_CONTRACT_OLDOF(v, find(id)); // Pass `v`.
@@ -84,8 +84,7 @@ public:
         boost::contract::check c = boost::contract::public_function(
                 v, result, this) // Pass `v` and `result`.
             .precondition([&] {
-                // Specified identifier must not already be in container.
-                BOOST_CONTRACT_ASSERT(!find(id));
+                BOOST_CONTRACT_ASSERT(!find(id)); // ID cannot be already present.
             })
             .postcondition([&] (int const result) {
                 if(!*old_find) {
@@ -136,8 +135,7 @@ public:
             override_push_back // Pass override plus below function pointer...
         >(v, result, &identifiers::push_back, this, id) // ...and arguments.
             .precondition([&] { // Check in OR with bases.
-                // Do nothing if specified identifier already in container.
-                BOOST_CONTRACT_ASSERT(find(id));
+                BOOST_CONTRACT_ASSERT(find(id)); // ID can be already present.
             })
             .postcondition([&] (int const result) { // Check in AND with bases.
                 if(*old_find) BOOST_CONTRACT_ASSERT(size() == *old_size);

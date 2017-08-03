@@ -285,7 +285,7 @@ public:
         return 0;
     }
 
-    #ifndef DOXYGEN
+    #ifndef BOOST_CONTRACT_DETAIL_DOXYGEN
         BOOST_CONTRACT_DETAIL_OPERATOR_SAFE_BOOL(old_ptr<T>,
                 !!typed_copy_)
     #else
@@ -390,7 +390,7 @@ public:
         return 0;
     }
 
-    #ifndef DOXYGEN
+    #ifndef DBOOST_CONTRACT_DETAIL_OXYGEN
         BOOST_CONTRACT_DETAIL_OPERATOR_SAFE_BOOL(old_ptr_if_copyable<T>,
                 !!typed_copy_)
     #else

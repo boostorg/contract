@@ -10,7 +10,7 @@
 #include <cassert>
 
 //[old_if_copyable_offset
-template<typename T>
+template<typename T> // T might or might not be copyable.
 void offset(T& x, int count) {
     // No compiler error if T has no copy constructor...
     boost::contract::old_ptr_if_copyable<T> old_x = BOOST_CONTRACT_OLDOF(x);
@@ -29,7 +29,7 @@ void offset(T& x, int count) {
 // Copyable type but...
 class w {
 public:
-    w(w const&) { /* Some very expensive copy here operation... */ }
+    w(w const&) { /* Some very expensive copy here operation here... */ }
 
     /* ... */
 //]
@@ -87,11 +87,11 @@ namespace boost { namespace contract {
 //]
 
 //[old_if_copyable_n_decl
-// Non-copyable type so...
-class n {
+class n { // Do not want to use boost::noncopyable but...
     int num_;
 
-    n(n const&); // Unimplemented private copy constructor (not copyable).
+private:
+    n(n const&); // ...unimplemented private copy constructor (so non-copyable).
 
     /* ... */
 //]
@@ -104,7 +104,7 @@ public:
 };
 
 //[old_if_copyable_n_spec
-// ...specialize `boost::is_copy_constructible` (no need for this on C++11).
+// Specialize `boost::is_copy_constructible` (no need for this on C++11).
 namespace boost { namespace contract {
     template<>
     struct is_old_value_copyable<n> : boost::false_type {};

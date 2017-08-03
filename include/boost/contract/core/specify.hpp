@@ -474,7 +474,7 @@ old values at body, check postconditions, and check exception guarantees.
 */
 template<
     typename VirtualResult /* = void (already in fwd decl from decl.hpp) */
-    #ifdef DOXYGEN
+    #ifdef BOOST_CONTRACT_DETAIL_DOXYGEN
         = void
     #endif
 >

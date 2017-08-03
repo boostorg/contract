@@ -24,7 +24,7 @@ Handle contract assertion failures.
 // #defined, because user code might explicitly call precondition_failure()
 // (for whatever reason...). Otherwise, the public API of this lib will change.
 
-#ifdef DOXYGEN
+#ifdef BOOST_CONTRACT_DETAIL_DOXYGEN
 // Needed for `std::` prefix to show (but removed via `EXCLUDE_SYMBOLS=std`).
 namespace std {
     class exception {};

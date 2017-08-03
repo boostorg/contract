@@ -8,7 +8,7 @@
     [quickbook 1.5]
     [version 1.0]
     [authors [Caminiti <email>lorcaminiti@gmail.com</email>, Lorenzo]]
-    [copyright 2008-2016 Lorenzo Caminiti]
+    [copyright 2008-2017 Lorenzo Caminiti]
     [license Distributed under the Boost Software License, Version 1.0 (see accompanying file LICENSE_1_0.txt or a copy at [@http://www.boost.org/LICENSE_1_0.txt])]
 ]
 
@@ -74,7 +74,7 @@
 [def __Volatile_Public_Functions__ [link boost_contract.extras.volatile_public_functions Volatile Public Functions]]
 [def __Move_Operations__ [link boost_contract.extras.move_operations Move Operations]]
 [def __Unions__ [link boost_contract.extras.unions Unions]]
-[def __Disable_Contract_Checking__ [link boost_contract.extras.disable_contract_checking Disable Contract Checking]]
+[def __Disable_Contract_Checking__ [link boost_contract.extras.disable_contract_checking__and_assertion_levels_ Disable Contract Checking]]
 [def __Disable_Contract_Checking_and_Assertion_Levels__ [link boost_contract.extras.disable_contract_checking__and_assertion_levels_ Disable Contract Checking (and Assertion Levels)]]
 [def __Disable_Contract_Compilation__ [link boost_contract.extras.disable_contract_compilation__macro_interface_ Disable Contract Compilation]]
 [def __Disable_Contract_Compilation_Macro_Interface__ [link boost_contract.extras.disable_contract_compilation__macro_interface_ Disable Contract Compilation (Macro Interface)]]
@@ -130,11 +130,11 @@ This library implements
 Design by Contract (DbC) is a registered trademark of the Eiffel Software company and it was first introduced by the Eiffel programming language (see __Meyer97__).
 ]
 for the C++ programming language.
-All Contract Programming features are supported by this library: subcontracting, class invariants (also for static and volatile member functions), postconditions (with old and return values), preconditions, customizable actions on assertion failure (e.g., terminate the program or throw an exception), optional compilation of assertions, disable assertions while already checking other assertions (to avoid infinite recursion), etc. (see __Feature_Summary__).
+All Contract Programming features are supported by this library: subcontracting, class invariants (also for static and volatile member functions), postconditions (with old and return values), preconditions, customizable actions on assertion failure (e.g., terminate the program or throw exceptions), optional compilation of assertions, disable assertions while already checking other assertions (to avoid infinite recursion), and more (see __Feature_Summary__).
 
 [note
 In one of its previous revisions, this library passed Boost formal review and it was accepted into the Boost libraries (see [@https://groups.google.com/forum/?fromgroups=#!topic/boost-list/jQ7OjAmos_Y]).
-However, the authors have not had time yet to add this library to a Boost release.
+However, the authors have not had time to add this library to a Boost release yet.
 ]
 
 This library source is hosted at [@https://github.com/lcaminiti/boost-contract].

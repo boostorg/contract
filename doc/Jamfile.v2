@@ -33,14 +33,15 @@ doxygen reference
 :   
     <reftitle>"Reference"
     # Quickbook's Doxygen does not show destructor exception specs.
-    <doxygen:param>PREDEFINED="DOXYGEN BOOST_PP_VARIADICS"
+    <doxygen:param>PREDEFINED="BOOST_CONTRACT_DETAIL_DOXYGEN BOOST_PP_VARIADICS"
     <doxygen:param>MACRO_EXPANSION=YES
     <doxygen:param>INCLUDE_PATH="../include"
     <doxygen:param>QUIET=YES
     <doxygen:param>JAVADOC_AUTOBRIEF=YES
     <doxygen:param>WARN_IF_UNDOCUMENTED=NO
     <doxygen:param>EXCLUDE_SYMBOLS=std
-    # Does not work for XML output (use @cond/#ifdef DOXYGEN in code instead).
+    # Following does not work for XML output... use @cond and/or
+    # #ifdef BOOST_CONTRACT_DETAIL_DOXYGEN in code instead.
     <doxygen:param>EXTRACT_PRIVATE=NO
     <doxygen:param>HIDE_UNDOC_MEMBERS=YES
     <doxygen:param>HIDE_UNDOC_CLASSES=YES

@@ -11,10 +11,10 @@
 //[private_protected_virtual_counter
 class counter {
     // Virtual private and protected functions still declare extra
-    // `virtual_* = 0` parameter (otherwise they cannot be overridden).
+    // `virtual_* = 0` parameter (otherwise they cannot be overridden), but...
 protected:
     virtual void set(int n, boost::contract::virtual_* = 0) {
-        boost::contract::check c = boost::contract::function()
+        boost::contract::check c = boost::contract::function() // ...no `v`.
             .precondition([&] {
                 BOOST_CONTRACT_ASSERT(n <= 0);
             })
@@ -28,8 +28,8 @@ protected:
 
 private:
     virtual void dec(boost::contract::virtual_* = 0) {
-        boost::contract::old_ptr<int> old_get = BOOST_CONTRACT_OLDOF(get());
-        boost::contract::check c = boost::contract::function()
+        boost::contract::old_ptr<int> old_get = BOOST_CONTRACT_OLDOF(get()); // ...no `v`.
+        boost::contract::check c = boost::contract::function() // ...no `v`.
             .precondition([&] {
                 BOOST_CONTRACT_ASSERT(
                         get() + 1 >= std::numeric_limits<int>::min());

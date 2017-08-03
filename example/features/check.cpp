@@ -36,7 +36,7 @@ int main() {
     //]
 
     //[check_macro
-    // Implementation checks via macro (preferred).
+    // Implementation checks via macro (disable run- and compile-time overhead).
     BOOST_CONTRACT_CHECK(gcd(12, 28) == 4);
     BOOST_CONTRACT_CHECK(gcd(4, 14) == 2);
     //]

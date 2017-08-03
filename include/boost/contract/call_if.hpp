@@ -64,7 +64,7 @@ Usually this class template is instantiated only via the return value of
         @c internal_type in this documentation).
 */
 template<bool Pred, typename Then, typename ThenResult =
-    #ifndef DOXYGEN
+    #ifndef BOOST_CONTRACT_DETAIL_DOXYGEN
         boost::contract::detail::none
     #else
         internal_type
@@ -96,14 +96,14 @@ Usually this class template is instantiated only via the return value of
 */
 template<typename Then>
 struct call_if_statement<true, Then,
-    #ifndef DOXYGEN
+    #ifndef BOOST_CONTRACT_DETAIL_DOXYGEN
         boost::contract::detail::none
     #else
         internal_type
     #endif
 > :
     call_if_statement<true, Then,
-        #ifndef DOXYGEN
+        #ifndef BOOST_CONTRACT_DETAIL_DOXYGEN
             BOOST_CONTRACT_CALL_IF_RESULT_OF_(Then)
         #else
             typename result_of<Then()>::type
@@ -343,7 +343,7 @@ Usually this class template is instantiated only via the return value of
 */
 template<typename Then> // Copyable (no data).
 struct call_if_statement<false, Then,
-    #ifndef DOXYGEN
+    #ifndef BOOST_CONTRACT_DETAIL_DOXYGEN
         boost::contract::detail::none
     #else
         internal_type
@@ -385,7 +385,7 @@ struct call_if_statement<false, Then,
             template @c f().
     */
     template<typename Else>
-    #ifndef DOXYGEN
+    #ifndef BOOST_CONTRACT_DETAIL_DOXYGEN
         BOOST_CONTRACT_CALL_IF_RESULT_OF_(Else)
     #else
         typename result_of<Else()>::type
@@ -561,7 +561,7 @@ trivially return @p else_ (@c true by default) at run-time.
 @return Boolean value returned by @c f() if the static predicate @c Pred is
         @c true. Otherwise, trivially return @p else_.
 */
-#ifdef DOXYGEN
+#ifdef BOOST_CONTRACT_DETAIL_DOXYGEN
     template<bool Pred, typename Then>
     bool condition_if_c(Then f, bool else_ = true);
 #else

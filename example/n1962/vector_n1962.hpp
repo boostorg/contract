@@ -270,8 +270,8 @@ public:
         postcondition {
             size() == count;
             if constexpr(boost::has_equal_to<T>::value) {
-                if(count > oldof size()) {
-                    boost::algorithm::all_of_equal(begin() + oldof size(),
+                if(count > oldof(size())) {
+                    boost::algorithm::all_of_equal(begin() + oldof(size()),
                             end(), value);
                 }
             }
@@ -401,8 +401,8 @@ public:
             size() < max_size();
         }
         postcondition {
-            size() == oldof size() + 1;
-            capacity() >= oldof capacity()
+            size() == oldof(size()) + 1;
+            capacity() >= oldof(capacity())
             if constexpr(boost::has_equal_to<T>::value) {
                 back() == value;
             }
@@ -425,7 +425,7 @@ public:
             !empty();
         }
         postcondition {
-            size() == oldof size() - 1;
+            size() == oldof(size()) - 1;
         }
     {
         vect_.pop_back();
@@ -471,12 +471,12 @@ public:
             size() < max_size();
         }
         postcondition(result) {
-            size() == oldof size() + 1;
-            capacity() >= oldof capacity();
+            size() == oldof(size()) + 1;
+            capacity() >= oldof(capacity());
             if constexpr(boost::has_equal_to<T>::value) {
                 *result == value;
             }
-            //  if(capacity() > oldof capacity())
+            //  if(capacity() > oldof(capacity()))
             //      [begin(), end()) is invalid
             //  else
             //      [where, end()) is invalid
@@ -500,12 +500,12 @@ public:
             size() + count < max_size();
         }
         postcondition {
-            size() == oldof size() + count;
-            capacity() >= oldof capacity();
+            size() == oldof(size()) + count;
+            capacity() >= oldof(capacity());
             if constexpr(boost::has_equal_to<T>::value) {
-                if(capacity() == oldof capacity()) {
-                    boost::algorithm::all_of_equal(boost::prior(oldof where),
-                            boost::prior(oldof where) + count, value);
+                if(capacity() == oldof(capacity())) {
+                    boost::algorithm::all_of_equal(boost::prior(oldof(where)),
+                            boost::prior(oldof(where)) + count, value);
                 }
                 // [where, end()) is invalid
             }
@@ -535,12 +535,12 @@ public:
             // [first, last) is not contained in [begin(), end())
         }
         postcondition {
-            size() == oldof size() + std::distance(first, last);
-            capacity() >= oldof capacity();
+            size() == oldof(size()) + std::distance(first, last);
+            capacity() >= oldof(capacity());
             if constexpr(boost::has_equal_to<T>::value) {
-                if(capacity() == oldof capacity()) {
-                    boost::algorithm::all_of_equal(boost::prior(oldof where),
-                            boost::prior(oldof where) + count, value);
+                if(capacity() == oldof(capacity())) {
+                    boost::algorithm::all_of_equal(boost::prior(oldof(where)),
+                            boost::prior(oldof(where)) + count, value);
                 }
                 // [where, end()) is invalid
             }
@@ -589,7 +589,7 @@ public:
             size() >= std::distance(first, lasst);
         }
         postcondition(result) {
-            size() == oldof size() - std::distance(first, last);
+            size() == oldof(size()) - std::distance(first, last);
             if(empty()) result == end();
             // [first, last) is invalid
         }
@@ -619,8 +619,8 @@ public:
         }
         postcondition {
             if constexpr(boost::has_equal_to<T>::value) {
-                *this == oldof other;
-                other == oldof *this;
+                *this == oldof(other);
+                other == oldof(*this);
             }
         }
     {
