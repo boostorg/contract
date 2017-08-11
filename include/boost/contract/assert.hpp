@@ -49,5 +49,20 @@ Assert contract conditions.
     #define BOOST_CONTRACT_ASSERT(condition) ((void*)0)
 #endif
 
+#ifndef BOOST_CONTRACT_NO_AUDIT_ASSERTIONS
+    // Compiles and evaluates condition (default).
+    #define BOOST_CONTRACT_ASSERT_AUDIT(condition) \
+        BOOST_CONTRACT_ASSERT(condition)
+#else
+    /** TODO */
+    // Compiles but does not evaluate condition.
+    #define BOOST_CONTRACT_ASSERT_AUDIT(condition) \
+        BOOST_CONTRACT_ASSERT(true || (condition))
+#endif
+
+/** TODO */
+#define BOOST_CONTRACT_ASSERT_AXIOM(condition) \
+    BOOST_CONTRACT_ASSERT(true || (condition))
+
 #endif // #include guard
 

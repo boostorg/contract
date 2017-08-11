@@ -9,28 +9,16 @@
 #include <iostream>
 #include <cassert>
 
-#define CONTRACT_AUDIT // Check "audit" assertions for this example.
-
 //[ifdef_audit
-// #define this only when willing to check expensive assertions.
-#ifdef CONTRACT_AUDIT
-    #define CONTRACT_ASSERT_AUDIT(cond) BOOST_CONTRACT_ASSERT(cond)
-#else
-    #define CONTRACT_ASSERT_AUDIT(cond) BOOST_CONTRACT_ASSERT(true || (cond))
-#endif
-
-// Prohibitively expensive assertions, never checked (same as formal comments).
-#define CONTRACT_ASSERT_AXIOM(cond) BOOST_CONTRACT_ASSERT(true || (cond))
-
 template<typename RandomIter, typename T>
 RandomIter random_binary_search(RandomIter first, RandomIter last,
         T const& value) {
     RandomIter result;
     boost::contract::check c = boost::contract::function()
         .precondition([&] {
-            BOOST_CONTRACT_ASSERT(first <= last);
-            // Expensive O(n) assertion so marked "audit".
-            CONTRACT_ASSERT_AUDIT(std::is_sorted(first, last));
+            BOOST_CONTRACT_ASSERT(first <= last); // Default, not expensive.
+            // Expensive O(n) assertion (use AXIOM if prohibitive instead).
+            BOOST_CONTRACT_ASSERT_AUDIT(std::is_sorted(first, last));
         })
         .postcondition([&] {
             if(result != last) BOOST_CONTRACT_ASSERT(*result == value);

@@ -14,19 +14,12 @@
 #include <algorithm>
 #include <cassert>
 
-// Following used to selectively disable checking of more complex assertions.
-#define O_1             0 // O(1): constant complexity.
-#define O_N             1 // O(n): linear complexity.
-#define COMPLEXITY_MAX  O_N
-
 // Subject for observer design pattern.
 class subject {
     friend class boost::contract::access;
 
     void invariant() const {
-        #if O_N <= COMPLEXITY_MAX
-            BOOST_CONTRACT_ASSERT(all_observers_valid(observers())); // Valid.
-        #endif
+        BOOST_CONTRACT_ASSERT_AUDIT(all_observers_valid(observers())); // Valid.
     }
 
 public:
@@ -62,8 +55,11 @@ public:
 
     // Attach given object as an observer.
     void attach(observer* ob) {
-        boost::contract::old_ptr<std::vector<observer const*> > old_observers =
-                BOOST_CONTRACT_OLDOF(observers());
+        boost::contract::old_ptr<std::vector<observer const*> > old_observers
+            #ifndef BOOST_CONTRACT_NO_AUDIT_ASSERTIONS
+                = BOOST_CONTRACT_OLDOF(observers())
+            #endif // Else, leave old pointer null...
+        ;
         boost::contract::check c = boost::contract::public_function(this)
             .precondition([&] {
                 BOOST_CONTRACT_ASSERT(ob); // Not null.
@@ -71,11 +67,11 @@ public:
             })
             .postcondition([&] {
                 BOOST_CONTRACT_ASSERT(attached(ob)); // Attached.
-                #if O_N <= COMPLEXITY_MAX
-                    // Others not changed (frame rule).
+                // Others not changed (frame rule).
+                if(old_observers) { // ...skip #if NO_AUDIT.
                     BOOST_CONTRACT_ASSERT(other_observers_unchanged(
                             *old_observers, observers(), ob));
-                #endif
+                }
             })
         ;
 
@@ -104,10 +100,8 @@ protected:
         // Protected members use `function` (no inv and no subcontracting).
         boost::contract::check c = boost::contract::function()
             .postcondition([&] {
-                #if O_N <= COMPLEXITY_MAX
-                    // All updated.
-                    BOOST_CONTRACT_ASSERT(all_observers_updated(observers()));
-                #endif
+                // All updated.
+                BOOST_CONTRACT_ASSERT_AUDIT(all_observers_updated(observers()));
             })
         ;
         

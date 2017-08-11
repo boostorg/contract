@@ -240,6 +240,11 @@ Configure this library compile-time and run-time behaviours.
 #endif
 
 #ifdef BOOST_CONTRACT_DETAIL_DOXYGEN
+    /** TODO */
+    #define BOOST_CONTRACT_NO_AUDIT_ASSERTIONS
+#endif
+
+#ifdef BOOST_CONTRACT_DETAIL_DOXYGEN
     /**
     If defined, this library does not perform implementation checks (undefined
     by default).

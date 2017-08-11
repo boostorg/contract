@@ -265,8 +265,8 @@ Therefore, programmers should not change the exception guarantee failure handler
 
 [section Class Invariants]
 
-When class invariants are specified, they are programmed in a public `const` member function named `invariant` taking no argument and returning `void`.
-Classes that do not have invariants, simply do not declare this `invariant` member function.
+When class invariants are specified, they are programmed in a public `const` function named `invariant` taking no argument and returning `void`.
+Classes that do not have invariants, simply do not declare the `invariant` function.
 [footnote
 This library uses template meta-programming (SFINAE-based introspection techniques) to check invariants only for classes that declare a member function named [macroref BOOST_CONTRACT_INVARIANT_FUNC].
 ]
@@ -311,8 +311,8 @@ See __Volatile_Public_Functions__ to program invariants for classes with `volati
 
 [heading Static Class Invariants]
 
-When static class invariants are specified, they are programmed in a public `static` member function named `static_invariant` taking no argument and returning `void`.
-Classes that do not have static class invariants, simply do not declare a `static_invariant` member function.
+When static class invariants are specified, they are programmed in a public `static` function named `static_invariant` taking no argument and returning `void`.
+Classes that do not have static class invariants, simply do not declare the `static_invariant` function.
 [footnote
 This library uses template meta-programming (SFINAE-based introspection techniques) to check static invariants only for classes that declare a member function named [macroref BOOST_CONTRACT_STATIC_INVARIANT_FUNC].
 ]

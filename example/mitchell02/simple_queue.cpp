@@ -10,11 +10,6 @@
 #include <vector>
 #include <cassert>
 
-// Disable selected expensive assertion checks and old value copies.
-#define O_1 0               // O(1): constant complexity (default).
-#define O_N 1               // O(n): linear complexity.
-#define COMPLEXITY_MAX O_1  // Max allowed complexity.
-
 template<typename T>
 class simple_queue
     #define BASES private boost::contract::constructor_precondition< \
@@ -117,7 +112,7 @@ public:
         return result = (items_.size() == 0);
     }
 
-    // If queue as no room for another item.
+    // If queue has no room for another item.
     bool is_full() const {
         bool result;
         boost::contract::check c = boost::contract::public_function(this)
@@ -136,9 +131,10 @@ public:
     void remove() {
         // Expensive all_equal postcond. and old_items copy might be skipped.
         boost::contract::old_ptr<std::vector<T> > old_items;
-        #if O_N <= COMPLEXITY_MAX
-            old_items = BOOST_CONTRACT_OLDOF(items());
-        #endif
+            #ifndef BOOST_CONTRACT_NO_AUDIT_ASSERTIONS
+                = BOOST_CONTRACT_OLDOF(items())
+            #endif // Else, leave old pointer null...
+        ;
         boost::contract::old_ptr<int> old_count = BOOST_CONTRACT_OLDOF(count());
         boost::contract::check c = boost::contract::public_function(this)
             .precondition([&] {
@@ -146,6 +142,7 @@ public:
             })
             .postcondition([&] {
                 BOOST_CONTRACT_ASSERT(count() == *old_count - 1); // Count dec.
+                // ...following skipped #if NO_AUDIT.
                 if(old_items) all_equal(items(), *old_items, /* shifted = */ 1);
             })
         ;
@@ -157,9 +154,10 @@ public:
     void put(T const& item) {
         // Expensive all_equal postcond. and old_items copy might be skipped.
         boost::contract::old_ptr<std::vector<T> > old_items;
-        #if O_N <= COMPLEXITY_MAX
-            old_items = BOOST_CONTRACT_OLDOF(items());
-        #endif
+            #ifndef BOOST_CONTRACT_NO_AUDIT_ASSERTIONS
+                = BOOST_CONTRACT_OLDOF(items())
+            #endif // Else, leave old pointer null...
+        ;
         boost::contract::old_ptr<int> old_count = BOOST_CONTRACT_OLDOF(count());
         boost::contract::check c = boost::contract::public_function(this)
             .precondition([&] {
@@ -169,6 +167,7 @@ public:
                 BOOST_CONTRACT_ASSERT(count() == *old_count + 1); // Count inc.
                 // Second to last item.
                 BOOST_CONTRACT_ASSERT(items().at(count() - 1) == item);
+                // ...following skipped #if NO_AUDIT.
                 if(old_items) all_equal(items(), *old_items);
             })
         ;

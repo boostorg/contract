@@ -6,11 +6,11 @@
 
 [section Examples]
 
-This section lists examples taken from different sources discussing Contract Programming and re-implemented using this library.
+This section lists some examples taken from different sources discussing Contract Programming and implemented here using this library.
 
 [note
-Some of these examples might be from old sources, containing old or obsolete code practices, not optimized for execution speed, not complete, and they might be more relevant in the context of programming languages different from C++.
-Nevertheless, programmers are encouraged to review these examples to see a few diverse usages of this library that might be relevant for contracts they need to write in their code.
+Some of these examples might be from old code, containing obsolete coding practices, not optimized for execution speed, not complete, and they might be more relevant in the context of programming languages different from C++.
+Nevertheless, programmers are encouraged to review these examples to see a few diverse usages of this library that might be relevant to their needs.
 ]
 
 Sources of the listed examples:
@@ -29,15 +29,17 @@ A few notable examples:
 * [link Cline90_vector_anchor \[Cline90\] Vector]: Comparison with A++ syntax.
 
 [#N1962_vector_anchor]
-[section \[N1962\] Vector: STL Vector contracts and comparison with C++ contract proposal syntax]
+[section \[N1962\] Vector: Contracts for STL vector and comparison with C++11 proposal syntax]
+
+On compilers that support C++17 `if constexpr`, the following example using this library can be simplified removing [funcref boost::contract::condition_if] and related functor templates such as `all_of_equal_to`, etc. (making it more similar to the pseudo-code on the right-hand side).
+
 [import ../example/n1962/vector.cpp]
 [import ../example/n1962/vector_n1962.hpp]
 [table
-    [ [This Library] [Contract Programming Proposal \[N1962\] (not part of C++) plus C++17 [^if constexpr]] ]
+    [ [This library] [\[N1962\] proposal (not accepted in C++) plus C++17 [^if constexpr]] ]
     [ [[n1962_vector]] [[n1962_vector_n1962]] ]
 ]
 
-On compilers that support C++17 `if constexpr`, the above example using this library can be simplified removing [funcref boost::contract::condition_if] and related functor templates `all_of_equal_to`, etc. (making the code to the left more similar to the code to the right).
 [endsect]
 
 [section \[N1962\] Circle: Subcontracting]
@@ -46,7 +48,7 @@ On compilers that support C++17 `if constexpr`, the above example using this lib
 [endsect]
 
 [#N1962_factorial_anchor]
-[section \[N1962\] Factorial: Recursion and assertion computational complexity]
+[section \[N1962\] Factorial: Recursion]
 [import ../example/n1962/factorial.cpp]
 [n1962_factorial]
 [endsect]
@@ -108,7 +110,7 @@ On compilers that support C++17 `if constexpr`, the above example using this lib
 [mitchell02_stack]
 [endsect]
 
-[section \[Mitchell02\] Simple Queue: Queue-like container and assertion big-O complexity]
+[section \[Mitchell02\] Simple Queue: Queue-like container and disable old value copies for audit assertions]
 [import ../example/mitchell02/simple_queue.cpp]
 [mitchell02_simple_queue]
 [endsect]
@@ -140,12 +142,12 @@ On compilers that support C++17 `if constexpr`, the above example using this lib
 [endsect]
 
 [#Cline90_vector_anchor]
-[section \[Cline90\] Vector: Comparison with A++ proposed syntax]
+[section \[Cline90\] Vector: Comparison with A++ proposal syntax]
 [import ../example/cline90/vector.hpp]
 [import ../example/cline90/vector_main.cpp]
 [import ../example/cline90/vector_axx.hpp]
 [table
-    [ [This Library] [A++ Proposal (not part of C++)] ]
+    [ [This Library] [A++ Proposal (never actually implemented)] ]
     [ [[cline90_vector]] [[cline90_vector_axx]] ]
     [ [[cline90_vector_main]] [] ]
 ]

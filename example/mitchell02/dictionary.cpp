@@ -31,7 +31,7 @@ public:
     }
 
     // Destroy dictionary.
-    ~dictionary() {
+    virtual ~dictionary() {
         // Check invariants.
         boost::contract::check c = boost::contract::destructor(this);
     }

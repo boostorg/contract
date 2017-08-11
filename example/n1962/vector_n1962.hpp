@@ -99,6 +99,7 @@ public:
     
     
     
+    
     vector(size_type count, T const& value, Allocator const& alloc)
         postcondition {
             size() == count;
@@ -168,7 +169,6 @@ public:
    
 
 
-    
     
     
     
@@ -502,8 +502,8 @@ public:
         postcondition {
             size() == oldof(size()) + count;
             capacity() >= oldof(capacity());
-            if constexpr(boost::has_equal_to<T>::value) {
-                if(capacity() == oldof(capacity())) {
+            if(capacity() == oldof(capacity())) {
+                if constexpr(boost::has_equal_to<T>::value) {
                     boost::algorithm::all_of_equal(boost::prior(oldof(where)),
                             boost::prior(oldof(where)) + count, value);
                 }
@@ -537,8 +537,8 @@ public:
         postcondition {
             size() == oldof(size()) + std::distance(first, last);
             capacity() >= oldof(capacity());
-            if constexpr(boost::has_equal_to<T>::value) {
-                if(capacity() == oldof(capacity())) {
+            if(capacity() == oldof(capacity())) {
+                if constexpr(boost::has_equal_to<T>::value) {
                     boost::algorithm::all_of_equal(boost::prior(oldof(where)),
                             boost::prior(oldof(where)) + count, value);
                 }

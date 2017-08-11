@@ -484,11 +484,11 @@ public:
                         boost::bind(std::equal_to<T>(), boost::cref(*result),
                                 boost::cref(value))
                     )
-                    //  if(capacity() > old(capacity()))
-                    //      [begin(), end()) is invalid
-                    //  else
-                    //      [where, end()) is invalid
                 );
+                //  if(capacity() > old(capacity()))
+                //      [begin(), end()) is invalid
+                //  else
+                //      [where, end()) is invalid
             })
         ;
 

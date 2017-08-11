@@ -165,7 +165,8 @@ However, this library adds the flexibility to let programmers manually specify w
 [import ../example/features/friend_invariant.cpp]
 [friend_invariant]
 
-This technique can also be extended to friend functions that take multiple objects as parameters and can be logically considered extensions to the public interfaces of each of these objects, for example:
+This technique can also be extended to friend functions that take multiple objects as parameters and can be logically considered extensions to the public interfaces of each of these objects.
+For example:
 
     // Can be considered an extension of multiple objects' public interfaces.
     friend void f(class1& object1, class2* object2, type3& value3) {
@@ -387,7 +388,8 @@ The `override_...` member types do not have to be declared `public` on any compi
 In any case, declaring the [classref boost::contract::access] class `friend` allows to always declare all these extra members `private` on all compilers.
 ]
 However, programmers might need to more precisely control the public members of their classes to prevent incorrect access of encapsulated members.
-All these members can be declared `private` as long as the [classref boost::contract::access] class is declared as `friend` of the user class, for example (see [@../../example/features/access.cpp =access.cpp=]):
+All these members can be declared `private` as long as the [classref boost::contract::access] class is declared as `friend` of the user class.
+For example (see [@../../example/features/access.cpp =access.cpp=]):
 
 [import ../example/features/access.cpp]
 [access]
@@ -429,7 +431,8 @@ However, programmers can override the default contract failure handlers to perfo
 * Old copies at body: [funcref boost::contract::set_old_failure].
 * Implementation checks: [funcref boost::contract::set_check_failure].
 
-These `set_..._failure(`[^['f]]`)` function calls return the contract failure handler functor [^['f]] that they take as input parameter, for example (see [@../../example/features/throw_on_failure.cpp =throw_on_failure.cpp=]):
+These `set_..._failure(`[^['f]]`)` function calls return the contract failure handler functor [^['f]] that they take as input parameter.
+For example (see [@../../example/features/throw_on_failure.cpp =throw_on_failure.cpp=]):
 [footnote
 *Rationale:*
 Even if somewhat different from `std::set_terminate`, the `set_..._failure` functions take a functor as parameter (so to handle not just function pointers, but also lambdas, binds, etc.) and return this same functor as result (so they can be concatenated).

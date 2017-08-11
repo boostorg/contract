@@ -9,7 +9,7 @@
 #include <cassert>
 
 //[ifdef_macro_function
-// Use macro interface to selectively disable contract compilation.
+// Use macro interface to completely disable contract overhead.
 #include <boost/contract_macro.hpp>
 
 int inc(int& x) {
@@ -31,7 +31,7 @@ int inc(int& x) {
 
 template<typename T>
 class pushable {
-    friend class boost::contract::access; // Almost no overhead, always in code.
+    friend class boost::contract::access; // Left in code (almost no overhead).
 
     BOOST_CONTRACT_INVARIANT({
         BOOST_CONTRACT_ASSERT(capacity() <= max_size());
@@ -40,7 +40,7 @@ class pushable {
 public:
     virtual void push_back(
         T const& x,
-        boost::contract::virtual_* v = 0 // Almost no overhead, always in code.
+        boost::contract::virtual_* v = 0 // Left in code (almost no overhead).
     ) = 0;
 
 protected:
@@ -66,11 +66,11 @@ void pushable<T>::push_back(T const& x, boost::contract::virtual_* v) {
 class integers
     #define BASES public pushable<int>
     :
-        // Almost no overhead for this extra base, always in code.
+        // Left in code (almost no overhead).
         private boost::contract::constructor_precondition<integers>,
         BASES
 {
-    // Almost no overhead for followings, always in code.
+    // Followings left in code (almost no overhead).
     friend class boost::contract::access;
     typedef BOOST_CONTRACT_BASE_TYPES(BASES) base_types;
     #undef BASES
@@ -99,8 +99,10 @@ public:
         BOOST_CONTRACT_DESTRUCTOR(this); // Check invariants.
     }
 
-    virtual void push_back(int const& x, boost::contract::virtual_* v = 0)
-            /* override */ {
+    virtual void push_back(
+        int const& x,
+        boost::contract::virtual_* v = 0 // Left in code (almost no overhead).
+    ) /* override */ {
         BOOST_CONTRACT_OLD_PTR(unsigned)(old_size);
         BOOST_CONTRACT_PUBLIC_FUNCTION_OVERRIDE(override_push_back)(
                 v, &integers::push_back, this, x)
@@ -122,7 +124,7 @@ public:
     }
 
 private:
-    BOOST_CONTRACT_OVERRIDE(push_back) // About no overhead, always in code.
+    BOOST_CONTRACT_OVERRIDE(push_back) // Left in code (almost no overhead).
 
     /* ... */
 //]

@@ -10,73 +10,90 @@
 //[volatile
 class a {
 public:
-    void invariant() const volatile;    // Invariants cv qualified.
-    void invariant() const;             // Invariants const qualified.
+    static void static_invariant();     // Static invariants.
+    void invariant() const volatile;    // Volatile invariants.
+    void invariant() const;             // Const invariants.
 
-    a() { // Check both cv and const invariant (at exit if no throw).
+    a() { // Check static, volatile, and const invariants.
         boost::contract::check c= boost::contract::constructor(this);
     }
 
-    ~a() { // Check both cv and const invariant (at entry).
+    ~a() { // Check static, volatile, and const invariants.
         boost::contract::check c = boost::contract::destructor(this);
     }
 
-    void m() { // Check const invariant (at entry and exit).
+    void nc() { // Check static and const invariants.
         boost::contract::check c = boost::contract::public_function(this);
     }
 
-    void c() const { // Check const invariant (at entry and exit).
+    void c() const { // Check static and const invariants.
         boost::contract::check c = boost::contract::public_function(this);
     }
     
-    void v() volatile { // Check cv invariant (at entry and exit).
+    void v() volatile { // Check static and volatile invariants.
         boost::contract::check c = boost::contract::public_function(this);
     }
     
-    void cv() const volatile { // Check cv invariant (at entry and exit).
+    void cv() const volatile { // Check static and volatile invariants.
         boost::contract::check c = boost::contract::public_function(this);
+    }
+
+    static s() { // Check static invariants only.
+        boost::contract::check c = boost::contract::public_function<a>();
     }
 };
 //]
 
-bool cv_invariant_checked, const_invariant_checked;
-void a::invariant() const volatile { cv_invariant_checked = true; }
-void a::invariant() const { const_invariant_checked = true; }
+bool static_inv_checked, cv_inv_checked, const_inv_checked;
+void a::static_invariant() { static_inv_checked = true; }
+void a::invariant() const volatile { cv_inv_checked = true; }
+void a::invariant() const { const_inv_checked = true; }
 
 int main() {
-    // These failures properly handled only when invariants checked.
     #ifndef BOOST_CONTRACT_NO_EXIT_INVARIANTS
         {
-            cv_invariant_checked = const_invariant_checked = false;
+            static_inv_checked = cv_inv_checked = const_inv_checked = false;
             a x;
-            assert(cv_invariant_checked);
-            assert(const_invariant_checked);
+            assert(static_inv_checked);
+            assert(cv_inv_checked);
+            assert(const_inv_checked);
 
-            cv_invariant_checked = const_invariant_checked = false;
-            x.m();
-            assert(!cv_invariant_checked);
-            assert(const_invariant_checked);
+            static_inv_checked = cv_inv_checked = const_inv_checked = false;
+            x.nc();
+            assert(static_inv_checked);
+            assert(!cv_inv_checked);
+            assert(const_inv_checked);
             
-            cv_invariant_checked = const_invariant_checked = false;
+            static_inv_checked = cv_inv_checked = const_inv_checked = false;
             x.c();
-            assert(!cv_invariant_checked);
-            assert(const_invariant_checked);
+            assert(static_inv_checked);
+            assert(!cv_inv_checked);
+            assert(const_inv_checked);
             
-            cv_invariant_checked = const_invariant_checked = false;
+            static_inv_checked = cv_inv_checked = const_inv_checked = false;
             x.v();
-            assert(cv_invariant_checked);
-            assert(!const_invariant_checked);
+            assert(static_inv_checked);
+            assert(cv_inv_checked);
+            assert(!const_inv_checked);
             
-            cv_invariant_checked = const_invariant_checked = false;
+            static_inv_checked = cv_inv_checked = const_inv_checked = false;
             x.cv();
-            assert(cv_invariant_checked);
-            assert(!const_invariant_checked);
+            assert(static_inv_checked);
+            assert(cv_inv_checked);
+            assert(!const_inv_checked);
+            
+            static_inv_checked = cv_inv_checked = const_inv_checked = false;
+            x.s();
+            assert(static_inv_checked);
+            assert(!cv_inv_checked);
+            assert(!const_inv_checked);
         
-            cv_invariant_checked = const_invariant_checked = false;
+            static_inv_checked = cv_inv_checked = const_inv_checked = false;
         } // Call destructor.
         #ifndef BOOST_CONTRACT_NO_ENTRY_INVARIANTS
-            assert(cv_invariant_checked);
-            assert(const_invariant_checked);
+            assert(static_inv_checked);
+            assert(cv_inv_checked);
+            assert(const_inv_checked);
         #endif
     #endif
 

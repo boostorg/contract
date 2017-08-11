@@ -24,8 +24,9 @@ public:
         BOOST_CONTRACT_ASSERT(d_ > 0);
     }
 
-    explicit positive(int x) { // Contracts for a constructor.
-        // Unions cannot have bases so ctor preconditions here.
+    // Contracts for constructor, as usual but...
+    explicit positive(int x) {
+        // ...unions cannot have bases so constructor preconditions here.
         boost::contract::constructor_precondition<positive> pre([&] {
             BOOST_CONTRACT_ASSERT(x > 0);
         });
@@ -41,7 +42,8 @@ public:
         ++instances_;
     }
     
-    ~positive() { // Contracts for the destructor.
+    // Contracts for destructor (as usual).
+    ~positive() {
         boost::contract::old_ptr<int> old_instances =
                 BOOST_CONTRACT_OLDOF(instances());
         boost::contract::check c = boost::contract::destructor(this)
@@ -53,7 +55,8 @@ public:
         --instances_;
     }
     
-    void get(int& x) { // Contracts for a public function.
+    // Contracts for public function (as usual, but no virtual or override).
+    void get(int& x) {
         boost::contract::check c = boost::contract::public_function(this)
             .postcondition([&] {
                 BOOST_CONTRACT_ASSERT(x > 0);
@@ -63,7 +66,8 @@ public:
         x = i_;
     }
     
-    static int instances() { // Contracts for a static public function.
+    // Contracts for static public function (as usual).
+    static int instances() {
         boost::contract::check c = boost::contract::public_function<positive>();
         return instances_;
     }
@@ -77,7 +81,7 @@ private:
 
 public:
     explicit positive(double x) {
-        // Unions cannot have bases so ctor preconditions here.
+        // Unions cannot have bases so constructor preconditions here.
         boost::contract::constructor_precondition<positive> pre([&] {
             BOOST_CONTRACT_ASSERT(x > 0);
         });

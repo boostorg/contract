@@ -28,7 +28,7 @@ public:
         boost::contract::check c = boost::contract::constructor(this);
     }
 
-    ~concrete_subject() {
+    virtual ~concrete_subject() {
         boost::contract::check c = boost::contract::destructor(this);
     }
 
@@ -66,7 +66,7 @@ public:
         boost::contract::check c = boost::contract::constructor(this);
     }
 
-    ~concrete_observer() {
+    virtual ~concrete_observer() {
         boost::contract::check c = boost::contract::destructor(this);
     }
 

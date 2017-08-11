@@ -8,13 +8,7 @@
 #include <boost/contract.hpp>
 #include <cassert>
 
-// Assertion complexity classified relative their function body complexity.
-#define O_LESS_THAN_BODY        0
-#define O_SAME_AS_BODY          1
-#define O_GREATHER_THAN_BODY    2
-#define COMPLEXITY_MAX          O_SAME_AS_BODY
-
-int factorial(int n ) {
+int factorial(int n) {
     int result;
     boost::contract::check c = boost::contract::function()
         .precondition([&] {
@@ -26,15 +20,10 @@ int factorial(int n ) {
             if(n < 2) { // Select assertion.
                 BOOST_CONTRACT_ASSERT(result == 1);
             } else {
-                // Following assertion introduce significant run-time overhead
-                // (same as the function body) so assertion can be selectively
-                // disabled by setting COMPLEXITY_MAX.
-                #if O_SAME_AS_BODY <= COMPLEXITY_MAX
-                    // Assertions automatically disabled in other assertions.
-                    // Therefore, this postcondition can recursively call the
-                    // function without causing infinite recursion.
-                    BOOST_CONTRACT_ASSERT(n * factorial(n - 1));
-                #endif
+                // Assertions automatically disabled in other assertions.
+                // Therefore, this postcondition can recursively call the
+                // function without causing infinite recursion.
+                BOOST_CONTRACT_ASSERT_AUDIT(n * factorial(n - 1));
             }
         })
     ;

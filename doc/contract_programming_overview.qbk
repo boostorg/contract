@@ -369,8 +369,8 @@ The following table compares Contract Programming features among this library, _
 [
     [Feature]
     [This Library]
-    [__N1962__ Proposal (not part of C++)]
-    [__P0380__ Proposal (being considered for C++1z)]
+    [__N1962__ Proposal (not accepted in C++)]
+    [__P0380__ Proposal (being considered for C++2x)]
     [ISE Eiffel 5.4 (see __Meyer97__)]
     [D (see __Bright04__)]
 ][
@@ -522,20 +522,16 @@ Therefore, this feature was removed in the current revision of this library.
     [Disable nothing.]
 ][
     [['Disable contract checking]]
-    [
-Yes, contract checking can be skipped at run-time by defining combinations of the [macroref BOOST_CONTRACT_NO_PRECONDITIONS], [macroref BOOST_CONTRACT_NO_POSTCONDITIONS], [macroref BOOST_CONTRACT_NO_INVARIANTS], [macroref BOOST_CONTRACT_NO_ENTRY_INVARIANTS], and [macroref BOOST_CONTRACT_NO_EXIT_INVARIANTS] macros (completely removing contract code from compiled object code is possible but requires using macros introduced in __Disable_Contract_Compilation__).
-]
+    [Yes, contract checking can be skipped at run-time by defining combinations of the [macroref BOOST_CONTRACT_NO_PRECONDITIONS], [macroref BOOST_CONTRACT_NO_POSTCONDITIONS], [macroref BOOST_CONTRACT_NO_INVARIANTS], [macroref BOOST_CONTRACT_NO_ENTRY_INVARIANTS], and [macroref BOOST_CONTRACT_NO_EXIT_INVARIANTS] macros (completely removing contract code from compiled object code is possible but requires using macros shown in __Disable_Contract_Compilation__).]
     [Yes (contract code also removed from compiled object code, but details are compiler-implementation specific).]
     [Yes (contract code also removed from compiled object code, but details are compiler-implementation specific).]
     [Yes, but only predefined combinations of preconditions, postconditions, and class invariants can be disabled (contract code also removed from compiled object code).]
     [Yes.]
 ][
     [['Assertion levels]]
-    [
-Yes, programmers can define their own assertion levels as needed (including "audit" and "axiom" as shown in __Disable_Contract_Checking__).
-]
+    [Yes, predefined default, audit, and axiom plus programmers can define their own levels.]
     [No (but a previous revision of this proposal considered adding assertion levels called "assertion ordering").]
-    [Yes, predefined "audit" and "axiom".]
+    [Yes, predefined default, audit, and axiom.]
     [No.]
     [No.]
 ]

@@ -17,7 +17,8 @@ public:
         if(!moved()) { // Do not check (some) invariants for moved-from objects.
             BOOST_CONTRACT_ASSERT(index() < size());
         }
-        // More invariants here (that must hold also for moved-from objects).
+        // More invariants here that hold also for moved-from objects (e.g.,
+        // all assertions necessary to successfully destroy moved-from objects).
     }
     
     // Move constructor.
@@ -63,7 +64,6 @@ public:
     }
 
 private:
-    
     bool moved_;
 
     /* ... */
