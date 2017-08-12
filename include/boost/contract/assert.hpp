@@ -12,6 +12,8 @@ Assert contract conditions.
 */
 
 #include <boost/contract/core/config.hpp>
+#include <boost/contract/detail/noop.hpp>
+
 #ifndef BOOST_CONTRACT_NO_ALL
     #include <boost/contract/detail/assert.hpp>
     #define BOOST_CONTRACT_ASSERT(condition) \
@@ -46,10 +48,11 @@ Assert contract conditions.
     // This must be an expression (a trivial one so the compiler can optimize it
     // away). It cannot an empty code block `{}`, etc. otherwise code like
     // `if(...) ASSERT(...); else ASSERT(...);` won't work when NO_ALL.
-    #define BOOST_CONTRACT_ASSERT(condition) ((void*)0)
+    #define BOOST_CONTRACT_ASSERT(condition) \
+        BOOST_CONTRACT_DETAIL_NOOP
 #endif
 
-#ifndef BOOST_CONTRACT_NO_AUDIT_ASSERTIONS
+#ifndef BOOST_CONTRACT_NO_AUDITS
     // Compiles and evaluates condition (default).
     #define BOOST_CONTRACT_ASSERT_AUDIT(condition) \
         BOOST_CONTRACT_ASSERT(condition)
@@ -57,12 +60,12 @@ Assert contract conditions.
     /** TODO */
     // Compiles but does not evaluate condition.
     #define BOOST_CONTRACT_ASSERT_AUDIT(condition) \
-        BOOST_CONTRACT_ASSERT(true || (condition))
+        BOOST_CONTRACT_DETAIL_NOEVAL(condition)
 #endif
 
 /** TODO */
 #define BOOST_CONTRACT_ASSERT_AXIOM(condition) \
-    BOOST_CONTRACT_ASSERT(true || (condition))
+    BOOST_CONTRACT_DETAIL_NOEVAL(condition)
 
 #endif // #include guard
 

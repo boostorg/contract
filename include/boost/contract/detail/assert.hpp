@@ -8,6 +8,7 @@
 // See: http://www.boost.org/doc/libs/release/libs/contract/doc/html/index.html
 
 #include <boost/contract/core/exception.hpp>
+#include <boost/contract/detail/noop.hpp>
 #include <boost/preprocessor/stringize.hpp>
 
 // In detail because used by both ASSERT and CHECK.
@@ -16,8 +17,12 @@
 // if wrapped by {}, and else won't compile if expands trailing `;`).
 #define BOOST_CONTRACT_DETAIL_ASSERT(condition) \
     /* no if-statement here */ \
-    ((condition) ? (void*)0 : throw boost::contract::assertion_failure( \
-            __FILE__, __LINE__, BOOST_PP_STRINGIZE(condition))) /* no ; here */
+    ((condition) ? \
+        BOOST_CONTRACT_DETAIL_NOOP \
+    : \
+        throw boost::contract::assertion_failure( \
+                __FILE__, __LINE__, BOOST_PP_STRINGIZE(condition)) \
+    ) /* no ; here */
 
 #endif // #include guard
 

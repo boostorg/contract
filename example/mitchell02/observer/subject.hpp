@@ -55,11 +55,10 @@ public:
 
     // Attach given object as an observer.
     void attach(observer* ob) {
-        boost::contract::old_ptr<std::vector<observer const*> > old_observers
-            #ifndef BOOST_CONTRACT_NO_AUDIT_ASSERTIONS
-                = BOOST_CONTRACT_OLDOF(observers())
-            #endif // Else, leave old pointer null...
-        ;
+        boost::contract::old_ptr<std::vector<observer const*> > old_observers;
+        #ifndef BOOST_CONTRACT_NO_AUDITS
+            old_observers = BOOST_CONTRACT_OLDOF(observers());
+        #endif
         boost::contract::check c = boost::contract::public_function(this)
             .precondition([&] {
                 BOOST_CONTRACT_ASSERT(ob); // Not null.
@@ -68,10 +67,8 @@ public:
             .postcondition([&] {
                 BOOST_CONTRACT_ASSERT(attached(ob)); // Attached.
                 // Others not changed (frame rule).
-                if(old_observers) { // ...skip #if NO_AUDIT.
-                    BOOST_CONTRACT_ASSERT(other_observers_unchanged(
-                            *old_observers, observers(), ob));
-                }
+                BOOST_CONTRACT_ASSERT_AUDIT(other_observers_unchanged(
+                        *old_observers, observers(), ob));
             })
         ;
 

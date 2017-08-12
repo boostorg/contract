@@ -13,6 +13,8 @@ Macro for implementation checks.
 
 // IMPORTANT: Included by contract_macro.hpp so must #if-guard all its includes.
 #include <boost/contract/core/config.hpp> 
+#include <boost/contract/detail/noop.hpp>
+
 #ifndef BOOST_CONTRACT_NO_CHECKS
     #include <boost/contract/detail/check.hpp>
     #include <boost/contract/detail/assert.hpp>
@@ -39,6 +41,19 @@ Macro for implementation checks.
     */
     #define BOOST_CONTRACT_CHECK(condition) /* nothing */
 #endif
+
+#ifndef BOOST_CONTRACT_NO_AUDITS
+    #define BOOST_CONTRACT_CHECK_AUDIT(condition) \
+        BOOST_CONTRACT_CHECK(condition)
+#else
+    /** TODO */
+    #define BOOST_CONTRACT_CHECK_AUDIT(condition) \
+        BOOST_CONTRACT_DETAIL_NOEVAL(condition)
+#endif
+    
+/** TODO */
+#define BOOST_CONTRACT_CHECK_AXIOM(condition) \
+    BOOST_CONTRACT_DETAIL_NOEVAL(condition)
 
 #endif // #include guard
 

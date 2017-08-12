@@ -241,7 +241,7 @@ Configure this library compile-time and run-time behaviours.
 
 #ifdef BOOST_CONTRACT_DETAIL_DOXYGEN
     /** TODO */
-    #define BOOST_CONTRACT_NO_AUDIT_ASSERTIONS
+    #define BOOST_CONTRACT_NO_AUDITS
 #endif
 
 #ifdef BOOST_CONTRACT_DETAIL_DOXYGEN

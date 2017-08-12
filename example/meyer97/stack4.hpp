@@ -53,7 +53,7 @@ public:
             .postcondition([&] {
                 BOOST_CONTRACT_ASSERT(capacity() == other.capacity());
                 BOOST_CONTRACT_ASSERT(count() == other.count());
-                // All elements equal to other's elements one by one.
+                BOOST_CONTRACT_ASSERT_AXIOM(*this == other);
             })
         ;
 
@@ -69,7 +69,7 @@ public:
             .postcondition([&] {
                 BOOST_CONTRACT_ASSERT(capacity() == other.capacity());
                 BOOST_CONTRACT_ASSERT(count() == other.count());
-                // All elements equal to other's elements one by one.
+                BOOST_CONTRACT_ASSERT_AXIOM(*this == other);
             })
         ;
 

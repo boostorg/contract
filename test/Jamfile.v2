@@ -233,6 +233,13 @@ test-suite check :
     
     [ subdir-run check : ifdef ]
     [ subdir-run check : ifdef_macro ]
+    
+    [ subdir-run check : audit ]
+    [ subdir-compile-fail check : audit_error ]
+    [ subdir-run check : audit_disabled ]
+    [ subdir-compile-fail check : audit_disabled_error ]
+    [ subdir-run check : axiom ]
+    [ subdir-compile-fail check : axiom_error ]
 ;
 
 test-suite result :
@@ -275,6 +282,13 @@ test-suite disable :
             <link>shared:<define>BOOST_CONTRACT_TEST_LIB_Y_DYN_LINK ]
     [ subdir-run disable : always_disable_post_except_lib :
             <library>disable-lib_x <library>disable-lib_y ]
+    
+    [ subdir-run disable : audit ]
+    [ subdir-compile-fail disable : audit_error ]
+    [ subdir-run disable : audit_disabled ]
+    [ subdir-compile-fail disable : audit_disabled_error ]
+    [ subdir-run disable : axiom ]
+    [ subdir-compile-fail disable : axiom_error ]
 ;
 
 test-suite specify :

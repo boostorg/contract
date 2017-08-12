@@ -16,8 +16,11 @@ class abstract_stack {
 public:
     abstract_stack() {
         boost::contract::check c = boost::contract::constructor(this)
-            // Postcondition: empty() (but it cannot be checked here to avoid
-            // calling pure virtual function length() during construction).
+            .postcondition([&] {
+                // AXIOM as empty() cannot actually be checked here to avoid
+                // calling pure virtual function length() during construction).
+                BOOST_CONTRACT_ASSERT_AXIOM(empty());
+            })
         ;
     }
 

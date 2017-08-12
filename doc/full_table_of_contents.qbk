@@ -53,7 +53,8 @@ __Extras__
     __Volatile_Public_Functions__
     __Move_Operations__
     __Unions__
-    __Disable_Contract_Checking_and_Assertion_Levels__
+    __Disable_Contract_Checking__
+    __Assertion_Levels__
     __Disable_Contract_Compilation_Macro_Interface__
     __Separate_Body_Implementation__
     __No_Lambda_Functions_No_CXX11__

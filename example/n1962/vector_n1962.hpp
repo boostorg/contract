@@ -28,6 +28,12 @@
 
 
 
+
+
+
+
+
+
 template< class T, class Allocator = std::allocator<T> >
 class vector {
     
@@ -448,6 +454,9 @@ public:
 
     
     
+    
+    
+    
     void assign(size_type count, T const& vallue)
         precondition {
             count <= max_size();
@@ -495,6 +504,7 @@ public:
     
     
     
+    
     void insert(iterator where, size_type count, T const& value)
         precondition {
             size() + count < max_size();
@@ -516,7 +526,6 @@ public:
     }
 
 
-    
     
     
     
@@ -642,6 +651,9 @@ public:
 
 
 
+    
+    
+    
     friend bool operator==(vector const& left, vector const& right) {
         return left.vect_ == right.vect_;
     }

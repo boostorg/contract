@@ -27,6 +27,12 @@ struct all_of_equal_to {
     }
 };
 
+template<typename Iter>
+bool valid(Iter first, Iter last); // Cannot implement in C++ (for axiom only).
+
+template<typename Iter>
+bool contained(Iter first1, Iter last1, Iter first2, Iter last2); // For axiom.
+
 // STL vector requires T copyable but not equality comparable.
 template<typename T, class Allocator = std::allocator<T> >
 class vector {
@@ -438,7 +444,10 @@ public:
     template<typename InputIter>
     void assign(InputIter first, InputIter last) {
         boost::contract::check c = boost::contract::public_function(this)
-            // Precondition: [begin(), end()) does not contain [first, last).
+            .precondition([&] {
+                BOOST_CONTRACT_ASSERT_AXIOM(
+                        !contained(begin(), end(), first, lat));
+            })
             .postcondition([&] {
                 BOOST_CONTRACT_ASSERT(std::distance(first, last) ==
                         int(size()));
@@ -485,10 +494,11 @@ public:
                                 boost::cref(value))
                     )
                 );
-                //  if(capacity() > old(capacity()))
-                //      [begin(), end()) is invalid
-                //  else
-                //      [where, end()) is invalid
+                if(capacity() > *old_capacity) {
+                    BOOST_CONTRACT_ASSERT_AXIOM(!valid(begin(), end()));
+                } else {
+                    BOOST_CONTRACT_ASSERT_AXIOM(!valid(where, end()));
+                }
             })
         ;
 
@@ -519,9 +529,8 @@ public:
                             )
                         )
                     );
-                    // [where, end()) is invalid
-                }
-                // else [begin(), end()) is invalid
+                    BOOST_CONTRACT_ASSERT_AXIOM(!valid(where, end()));
+                } else BOOST_CONTRACT_ASSERT_AXIOM(!valid(begin(), end()));
             })
         ;
 
@@ -540,7 +549,8 @@ public:
             .precondition([&] {
                 BOOST_CONTRACT_ASSERT(size() + std::distance(first, last) <
                         max_size());
-                // [first, last) not contained in [begin(), end())
+                BOOST_CONTRACT_ASSERT_AXIOM(
+                        !contained(first, lat, begin(), end()));
             })
             .postcondition([&] {
                 BOOST_CONTRACT_ASSERT(size() == *old_size() +
@@ -556,9 +566,8 @@ public:
                             )
                         )
                     );
-                    // [where, end()) is invalid
-                }
-                // else [begin(), end()) is invalid
+                    BOOST_CONTRACT_ASSERT_AXIOM(!valid(where, end()));
+                } else BOOST_CONTRACT_ASSERT_AXIOM(!valid(begin(), end()));
             })
         ;
 
@@ -577,7 +586,7 @@ public:
             .postcondition([&] {
                 BOOST_CONTRACT_ASSERT(size() == *old_size - 1);
                 if(empty()) BOOST_CONTRACT_ASSERT(result == end());
-                // [where, end()) is invalid
+                BOOST_CONTRACT_AXIOM(!valid(where, end()));
             })
         ;
 
@@ -596,7 +605,7 @@ public:
                 BOOST_CONTRACT_ASSERT(size() == *old_size -
                         std::distance(first, last));
                 if(empty()) BOOST_CONTRACT_ASSERT(result == end());
-                // [first, last) is invalid
+                BOOST_CONTRACT_ASSERT_AXIOM(!valid(first, last));
             })
         ;
 
@@ -614,22 +623,25 @@ public:
     }
 
     void swap(vector& other) {
-        boost::contract::old_ptr<vector> old_me = BOOST_CONTRACT_OLDOF(*this);
-        boost::contract::old_ptr<vector> old_other =
-                BOOST_CONTRACT_OLDOF(other);
+        boost::contract::old_ptr<vector> old_me;
+        boost::contract::old_ptr<vector> old_other;
+        #ifndef BOOST_CONTRACT_NO_AUDITS
+            old_me = BOOST_CONTRACT_OLDOF(*this);
+            old_other = BOOST_CONTRACT_OLDOF(other);
+        #endif
         boost::contract::check c = boost::contract::public_function(this)
             .precondition([&] {
                 BOOST_CONTRACT_ASSERT(get_allocator() == other.get_allocator());
             })
             .postcondition([&] {
-                BOOST_CONTRACT_ASSERT(
+                BOOST_CONTRACT_ASSERT_AUDIT(
                     boost::contract::condition_if<boost::has_equal_to<
                             vector<T> > >(
                         boost::bind(std::equal_to<vector<T> >(),
                                 boost::cref(*this), boost::cref(*old_other))
                     )
                 );
-                BOOST_CONTRACT_ASSERT(
+                BOOST_CONTRACT_ASSERT_AUDIT(
                     boost::contract::condition_if<boost::has_equal_to<
                             vector<T> > >(
                         boost::bind(std::equal_to<vector<T> >(),
