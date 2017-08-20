@@ -8,11 +8,9 @@
 // See: http://www.boost.org/doc/libs/release/libs/contract/doc/html/index.html
 
 /** @file
-Completely disable run-time and compile-time overheads of contract code.
-
-This header also includes all headers file <c>boost/contract/\*.hpp</c> are
-necessary to use this macro (including the ones that define ASSERT, virtual_,
-access, OVERRIDE, BASE_TYPES, CHECK, constructor_precondition, etc.)
+Completely disable compile-time and run-time overhead introduced by contracts.
+This header also includes all headers file <c>boost/contract/\*.hpp</c> that are
+necessary to use its macros.
 
 Almost all the macros defined in this header file are variadic macros. On
 compilers that do not support variadic macros, programmers can manually code
@@ -93,7 +91,7 @@ Disable Contract Compilation}).
     Where:
 
     @arg    <c><b>f</b></c> is the functor called by this library to check
-            postconditions @c f(...).
+            postconditions <c>f(...)</c>.
             Assertions within this functor are usually programmed using
             @RefMacro{BOOST_CONTRACT_ASSERT}, but any exception thrown by a call
             to this functor indicates a contract assertion failure (and will

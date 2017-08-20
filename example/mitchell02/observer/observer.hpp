@@ -20,10 +20,12 @@ public:
     /* Creation */
 
     observer() {
+        // Could have omitted contracts here (nothing to check).
         boost::contract::check c = boost::contract::constructor(this);
     }
     
     virtual ~observer() {
+        // Could have omitted contracts here (nothing to check).
         boost::contract::check c = boost::contract::destructor(this);
     }
 

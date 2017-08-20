@@ -31,8 +31,7 @@ preconditions, see
 @RefSect{contract_programming_overview, Contract Programming Overview}).
 
 For optimization, this can be omitted for destructors that do not have
-postconditions and exception guarantees when the enclosing class has no
-invariants.
+postconditions and exception guarantees, within classes that have no invariants.
 
 @see @RefSect{tutorial.destructors, Destructors}
 
@@ -41,10 +40,10 @@ invariants.
             (Destructors check all class invariants, including static and
             volatile invariants, see also @RefSect{tutorial.class_invariants,
             Class Invariants} and
-            @RefSect{advanced_topics.volatile_public_functions,
+            @RefSect{advanced.volatile_public_functions,
             Volatile Public Functions}).
 
-@tparam Class   The class type of the enclosing destructor declaring the
+@tparam Class   The type of the class containing the destructor declaring the
                 contract.
                 (Usually this template parameter is automatically deduced by C++
                 and it does not need to be explicitly specified by programmers.)

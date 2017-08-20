@@ -159,9 +159,7 @@ one or more overriding public function must declare a @c typedef named
 This @c typedef must be @c public unless @RefClass{boost::contract::access} is
 used.
 
-@see    @RefSect{tutorial.base_classes, Base Classes},
-        @RefSect{advanced_topics.access_specifiers, Access Specifiers},
-        @RefSect{extra_topics.no_macros__no_c__11_, No Macros}
+@see @RefSect{tutorial.base_classes__subcontracting_, Base Classes}
 
 @param ...  Comma separated list of base classes.
             Each base must explicitly specify its access specifier @c public,
@@ -171,7 +169,7 @@ used.
             (because of similar limits in Boost.MPL internally used by this
             library).
             This is a variadic macro parameter, on compilers that do not support
-            variadic macros, the base classes @c typedef can be programmed
+            variadic macros, the @c typedef for base classes can be programmed
             manually without using this macro.
 */
 #define BOOST_CONTRACT_BASE_TYPES(...) void /* dummy type for typedef */

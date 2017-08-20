@@ -26,11 +26,14 @@ namespace boost { namespace contract {
 Program preconditions for constructors.
 
 This class must be the very first base of the class declaring the
-constructor for which preconditions are being programmed (that way constructor
-arguments are checked by preconditions even before they are used to initialize
-any other base class).
-Also user-defined classes should inherit privately (and never virtually) from
-this class (to not alter the public interface of user-defined classes).
+constructor for which preconditions are programmed (that way constructor
+arguments can be checked by preconditions even before they are used to
+initialize other base classes).
+User-defined classes should inherit privately from this class (to not alter the
+public interface of user-defined classes).
+In addition, this class should never be declared as a virtual base (because
+virtual bases are initialized only once across the entire inheritance hierarchy
+preventing preconditions of other base classes from being checked).
 
 Unions cannot have base classes in C++ so this class can be used to declare a
 local object within the constructor definition just before
@@ -53,7 +56,7 @@ public:
     
     @note   Calling this default constructor should amount to negligible
             compile-time and run-time overheads (likely to be optimized away
-            completely in most cases).
+            completely by most compilers).
     */
     constructor_precondition() {}
 

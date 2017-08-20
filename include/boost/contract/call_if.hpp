@@ -8,11 +8,10 @@
 // See: http://www.boost.org/doc/libs/release/libs/contract/doc/html/index.html
 
 /** @file
-Statically disable compilation and execution of functor template calls.
+Statically disable compilation and execution of functor calls.
 
-@note   This facility also allows to emulate C++17 <c>if constexpr</c>
-        statements but only when used together with functor templates (or C++14
-        generic lambdas).
+@note   This facility allows to emulate C++17 <c>if constexpr</c> statements
+        when used together with functor templates (or C++14 generic lambdas).
 */
 
 #include <boost/contract/detail/none.hpp>
@@ -54,8 +53,8 @@ Usually this class template is instantiated only via the return value of
 @see    @RefSect{extra_topics.assertion_requirements__templates_,
         Assertion Requirements}
 
-@tparam Pred    Static boolean predicate selecting which functor template call
-                to compile and execute.
+@tparam Pred    Static boolean predicate that selects which functor template
+                call to compile and execute.
 @tparam Then Type of the functor template to call if the static predicate is
         @c true.
 @tparam ThenResult Return type of then-branch functor template call (this is
@@ -451,7 +450,7 @@ Select compilation and execution of functor template calls using a static
 boolean predicate.
 
 Create a call-if object with the specified then-branch functor template.
-Optional functor template for else-if-branches and the else-branch can be
+Optional functor templates for else-if-branches and the else-branch can be
 specified as needed.
 For example:
 
@@ -462,8 +461,8 @@ boost::contract::call_if<Predicate1>(
     then_functor_template2
 )
 ...                                     // Optionally, other `else_if`.
-.else_(                                 // Optional for `void` functors.
-    else_functor_template
+.else_(                                 // Optional for `void` functors,
+    else_functor_template               // but required for non `void`.
 )
 @endcode
 
@@ -495,9 +494,9 @@ call_if_statement<Pred, Then> call_if_c(Then f) {
 Select compilation and execution of functor template calls using a nullary
 boolean meta-function.
 
-Create a call-if object with the specified then-branch functor template (this is
-equivalent to <c>boost::contract::call_if_c<Pred::value>(f)</c>).
-Optional functor template for else-if-branches and the else-branch can be
+Create a call-if object with the specified then-branch functor template.
+This is equivalent to <c>boost::contract::call_if_c<Pred::value>(f)</c>.
+Optional functor templates for else-if-branches and the else-branch can be
 specified as needed.
 For example:
 
@@ -508,8 +507,8 @@ boost::contract::call_if<MetaFunction1>(
     then_functor_template2
 )
 ...                                     // Optionally, other `else_if`.
-.else_(                                 // Optional for `void` functors.
-    else_functor_template
+.else_(                                 // Optional for `void` functors,
+    else_functor_template               // but required for non `void`.
 )
 @endcode
 
@@ -545,6 +544,9 @@ static boolean predicate.
 Compile and execute the nullary boolean functor template call @c f() if and only
 if the specified static boolean predicate @p Pred is @c true, otherwise
 trivially return @p else_ (@c true by default) at run-time.
+A call to <c>boost::contract::condition_if_c<Pred>(f, b)</c> is logically
+equivalent to <c>boost::contract::call_if_c<Pred>(f, [b] { return b; })</c> (but
+its implementation is optimized with respsect to the @c call_if_c equivalent).
 
 @see    @RefSect{extra_topics.assertion_requirements__templates_,
         Assertion Requirements}

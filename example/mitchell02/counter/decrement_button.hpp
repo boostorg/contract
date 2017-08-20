@@ -39,6 +39,7 @@ public:
 
     // Destroy button.
     virtual ~decrement_button() {
+        // Could have omitted contracts here (nothing to check).
         boost::contract::check c = boost::contract::destructor(this);
     }
 

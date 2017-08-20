@@ -333,18 +333,18 @@ The assertion levels predefined by this library are similar to the default, audi
 * [macroref BOOST_CONTRACT_ASSERT] is used to assert conditions that are not computationally expensive, at least compared to the cost of executing the function body.
 These assertions are always checked at run-time and cannot be disabled.
 * [macroref BOOST_CONTRACT_ASSERT_AUDIT] is used to assert conditions that are computationally expensive compared to the cost of executing the function body.
-These assertions are checked at run-time by default but programmers can disable them by defining [macroref BOOST_CONTRACT_NO_AUDITS] (the asserted conditions will always be compiled and validated syntactically even when they are not actually evaluated and checked at run-time).
+These assertions are not checked at run-time unless programmers explicitly define [macroref BOOST_CONTRACT_AUDITS] (undefined by default), but the conditions are always compiled and validated syntactically (even when they are not actually evaluated and checked at run-time).
 * [macroref BOOST_CONTRACT_ASSERT_AXIOM] is used to assert conditions that are computationally prohibitive, at least compared to the cost of executing the function body.
-These assertions are never evaluated or checked at run-time (but the asserted conditions are always compiled and validated syntactically so these assertions can serve as formal comments in the code).
+These assertions are never evaluated or checked at run-time, but the asserted conditions are always compiled and validated syntactically so these assertions can serve as formal comments in the code.
 
-In addition, [macroref BOOST_CONTRACT_CHECK_AUDIT] and [macroref BOOST_CONTRACT_CHECK_AXIOM] are similar to [macroref BOOST_CONTRACT_ASSERT_AUDIT] and [macroref BOOST_CONTRACT_ASSERT_AXIOM] but they are used to program audit and axiom implementation checks instead of assertions (see __Implementation_Checks__).
+In addition, [macroref BOOST_CONTRACT_CHECK_AUDIT] and [macroref BOOST_CONTRACT_CHECK_AXIOM] are similar to [macroref BOOST_CONTRACT_ASSERT_AUDIT] and [macroref BOOST_CONTRACT_ASSERT_AXIOM] but they are used to program audit and axiom levels for implementation checks instead of assertions (see __Implementation_Checks__).
 
 For example, [macroref BOOST_CONTRACT_ASSERT_AUDIT] can be used to program computationally expensive assertions (see [@../../example/features/assertion_level.cpp =assertion_level.cpp=]):
 
 [import ../example/features/assertion_level.cpp]
 [assertion_level_audit]
 
-Also [macroref BOOST_CONTRACT_NO_AUDITS] can be used to disable expensive old value copies and related assertions that use them (see [@../../example/features/assertion_level.cpp =assertion_level.cpp=]):
+Also [macroref BOOST_CONTRACT_AUDITS] can be used to disable expensive old value copies and related assertions that use them (see [@../../example/features/assertion_level.cpp =assertion_level.cpp=]):
 
 [assertion_level_class_begin]
 [assertion_level_audit_old]
@@ -558,12 +558,12 @@ However, using [macroref BOOST_CONTRACT_ASSERT] is convenient because it always 
 The [macroref BOOST_CONTRACT_ASSERT_AUDIT] and [macroref BOOST_CONTRACT_ASSERT_AXIOM] macros are not a variadic macros and programmers should be able to use them on all C++ compilers.
 Their implements are equivalent to the following:
 
-    #ifdef BOOST_CONTRACT_NO_AUDIT_ASSERTIONS
-        #define BOOST_CONTRACT_ASSERT_AUDIT(condition) \
-            BOOST_CONTRACT_ASSERT(true || (condition))
-    #else
+    #ifdef BOOST_CONTRACT_AUDITS
         #define BOOST_CONTRACT_ASSERT_AUDIT(condition) \
             BOOST_CONTRACT_ASSERT(condition)
+    #else
+        #define BOOST_CONTRACT_ASSERT_AUDIT(condition) \
+            BOOST_CONTRACT_ASSERT(true || (condition))
     #endif
         
     #define BOOST_CONTRACT_ASSERT_AXIOM(condition) \

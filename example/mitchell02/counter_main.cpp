@@ -26,6 +26,7 @@ public:
 
     // Create view associated with given counter.
     explicit view_of_counter(counter& a_counter) : counter_(a_counter) {
+        // Could have omitted contracts here (nothing to check).
         boost::contract::check c = boost::contract::constructor(this);
 
         counter_.attach(this);
@@ -34,6 +35,7 @@ public:
 
     // Destroy view.
     virtual ~view_of_counter() {
+        // Could have omitted contracts here (nothing to check).
         boost::contract::check c = boost::contract::destructor(this);
     }
 

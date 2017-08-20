@@ -633,6 +633,10 @@ Remember:
 
 For the rest, considerations made in __Public_Functions__ apply to virtual public functions as well.
 
+[note
+A virtual public function should always call [funcref boost::contract::public_function] (even if it has no preconditions, no postconditions, no exception guarantees, and its class has no invariants), otherwise this library will not be able to correctly use it for subcontracting.
+]
+
 [endsect]
 
 [section Public Function Overrides (Subcontracting)]
@@ -747,6 +751,10 @@ At destruction instead (enclosing public function override exit):
 This ensures that public function override contracts and subcontracts are correctly checked at run-time (see __Public_Function_Calls__).
 
 For the rest, considerations made in __Virtual_Public_Functions__ apply to public function overrides as well.
+
+[note
+A public function override should always call [funcref boost::contract::public_function] (even if it has no preconditions, no postconditions, no exception guarantees, and its class has no invariants), otherwise this library will not be able to correctly use it for subcontracting.
+]
 
 [endsect]
 

@@ -8,7 +8,7 @@
 // See: http://www.boost.org/doc/libs/release/libs/contract/doc/html/index.html
 
 /** @file
-Program contracts for public member functions.
+Program contracts for public functions (including subcontracting).
 Overloads handle public functions that are static, virtual void, virtual non-void, overriding void, and overriding non-void.
 */
 
@@ -28,7 +28,7 @@ Overloads handle public functions that are static, virtual void, virtual non-voi
 #include <boost/contract/detail/decl.hpp>
 #include <boost/contract/detail/tvariadic.hpp>
 #if BOOST_CONTRACT_PUBLIC_FUNCTIONS_IMPL_
-    #include <boost/contract/detail/operation/public_static_function.hpp>
+    #include <boost/contract/detail/operation/static_public_function.hpp>
     #include <boost/contract/detail/operation/public_function.hpp>
     #include <boost/contract/detail/type_traits/optional.hpp>
     #include <boost/contract/detail/none.hpp>
@@ -73,13 +73,13 @@ value copies at body, and check static class invariants for static public
 functions.
 
 For optimization, this can be omitted for static public functions that do not
-have preconditions, postconditions, and exception guarantees when the enclosing
-class has no static invariants.
+have preconditions, postconditions and exception guarantees, within classes that
+have no static invariants.
 
 @see @RefSect{tutorial.static_public_functions, Static Public Functions}
 
-@tparam Class   The class type of the enclosing static public function declaring
-                the contract.
+@tparam Class   The type of the class containing the static public function
+                declaring the contract.
                 This template parameter must be explicitly specified for static
                 public functions (because they have no object @c this so there
                 is no function argument from which this type template parameter
@@ -87,14 +87,14 @@ class has no static invariants.
 
 @return The result of this function must be explicitly assigned to a variable of
         type @RefClass{boost::contract::check} declared locally just before the
-        static function body code (otherwise this library will generate a
+        code of the static function body (otherwise this library will generate a
         run-time error, see @RefMacro{BOOST_CONTRACT_ON_MISSING_CHECK_DECL}).
 */
 template<class Class>
 specify_precondition_old_postcondition_except<> public_function() {
     #if BOOST_CONTRACT_PUBLIC_FUNCTIONS_IMPL_
         return specify_precondition_old_postcondition_except<>(
-            new boost::contract::detail::public_static_function<Class>());
+            new boost::contract::detail::static_public_function<Class>());
     #else
         return specify_precondition_old_postcondition_except<>();
     #endif
@@ -109,8 +109,8 @@ value copies at body, and check class invariants for public functions that are
 not static, not virtual, and do not override.
 
 For optimization, this can be omitted for public functions that do not have
-preconditions, postconditions, and exception guarantees when the enclosing class
-has no (non-static) invariants.
+preconditions, postconditions and exception guarantees, within classes that have
+no invariants.
 
 @see @RefSect{tutorial.public_functions, Public Functions}
 
@@ -120,11 +120,11 @@ has no (non-static) invariants.
             <c>const volatile</c> depending on the cv-qualifier of the enclosing
             function (volatile virtual public functions will check volatile
             class invariants, see
-            @RefSect{extra_topics.volatile_public_functions,
+            @RefSect{extras.volatile_public_functions,
             Volatile Public Functions}).
 
-@tparam Class   The class type of the enclosing public function declaring the
-                contract.
+@tparam Class   The type of the class containing the public function declaring
+                the contract.
                 (Usually this template parameter is automatically deduced by C++
                 and it does not need to be explicitly specified by programmers.)
 
@@ -234,9 +234,9 @@ specify_precondition_old_postcondition_except<> public_function(Class* obj) {
     old value copies at body, and check class invariants for public functions
     that are virtual, do not override, and return @c void.
 
-    For optimization, this can be omitted for virtual public functions that do
-    not have preconditions, postconditions, and exception guarantees when the
-    enclosing class has no (non-static) invariants.
+    A virtual public function should always call
+    @RefFunc{boost::contract::public_function} otherwise this library will not
+    be able to correctly use it for subcontracting.
 
     @see @RefSect{tutorial.virtual_public_functions, Virtual Public Functions}
     
@@ -249,10 +249,10 @@ specify_precondition_old_postcondition_except<> public_function(Class* obj) {
                 <c>const volatile</c> depending on the cv-qualifier of the
                 enclosing function (volatile public functions will check
                 volatile class invariants, see
-                @RefSect{extra_topics.volatile_public_functions,
+                @RefSect{extras.volatile_public_functions,
                 Volatile Public Functions}).
 
-    @tparam Class   The class type of the enclosing virtual public function
+    @tparam Class   The type of the class containing the virtual public function
                     declaring the contract.
                     (Usually this template parameter is automatically deduced by
                     C++ and it does not need to be explicitly specified by
@@ -276,9 +276,9 @@ specify_precondition_old_postcondition_except<> public_function(Class* obj) {
     old value copies at body, and check class invariants for public functions
     that are virtual, do not override, and do not return @c void.
 
-    For optimization, this can be omitted for virtual public functions that do
-    not have preconditions, postconditions, and exception guarantees when the
-    enclosing class has no (non-static) invariants.
+    A virtual public function should always call
+    @RefFunc{boost::contract::public_function} otherwise this library will not
+    be able to correctly use it for subcontracting.
 
     @see @RefSect{tutorial.virtual_public_functions, Virtual Public Functions}
     
@@ -297,7 +297,7 @@ specify_precondition_old_postcondition_except<> public_function(Class* obj) {
                 <c>const volatile</c> depending on the cv-qualifier of the
                 enclosing function (volatile public functions will check
                 volatile class invariants, see
-                @RefSect{extra_topics.volatile_public_functions,
+                @RefSect{extras.volatile_public_functions,
                 Volatile Public Functions}).
     
     @tparam VirtualResult   This type must be the same as, or compatible with,
@@ -309,12 +309,12 @@ specify_precondition_old_postcondition_except<> public_function(Class* obj) {
                             Alternatively,
                             <c>boost::optional<<i>return-type</i>></c> can also
                             be used (see
-                            @RefSect{advanced_topics.optional_return_value,
+                            @RefSect{advanced.optional_return_value,
                             Optional Return Value}).
                             (Usually this template parameter is automatically
                             deduced by C++ and it does not need to be explicitly
                             specified by programmers.)
-    @tparam Class   The class type of the enclosing virtual public function
+    @tparam Class   The type of the class containing the virtual public function
                     declaring the contract.
                     (Usually this template parameter is automatically deduced by
                     C++ and it does not need to be explicitly specified by
@@ -421,9 +421,9 @@ specify_precondition_old_postcondition_except<> public_function(Class* obj) {
     old value copies at body, and check class invariants for public function
     overrides (virtual or not) that return @c void.
 
-    For optimization, this can be omitted for public function overrides that do
-    not have preconditions, postconditions, and exception guarantees when the
-    enclosing class has no (non-static) invariants.
+    A public function override should always call
+    @RefFunc{boost::contract::public_function} otherwise this library will not
+    be able to correctly use it for subcontracting.
 
     @see    @RefSect{tutorial.public_function_overrides__subcontracting_,
             Public Function Overrides}
@@ -439,28 +439,26 @@ specify_precondition_old_postcondition_except<> public_function(Class* obj) {
                 <c>const volatile</c> depending on the cv-qualifier of the
                 enclosing function (volatile public functions will check
                 volatile class invariants, see
-                @RefSect{extra_topics.volatile_public_functions,
+                @RefSect{extras.volatile_public_functions,
                 Volatile Public Functions}).
     @param args All arguments passed to the enclosing public function override
-                declaring the contract (by reference and in order they appear in
-                the enclosing function declaration), but excluding the trailing
-                argument @c v.
+                declaring the contract (by reference and in the order they
+                appear in the enclosing function declaration), but excluding the
+                trailing argument @c v.
 
     @tparam Override    The type <c>override_<i>function-name</i></c> declared
-                        using the @RefMacro{BOOST_CONTRACT_OVERRIDE} (or
-                        equivalent) macro from the enclosing function name.
+                        using the @RefMacro{BOOST_CONTRACT_OVERRIDE} or related
+                        macros.
                         This template parameter must be explicitly specified
-                        (because there is no function argument from which this
-                        type template parameter can be automatically deduced by
-                        C++).
-    @tparam F   The function pointer type for the enclosing public function
+                        (because there is no function argument from which it can
+                        be automatically deduced by C++).
+    @tparam F   The function pointer type of the enclosing public function
                 override declaring the contract.
                 (Usually this template parameter is automatically deduced by
                 C++ and it does not need to be explicitly specified by
                 programmers, but see
-                @RefSect{advanced_topics.function_overloads,
-                Function Overloads}.)
-    @tparam Class   The class type of the enclosing virtual public function
+                @RefSect{advanced.function_overloads, Function Overloads}.)
+    @tparam Class   The type of the class containing the virtual public function
                     declaring the contract.
                     (Usually this template parameter is automatically deduced by
                     C++ and it does not need to be explicitly specified by
@@ -494,9 +492,9 @@ specify_precondition_old_postcondition_except<> public_function(Class* obj) {
     old value copies at body, and check class invariants for public function
     overrides (virtual or not) that do not return @c void.
 
-    For optimization, this can be omitted for public function overrides that do
-    not have preconditions, postconditions, and exception guarantees when the
-    enclosing class has no (non-static) invariants.
+    A public function override should always call
+    @RefFunc{boost::contract::public_function} otherwise this library will not
+    be able to correctly use it for subcontracting.
 
     @see    @RefSect{tutorial.public_function_overrides__subcontracting_,
             Public Function Overrides}
@@ -518,20 +516,19 @@ specify_precondition_old_postcondition_except<> public_function(Class* obj) {
                 <c>const volatile</c> depending on the cv-qualifier of the
                 enclosing function (volatile public functions will check
                 volatile class invariants, see
-                @RefSect{extra_topics.volatile_public_functions,
+                @RefSect{extras.volatile_public_functions,
                 Volatile Public Functions}).
     @param args All arguments passed to the enclosing public function override
-                declaring the contract (by reference and in order they appear in
-                the enclosing function declaration), but excluding the trailing
-                argument @c v.
+                declaring the contract (by reference and in the order they
+                appear in the enclosing function declaration), but excluding the
+                trailing argument @c v.
 
     @tparam Override    The type <c>override_<i>function-name</i></c> declared
-                        using the @RefMacro{BOOST_CONTRACT_OVERRIDE} (or
-                        equivalent) macro from the enclosing function name.
+                        using the @RefMacro{BOOST_CONTRACT_OVERRIDE} or related
+                        macros.
                         This template parameter must be explicitly specified
-                        (because there is no function argument from which this
-                        type template parameter can be automatically deduced by
-                        C++).
+                        (because there is no function argument from which it can
+                        be automatically deduced by C++).
     @tparam VirtualResult   This type must be the same as, or compatible with,
                             the return type of the enclosing public function
                             override declaring the contract (this library might
@@ -541,19 +538,19 @@ specify_precondition_old_postcondition_except<> public_function(Class* obj) {
                             Alternatively,
                             <c>boost::optional<<i>return-type</i>></c> can also
                             be used (see
-                            @RefSect{advanced_topics.optional_return_value,
+                            @RefSect{advanced.optional_return_value,
                             Optional Return Value}).
                             (Usually this template parameter is automatically
                             deduced by C++ and it does not need to be explicitly
                             specified by programmers.)
-    @tparam F   The function pointer type for the enclosing public function
+    @tparam F   The function pointer type of the enclosing public function
                 override declaring the contract.
                 (Usually this template parameter is automatically deduced by
                 C++ and it does not need to be explicitly specified by
                 programmers, but see
-                @RefSect{advanced_topics.function_overloads,
+                @RefSect{advanced.function_overloads,
                 Function Overloads}.)
-    @tparam Class   The class type of the enclosing virtual public function
+    @tparam Class   The type of the class containing the virtual public function
                     declaring the contract.
                     (Usually this template parameter is automatically deduced by
                     C++ and it does not need to be explicitly specified by

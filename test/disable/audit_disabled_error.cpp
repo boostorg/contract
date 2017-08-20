@@ -5,6 +5,5 @@
 // See: http://www.boost.org/doc/libs/release/libs/contract/doc/html/index.html
 
 #define BOOST_CONTRACT_TEST_ERROR
-#define BOOST_CONTRACT_NO_AUDITS
 #include "audit.hpp"
 

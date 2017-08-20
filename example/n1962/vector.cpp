@@ -181,6 +181,7 @@ public:
     }
 
     virtual ~vector() {
+        // Check invariants.
         boost::contract::check c = boost::contract::destructor(this);
     }
 
@@ -231,11 +232,13 @@ public:
     }
 
     iterator end() {
+        // Check invariants.
         boost::contract::check c = boost::contract::public_function(this);
         return vect_.end();
     }
     
     const_iterator end() const {
+        // Check invariants.
         boost::contract::check c = boost::contract::public_function(this);
         return vect_.end();
     }
@@ -263,11 +266,13 @@ public:
     }
 
     reverse_iterator rend() {
+        // Check invariants.
         boost::contract::check c = boost::contract::public_function(this);
         return vect_.rend();
     }
     
     const_reverse_iterator rend() const {
+        // Check invariants.
         boost::contract::check c = boost::contract::public_function(this);
         return vect_.rend();
     }
@@ -326,18 +331,19 @@ public:
     }
 
     Allocator get_allocator() const {
+        // Check invariants.
         boost::contract::check c = boost::contract::public_function(this);
         return vect_.get_allocator();
     }
 
     reference at(size_type index) {
-        // No precondition because throws out_of_range for invalid index.
+        // Check invariants, no pre (throw out_of_range for invalid index).
         boost::contract::check c = boost::contract::public_function(this);
         return vect_.at(index);
     }
     
     const_reference at(size_type index) const {
-        // No precondition because throws out_of_range for invalid index.
+        // Check invariants, no pre (throw out_of_range for invalid index).
         boost::contract::check c = boost::contract::public_function(this);
         return vect_.at(index);
     }
@@ -586,7 +592,7 @@ public:
             .postcondition([&] {
                 BOOST_CONTRACT_ASSERT(size() == *old_size - 1);
                 if(empty()) BOOST_CONTRACT_ASSERT(result == end());
-                BOOST_CONTRACT_AXIOM(!valid(where, end()));
+                BOOST_CONTRACT_ASSERT_AXIOM(!valid(where, end()));
             })
         ;
 
@@ -623,9 +629,8 @@ public:
     }
 
     void swap(vector& other) {
-        boost::contract::old_ptr<vector> old_me;
-        boost::contract::old_ptr<vector> old_other;
-        #ifndef BOOST_CONTRACT_NO_AUDITS
+        boost::contract::old_ptr<vector> old_me, old_other;
+        #ifdef BOOST_CONTRACT_AUDITS
             old_me = BOOST_CONTRACT_OLDOF(*this);
             old_other = BOOST_CONTRACT_OLDOF(other);
         #endif
@@ -655,6 +660,11 @@ public:
     }
 
     friend bool operator==(vector const& left, vector const& right) {
+        // Check class invariants for left and right objects.
+        boost::contract::check left_inv =
+                boost::contract::public_function(&left);
+        boost::contract::check right_inv =
+                boost::contract::public_function(&right);
         return left.vect_ == right.vect_;
     }
 

@@ -16,7 +16,7 @@ Allow to declare invariants, base types, etc all as private members.
 #if !defined(BOOST_CONTRACT_NO_CONDITIONS) || \
         defined(BOOST_CONTRACT_STATIC_LINK)
     #include <boost/contract/detail/decl.hpp>
-    #include <boost/contract/detail/type_traits/introspection.hpp>
+    #include <boost/contract/detail/type_traits/mirror.hpp>
 #endif
 #ifndef BOOST_CONTRACT_NO_INVARIANTS
     #include <boost/contract/detail/debug.hpp>
@@ -45,8 +45,9 @@ namespace boost { namespace contract {
 /**
 Friend this class to declare invariants and base types as private members.
 
-Declare this class as friend of the contracted class in order to declare
-the invariants functions and the base types @c typedef as non-public members.
+Declare this class a friend of the user-defined class specifying the contracts
+in order to declare the invariant functions and the base types @c typedef as
+non-public members.
 In real code, programmers will likely chose to declare this class as friend so
 to fully control public interfaces of their user-defined classes.
 
@@ -60,11 +61,11 @@ member and it is not copyable).
             On other compilers (e.g., GCC and CLang), the private access will
             instead fail SFINAE and no compiler error will be reported while
             invariants and subcontracting will be silently skipped at run-time.
-            Therefore, programmers must make sure to either declare invariant
-            functions and base types @c typedef as public members or to declare
-            this class as friend.
+            Therefore, programmers must make sure to either declare this class
+            as friend (preferred) or to always declare invariant functions and
+            base types @c typedef as public members.
 
-@see @RefSect{advanced_topics.access_specifiers, Access Specifiers}
+@see @RefSect{advanced.access_specifiers, Access Specifiers}
 */
 class access { // Non-copyable (see below).
 /** @cond */
@@ -79,7 +80,7 @@ private: // No public APIs (so users cannot use it directly by mistake).
     
     #if !defined(BOOST_CONTRACT_NO_CONDITIONS) || \
             defined(BOOST_CONTRACT_STATIC_LINK)
-        BOOST_CONTRACT_DETAIL_INTROSPECTION_HAS_TYPE(has_base_types,
+        BOOST_CONTRACT_DETAIL_MIRROR_HAS_TYPE(has_base_types,
                 BOOST_CONTRACT_BASES_TYPEDEF)
 
         template<class C>
@@ -89,10 +90,10 @@ private: // No public APIs (so users cannot use it directly by mistake).
     #endif
 
     #ifndef BOOST_CONTRACT_NO_INVARIANTS
-        BOOST_CONTRACT_DETAIL_INTROSPECTION_HAS_MEMBER_FUNCTION(
+        BOOST_CONTRACT_DETAIL_MIRROR_HAS_MEMBER_FUNCTION(
                 has_static_invariant_f, BOOST_CONTRACT_STATIC_INVARIANT_FUNC)
         
-        BOOST_CONTRACT_DETAIL_INTROSPECTION_HAS_STATIC_MEMBER_FUNCTION(
+        BOOST_CONTRACT_DETAIL_MIRROR_HAS_STATIC_MEMBER_FUNCTION(
                 has_static_invariant_s, BOOST_CONTRACT_STATIC_INVARIANT_FUNC)
 
         template<class C>
@@ -113,10 +114,10 @@ private: // No public APIs (so users cannot use it directly by mistake).
             }
         };
 
-        BOOST_CONTRACT_DETAIL_INTROSPECTION_HAS_MEMBER_FUNCTION(
+        BOOST_CONTRACT_DETAIL_MIRROR_HAS_MEMBER_FUNCTION(
                 has_invariant_f, BOOST_CONTRACT_INVARIANT_FUNC)
         
-        BOOST_CONTRACT_DETAIL_INTROSPECTION_HAS_STATIC_MEMBER_FUNCTION(
+        BOOST_CONTRACT_DETAIL_MIRROR_HAS_STATIC_MEMBER_FUNCTION(
                 has_invariant_s, BOOST_CONTRACT_INVARIANT_FUNC)
 
         template<class C>

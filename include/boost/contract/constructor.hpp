@@ -32,8 +32,7 @@ at body, and check class invariants for constructors (see
 for constructors instead).
 
 For optimization, this can be omitted for constructors that do not have
-postconditions and exception guarantees when the enclosing class has no
-invariants.
+postconditions and exception guarantees, within classes that have no invariants.
 
 @see @RefSect{tutorial.constructors, Constructors}
     
@@ -42,10 +41,10 @@ invariants.
             (Constructors check all class invariants, including static and
             volatile invariants, see also @RefSect{tutorial.class_invariants,
             Class Invariants} and
-            @RefSect{advanced_topics.volatile_public_functions,
+            @RefSect{advanced.volatile_public_functions,
             Volatile Public Functions}).
 
-@tparam Class   The class type of the enclosing constructor declaring the
+@tparam Class   The type of the class containing the constructor declaring the
                 contract.
                 (Usually this template parameter is automatically deduced by C++
                 and it does not need to be explicitly specified by programmers.)

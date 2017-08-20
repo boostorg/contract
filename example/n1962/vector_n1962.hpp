@@ -184,6 +184,7 @@ public:
 
 
     
+    
     void reserve(size_type count)
         precondition {
             count < max_size();
@@ -234,12 +235,14 @@ public:
         return vect_.end();
     }
 
-    
+
+
     const_iterator end() const {
         return vect_.end();
     }
 
 
+    
     reverse_iterator rbegin()
         postcondition(result) {
             if(empty()) result == rend();
@@ -267,9 +270,11 @@ public:
     }
 
 
+    
     const_reverse_iterator rend() const {
         return vect_.rend();
     }
+
 
 
     void resize(size_type count, T const& value = T())
@@ -330,14 +335,15 @@ public:
     }
 
 
+    
     reference at(size_type index) {
-        // No precondition because throws out_of_range for invalid index.
+        // No precondition (throw out_of_range for invalid index).
         return vect_.at(index);
     }
 
 
     const_reference at(size_type index) const {
-        // No precondition because throws out_of_range for invalid index.
+        // No precondition (throw out_of_range for invalid index).
         return vect_.at(index);
     }
 
@@ -655,8 +661,13 @@ public:
     
     
     friend bool operator==(vector const& left, vector const& right) {
+        // Cannot check class invariants for left and right objects.
         return left.vect_ == right.vect_;
     }
+
+
+
+
 
 private:
     std::vector<T, Allocator> vect_;

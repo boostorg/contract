@@ -19,7 +19,7 @@ int main() {
         #endif
     } catch(boost::contract::assertion_failure const&) { threw = true; }
     
-    #ifndef BOOST_CONTRACT_NO_AUDITS
+    #ifdef BOOST_CONTRACT_AUDITS
         BOOST_TEST(threw);
     #else
         BOOST_TEST(!threw);

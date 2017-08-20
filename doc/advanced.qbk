@@ -243,7 +243,7 @@ For example (see [@../../example/features/code_block.cpp =code_block.cpp=]):
 [import ../example/features/code_block.cpp]
 [code_block]
 
-Finally, at the moment this library does not support contracts for functions declared `constexpr` and literal classes.
+Finally, at the moment this library does not support contracts for functions and classes declared `constexpr`.
 [footnote
 *Rationale:*
 In general, it might be useful to specify contracts for `constexpr` functions and literal classes.

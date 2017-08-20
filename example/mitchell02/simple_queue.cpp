@@ -131,7 +131,7 @@ public:
     void remove() {
         // Expensive all_equal postcond. and old_items copy might be skipped.
         boost::contract::old_ptr<std::vector<T> > old_items;
-            #ifndef BOOST_CONTRACT_NO_AUDIT_ASSERTIONS
+            #ifdef BOOST_CONTRACT_AUDIITS
                 = BOOST_CONTRACT_OLDOF(items())
             #endif // Else, leave old pointer null...
         ;
@@ -142,7 +142,7 @@ public:
             })
             .postcondition([&] {
                 BOOST_CONTRACT_ASSERT(count() == *old_count - 1); // Count dec.
-                // ...following skipped #if NO_AUDIT.
+                // ...following skipped #ifndef AUDITS.
                 if(old_items) all_equal(items(), *old_items, /* shifted = */ 1);
             })
         ;
@@ -154,7 +154,7 @@ public:
     void put(T const& item) {
         // Expensive all_equal postcond. and old_items copy might be skipped.
         boost::contract::old_ptr<std::vector<T> > old_items;
-            #ifndef BOOST_CONTRACT_NO_AUDIT_ASSERTIONS
+            #ifdef BOOST_CONTRACT_AUDITS
                 = BOOST_CONTRACT_OLDOF(items())
             #endif // Else, leave old pointer null...
         ;
@@ -167,7 +167,7 @@ public:
                 BOOST_CONTRACT_ASSERT(count() == *old_count + 1); // Count inc.
                 // Second to last item.
                 BOOST_CONTRACT_ASSERT(items().at(count() - 1) == item);
-                // ...following skipped #if NO_AUDIT.
+                // ...following skipped #ifndef AUDITS.
                 if(old_items) all_equal(items(), *old_items);
             })
         ;

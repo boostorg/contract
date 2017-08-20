@@ -1,6 +1,6 @@
 
-#ifndef BOOST_CONTRACT_DETAIL_PUBLIC_STATIC_FUNCTION_HPP_
-#define BOOST_CONTRACT_DETAIL_PUBLIC_STATIC_FUNCTION_HPP_
+#ifndef BOOST_CONTRACT_DETAIL_STATIC_PUBLIC_FUNCTION_HPP_
+#define BOOST_CONTRACT_DETAIL_STATIC_PUBLIC_FUNCTION_HPP_
 
 // Copyright (C) 2008-2016 Lorenzo Caminiti
 // Distributed under the Boost Software License, Version 1.0 (see accompanying
@@ -29,9 +29,9 @@ namespace boost { namespace contract { namespace detail {
 
 // No subcontracting because static so no obj and no substitution principle.
 template<class C> // Non-copyable base.
-class public_static_function : public cond_inv</* VR = */ none, C> {
+class static_public_function : public cond_inv</* VR = */ none, C> {
 public:
-    explicit public_static_function() : cond_inv</* VR = */ none, C>(
+    explicit static_public_function() : cond_inv</* VR = */ none, C>(
             boost::contract::from_function, /* obj = */ 0) {}
 
 private:
@@ -74,7 +74,7 @@ public:
     #if     !defined(BOOST_CONTRACT_NO_EXIT_INVARIANTS) || \
             !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
             !defined(BOOST_CONTRACT_NO_EXCEPTS)
-        ~public_static_function() BOOST_NOEXCEPT_IF(false) {
+        ~static_public_function() BOOST_NOEXCEPT_IF(false) {
             this->assert_initialized();
             #ifndef BOOST_CONTRACT_ALL_DISABLE_NO_ASSERTION
                 if(checking::already()) return;

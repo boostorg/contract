@@ -19,8 +19,8 @@ Macro for implementation checks.
     #include <boost/contract/detail/check.hpp>
     #include <boost/contract/detail/assert.hpp>
 
-    #define BOOST_CONTRACT_CHECK(condition) \
-        BOOST_CONTRACT_DETAIL_CHECK(BOOST_CONTRACT_DETAIL_ASSERT(condition))
+    #define BOOST_CONTRACT_CHECK(cond) \
+        BOOST_CONTRACT_DETAIL_CHECK(BOOST_CONTRACT_DETAIL_ASSERT(cond))
 #else
     /**
     Preferred way to assert implementation check conditions.
@@ -29,31 +29,95 @@ Macro for implementation checks.
     checks in a nullary functor passed to @RefClass{boost::contract::check}
     constructor because this macro will completely remove implementation checks
     from the code when @RefMacro{BOOST_CONTRACT_NO_CHECKS} is defined.
+    
+    @RefMacro{BOOST_CONTRACT_CHECK}, @RefMacro{BOOST_CONTRACT_CHECK_AUDIT}, and
+    @RefMacro{BOOST_CONTRACT_CHECK_AXIOM} are the three assertion levels
+    predefined by this library.
 
-    @see @RefSect{advanced_topics.implementation_checks, Implementation Checks}
+    @see @RefSect{advanced.implementation_checks, Implementation Checks}
 
-    @param condition    The condition to be asserted within implementation code
-                        (function body, etc.).
-                        (This is not a variadic macro parameter so any comma it
-                        might contain must be protected by round parenthesis,
-                        but @c BOOST_CONTRACT_CHECK((condition)) will always
-                        work.)
+    @param cond Boolean condition to check within implementation code (function
+                body, etc.).
+                (This is not a variadic macro parameter so any comma it might
+                contain must be protected by round parenthesis,
+                @c BOOST_CONTRACT_CHECK((cond)) will always work.)
     */
-    #define BOOST_CONTRACT_CHECK(condition) /* nothing */
+    #define BOOST_CONTRACT_CHECK(cond) /* nothing */
 #endif
 
-#ifndef BOOST_CONTRACT_NO_AUDITS
-    #define BOOST_CONTRACT_CHECK_AUDIT(condition) \
-        BOOST_CONTRACT_CHECK(condition)
+#ifdef BOOST_CONTRACT_AUDITS
+    /**
+    Preferred way to assert implementation check conditions that are
+    computationally expensive, at least compared to the cost of executing the
+    function body.
+
+    The specified condition will always be compiled and validated
+    syntactically, but it will not be evaluated at run-time unless
+    @RefMacro{BOOST_CONTRACT_AUDITS} is defined (undefined by default).
+
+    This macro is defined by code equivalent to:
+
+    @code
+    #ifdef BOOST_CONTRACT_AUDITS
+        #define BOOST_CONTRACT_CHECK_AUDIT(cond) \
+            BOOST_CONTRACT_CHECK(cond)
+    #else
+        #define BOOST_CONTRACT_CHECK_AUDIT(cond) \
+            BOOST_CONTRACT_CHECK(true || cond)
+    #endif
+    @endcode
+
+    @RefMacro{BOOST_CONTRACT_CHECK}, @RefMacro{BOOST_CONTRACT_CHECK_AUDIT}, and
+    @RefMacro{BOOST_CONTRACT_CHECK_AXIOM} are the three assertion levels
+    predefined by this library.
+    If there is a need, programmers are free to implement their own assertion
+    levels defining macros similar to the one above.
+
+    @see @RefSect{extras.assertion_levels, Assertion Levels}
+
+    @param cond Boolean condition to check within implementation code (function
+                body, etc.).
+                (This is not a variadic macro parameter so any comma it might
+                contain must be protected by round parenthesis,
+                @c BOOST_CONTRACT_CHECK((cond)) will always work.)
+    */
+    #define BOOST_CONTRACT_CHECK_AUDIT(cond) \
+        BOOST_CONTRACT_CHECK(cond)
 #else
-    /** TODO */
-    #define BOOST_CONTRACT_CHECK_AUDIT(condition) \
-        BOOST_CONTRACT_DETAIL_NOEVAL(condition)
+    #define BOOST_CONTRACT_CHECK_AUDIT(cond) \
+        BOOST_CONTRACT_DETAIL_NOEVAL(cond)
 #endif
     
-/** TODO */
-#define BOOST_CONTRACT_CHECK_AXIOM(condition) \
-    BOOST_CONTRACT_DETAIL_NOEVAL(condition)
+/**
+Preferred way to assert implementation check conditions that are computationally
+prohibitive, at least compared to the cost of executing the function body.
+
+The specified condition will always be compiled and validated
+syntactically, but it will never be evaluated at run-time.
+
+This macro is defined by code equivalent to:
+
+@code
+#define BOOST_CONTRACT_CHECK_AXIOM(cond) \
+    BOOST_CONTRACT_CHECK(true || cond)
+@endcode
+
+@RefMacro{BOOST_CONTRACT_CHECK}, @RefMacro{BOOST_CONTRACT_CHECK_AUDIT}, and
+@RefMacro{BOOST_CONTRACT_CHECK_AXIOM} are the three assertion levels predefined
+by this library.
+If there is a need, programmers are free to implement their own assertion levels
+defining macros similar to the one above.
+
+@see @RefSect{extras.assertion_levels, Assertion Levels}
+
+@param cond Boolean condition to check within implementation code (function
+            body, etc.).
+            (This is not a variadic macro parameter so any comma it might
+            contain must be protected by round parenthesis,
+            @c BOOST_CONTRACT_CHECK((cond)) will always work.)
+*/
+#define BOOST_CONTRACT_CHECK_AXIOM(cond) \
+    BOOST_CONTRACT_DETAIL_NOEVAL(cond)
 
 #endif // #include guard
 

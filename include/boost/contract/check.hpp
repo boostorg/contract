@@ -8,7 +8,7 @@
 // See: http://www.boost.org/doc/libs/release/libs/contract/doc/html/index.html
 
 /** @file
-RAII object to check contracts.
+RAII object that checks contracts.
 */
 
 #include <boost/contract/core/config.hpp>
@@ -49,21 +49,27 @@ namespace boost { namespace contract {
 /**
 RAII object that checks the contracts.
 
-In general, this object checks entry invariants, preconditions, and assigns old
-values when it is constructed.
-Then it checks exit invariants and postconditions or exception guarantees when
-it is destructed.
-That said, this object also enforces the following (see also
+In general, when this object is constructed it checks class invariants at entry,
+preconditions, and makes old value copies at body.
+When it is destructed, it checks class invariants at exist, postconditions, and
+exception guarantees.
+This object enforces the following (see also
 @RefSect{contract_programming_overview, Contract Programming Overview}):
 
 @li Postconditions are checked only if the body does not throw an exception.
-@li Exceptions guarantee are checked only if the body throws an exception.
-@li Constructors never check entry invariants.
-@li Destructors check exit invariants only if their bodies throw an exception.
-@li Static invariants are always checked at entry and exit, etc.
+@li Exceptions guarantees are checked only if the body throws an exception.
+@li Constructor entry never checks class invariants.
+@li Destructor exit checks class invariants only if the body throws an
+exception.
+@li Static invariants are always checked at entry and exit (and regardless of
+the body throwing exceptions or not).
 
-Plus, one of the constructors of this object can be used to program
-implementation checks.
+This object is usually constructed initializing it to the return value of one
+of the contract functions @RefFunc{boost::contract::function},
+@RefFunc{boost::contract::constructor}, @RefFunc{boost::contract::destructor},
+or @RefFunc{boost::contract::public_function}.
+In addition, this object can be constructed from a nullary functor that is used
+to program implementation checks.
 
 @see    @RefSect{tutorial, Tutorial},
         @RefSect{advanced_topics.implementation_checks, Implementation Checks}
@@ -75,15 +81,17 @@ public:
     Construct this object for implementation checks.
 
     This can be used to program checks within implementation code (body, etc.).
+    This constructor is not declared @c explicit so initializations can use
+    operator @c = syntax.
     
-    @b Throws:  This can throw (i.e., declared @c noexcept(false)) in case
-                programmers specify failure handlers that throw exceptions
-                instead of terminating the program (see
+    @b Throws:  This can throw (it is declared @c noexcept(false)) in case
+                programmers specify contract failure handlers that throw
+                exceptions instead of terminating the program (see
                 @RefSect{advanced_topics.throw_on_failure, Throw on Failure}).
 
-    @param f    Nullary functor that asserts implementation checks @c f() will
+    @param f    Nullary functor that asserts implementation checks. @c f() will
                 be called as soon as this object is constructed at the point it
-                is declared within the body code.
+                is declared within the implementation code.
     */
     template<typename F> // Cannot check `if(f) ...` as f can be a lambda.
     /* implicit */ check(F const& f) { BOOST_CONTRACT_DETAIL_CHECK({ f(); }) }
@@ -105,15 +113,16 @@ public:
     {}
 
     /**
-    Construct this object from the specified contract.
+    Construct this object to check the specified contract.
 
-    Check entry invariants (if they apply to the specified contract).
+    This checks class invariants at entry (if they apply to the specified
+    contract).
     This constructor is not declared @c explicit so initializations can use
     operator @c = syntax.
     
-    @b Throws:  This can throw (i.e., declared @c noexcept(false)) in case
-                programmers specify failure handlers that throw exceptions
-                instead of terminating the program (see
+    @b Throws:  This can throw (it is declared @c noexcept(false)) in case
+                programmers specify contract failure handlers that throw
+                exceptions instead of terminating the program (see
                 @RefSect{advanced_topics.throw_on_failure, Throw on Failure}).
 
     @param contract Contract to be checked.
@@ -134,16 +143,16 @@ public:
     #endif
     
     /**
-    Construct this object from the specified contract.
+    Construct this object to check the specified contract.
 
-    Check entry invariants (if they apply to the specified contract) and check 
-    preconditions.
+    This checks class invariants at entry (if they apply to the specified
+    contract) and preconditions.
     This constructor is not declared @c explicit so initializations can use
     operator @c = syntax.
     
-    @b Throws:  This can throw (i.e., declared @c noexcept(false)) in case
-                programmers specify failure handlers that throw exceptions
-                instead of terminating the program (see
+    @b Throws:  This can throw (it is declared @c noexcept(false)) in case
+                programmers specify contract failure handlers that throw
+                exceptions instead of terminating the program (see
                 @RefSect{advanced_topics.throw_on_failure, Throw on Failure}).
 
     @param contract Contract to be checked.
@@ -164,16 +173,16 @@ public:
     #endif
     
     /**
-    Construct this object from the specified contract.
+    Construct this object to check the specified contract.
 
-    Check entry invariants (if they apply to the specified contract) and check 
-    preconditions, and assign old values.
+    This checks class invariants at entry (if they apply to the specified
+    contract) and preconditions, then it makes old value copies at body.
     This constructor is not declared @c explicit so initializations can use
     operator @c = syntax.
     
-    @b Throws:  This can throw (i.e., declared @c noexcept(false)) in case
-                programmers specify failure handlers that throw exceptions
-                instead of terminating the program (see
+    @b Throws:  This can throw (it is declared @c noexcept(false)) in case
+                programmers specify contract failure handlers that throw
+                exceptions instead of terminating the program (see
                 @RefSect{advanced_topics.throw_on_failure, Throw on Failure}).
 
     @param contract Contract to be checked.
@@ -194,17 +203,17 @@ public:
     #endif
     
     /**
-    Construct this object from the specified contract.
+    Construct this object to check the specified contract.
 
-    Check entry invariants (if they apply to the specified contract) and check 
-    preconditions, and assign old values (plus the destructor of this object
-    will also check postconditions in this case).
+    This checks class invariants at entry (if they apply to the specified
+    contract) and preconditions, then it makes old value copies at body.
+    (plus the destructor of this object will check postconditions in this case).
     This constructor is not declared @c explicit so initializations can use
     operator @c = syntax.
     
-    @b Throws:  This can throw (i.e., declared @c noexcept(false)) in case
-                programmers specify failure handlers that throw exceptions
-                instead of terminating the program (see
+    @b Throws:  This can throw (it is declared @c noexcept(false)) in case
+                programmers specify contract failure handlers that throw
+                exceptions instead of terminating the program (see
                 @RefSect{advanced_topics.throw_on_failure, Throw on Failure}).
 
     @param contract Contract to be checked.
@@ -222,17 +231,18 @@ public:
     #endif
     
     /**
-    Construct this object from the specified contract.
+    Construct this object to check the specified contract.
 
-    Check entry invariants (if they apply to the specified contract) and check 
-    preconditions, and assign old values (plus the destructor of this object
-    will also check postconditions and exception guarantees in this case).
+    This checks class invariants at entry (if they apply to the specified
+    contract) and preconditions, then it makes old value copies at body.
+    (plus the destructor of this object will check postconditions and
+    exception guarantees in this case).
     This constructor is not declared @c explicit so initializations can use
     operator @c = syntax.
     
-    @b Throws:  This can throw (i.e., declared @c noexcept(false)) in case
-                programmers specify failure handlers that throw exceptions
-                instead of terminating the program (see
+    @b Throws:  This can throw (it is declared @c noexcept(false)) in case
+                programmers specify contract failure handlers that throw
+                exceptions instead of terminating the program (see
                 @RefSect{advanced_topics.throw_on_failure, Throw on Failure}).
 
     @param contract Contract to be checked.
@@ -251,15 +261,16 @@ public:
 
     /**
     Destruct this object.
-    Check exit invariants (if they apply to the contract specified at
-    construction) and postconditions (if they apply to the contract specified at
-    construction and the enclosing function body did not throw) or exception
-    guarantees (if they apply to the contract specified at construction and the
-    enclosing function body threw).
 
-    @b Throws:  This can throw (i.e., declared @c noexcept(false)) in case
-                programmers specify failure handlers that throw exceptions
-                instead of terminating the program (see
+    This checks class invariants at exit and either postconditions when the
+    enclosing function body did not throw an exception, or exception guarantees
+    when the function body threw an exception (that is if class invariants,
+    postconditions, and exception guarantees respectively apply to the object
+    specified when constructing this object).
+
+    @b Throws:  This can throw (it is declared @c noexcept(false)) in case
+                programmers specify contract failure handlers that throw
+                exceptions instead of terminating the program (see
                 @RefSect{advanced_topics.throw_on_failure, Throw on Failure}).
     */
     ~check() BOOST_NOEXCEPT_IF(false) {} // Allow auto_ptr dtor to throw.

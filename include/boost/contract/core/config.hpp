@@ -24,9 +24,12 @@ Configure this library compile-time and run-time behaviours.
     If this macro is defined, this library is compiled so it can be linked
     statically to user code (and not as a shared library as by default).
 
-    @warning    In general this library must be compiled as a shared library
-                (i.e., not defining this macro) otherwise the contracts might
-                not always be checked correctly at run-time.
+    @warning    This library is not guaranteed to always work correctly at
+                run-time when this macro is defined.
+                However, this macro can be defined and this library can be
+                safely used as a static library for user code that checks
+                contracts in a single program unit (e.g., a single program with
+                only statically linked libraries that check contracts).
                 
     @see @RefSect{getting_started.install_and_compile, Install and Compile}
     */
@@ -41,17 +44,20 @@ Configure this library compile-time and run-time behaviours.
 
 #ifdef BOOST_CONTRACT_DETAIL_DOXYGEN
     /**
-    Define this macro when compiling user code to avoid compiling this library
-    (undefined by default).
+    Define this macro to use this library as a header-only library (undefined by
+    default).
 
     If this macro is defined, this library does not have to be compiled
     separately from user code.
-    This library headers are simply included in the user program and this
-    library implementation code is compiled as part of the user program.
+    This library headers are simply included and compiled as part of the user
+    program.
     
-    @warning    In general this library must be compiled as a shared library
-                (i.e., not defining this macro) otherwise the contracts might
-                not always be checked correctly at run-time.
+    @warning    This library is not guaranteed to always work correctly at
+                run-time when this macro is defined.
+                However, this macro can be defined and this library can be
+                safely used as a header-only library for user code that checks
+                contracts in a single program unit (e.g., a single program with
+                only statically linked libraries that check contracts).
                 
     @see @RefSect{getting_started.install_and_compile, Install and Compile}
     */
@@ -70,15 +76,17 @@ Configure this library compile-time and run-time behaviours.
     (undefined by default).
 
     Defining this macro will make the library implementation code not thread
-    safe so this macro should not be defined unless the library is being used
-    strictly under single-threaded applications.
+    safe so this macro should not be defined unless the library is being used by
+    single-threaded applications only.
+
     However, when this macro is left undefined this library needs to internally
-    use some sort of "global" locks (to ensure contract checking is globally
+    use some sort of "global" lock (to ensure contract checking is globally
     disabled when other contracts are being checked and also to safely access
-    failure handler functors) and that could introduce an undesired amount of
-    synchronization in some multi-threaded applications.
+    failure handler functors).
+    That could introduce an undesired amount of synchronization in some
+    multi-threaded applications.
     
-    @see @RefSect{contract_programming_overview, Contract Programming Overview}
+    @see @RefSect{contract_programming_overview.assertions, Assertions}
     */
     #define BOOST_CONTRACT_DISABLE_THREADS
 #endif
@@ -90,16 +98,15 @@ Configure this library compile-time and run-time behaviours.
 
     On compilers that support variadic macros, this macro has no effect.
     On compilers that do not support variadic macros, this macro can be defined
-    to support a maximum number of arguments different than @c 10 for
-    public function overrides (that use
-    @RefFunc{boost::contract::public_function}).
+    to the maximum number of arguments that public function overrides can
+    have and pass to @RefFunc{boost::contract::public_function}.
 
     @note   Regardless of the value of this macro and of compiler support for
             variadic macros, there is an intrinsic limit of about 18 arguments
             for public function overrides (because of similar limits in
             Boost.MPL and Boost.FunctionTypes internally used by this library).
 
-    @see @RefSect{extra_topics.no_macros__no_c__11_, No Macros}
+    @see @RefSect{extras.no_macros__no_c__11_, No Macros}
     */
     #define BOOST_CONTRACT_MAX_ARGS 10
 #endif
@@ -110,8 +117,8 @@ Configure this library compile-time and run-time behaviours.
 
     This macro expands to the name of the @c typedef that lists the base
     classes for subcontracting via @RefMacro{BOOST_CONTRACT_BASE_TYPES}.
-    This macro can be defined if that @c typedef must have a name different from
-    @c base_types.
+    This macro can be defined if the @c typedef must have a name different from
+    @c base_types (because of name clashes in user code, etc.).
     
     @see @RefSect{tutorial.base_classes__subcontracting_, Base Classes}
     */
@@ -120,16 +127,17 @@ Configure this library compile-time and run-time behaviours.
 
 #ifndef BOOST_CONTRACT_INVARIANT_FUNC
     /**
-    Define the name of the invariant member functions (@c invariant by defult).
+    Define the name of the class invariant member function (@c invariant by
+    default).
 
     This macro expands to the name of the @c const and <c>const volatile</c>
-    member functions that check mutable and volatile class invariants
+    member functions that check class invariants and volatile class invariants
     respectively.
     This macro can be defined if these invariant functions must have a name
-    different from @c invariant.
+    different from @c invariant (because of name clashes in user code, etc.).
     
     @see    @RefSect{tutorial.class_invariants, Class Invariants},
-            @RefSect{extra_topics.volatile_public_functions,
+            @RefSect{extras.volatile_public_functions,
             Volatile Public Functions}
     */
     #define BOOST_CONTRACT_INVARIANT_FUNC invariant
@@ -143,10 +151,11 @@ Configure this library compile-time and run-time behaviours.
     This macro expands to the name of the @c static member function that checks
     static class invariants.
     This macro can be defined if this static invariant function must have a name
-    different from @c static_invariant.
+    different from @c static_invariant (because of name clashes in suer code,
+    etc.).
 
     @note   C++ does not allow to overload member functions based on the
-            @c static qualifier, so this macro must always be defined to be
+            @c static classifier, so this macro must always be defined to be
             different than the function name defined for
             @RefMacro{BOOST_CONTRACT_INVARIANT_FUNC}.
     
@@ -160,8 +169,8 @@ Configure this library compile-time and run-time behaviours.
     Disable some compile-time errors generated by this library (undefined by
     default).
 
-    Defining this macro disables a number of static checks and compile-time
-    errors, for example:
+    Defining this macro disables a number of static checks and related
+    compile-time errors, for example:
 
     @li The static invariant member @c BOOST_CONTRACT_STATIC_INVARIANT_FUNC
         function must be declared @c static.
@@ -171,6 +180,9 @@ Configure this library compile-time and run-time behaviours.
     @li Derived classes that program contracts for one or more public function
         overrides via @RefFunc{boost::contract::public_function} must also
         define the @RefMacro{BOOST_CONTRACT_BASE_TYPES} @c typedef.
+
+    In general, it is not recommended to define this macro because these
+    compile-time checks can guard against missuses of this library.
         
     @see    @RefSect{tutorial.class_invariants, Class Invariants},
             @RefSect{tutorial.base_classes__subcontracting_, Base Classes}
@@ -181,7 +193,8 @@ Configure this library compile-time and run-time behaviours.
 #ifdef BOOST_CONTRACT_DETAIL_DOXYGEN
     /**
     Code block to execute if contracts are not assigned to a
-    @RefClass{boost::contract::check} variable (undefined by default).
+    @RefClass{boost::contract::check} variable (undefined by default and
+    executes @c assert(false)).
 
     In general, there is a logic error in the program when contracts are not
     assigned to a local variable of type @RefClass{boost::contract::check}.
@@ -194,7 +207,7 @@ Configure this library compile-time and run-time behaviours.
     This macro can be defined to be any block of code (including @c {} to
     generate no error), for example (on GCC):
     @code
-        -DBOOST_CONTRACT_ON_MISSING_CHECK_DECL='{ throw std::logic_error(); }'
+        -DBOOST_CONTRACT_ON_MISSING_CHECK_DECL='{ throw std::logic_error("missing contract check declaration"); }'
     @endcode
 
     @see @RefSect{tutorial.non_member_functions, Non-Member Functions}
@@ -209,15 +222,17 @@ Configure this library compile-time and run-time behaviours.
     
     Not disabling other assertions while checking preconditions can lead to
     infinite recursion in user code so by default this macro is not defined.
+
     However, the @RefSect{bibliography, [1962]} proposal does not disable any
     assertion while checking preconditions because arguments can reach the
     function body unchecked if assertions are disabled while checking
-    preconditions (when these same functions bodies are called to check the
-    preconditions in question).
+    preconditions (e.g., when these same functions bodies are called to check
+    the preconditions in question).
     This macro can be defined to obtain the behaviour specified in
     @RefSect{bibliography, [1962]} (at the risk of infinite recursion).
 
-    @see @RefSect{contract_programming_overview, Contract Programming Overview}
+    @see    @RefSect{contract_programming_overview.feature_summary,
+            Feature Summary}
     */
     #define BOOST_CONTRACT_PRECONDITIONS_DISABLE_NO_ASSERTION
 #endif
@@ -234,14 +249,28 @@ Configure this library compile-time and run-time behaviours.
     @RefMacro{BOOST_CONTRACT_PRECONDITIONS_DISABLE_NO_ASSERTION} was also
     defined.)
 
-    @see @RefSect{contract_programming_overview, Contract Programming Overview}
+    @see    @RefSect{contract_programming_overview.feature_summary,
+            Feature Summary}
     */
     #define BOOST_CONTRACT_ALL_DISABLE_NO_ASSERTION
 #endif
 
 #ifdef BOOST_CONTRACT_DETAIL_DOXYGEN
-    /** TODO */
-    #define BOOST_CONTRACT_NO_AUDITS
+    /**
+    Define this macro to evaluate and check audit assertions at run-time
+    (undefined by default).
+
+    Audit assertions and implementation checks programmed via
+    @RefMacro{BOOST_CONTRACT_ASSERT_AUDIT} and
+    @RefMacro{BOOST_CONTRACT_CHECK_AUDIT} are always compiled and validated
+    syntactically.
+    However, they are not evaluated and checked at run-time unless
+    this macro is defined (because these conditions can be computationally
+    expensive, at least compared to the cost of executing the function body).
+
+    @see @RefSect{extras.assertion_levels, Assertion Levels}
+    */
+    #define BOOST_CONTRACT_AUDITS
 #endif
 
 #ifdef BOOST_CONTRACT_DETAIL_DOXYGEN
@@ -254,12 +283,12 @@ Configure this library compile-time and run-time behaviours.
     implementation checks.
     Use @RefMacro{BOOST_CONTRACT_CHECK} to completely disable compilation of
     implementation checks when @RefMacro{BOOST_CONTRACT_NO_CHECKS} is defined.
-
-    @see    @RefSect{advanced_topics.implementation_checks,
+    
+    @see    @RefSect{advanced.implementation_checks,
             Implementation Checks},
-            @RefSect{extra_topics.disable_contract_checking,
+            @RefSect{extras.disable_contract_checking,
             Disable Contract Checking},
-           @RefSect{extra_topics.disable_contract_compilation__macro_interface_,
+            @RefSect{extras.disable_contract_compilation__macro_interface_,
             Disable Contract Compilation}
     */
     #define BOOST_CONTRACT_NO_CHECKS
@@ -280,9 +309,9 @@ Configure this library compile-time and run-time behaviours.
     from production code).
 
     @see    @RefSect{tutorial.preconditions, Preconditions},
-            @RefSect{extra_topics.disable_contract_checking,
+            @RefSect{extras.disable_contract_checking,
             Disable Contract Checking},
-           @RefSect{extra_topics.disable_contract_compilation__macro_interface_,
+            @RefSect{extras.disable_contract_compilation__macro_interface_,
             Disable Contract Compilation}
     */
     #define BOOST_CONTRACT_NO_PRECONDITIONS
@@ -303,9 +332,9 @@ Configure this library compile-time and run-time behaviours.
     from production code).
 
     @see    @RefSect{tutorial.postconditions, Postconditions},
-            @RefSect{extra_topics.disable_contract_checking,
+            @RefSect{extras.disable_contract_checking,
             Disable Contract Checking},
-           @RefSect{extra_topics.disable_contract_compilation__macro_interface_,
+            @RefSect{extras.disable_contract_compilation__macro_interface_,
             Disable Contract Compilation}
     */
     #define BOOST_CONTRACT_NO_POSTCONDITIONS
@@ -326,9 +355,9 @@ Configure this library compile-time and run-time behaviours.
     compilation from production code).
 
     @see    @RefSect{tutorial.exception_guarantees, Exception Guarantees},
-            @RefSect{extra_topics.disable_contract_checking,
+            @RefSect{extras.disable_contract_checking,
             Disable Contract Checking},
-           @RefSect{extra_topics.disable_contract_compilation__macro_interface_,
+            @RefSect{extras.disable_contract_compilation__macro_interface_,
             Disable Contract Compilation}
     */
     #define BOOST_CONTRACT_NO_EXCEPTS
@@ -345,7 +374,7 @@ Configure this library compile-time and run-time behaviours.
 
     If this macro is defined, this library internal code is also optimized to
     reduce compile-time (not just run-time) overhead associated with
-    checking entry class invariants.
+    checking class invariants at entry.
     Users can manually program @c \#ifndef statements in their code using this
     macro to completely disable compilation of entry class invariants or use the
     macros defined in @c boost/contract_macro.hpp (recommended only for
@@ -356,9 +385,9 @@ Configure this library compile-time and run-time behaviours.
     @RefMacro{BOOST_CONTRACT_NO_INVARIANTS} is defined.
 
     @see    @RefSect{tutorial.class_invariants, Class Invariants},
-            @RefSect{extra_topics.disable_contract_checking,
+            @RefSect{extras.disable_contract_checking,
             Disable Contract Checking},
-           @RefSect{extra_topics.disable_contract_compilation__macro_interface_,
+            @RefSect{extras.disable_contract_compilation__macro_interface_,
             Disable Contract Compilation}
     */
     #define BOOST_CONTRACT_NO_ENTRY_INVARIANTS
@@ -375,7 +404,7 @@ Configure this library compile-time and run-time behaviours.
 
     If this macro is defined, this library internal code is also optimized to
     reduce compile-time (not just run-time) overhead associated with
-    checking exit class invariants.
+    checking class invariants at exit.
     Users can manually program @c \#ifndef statements in their code using this
     macro to completely disable compilation of exit class invariants or use the
     macros defined in @c boost/contract_macro.hpp (recommended only for
@@ -386,9 +415,9 @@ Configure this library compile-time and run-time behaviours.
     @RefMacro{BOOST_CONTRACT_NO_INVARIANTS} is defined.
 
     @see    @RefSect{tutorial.class_invariants, Class Invariants},
-            @RefSect{extra_topics.disable_contract_checking,
+            @RefSect{extras.disable_contract_checking,
             Disable Contract Checking},
-           @RefSect{extra_topics.disable_contract_compilation__macro_interface_,
+            @RefSect{extras.disable_contract_compilation__macro_interface_,
             Disable Contract Compilation}
     */
     #define BOOST_CONTRACT_NO_EXIT_INVARIANTS
@@ -415,9 +444,9 @@ Configure this library compile-time and run-time behaviours.
     @RefMacro{BOOST_CONTRACT_NO_EXIT_INVARIANTS}.
 
     @see    @RefSect{tutorial.class_invariants, Class Invariants},
-            @RefSect{extra_topics.disable_contract_checking,
+            @RefSect{extras.disable_contract_checking,
             Disable Contract Checking},
-           @RefSect{extra_topics.disable_contract_compilation__macro_interface_,
+            @RefSect{extras.disable_contract_compilation__macro_interface_,
             Disable Contract Compilation}
     */
     #define BOOST_CONTRACT_NO_INVARIANTS
@@ -445,8 +474,8 @@ Configure this library compile-time and run-time behaviours.
     compilation from production code).
 
     @see    @RefSect{tutorial.old_values, Old Values},
-            @RefSect{advanced_topics.old_values_at_body, Old Values at Body},
-           @RefSect{extra_topics.disable_contract_compilation__macro_interface_,
+            @RefSect{advanced.old_values_at_body, Old Values at Body},
+            @RefSect{extras.disable_contract_compilation__macro_interface_,
             Disable Contract Compilation}
     */
     #define BOOST_CONTRACT_NO_OLDS
@@ -459,8 +488,8 @@ Configure this library compile-time and run-time behaviours.
         defined(BOOST_CONTRACT_NO_POSTCONDITIONS) && \
         defined(BOOST_CONTRACT_NO_EXCEPTS)
     /**
-    Automatically defined by this library when contracts are not to be checked
-    for constructors.
+    Automatically defined by this library when contracts are not checked for
+    constructors.
 
     This library will define this macro when users define all
     @RefMacro{BOOST_CONTRACT_NO_INVARIANTS},
@@ -479,7 +508,7 @@ Configure this library compile-time and run-time behaviours.
             disabled by @RefMacro{BOOST_CONTRACT_NO_PRECONDITIONS} instead.
 
     @see    @RefSect{tutorial.constructors, Constructors},
-           @RefSect{extra_topics.disable_contract_compilation__macro_interface_,
+            @RefSect{extras.disable_contract_compilation__macro_interface_,
             Disable Contract Compilation}
     */
     #define BOOST_CONTRACT_NO_CONSTRUCTORS
@@ -491,8 +520,8 @@ Configure this library compile-time and run-time behaviours.
         defined(BOOST_CONTRACT_NO_POSTCONDITIONS) && \
         defined(BOOST_CONTRACT_NO_EXCEPTS)
     /**
-    Automatically defined by this library when contracts are not to be checked
-    for destructors.
+    Automatically defined by this library when contracts are not checked for
+    destructors.
 
     This library will define this macro when users define all
     @RefMacro{BOOST_CONTRACT_NO_INVARIANTS},
@@ -507,7 +536,7 @@ Configure this library compile-time and run-time behaviours.
     compilation from production code).
     
     @see    @RefSect{tutorial.destructors, Destructors},
-           @RefSect{extra_topics.disable_contract_compilation__macro_interface_,
+            @RefSect{extras.disable_contract_compilation__macro_interface_,
             Disable Contract Compilation}
     */
     #define BOOST_CONTRACT_NO_DESTRUCTORS
@@ -520,8 +549,8 @@ Configure this library compile-time and run-time behaviours.
         defined(BOOST_CONTRACT_NO_POSTCONDITIONS) && \
         defined(BOOST_CONTRACT_NO_EXCEPTS)
     /**
-    Automatically defined by this library when contracts are not to be checked
-    for public functions.
+    Automatically defined by this library when contracts are not checked for
+    public functions.
 
     This library will define this macro when users define all
     @RefMacro{BOOST_CONTRACT_NO_INVARIANTS},
@@ -537,7 +566,7 @@ Configure this library compile-time and run-time behaviours.
     compilation from production code).
     
     @see    @RefSect{tutorial.public_functions, Public Functions},
-           @RefSect{extra_topics.disable_contract_compilation__macro_interface_,
+            @RefSect{extras.disable_contract_compilation__macro_interface_,
             Disable Contract Compilation}
     */
     #define BOOST_CONTRACT_NO_PUBLIC_FUNCTIONS
@@ -549,8 +578,8 @@ Configure this library compile-time and run-time behaviours.
         defined(BOOST_CONTRACT_NO_POSTCONDITIONS) && \
         defined(BOOST_CONTRACT_NO_EXCEPTS)
     /**
-    Automatically defined by this library when contracts are not to be checked
-    for (non-public) functions.
+    Automatically defined by this library when contracts are not checked for
+    non-member, private and protected functions.
 
     This library will define this macro when users define all
     @RefMacro{BOOST_CONTRACT_NO_PRECONDITIONS},
@@ -559,20 +588,21 @@ Configure this library compile-time and run-time behaviours.
     macro and this library will generate a compile-time error if users try to
     define it directly).
     Users can manually program @c \#ifndef statements in their code using this
-    macro to completely disable compilation of contracts for (non-public)
-    functions or use the macros defined in @c boost/contract_macro.hpp
-    (recommended only for applications where it is truly necessary to completely
-    remove contract code compilation from production code).
+    macro to completely disable compilation of contracts for non-member,
+    private and protected functions, or use the macros defined in
+    @c boost/contract_macro.hpp (recommended only for applications where it is
+    truly necessary to completely remove contract code compilation from
+    production code).
 
-    This macro is also used when contracts are not to be checked for private and
+    This macro is also used when contracts are not checked for private and
     protected functions, lambda functions, code blocks, loops, etc.
 
     @see    @RefSect{tutorial.non_member_functions, Non-Member Functions},
-            @RefSect{advanced_topics.private_and_protected_functions,
+            @RefSect{advanced.private_and_protected_functions,
             Private and Protected Functions},
-            @RefSect{advanced_topics.lambdas__code_blocks__loops__etc_,
+            @RefSect{advanced.lambdas__code_blocks__loops__etc_,
             Lambdas\, Code Blocks\, Loops\, Etc.},
-           @RefSect{extra_topics.disable_contract_compilation__macro_interface_,
+            @RefSect{extras.disable_contract_compilation__macro_interface_,
             Disable Contract Compilation}
     */
     #define BOOST_CONTRACT_NO_FUNCTIONS
@@ -585,14 +615,15 @@ Configure this library compile-time and run-time behaviours.
         defined(BOOST_CONTRACT_NO_POSTCONDITIONS) && \
         defined(BOOST_CONTRACT_NO_EXCEPTS)
     /**
-    Automatically defined by this library when contracts are not to be checked
-    for specification conditions (but excluding implementation checks).
+    Automatically defined by this library when contracts are not checked for
+    preconditions, postconditions, exceptions guarantees, and class invariants
+    (excluding implementation checks).
 
     This library will define this macro when users define all
-    @RefMacro{BOOST_CONTRACT_NO_INVARIANTS},
     @RefMacro{BOOST_CONTRACT_NO_PRECONDITIONS},
-    @RefMacro{BOOST_CONTRACT_NO_POSTCONDITIONS}, and
-    @RefMacro{BOOST_CONTRACT_NO_EXCEPTS} (this macro is not a configuration
+    @RefMacro{BOOST_CONTRACT_NO_POSTCONDITIONS},
+    @RefMacro{BOOST_CONTRACT_NO_EXCEPTS}, and
+    @RefMacro{BOOST_CONTRACT_NO_INVARIANTS} (this macro is not a configuration
     macro and this library will generate a compile-time error if users try to
     define it directly).
     Users can manually program @c \#ifndef statements in their code using this
@@ -601,7 +632,7 @@ Configure this library compile-time and run-time behaviours.
     for applications where it is truly necessary to completely remove contract
     code compilation from production code).
 
-    @see   @RefSect{extra_topics.disable_contract_compilation__macro_interface_,
+    @see    @RefSect{extras.disable_contract_compilation__macro_interface_,
             Disable Contract Compilation}
     */
     #define BOOST_CONTRACT_NO_CONDITIONS
@@ -615,8 +646,7 @@ Configure this library compile-time and run-time behaviours.
         defined(BOOST_CONTRACT_NO_EXCEPTS) && \
         defined(BOOST_CONTRACT_NO_CHECKS)
     /**
-    Automatically defined by this library when contracts are not to be checked
-    for any operation.
+    Automatically defined by this library when contracts are not checked at all.
 
     This library will define this macro when users define all
     @RefMacro{BOOST_CONTRACT_NO_INVARIANTS},
@@ -637,11 +667,13 @@ Configure this library compile-time and run-time behaviours.
     #endif
     @endcode
     
-    Or, include @c boost/contract_macro.hpp instead (recommended only for
-    applications where it is truly necessary to completely remove contract
-    code compilation from production code).
+    Or, use the @c boost/contract_macro.hpp header and related macros instead
+    (because the @c boost/contract/_macro.hpp header is already optimized to not
+    include other headers from this library when contracts are not checked, but
+    recommended only for applications where it is truly necessary to completely
+    remove contract code compilation from production code).
 
-    @see   @RefSect{extra_topics.disable_contract_compilation__macro_interface_,
+    @see    @RefSect{extras.disable_contract_compilation__macro_interface_,
             Disable Contract Compilation}
     */
     #define BOOST_CONTRACT_NO_ALL
@@ -657,7 +689,7 @@ Configure this library compile-time and run-time behaviours.
         )
     /**
     Automatically defined when this library is being compiled as a shared
-    library (automatically defined by default).
+    library (defined by default).
     
     This library will define this macro unless users define
     @RefMacro{BOOST_CONTRACT_STATIC_LINK} or
@@ -668,7 +700,10 @@ Configure this library compile-time and run-time behaviours.
 
     @warning    In general this library will correctly check contracts at
                 run-time only when compiled as a shared library (i.e., this
-                macro will be automatically defined by default).
+                macro will be automatically defined by default), unless  user
+                code checks contracts in a single program unit (e.g., a single
+                program with only statically linked libraries that check
+                contracts).
                 
     @see @RefSect{getting_started.install_and_compile, Install and Compile}
     */

@@ -8,7 +8,7 @@
 // See: http://www.boost.org/doc/libs/release/libs/contract/doc/html/index.html
 
 /** @file
-Handle virtual public functions for contracts (for subcontracting).
+Handle virtual public functions with contracts (for subcontracting).
 */
 
 // IMPORTANT: Included by contract_macro.hpp so must #if-guard all its includes.
@@ -45,20 +45,21 @@ This parameter must be a pointer to this class and it must have default value
 (This extra parameter is often named @c v in this documentation, but any name
 can be used.)
 
-This extra parameter does not alter the calling interface of the enclosing
-function declaring the contract because it is always the very last parameter and
-it has a default value (so it can always be omitted when users call the
-function).
+In practice this extra parameter does not alter the calling interface of the
+enclosing function declaring the contract because it is always the very last
+parameter and it has a default value (so it can always be omitted when users
+call the function).
 This extra parameter must be passed to
 @RefFunc{boost::contract::public_function}, @RefMacro{BOOST_CONTRACT_OLDOF}, and
-all other operations of this library that require a pointer to
+all other operations of this library that accept a pointer to
 @RefClass{boost::contract::virtual_}.
 A part from that, this class is not intended to be directly used by programmers
 (and that is why this class does not have any public member and it is not
 copyable).
 
 @see    @RefSect{tutorial.virtual_public_functions, Virtual Public Functions},
-        @RefSect{tutorial.public_function_overrides, Public Function Overrides}
+        @RefSect{tutorial.public_function_overrides__subcontracting_,
+        Public Function Overrides}
 */
 class virtual_ { // Non-copyable (see below) to avoid copy queue, stack, etc.
 /** @cond */

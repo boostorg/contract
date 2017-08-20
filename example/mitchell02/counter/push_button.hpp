@@ -28,6 +28,7 @@ public:
 
     // Destroy button.
     virtual ~push_button() {
+        // Could have omitted contracts here (nothing to check).
         boost::contract::check c = boost::contract::destructor(this);
     }
 
@@ -35,6 +36,7 @@ public:
 
     // If button is enabled.
     bool enabled() const {
+        // Could have omitted contracts here (nothing to check).
         boost::contract::check c = boost::contract::public_function(this);
         return enabled_;
     }

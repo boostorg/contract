@@ -16,8 +16,8 @@ Assert contract conditions.
 
 #ifndef BOOST_CONTRACT_NO_ALL
     #include <boost/contract/detail/assert.hpp>
-    #define BOOST_CONTRACT_ASSERT(condition) \
-        BOOST_CONTRACT_DETAIL_ASSERT(condition) /* no `;`  here */
+    #define BOOST_CONTRACT_ASSERT(cond) \
+        BOOST_CONTRACT_DETAIL_ASSERT(cond) /* no `;`  here */
 #else
     /**
     Preferred way to assert contract conditions.
@@ -29,43 +29,103 @@ Assert contract conditions.
     exception when an asserted condition is checked to be @c false (this
     library will then call the appropriate contract failure handler
     @RefFunc{boost::contract::precondition_failure}, etc.).
-    However, it is preferred to use this macro instead because it expands to
+    However, it is preferred to use this macro because it expands to
     code that throws @RefClass{boost::contract::assertion_failure} with the
     correct assertion file name (using <c>__FILE__</c>), line number (using
     <c>__LINE__</c>), and asserted condition code so to produce informative
     error messages.
-
-    @see    @RefSect{tutorial, Tutorial},
-            @RefSect{advanced_topics.throw_on_failure, Throw on Failure},
-            @RefSect{extra_topics.no_macros__no_c__11_, No Macros}
     
-    @param condition    The contract condition being checked.
-                        (This is not a variadic macro parameter so any comma it
-                        might contain must be protected by round parenthesis,
-                        but @c BOOST_CONTRACT_ASSERT((condition)) will always
-                        work.)
+    @RefMacro{BOOST_CONTRACT_ASSERT}, @RefMacro{BOOST_CONTRACT_ASSERT_AUDIT} and
+    @RefMacro{BOOST_CONTRACT_ASSERT_AXIOM} are the three assertion levels
+    predefined by this library.
+
+    @see    @RefSect{tutorial.preconditions, Preconditions},
+            @RefSect{tutorial.postconditions, Postconditions},
+            @RefSect{tutorial.exception_guarantees, Exceptions Guarantees},
+            @RefSect{tutorial.class_invariants, Class Invariants}
+    
+    @param cond Boolean contract condition to check.
+                (This is not a variadic macro parameter so any comma it might
+                contain must be protected by round parenthesis,
+                @c BOOST_CONTRACT_ASSERT((cond)) will always work.)
     */
     // This must be an expression (a trivial one so the compiler can optimize it
     // away). It cannot an empty code block `{}`, etc. otherwise code like
     // `if(...) ASSERT(...); else ASSERT(...);` won't work when NO_ALL.
-    #define BOOST_CONTRACT_ASSERT(condition) \
+    #define BOOST_CONTRACT_ASSERT(cond) \
         BOOST_CONTRACT_DETAIL_NOOP
 #endif
 
-#ifndef BOOST_CONTRACT_NO_AUDITS
-    // Compiles and evaluates condition (default).
-    #define BOOST_CONTRACT_ASSERT_AUDIT(condition) \
-        BOOST_CONTRACT_ASSERT(condition)
+#ifdef BOOST_CONTRACT_AUDITS
+    /**
+    Preferred way to assert contract conditions that are computationally
+    expensive, at least compared to the cost of executing the function body.
+
+    The asserted condition will always be compiled and validated syntactically,
+    but it will not be evaluated at run-time unless
+    @RefMacro{BOOST_CONTRACT_AUDITS} is defined (undefined by default).
+    
+    This macro is defined by code equivalent to:
+
+    @code
+        #ifdef BOOST_CONTRACT_AUDITS
+            #define BOOST_CONTRACT_ASSERT_AUDIT(cond) \
+                BOOST_CONTRACT_ASSERT(cond)
+        #else
+            #define BOOST_CONTRACT_ASSERT_AUDIT(cond) \
+                BOOST_CONTRACT_ASSERT(true || cond)
+        #endif
+    @endcode
+
+    @RefMacro{BOOST_CONTRACT_ASSERT}, @RefMacro{BOOST_CONTRACT_ASSERT_AUDIT} and
+    @RefMacro{BOOST_CONTRACT_ASSERT_AXIOM} are the three assertion levels
+    predefined by this library.
+    If there is a need, programmers are free to implement their own assertion
+    levels defining macros similar to the one above.
+    
+    @see @RefSect{extras.assertion_levels, Assertions Levels}
+    
+    @param cond Boolean contract condition to check.
+                (This is not a variadic macro parameter so any comma it might
+                contain must be protected by round parenthesis,
+                @c BOOST_CONTRACT_ASSERT_AUDIT((cond)) will always work.)
+    */
+    #define BOOST_CONTRACT_ASSERT_AUDIT(cond) \
+        BOOST_CONTRACT_ASSERT(cond)
 #else
-    /** TODO */
-    // Compiles but does not evaluate condition.
-    #define BOOST_CONTRACT_ASSERT_AUDIT(condition) \
-        BOOST_CONTRACT_DETAIL_NOEVAL(condition)
+    #define BOOST_CONTRACT_ASSERT_AUDIT(cond) \
+        BOOST_CONTRACT_DETAIL_NOEVAL(cond)
 #endif
 
-/** TODO */
-#define BOOST_CONTRACT_ASSERT_AXIOM(condition) \
-    BOOST_CONTRACT_DETAIL_NOEVAL(condition)
+/**
+Preferred way to assert contract conditions that are computationally
+prohibitive, at least compared to the cost of executing the function body.
+
+The asserted condition will always be compiled and validated syntactically, but
+it will never be evaluated at run-time.
+
+This macro is defined by code equivalent to:
+
+@code
+    #define BOOST_CONTRACT_ASSERT_AXIOM(cond) \
+        BOOST_CONTRACT_ASSERT(true || cond)
+@endcode
+
+@RefMacro{BOOST_CONTRACT_ASSERT}, @RefMacro{BOOST_CONTRACT_ASSERT_AUDIT} and
+@RefMacro{BOOST_CONTRACT_ASSERT_AXIOM} are the three assertion levels predefined
+by this library.
+If there is a need, programmers are free to implement their own assertion levels
+defining macros similar to the one above.
+
+@see @RefSect{extras.assertion_levels, Assertion Levels}
+
+@param cond Boolean contract condition to check.
+            (This is not a variadic macro parameter so any comma it might
+            contain must be protected by round parenthesis,
+            @c BOOST_CONTRACT_ASSERT_AXIOM((cond)) will always work.)
+*/
+#define BOOST_CONTRACT_ASSERT_AXIOM(cond) \
+    BOOST_CONTRACT_DETAIL_NOEVAL(cond)
 
 #endif // #include guard
 

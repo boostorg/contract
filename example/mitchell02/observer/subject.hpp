@@ -56,7 +56,7 @@ public:
     // Attach given object as an observer.
     void attach(observer* ob) {
         boost::contract::old_ptr<std::vector<observer const*> > old_observers;
-        #ifndef BOOST_CONTRACT_NO_AUDITS
+        #ifdef BOOST_CONTRACT_AUDITS
             old_observers = BOOST_CONTRACT_OLDOF(observers());
         #endif
         boost::contract::check c = boost::contract::public_function(this)

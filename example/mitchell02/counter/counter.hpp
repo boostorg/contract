@@ -33,6 +33,7 @@ public:
 
     // Destroy counter.
     virtual ~counter() {
+        // Could have omitted contracts here (nothing to check).
         boost::contract::check c = boost::contract::destructor(this);
     }
 
@@ -40,6 +41,7 @@ public:
 
     // Current counter value.
     int value() const {
+        // Could have omitted contracts here (nothing to check).
         boost::contract::check c = boost::contract::public_function(this);
         return value_;
     }

@@ -55,10 +55,10 @@ public:
 public:
     void swap(vector& other) {
         boost::contract::old_ptr<vector> old_me, old_other;
-        #ifndef BOOST_CONTRACT_NO_AUDITS // Skip old copies if NO_AUDIT...
+        #ifdef BOOST_CONTRACT_AUDITS
             old_me = BOOST_CONTRACT_OLDOF(*this);
             old_other = BOOST_CONTRACT_OLDOF(other);
-        #endif
+        #endif // Else, skip old value copies...
         boost::contract::check c = boost::contract::public_function(this)
             .postcondition([&] {
                 // ...and also skip related assertions.

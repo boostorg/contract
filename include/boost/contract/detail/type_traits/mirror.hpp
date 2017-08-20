@@ -1,6 +1,6 @@
 
-#ifndef BOOST_CONTRACT_DETAIL_INTROSPECTION_HPP_
-#define BOOST_CONTRACT_DETAIL_INTROSPECTION_HPP_
+#ifndef BOOST_CONTRACT_DETAIL_MIRROR_HPP_
+#define BOOST_CONTRACT_DETAIL_MIRROR_HPP_
 
 // Copyright (C) 2008-2016 Lorenzo Caminiti
 // Distributed under the Boost Software License, Version 1.0 (see accompanying
@@ -18,21 +18,21 @@
 #include <boost/preprocessor/tuple/eat.hpp>
 
 // NOTE: Unfortunately, it is not possible to use Boost.TTI because it not
-// always works on MSVC (e.g., when the introspecting meta-function is invoked
+// always works on MSVC (e.g., when the mirror meta-function is invoked
 // multiple times, MSVC 2010 gives an internal compiler error). This is a
-// simpler introspecting implementation that seems to work better on MSVC.
+// simpler mirror implementation that seems to work better on MSVC.
 
 /* PRIVATE */
 
-#define BOOST_CONTRACT_DETAIL_INTROSPECTION_END_(tparam) \
+#define BOOST_CONTRACT_DETAIL_MIRROR_END_(tparam) \
         template<typename> \
-        static boost::contract::detail::introspection::no& check(...); \
+        static boost::contract::detail::mirror::no& check(...); \
     public: \
         static bool const value = sizeof(check<tparam>(0)) == \
-                sizeof(boost::contract::detail::introspection::yes); \
+                sizeof(boost::contract::detail::mirror::yes); \
         typedef boost::mpl::bool_<value> type;
 
-#define BOOST_CONTRACT_DETAIL_INTROSPECTION_HAS_MEMBER_FUNCTION_(is_static, \
+#define BOOST_CONTRACT_DETAIL_MIRROR_HAS_MEMBER_FUNCTION_(is_static, \
         trait, func_name) \
     template< \
         typename BOOST_CONTRACT_DETAIL_NAME1(T), \
@@ -42,8 +42,8 @@
     > \
     class trait { \
         template<class BOOST_CONTRACT_DETAIL_NAME1(C)> \
-        static boost::contract::detail::introspection::yes& check( \
-            boost::contract::detail::introspection::check_function< \
+        static boost::contract::detail::mirror::yes& check( \
+            boost::contract::detail::mirror::check_function< \
                 typename \
                     BOOST_PP_IIF(is_static, \
                         boost::function_types::function_pointer \
@@ -70,36 +70,35 @@
                 &BOOST_CONTRACT_DETAIL_NAME1(C)::func_name \
             >* \
         ); \
-        BOOST_CONTRACT_DETAIL_INTROSPECTION_END_( \
+        BOOST_CONTRACT_DETAIL_MIRROR_END_( \
                 BOOST_CONTRACT_DETAIL_NAME1(T)) \
     };
 
 /* PUBLIC */
 
-#define BOOST_CONTRACT_DETAIL_INTROSPECTION_HAS_TYPE(trait, type_name)\
+#define BOOST_CONTRACT_DETAIL_MIRROR_HAS_TYPE(trait, type_name)\
     template<typename BOOST_CONTRACT_DETAIL_NAME1(T)> \
     class trait { \
         template<class BOOST_CONTRACT_DETAIL_NAME1(C)> \
-        static boost::contract::detail::introspection::yes& check( \
+        static boost::contract::detail::mirror::yes& check( \
                 typename BOOST_CONTRACT_DETAIL_NAME1(C)::type_name*); \
-        BOOST_CONTRACT_DETAIL_INTROSPECTION_END_( \
+        BOOST_CONTRACT_DETAIL_MIRROR_END_( \
                 BOOST_CONTRACT_DETAIL_NAME1(T)) \
     };
 
-#define BOOST_CONTRACT_DETAIL_INTROSPECTION_HAS_MEMBER_FUNCTION( \
+#define BOOST_CONTRACT_DETAIL_MIRROR_HAS_MEMBER_FUNCTION( \
         trait, func_name) \
-    BOOST_CONTRACT_DETAIL_INTROSPECTION_HAS_MEMBER_FUNCTION_( \
+    BOOST_CONTRACT_DETAIL_MIRROR_HAS_MEMBER_FUNCTION_( \
             /* is_static = */ 0, trait, func_name)
 
-#define BOOST_CONTRACT_DETAIL_INTROSPECTION_HAS_STATIC_MEMBER_FUNCTION(trait, \
+#define BOOST_CONTRACT_DETAIL_MIRROR_HAS_STATIC_MEMBER_FUNCTION(trait, \
         func_name) \
-    BOOST_CONTRACT_DETAIL_INTROSPECTION_HAS_MEMBER_FUNCTION_( \
+    BOOST_CONTRACT_DETAIL_MIRROR_HAS_MEMBER_FUNCTION_( \
             /* is_static = */ 1, trait, func_name)
         
 /* CODE */
 
-namespace boost { namespace contract { namespace detail {
-        namespace introspection {
+namespace boost { namespace contract { namespace detail { namespace mirror {
 
 typedef class {} yes;
 typedef yes no[2];

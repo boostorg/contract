@@ -9,9 +9,12 @@
 
 /** @file
 Include all header files required by this library at once (for convenience).
-All headers file <c>boost/contract/\*.hpp</c> are independent from one another
-and can be included one-by-one to reduce the amount of the code of this library
-being compiled in user code (but that should not make a significant difference).
+
+All header files <c>boost/contract/\*.hpp</c> are independent from one another
+and can be included one-by-one to reduce the amount of code to compile from this
+library in user code (but this was measured to not make an appreciable
+difference in compile-time so <c>boost/contract.hpp</c> can be included directly
+in most cases).
 Instead the headers <c>boost/contract/core/\*.hpp</c> are not independent from
 other library headers and they are automatically included by the
 <c>boost/contract/\*.hpp</c> headers (so the <c>boost/contract/core/\*.hpp</c>
@@ -22,6 +25,7 @@ All files under the <c>boost/contract/detail/</c> directory, names within the
 @c boost_contract_detail... and @c BOOST_CONTRACT_DETAIL... (in any namesapce,
 including user's code) are reserved for internal use of this library and should
 never be used directly by programmers.
+
 @see @RefSect{getting_started, Getting Started}
 */
 

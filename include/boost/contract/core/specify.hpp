@@ -147,7 +147,7 @@ public:
     @b Throws:  This can throw (i.e., @c noexcept(false)) in case programmers
                 specify failure handlers that throw exceptions instead of
                 terminating the program (see
-                @RefSect{advanced_topics.throw_on_failure, Throw on Failure}).
+                @RefSect{advanced.throw_on_failure, Throw on Failure}).
     */
     ~specify_nothing() BOOST_NOEXCEPT_IF(false) {}
     
@@ -191,7 +191,7 @@ public:
     @b Throws:  This can throw (i.e., @c noexcept(false)) in case programmers
                 specify failure handlers that throw exceptions instead of
                 terminating the program (see
-                @RefSect{advanced_topics.throw_on_failure, Throw on Failure}).
+                @RefSect{advanced.throw_on_failure, Throw on Failure}).
     */
     ~specify_except() BOOST_NOEXCEPT_IF(false) {}
 
@@ -205,7 +205,6 @@ public:
                 call to this functor indicates a contract assertion failure (and
                 will result in this library calling
                 @RefFunc{boost::contract::except_failure}).
-                @RefSect{advanced_topics.throw_on_failure, Throw on Failure}).
                 This functor should capture variables by (constant) references
                 (to access the values they will have at function exit).
 
@@ -238,9 +237,9 @@ private:
 };
 
 /**
-Allow to specify postconditions and exception guarantees.
+Allow to specify postconditions or exception guarantees.
 
-Allow to specify functors this library will call to check postconditions and
+Allow to specify functors this library will call to check postconditions or
 exception guarantees.
 
 @see    @RefSect{tutorial.postconditions, Postconditions},
@@ -260,7 +259,7 @@ public:
     @b Throws:  This can throw (i.e., @c noexcept(false)) in case programmers
                 specify failure handlers that throw exceptions instead of
                 terminating the program (see
-                @RefSect{advanced_topics.throw_on_failure, Throw on Failure}).
+                @RefSect{advanced.throw_on_failure, Throw on Failure}).
     */
     ~specify_postcondition_except() BOOST_NOEXCEPT_IF(false) {}
 
@@ -329,12 +328,12 @@ private:
 };
 
 /**
-Allow to specify old copies at body, postconditions, and exception guarantees.
+Allow to specify old copies at body, postconditions, or exception guarantees.
 
 Allow to specify functors this library will call to copy old value at body, 
-check postconditions, and check exception guarantees.
+check postconditions, or check exception guarantees.
 
-@see    @RefSect{advanced_topics.old_values_at_body, Old Values at Body},
+@see    @RefSect{advanced.old_copies_at_body, Old Copies at Body},
         @RefSect{tutorial.postconditions, Postconditions},
         @RefSect{tutorial.exception_guarantees, Exception Guarantees}
 
@@ -352,7 +351,7 @@ public:
     @b Throws:  This can throw (i.e., @c noexcept(false)) in case programmers
                 specify failure handlers that throw exceptions instead of
                 terminating the program (see
-                @RefSect{advanced_topics.throw_on_failure, Throw on Failure}).
+                @RefSect{advanced.throw_on_failure, Throw on Failure}).
     */
     ~specify_old_postcondition_except() BOOST_NOEXCEPT_IF(false) {}
     
@@ -361,7 +360,7 @@ public:
 
     It should often be sufficient to initialize old value pointers as soon as
     they are declared, without using this function (see
-    @RefSect{advanced_topics.old_values_at_body, Old Values at Body}).
+    @RefSect{advanced.old_copies_at_body, Old Copies at Body}).
 
     @param f    Nullary functor called by this library @c f() to assign old
                 value copies just before the body is executed but after entry
@@ -463,7 +462,7 @@ Allow to specify functors this library will call to check preconditions, copy
 old values at body, check postconditions, and check exception guarantees.
 
 @see    @RefSect{tutorial.preconditions, Preconditions},
-        @RefSect{advanced_topics.old_values_at_body, Old Values at Body},
+        @RefSect{advanced.old_copies_at_body, Old Copies at Body},
         @RefSect{tutorial.postconditions, Postconditions},
         @RefSect{tutorial.exception_guarantees, Exception Guarantees}
 
@@ -486,7 +485,7 @@ public:
     @b Throws:  This can throw (i.e., @c noexcept(false)) in case programmers
                 specify failure handlers that throw exceptions instead of
                 terminating the program (see
-                @RefSect{advanced_topics.throw_on_failure, Throw on Failure}).
+                @RefSect{advanced.throw_on_failure, Throw on Failure}).
     */
     ~specify_precondition_old_postcondition_except() BOOST_NOEXCEPT_IF(false) {}
     
@@ -517,7 +516,7 @@ public:
 
     It should often be sufficient to initialize old value pointers as soon as
     they are declared, without using this function (see
-    @RefSect{advanced_topics.old_values_at_body, Old Values at Body}).
+    @RefSect{advanced.old_copies_at_body, Old Copies at Body}).
 
     @param f    Nullary functor called by this library @c f() to assign old
                 value copies just before the body is executed but after entry
