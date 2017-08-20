@@ -95,7 +95,7 @@ Handle public function overrides (for subcontracting).
 
     @param override_name    Name of the override type this macro will declare.
                             (This is not a variadic macro parameter but it
-                            should never contain any comma because it is an
+                            should never contain commas because it is an
                             identifier.)
     @param function_name    Function name of the public function override.
                             This macro is called just once even if the function
@@ -104,7 +104,7 @@ Handle public function overrides (for subcontracting).
                             @RefSect{advanced_topics.function_overloads,
                             Function Overloads}).
                             (This is not a variadic macro parameter but it
-                            should never contain any comma because it is an
+                            should never contain commas because it is an
                             identifier.)
     */
     #define BOOST_CONTRACT_NAMED_OVERRIDE(override_name, function_name) \
@@ -172,8 +172,8 @@ Declare the override type to pass as an explicit template parameter to
     
     @param ...  A comma separated list of one or more function names of public
                 function overrides.
-                (Each function name should never contain any commas because it
-                is an identifier.)
+                (Each function name should never contain commas because it is an
+                identifier.)
     */
     #define BOOST_CONTRACT_OVERRIDES(...) \
         BOOST_PP_SEQ_FOR_EACH(BOOST_CONTRACT_OVERRIDES_SEQ_, ~, \

@@ -45,7 +45,9 @@ Disable Contract Compilation}).
     /**
     Program preconditions that can be completely disabled at compile-time.
 
-    @c BOOST_CONTRACT_PRECONDITION(f) expands to code equivalent to:
+    @c BOOST_CONTRACT_PRECONDITION(f) expands to code equivalent to the
+    following (note that no code is generated when
+    @RefMacro{BOOST_CONTRACT_NO_PRECONDITIONS} is defined):
     
     @code
     #ifndef BOOST_CONTRACT_NO_PRECONDITIONS
@@ -80,7 +82,9 @@ Disable Contract Compilation}).
     /**
     Program postconditions that can be completely disabled at compile-time.
 
-    @c BOOST_CONTRACT_POSTCONDITION(f) expands to code equivalent to:
+    @c BOOST_CONTRACT_POSTCONDITION(f) expands to code equivalent to the
+    following (note that no code is generated when
+    @RefMacro{BOOST_CONTRACT_NO_POSTCONDITIONS} is defined):
     
     @code
     #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
@@ -119,7 +123,9 @@ Disable Contract Compilation}).
     Program exception guarantees that can be completely disabled at
     compile-time.
     
-    @c BOOST_CONTRACT_EXCEPT(f) expands to code equivalent to:
+    @c BOOST_CONTRACT_EXCEPT(f) expands to code equivalent to the following
+    (note that no code is generated when @RefMacro{BOOST_CONTRACT_NO_EXCEPTS}
+    is defined):
     
     @code
     #ifndef BOOST_CONTRACT_NO_EXCEPTS
@@ -184,7 +190,9 @@ Disable Contract Compilation}).
     /**
     Program old copies at body that can be completely disabled at compile-time.
 
-    @c BOOST_CONTRACT_OLD(f) expands to code equivalent to:
+    @c BOOST_CONTRACT_OLD(f) expands to code equivalent to the following (note
+    that no code is generated when @RefMacro{BOOST_CONTRACT_NO_OLDS} is
+    defined):
     
     @code
     #ifndef BOOST_CONTRACT_NO_OLDS
@@ -211,18 +219,19 @@ Disable Contract Compilation}).
             (This is a variadic macro parameter so it can contain commas not
             protected by round parenthesis.)
 
-    @see    @RefSect{advanced.old_values_at_body, Old Values at Body},
+    @see    @RefSect{advanced.old_copies_at_body, Old Copies at Body},
             @RefSect{extras.disable_contract_compilation__macro_interface_,
             Disable Contract Compilation}
     */
     #define BOOST_CONTRACT_OLD(...) /* nothing */
 
     /**
-    Program old values that can be completely disabled at compile-time (this
-    requires the old value type to be copyable).
+    Program old values that can be completely disabled at compile-time (requires
+    the old value type to be copyable).
 
     This is an overloaded variadic macro and it can be used in the following
-    different ways.
+    different ways (note that no code is generated when
+    @RefMacro{BOOST_CONTRACT_NO_OLDS} is defined).
 
     1\. <c>BOOST_CONTRACT_OLD_PTR(T)(ptr)</c> expands to code equivalent
         to the following (this leaves the old value pointer null):
@@ -260,23 +269,23 @@ Disable Contract Compilation}).
             <c>boost::contract::is_old_value_copyable<T>::value</c> is @c true),
             otherwise this pointer will always be null and this library will
             generate a compile-time error when the pointer is dereferenced
-            (but see also @c BOOST_CONTRACT_OLD_PTR_IF_COPYABLE).
+            (but see @RefMacro{BOOST_CONTRACT_OLD_PTR_IF_COPYABLE}).
             (This is a variadic macro parameter so it can contain commas not
             protected by round parenthesis.)
     @arg    <c><b>v</b></c> is the extra parameter of type
             @RefClass{boost::contract::virtual_}<c>*</c> and default value @c 0
             from the enclosing virtual public function or public function
-            overrides declaring the contract.
+            override declaring the contract.
             (This is not a variadic macro parameter so any comma it might
-            contain must be protected by round parenthesis, but
+            contain must be protected by round parenthesis,
             <c>BOOST_CONTRACT_OLD_PTR(T)((v), ptr, expr)</c> will always work.)
     @arg    <c><b>ptr</b></c> is the name of the old value pointer variable.
-            (This is not a variadic macro parameter but it will never contain
-            any comma because it is an identifier.)
+            (This is not a variadic macro parameter but it should never contain
+            commas because it is an identifier.)
     @arg    <c><b>expr</b></c> is the expression to be evaluated and copied in
             the old value pointer.
             (This is not a variadic macro parameter so any comma it might
-            contain must be protected by round parenthesis, but
+            contain must be protected by round parenthesis,
             <c>BOOST_CONTRACT_OLD_PTR(T)(v, ptr, (expr))</c> will always work.)
 
     @see    @RefSect{tutorial.old_values, Old Values},
@@ -286,11 +295,12 @@ Disable Contract Compilation}).
     #define BOOST_CONTRACT_OLD_PTR(...) BOOST_PP_TUPLE_EAT(0)
 
     /**
-    Program old values that can be completely disabled at compile-time (this
-    does not require the old value type to be copyable).
+    Program old values that can be completely disabled at compile-time (does not
+    require the old value type to be copyable).
 
     This is an overloaded variadic macro and it can be used in the following
-    different ways.
+    different ways (note that no code is generated when
+    @RefMacro{BOOST_CONTRACT_NO_OLDS} is defined).
 
     1\. <c>BOOST_CONTRACT_OLD_PTR_IF_COPYABLE(T)(ptr)</c> expands to code
         equivalent to the following (this leaves the old value pointer null):
@@ -330,24 +340,24 @@ Disable Contract Compilation}).
             <c>boost::contract::is_old_value_copyable<T>::value</c> is
             @c false), this pointer will always be null, but this library will
             not generate a compile-time error when this pointer is dereferenced
-            (see also @c BOOST_CONTRACT_OLD_PTR).
+            (but see @RefMacro{BOOST_CONTRACT_OLD_PTR}).
             (This is a variadic macro parameter so it can contain commas not
             protected by round parenthesis.)
     @arg    <c><b>v</b></c> is the extra parameter of type
             @RefClass{boost::contract::virtual_}<c>*</c> and default value @c 0
             from the enclosing virtual public function or public function
-            overrides declaring the contract.
+            override declaring the contract.
             (This is not a variadic macro parameter so any comma it might
-            contain must be protected by round parenthesis, but
+            contain must be protected by round parenthesis,
             <c>BOOST_CONTRACT_OLD_PTR_IF_COPYABLE(T)((v), ptr, expr)</c> will
             always work.)
     @arg    <c><b>ptr</b></c> is the name of the old value pointer variable.
-            (This is not a variadic macro parameter but it will never contain
-            any commas because it is an identifier.)
+            (This is not a variadic macro parameter but it should never contain
+            commas because it is an identifier.)
     @arg    <c><b>expr</b></c> is the expression to be evaluated and copied in
             the old value pointer.
             (This is not a variadic macro parameter so any comma it might
-            contain must be protected by round parenthesis, but
+            contain must be protected by round parenthesis,
             <c>BOOST_CONTRACT_OLD_PTR_IF_COPYABLE(T)(v, ptr, (expr))</c> will
             always work.)
 
@@ -375,7 +385,9 @@ Disable Contract Compilation}).
     Program (constant) class invariants that can be completely disabled at
     compile-time.
 
-    @c BOOST_CONTRACT_INVARIANT({ ... }) expands to code equivalent to:
+    @c BOOST_CONTRACT_INVARIANT({ ... }) expands to code equivalent to the
+    following (note that no code is generated when
+    @RefMacro{BOOST_CONTRACT_NO_INVARIANTS} is defined):
 
     @code
         #ifndef BOOST_CONTRACT_NO_INVARIANTS
@@ -389,8 +401,8 @@ Disable Contract Compilation}).
     
     @arg    <b>{ ... }</b> is the definition of the function that checks class
             invariants for public functions that are not static and not volatile
-            (but see also @c BOOST_CONTRACT_STATIC_INVARIANT and
-            @c BOOST_CONTRACT_INVARIANT_VOLATILE).
+            (see @RefMacro{BOOST_CONTRACT_STATIC_INVARIANT} and
+            @RefMacro{BOOST_CONTRACT_INVARIANT_VOLATILE}).
             Assertions within this function are usually programmed using
             @RefMacro{BOOST_CONTRACT_ASSERT}, but any exception thrown by a call
             to this function indicates a contract assertion failure (and will
@@ -410,7 +422,9 @@ Disable Contract Compilation}).
     Program volatile class invariants that can be completely disabled at
     compile-time.
 
-    @c BOOST_CONTRACT_INVARIANT_VOLATILE({ ... }) expands to code equivalent to:
+    @c BOOST_CONTRACT_INVARIANT_VOLATILE({ ... }) expands to code equivalent to
+    the following (note that no code is generated when
+    @RefMacro{BOOST_CONTRACT_NO_INVARIANTS} is defined):
 
     @code
         #ifndef BOOST_CONTRACT_NO_INVARIANTS
@@ -424,8 +438,8 @@ Disable Contract Compilation}).
     
     @arg    <b>{ ... }</b> is the definition of the function that checks class
             invariants for volatile public functions
-            (but see also @c BOOST_CONTRACT_INVARIANT and
-            @c BOOST_CONTRACT_STATIC_INVARIANT).
+            (see @RefMacro{BOOST_CONTRACT_INVARIANT} and
+            @RefMacro{BOOST_CONTRACT_STATIC_INVARIANT}).
             Assertions within this function are usually programmed using
             @RefMacro{BOOST_CONTRACT_ASSERT}, but any exception thrown by a call
             to this function indicates a contract assertion failure (and will
@@ -446,7 +460,9 @@ Disable Contract Compilation}).
     Program static class invariants that can be completely disabled at
     compile-time.
 
-    @c BOOST_CONTRACT_STATIC_INVARIANT({ ... }) expands to code equivalent to:
+    @c BOOST_CONTRACT_STATIC_INVARIANT({ ... }) expands to code equivalent to
+    the following (note that no code is generated when
+    @RefMacro{BOOST_CONTRACT_NO_INVARIANTS} is defined):
 
     @code
         #ifndef BOOST_CONTRACT_NO_INVARIANTS
@@ -460,8 +476,8 @@ Disable Contract Compilation}).
     
     @arg    <b>{ ... }</b> is the definition of the function that checks class
             invariants for static public functions
-            (but see also @c BOOST_CONTRACT_INVARIANT and
-            @c BOOST_CONTRACT_INVARIANT_VOLATILE).
+            (see @RefMacro{BOOST_CONTRACT_INVARIANT} and
+            @RefMacro{BOOST_CONTRACT_INVARIANT_VOLATILE}).
             Assertions within this function are usually programmed using
             @RefMacro{BOOST_CONTRACT_ASSERT}, but any exception thrown by a call
             to this function indicates a contract assertion failure (and will
@@ -491,7 +507,9 @@ Disable Contract Compilation}).
     Program contracts that can be completely disabled at compile-time for
     constructors.
             
-    @c BOOST_CONTRACT_CONSTRUCTOR(obj) expands to code equivalent to:
+    @c BOOST_CONTRACT_CONSTRUCTOR(obj) expands to code equivalent to the
+    following (note that no code is generated when
+    @RefMacro{BOOST_CONTRACT_NO_CONSTRUCTORS} is defined):
 
     @code
         #ifndef BOOST_CONTRACT_NO_CONSTRUCTORS
@@ -505,16 +523,16 @@ Disable Contract Compilation}).
     @arg    <c><b>obj</b></c> is the object @c this from the scope of the
             enclosing constructor declaring the contract.
             Constructors check all class invariants, including static and
-            volatile invariants (see also @RefSect{tutorial.class_invariants,
+            volatile invariants (see @RefSect{tutorial.class_invariants,
             Class Invariants} and
-            @RefSect{advanced.volatile_public_functions,
+            @RefSect{extras.volatile_public_functions,
             Volatile Public Functions}).
             (This is a variadic macro parameter so it can contain commas not
             protected by round parenthesis.)
     @arg    <c><b>internal_var</b></c> is a variable name internally generated
-            by this library (this name is unique but only on different lines so
-            this macro cannot be expanded multiple times on the same line
-            number).
+            by this library (this name is unique but only on different line
+            numbers so this macro cannot be expanded multiple times on the same
+            line).
 
     @see    @RefSect{tutorial.constructors, Constructors},
             @RefSect{extras.disable_contract_compilation__macro_interface_,
@@ -533,11 +551,13 @@ Disable Contract Compilation}).
     // constructor_precondition.hpp always #included at top of this file.
 
     /**
-    Program preconditions that can be completely disabled at compile-time for
-    constructors.
+    Program preconditions that can be disabled at compile-time for constructors.
 
     <c>BOOST_CONTRACT_CONSTRUCTOR_PRECONDITION(Class)(f)</c> expands
-    to code equivalent to:
+    to code equivalent to the following (note that when
+    @RefMacro{BOOST_CONTRACT_NO_PRECONDITIONS} is defined, this macro trivially
+    expands to a default constructor call that is internally implemented to do
+    nothing so this should have minimal to no overhead):
 
     @code
     // Guarded only by NO_PRECONDITIONS (and not also by NO_CONSTRUCTORS)
@@ -553,8 +573,8 @@ Disable Contract Compilation}).
     
     Where:
 
-    @arg    <c><b>Class</b></c> is the class type of the constructor for which
-            preconditions are being programmed.
+    @arg    <c><b>Class</b></c> is the type of the class containing the
+            constructor for which preconditions are being programmed.
             (This is a variadic macro parameter so it can contain commas not
             protected by round parenthesis.)
     @arg    <c><b>f</b></c> is the nullary functor called by this library to
@@ -593,7 +613,9 @@ Disable Contract Compilation}).
     Program contracts that can be completely disabled at compile-time for
     destructors.
     
-    @c BOOST_CONTRACT_DESTRUCTOR(obj) expands to code equivalent to:
+    @c BOOST_CONTRACT_DESTRUCTOR(obj) expands to code equivalent to the
+    following (note that no code is generated when
+    @RefMacro{BOOST_CONTRACT_NO_DESTRUCTORS} is defined):
     
     @code
         #ifndef BOOST_CONTRACT_NO_DESTRUCTORS
@@ -607,16 +629,16 @@ Disable Contract Compilation}).
     @arg    <c><b>obj</b></c> is the object @c this from the scope of the
             enclosing destructor declaring the contract.
             Destructors check all class invariants, including static and
-            volatile invariants (see also @RefSect{tutorial.class_invariants,
+            volatile invariants (see @RefSect{tutorial.class_invariants,
             Class Invariants} and
-            @RefSect{advanced.volatile_public_functions,
+            @RefSect{extras.volatile_public_functions,
             Volatile Public Functions}).
             (This is a variadic macro parameter so it can contain commas not
             protected by round parenthesis.)
     @arg    <c><b>internal_var</b></c> is a variable name internally generated
-            by this library (this name is unique but only on different lines so
-            this macro cannot be expanded multiple times on the same line
-            number).
+            by this library (this name is unique but only on different line
+            numbers so this macro cannot be expanded multiple times on the same
+            line).
 
     @see    @RefSect{tutorial.destructors, Destructors},
             @RefSect{extras.disable_contract_compilation__macro_interface_,
@@ -649,7 +671,8 @@ Disable Contract Compilation}).
     non-static public functions (virtual or not) that do not override.
     
     This is an overloaded variadic macro and it can be used in the following
-    different ways.
+    different ways (note that no code is generated when
+    @RefMacro{BOOST_CONTRACT_NO_PUBLIC_FUNCTIONS} is defined).
 
     1\. <c>BOOST_CONTRACT_PUBLIC_FUNCTION(obj)</c> expands to code
         equivalent to the following (for non-virtual public functions that are
@@ -704,9 +727,9 @@ Disable Contract Compilation}).
             invariants, see @RefSect{extras.volatile_public_functions,
             Volatile Public Functions}).
     @arg    <c><b>internal_var</b></c> is a variable name internally generated
-            by this library (this name is unique but only on different lines so
-            this macro cannot be expanded multiple times on the same line
-            number).
+            by this library (this name is unique but only on different line
+            numbers so this macro cannot be expanded multiple times on the same
+            line).
     
     @see    @RefSect{tutorial.public_functions, Public Functions},
             @RefSect{tutorial.virtual_public_functions,
@@ -721,7 +744,8 @@ Disable Contract Compilation}).
     public function overrides (virtual or not).
     
     This is an overloaded variadic macro and it can be used in the following
-    different ways.
+    different ways (note that no code is generated when
+    @RefMacro{BOOST_CONTRACT_NO_PUBLIC_FUNCTIONS} is defined).
 
     1\. <c>BOOST_CONTRACT_PUBLIC_FUNCTION_OVERRIDE(Override)(v, f, obj, ...)</c>
         expands to code equivalent to the following (for public function
@@ -750,8 +774,7 @@ Disable Contract Compilation}).
 
     @arg    <c><b>Override</b></c> is the type
             <c>override_<i>function-name</i></c> declared using the
-            @RefMacro{BOOST_CONTRACT_OVERRIDE} (or equivalent) macro from the
-            enclosing function name.
+            @RefMacro{BOOST_CONTRACT_OVERRIDE} or related macros.
     @arg    <c><b>v</b></c> is the extra parameter of type
             @RefClass{boost::contract::virtual_}<c>*</c> and default value @c 0
             from the enclosing virtual public function declaring the contract.
@@ -775,11 +798,11 @@ Disable Contract Compilation}).
             the contract (by reference and in order they appear in the enclosing
             function declaration), but excluding the trailing argument @c v.
     @arg    <c><b>internal_var</b></c> is a variable name internally generated
-            by this library (this name is unique but only on different lines so
-            this macro cannot be expanded multiple times on the same line
-            number).
+            by this library (this name is unique but only on different line
+            numbers so this macro cannot be expanded multiple times on the same
+            line).
     
-    @see    @RefSect{tutorial.public_function_overrides,
+    @see    @RefSect{tutorial.public_function_overrides__subcontracting_,
             Public Function Overrides},
             @RefSect{extras.disable_contract_compilation__macro_interface_,
             Disable Contract Compilation}
@@ -792,7 +815,8 @@ Disable Contract Compilation}).
     public functions.
     
     @c BOOST_CONTRACT_STATIC_PUBLIC_FUNCTION(Class) expands to code equivalent
-    to:
+    to the following (note that no code is generated when
+    @RefMacro{BOOST_CONTRACT_NO_PUBLIC_FUNCTIONS} is defined):
     
     @code
         #ifndef BOOST_CONTRACT_NO_PUBLIC_FUNCTIONS
@@ -803,14 +827,14 @@ Disable Contract Compilation}).
     
     Where:
     
-    @arg    <c><b>Class</b></c> is the class type of the enclosing static
-            public function declaring the contract.
+    @arg    <c><b>Class</b></c> is the type of the class containing the
+            static public function declaring the contract.
             (This is a variadic macro parameter so it can contain commas not
             protected by round parenthesis.)
     @arg    <c><b>internal_var</b></c> is a variable name internally generated
-            by this library (this name is unique but only on different lines so
-            this macro cannot be expanded multiple times on the same line
-            number).
+            by this library (this name is unique but only on different line
+            numbers so this macro cannot be expanded multiple times on the same
+            line).
     
     @see    @RefSect{tutorial.static_public_functions, Static Public Functions},
             @RefSect{extras.disable_contract_compilation__macro_interface_,
@@ -838,7 +862,9 @@ Disable Contract Compilation}).
     private and protected functions, lambda functions, loops, arbitrary blocks
     of code, etc.
 
-    @c BOOST_CONTRACT_FUNCTION() expands to code equivalent to:
+    @c BOOST_CONTRACT_FUNCTION() expands to code equivalent to the following
+    (note that no code is generated when @RefMacro{BOOST_CONTRACT_NO_FUNCTIONS}
+    is defined):
     
     @code
         #ifndef BOOST_CONTRACT_NO_FUNCTIONS
@@ -849,16 +875,16 @@ Disable Contract Compilation}).
     
     Where:
     
-    @arg    <c><b>internal_far</b></c> is a variable name internally generated
-            by this library (this name is unique but only on different lines so
-            this macro cannot be expanded multiple times on the same line
-            number).
+    @arg    <c><b>internal_var</b></c> is a variable name internally generated
+            by this library (this name is unique but only on different line
+            numbers so this macro cannot be expanded multiple times on the same
+            line).
     
     @see    @RefSect{tutorial.non_member_functions, Non-Member Functions},
             @RefSect{advanced.private_and_protected_functions,
             Private and Protected Functions},
-            @RefSect{advanced.lambdas__loops__code_blocks__etc_,
-            Lambdas\, Loops\, Code Blocks\, Etc.},
+            @RefSect{advanced.lambdas__loops__code_blocks__and__constexpr__,
+            Lambdas\, Loops\, Code Blocks},
             @RefSect{extras.disable_contract_compilation__macro_interface_,
             Disable Contract Compilation}
     */
