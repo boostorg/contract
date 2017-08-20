@@ -15,7 +15,7 @@ necessary to use its macros.
 Almost all the macros defined in this header file are variadic macros. On
 compilers that do not support variadic macros, programmers can manually code
 <c>#ifndef BOOST_CONTRACT_NO_...</c> statements instead (see
-@RefSect{extra_topics.disable_contract_compilation__macro_interface_,
+@RefSect{extras.disable_contract_compilation__macro_interface_,
 Disable Contract Compilation}).
 */
 
@@ -68,7 +68,7 @@ Disable Contract Compilation}).
             protected by round parenthesis.)
 
     @see    @RefSect{tutorial.preconditions, Preconditions},
-           @RefSect{extra_topics.disable_contract_compilation__macro_interface_,
+            @RefSect{extras.disable_contract_compilation__macro_interface_,
             Disable Contract Compilation}
     */
     #define BOOST_CONTRACT_PRECONDITION(...) /* nothing */
@@ -106,7 +106,7 @@ Disable Contract Compilation}).
             protected by round parenthesis.)
 
     @see    @RefSect{tutorial.postconditions, Postconditions},
-           @RefSect{extra_topics.disable_contract_compilation__macro_interface_,
+            @RefSect{extras.disable_contract_compilation__macro_interface_,
             Disable Contract Compilation}
     */
     #define BOOST_CONTRACT_POSTCONDITION(...) /* nothing */
@@ -142,7 +142,7 @@ Disable Contract Compilation}).
             protected by round parenthesis.)
 
     @see    @RefSect{tutorial.exception_guarantees, Exception Guarantees},
-           @RefSect{extra_topics.disable_contract_compilation__macro_interface_,
+            @RefSect{extras.disable_contract_compilation__macro_interface_,
             Disable Contract Compilation}
     */
     #define BOOST_CONTRACT_EXCEPT(...) /* nothing */
@@ -211,8 +211,8 @@ Disable Contract Compilation}).
             (This is a variadic macro parameter so it can contain commas not
             protected by round parenthesis.)
 
-    @see    @RefSect{advanced_topics.old_values_at_body, Old Values at Body},
-           @RefSect{extra_topics.disable_contract_compilation__macro_interface_,
+    @see    @RefSect{advanced.old_values_at_body, Old Values at Body},
+            @RefSect{extras.disable_contract_compilation__macro_interface_,
             Disable Contract Compilation}
     */
     #define BOOST_CONTRACT_OLD(...) /* nothing */
@@ -280,7 +280,7 @@ Disable Contract Compilation}).
             <c>BOOST_CONTRACT_OLD_PTR(T)(v, ptr, (expr))</c> will always work.)
 
     @see    @RefSect{tutorial.old_values, Old Values},
-           @RefSect{extra_topics.disable_contract_compilation__macro_interface_,
+            @RefSect{extras.disable_contract_compilation__macro_interface_,
             Disable Contract Compilation}
     */
     #define BOOST_CONTRACT_OLD_PTR(...) BOOST_PP_TUPLE_EAT(0)
@@ -351,9 +351,9 @@ Disable Contract Compilation}).
             <c>BOOST_CONTRACT_OLD_PTR_IF_COPYABLE(T)(v, ptr, (expr))</c> will
             always work.)
 
-    @see    @RefSect{extra_topics.old_value_requirements__templates_,
+    @see    @RefSect{extras.old_value_requirements__templates_,
             Old Value Requirements},
-           @RefSect{extra_topics.disable_contract_compilation__macro_interface_,
+            @RefSect{extras.disable_contract_compilation__macro_interface_,
             Disable Contract Compilation}
     */
     #define BOOST_CONTRACT_OLD_PTR_IF_COPYABLE(...) BOOST_PP_TUPLE_EAT(0)
@@ -401,7 +401,7 @@ Disable Contract Compilation}).
             protected by round parenthesis.)
 
     @see    @RefSect{tutorial.class_invariants, Class Invariants},
-           @RefSect{extra_topics.disable_contract_compilation__macro_interface_,
+            @RefSect{extras.disable_contract_compilation__macro_interface_,
             Disable Contract Compilation}
     */
     #define BOOST_CONTRACT_INVARIANT(...) /* nothing */
@@ -435,9 +435,9 @@ Disable Contract Compilation}).
             (This is a variadic macro parameter so it can contain commas not
             protected by round parenthesis.)
 
-    @see    @RefSect{extra_topics.volatile_public_functions,
+    @see    @RefSect{extras.volatile_public_functions,
             Volatile Public Functions},
-           @RefSect{extra_topics.disable_contract_compilation__macro_interface_,
+            @RefSect{extras.disable_contract_compilation__macro_interface_,
             Disable Contract Compilation}
     */
     #define BOOST_CONTRACT_INVARIANT_VOLATILE(...) /* nothing */
@@ -472,7 +472,7 @@ Disable Contract Compilation}).
             protected by round parenthesis.)
 
     @see    @RefSect{tutorial.class_invariants, Class Invariants},
-           @RefSect{extra_topics.disable_contract_compilation__macro_interface_,
+            @RefSect{extras.disable_contract_compilation__macro_interface_,
             Disable Contract Compilation}
     */
     #define BOOST_CONTRACT_STATIC_INVARIANT(...) /* nothing */
@@ -507,7 +507,7 @@ Disable Contract Compilation}).
             Constructors check all class invariants, including static and
             volatile invariants (see also @RefSect{tutorial.class_invariants,
             Class Invariants} and
-            @RefSect{advanced_topics.volatile_public_functions,
+            @RefSect{advanced.volatile_public_functions,
             Volatile Public Functions}).
             (This is a variadic macro parameter so it can contain commas not
             protected by round parenthesis.)
@@ -517,7 +517,7 @@ Disable Contract Compilation}).
             number).
 
     @see    @RefSect{tutorial.constructors, Constructors},
-           @RefSect{extra_topics.disable_contract_compilation__macro_interface_,
+            @RefSect{extras.disable_contract_compilation__macro_interface_,
             Disable Contract Compilation},
             @RefMacro{BOOST_CONTRACT_CONSTRUCTOR_PRECONDITION}
     */
@@ -570,7 +570,7 @@ Disable Contract Compilation}).
             protected by round parenthesis.)
 
     @see    @RefSect{tutorial.constructors, Constructors},
-           @RefSect{extra_topics.disable_contract_compilation__macro_interface_,
+            @RefSect{extras.disable_contract_compilation__macro_interface_,
             Disable Contract Compilation},
             @RefMacro{BOOST_CONTRACT_CONSTRUCTOR}
     */
@@ -609,7 +609,7 @@ Disable Contract Compilation}).
             Destructors check all class invariants, including static and
             volatile invariants (see also @RefSect{tutorial.class_invariants,
             Class Invariants} and
-            @RefSect{advanced_topics.volatile_public_functions,
+            @RefSect{advanced.volatile_public_functions,
             Volatile Public Functions}).
             (This is a variadic macro parameter so it can contain commas not
             protected by round parenthesis.)
@@ -619,7 +619,7 @@ Disable Contract Compilation}).
             number).
 
     @see    @RefSect{tutorial.destructors, Destructors},
-           @RefSect{extra_topics.disable_contract_compilation__macro_interface_,
+            @RefSect{extras.disable_contract_compilation__macro_interface_,
             Disable Contract Compilation}
     */
     #define BOOST_CONTRACT_DESTRUCTOR(...) /* nothing */
@@ -701,7 +701,7 @@ Disable Contract Compilation}).
             This object might be mutable, @c const, @c volatile, or
             <c>const volatile</c> depending on the cv-qualifier of the enclosing
             function (volatile public functions will check volatile class
-            invariants, see @RefSect{extra_topics.volatile_public_functions,
+            invariants, see @RefSect{extras.volatile_public_functions,
             Volatile Public Functions}).
     @arg    <c><b>internal_var</b></c> is a variable name internally generated
             by this library (this name is unique but only on different lines so
@@ -711,7 +711,7 @@ Disable Contract Compilation}).
     @see    @RefSect{tutorial.public_functions, Public Functions},
             @RefSect{tutorial.virtual_public_functions,
             Virtual Public Functions},
-           @RefSect{extra_topics.disable_contract_compilation__macro_interface_,
+            @RefSect{extras.disable_contract_compilation__macro_interface_,
             Disable Contract Compilation}
     */
     #define BOOST_CONTRACT_PUBLIC_FUNCTION(...) /* nothing */
@@ -768,7 +768,7 @@ Disable Contract Compilation}).
             This object might be mutable, @c const, @c volatile, or
             <c>const volatile</c> depending on the cv-qualifier of the enclosing
             function (volatile public functions will check volatile class
-            invariants, see @RefSect{extra_topics.volatile_public_functions,
+            invariants, see @RefSect{extras.volatile_public_functions,
             Volatile Public Functions}).
     @arg    <c><b>...</b></c> is a variadic macro parameter listing all the
             arguments passed to the enclosing public function override declaring
@@ -781,7 +781,7 @@ Disable Contract Compilation}).
     
     @see    @RefSect{tutorial.public_function_overrides,
             Public Function Overrides},
-           @RefSect{extra_topics.disable_contract_compilation__macro_interface_,
+            @RefSect{extras.disable_contract_compilation__macro_interface_,
             Disable Contract Compilation}
     */
     #define BOOST_CONTRACT_PUBLIC_FUNCTION_OVERRIDE(...) \
@@ -813,7 +813,7 @@ Disable Contract Compilation}).
             number).
     
     @see    @RefSect{tutorial.static_public_functions, Static Public Functions},
-           @RefSect{extra_topics.disable_contract_compilation__macro_interface_,
+            @RefSect{extras.disable_contract_compilation__macro_interface_,
             Disable Contract Compilation}
     */
     #define BOOST_CONTRACT_STATIC_PUBLIC_FUNCTION(...) /* nothing */
@@ -855,11 +855,11 @@ Disable Contract Compilation}).
             number).
     
     @see    @RefSect{tutorial.non_member_functions, Non-Member Functions},
-            @RefSect{advanced_topics.private_and_protected_functions,
+            @RefSect{advanced.private_and_protected_functions,
             Private and Protected Functions},
-            @RefSect{advanced_topics.lambdas__loops__code_blocks__etc_,
+            @RefSect{advanced.lambdas__loops__code_blocks__etc_,
             Lambdas\, Loops\, Code Blocks\, Etc.},
-           @RefSect{extra_topics.disable_contract_compilation__macro_interface_,
+            @RefSect{extras.disable_contract_compilation__macro_interface_,
             Disable Contract Compilation}
     */
     #define BOOST_CONTRACT_FUNCTION() /* nothing */
