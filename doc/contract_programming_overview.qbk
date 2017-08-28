@@ -400,7 +400,7 @@ The last three specifiers appear in user code so their names can be referred to 
 ][
     [['Old values in postconditions]]
     [
-Yes, [macroref BOOST_CONTRACT_OLD] macro and [classref boost::contract::old_ptr] (but copied before preconditions unless `.old(...)` is used as shown in __Old_Values_at_Body__).
+Yes, [macroref BOOST_CONTRACT_OLD] macro and [classref boost::contract::old_ptr] (but copied before preconditions unless `.old(...)` is used as shown in __Old_Copies_at_Body__).
 For templates, [classref boost::contract::old_ptr_if_copyable] skips old value copies for non-copyable types and [classref boost::contract::condition_if] skips old value copies selectively based on old expression type requirements.
     ]
     [
@@ -559,6 +559,13 @@ but old values, class invariants, and subcontracting are not supported (plus con
 [ [__Maley99__] [C++] [
 This supports Contract Programming including subcontracting but with limitations (e.g., programmers need to manually build an inheritance tree using artificial template parameters), it does not use macros but programmers are required to write by hand a significant amount of boiler-plate code.
 (The authors have found this work very inspiring when developing initial revisions of this library especially for its attempt to support subcontracting.)
+] ]
+[ [__Nana__] [C++] [
+This uses macros but it only works on GCC (and maybe Clang, but it does not work on MSVC, etc.).
+It does not support subcontracting.
+It requires extra care to program postconditions for functions with multiple return statements.
+It seems that it might not check class invariants when functions throw exceptions (unless the `END` macro does that...).
+(In addition, it provides tools for logging and integration with GDB.)
 ] ]
 [ [__C2__] [C++] [
 This uses an external preprocessing tool (the authors could no longer find this project's code to evaluate it).

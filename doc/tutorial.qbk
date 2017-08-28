@@ -204,7 +204,7 @@ Old values should not be used in preconditions and this library does not guarant
 [footnote
 For example, old value pointers might be null in preconditions when postconditions and exception guarantees are disabled defining [macroref BOOST_CONTRACT_NO_POSTCONDITIONS] and [macroref BOOST_CONTRACT_NO_EXCEPTS], when checking an overridden virtual public function contract via subcontracting, and possibly in other cases.
 ]
-See __Old_Values_at_Body__ for delaying the assignment of old values until after class invariants (for constructors, destructors, and public functions) and preconditions are checked (this allows to program old value expressions under the simplifying assumption that class invariant and precondition assertions are satisfied already).
+See __Old_Copies_at_Body__ for delaying the assignment of old values until after class invariants (for constructors, destructors, and public functions) and preconditions are checked (this allows to program old value expressions under the simplifying assumption that class invariant and precondition assertions are satisfied already).
 
 [macroref BOOST_CONTRACT_OLDOF] is a variadic macro and it takes an extra parameter when used in virtual public functions or public function overrides (see __Virtual_Public_Functions__ and __Public_Function_Overrides__).
 C++11 auto declarations can be used with [macroref BOOST_CONTRACT_OLDOF] for brevity `auto `[^old_['variable-name] = BOOST_CONTRACT_OLDOF(['expression])].

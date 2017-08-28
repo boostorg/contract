@@ -6,7 +6,7 @@
 
 [section Acknowledgments]
 
-This section aims to recognize the contributions of /all/ the different people that participated directly or indirectly to the design and development of this library.
+This section aims to recognize the contributions of all the different people that participated directly or indirectly to the design and development of this library.
 
 Sincere thanks to my parents for their support with my education and my studies in computer science.
 
@@ -24,7 +24,7 @@ Many thanks to Thorsten Ottosen for his work on the __N1962__ proposal (and its 
 
 Many thanks to Bertrand Meyer for his pioneering and thorough work on Contract Programming in __Meyer97__.
 
-Finally, many thanks to the entire Boost community and [@http://lists.boost.org mailing list] for providing valuable comments about this library and great insights on the C++ programming language.
+Finally, many thanks to the entire Boost community and [@http://lists.boost.org mailing list] for providing valuable comments on this library and great insights on the C++ programming language.
 
 [endsect]
 

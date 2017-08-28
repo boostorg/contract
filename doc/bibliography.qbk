@@ -76,6 +76,8 @@ This section lists all references consulted while designing and developing this 
 
 [#N4378_anchor] [N4378] J. Lakos, N. Myers, A. Zakharov, and A. Beels. [@http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2015/n4378.pdf /Language Support for Contract Assertions (Revision 10)/]. The C++ Standards Committee, N4378, 2015.
 
+[#Nana_anchor] [Nana] P. J. Maker. [@https://github.com/pjmaker/nana /GNU Nana/]. 2014.
+
 [#N4379_anchor] [N4378] J. Lakos and N. Myers. [@http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2015/n4379.pdf /FAQ about Contract Assertions/]. The C++ Standards Committee, N4379, 2015.
 
 [#N4435_anchor] [N4435] W. E. Brown. [@http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2015/n4435.pdf /Proposing Contract Attributes/]. The C++ Standards Committee, N4435, 2015.
