@@ -1,0 +1,2 @@
+document.writeln("<a href=\"http://ad101com.adbureau.net/accipiter/adclick/CID=fffffffcfffffffcfffffffc/acc_random=33256635/site=adt/area=article/aID=4593/TOPIC=/aamsz=dogear/pos=dog01/pageid=97781495\" target=\"_BLANK\"><img src=\"http://ad101com-images.adbureau.net/ad101com/accipiter/images/AE0.gif\" border=\"0\"></a>");
+document.close();
