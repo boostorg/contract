@@ -27,7 +27,7 @@ template<typename T> // Contract for pure virtual function.
 void pushable<T>::push_back(T const& value, boost::contract::virtual_* v) {
     boost::contract::old_ptr<unsigned> old_capacity =
             BOOST_CONTRACT_OLDOF(v, capacity());
-    boost::contract::guard c = boost::contract::public_function(v, this)
+    boost::contract::check c = boost::contract::public_function(v, this)
         .precondition([&] {
             BOOST_CONTRACT_ASSERT(capacity() < max_size());
         })
@@ -56,7 +56,7 @@ public:
             boost::contract::virtual_* v = 0) /* override */ { // Tag virtuals.
         boost::contract::old_ptr<unsigned> old_size =
                 BOOST_CONTRACT_OLDOF(v, size()); // Old values for virtuals.
-        boost::contract::guard c = boost::contract::public_function< // For overrides.
+        boost::contract::check c = boost::contract::public_function< // For overrides.
                 override_push_back>(v, &vector::push_back, this, value)
             .precondition([&] { // Checked in OR with base preconditions.
                 BOOST_CONTRACT_ASSERT(size() < max_size());
