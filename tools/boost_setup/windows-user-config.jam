@@ -1,0 +1,19 @@
+
+# Copyright (C) 2008-2012 Lorenzo Caminiti
+# Distributed under the Boost Software License, Version 1.0
+# (see accompanying file LICENSE_1_0.txt or a copy at
+# http://www.boost.org/LICENSE_1_0.txt)
+# Home at http://sourceforge.net/projects/contractpp
+
+using msvc ;
+using python ;
+ 
+# Documentation tools.
+using quickbook : "C:/Program Files (x86)/boost/xml/bin/quickbook.exe" : ; 
+using xsltproc : "C:/Program Files (x86)/boost/xml/bin/xsltproc.exe" ; 
+using boostbook
+    : "C:/Program Files (x86)/boost/xml/docbook-xsl"
+    : "C:/Program Files (x86)/boost/xml/docbook-xml"
+    ; 
+using doxygen : "C:/Program Files (x86)/doxygen/bin/doxygen.exe" ; 
+
