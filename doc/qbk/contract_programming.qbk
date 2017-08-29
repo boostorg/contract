@@ -1,0 +1,236 @@
+
+[section:contract_programming Annex: Contract Programming]
+
+This section continues the discussion on Contract Programming started in __Contract_Programming_Overview__.
+
+[section Features]
+
+The following table compares features between this library, the proposal for adding Contract Programming to the C++ standard __Crowl2006__ (see also __Crowl2005__, __Abrahams2005__, __Ottosen2004b__, and __Ottosen2004__)
+[footnote These are all revisions of the same proposal for adding Contract Programming to the C++ standard.]
+, the Eiffel programming language __Meyer1997__, and the D programming language __Bright2004__.
+
+[table Contract Programming Feature Comparison
+[
+    [ Feature ]
+    [ This Library ]
+    [ C++ Standard Proposal ]
+    [ ISE Eiffel 5.4 ]
+    [ D ]
+][
+    [ /Keywords/ ]
+    [ In contract macros preprocessor sequence: =(precondition)=, =(postcondition)=, =(body)=, =(copyable)=, =(inherit)= ]
+    [ =invariant=, =precondition=, =postcondition=, =oldof= ]
+    [ =invariant=, =require=, =ensure=, =do=, =require else=, =ensure then=, =old=, =result=, =variant= ]
+    [ =invariant=, =in=, =out=, =assert=, =static= ]
+][
+    [ /On contract failure/ ]
+    [ Default to `std::terminate()` but can be customized (might throw) ]
+    [ Default to `std::terminate()` but can be customized (might throw) ]
+    [ Throw exception ]
+    [ Throw exception ]
+][
+    [ /Return value in postconditions/ ]
+    [ Yes, =(postcondition)(=/result-name/=)= ]
+    [ Yes, =postcondition (=/result-name/=)= ]
+    [ Yes, =result= keyword ]
+    [ No ]
+][
+    [ /Old values in postconditions/ ]
+    [ Yes, =CONTRACT_OLDOF(=/name/=)= (but only for class and argument types tagged `contract::copyable`) ]
+    [ Yes, =oldof= keyword ]
+    [ Yes, =old= keyword ]
+    [ No ]
+][
+    [ /Subcontracting/ ]
+    [ Yes, also support multiple base contracts for multiple inheritance ]
+    [ Yes, also support multiple base contracts but only base classes can specify preconditions ]
+    [ Yes ]
+    [ Yes ]
+][
+    [ /Contracts for abstract functions/ ]
+    [ Yes ]
+    [ Yes ]
+    [ Yes ]
+    [ No (planned) ]
+][
+    [ /Arbitrary code in contracts/ ]
+    [ Yes (but recommended to limit contracts to a list of assertions =CONTRACT_ASSERT()= and to use only public members in preconditions)]
+    [ No, assertions only ]
+    [ No, assertions only plus preconditions can only access public members ]
+    [ Yes ]
+][
+    [ /Constant-correct/ ]
+    [ Yes ]
+    [ Yes ]
+    [ Yes ]
+    [ No ]
+][
+    [ /Function code ordering/ ]
+    [ In contract macros preprocessor sequence: Preconditions -> postconditions -> body ]
+    [ Preconditions, postconditions, body ]
+    [ Preconditions, body, postconditions ]
+    [ Preconditions, postconditions, body ]
+][
+    [ /Static assertions/ ]
+    [ No (but __Boost_MPL__ can be used within contracts) ]
+    [ No ]
+    [ No ]
+    [ Yes ]
+][
+    [ /Block invariants/ ]
+    [ Yes, =CONTRACT_ASSERT_BLOCK_INVARIANT()= ]
+    [ Yes, =invariant= ]
+    [ No, but support loop invariants (loops are special code blocks that iterate) ]
+    [ No ]
+][
+    [ /Loop variants/ ]
+    [ Yes, =CONTRACT_ASSERT_LOOP_VARIANT()= and =CONTRACT_INIT_LOOP_VARIANT= ]
+    [ No ]
+    [ Yes ]
+    [ No ]
+][
+    [ /Disable assertion checking within assertions checking (policy)/ ]
+    [ Yes (to prevent infinite recursion) ]
+    [ Yes, but not in preconditions ]
+    [ Yes ]
+    [ No ]
+][
+    [ /Nested function calls (policy)/ ]
+    [ Disable checking of class invariants (static and non) ]
+    [ Disable nothing ]
+    [ Disable all checks ]
+    [ Disable nothing ]
+][
+    [ /Non-static class invariants checking (policy)/ ]
+    [ At constructor exit, around any non-static function, at destructor entry, and at function exit due to exception -- but only if programmers specifies contracts for those (e.g., if no contract specified for a private function then no class invariant and no contract is checked for that function) ]
+    [ At constructor exit, around public functions, at destructor entry, and at function exit due to exception ]
+    [ At constructor exit, and around public functions ]
+    [ At constructor exit, around public functions, and at destructor entry ]
+][
+    [ /Static class invariants checking (policy)/ ]
+    [ At entry and exit of any (also static) member function, constructor, and destructor ]
+    [ No static class invariants ]
+    [ No static class invariants ]
+    [ No static class invariants ]
+][
+    [ /Removable from object code/ ]
+    [ Yes, any combinations of `CONTRACT_CHECK_BLOCK_INVARIANT`, `CONTRACT_CHECK_CLASS_INVARIANT`, `CONTRACT_CHECK_PRECONDITION`, and `CONTRACT_CHECK_POSTCONDITION` ]
+    [ Yes ]
+    [ Yes (but predefined combinations only) ]
+    [ Yes ]
+]
+]
+
+[endsect]
+[section Requirements]
+
+The design of this library was largely based on the requirements identified by the different revisions of the proposal for adding Contract Programming to the C++ standard __Crowl2006_etc__ and by the Eiffel programming language __Meyer1997__.
+
+This is a list of some of the specific requirements considered for the library design:
+
+# Implement Contract Programming within ISO standard C++ (without using external preprcessing tools, etc).
+# Support optional contract compilation and checking.
+Programmers can select any combination among invariants, preconditions, and postconditions to be compiled and checked (e.g., compile and check invariants and postconditions only).
+# Programmers can decide the action to take on contract failure.
+# Programmers can completely remove contract code for compilation.
+In other words, if no invariants, no preconditions, and no postconditions are compiled and checked then the user code should remain unchanged (for object size, execution time, compilation-time, etc).
+# Support old values in postconditions for copyable types.
+Plus allow programmers to remove the extra copy overhead even for copyable types if the old value is not needed in postconditions (e.g., by not specifying the type copyable).
+# Support result value in postconditions.
+# Support subcontracting with multiple inheritance.
+# Enforce contract constant-correctness at compile-time.
+# Do not alter the user code public API.
+# Support contract for all C++ constructs (operators, template class, template functions, static members, non-members, non-static members, constructors, destructors, pure virtual members, etc).
+# Program contracts together with function and class declarations (not definitions) because contracts are part of the specifications.
+# Support contract when function (body) definition is separated from (contract) declaration.
+# Support block invariants.
+# Support loop variants and invariants.
+
+In addition, library early implementations were somewhat inspired by the work of __Maley1999__.
+
+[endsect]
+[section Benefits]
+
+The main use of Contract Programming is to improve software quality.
+__Meyer1997__ discusses how Contract Programming can be used as the basic tool to write "correct" software.
+The following is a short summary of the benefits associated with Contract Programming mainly taken from __Ottosen2004__.
+See also __Wilson2006__ for a discussion of Contract Programming applied to the C++ programming language.
+Furhtermore, __Stroustrup1997__ discusses the key importance of class invariants plus advantages and disadvantages of using preconditions and postconditions.
+
+# Using class invariants, programmers can describe what to expect from a class and the logic dependencies between the class members.
+It is the job of the constructor to ensure that the class invariants are satisfied when the object is first created.
+Then the implementation of the member functions can be largely simplified as they can be written knowing that the class invariants are satisfied because Contract Programing checks them before and after the execution of every member function. 
+Finally, the destructor makes sure that the class invariants hold for the entire object life-cycle checking the class invariants one last time before destroying the object.
+# Using function preconditions and postconditions, programmers can give a precise semantic description of what a function requires at its entry and what it ensures under its (normal) exit.
+In particular, using the old value in postconditions, Contract Programming provides a mechanism that allows programmers to compare values of an expression before and after the executions of the function body.
+This mechanism is powerful enough to enable programmers to express many constraints within the code -- constraints that would otherwise have to be captured at the best only informally by the code documentation.
+# Because contracts are embedded directly into the source code, they are executed and verified at run-time so they are always up to date with the code itself.
+Therefore the specifications as documented by the contracts can be trusted to always be up to date with the source code itself.
+# Contract Programming can provide a powerful debugging facility because, if contracts are well written, bugs will cause contract assertions to fail exactly where the problem first occurs instead that in some later stage of the program in an apparently unrelated manner.
+In general, a precondition failure points to a bug in the function caller.
+A postcondition failure points instead to a bug in the function implementation. 
+Furthermore, in case of contract failure, this library provides detailed error messages that greatly helps debugging.
+[footnote Of course, if the contract is ill written then Contract Programming is of little use.
+However, it is less likely to have a bug in both the function body and the contract than in the function body only.
+For example, consider the validation of a result in postconditions.
+Validating the return value might seem redundant, but in this case we actually want that redundancy.
+When programmers write a function, there is a certain probability that they make a mistake in implementing the function body.
+When they specify the result of the function in the postconditions, there is also a certain probability that they make a mistake in writing the contract. 
+However, the probability that they make a mistake twice (in the body /and/ in the contract) is lower than the probability that the mistake is made just once (in the body).]
+# Contract Programming facilitates testing because a contract naturally specifies what a test should check.
+For example, preconditions of a function state which inputs cause the function to fail and postconditions state which inputs cause it to exit normally.
+# Contract Programming can serve to reduce the gap between designers and programmers by providing a precise and unambiguous specification language.
+Moreover, contracts can make code reviews easier.
+# Contract Programming formalizes the virtual function overriding mechanism via the concept of subcontracting.
+This keeps the base class programmers in control as overriding functions still have to fully satisfy the base class contracts.
+# Contract Programming assertions can replace /defensive programming/ checks localizing these checks within the contract and making the code more readable.
+
+[endsect]
+[section Costs]
+
+Contract Programming benefits come to the cost of performance as discussed in detail by both __Stroustrup1997__ and __Meyer1997__.
+
+The run-time performances are negatively impacted by Contract Programming mainly because of the following:
+
+# The extra processing required to check the assertions.
+# The extra processing required by the additional function calls (additional functions are invoked to check class invariants, preconditions, and postconditions).
+# The extra processing required to copy object and function arguments when their old values are accessed in postconditions.
+
+To alleviate some of these run-time performance impacts, you can selectively turn off some of the contract compilation and the related run-time checking.
+In reality, you will have to decide based on the performance trade-offs required by your system but a reasonable approach might be to
+[footnote This approach is generally reasonable because in well tested production code, validating the function body implementation via postconditions and class invariants is rarely needed since the function has shown itself to be "correct" during testing.
+On the other hand, checking arguments has continuing need because of the evolution of the callers.]:
+
+* Always write contracts to clarify the semantics of your design embedding them directly into the code and its documentation.
+* Turn on class invariants, preconditions, and postconditions compilation and checking during early testing.
+* Turn on only preconditions (and possibly class invariants) during release testing and for the final release.
+(Postconditions are usually more expensive to check.)
+
+Compile-time performances are also impacted by this library as compilation time and compiler memory usage increase mainly because:
+
+# The contracts appear in the class declaration (usually header files) so they have to be re-compiled for each translation unit.
+# The library implementation extensively uses C++ preprocessor and template metaprogramming which can significantly stress some compilers.
+
+In addition, Contract Programming might induce a false sense of security on the correctness of the software.
+However, Contract Programming is proposed here as a tool to complement (and not to substitute) testing.
+
+In general, Contract Programming is an essential approach to improve software quality even if it comes at a performance cost.
+While performance trade-offs should be carefully considered depending on the specific application domain, software quality cannot be sacrificed -- it is difficult to see the value of a system that quickly and efficiently provides the incorrect output.
+
+[endsect]
+[section Other Tools]
+
+Contract Programming is also supported by the following tools (this is /not/ a complete list):
+
+* __Bright2004b__ is the Digital Mars C++ compiler with added Contract Programming support.
+* __C2__ implements Contract Programming for C++ using an external preprocessing tool.
+* __SpecSharp__ extends C# with Contract Programming.
+* __iContract__ and __Jcontract__ are external preprocessing tools that implement Contract Programming for Java.
+* __Chrome2002__ is Object Pascal in .NET with Contract Programming support.
+* __SPARKAda__ is an Ada-like programming language with Contract Programming support.
+
+Typically, preprocessing tools external to the language work by transforming specially formatted code comments into contract code that is then checked at run-time.
+
+[endsect]
+[endsect]
+

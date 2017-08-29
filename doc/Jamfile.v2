@@ -1,0 +1,69 @@
+# Copyright (C) 2009-2010 Lorenzo Caminiti.
+# Use, modification, and distribution is subject to the
+# Contract++ Software License, Version 1.0.
+# (See accompanying file LICENSE_1_0.txt.)
+
+# To compile the documention:
+# 1. Boost source code must be compiled and installed on your system.
+# 2. Compiled Boost code must be at the same level as trunk.
+# 3. Create symbolic links in compiled Boost code directory to the trunk files.
+
+import path ;
+import quickbook ;
+using boostbook ;
+using doxygen ;
+
+path-constant here : . ;
+    
+doxygen reference
+    :
+        # This order does not matter (always alphabetic in doc).
+        $(here)/qbk/src/contract.hpp
+        [ glob $(here)/qbk/src/contract/*.hpp ]
+    :
+        # Most of these Doxygen options seem not to work... maybe they are overridden by Boost...
+        <doxygen:param>CREATE_SUBDIRS=NO
+        # Header files are included anyway -- user will get an error...
+        <doxygen:param>VERBATIM_HEADERS=NO
+        <doxygen:param>INLINE_SOURCES=NO
+        # Full path is used anyway for anything but "boost/*"...
+        <doxygen:param>FULL_PATH_NAMES=NO
+        <doxygen:param>STRIP_FROM_PATH=$(here)/qbk/src/
+        <doxygen:param>STRIP_FROM_INC_PATH=$(here)/qbk/src/
+        # These options seem to work instead.
+        <doxygen:param>EXTRACT_ALL=YES
+        <doxygen:param>HIDE_UNDOC_MEMBERS=NO
+        <doxygen:param>EXTRACT_PRIVATE=NO
+        <doxygen:param>SEARCH_INCLUDES=NO
+        # Special Doxygen commands required by this doc.
+        <doxygen:param>ALIASES=" Params=\"<b>Parameters:</b> <table border="0">\" Param{2}=\"<tr><td><b><tt>\\1</tt></b></td><td>\\2</td></tr>\" EndParams=\"</table>\" Returns=\"<b>Returns:</b>\" Note=\"<b>Note:</b>\" Warning=\"<b>Warning:</b>\" See=\"<b>See:</b>\" "
+        <reftitle>"Reference"
+    ;
+
+xml contract
+    :
+        qbk/contract.qbk
+    :
+        <dependency>qbk/introduction.qbk
+        <dependency>qbk/getting_started.qbk
+        <dependency>qbk/tutorial.qbk
+        <dependency>qbk/without_the_macros.qbk
+        <dependency>qbk/throw_on_failure.qbk
+        <dependency>qbk/contract_programming.qbk
+        <dependency>qbk/examples.qbk
+        <dependency>reference
+        <dependency>qbk/bibliography.qbk
+        <dependency>qbk/release_history.qbk
+        <dependency>qbk/license.qbk
+        <dependency>qbk/todo.qbk
+    ;
+
+boostbook standalone
+    :
+        contract
+    :
+        <xsl:param>toc.max.depth=1
+        <xsl:param>boost.root="."
+        <xsl:param>html.stylesheet=doc/html/boostbook.css
+    ;
+

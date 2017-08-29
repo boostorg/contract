@@ -1,0 +1,885 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Annex: Contract Programming</title>
+<link rel="stylesheet" href="../doc/html/boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.73.2">
+<link rel="start" href="../index.html" title="Contract++ 0.3.469">
+<link rel="up" href="../index.html" title="Contract++ 0.3.469">
+<link rel="prev" href="throw_on_failure.html" title="Annex: Throw on Failure">
+<link rel="next" href="examples.html" title="Examples">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<div class="spirit-nav">
+<a accesskey="p" href="throw_on_failure.html"><img src=".././doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src=".././doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src=".././doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="examples.html"><img src=".././doc/html/images/next.png" alt="Next"></a>
+</div>
+<hr>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="contract__.contract_programming"></a><a class="link" href="contract_programming.html" title="Annex: Contract Programming"> Annex: Contract Programming</a>
+</h2></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="contract_programming.html#contract__.contract_programming.features">Features</a></span></dt>
+<dt><span class="section"><a href="contract_programming.html#contract__.contract_programming.requirements">Requirements</a></span></dt>
+<dt><span class="section"><a href="contract_programming.html#contract__.contract_programming.benefits">Benefits</a></span></dt>
+<dt><span class="section"><a href="contract_programming.html#contract__.contract_programming.costs">Costs</a></span></dt>
+<dt><span class="section"><a href="contract_programming.html#contract__.contract_programming.other_tools">Other Tools</a></span></dt>
+</dl></div>
+<p>
+      This section continues the discussion on Contract Programming started in <a class="link" href="tutorial.html#contract__.tutorial.contract_programming_overview" title="Contract Programming Overview">Contract Programming
+      Overview</a>.
+    </p>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="contract__.contract_programming.features"></a><a class="link" href="contract_programming.html#contract__.contract_programming.features" title="Features">Features</a>
+</h3></div></div></div>
+<p>
+        The following table compares features between this library, the proposal
+        for adding Contract Programming to the C++ standard <a class="link" href="bibliography.html" title="Bibliography">[Crowl2006]</a>
+        (see also <a class="link" href="bibliography.html" title="Bibliography">[Crowl2005]</a>, <a class="link" href="bibliography.html" title="Bibliography">[Abrahams2005]</a>, <a class="link" href="bibliography.html" title="Bibliography">[Ottosen2004b]</a>,
+        and <a class="link" href="bibliography.html" title="Bibliography">[Ottosen2004]</a>)
+        <sup>[<a name="id2647248" href="#ftn.id2647248" class="footnote">16</a>]</sup>
+        , the Eiffel programming language <a class="link" href="bibliography.html" title="Bibliography">[Meyer1997]</a>,
+        and the D programming language <a class="link" href="bibliography.html" title="Bibliography">[Bright2004]</a>.
+      </p>
+<div class="table">
+<a name="id2647273"></a><p class="title"><b>Table 1. Contract Programming Feature Comparison</b></p>
+<div class="table-contents"><table class="table" summary="Contract Programming Feature Comparison">
+<colgroup>
+<col>
+<col>
+<col>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+            <p>
+              Feature
+            </p>
+            </th>
+<th>
+            <p>
+              This Library
+            </p>
+            </th>
+<th>
+            <p>
+              C++ Standard Proposal
+            </p>
+            </th>
+<th>
+            <p>
+              ISE Eiffel 5.4
+            </p>
+            </th>
+<th>
+            <p>
+              D
+            </p>
+            </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+            <p>
+              <span class="emphasis"><em>Keywords</em></span>
+            </p>
+            </td>
+<td>
+            <p>
+              In contract macros preprocessor sequence: <code class="literal">(precondition)</code>,
+              <code class="literal">(postcondition)</code>, <code class="literal">(body)</code>, <code class="literal">(copyable)</code>,
+              <code class="literal">(inherit)</code>
+            </p>
+            </td>
+<td>
+            <p>
+              <code class="literal">invariant</code>, <code class="literal">precondition</code>, <code class="literal">postcondition</code>,
+              <code class="literal">oldof</code>
+            </p>
+            </td>
+<td>
+            <p>
+              <code class="literal">invariant</code>, <code class="literal">require</code>, <code class="literal">ensure</code>,
+              <code class="literal">do</code>, <code class="literal">require else</code>, <code class="literal">ensure
+              then</code>, <code class="literal">old</code>, <code class="literal">result</code>,
+              <code class="literal">variant</code>
+            </p>
+            </td>
+<td>
+            <p>
+              <code class="literal">invariant</code>, <code class="literal">in</code>, <code class="literal">out</code>,
+              <code class="literal">assert</code>, <code class="literal">static</code>
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              <span class="emphasis"><em>On contract failure</em></span>
+            </p>
+            </td>
+<td>
+            <p>
+              Default to <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">terminate</span><span class="special">()</span></code>
+              but can be customized (might throw)
+            </p>
+            </td>
+<td>
+            <p>
+              Default to <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">terminate</span><span class="special">()</span></code>
+              but can be customized (might throw)
+            </p>
+            </td>
+<td>
+            <p>
+              Throw exception
+            </p>
+            </td>
+<td>
+            <p>
+              Throw exception
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              <span class="emphasis"><em>Return value in postconditions</em></span>
+            </p>
+            </td>
+<td>
+            <p>
+              Yes, <code class="literal">(postcondition)(</code><span class="emphasis"><em>result-name</em></span><code class="literal">)</code>
+            </p>
+            </td>
+<td>
+            <p>
+              Yes, <code class="literal">postcondition (</code><span class="emphasis"><em>result-name</em></span><code class="literal">)</code>
+            </p>
+            </td>
+<td>
+            <p>
+              Yes, <code class="literal">result</code> keyword
+            </p>
+            </td>
+<td>
+            <p>
+              No
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              <span class="emphasis"><em>Old values in postconditions</em></span>
+            </p>
+            </td>
+<td>
+            <p>
+              Yes, <code class="literal">CONTRACT_OLDOF(</code><span class="emphasis"><em>name</em></span><code class="literal">)</code>
+              (but only for class and argument types tagged <code class="computeroutput"><span class="identifier">contract</span><span class="special">::</span><span class="identifier">copyable</span></code>)
+            </p>
+            </td>
+<td>
+            <p>
+              Yes, <code class="literal">oldof</code> keyword
+            </p>
+            </td>
+<td>
+            <p>
+              Yes, <code class="literal">old</code> keyword
+            </p>
+            </td>
+<td>
+            <p>
+              No
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              <span class="emphasis"><em>Subcontracting</em></span>
+            </p>
+            </td>
+<td>
+            <p>
+              Yes, also support multiple base contracts for multiple inheritance
+            </p>
+            </td>
+<td>
+            <p>
+              Yes, also support multiple base contracts but only base classes can
+              specify preconditions
+            </p>
+            </td>
+<td>
+            <p>
+              Yes
+            </p>
+            </td>
+<td>
+            <p>
+              Yes
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              <span class="emphasis"><em>Contracts for abstract functions</em></span>
+            </p>
+            </td>
+<td>
+            <p>
+              Yes
+            </p>
+            </td>
+<td>
+            <p>
+              Yes
+            </p>
+            </td>
+<td>
+            <p>
+              Yes
+            </p>
+            </td>
+<td>
+            <p>
+              No (planned)
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              <span class="emphasis"><em>Arbitrary code in contracts</em></span>
+            </p>
+            </td>
+<td>
+            <p>
+              Yes (but recommended to limit contracts to a list of assertions <code class="literal">CONTRACT_ASSERT()</code>
+              and to use only public members in preconditions)
+            </p>
+            </td>
+<td>
+            <p>
+              No, assertions only
+            </p>
+            </td>
+<td>
+            <p>
+              No, assertions only plus preconditions can only access public members
+            </p>
+            </td>
+<td>
+            <p>
+              Yes
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              <span class="emphasis"><em>Constant-correct</em></span>
+            </p>
+            </td>
+<td>
+            <p>
+              Yes
+            </p>
+            </td>
+<td>
+            <p>
+              Yes
+            </p>
+            </td>
+<td>
+            <p>
+              Yes
+            </p>
+            </td>
+<td>
+            <p>
+              No
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              <span class="emphasis"><em>Function code ordering</em></span>
+            </p>
+            </td>
+<td>
+            <p>
+              In contract macros preprocessor sequence: Preconditions -&gt; postconditions
+              -&gt; body
+            </p>
+            </td>
+<td>
+            <p>
+              Preconditions, postconditions, body
+            </p>
+            </td>
+<td>
+            <p>
+              Preconditions, body, postconditions
+            </p>
+            </td>
+<td>
+            <p>
+              Preconditions, postconditions, body
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              <span class="emphasis"><em>Static assertions</em></span>
+            </p>
+            </td>
+<td>
+            <p>
+              No (but <a href="http://www.boost.org/libs/mpl/doc/index.html" target="_top">Boost.MPL</a>
+              can be used within contracts)
+            </p>
+            </td>
+<td>
+            <p>
+              No
+            </p>
+            </td>
+<td>
+            <p>
+              No
+            </p>
+            </td>
+<td>
+            <p>
+              Yes
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              <span class="emphasis"><em>Block invariants</em></span>
+            </p>
+            </td>
+<td>
+            <p>
+              Yes, <code class="literal">CONTRACT_ASSERT_BLOCK_INVARIANT()</code>
+            </p>
+            </td>
+<td>
+            <p>
+              Yes, <code class="literal">invariant</code>
+            </p>
+            </td>
+<td>
+            <p>
+              No, but support loop invariants (loops are special code blocks that
+              iterate)
+            </p>
+            </td>
+<td>
+            <p>
+              No
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              <span class="emphasis"><em>Loop variants</em></span>
+            </p>
+            </td>
+<td>
+            <p>
+              Yes, <code class="literal">CONTRACT_ASSERT_LOOP_VARIANT()</code> and <code class="literal">CONTRACT_INIT_LOOP_VARIANT</code>
+            </p>
+            </td>
+<td>
+            <p>
+              No
+            </p>
+            </td>
+<td>
+            <p>
+              Yes
+            </p>
+            </td>
+<td>
+            <p>
+              No
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              <span class="emphasis"><em>Disable assertion checking within assertions checking (policy)</em></span>
+            </p>
+            </td>
+<td>
+            <p>
+              Yes (to prevent infinite recursion)
+            </p>
+            </td>
+<td>
+            <p>
+              Yes, but not in preconditions
+            </p>
+            </td>
+<td>
+            <p>
+              Yes
+            </p>
+            </td>
+<td>
+            <p>
+              No
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              <span class="emphasis"><em>Nested function calls (policy)</em></span>
+            </p>
+            </td>
+<td>
+            <p>
+              Disable checking of class invariants (static and non)
+            </p>
+            </td>
+<td>
+            <p>
+              Disable nothing
+            </p>
+            </td>
+<td>
+            <p>
+              Disable all checks
+            </p>
+            </td>
+<td>
+            <p>
+              Disable nothing
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              <span class="emphasis"><em>Non-static class invariants checking (policy)</em></span>
+            </p>
+            </td>
+<td>
+            <p>
+              At constructor exit, around any non-static function, at destructor
+              entry, and at function exit due to exception -- but only if programmers
+              specifies contracts for those (e.g., if no contract specified for a
+              private function then no class invariant and no contract is checked
+              for that function)
+            </p>
+            </td>
+<td>
+            <p>
+              At constructor exit, around public functions, at destructor entry,
+              and at function exit due to exception
+            </p>
+            </td>
+<td>
+            <p>
+              At constructor exit, and around public functions
+            </p>
+            </td>
+<td>
+            <p>
+              At constructor exit, around public functions, and at destructor entry
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              <span class="emphasis"><em>Static class invariants checking (policy)</em></span>
+            </p>
+            </td>
+<td>
+            <p>
+              At entry and exit of any (also static) member function, constructor,
+              and destructor
+            </p>
+            </td>
+<td>
+            <p>
+              No static class invariants
+            </p>
+            </td>
+<td>
+            <p>
+              No static class invariants
+            </p>
+            </td>
+<td>
+            <p>
+              No static class invariants
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              <span class="emphasis"><em>Removable from object code</em></span>
+            </p>
+            </td>
+<td>
+            <p>
+              Yes, any combinations of <code class="computeroutput"><span class="identifier">CONTRACT_CHECK_BLOCK_INVARIANT</span></code>,
+              <code class="computeroutput"><span class="identifier">CONTRACT_CHECK_CLASS_INVARIANT</span></code>,
+              <code class="computeroutput"><span class="identifier">CONTRACT_CHECK_PRECONDITION</span></code>,
+              and <code class="computeroutput"><span class="identifier">CONTRACT_CHECK_POSTCONDITION</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              Yes
+            </p>
+            </td>
+<td>
+            <p>
+              Yes (but predefined combinations only)
+            </p>
+            </td>
+<td>
+            <p>
+              Yes
+            </p>
+            </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<br class="table-break">
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="contract__.contract_programming.requirements"></a><a class="link" href="contract_programming.html#contract__.contract_programming.requirements" title="Requirements">Requirements</a>
+</h3></div></div></div>
+<p>
+        The design of this library was largely based on the requirements identified
+        by the different revisions of the proposal for adding Contract Programming
+        to the C++ standard <a class="link" href="bibliography.html" title="Bibliography">[Crowl2006, etc]</a>
+        and by the Eiffel programming language <a class="link" href="bibliography.html" title="Bibliography">[Meyer1997]</a>.
+      </p>
+<p>
+        This is a list of some of the specific requirements considered for the library
+        design:
+      </p>
+<div class="orderedlist"><ol type="1">
+<li>
+          Implement Contract Programming within ISO standard C++ (without using external
+          preprcessing tools, etc).
+        </li>
+<li>
+          Support optional contract compilation and checking. Programmers can select
+          any combination among invariants, preconditions, and postconditions to
+          be compiled and checked (e.g., compile and check invariants and postconditions
+          only).
+        </li>
+<li>
+          Programmers can decide the action to take on contract failure.
+        </li>
+<li>
+          Programmers can completely remove contract code for compilation. In other
+          words, if no invariants, no preconditions, and no postconditions are compiled
+          and checked then the user code should remain unchanged (for object size,
+          execution time, compilation-time, etc).
+        </li>
+<li>
+          Support old values in postconditions for copyable types. Plus allow programmers
+          to remove the extra copy overhead even for copyable types if the old value
+          is not needed in postconditions (e.g., by not specifying the type copyable).
+        </li>
+<li>
+          Support result value in postconditions.
+        </li>
+<li>
+          Support subcontracting with multiple inheritance.
+        </li>
+<li>
+          Enforce contract constant-correctness at compile-time.
+        </li>
+<li>
+          Do not alter the user code public API.
+        </li>
+<li>
+          Support contract for all C++ constructs (operators, template class, template
+          functions, static members, non-members, non-static members, constructors,
+          destructors, pure virtual members, etc).
+        </li>
+<li>
+          Program contracts together with function and class declarations (not definitions)
+          because contracts are part of the specifications.
+        </li>
+<li>
+          Support contract when function (body) definition is separated from (contract)
+          declaration.
+        </li>
+<li>
+          Support block invariants.
+        </li>
+<li>
+          Support loop variants and invariants.
+        </li>
+</ol></div>
+<p>
+        In addition, library early implementations were somewhat inspired by the
+        work of <a class="link" href="bibliography.html" title="Bibliography">[Maley1999]</a>.
+      </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="contract__.contract_programming.benefits"></a><a class="link" href="contract_programming.html#contract__.contract_programming.benefits" title="Benefits">Benefits</a>
+</h3></div></div></div>
+<p>
+        The main use of Contract Programming is to improve software quality. <a class="link" href="bibliography.html" title="Bibliography">[Meyer1997]</a> discusses how Contract
+        Programming can be used as the basic tool to write "correct" software.
+        The following is a short summary of the benefits associated with Contract
+        Programming mainly taken from <a class="link" href="bibliography.html" title="Bibliography">[Ottosen2004]</a>.
+        See also <a class="link" href="bibliography.html" title="Bibliography">[Wilson2006]</a> for
+        a discussion of Contract Programming applied to the C++ programming language.
+        Furhtermore, <a class="link" href="bibliography.html" title="Bibliography">[Stroustrup1997]</a>
+        discusses the key importance of class invariants plus advantages and disadvantages
+        of using preconditions and postconditions.
+      </p>
+<div class="orderedlist"><ol type="1">
+<li>
+          Using class invariants, programmers can describe what to expect from a
+          class and the logic dependencies between the class members. It is the job
+          of the constructor to ensure that the class invariants are satisfied when
+          the object is first created. Then the implementation of the member functions
+          can be largely simplified as they can be written knowing that the class
+          invariants are satisfied because Contract Programing checks them before
+          and after the execution of every member function. Finally, the destructor
+          makes sure that the class invariants hold for the entire object life-cycle
+          checking the class invariants one last time before destroying the object.
+        </li>
+<li>
+          Using function preconditions and postconditions, programmers can give a
+          precise semantic description of what a function requires at its entry and
+          what it ensures under its (normal) exit. In particular, using the old value
+          in postconditions, Contract Programming provides a mechanism that allows
+          programmers to compare values of an expression before and after the executions
+          of the function body. This mechanism is powerful enough to enable programmers
+          to express many constraints within the code -- constraints that would otherwise
+          have to be captured at the best only informally by the code documentation.
+        </li>
+<li>
+          Because contracts are embedded directly into the source code, they are
+          executed and verified at run-time so they are always up to date with the
+          code itself. Therefore the specifications as documented by the contracts
+          can be trusted to always be up to date with the source code itself.
+        </li>
+<li>
+          Contract Programming can provide a powerful debugging facility because,
+          if contracts are well written, bugs will cause contract assertions to fail
+          exactly where the problem first occurs instead that in some later stage
+          of the program in an apparently unrelated manner. In general, a precondition
+          failure points to a bug in the function caller. A postcondition failure
+          points instead to a bug in the function implementation. Furthermore, in
+          case of contract failure, this library provides detailed error messages
+          that greatly helps debugging.
+          <sup>[<a name="id2648598" href="#ftn.id2648598" class="footnote">17</a>]</sup>
+</li>
+<li>
+          Contract Programming facilitates testing because a contract naturally specifies
+          what a test should check. For example, preconditions of a function state
+          which inputs cause the function to fail and postconditions state which
+          inputs cause it to exit normally.
+        </li>
+<li>
+          Contract Programming can serve to reduce the gap between designers and
+          programmers by providing a precise and unambiguous specification language.
+          Moreover, contracts can make code reviews easier.
+        </li>
+<li>
+          Contract Programming formalizes the virtual function overriding mechanism
+          via the concept of subcontracting. This keeps the base class programmers
+          in control as overriding functions still have to fully satisfy the base
+          class contracts.
+        </li>
+<li>
+          Contract Programming assertions can replace <span class="emphasis"><em>defensive programming</em></span>
+          checks localizing these checks within the contract and making the code
+          more readable.
+        </li>
+</ol></div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="contract__.contract_programming.costs"></a><a class="link" href="contract_programming.html#contract__.contract_programming.costs" title="Costs">Costs</a>
+</h3></div></div></div>
+<p>
+        Contract Programming benefits come to the cost of performance as discussed
+        in detail by both <a class="link" href="bibliography.html" title="Bibliography">[Stroustrup1997]</a>
+        and <a class="link" href="bibliography.html" title="Bibliography">[Meyer1997]</a>.
+      </p>
+<p>
+        The run-time performances are negatively impacted by Contract Programming
+        mainly because of the following:
+      </p>
+<div class="orderedlist"><ol type="1">
+<li>
+          The extra processing required to check the assertions.
+        </li>
+<li>
+          The extra processing required by the additional function calls (additional
+          functions are invoked to check class invariants, preconditions, and postconditions).
+        </li>
+<li>
+          The extra processing required to copy object and function arguments when
+          their old values are accessed in postconditions.
+        </li>
+</ol></div>
+<p>
+        To alleviate some of these run-time performance impacts, you can selectively
+        turn off some of the contract compilation and the related run-time checking.
+        In reality, you will have to decide based on the performance trade-offs required
+        by your system but a reasonable approach might be to
+        <sup>[<a name="id2648736" href="#ftn.id2648736" class="footnote">18</a>]</sup>
+        :
+      </p>
+<div class="itemizedlist"><ul type="disc">
+<li>
+          Always write contracts to clarify the semantics of your design embedding
+          them directly into the code and its documentation.
+        </li>
+<li>
+          Turn on class invariants, preconditions, and postconditions compilation
+          and checking during early testing.
+        </li>
+<li>
+          Turn on only preconditions (and possibly class invariants) during release
+          testing and for the final release. (Postconditions are usually more expensive
+          to check.)
+        </li>
+</ul></div>
+<p>
+        Compile-time performances are also impacted by this library as compilation
+        time and compiler memory usage increase mainly because:
+      </p>
+<div class="orderedlist"><ol type="1">
+<li>
+          The contracts appear in the class declaration (usually header files) so
+          they have to be re-compiled for each translation unit.
+        </li>
+<li>
+          The library implementation extensively uses C++ preprocessor and template
+          metaprogramming which can significantly stress some compilers.
+        </li>
+</ol></div>
+<p>
+        In addition, Contract Programming might induce a false sense of security
+        on the correctness of the software. However, Contract Programming is proposed
+        here as a tool to complement (and not to substitute) testing.
+      </p>
+<p>
+        In general, Contract Programming is an essential approach to improve software
+        quality even if it comes at a performance cost. While performance trade-offs
+        should be carefully considered depending on the specific application domain,
+        software quality cannot be sacrificed -- it is difficult to see the value
+        of a system that quickly and efficiently provides the incorrect output.
+      </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="contract__.contract_programming.other_tools"></a><a class="link" href="contract_programming.html#contract__.contract_programming.other_tools" title="Other Tools">Other Tools</a>
+</h3></div></div></div>
+<p>
+        Contract Programming is also supported by the following tools (this is <span class="emphasis"><em>not</em></span>
+        a complete list):
+      </p>
+<div class="itemizedlist"><ul type="disc">
+<li>
+<a class="link" href="bibliography.html" title="Bibliography">[Bright2004b]</a> is the Digital
+          Mars C++ compiler with added Contract Programming support.
+        </li>
+<li>
+<a class="link" href="bibliography.html" title="Bibliography">[C^2]</a> implements Contract
+          Programming for C++ using an external preprocessing tool.
+        </li>
+<li>
+<a class="link" href="bibliography.html" title="Bibliography">[Spec#]</a> extends C# with
+          Contract Programming.
+        </li>
+<li>
+<a class="link" href="bibliography.html" title="Bibliography">[iContract]</a> and <a class="link" href="bibliography.html" title="Bibliography">[Jcontract]</a>
+          are external preprocessing tools that implement Contract Programming for
+          Java.
+        </li>
+<li>
+<a class="link" href="bibliography.html" title="Bibliography">[Chrome2002]</a> is Object Pascal
+          in .NET with Contract Programming support.
+        </li>
+<li>
+<a class="link" href="bibliography.html" title="Bibliography">[SPARKAda]</a> is an Ada-like
+          programming language with Contract Programming support.
+        </li>
+</ul></div>
+<p>
+        Typically, preprocessing tools external to the language work by transforming
+        specially formatted code comments into contract code that is then checked
+        at run-time.
+      </p>
+</div>
+<div class="footnotes">
+<br><hr width="100" align="left">
+<div class="footnote"><p><sup>[<a name="ftn.id2647248" href="#id2647248" class="para">16</a>] </sup>
+            These are all revisions of the same proposal for adding Contract Programming
+            to the C++ standard.
+          </p></div>
+<div class="footnote"><p><sup>[<a name="ftn.id2648598" href="#id2648598" class="para">17</a>] </sup>
+              Of course, if the contract is ill written then Contract Programming
+              is of little use. However, it is less likely to have a bug in both
+              the function body and the contract than in the function body only.
+              For example, consider the validation of a result in postconditions.
+              Validating the return value might seem redundant, but in this case
+              we actually want that redundancy. When programmers write a function,
+              there is a certain probability that they make a mistake in implementing
+              the function body. When they specify the result of the function in
+              the postconditions, there is also a certain probability that they make
+              a mistake in writing the contract. However, the probability that they
+              make a mistake twice (in the body <span class="emphasis"><em>and</em></span> in the contract)
+              is lower than the probability that the mistake is made just once (in
+              the body).
+            </p></div>
+<div class="footnote"><p><sup>[<a name="ftn.id2648736" href="#id2648736" class="para">18</a>] </sup>
+            This approach is generally reasonable because in well tested production
+            code, validating the function body implementation via postconditions
+            and class invariants is rarely needed since the function has shown itself
+            to be "correct" during testing. On the other hand, checking
+            arguments has continuing need because of the evolution of the callers.
+          </p></div>
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright © 2009 -2010 Lorenzo Caminiti<p>
+        Distributed under the Contract++ Software License, Version 1.0 (see accompanying
+        file LICENSE_1_0.txt)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="throw_on_failure.html"><img src=".././doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src=".././doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src=".././doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="examples.html"><img src=".././doc/html/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>

@@ -1,0 +1,66 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Type from</title>
+<link rel="stylesheet" href="../doc/html/boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.73.2">
+<link rel="start" href="../index.html" title="Contract++ 0.3.469">
+<link rel="up" href="../reference.html#header..home.lcaminiti.sandbox.dbcpp_sourceforge.boost-quickbook.doc.qbk.src.contract.from_hpp" title="Header &lt;contract/from.hpp&gt;">
+<link rel="prev" href="destructor.html" title="Class template destructor">
+<link rel="next" href="../CONTRACT_INVARIANT.html" title="Macro CONTRACT_INVARIANT">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<div class="spirit-nav">
+<a accesskey="p" href="destructor.html"><img src=".././doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../reference.html#header..home.lcaminiti.sandbox.dbcpp_sourceforge.boost-quickbook.doc.qbk.src.contract.from_hpp"><img src=".././doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src=".././doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="../CONTRACT_INVARIANT.html"><img src=".././doc/html/images/next.png" alt="Next"></a>
+</div>
+<hr>
+<div class="refentry" lang="en">
+<a name="contract.from"></a><div class="titlepage"></div>
+<div class="refnamediv">
+<h2><span class="refentrytitle">Type from</span></h2>
+<p>contract::from</p>
+</div>
+<h2 xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="refsynopsisdiv-title">Synopsis</h2>
+<div xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="refsynopsisdiv"><pre class="synopsis"><span class="emphasis"><em>// In header: &lt;<a class="link" href="../reference.html#header..home.lcaminiti.sandbox.dbcpp_sourceforge.boost-quickbook.doc.qbk.src.contract.from_hpp" title="Header &lt;contract/from.hpp&gt;">contract/from.hpp</a>&gt;
+
+</em></span>
+<span class="bold"><strong>enum</strong></span> from { <a class="link" href="from.html#contract.from.FROM_CONSTRUCTOR">FROM_CONSTRUCTOR</a>, <a class="link" href="from.html#contract.from.FROM_DESTRUCTOR">FROM_DESTRUCTOR</a>, 
+            <a class="link" href="from.html#contract.from.FROM_NON_STATIC_MEMBER_FUNCTION">FROM_NON_STATIC_MEMBER_FUNCTION</a>, <a class="link" href="from.html#contract.from.FORM_STATIC_MEMBER_FUNCTION">FORM_STATIC_MEMBER_FUNCTION</a>, 
+            <a class="link" href="from.html#contract.from.FROM_NON_MEMBER_FUNCTION">FROM_NON_MEMBER_FUNCTION</a>, <a class="link" href="from.html#contract.from.FROM_BLOCK">FROM_BLOCK</a> };</pre></div>
+<div class="refsect1" lang="en">
+<a name="id2655865"></a><h2>Description</h2>
+<p>Source that found the contract condition failure.</p>
+<p>For example, this is used in the Throw on Failure annex to ensure that destructors never throw to comply with C++ STL exception safety requirements.</p>
+<p>These failure sources are identified separately because they all have different contract checking semantics with respect to each other (see the Tutorial section).</p>
+<p><span class="bold"><strong>Warning:</strong></span> You must not assume any specific integer value for these enumerated values. Only use the enumerated values because the integer values they map to are library implementation specific and they could change in future revisions of the library.</p>
+<p><span class="bold"><strong>See:</strong></span> <code class="computeroutput">contract::contract_failed_handler</code> </p>
+<div class="variablelist"><dl>
+<dt><span class="term"><code class="computeroutput">FROM_CONSTRUCTOR</code><a name="contract.from.FROM_CONSTRUCTOR"></a></span></dt>
+<dd><p>Contract condition failed from a constructor. </p></dd>
+<dt><span class="term"><code class="computeroutput">FROM_DESTRUCTOR</code><a name="contract.from.FROM_DESTRUCTOR"></a></span></dt>
+<dd><p>Contract condition failed from a destructor. </p></dd>
+<dt><span class="term"><code class="computeroutput">FROM_NON_STATIC_MEMBER_FUNCTION</code><a name="contract.from.FROM_NON_STATIC_MEMBER_FUNCTION"></a></span></dt>
+<dd><p>Contract condition failed from a non-static member function. </p></dd>
+<dt><span class="term"><code class="computeroutput">FORM_STATIC_MEMBER_FUNCTION</code><a name="contract.from.FORM_STATIC_MEMBER_FUNCTION"></a></span></dt>
+<dd><p>Contract condition failed from a static member function. </p></dd>
+<dt><span class="term"><code class="computeroutput">FROM_NON_MEMBER_FUNCTION</code><a name="contract.from.FROM_NON_MEMBER_FUNCTION"></a></span></dt>
+<dd><p>Contract condition failed from a non-member function. </p></dd>
+<dt><span class="term"><code class="computeroutput">FROM_BLOCK</code><a name="contract.from.FROM_BLOCK"></a></span></dt>
+<dd><p>Contract condition failed from a code block. </p></dd>
+</dl></div>
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright © 2009 -2010 Lorenzo Caminiti<p>
+        Distributed under the Contract++ Software License, Version 1.0 (see accompanying
+        file LICENSE_1_0.txt)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="destructor.html"><img src=".././doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../reference.html#header..home.lcaminiti.sandbox.dbcpp_sourceforge.boost-quickbook.doc.qbk.src.contract.from_hpp"><img src=".././doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src=".././doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="../CONTRACT_INVARIANT.html"><img src=".././doc/html/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>

@@ -1,0 +1,139 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Macro CONTRACT_CONSTRUCTOR_BODY</title>
+<link rel="stylesheet" href="doc/html/boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.73.2">
+<link rel="start" href="index.html" title="Contract++ 0.3.469">
+<link rel="up" href="reference.html#header..home.lcaminiti.sandbox.dbcpp_sourceforge.boost-quickbook.doc.qbk.src.contract.body_hpp" title="Header &lt;contract/body.hpp&gt;">
+<link rel="prev" href="CONTRACT_INIT_LOOP_VARIANT.html" title="Macro CONTRACT_INIT_LOOP_VARIANT">
+<link rel="next" href="CONTRACT_DESTRUCTOR_BODY.html" title="Macro CONTRACT_DESTRUCTOR_BODY">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<div class="spirit-nav">
+<a accesskey="p" href="CONTRACT_INIT_LOOP_VARIANT.html"><img src="./doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="reference.html#header..home.lcaminiti.sandbox.dbcpp_sourceforge.boost-quickbook.doc.qbk.src.contract.body_hpp"><img src="./doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="index.html"><img src="./doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="CONTRACT_DESTRUCTOR_BODY.html"><img src="./doc/html/images/next.png" alt="Next"></a>
+</div>
+<hr>
+<div class="refentry" lang="en">
+<a name="CONTRACT_CONSTRUCTOR_BODY"></a><div class="titlepage"></div>
+<div class="refnamediv">
+<h2><span class="refentrytitle">Macro CONTRACT_CONSTRUCTOR_BODY</span></h2>
+<p>CONTRACT_CONSTRUCTOR_BODY</p>
+</div>
+<h2 xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="refsynopsisdiv-title">Synopsis</h2>
+<div xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="refsynopsisdiv"><pre class="synopsis"><span class="emphasis"><em>// In header: &lt;<a class="link" href="reference.html#header..home.lcaminiti.sandbox.dbcpp_sourceforge.boost-quickbook.doc.qbk.src.contract.body_hpp" title="Header &lt;contract/body.hpp&gt;">contract/body.hpp</a>&gt;
+
+</em></span>CONTRACT_CONSTRUCTOR_BODY(class_type, class_name)</pre></div>
+<div class="refsect1" lang="en">
+<a name="id2653396"></a><h2>Description</h2>
+<p>Macro used to name the constructor body when separating constructor definition from its declaration.</p>
+<p>This macro is used when the constructor is defined outside the class declaration (for example in a separate ".cpp" file) to name the constructor body function: </p>
+<pre class="programlisting">    BOOST_CONTRACT_CONSTRUCTOR_BODY(class_type, class_name)
+            (...) { // Constructor arguments.
+        ... // Constructor implementation.
+    }
+</pre>
+<p><span class="bold"><strong>Parameters:</strong></span> </p>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<tbody>
+<tr>
+<td><span class="bold"><strong><code class="computeroutput">class_type</code></strong></span></td>
+<td>The type of the class. For class templates this must also list the template parameters. </td>
+</tr>
+<tr>
+<td><span class="bold"><strong><code class="computeroutput">class_name</code></strong></span></td>
+<td>The constructor name which is the class type name. For class templates this shall not list the template parameters. </td>
+</tr>
+</tbody>
+</table></div>
+<p>
+</p>
+<p><span class="bold"><strong>Returns:</strong></span> This macro expands to code equivalent to the following: </p>
+<pre class="programlisting">    #if defined CONTRACT_CHECK_CLASS_INVARIANT || \
+            defined CONTRACT_CHECK_PRECONDITION || \
+            defined CONTRACT_CHECK_POSTCONDITION
+        void class_type::contract_body_constructor_ // Constructor body function name.
+    #else
+        class_type::class_name // Constructor function (contracts off).
+    #endif
+            (...) { // Constructor arguments.
+        ... // Constructor implementation.
+    }
+</pre>
+<p><span class="bold"><strong>Member Initialization List</strong></span></p>
+<p>A limitation of this mechanism is that it does not directly support constructor member initialization list. If a member initialization list is specified then the constructor definition must be provided together with its declaration (for example in the header file). (This library could overcome this limitation in the future if upcoming C++ standard revisions were to support delegating constructors.)</p>
+<p>If the constructor implementation must be separated from its declaration, a possible workaround is to:</p>
+<div class="orderedlist"><ol type="1">
+<li><p>Delegate the construction job to a special initialization function which must be named "constructor" (and it should be private to avoid other code from messing with the object construction).</p></li>
+<li><p>Program the real constructor to just invoke the initialization function.</p></li>
+<li><p>Write the contract for the initialization function instead that for the real constructor (but using CONTRACT_CONSTRUCTOR() instead of CONTRACT_FUNCTION()).</p></li>
+</ol></div>
+<p>
+</p>
+<p>If this is done then both the constructor and the initialization function body definitions can be separated from the contract declaration. For example: </p>
+<pre class="programlisting">    // Declaration.
+    
+    template&lt;typename T&gt;
+    class myvector {
+        ... // Invariants.
+        
+    public:
+        typedef typename std::vector&lt;T&gt;::size_type size_type;
+        typedef typename std::vector&lt;T&gt;::const_reference const_reference;
+
+        explicit myvector(size_type count); // Separated definition.
+        
+        ... // Rest of the class.
+
+    private:
+        // The initialization function is private and must be named "constructor
+".
+        void constructor(size_type count)
+        // Specify the contract for the initialization function instead of the real constructor.
+        CONTRACT_CONSTRUCTOR( (class) (myvector)
+                (private) (myvector)( (size_type)(count) ), {
+            // Constructor preconditions (none in this case).
+        }, {
+            // Constructor postconditions.
+            CONTRACT_ASSERT(self.now.size() == count.now,
+                    "size set to count");
+        }, ;) // Now we can separate the body definition using ";".
+        
+        std::vector&lt;T&gt; vector_;
+    };
+    
+    // Separated definition (possibly in a different file).
+    
+    template&lt;typename T&gt;
+    myvector&lt;T&gt;::myvector(size_type count):
+            vector_(count) { // Member initialization list.
+        constructor(count); // Just invoke the initialization function.
+    }
+        
+    template&lt;typename T&gt;
+    void myvector&lt;T&gt;::CONTRACT_BODY(constructor)(size_type count) {
+        // Actual constructor implementation (do nothing in this case).
+    }
+</pre>
+<p>To allow for this workaround, the <code class="computeroutput">CONTRACT_CONSTRUCTOR()</code> macro can follow a member function but <span class="bold"><strong>only</strong></span> when the member function is named "constructor", it has a <code class="computeroutput">void</code> return type, and it is not <code class="computeroutput">const</code> (essentially, only when its signature matches the one of a constructor). Be aware that for this special "constructor" member function, class invariants will <span class="bold"><strong>not</strong></span> be checked before body execution (because the <code class="computeroutput">CONTRACT_CONSTRUCTOR()</code> macro implements the Constructor Call Semantics and not the Member Function Call Semantics as explained in the Tutorial section).</p>
+<p><span class="bold"><strong>See:</strong></span> Tutorial section, <code class="computeroutput">CONTRACT_CONSTRUCTOR()</code> </p>
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright © 2009 -2010 Lorenzo Caminiti<p>
+        Distributed under the Contract++ Software License, Version 1.0 (see accompanying
+        file LICENSE_1_0.txt)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="CONTRACT_INIT_LOOP_VARIANT.html"><img src="./doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="reference.html#header..home.lcaminiti.sandbox.dbcpp_sourceforge.boost-quickbook.doc.qbk.src.contract.body_hpp"><img src="./doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="index.html"><img src="./doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="CONTRACT_DESTRUCTOR_BODY.html"><img src="./doc/html/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>

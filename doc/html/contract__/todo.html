@@ -1,0 +1,147 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>TODO</title>
+<link rel="stylesheet" href="../doc/html/boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.73.2">
+<link rel="start" href="../index.html" title="Contract++ 0.3.469">
+<link rel="up" href="../index.html" title="Contract++ 0.3.469">
+<link rel="prev" href="release_history.html" title="Release History">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<div class="spirit-nav">
+<a accesskey="p" href="release_history.html"><img src=".././doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src=".././doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src=".././doc/html/images/home.png" alt="Home"></a>
+</div>
+<hr>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="contract__.todo"></a><a class="link" href="todo.html" title="TODO">TODO</a>
+</h2></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="todo.html#contract__.todo.improve_contract_macros__sequence__error_detection_and_reporting">Improve
+      contract macros <code class="computeroutput"><span class="identifier">sequence</span></code> error
+      detection and reporting</a></span></dt>
+<dt><span class="section"><a href="todo.html#contract__.todo.can_constructor_member_initialization_list_limitation_be_removed_">Can
+      constructor member initialization list limitation be removed?</a></span></dt>
+<dt><span class="section"><a href="todo.html#contract__.todo.should_preconditions_be_checked_before_constructor_member_initialization_list_">Should
+      preconditions be checked before constructor member initialization list?</a></span></dt>
+<dt><span class="section"><a href="todo.html#contract__.todo.can_syntax_of_contract_macros_be_unified_with_other_boost_libraries_">Can
+      syntax of contract macros be unified with other Boost libraries?</a></span></dt>
+<dt><span class="section"><a href="todo.html#contract__.todo.consider_allowing_optional_contract_checking_based_on_assertion_priority_and_or_class_name">Consider
+      allowing optional contract checking based on assertion priority and/or class
+      name</a></span></dt>
+</dl></div>
+<p>
+      This section lists open items under consideration for future development of
+      this library. It is mainly intended as a memorandum for the library authors.
+    </p>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="contract__.todo.improve_contract_macros__sequence__error_detection_and_reporting"></a><a class="link" href="todo.html#contract__.todo.improve_contract_macros__sequence__error_detection_and_reporting" title="Improve contract macros sequence error detection and reporting">Improve
+      contract macros <code class="computeroutput"><span class="identifier">sequence</span></code> error
+      detection and reporting</a>
+</h3></div></div></div>
+<p>
+        The current implementation for syntax error detection and reporting for the
+        <code class="computeroutput"><span class="identifier">sequence</span></code> parameter of the
+        contract macros should be improved. For example, if I forget the sequence
+        element for the result type <code class="computeroutput"><span class="special">(</span><span class="identifier">result</span><span class="special">-</span><span class="identifier">type</span><span class="special">)</span></code>,
+        the preprocessor given a ton of errors most of which are about Boost.Preprocessor
+        internal macros and make no sense to the user. While there are some fundamental
+        limitations to the amount of syntax checking I can implement with the preprocessor
+        for <code class="computeroutput"><span class="identifier">sequence</span></code>, I should be
+        able to improve the current implementation.
+      </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="contract__.todo.can_constructor_member_initialization_list_limitation_be_removed_"></a><a class="link" href="todo.html#contract__.todo.can_constructor_member_initialization_list_limitation_be_removed_" title="Can constructor member initialization list limitation be removed?">Can
+      constructor member initialization list limitation be removed?</a>
+</h3></div></div></div>
+<p>
+        Can the contract macros overcome the constructor member initialization list
+        limitation when separating definition from declaration? However, this would
+        have to work for all combinations of the followings: (1) with and without
+        contracts, (2) definition together and separated from declaration, (3) with
+        and without member initialization list.
+      </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="contract__.todo.should_preconditions_be_checked_before_constructor_member_initialization_list_"></a><a class="link" href="todo.html#contract__.todo.should_preconditions_be_checked_before_constructor_member_initialization_list_" title="Should preconditions be checked before constructor member initialization list?">Should
+      preconditions be checked before constructor member initialization list?</a>
+</h3></div></div></div>
+<p>
+        The library checks constructor preconditions after executing the member initialization
+        list: {Default AND Pre}Body{Post AND Inv} (Default is the member initialization
+        list).
+      </p>
+<p>
+        This is what Eiffel does but is this what C++ should do or {Pre AND Default}
+        is a better approach for C++? Why does Eiffel do {Default AND Pre}? Does
+        any of the CP proposals for C++ mention this issue explicitly?
+      </p>
+<p>
+        If {Pre AND Default} is a better approach, {Default AND Pre} should be documented
+        as a library limitation. If {Default and Pre} is a better approach, I should
+        document why.
+      </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="contract__.todo.can_syntax_of_contract_macros_be_unified_with_other_boost_libraries_"></a><a class="link" href="todo.html#contract__.todo.can_syntax_of_contract_macros_be_unified_with_other_boost_libraries_" title="Can syntax of contract macros be unified with other Boost libraries?">Can
+      syntax of contract macros be unified with other Boost libraries?</a>
+</h3></div></div></div>
+<p>
+        Look if the contract macro <code class="computeroutput"><span class="identifier">sequence</span></code>
+        syntax can be unified with the one of other Boost libraries.
+      </p>
+<p>
+        Specifically, is this possible with Boost.ConceptCheck and how concept checking
+        interacts with this Contract Programming library? Same questions respect
+        to Boost.Parameter. Any other Boost library I should look in these regards?
+      </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="contract__.todo.consider_allowing_optional_contract_checking_based_on_assertion_priority_and_or_class_name"></a><a class="link" href="todo.html#contract__.todo.consider_allowing_optional_contract_checking_based_on_assertion_priority_and_or_class_name" title="Consider allowing optional contract checking based on assertion priority and/or class name">Consider
+      allowing optional contract checking based on assertion priority and/or class
+      name</a>
+</h3></div></div></div>
+<div class="orderedlist"><ol type="1">
+<li>
+          I have a template library that is well tested so I want to disable postcondition
+          checking. However, that is a template so it cannot be precompiled separately
+          with postconditions off. I must compile it together with the rest of the
+          code. Therefore, if the rest of the code needs to check postconditions,
+          I must check postconditions for the well tested template library as well!
+        </li>
+<li>
+          There might be contract conditions which are very inefficient to test so
+          I might want to turn only the inefficient condition checking off.
+        </li>
+</ol></div>
+<p>
+        If I could disable contract checking (at least at run-time) based on class
+        name or class+function name, I could address the template issue. And/or if
+        I could disable contract checking (at least at run-time) based on some assertion
+        priority (or level of inefficiency), I could address the second issue (one
+        of the CP C++ proposal might suggest to attach a priority label to the assertions...
+        I am not sure).
+      </p>
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright © 2009 -2010 Lorenzo Caminiti<p>
+        Distributed under the Contract++ Software License, Version 1.0 (see accompanying
+        file LICENSE_1_0.txt)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="release_history.html"><img src=".././doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src=".././doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src=".././doc/html/images/home.png" alt="Home"></a>
+</div>
+</body>
+</html>

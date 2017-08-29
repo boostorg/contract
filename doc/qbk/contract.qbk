@@ -1,0 +1,176 @@
+
+[preface Contract++
+    [quickbook 1.3]
+    [version 0.3.469]
+    [id contractpp]
+    [copyright 2009-2010 Lorenzo Caminiti]
+    [purpose Implement Contract Programming for C++.]
+    [category Correctness and testing]
+    [authors [Caminiti, Lorenzo]]
+    [license Distributed under the Contract++ Software License, Version 1.0 (see accompanying file LICENSE_1_0.txt)]
+    [source-mode c++]
+]
+
+[/  CONVENTIONS
+    * Contract conditions FAILURE (not violation, broken, etc).
+    * Object code (not object file).
+    * ResultType (not ReturnType).
+    * "Parameters:", "Returns:", "Warning:", "Note:", "See:".
+    * Function arguments but macro/template parameters.
+]
+
+
+[def __download__ [@http://sourceforge.net/projects/dbcpp/]]
+[def __help__ [@http://sourceforge.net/projects/dbcpp/forums/forum/920163]]
+[def __comments__ [@http://sourceforge.net/projects/dbcpp/forums/forum/920162]]
+[def __email__ [@mailto:lorcaminiti@gmail.com lorcaminiti@gmail.com]]
+[def __help_website__ [@http://sourceforge.net/projects/dbcpp/forums/forum/920163 help website]]
+
+[def __Abrahams2005__ [link contract__.bibliography \[Abrahams2005\]]]
+[def __Bright2004__ [link contract__.bibliography \[Bright2004\]]]
+[def __Bright2004b__ [link contract__.bibliography \[Bright2004b\]]]
+[def __C2__ [link contract__.bibliography \[C^2\]]]
+[def __Chrome2002__ [link contract__.bibliography \[Chrome2002\]]]
+[def __Crowl2005__ [link contract__.bibliography \[Crowl2005\]]]
+[def __Crowl2006__ [link contract__.bibliography \[Crowl2006\]]]
+[def __Crowl2006_etc__ [link contract__.bibliography \[Crowl2006, etc\]]]
+[def __iContract__ [link contract__.bibliography \[iContract\]]]
+[def __Jcontract__ [link contract__.bibliography \[Jcontract\]]]
+[def __Maley1999__ [link contract__.bibliography \[Maley1999\]]]
+[def __Meyer1997__ [link contract__.bibliography \[Meyer1997\]]]
+[def __Mitchell2002__ [link contract__.bibliography \[Mitchell2002\]]]
+[def __Nelson2004__ [link contract__.bibliography \[Nelson2004\]]]
+[def __Ottosen2004__ [link contract__.bibliography \[Ottosen2004\]]]
+[def __Ottosen2004b__ [link contract__.bibliography \[Ottosen2004b\]]]
+[def __SPARKAda__ [link contract__.bibliography \[SPARKAda\]]]
+[def __SpecSharp__ [link contract__.bibliography \[Spec#\]]]
+[def __Sutter2005__ [link contract__.bibliography \[Sutter2005\]]]
+[def __Stroustrup1997__ [link contract__.bibliography \[Stroustrup1997\]]]
+[def __Tandin2004__ [link contract__.bibliography \[Tandin2004\]]]
+[def __Wilson2006__ [link contract__.bibliography \[Wilson2006\]]]
+
+[def __Design_by_Contract__ [@http://en.wikipedia.org/wiki/Design_by_contract Design by Contract]]
+[def __Eiffel_Software__ [@http://en.wikipedia.org/wiki/Eiffel_Software Eiffel Software]]
+[def __Doxygen__ [@http://www.doxygen.org Doxygen]]
+[def __Boost__ [@http://www.boost.org/ Boost]]
+[def __Boost_Preprocessor__ [@http://www.boost.org/libs/preprocessor/doc/index.html Boost.Preprocessor]]
+[def __Boost_MPL__ [@http://www.boost.org/libs/mpl/doc/index.html Boost.MPL]]
+[def __Boost_Function__ [@http://www.boost.org/doc/libs/1_42_0/doc/html/function.html Boost.Function]]
+
+
+[def __CONTRACT_CHECK_BLOCK_INVARIANT__ [@CONTRACT_CHECK_BLOCK_INVARIANT.html CONTRACT_CHECK_BLOCK_INVARIANT]]
+[def __CONTRACT_CHECK_CLASS_INVARIANT__ [@CONTRACT_CHECK_CLASS_INVARIANT.html CONTRACT_CHECK_CLASS_INVARIANT]]
+[def __CONTRACT_CHECK_PRECONDITION__ [@CONTRACT_CHECK_PRECONDITION.html CONTRACT_CHECK_PRECONDITION]]
+[def __CONTRACT_CHECK_POSTCONDITION__ [@CONTRACT_CHECK_POSTCONDITION.html CONTRACT_CHECK_POSTCONDITION]]
+
+[def __CONTRACT_INVARIANT__ [@CONTRACT_INVARIANT.html CONTRACT_INVARIANT]]
+[def __CONTRACT_CONSTRUCTOR__ [@CONTRACT_CONSTRUCTOR.html CONTRACT_CONSTRUCTOR]]
+[def __CONTRACT_DESTRUCTOR__ [@CONTRACT_DESTRUCTOR.html CONTRACT_DESTRUCTOR]]
+[def __CONTRACT_FUNCTION__ [@CONTRACT_FUNCTION.html CONTRACT_FUNCTION]]
+
+[def __CONTRACT_BODY__ [@CONTRACT_BODY.html CONTRACT_BODY]]
+[def __CONTRACT_CONSTRUCTOR_BODY__ [@CONTRACT_CONSTRUCTOR_BODY.html CONTRACT_CONSTRUCTOR_BODY]]
+[def __CONTRACT_DESTRUCTOR_BODY__ [@CONTRACT_DESTRUCTOR_BODY.html CONTRACT_DESTRUCTOR_BODY]]
+
+[def __call__ [@contract/nonstatic_member_function.html call]]
+[def __precondition__ [@contract/nonstatic_member_function.html precondition]]
+[def __postcondition__ [@contract/nonstatic_member_function.html postcondition]]
+[def __result__ [@contract/nonstatic_member_function.html result]]
+
+[def __nonmember_function__ [@contract/nonmember_function.html nonmember_function]]
+[def __nonstatic_member_function__ [@contract/nonstatic_member_function.html nonstatic_member_function]]
+[def __static_member_function__ [@contract/static_member_function.html static_member_function]]
+[def __constructor__ [@contract/constructor.html constructor]]
+[def __destructor__ [@contract/destructor.html destructor]]
+
+[def __contract_static_invariant___ [@contract/nonstatic_member_function.html '''contract_static_invariant_''']]
+[def __contract_invariant___ [@contract/nonstatic_member_function.html '''contract_invariant_''']]
+
+[def __state__ [@contract/state.html state]]
+[def __contract_state___ [@contract/nonstatic_member_function.html '''contract_state_''']]
+
+[def __CONTRACT_OLDOF__ [@CONTRACT_OLDOF.html CONTRACT_OLDOF]]
+[def __copyable__ [@contract/copyable.html copyable]]
+[def __copy__ [@contract/copy.html copy]]
+[def __noold__ [@contract/oldof.html noold]]
+
+[def __failure__ [@contract/failure.html failure]]
+[def __from__ [@contract/from.html from]]
+[def __contract_failed_handler__ [@contract/contract_failed_handler.html contract_failed_handler]]
+
+[def __block_invariant_failed__ [@contract/block_invariant_failed.html block_invariant_failed]]
+[def __set_block_invariant_failed__ [@contract/set_block_invariant_failed.html set_block_invariant_failed]]
+
+[def __class_invariant_failed__ [@contract/class_invariant_failed.html class_invariant_failed]]
+[def __set_class_invariant_failed__ [@contract/set_class_invariant_failed.html set_class_invariant_failed]]
+
+[def __precondition_failed__ [@contract/precondition_failed.html precondition_failed]]
+[def __set_precondition_failed__ [@contract/set_precondition_failed.html set_precondition_failed]]
+
+[def __postcondition_failed__ [@contract/postcondition_failed.html postcondition_failed]]
+[def __set_postcondition_failed__ [@contract/set_postcondition_failed.html set_postcondition_failed]]
+
+[def __CONTRACT_ASSERT__ [@CONTRACT_ASSERT.html CONTRACT_ASSERT]]
+[def __CONTRACT_ASSERT_MSG__ [@CONTRACT_ASSERT_MSG.html CONTRACT_ASSERT_MSG]]
+
+[def __CONTRACT_ASSERT_BLOCK_INVARIANT__ [@CONTRACT_ASSERT_BLOCK_INVARIANT.html CONTRACT_ASSERT_BLOCK_INVARIANT]]
+[def __CONTRACT_ASSERT_BLOCK_INVARIANT_MSG__ [@CONTRACT_ASSERT_BLOCK_INVARIANT_MSG.html CONTRACT_ASSERT_BLOCK_INVARIANT_MSG]]
+
+[def __CONTRACT_ASSERT_LOOP_VARIANT__ [@CONTRACT_ASSERT_LOOP_VARIANT.html CONTRACT_ASSERT_LOOP_VARIANT]]
+[def __CONTRACT_ASSERT_LOOP_VARIANT_MSG__ [@CONTRACT_ASSERT_LOOP_VARIANT_MSG.html CONTRACT_ASSERT_LOOP_VARIANT_MSG]]
+[def __CONTRACT_INIT_LOOP_VARIANT__ [@CONTRACT_INIT_LOOP_VARIANT.html CONTRACT_INIT_LOOP_VARIANT]]
+
+[def __wrap__ [@contract/wrap.html wrap]]
+[def __CONTRACT_WRAP_TYPE__ [@CONTRACT_WRAP_TYPE.html CONTRACT_WRAP_TYPE]]
+
+[def __CONTRACT_CONFIG_MAX_FUNCTION_ARITY__ [@CONTRACT_CONFIG_MAX_FUNCTION_ARITY.html CONTRACT_CONFIG_MAX_FUNCTION_ARITY]]
+[def __CONTRACT_CONFIG_MAX_MULTIPLE_INHERITANCE__ [@CONTRACT_CONFIG_MAX_MULTIPLE_INHERITANCE.html CONTRACT_CONFIG_MAX_MULTIPLE_INHERITANCE]]
+
+
+[def __Getting_Started__ [link contract__.getting_started Getting Started]]
+[def __Tutorial__ [link contract__.tutorial Tutorial]]
+[def __Contract_Programming_Overview__ [link contract__.tutorial.contract_programming_overview Contract Programming Overview]]
+[def __Member_Function_Call_Semantics__ [link contract__.tutorial.contract_programming_overview.member_function_call_semantics Member Function Call Semantics]]
+[def __Constructor_Call_Semantics__ [link contract__.tutorial.contract_programming_overview.constructor_call_semantics Constructor Call Semantics]]
+[def __Destructor_Call_Semantics__ [link contract__.tutorial.contract_programming_overview.destructor_call_semantics Destructor Call Semantics]]
+[def __Without_the_Macros__ [link contract__.without_the_macros Without the Macros]]
+[def __Throw_on_Failure__ [link contract__.throw_on_failure Throw on Failure]]
+[def __Features__ [link contract__.contract_programming.features Features]]
+[def __Examples__ [link contract__.examples Examples]]
+[def __Example__ [link contract__.examples Example]]
+[def __Reference__ [@reference.html Reference]]
+
+
+[import stubs/myvector_stub.cpp]
+[import ../../example/myvector/pushable.hpp]
+[import ../../example/myvector/boundable.hpp]
+[import ../../example/myvector/basic_begin.hpp]
+[import ../../example/myvector/myvector.hpp]
+[import ../../example/myvector/myvector_nomacros.hpp]
+[import ../../example/commas/main.cpp]
+[import ../../example/throw/main.cpp]
+
+
+The Contract++ library implements Contract Programming for the C++ programming language.
+
+[table
+[   [ What ]                [ Where ]           ]
+[   [ Download ]            [ __download__ ]    ]
+[   [ Help ]                [ __help__ ]        ]
+[   [ Comments ]            [ __comments__ ]    ]
+[   [ Contact the author ]  [ Email __email__ (with '''[contract]''' in the subject) ] ]
+]
+
+[include introduction.qbk]
+[include getting_started.qbk]
+[include tutorial.qbk]
+[include without_the_macros.qbk]
+[include throw_on_failure.qbk]
+[include contract_programming.qbk]
+[include examples.qbk]
+[xinclude ../reference.xml]
+[include bibliography.qbk]
+[include license.qbk]
+[include release_history.qbk]
+[include todo.qbk]
+
