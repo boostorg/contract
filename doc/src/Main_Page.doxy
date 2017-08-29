@@ -1,0 +1,81 @@
+/**
+
+@mainpage Design By Contract for C++ (DBC++)
+
+<div align="right"><small>
+@ref Quick_Start "Next"
+</small></div>
+
+This library implements Design By Contract (DBC) for the C++ programming
+language [@ref Str97]. All DBC features of the Eiffel programming language
+[@ref Mey97] are supported, among others (see @ref Other_Approaches for
+details):
+-   Optional compilation and checking of preconditions, postconditions, and 
+    invariants.
+-   Subcontracting for derived classes.
+-   Use of "old" in postconditions.
+-   Automatic contract documentation (using @ref doxygen).
+
+@ref A_Complete_Example quickly shows contracts written using this library.
+
+@n
+<em>-- Your feedback is welcome, leave a comment
+<a href="http://sourceforge.net/forum/forum.php?forum_id=920162">here</a>.</em>
+@n
+@n
+<dl>
+<dt><b>Contents:</b>
+<dd><dl>
+    <dt>@ref Quick_Start
+    <dd><dl>
+        <dt><small>@ref Conventions</small>
+        <dt><small>@ref Platform</small>
+        <dt><small>@ref Installation</small>
+        <dt><small>@ref Overview</small>
+        <dt><small>@ref A_Complete_Example</small>
+        </dl>
+    <dt> @ref Design_By_Contract
+    <dd><dl>
+        <dt><small>@ref Benefits</small>
+        <dt><small>@ref Costs</small>
+        <dt><small>@ref Other_Approaches</small>
+        </dl>
+    <dt> @ref Writing_Contracts
+    <dd><dl>
+        <dt><small>@ref Macro_Based_API</small>
+        <dt><small>@ref Invariants</small>
+        <dt><small>@ref Base_Object</small>
+        <dt><small>@ref Macro_Parameters_with_Commas</small>
+        <dt><small>@ref Assertions</small>
+        <dt><small>@ref Default_Exceptions</small>
+        <dt><small>@ref Separating_Declaration_and_Definition</small>
+        <dt><small>@ref The_old_Postfix</small>
+        <dt><small>@ref Subcontracting</small>
+        <dt><small>@ref Optional_Contract_Compilation</small>
+        <dt><small>@ref Automatic_Contract_Documentation</small>
+        <dt><small>@ref Configuration</small>
+        <dt><small>@ref Code_Based_API</small>
+        </dl>
+    <dt><small>@ref Errors</small>
+    <dt><small>@ref todo</small>
+    <dt><small>@ref bug</small>
+    <dt><small>@ref Software_License</small>
+    <dt><small>@ref Bibliography</small>
+    </dl>
+</dl>
+
+@author Copyright (C) 2009 Lorenzo Caminiti.
+    Distributed under the @ref Software_License "DBC++ Software License".
+
+@see This library is hosted at http://sourceforge.net/projects/dbcpp/ .@n
+    Download it at
+    http://sourceforge.net/project/platformdownload.php?group_id=253844 .@n
+    Submit questions and comments at
+    http://sourceforge.net/forum/?group_id=253844 .
+
+<div align="right"><small>
+@ref Quick_Start "Next"
+</small></div>
+
+*/
+

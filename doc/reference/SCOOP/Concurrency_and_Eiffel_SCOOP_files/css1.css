@@ -1,0 +1,36 @@
+body {
+  font-family: Helvetica, Geneva, Arial,
+        SunSans-Regular, sans-serif ;
+  background-color: #fffafa }
+a:link {
+  color: blue }
+a:visited {
+  color: purple }
+.navbar {
+  text-align: center;
+  font-size: x-small }
+img.validator {
+	float: right
+}
+.tail {
+        text-align: center ;
+        font-size: x-small ;
+        float: none ;
+        clear: both
+}
+table.indextable td {
+	vertical-align: top
+}
+td.indexgroup {
+	font-style: italic
+}
+.bibtexid {
+  font-size: x-small; color: grey;  display: none
+}
+span.ealeft {
+  color: grey; font-size: small; font-style: oblique;
+  position:absolute; left:-75px; width:60px
+}
+p.ea { 
+  position:relative; margin-left:80px; margin-right:auto 
+}

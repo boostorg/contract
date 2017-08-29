@@ -1,0 +1,158 @@
+# $Id$ #
+
+# Supported C++ compilers `make CXX=compiler', where compiler is:
+# 	GCC		GNU g++ (e.g., on Linux) (default)
+# 	MSVC	Microsoft Visual C++ (e.g., on Cygwin)
+CXX=GCC
+
+bin:=./bin
+ifeq ($(CXX), GCC)
+	cpp_nodef:=g++ -Wall -I./include
+	cpp_nodef_mustfail:=$(bin)/must-fail g++ -Wall -I./include
+	def:=-D
+	out:=-o 
+endif
+ifeq ($(CXX), MSVC)
+	# Don't use /Wall for MSVC has very verbose warnings (even in Boost?!).
+	cpp_nodef:=source $(bin)/env-MSVC8.sh && cl.exe /EHsc /I./include
+	cpp_nodef_mustfail:=source $(bin)/env-MSVC8.sh && $(bin)/must-fail cl.exe /EHsc /I./include
+	def:=/D
+	out:=/Fe
+endif
+cpp:=$(cpp_nodef) $(def)DBC_ALL $(def)DBC_CONFIG_LOG_LEVEL=DBC_LOG_LEVEL_ALL
+cpp_mustfail:=$(cpp_nodef_mustfail) $(def)DBC_ALL $(def)DBC_CONFIG_LOG_LEVEL=DBC_LOG_LEVEL_ALL
+
+src:=./test
+build:=./build/test
+codedoc:=./codedoc/test
+
+all: Access Const Construction Subcontracting Operators Checking Copyable doc
+
+clean:
+	rm -rf $(build)
+
+force_:
+
+Access: force_
+	mkdir -p $(build)
+	$(cpp) $(src)/Access/access.cpp $(out)$(build)/access
+
+Const: const_body const_precond_postcond_inv_ok const_precond_err const_postcond_err const_inv_err
+const_body: force_
+	mkdir -p $(build)
+	$(cpp) $(src)/Const/body-ok.cpp $(src)/Const/body-main.cpp $(out)$(build)/body-ok
+	$(cpp_mustfail) $(src)/Const/body-err_assign_var.cpp $(src)/Const/body-main.cpp $(out)$(build)/body-err_assign_var
+	$(cpp_mustfail) $(src)/Const/body-err_call_nonconst_fun.cpp $(src)/Const/body-main.cpp $(out)$(build)/body-err_call_nonconst_fun
+const_precond_postcond_inv_ok: force_
+	mkdir -p $(build)
+	$(cpp) $(src)/Const/precond_postcond_inv-ok.cpp $(out)$(build)/precond_postcond_inv-ok
+const_precond_err: force_
+	mkdir -p $(build)
+	$(cpp_mustfail) $(src)/Const/precond-err_assign_self_var.cpp $(out)$(build)/precond-err_assign_sef_var
+	$(cpp_mustfail) $(src)/Const/precond-err_call_self_nonconst_fun.cpp $(out)$(build)/precond-err_call_self_nonconst_fun
+	$(cpp_mustfail) $(src)/Const/precond-err_assign_arg.cpp $(out)$(build)/precond-err_assign_arg
+const_postcond_err: force_
+	mkdir -p $(build)
+	$(cpp_mustfail) $(src)/Const/postcond-err_assign_self_now_var.cpp $(out)$(build)/postcond-err_assign_sef_now_var
+	$(cpp_mustfail) $(src)/Const/postcond-err_assign_self_old_var.cpp $(out)$(build)/postcond-err_assign_sef_old_var
+	$(cpp_mustfail) $(src)/Const/postcond-err_call_self_now_nonconst_fun.cpp $(out)$(build)/postcond-err_call_self_now_nonconst_fun
+	$(cpp_mustfail) $(src)/Const/postcond-err_call_self_old_nonconst_fun.cpp $(out)$(build)/postcond-err_call_self_old_nonconst_fun
+	$(cpp_mustfail) $(src)/Const/postcond-err_assign_arg_now.cpp $(out)$(build)/postcond-err_assign_arg_now
+	$(cpp_mustfail) $(src)/Const/postcond-err_assign_arg_old.cpp $(out)$(build)/postcond-err_assign_arg_old
+const_inv_err: force_
+	mkdir -p $(build)
+	$(cpp_mustfail) $(src)/Const/inv-err_assign_self_var.cpp $(out)$(build)/inv-err_assign_sef_var
+	$(cpp_mustfail) $(src)/Const/inv-err_call_self_nonconst_fun.cpp $(out)$(build)/inv-err_call_self_nonconst_fun
+
+Construction: construction_ok construction_precond_err throwing_constructor throwing_constructor_init throwing_destructor throwing_mem_fun
+construction_ok: force_
+	mkdir -p $(build)
+	$(cpp) $(src)/Construction/construction.cpp $(out)$(build)/construction
+construction_precond_err: force_
+	mkdir -p $(build)
+	$(cpp_mustfail) $(src)/Construction/construction-err_precond_access_self.cpp $(out)$(build)/construction-err
+throwing_constructor: force_
+	mkdir -p $(build)
+	$(cpp) $(src)/Construction/throwing_constructor.cpp $(out)$(build)/throwing_constructor
+throwing_constructor_init: force_
+	mkdir -p $(build)
+	$(cpp) $(src)/Construction/throwing_constructor_init.cpp $(out)$(build)/throwing_constructor_init
+throwing_destructor: force_
+	mkdir -p $(build)
+	$(cpp) $(src)/Construction/throwing_destructor.cpp $(out)$(build)/throwing_destructor
+throwing_mem_fun: force_
+	mkdir -p $(build)
+	$(cpp) $(src)/Construction/throwing_mem_fun.cpp $(out)$(build)/throwing_mem_fun
+
+Subcontracting: base_class base_template class_subcontracts_template template_subcontracts_template deep_subcontracting
+base_class: force_
+	mkdir -p $(build)
+	$(cpp) $(src)/Subcontracting/base_class.cpp $(out)$(build)/base_class
+class_subcontracts_class: force_
+	mkdir -p $(build)
+	$(cpp) $(src)/Subcontracting/class_subcontracts_class.cpp $(out)$(build)/class_subcontracts_class
+template_subcontracts_class: force_
+	mkdir -p $(build)
+	$(cpp) $(src)/Subcontracting/template_subcontracts_class.cpp $(out)$(build)/template_subcontracts_class
+base_template: force_
+	mkdir -p $(build)
+	$(cpp) $(src)/Subcontracting/base_template.cpp $(out)$(build)/base_template
+class_subcontracts_template: force_
+	mkdir -p $(build)
+	$(cpp) $(src)/Subcontracting/class_subcontracts_template.cpp $(out)$(build)/class_subcontracts_template
+template_subcontracts_template: force_
+	mkdir -p $(build)
+	$(cpp) $(src)/Subcontracting/template_subcontracts_template.cpp $(out)$(build)/template_subcontracts_template
+deep_subcontracting: force_
+	mkdir -p $(build)
+	$(cpp) $(src)/Subcontracting/deep_subcontracting.cpp $(out)$(build)/deep_subcontracting
+
+Operators: force_
+	mkdir -p $(build)
+	$(cpp) $(src)/Operators/operators.cpp $(out)$(build)/operators
+
+Checking: force_
+	mkdir -p $(build)
+	# Compile this test with different DBC_CHECKING... levels.
+	# Verbose log DBC_CONFIG_LOG_LEVEL set by program code itself.
+	$(cpp_nodef) $(def)DBC_NO $(src)/Checking/checking.cpp $(out)$(build)/checking-no
+	$(cpp_nodef) $(def)DBC_ALL $(src)/Checking/checking.cpp $(out)$(build)/checking-all
+	# Only one at the time
+	$(cpp_nodef) $(def)DBC_CHECK_REQUIRE $(src)/Checking/checking.cpp $(out)$(build)/checking-require_only
+	$(cpp_nodef) $(def)DBC_CHECK_ENSURE $(src)/Checking/checking.cpp $(out)$(build)/checking-ensure_only
+	$(cpp_nodef) $(def)DBC_CHECK_INVARIANT $(src)/Checking/checking.cpp $(out)$(build)/checking-invariant_only
+	# Eiffel like combinations.
+	$(cpp_nodef) $(def)DBC_CHECK_REQUIRE $(src)/Checking/checking.cpp $(out)$(build)/checking-require
+	$(cpp_nodef) $(def)DBC_CHECK_REQUIRE $(def)DBC_CHECK_ENSURE $(src)/Checking/checking.cpp $(out)$(build)/checking-require_and_ensure
+	$(cpp_nodef) $(def)DBC_CHECK_REQUIRE $(def)DBC_CHECK_ENSURE $(def)DBC_CHECK_INVARIANT $(src)/Checking/checking.cpp $(out)$(build)/checking-require_ensure_and_invariant
+	# Code documentation.
+	$(cpp_nodef) $(def)DBC_DOC $(src)/Checking/checking.cpp $(out)$(build)/checking-doc
+	# Invalid define combinations -- compilationmust fail.
+	$(cpp_nodef_mustfail) $(def)DBC $(src)/Checking/checking.cpp $(out)$(build)/checking-dbc
+	$(cpp_nodef_mustfail) $(def)DBC_NO $(def)DBC_ALL $(src)/Checking/checking.cpp $(out)$(build)/checking-no_and_all
+	$(cpp_nodef_mustfail) $(def)DBC_DOC $(def)DBC_ALL $(src)/Checking/checking.cpp $(out)$(build)/checking-doc_and_all
+
+Copyable: copyable copyable_ptr
+copyable: force_
+	mkdir -p $(build)
+	$(cpp) $(src)/Copyable/copyable.cpp $(out)$(build)/copyable
+copyable_ptr: force_
+	mkdir -p $(build)
+	$(cpp) $(src)/Copyable/copyable_ptr.cpp $(out)$(build)/copyable_ptr
+
+Static: static
+static: force_
+	mkdir -p $(build)
+	$(cpp) $(src)/Static/static.cpp $(out)$(build)/static
+
+Separate: separated_access
+separated_access: force_
+	mkdir -p $(build)
+	$(cpp) $(src)/Separate/separated_access.cpp $(out)$(build)/separated_access
+
+doc: force_
+	mkdir -p $(build)
+	$(cpp) $(src)/Doc/doc.cpp $(out)$(build)/doc
+	mkdir -p $(codedoc)
+	doxygen codedoc/Doxyfile.test
+

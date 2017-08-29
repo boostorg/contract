@@ -1,0 +1,29 @@
+#!/bin/bash
+
+echo "Making documentation..."
+echo
+
+make doc
+if [ $? -ne 0 ]; then
+    echo "ERROR: Unable to build documentation"
+    echo "       Make sure to run this script from dbcpp root directory"
+    exit 1
+fi
+
+echo
+echo "Uploading documentation to website..."
+
+server=dbcpp@web.sourceforge.net
+echo -en "$server user: " && read user
+
+echo -en """
+cd htdocs
+put doc/html/*
+cd str
+put doc/html/str/*
+exit
+""" | sftp $user,$server
+
+echo
+echo "Done"
+

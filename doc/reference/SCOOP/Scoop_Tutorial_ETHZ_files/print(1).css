@@ -1,0 +1,30 @@
+#mainheader {
+	DISPLAY: none
+}
+#sidebar-left {
+	DISPLAY: none
+}
+.tabs {
+	DISPLAY: none
+}
+.links {
+	DISPLAY: none
+}
+#footer {
+	DISPLAY: none
+}
+#mainbox {
+	BACKGROUND: none transparent scroll repeat 0% 0%
+}
+HTML {
+	BACKGROUND: none transparent scroll repeat 0% 0%
+}
+BODY {
+	BACKGROUND: none transparent scroll repeat 0% 0%
+}
+#main {
+	PADDING-RIGHT: 0px; PADDING-LEFT: 0px; PADDING-BOTTOM: 0px; PADDING-TOP: 0px
+}
+#sidebar-middle {
+	MARGIN-LEFT: 0px
+}

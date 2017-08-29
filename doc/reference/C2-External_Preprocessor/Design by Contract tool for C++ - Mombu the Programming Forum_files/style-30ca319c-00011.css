@@ -1,0 +1,288 @@
+/* vBulletin 3 CSS For Style 'prueba5' (styleid: 11) */
+body
+{
+	background: #BCBCBC;
+	color: #CCCCCC;
+	font: 12px verdana, arial, sans-serif;
+	margin: 0px 0px 0px 0px;
+	padding: 0px;
+}
+a:link
+{
+	color: #ff5501;
+}
+a:visited
+{
+	color: #FF5501;
+}
+a:hover, a:active
+{
+	color: #666666;
+}
+.page
+{
+	background: #bcbcbc;
+	color: #FF5501;
+}
+td, th, p, li
+{
+	font: 10px verdana, geneva, lucida, 'lucida grande', arial, helvetica, sans-serif;
+}
+.tborder
+{
+	background: #999999;
+	border: 1px solid #666666
+}
+.tcat
+{
+	background: #A4A4A4;
+	color: #666666;
+	font: bold 10pt verdana, geneva, lucida, 'lucida grande', arial, helvetica, sans-serif;
+}
+.tcat a:link
+{
+	color: #666666;
+	text-decoration: none;
+}
+.tcat a:visited
+{
+	color: #FFFFFF;
+	text-decoration: none;
+}
+.tcat a:hover, .tcat a:active
+{
+	color: #000000;
+	text-decoration: underline;
+}
+.thead
+{
+	background: #bcbcbc;
+	color: #FF6600;
+	font: 12px tahoma, verdana, geneva, lucida, 'lucida grande', arial, helvetica, sans-serif;
+}
+.thead a:link
+{
+	color: #FFFFFF;
+}
+.thead a:visited
+{
+	color: #FFFFFF;
+}
+.thead a:hover, .thead a:active
+{
+	color: #000000;
+}
+.tfoot
+{
+	background: #8B8B8B;
+	color: #FF9900;
+}
+.tfoot a:link
+{
+	color: #FFFFFF;
+}
+.tfoot a:visited
+{
+	color: #FFFFFF;
+}
+.tfoot a:hover, .tfoot a:active
+{
+	color: #FF6600;
+}
+.alt1, .alt1Active
+{
+	background: #EEEEEE;
+	color: #FF6600;
+}
+.alt2, .alt2Active
+{
+	background: #CCCCCC;
+	color: #000000;
+}
+td.inlinemod
+{
+	background: #FFFFCC;
+	color: #000000;
+}
+.wysiwyg
+{
+	background: #FFFFFF;
+	color: #66666;
+	font: 10pt verdana, geneva, lucida, 'lucida grande', arial, helvetica, sans-serif;
+}
+textarea, .bginput
+{
+	font: 10pt verdana, geneva, lucida, 'lucida grande', arial, helvetica, sans-serif;
+}
+.button
+{
+	font: 11px verdana, geneva, lucida, 'lucida grande', arial, helvetica, sans-serif;
+}
+select
+{
+	font: 11px verdana, geneva, lucida, 'lucida grande', arial, helvetica, sans-serif;
+}
+option, optgroup
+{
+	font-size: 11px;
+	font-family: verdana, geneva, lucida, 'lucida grande', arial, helvetica, sans-serif;
+}
+.smallfont
+{
+	color: #424242;
+	font: 11px verdana, geneva, lucida, 'lucida grande', arial, helvetica, sans-serif;
+}
+.time
+{
+	color: #666666;
+}
+.navbar
+{
+	color: #666666;
+	font: 12px verdana, geneva, lucida, 'lucida grande', arial, helvetica, sans-serif;
+}
+.highlight
+{
+	color: #000000;
+	font-weight: bold;
+}
+.fjsel
+{
+	background: #F7F7F1;
+	color: #000000;
+}
+.fjdpth0
+{
+	background: #F7F7F7;
+	color: #000000;
+}
+.panel
+{
+	background: #CCCCCC;
+	color: #000000;
+	padding: 10px;
+	border: 2px outset;
+}
+.panelsurround
+{
+	background: #CCCCCC;
+	color: #666666;
+}
+legend
+{
+	color: #000000;
+	font: 11px tahoma, verdana, geneva, lucida, 'lucida grande', arial, helvetica, sans-serif;
+}
+.vbmenu_control
+{
+	background: #6A6A6A;
+	color: #000000;
+	font: 10px verdana, arial, sans-serif;
+	padding: 3px 6px 3px 6px;
+	white-space: nowrap;
+}
+.vbmenu_control a:link
+{
+	color: #FFFFFF;
+	text-decoration: none;
+}
+.vbmenu_control a:visited
+{
+	color: #FFFFFF;
+	text-decoration: none;
+}
+.vbmenu_control a:hover, .vbmenu_control a:active
+{
+	color: #FF8C40;
+	text-decoration: none;
+}
+.vbmenu_popup
+{
+	background: #FFFFFF;
+	color: #000000;
+	border: 1px solid #0B198C;
+}
+.vbmenu_option
+{
+	background: #999999;
+	color: #FF5501;
+	font: 11px verdana, geneva, lucida, 'lucida grande', arial, helvetica, sans-serif;
+	white-space: nowrap;
+	cursor: pointer;
+}
+.vbmenu_option a:link
+{
+	color: #FFFFFF;
+	text-decoration: none;
+}
+.vbmenu_option a:visited
+{
+	color: #FFFFFF;
+	text-decoration: none;
+}
+.vbmenu_option a:hover, .vbmenu_option a:active
+{
+	color: #FFFFFF;
+	text-decoration: none;
+}
+.vbmenu_hilite
+{
+	background: #CCCCCC;
+	color: #FFFFFF;
+	font: 11px verdana, geneva, lucida, 'lucida grande', arial, helvetica, sans-serif;
+	white-space: nowrap;
+	cursor: pointer;
+}
+.vbmenu_hilite a:link
+{
+	color: #000000;
+	text-decoration: none;
+}
+.vbmenu_hilite a:visited
+{
+	color: #000000;
+	text-decoration: none;
+}
+.vbmenu_hilite a:hover, .vbmenu_hilite a:active
+{
+	color: #000000;
+	text-decoration: none;
+}
+/* ***** styling for 'big' usernames on postbit etc. ***** */
+.bigusername { font-size: 9pt; }
+
+.navusername { font-size: 7pt; }
+
+/* ***** small padding on 'thead' elements ***** */
+td.thead, div.thead { padding: 4px; }
+
+/* ***** basic styles for multi-page nav elements */
+.pagenav a { text-decoration: none; }
+.pagenav td { padding: 2px 4px 2px 4px; }
+
+/* ***** define margin and font-size for elements inside panels ***** */
+.fieldset { margin-bottom: 6px; }
+.fieldset, .fieldset td, .fieldset p, .fieldset li { font-size: 11px; }
+
+/* ***** don't change the following ***** */
+form { display: inline; }
+label { cursor: default; }
+.normal { font-weight: normal; }
+.inlineimg { vertical-align: middle; }
+/* Start Sub-forums-list in Columns */
+.subforum {
+	padding:0;
+	margin:	0;
+}
+.subforum li {
+	display:inline;
+	width:230px;
+	font-size: 8pt;
+float:left;
+	padding-left:0.5em;
+	padding-right:0.5em;
+}
+.clear {
+	clear:both;
+}
+/* End */

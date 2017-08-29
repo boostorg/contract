@@ -1,0 +1,337 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3c.org/TR/1999/REC-html401-19991224/loose.dtd">
+<!-- saved from url=(0040)http://scoop.origo.ethz.ch/wiki/Tutorial -->
+<HTML lang=en xml:lang="en" xmlns="http://www.w3.org/1999/xhtml"><HEAD><TITLE>Tutorial | Scoop</TITLE>
+<META http-equiv=Content-Type content="text/html; charset=utf-8"><LINK 
+href="/sites/all/themes/bluefish/favicon.ico" type=image/x-icon 
+rel="shortcut icon"><LINK media=all href="Scoop_Tutorial_ETHZ_files/node.css" 
+type=text/css rel=stylesheet><LINK media=all 
+href="Scoop_Tutorial_ETHZ_files/defaults.css" type=text/css rel=stylesheet><LINK 
+media=all href="Scoop_Tutorial_ETHZ_files/system.css" type=text/css 
+rel=stylesheet><LINK media=all href="Scoop_Tutorial_ETHZ_files/system-menus.css" 
+type=text/css rel=stylesheet><LINK media=all 
+href="Scoop_Tutorial_ETHZ_files/user.css" type=text/css rel=stylesheet><LINK 
+media=all href="Scoop_Tutorial_ETHZ_files/geshifilter.css" type=text/css 
+rel=stylesheet><LINK media=all href="Scoop_Tutorial_ETHZ_files/google_cse.css" 
+type=text/css rel=stylesheet><LINK media=all 
+href="Scoop_Tutorial_ETHZ_files/img_assist.css" type=text/css 
+rel=stylesheet><LINK media=all 
+href="Scoop_Tutorial_ETHZ_files/mediawiki_filter.css" type=text/css 
+rel=stylesheet><LINK media=all href="Scoop_Tutorial_ETHZ_files/forum.css" 
+type=text/css rel=stylesheet><LINK media=all 
+href="Scoop_Tutorial_ETHZ_files/comment.css" type=text/css rel=stylesheet><LINK 
+media=all href="Scoop_Tutorial_ETHZ_files/style.css" type=text/css 
+rel=stylesheet><LINK media=print href="Scoop_Tutorial_ETHZ_files/print.css" 
+type=text/css rel=stylesheet>
+<SCRIPT src="Scoop_Tutorial_ETHZ_files/jquery.js" type=text/javascript></SCRIPT>
+
+<SCRIPT src="Scoop_Tutorial_ETHZ_files/drupal.js" type=text/javascript></SCRIPT>
+
+<SCRIPT src="Scoop_Tutorial_ETHZ_files/img_assist.js" 
+type=text/javascript></SCRIPT>
+
+<SCRIPT src="Scoop_Tutorial_ETHZ_files/mediawiki_filter.js" 
+type=text/javascript></SCRIPT>
+
+<SCRIPT type=text/javascript>
+<!--//--><![CDATA[//><!--
+jQuery.extend(Drupal.settings, { "basePath": "/" });
+//--><!]]>
+</SCRIPT>
+
+<STYLE type=text/css media=print>@import url( /sites/all/themes/bluefish/print.css );
+</STYLE>
+
+<SCRIPT type=text/javascript> </SCRIPT>
+
+<META content="MSHTML 6.00.2900.3562" name=GENERATOR></HEAD>
+<BODY>
+<DIV id=mainbox>
+<DIV id=mainheader>
+<DIV id=logo><A title=Home href="http://scoop.origo.ethz.ch/"><IMG alt=Home 
+src="Scoop_Tutorial_ETHZ_files/logo.png"></A> 
+<DIV id=site-name-frame>
+<H1 class=site-name><A title=Home 
+href="http://scoop.origo.ethz.ch/">Scoop</A></H1></DIV></DIV>
+<UL id=user-info>
+  <LI><A 
+  href="http://scoop.origo.ethz.ch/user/register?destination=node%2F29">Register</A> 
+
+  <LI><A href="http://scoop.origo.ethz.ch/user?destination=node%2F29">Sign 
+  in</A> 
+  <LI>
+  <FORM id=search-theme-form accept-charset=UTF-8 action=/wiki/Tutorial 
+  method=post>
+  <DIV>
+  <DIV class=form-item id=edit-search-theme-form-1-wrapper><INPUT 
+  class=form-text id=edit-search-theme-form-1 
+  title="Enter the terms you wish to search for." maxLength=128 size=15 
+  name=search_theme_form> </DIV><INPUT class=form-submit id=edit-submit 
+  type=image src="Scoop_Tutorial_ETHZ_files/search.gif" value=Search name=op> 
+  <INPUT id=form-d410c043586ccbeeaf086d581c2c76c2 type=hidden 
+  value=form-d410c043586ccbeeaf086d581c2c76c2 name=form_build_id> <INPUT 
+  id=edit-search-theme-form type=hidden value=search_theme_form name=form_id> 
+  <INPUT id=edit-2 type=hidden name=2> </DIV></FORM></LI></UL>
+<DIV id=navbar-space><!-- BUFFER FOR NAVBAR IF DOWNSIZE WINDOW @see style.css --></DIV><!-- START TOP NAV -->
+<DIV id=navlist-frame>
+<UL class=links id=navlist>
+  <LI class="first menu-1"><A class=menu-1 title=Home 
+  href="http://scoop.origo.ethz.ch/wiki/scoop">Home</A> </LI>
+  <LI class=menu-7><A class=menu-7 title=Download 
+  href="http://scoop.origo.ethz.ch/download">Download</A> </LI>
+  <LI class=menu-2><A class=menu-2 title=Screenshots 
+  href="http://scoop.origo.ethz.ch/wiki/screenshots">Screenshots</A> </LI>
+  <LI class=menu-3><A class=menu-3 title=Doc 
+  href="http://scoop.origo.ethz.ch/wiki/doc">Doc</A> </LI>
+  <LI class=menu-8><A class=menu-8 title=Forum 
+  href="http://scoop.origo.ethz.ch/forum">Forum</A> </LI>
+  <LI class=menu-6><A class=menu-6 title=Blog 
+  href="http://scoop.origo.ethz.ch/blog">Blog</A> </LI>
+  <LI class=menu-5><A class=menu-5 title=Issues 
+  href="http://scoop.origo.ethz.ch/issues">Issues</A> </LI>
+  <LI class=menu-9><A class=menu-9 title=Statistics 
+  href="http://scoop.origo.ethz.ch/statistics">Statistics</A> </LI>
+  <LI class="last menu-4"><A class=menu-4 title=Development 
+  href="http://scoop.origo.ethz.ch/wiki/development">Development</A> </LI></UL><BR 
+class=clear></DIV><!-- END TOP NAV --></DIV><!-- END MAIN HEADER -->
+<DIV id=footer-frame>
+<DIV id=content-min-height></DIV>
+<DIV id=sidebar-left>
+<DIV id=sidebar-left-inner>
+<DIV class="clear-block block block-origo_home" id=block-origo_home-0>
+<DIV class=content>
+<UL class=menu>
+  <LI class=collapsed><A href="http://scoop.origo.ethz.ch/search_global">Global 
+  Search</A>
+  <LI class=collapsed><A 
+  href="http://scoop.origo.ethz.ch/project_list">Projects</A></LI></UL></DIV></DIV></DIV></DIV>
+<DIV id=sidebar-middle>
+<DIV id=main>
+<DIV class=tabs></DIV><!-- START TITLE -->
+<H1 class=title>Tutorial </H1><!-- END TITLE --><!-- CONTENT START -->
+<DIV class=node>
+<DIV class=clear-block><SPAN class=submitted></SPAN><SPAN class=taxonomy></SPAN>
+<DIV class=content>
+<H2 id=toc0>Rationale</H2><BR>Concurrency, which used to be the privilege of 
+highly specialized application domains - operating systems and network 
+programming - now rears its head in many traditional areas. Multi-threading, in 
+particular, is of interest to ever more applications. Yet the techniques used to 
+program concurrent applications remain low-level, as illustrated for example by 
+widely used multithreading libraries. The resulting applications are difficult 
+to produce, to debug and to maintain; the code is complex, relying on low-level 
+notions such as semaphores. There is a stunning gap between the object-oriented 
+concepts that are increasingly popular for the architecture of sequential 
+programs and the techniques used for handling the multithreaded or concurrent 
+parts.
+<P>The SCOOP mechanism seeks to remove this gap by bringing to the world of 
+concurrency the same systematic O-O development techniques that have made their 
+mark in the sequential world.</P>
+<H2 id=toc1>Basic concepts</H2><BR>SCOOP starts from the observation that the 
+basic framework of object-oriented computation lends itself naturally to a 
+concurrent extension. Objects are independent entities with their own state and 
+controlled access to their mechanisms. Contrary to most other approaches to 
+concurrent O-O programming, we do not attempt to make objects "active", an 
+approach that quickly lead to contradictions such as the "inheritance anomaly". 
+Instead, SCOOP makes explicit the notion of processor, implicit in usual views 
+of computation. Programs apply actions to objects using processors:<BR><A 
+href="http://scoop.origo.ethz.ch/image/scoop_figure_1"><IMG title=scoop_figure_1 
+height=47 alt=scoop_figure_1 
+src="Scoop_Tutorial_ETHZ_files/scoop_figure_1.thumbnail.png" 
+width=100></A><BR>In sequential programming there is only one processor, and 
+concurrency is defined by the presence of several allowing interleaved execution 
+of instructions. These processors are threads of control; they can be computers 
+("processors") in the hardware sense, but also processes or threads on an 
+operating system. To write a SCOOP program, one need not know how processors are 
+actually implemented; the correspondence between the abstract architecture and 
+the actual processors, software -or hardware- based, is described by a 
+Concurrency Control File (CCF) independent from the rest of the application.
+<P>The following figure illustrates this architectural decision: the SCOOP level 
+provides the general mechanisms that all SCOOP programmers will use. The lower 
+level provides "handles", each based on a certain concurrency mechanism 
+implementing its own view of processors and the associated facilities.<BR><A 
+href="http://scoop.origo.ethz.ch/image/scoop_figure_2"><IMG title=scoop_figure_2 
+height=45 alt=scoop_figure_2 
+src="Scoop_Tutorial_ETHZ_files/scoop_figure_2.thumbnail.png" 
+width=100></A><BR>All calls to operations on a particular object are handled by 
+a single processor; we say that the processor handles the object. With these 
+basic concepts, we may isolate the difference between sequential and concurrent 
+computation down to a single key point: what happens in the basic operation of 
+O-O computation, a "feature call" of the form<BR>
+<DIV class=geshifilter><PRE class=geshifilter-text>x.f (a)</PRE></DIV><BR>In a sequential context this 
+is synchronous: computation doesn't proceed until the call to f has been 
+completed. In a concurrent context, if x denotes an object handled by a 
+different processor (different from the processor handling the object on whose 
+behalf the call is being executed), the communication can be asynchronous: 
+computation can just proceed without waiting for f to terminate. That's indeed 
+the whole idea of concurrency: several computations can proceed in parallel, not 
+waiting for each other until they need to. When they indeed "need to" is, in 
+SCOOP, determined not by the programmer but automatically by the SCOOP 
+mechanisms: the processor of the client object will need to resynchronize with 
+the processor in charge of x when its computation requires access to a query on 
+x. This SCOOP policy is called wait by necessity.
+<P></P>
+<P>To distinguish between synchronous and asynchronous calls, the program must 
+specify whether the processor handling x is the same or another. This leads to 
+the single language extension required by SCOOP: separate declarations. If x 
+represents an object handled by another processor, it will be declared (in 
+Eiffel syntax) not as<BR>
+<DIV class=geshifilter><PRE class=geshifilter-text>x: SOME_TYPE</PRE></DIV><BR>but as<BR>
+<DIV class=geshifilter><PRE class=geshifilter-text>x: separate SOME_TYPE</PRE></DIV><BR>This doesn't 
+specify the processor but does specify that it is (or may be) a different one, 
+yielding a different semantics of calls.
+<P></P>
+<P>For simple reasons of being able to reason about programs, calls on a 
+separate object are exclusive: only one client can use a separate supplier at a 
+time. The mechanism for reserving an object is simply argument passing: a call 
+of the form<BR>
+<DIV class=geshifilter><PRE class=geshifilter-text>     g (x)</PRE></DIV><BR>or<BR>
+<DIV class=geshifilter><PRE class=geshifilter-text>     b.g (x)</PRE></DIV><BR>where x is separate, 
+will only proceed when the object attached to x becomes available to the caller; 
+it will then retain that object for the duration of the call. Calls of the above 
+basic form x.f (a), where x is separate, are only permitted when x is such a 
+formal argument of the enclosing routine, here g. This rule guarantees 
+predictability of the code and avoids major mistakes; even for an experienced 
+concurrent programmer, it is very easy - in a context where the rule would not 
+apply - to believe instinctively that in<BR>
+<DIV class=geshifilter><PRE class=geshifilter-text>x.insert (a, some_position)
+...
+y = x.value (some_position)</PRE></DIV>
+<P></P>
+<P>the element retrieved by the last instruction is the one inserted by the 
+first instruction. But some other separate client may have polluted the 
+structure by squeezing in another insert instruction in-between, even though 
+this is not reflected in the code. Such bugs are very difficult to identify 
+because they are by their very nature transient - the problem will occur only 
+rarely, and in appearance haphazardly. The SCOOP rules guarantee that the above 
+calls may only occur in a routine of which x is a separate argument. So the 
+intuitive expectation that the two calls act on the same object with no 
+competing access in-between - as suggested by the code - indeed matches reality. 
+If this property is not required, the calls to insert and value may just appear 
+in different routines of the class, for a finer level of access control 
+granularity.</P>
+<P>The final synchronization mechanism is provided by a natural extension of the 
+Design by Contract constructs of Eiffel. A precondition on a separate target, as 
+in<BR>
+<DIV class=geshifilter><PRE class=geshifilter-text>insert (structure: CONTAINER;  element: SOME_TYPE; position: INTEGER)
+    require
+        structure_not_void: structure =/ void
+        structure_not_full: not structure.is_full
+        element_not_void: element /= void
+        valid_position: structure.is_valid_index (position) 
+    do
+        ...
+    ensure
+        ...
+    end</PRE></DIV><BR>cannot keep its usual semantics of a correctness 
+condition, because even if the client ensures it prior to a call some other 
+client can invalidate it before the routine actually starts its execution, so 
+that the routine would be wrong in assuming the precondition. It has to be 
+reinterpreted as a wait condition. Hence a call such as<BR>
+<DIV class=geshifilter><PRE class=geshifilter-text>insert (s, e, p)</PRE></DIV><BR>will proceed only 
+when s is (as noted before) available on an exclusive basis to the client, and 
+satisfy the precondition. This convention provides a simple and powerful 
+synchronization technique.
+<P></P>
+<P>These are the basic concepts of SCOOP. They are complemented by a few library 
+mechanisms that tune the mechanism, for example to specify limits on the 
+acceptable waiting time when trying to reserve an object.</P>
+<P>The result is a general mechanism that makes it possible to program 
+concurrent applications in a much simpler way than we have seen anywhere else. 
+Check the numerous examples in the references below to see for yourself.</P>
+<H2 id=toc2>Bibliography</H2>
+<UL>
+  <LI>Meyer B.: <EM>Object-Oriented Software Construction</EM>, chapter 31, 2nd 
+  edition, Prentice Hall, 1997. </LI></UL>
+<UL>
+  <LI>Nienaltowski P., Meyer, B.: <EM>Contracts for concurrency</EM>, 
+  International Symposium on Concurrency, Real-Time and Distribution in 
+  Eiffel-like Languages (CORDIE), 4-5 July 2006, York, UK. <A 
+  href="http://se.ethz.ch/people/nienaltowski/papers/contracts_for_concurrency.pdf">paper</A> 
+  </LI></UL>
+<UL>
+  <LI>Nienaltowski P.: <EM>Flexible locking in SCOOP</EM>, International 
+  Symposium on Concurrency, Real-Time and Distribution in Eiffel-like Languages 
+  (CORDIE), 4-5 July 2006, York, UK. <A 
+  href="http://se.ethz.ch/people/nienaltowski/papers/flexible_locking_in_scoop.pdf">paper</A> 
+  </LI></UL>
+<UL>
+  <LI>Arslan V., Eugster P., Nienaltowski P., Vaucouleur S.: <EM>SCOOP - 
+  concurrency made easy</EM>, in Meyer B., Schiper A., Kohlas J. (Eds) 
+  Dependable Systems: Software, Computing, Networks, Springer-Verlag, 2006 (to 
+  appear). </LI></UL>
+<UL>
+  <LI>Arslan V., Eugster P., Nienaltowski P.: <EM>Modeling embedded real-time 
+  applications with objects and events</EM>, 12th IEEE Real-Time and Embedded 
+  Technology and Applications Symposium RTAS 2006, April 2006, San Jose, USA. <A 
+  href="http://se.ethz.ch/people/nienaltowski/papers/rtel_rtas.pdf">paper</A> 
+  </LI></UL>
+<UL>
+  <LI>Nienaltowski P., Arslan V., Meyer B.: <EM>Concurrent object-oriented 
+  programming on .NET</EM>, IEE Proceedings Software, Special Issue on ROTOR, 
+  vol. 150, no. 5, 308-314, October 2003 <A 
+  href="http://www.inf.ethz.ch/~meyer/publications/concurrency/scoop_iee.pdf">paper</A> 
+  </LI></UL>
+<UL>
+  <LI>Nienaltowski P.: <EM>Efficient data race and deadlock prevention in 
+  concurrent object-oriented programs</EM>, Doctoral Symposium, OOPSLA'04, 
+  Vancouver, Canada, October 2004. Appears in OOPSLA 2004 Companion: 56-57 <A 
+  href="http://se.inf.ethz.ch/people/nienaltowski/papers/oopsla04.pdf">paper</A> 
+  </LI></UL>
+<UL>
+  <LI>Nienaltowski P., Arslan V., Meyer B.: <EM>SCOOP: Concurrent Programming 
+  Made Easy</EM> <A 
+  href="http://se.inf.ethz.ch/people/nienaltowski/papers/scoop_easy_draft.pdf">draft</A> 
+  </LI></UL></DIV></DIV>
+<DIV class=links>» 
+<UL class="links inline">
+  <LI class="first last comment_forbidden"><SPAN class=comment_forbidden><A 
+  href="http://scoop.origo.ethz.ch/user/login?destination=comment/reply/29%2523comment-form">Login</A> 
+  or <A 
+  href="http://scoop.origo.ethz.ch/user/register?destination=comment/reply/29%2523comment-form">register</A> 
+  to post comments</SPAN> </LI></UL></DIV></DIV><!-- CONTENT END --></DIV><!-- END MAIN --></DIV><!-- END SIDEBAR-MIDDLE -->
+<DIV class=clear></DIV>
+<DIV id=footer><A href="http://oriact.com/">Powered by</A><BR><A 
+href="http://oriact.com/"><IMG height=20 alt="Powered by Oriact" 
+src="Scoop_Tutorial_ETHZ_files/oriact_button.png" width=85></A><BR>
+<DIV class="clear-block block block-origo_eth" id=block-origo_eth-0>
+<DIV class=content><A href="http://origo.ethz.ch/">Hosted on </A><BR><A 
+href="http://origo.ethz.ch/"><IMG height=20 alt="Hosted on Origo" 
+src="Scoop_Tutorial_ETHZ_files/origo_button_1.png" width=85></A><BR><A 
+href="http://origo.ethz.ch/">a project by ETH Zürich</A><BR>©<A 
+href="http://origo.ethz.ch/"> 2006 - 2009</A><BR></DIV></DIV>
+<DIV class="clear-block block block-origo_global" id=block-origo_global-0>
+<DIV class=content><A 
+href="http://scoop.origo.ethz.ch/global/terms_of_use">Terms of 
+Use</A></DIV></DIV></DIV></DIV></DIV><!-- END MAINBOX --><!-- CLOSURE (e.g. javascript) -->
+<SCRIPT src="Scoop_Tutorial_ETHZ_files/google_cse.js" 
+type=text/javascript></SCRIPT>
+
+<SCRIPT type=text/javascript>
+<!--//--><![CDATA[//><!--
+jQuery.extend(Drupal.settings, { "googleCSE": { "language": "en" } });
+//--><!]]>
+</SCRIPT>
+
+<SCRIPT type=text/javascript>
+<!--//--><![CDATA[//><!--
+if (Drupal.jsEnabled) {
+      $(document).ready(function() {
+        $('a.external').each(function() {
+          $(this).append('&nbsp;<img src="/sites/all/modules/mediawiki_filter/external.png" alt="external"/>');
+        });
+      });
+    }
+//--><!]]>
+</SCRIPT>
+
+<SCRIPT type=text/javascript>
+<!--//--><![CDATA[//><!--
+if (Drupal.jsEnabled) {
+      $(document).ready(function() {
+        $('a.origo-private').each(function() {
+          $(this).append('&nbsp;<img src="/sites/all/themes/bluefish/private-page-link.png" alt="private"/>');
+        });
+      });
+    }
+//--><!]]>
+</SCRIPT>
+</BODY></HTML>

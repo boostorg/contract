@@ -1,0 +1,6 @@
+#!/bin/bash
+
+svn propset svn:ignore '
+example
+test
+' .

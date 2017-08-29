@@ -1,0 +1,90 @@
+
+/**
+
+@page bug Annex: Known Bugs
+
+List of library known bugs.
+
+-#  I have seen GCC internal segfaul error if DBC_CONFIG_MAX_ARGC is
+more than 3 some some of the DBC++ test programs... I wonder is the compiler 
+gets confused by fun<...> instead of fun0, fun1, ... (maybe the template
+specialization with partial default argument is not properly supported...).
+@n@n
+-#  When invoking parent's function directly from overriden function,
+must use DBC_BODY() to avoid infinite recursive checking of contract. See
+NameList example.
+@code
+    struct B DBC_INHERIT_OBJECT(B) {
+        virtual void f() DBC_MEM_FUN(..., {})
+        ...
+    };
+    struct D: public B DBC_TRAILING_OJECT(D) {
+        virtual void f() DBC_MEM_FUN(..., { B::DBC_BODY(f)(); })
+        // This instead, will cause infinite contract checking recursion.
+        virtual void f() DBC_MEM_FUN(..., { B::f(); })
+        ...
+    };
+@endcode
+@verbatim
+Begin program:
+#876 0x0804948c in main () at ./test/Subcontracting/class_subcontracts_class.cpp:7
+
+Call to f(x) on an instance of derived:
+#875 0x08050386 in derived::f (this=0xffd3bb38, x=@0xffd3bb4c) at ./test/Subcontracting/class_subcontracts_class.hpp:12
+
+Check invariant
+#874 0x0804ebca in dbc::fun<int, int const&, dbc::none_, dbc::none_>::mem<derived const, base::dbc_f_x>::operator() (this=0xffd3bae4, self=@0xffd3bb38,
+    body=&virtual derived::dbc_body_f_(int const&) const, arg0=@0xffd3bb4c, the_fun_name=@0xffd3baf8) at ./include/dbc/fun.hpp:228
+
+Check requires contract:
+#873 0x0804e93a in dbc::fun<int, int const&, dbc::none_, dbc::none_>::mem<derived const, base::dbc_f_x>::call (this=0xffd3bae4, self=@0xffd3bb38,
+    body=&virtual derived::dbc_body_f_(int const&) const, arg0=@0xffd3bb4c, the_fun_name=@0xffd3baf8, pre_invariant_check=@0xffd3ba97,
+    require_check=@0xffd3ba96, post_invariant_check=@0xffd3ba95, ensure_check=@0xffd3ba94) at ./include/dbc/fun.hpp:465
+
+Run actual body of DBC, which calls base's f(x):
+#872 0x0804a1bc in derived::dbc_body_f_ (this=0xffd3bb38, x=@0xffd3bb4c) at ./test/Subcontracting/class_subcontracts_class.hpp:28
+
+Call to f(x) on base class:
+#871 0x0804a126 in base::f (this=0xffd3bb38, x=@0xffd3bb4c) at ./test/Subcontracting/base_class.hpp:11	
+
+Check invariant (skips because it's nested):
+#870 0x0804d5be in dbc::fun<int, int const&, dbc::none_, dbc::none_>::mem<base const, dbc::fun<int, int const&, dbc::none_, dbc::none_>::no_base<base const> >::operator() (this=0xffd3b844, self=@0xffd3bb38, body=&virtual base::dbc_body_f_(int const&) const, arg0=@0xffd3bb4c, the_fun_name=@0xffd3b858)
+    at ./include/dbc/fun.hpp:228
+
+Check requires on base:
+#869 0x0804d32e in dbc::fun<int, int const&, dbc::none_, dbc::none_>::mem<base const, dbc::fun<int, int const&, dbc::none_, dbc::none_>::no_base<base const> >::call (this=0xffd3b844, self=@0xffd3bb38, body=&virtual base::dbc_body_f_(int const&) const, arg0=@0xffd3bb4c, the_fun_name=@0xffd3b858,
+    pre_invariant_check=@0xffd3b7f7, require_check=@0xffd3b7f6, post_invariant_check=@0xffd3b7f5, ensure_check=@0xffd3b7f4) at ./include/dbc/fun.hpp:465
+
+PROBLEM: base's f(x) is defined as: { return dbc_f_x()(*this, &base::DBC_BODY(f), x, "f"); } - but since dbc_f_x() is getting a reference to the function, it follows the
+trail of virtual inheritance and actually calls derived's f(x):
+#868 0x0804a1bc in derived::dbc_body_f_ (this=0xffd3bb38, x=@0xffd3bb4c) at ./test/Subcontracting/class_subcontracts_class.hpp:28	
+
+We ran derived's body, so now we're back at base and the recursion begins:
+#867 0x0804a126 in base::f (this=0xffd3bb38, x=@0xffd3bb4c) at ./test/Subcontracting/base_class.hpp:11
+@endverbatim
+This is quite annoying as a small developper error in omitting DBC_BODY() in 
+this context will result in a infinite recursion a run-time!!! Can I avoid this
+somehow??? Can I check it a compile-time? Can I make it work even if calling 
+w/out DBC_BODY()? Also, what happens if the body function is not declared 
+virtual but only the actual function is declared virtual?
+More in general than above todo, how shall DbC handle recursion?
+Shall contract checking always be disabled when a function recursively invokes
+itself? Maybe not, since it might invoke itself w/ different arguments and w/
+obj in a different state (is it is not a const mem fun)... What is Eiffel
+policy on DbC and recursion?
+@n@n
+-#  When constrcutor contract is delegated to init() initializer, the
+contract does not show up in Doxygen... that is because constr (which are 
+public) have no contract, while init() has the contract but it is private...
+is there a way around this? Since Doxygen reports the header files, the contract
+code (for init() also) is in the reported header but that's not ideal... It'd be
+nice if I could say in the Doxyfile to report init() (and del()) doc even if
+they are private...
+@n@n
+-#  Investigate limitation when subcontracting with multiple
+inheritance from base templates with same variable name (as its type depends on
+template param). This currently requires either direct use of DBC_BODY() (which
+prevents further subcontracting) or use of code API... but macro APIs fail.
+
+*/
+

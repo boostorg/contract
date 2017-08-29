@@ -1,0 +1,51 @@
+#permissions TD.module {
+	FONT-WEIGHT: bold
+}
+#permissions TD.permission {
+	PADDING-LEFT: 1.5em
+}
+#access-rules .access-type {
+	FLOAT: left; MARGIN-RIGHT: 1em
+}
+#access-rules .rule-type {
+	FLOAT: left; MARGIN-RIGHT: 1em
+}
+#access-rules .access-type .form-item {
+	MARGIN-TOP: 0px
+}
+#access-rules .rule-type .form-item {
+	MARGIN-TOP: 0px
+}
+#access-rules .mask {
+	CLEAR: both
+}
+#user-login-form {
+	TEXT-ALIGN: center
+}
+#user-admin-filter UL {
+	PADDING-RIGHT: 0px; PADDING-LEFT: 0px; PADDING-BOTTOM: 0px; MARGIN: 0px; WIDTH: 100%; PADDING-TOP: 0px; LIST-STYLE-TYPE: none
+}
+#user-admin-buttons {
+	CLEAR: right; FLOAT: left; MARGIN-LEFT: 0.5em
+}
+#user-admin-settings FIELDSET .description {
+	FONT-SIZE: 0.85em; PADDING-BOTTOM: 0.5em
+}
+.profile {
+	CLEAR: both; MARGIN: 1em 0px
+}
+.profile .picture {
+	FLOAT: right; MARGIN: 0px 1em 1em 0px
+}
+.profile H3 {
+	BORDER-BOTTOM: #ccc 1px solid
+}
+.profile DL {
+	MARGIN: 0px 0px 1.5em
+}
+.profile DT {
+	FONT-WEIGHT: bold; MARGIN: 0px 0px 0.2em
+}
+.profile DD {
+	MARGIN: 0px 0px 1em
+}
