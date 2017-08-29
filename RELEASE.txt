@@ -1,0 +1,19 @@
+RELEASE HISTORY
+===============
+
+From current to oldest release.
+Release_Number ::= Major_Revision.Minor_Revision.SVN_Revision
+
+
+Release 0.1.55 (2009-04-19)
+---------------------------
+
+Reorganized files to cleanup root directory.
+Added installation program.
+
+
+Release 0.1.50 (2009-04-19)
+---------------------------
+
+First public release.
+
