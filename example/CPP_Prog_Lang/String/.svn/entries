@@ -1,0 +1,52 @@
+8
+
+dir
+50
+https://dbcpp.svn.sourceforge.net/svnroot/dbcpp/example/CPP_Prog_Lang/String
+https://dbcpp.svn.sourceforge.net/svnroot/dbcpp
+
+
+
+2009-04-14T02:52:27.075111Z
+49
+lcaminiti
+
+
+svn:special svn:externals svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+99c725d5-dada-466e-881d-4cbda9df124f
+
+main.cpp
+file
+
+
+
+
+2009-04-19T14:08:36.000000Z
+a305b840a0a3f45b216f4b7516b553c6
+2009-04-14T01:48:10.046026Z
+48
+lcaminiti
+
+String.hpp
+file
+
+
+
+
+2009-04-19T14:08:36.000000Z
+6e1351c8a7056376cb4890ea804db68c
+2009-04-14T02:52:27.075111Z
+49
+lcaminiti
+

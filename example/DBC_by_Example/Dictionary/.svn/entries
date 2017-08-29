@@ -1,0 +1,52 @@
+8
+
+dir
+50
+https://dbcpp.svn.sourceforge.net/svnroot/dbcpp/example/DBC_by_Example/Dictionary
+https://dbcpp.svn.sourceforge.net/svnroot/dbcpp
+
+
+
+2009-04-14T01:48:10.046026Z
+48
+lcaminiti
+
+
+svn:special svn:externals svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+99c725d5-dada-466e-881d-4cbda9df124f
+
+main.cpp
+file
+
+
+
+
+2009-04-19T14:08:36.000000Z
+d43ae3edaf92f54900bb224fd68a8e7d
+2009-04-14T01:48:10.046026Z
+48
+lcaminiti
+
+Dictionary.hpp
+file
+
+
+
+
+2009-04-19T14:08:36.000000Z
+6ce9642167bfa61b142c3ab3f60fe36f
+2009-04-14T01:48:10.046026Z
+48
+lcaminiti
+

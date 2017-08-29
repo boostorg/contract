@@ -1,0 +1,77 @@
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svnroot/dbcpp/!svn/ver/48/test/Subcontracting
+END
+base_class.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svnroot/dbcpp/!svn/ver/38/test/Subcontracting/base_class.cpp
+END
+class_subcontracts_template.hpp
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svnroot/dbcpp/!svn/ver/48/test/Subcontracting/class_subcontracts_template.hpp
+END
+template_subcontracts_class.hpp
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svnroot/dbcpp/!svn/ver/38/test/Subcontracting/template_subcontracts_class.hpp
+END
+template_subcontracts_template.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svnroot/dbcpp/!svn/ver/38/test/Subcontracting/template_subcontracts_template.cpp
+END
+base_class.hpp
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svnroot/dbcpp/!svn/ver/38/test/Subcontracting/base_class.hpp
+END
+class_subcontracts_class.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svnroot/dbcpp/!svn/ver/38/test/Subcontracting/class_subcontracts_class.cpp
+END
+base_template.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svnroot/dbcpp/!svn/ver/38/test/Subcontracting/base_template.cpp
+END
+template_subcontracts_template.hpp
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svnroot/dbcpp/!svn/ver/38/test/Subcontracting/template_subcontracts_template.hpp
+END
+class_subcontracts_class.hpp
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svnroot/dbcpp/!svn/ver/38/test/Subcontracting/class_subcontracts_class.hpp
+END
+base_template.hpp
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svnroot/dbcpp/!svn/ver/38/test/Subcontracting/base_template.hpp
+END
+class_subcontracts_template.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svnroot/dbcpp/!svn/ver/38/test/Subcontracting/class_subcontracts_template.cpp
+END
+template_subcontracts_class.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svnroot/dbcpp/!svn/ver/38/test/Subcontracting/template_subcontracts_class.cpp
+END
