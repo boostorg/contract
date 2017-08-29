@@ -1,0 +1,96 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Macro CONTRACT_WRAP_TYPE</title>
+<link rel="stylesheet" href="doc/html/boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.73.2">
+<link rel="start" href="index.html" title="Contract++ 0.3.490">
+<link rel="up" href="reference.html#header..home.lcaminiti.sandbox.dbcpp_sourceforge.boost-quickbook.doc.qbk.src.contract.wrap_hpp" title="Header &lt;contract/wrap.hpp&gt;">
+<link rel="prev" href="contract/wrap_void_T__id2356976.html" title="Struct template wrap&lt;void(T)&gt;">
+<link rel="next" href="contract__/bibliography.html" title="Bibliography">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<div class="spirit-nav">
+<a accesskey="p" href="contract/wrap_void_T__id2356976.html"><img src="./doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="reference.html#header..home.lcaminiti.sandbox.dbcpp_sourceforge.boost-quickbook.doc.qbk.src.contract.wrap_hpp"><img src="./doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="index.html"><img src="./doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="contract__/bibliography.html"><img src="./doc/html/images/next.png" alt="Next"></a>
+</div>
+<hr>
+<div class="refentry" lang="en">
+<a name="CONTRACT_WRAP_TYPE"></a><div class="titlepage"></div>
+<div class="refnamediv">
+<h2><span class="refentrytitle">Macro CONTRACT_WRAP_TYPE</span></h2>
+<p>CONTRACT_WRAP_TYPE</p>
+</div>
+<h2 xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="refsynopsisdiv-title">Synopsis</h2>
+<div xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="refsynopsisdiv"><pre class="synopsis"><span class="emphasis"><em>// In header: &lt;<a class="link" href="reference.html#header..home.lcaminiti.sandbox.dbcpp_sourceforge.boost-quickbook.doc.qbk.src.contract.wrap_hpp" title="Header &lt;contract/wrap.hpp&gt;">contract/wrap.hpp</a>&gt;
+
+</em></span>CONTRACT_WRAP_TYPE(parenthesized_type)</pre></div>
+<div class="refsect1" lang="en">
+<a name="id2669152"></a><h2>Description</h2>
+<p>Macro used to pass type expressions with unwrapped commas as macro parameters.</p>
+<p>The C++ ISO standard preprocessor only recognizes the parenthesis <code class="computeroutput"></code>() and it does not recognize any other parenthesis like <code class="computeroutput">&lt;&gt;</code>, <code class="computeroutput">{}</code>, <code class="computeroutput"></code>[], etc.</p>
+<p>As a consequence, any comma within a macro parameter which is not wrapped by the <code class="computeroutput"></code>() parenthesis will be interpreted by the preprocessor as a separation token (the end of the current macro parameter and the start of the next macro parameter). See also the Tutorial section for more explanation and examples.</p>
+<p><span class="bold"><strong>Value Expressions</strong></span></p>
+<p>Value expressions passed as macro parameters and containing unwrapped commas can be wrapped by and extra set of parenthesis <code class="computeroutput"></code>().</p>
+<p>For example, this is OK because the comma `<code class="computeroutput">,</code>` is already wrapped by the parenthesis <code class="computeroutput"></code>() of the <code class="computeroutput">add()</code> function call: </p>
+<pre class="programlisting">    CONTRACT_ASSERT( add(1, 2) == 3 ); // OK.
+</pre>
+<p> This is incorrect instead because the comma `<code class="computeroutput">,</code>` is not wrapped. It is interpreted as a call to <code class="computeroutput">CONTRACT_ASSERT()</code> passing <span class="bold"><strong>two</strong></span> distinct macro parameters `<code class="computeroutput">std::map&lt;double</code>` and `<code class="computeroutput">int&gt;().empty()</code>` separated by the comma `<code class="computeroutput">,</code>`: </p>
+<pre class="programlisting">    CONTRACT_ASSERT( std::map&lt;double, int&gt;().empty() ); // Error.
+</pre>
+<p> However, it can be fixed by using and extra set of parenthesis to wrap the value expression: </p>
+<pre class="programlisting">    CONTRACT_ASSERT( (std::map&lt;double, int&gt;().empty()) ); // OK.
+</pre>
+<p><span class="bold"><strong>Type Expressions</strong></span></p>
+<p>A similar issue arises when type expressions with unwrapped commas are passed as macro parameters (including when they are passed as preprocessor sequence elements): </p>
+<pre class="programlisting">    std::map&lt;dobule, int&gt; m(void)
+    CONTRACT_FUNCTION( (std::map&lt;double, int&gt;) (m)( (void) ) // Error.
+        ...
+    )
+</pre>
+<p> This is interpreted as a preprocessor 2-tuple with two elements `<code class="computeroutput">std::map&lt;double</code>` and `<code class="computeroutput">int&gt;</code>` separated by the comma `<code class="computeroutput">,</code>` instead that one single element of the preprocessor sequence.</p>
+<p><span class="bold"><strong>Note:</strong></span> Unfortunately, the approach followed for value expressions cannot be used for macro parameters that represent type expressions. That is because types wrapped by an extra set of parenthesis <code class="computeroutput"></code>() can introduce syntax or semantics errors depending on the context where they are used. For example, with respect to <code class="computeroutput">std::map&lt;double, int&gt;</code>, the wrapped type expression <code class="computeroutput">(std::map&lt;double, int&gt;)</code> could be compiled a C-style type cast potentically introducing a semantic error, or it could generate a syntax error if it were used to declare a variable.</p>
+<p>The macro <code class="computeroutput">CONTRACT_WRAP_TYPE()</code> (or equivalently the <code class="computeroutput">contract::wrap</code> class template) is be used to overcome this limitation: </p>
+<pre class="programlisting">    std::map&lt;dobule, int&gt; m(void)
+    CONTRACT_FUNCTION( (CONTRACT_WRAP_TYPE( (std::map&lt;double, int&gt;) )) //OK.
+            (m)( (void) )
+        ...
+    )
+</pre>
+<p> Note that the extra pair of parenthesis <code class="computeroutput"></code>() used in invoking the macro are mandatory as they wrap the comma(s) so one parameter (not many) is passed to the macro.</p>
+<p><span class="bold"><strong>Parameters:</strong></span> </p>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<tbody><tr>
+<td><span class="bold"><strong><code class="computeroutput">parenthesized_type</code></strong></span></td>
+<td>The type expression wrapped within an extra set of mandatory parenthesis <code class="computeroutput"></code>(). </td>
+</tr></tbody>
+</table></div>
+<p>
+</p>
+<p><span class="bold"><strong>Returns:</strong></span> The macro in the example above expands to code equivalent to the following: </p>
+<pre class="programlisting">    std::map&lt;dobule, int&gt; m(void)
+    CONTRACT_FUNCTION( (contract::wrap&lt;void(std::map&lt;double, int&gt;)&gt;::type)
+            (m)( (void) )
+        ...
+    )
+</pre>
+<p> <span class="bold"><strong>See:</strong></span> contract::wrap, Tutorial section </p>
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright © 2009 -2010 Lorenzo Caminiti<p>
+        Distributed under the Contract++ Software License, Version 1.0 (see accompanying
+        file LICENSE_1_0.txt)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="contract/wrap_void_T__id2356976.html"><img src="./doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="reference.html#header..home.lcaminiti.sandbox.dbcpp_sourceforge.boost-quickbook.doc.qbk.src.contract.wrap_hpp"><img src="./doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="index.html"><img src="./doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="contract__/bibliography.html"><img src="./doc/html/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>

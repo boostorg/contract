@@ -1,0 +1,60 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Function precondition_failed</title>
+<link rel="stylesheet" href="../doc/html/boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.73.2">
+<link rel="start" href="../index.html" title="Contract++ 0.3.490">
+<link rel="up" href="../reference.html#header..home.lcaminiti.sandbox.dbcpp_sourceforge.boost-quickbook.doc.qbk.src.contract.assert_hpp" title="Header &lt;contract/assert.hpp&gt;">
+<link rel="prev" href="set_precondition_failed.html" title="Function set_precondition_failed">
+<link rel="next" href="set_postcondition_failed.html" title="Function set_postcondition_failed">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<div class="spirit-nav">
+<a accesskey="p" href="set_precondition_failed.html"><img src=".././doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../reference.html#header..home.lcaminiti.sandbox.dbcpp_sourceforge.boost-quickbook.doc.qbk.src.contract.assert_hpp"><img src=".././doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src=".././doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="set_postcondition_failed.html"><img src=".././doc/html/images/next.png" alt="Next"></a>
+</div>
+<hr>
+<div class="refentry" lang="en">
+<a name="contract.precondition_failed"></a><div class="titlepage"></div>
+<div class="refnamediv">
+<h2><span class="refentrytitle">Function precondition_failed</span></h2>
+<p>contract::precondition_failed</p>
+</div>
+<h2 xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="refsynopsisdiv-title">Synopsis</h2>
+<div xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="refsynopsisdiv"><pre class="synopsis"><span class="emphasis"><em>// In header: &lt;<a class="link" href="../reference.html#header..home.lcaminiti.sandbox.dbcpp_sourceforge.boost-quickbook.doc.qbk.src.contract.assert_hpp" title="Header &lt;contract/assert.hpp&gt;">contract/assert.hpp</a>&gt;
+
+</em></span>
+<span class="type"><span class="bold"><strong>void</strong></span></span> precondition_failed(<span class="bold"><strong>const</strong></span> from &amp; where);</pre></div>
+<div class="refsect1" lang="en">
+<a name="id2658940"></a><h2>Description</h2>
+<p>Automatically invoked by this library when a precondition fails.</p>
+<p>It calls <code class="computeroutput">std::terminate()</code> by default but it can be redefined using <code class="computeroutput">contract::set_precondition_failed()</code>. When this function is called, the exception raised by the contract failure is the active unhandled exception (which can be re-thrown using <code class="computeroutput">throw</code> and then caught, see Throw on Failure annex).</p>
+<p><span class="bold"><strong>Parameters:</strong></span> </p>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<tbody><tr>
+<td><span class="bold"><strong><code class="computeroutput">where</code></strong></span></td>
+<td>The source that found the the invariant failure. </td>
+</tr></tbody>
+</table></div>
+<p>
+</p>
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright © 2009 -2010 Lorenzo Caminiti<p>
+        Distributed under the Contract++ Software License, Version 1.0 (see accompanying
+        file LICENSE_1_0.txt)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="set_precondition_failed.html"><img src=".././doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../reference.html#header..home.lcaminiti.sandbox.dbcpp_sourceforge.boost-quickbook.doc.qbk.src.contract.assert_hpp"><img src=".././doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src=".././doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="set_postcondition_failed.html"><img src=".././doc/html/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>

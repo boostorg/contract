@@ -1,0 +1,65 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Macro CONTRACT_CONFIG_MAX_FUNCTION_ARITY</title>
+<link rel="stylesheet" href="doc/html/boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.73.2">
+<link rel="start" href="index.html" title="Contract++ 0.3.490">
+<link rel="up" href="reference.html#header..home.lcaminiti.sandbox.dbcpp_sourceforge.boost-quickbook.doc.qbk.src.contract.config_hpp" title="Header &lt;contract/config.hpp&gt;">
+<link rel="prev" href="CONTRACT_BODY.html" title="Macro CONTRACT_BODY">
+<link rel="next" href="CONTRACT_CONFIG_MAX_MULTIPLE_INHERITANCE.html" title="Macro CONTRACT_CONFIG_MAX_MULTIPLE_INHERITANCE">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<div class="spirit-nav">
+<a accesskey="p" href="CONTRACT_BODY.html"><img src="./doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="reference.html#header..home.lcaminiti.sandbox.dbcpp_sourceforge.boost-quickbook.doc.qbk.src.contract.config_hpp"><img src="./doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="index.html"><img src="./doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="CONTRACT_CONFIG_MAX_MULTIPLE_INHERITANCE.html"><img src="./doc/html/images/next.png" alt="Next"></a>
+</div>
+<hr>
+<div class="refentry" lang="en">
+<a name="CONTRACT_CONFIG_MAX_FUNCTION_ARITY"></a><div class="titlepage"></div>
+<div class="refnamediv">
+<h2><span class="refentrytitle">Macro CONTRACT_CONFIG_MAX_FUNCTION_ARITY</span></h2>
+<p>CONTRACT_CONFIG_MAX_FUNCTION_ARITY</p>
+</div>
+<h2 xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="refsynopsisdiv-title">Synopsis</h2>
+<div xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="refsynopsisdiv"><pre class="synopsis"><span class="emphasis"><em>// In header: &lt;<a class="link" href="reference.html#header..home.lcaminiti.sandbox.dbcpp_sourceforge.boost-quickbook.doc.qbk.src.contract.config_hpp" title="Header &lt;contract/config.hpp&gt;">contract/config.hpp</a>&gt;
+
+</em></span>CONTRACT_CONFIG_MAX_FUNCTION_ARITY</pre></div>
+<div class="refsect1" lang="en">
+<a name="id2661193"></a><h2>Description</h2>
+<p>The maximum number of function arguments supported by this library.</p>
+<p><span class="bold"><strong>Warning:</strong></span> Increasing this number can <span class="bold"><strong>significantly</strong></span> increase compilation time. If possible, do not increase this number.</p>
+<p>If you need to write a contract for a function with a number of arguments larger than the one specified by this macro default value, consider alternatives like wrapping the arguments within a <code class="computeroutput">struct</code>. For example, consider the function: </p>
+<pre class="programlisting">    // Many arguments thus need to increase configuration macro value.
+    void f(int i1, int i2, int i3, int i4, int i5, int i6, int i7);
+</pre>
+<p> However, this function could be rewritten as a single argument function using a <code class="computeroutput">struct:</code> </p>
+<pre class="programlisting">    struct ints {
+        int i1;
+        int i2;
+        int i3;
+        int i4;
+        int i5;
+        int i6;
+        int i7;
+    };
+
+    // Just one argument and default macro value suffice.    
+    void f(ints i);
+</pre>
+<p> Now the contract for <code class="computeroutput">f</code> only requires one argument and this macro value does not need to be increased. </p>
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright © 2009 -2010 Lorenzo Caminiti<p>
+        Distributed under the Contract++ Software License, Version 1.0 (see accompanying
+        file LICENSE_1_0.txt)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="CONTRACT_BODY.html"><img src="./doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="reference.html#header..home.lcaminiti.sandbox.dbcpp_sourceforge.boost-quickbook.doc.qbk.src.contract.config_hpp"><img src="./doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="index.html"><img src="./doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="CONTRACT_CONFIG_MAX_MULTIPLE_INHERITANCE.html"><img src="./doc/html/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>

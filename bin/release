@@ -1,0 +1,78 @@
+#!/bin/bash
+
+dbc_dir=`pwd`
+
+# Preconditions.
+echo -en "Did you add the release notes in the documentation? (Y/n) "; read ci
+if [ "$ci" != "Y" ]; then
+    echo -en "ERROR: You must add the release notes before releasing\n"
+    exit 1;
+fi
+echo -en "Did you commit to SVN? (Y/n) "; read ci
+if [ "$ci" != "Y" ]; then
+    echo -en "ERROR: You must commit before releasing\n"
+    exit 1;
+fi
+
+# Load release number.
+
+old_major=`cat $dbc_dir/bin/release.dat | egrep "^Major: .*$" | sed 's/^Major: //'`
+old_minor=`cat $dbc_dir/bin/release.dat | egrep "^Minor: .*$" | sed 's/^Minor: //'`
+old_rev=`cat $dbc_dir/bin/release.dat | egrep "^Revision: .*$" | sed 's/^Revision: //'`
+
+new_rev=`svn info | egrep "^Revision: .*$" | sed 's/^Revision: //'`
+
+echo
+echo "release-number := major.minor.subversion-revision"
+echo -en "New major release number [old = $old_major]: "; read new_major
+if [ -z "$new_major" ]; then new_major=$old_major; fi
+echo -en "New minor release number [old = $old_minor]: "; read new_minor
+if [ -z "$new_minor" ]; then new_minor=$old_minor; fi
+echo -en "New revision: $new_rev (current SVN revision)\n"
+
+name=contractpp_${new_major}_${new_minor}_${new_rev}
+
+# Tar ball from trunk.
+echo
+echo "Exporting SVN repository..." 
+cd /tmp
+svn export https://dbcpp.svn.sourceforge.net/svnroot/dbcpp/trunk $name
+tar czf $name.tar.gz $name
+
+# Save release number.
+echo """# Lateset release-number := major.minor.subversion-revision
+Major: $new_major
+Minor: $new_minor
+Revision: $new_rev" > $dbc_dir/bin/release.dat
+
+# Manual steps.
+echo -en """
+IMPORTANT: To complete the release do the following manual steps.
+
+RELEASE FILE
+1.  Log into 'http://sourceforge.net/projects/dbcpp/' as administrator.
+2.  In the Summary page, click EDIT next to the download area.
+3.  Left click on the gear next to the \"/releases\" directory.
+4.  Click 'Upload here' and upload \"/tmp/$name.tar.gz\".
+5.  Select the uploaded file and click Save (no need to specify label, etc).
+    The latest uploaded file is automatically set to the download file.
+
+DOCUMENTATION
+1.  Open Places > Home and click on Go > Location.
+2.  Enter 'sftp://<USER_NAME>,dbcpp@web.sourceforge.net' and type the password. 
+3.  Go to 'home/groups/d/db/dbcpp/htdocs' (website directory).
+4.  Remove all files from this directory (old documentation).
+5.  Copy (drag-n-drop) all files from 'trunk/doc/html/*' into the 'htdocs'
+    directory opened via sftp.
+
+DEVELOPMENT STATUS
+0.  Update release status (Alpha, Beta, etc) but only if really necessary.
+1.  Log into 'http://sourceforge.net/projects/dbcpp/' as administrator.
+2.  In the Summary page, click EDIT next to the library title.
+3.  Click Edit Trove Categorization (on the right).
+4.  Edit the Development Status.
+
+SUBVERSION
+1.  Commit this sandbox to SVN -- local modiciations made by this script.
+"""
+

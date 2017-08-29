@@ -1,0 +1,147 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Annex: Throw on Failure</title>
+<link rel="stylesheet" href="../doc/html/boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.73.2">
+<link rel="start" href="../index.html" title="Contract++ 0.3.490">
+<link rel="up" href="../index.html" title="Contract++ 0.3.490">
+<link rel="prev" href="examples.html" title="Examples">
+<link rel="next" href="contract_programming.html" title="Annex: Contract Programming">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<div class="spirit-nav">
+<a accesskey="p" href="examples.html"><img src=".././doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src=".././doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src=".././doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="contract_programming.html"><img src=".././doc/html/images/next.png" alt="Next"></a>
+</div>
+<hr>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="contract__.throw_on_failure"></a><a class="link" href="throw_on_failure.html" title="Annex: Throw on Failure"> Annex: Throw on Failure</a>
+</h2></div></div></div>
+<p>
+      This example shows how to setup the library to throw exceptions on contract
+      condition failure (overriding the library default behaviour to call <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">terminate</span><span class="special">()</span></code> to handle contract failures).
+    </p>
+<p>
+      Specifically:
+    </p>
+<div class="orderedlist"><ol type="1">
+<li>
+        Any exception (including user defined ones) that is thrown when checking
+        a contract condition is re-thrown by the contract failure handlers defined
+        below.
+      </li>
+<li>
+        However, if a contract condition fails from a destructor, exceptions cannot
+        be thrown (to comply with C++ STL exception safety requirements) so a message
+        is logged to <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">clog</span></code> and the program execution continues.
+        <sup>[<a name="id2653957" href="#ftn.id2653957" class="footnote">18</a>]</sup>
+</li>
+<li>
+        In addition, the postcondition failure handler catches any exception derived
+        from <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">exception</span></code> to print the exception description
+        <code class="computeroutput"><span class="identifier">what</span><span class="special">()</span></code>
+        on <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">clog</span></code> before re-throwing it (this is to
+        show how the contract failure handlers can selectively catch exceptions).
+      </li>
+</ol></div>
+<p>
+      </p>
+<p>
+        
+</p>
+<pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">contract</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">iostream</span><span class="special">&gt;</span>
+
+<span class="comment">// User defined exception (not even derived from `std::exception`).
+</span><span class="keyword">class</span> <span class="identifier">not_a_number</span> <span class="special">{};</span>
+
+<span class="keyword">double</span> <span class="identifier">sqrt</span><span class="special">(</span><span class="keyword">double</span> <span class="identifier">x</span><span class="special">)</span>
+<span class="identifier">CONTRACT_FUNCTION</span><span class="special">(</span> <span class="special">(</span><span class="keyword">double</span><span class="special">)</span> <span class="special">(</span><span class="identifier">sqrt</span><span class="special">)(</span> <span class="special">(</span><span class="keyword">double</span><span class="special">)(</span><span class="identifier">x</span><span class="special">)</span> <span class="special">)</span>
+<span class="special">(</span><span class="identifier">precondition</span><span class="special">)</span> <span class="special">({</span>
+    <span class="comment">// Eventually throws user-defined exception.
+</span>    <span class="keyword">if</span> <span class="special">(!(</span> <span class="identifier">x</span> <span class="special">&gt;=</span> <span class="number">0.0</span> <span class="special">))</span> <span class="keyword">throw</span> <span class="identifier">not_a_number</span><span class="special">();</span>
+<span class="special">})</span>
+<span class="special">(</span><span class="identifier">postcondition</span><span class="special">)</span> <span class="special">(</span><span class="identifier">root</span><span class="special">)</span> <span class="special">({</span>
+    <span class="comment">// Eventually throw library defined exception `contract::failure`.
+</span>    <span class="identifier">CONTRACT_ASSERT</span><span class="special">(</span> <span class="special">(</span><span class="identifier">root</span> <span class="special">*</span> <span class="identifier">root</span><span class="special">)</span> <span class="special">==</span> <span class="identifier">x</span> <span class="special">);</span>
+<span class="special">})</span>
+<span class="special">(</span><span class="identifier">body</span><span class="special">)</span> <span class="special">({</span>
+    <span class="keyword">return</span> <span class="number">0.0</span><span class="special">;</span> <span class="comment">// Intentionally incorrect to fail postcondition.
+</span><span class="special">})</span> <span class="special">)</span>
+
+<span class="keyword">void</span> <span class="identifier">throwing_handler</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">contract</span><span class="special">::</span><span class="identifier">from</span><span class="special">&amp;</span> <span class="identifier">where</span><span class="special">)</span> <span class="special">{</span>
+    <span class="keyword">if</span> <span class="special">(</span><span class="identifier">where</span> <span class="special">==</span> <span class="identifier">contract</span><span class="special">::</span><span class="identifier">FROM_DESTRUCTOR</span><span class="special">)</span> <span class="special">{</span>
+        <span class="comment">// Cannot throw from within destructor for STL exception safety.
+</span>        <span class="identifier">std</span><span class="special">::</span><span class="identifier">clog</span> <span class="special">&lt;&lt;</span> <span class="string">"Ignored destructor contract failure"</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
+    <span class="special">}</span> <span class="keyword">else</span> <span class="special">{</span>
+        <span class="comment">// Failure handlers always called with active an exception.
+</span>        <span class="keyword">throw</span><span class="special">;</span> <span class="comment">// Re-throw active exception thrown by precondition.
+</span>    <span class="special">}</span>
+<span class="special">}</span>
+
+<span class="keyword">void</span> <span class="identifier">postcondition_throwing_handler</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">contract</span><span class="special">::</span><span class="identifier">from</span><span class="special">&amp;</span> <span class="identifier">where</span><span class="special">)</span> <span class="special">{</span>
+    <span class="comment">// try/catch/re-throw to get active exception (for logging, etc.).
+</span>    <span class="keyword">try</span> <span class="special">{</span>
+        <span class="keyword">throw</span><span class="special">;</span> <span class="comment">// Re-throw active exception thrown by precondition.
+</span>    <span class="special">}</span> <span class="keyword">catch</span> <span class="special">(</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">exception</span><span class="special">&amp;</span> <span class="identifier">error</span><span class="special">)</span> <span class="special">{</span> <span class="comment">// Get exception object.
+</span>        <span class="identifier">std</span><span class="special">::</span><span class="identifier">clog</span> <span class="special">&lt;&lt;</span> <span class="string">"Throwing '"</span> <span class="special">&lt;&lt;</span> <span class="identifier">error</span><span class="special">.</span><span class="identifier">what</span><span class="special">()</span> <span class="special">&lt;&lt;</span> <span class="string">"'"</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
+        
+        <span class="keyword">throw</span><span class="special">;</span> <span class="comment">// Re-throw.
+</span>    <span class="special">}</span> <span class="comment">// Non standard exception also thrown.
+</span><span class="special">}</span>
+
+<span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span> <span class="special">{</span>
+    <span class="comment">// Setup contract failure handlers that throw (instead of terminate).
+</span>    <span class="identifier">contract</span><span class="special">::</span><span class="identifier">set_precondition_failed</span><span class="special">(&amp;</span><span class="identifier">throwing_handler</span><span class="special">);</span>
+    <span class="identifier">contract</span><span class="special">::</span><span class="identifier">set_postcondition_failed</span><span class="special">(&amp;</span><span class="identifier">postcondition_throwing_handler</span><span class="special">);</span>
+    <span class="comment">// Invariants not used by this examples but set anyway...
+</span>    <span class="identifier">contract</span><span class="special">::</span><span class="identifier">set_class_invariant_failed</span><span class="special">(&amp;</span><span class="identifier">throwing_handler</span><span class="special">);</span>
+    <span class="identifier">contract</span><span class="special">::</span><span class="identifier">set_block_invariant_failed</span><span class="special">(&amp;</span><span class="identifier">throwing_handler</span><span class="special">);</span>
+
+    <span class="keyword">try</span> <span class="special">{</span>
+        <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">sqrt</span><span class="special">(-</span><span class="number">1.0</span><span class="special">)</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
+    <span class="special">}</span> <span class="keyword">catch</span> <span class="special">(</span><span class="identifier">not_a_number</span><span class="special">&amp;)</span> <span class="special">{</span>
+        <span class="identifier">std</span><span class="special">::</span><span class="identifier">clog</span> <span class="special">&lt;&lt;</span> <span class="string">"Ignored not a number exception"</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
+    <span class="special">}</span>
+
+    <span class="keyword">try</span> <span class="special">{</span>
+        <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">sqrt</span><span class="special">(</span><span class="number">4.0</span><span class="special">)</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
+    <span class="special">}</span> <span class="keyword">catch</span> <span class="special">(...)</span> <span class="special">{</span>
+        <span class="identifier">std</span><span class="special">::</span><span class="identifier">clog</span> <span class="special">&lt;&lt;</span> <span class="string">"Unable to calculate square root"</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
+    <span class="special">}</span>
+
+    <span class="keyword">return</span> <span class="number">0</span><span class="special">;</span>
+<span class="special">}</span>
+
+</pre>
+<p>
+      </p>
+<p>
+    </p>
+<div class="footnotes">
+<br><hr width="100" align="left">
+<div class="footnote"><p><sup>[<a name="ftn.id2653957" href="#id2653957" class="para">18</a>] </sup>
+            Continuing the program in this case assumes that the destructors body
+            will be able to somehow execute correctly even if the class invariants
+            do not hold true. This is usually <span class="emphasis"><em>not</em></span> a safe assumption
+            and it is made here only for simplicity. You could chose to still terminate
+            in case class invariants fail for a destructor or to attempt to recover
+            from such an error in some other, more sophisticated, way.
+          </p></div>
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright © 2009 -2010 Lorenzo Caminiti<p>
+        Distributed under the Contract++ Software License, Version 1.0 (see accompanying
+        file LICENSE_1_0.txt)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="examples.html"><img src=".././doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src=".././doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src=".././doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="contract_programming.html"><img src=".././doc/html/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>

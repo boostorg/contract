@@ -1,0 +1,56 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Type definition loop_variant_type</title>
+<link rel="stylesheet" href="../doc/html/boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.73.2">
+<link rel="start" href="../index.html" title="Contract++ 0.3.490">
+<link rel="up" href="../reference.html#header..home.lcaminiti.sandbox.dbcpp_sourceforge.boost-quickbook.doc.qbk.src.contract.block_hpp" title="Header &lt;contract/block.hpp&gt;">
+<link rel="prev" href="../CONTRACT_ASSERT_MSG.html" title="Macro CONTRACT_ASSERT_MSG">
+<link rel="next" href="../CONTRACT_ASSERT_BLOCK_INVARIANT.html" title="Macro CONTRACT_ASSERT_BLOCK_INVARIANT">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<div class="spirit-nav">
+<a accesskey="p" href="../CONTRACT_ASSERT_MSG.html"><img src=".././doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../reference.html#header..home.lcaminiti.sandbox.dbcpp_sourceforge.boost-quickbook.doc.qbk.src.contract.block_hpp"><img src=".././doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src=".././doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="../CONTRACT_ASSERT_BLOCK_INVARIANT.html"><img src=".././doc/html/images/next.png" alt="Next"></a>
+</div>
+<hr>
+<div class="refentry" lang="en">
+<a name="contract.loop_variant_type"></a><div class="titlepage"></div>
+<div class="refnamediv">
+<h2><span class="refentrytitle">Type definition loop_variant_type</span></h2>
+<p>loop_variant_type</p>
+</div>
+<h2 xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="refsynopsisdiv-title">Synopsis</h2>
+<div xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="refsynopsisdiv"><pre class="synopsis"><span class="emphasis"><em>// In header: &lt;<a class="link" href="../reference.html#header..home.lcaminiti.sandbox.dbcpp_sourceforge.boost-quickbook.doc.qbk.src.contract.block_hpp" title="Header &lt;contract/block.hpp&gt;">contract/block.hpp</a>&gt;
+
+</em></span>
+<span class="bold"><strong>typedef</strong></span> __Integer__ loop_variant_type;</pre></div>
+<div class="refsect1" lang="en">
+<a name="id2659662"></a><h2>Description</h2>
+<p>The type of the loop variant expression.</p>
+<p>The <code class="computeroutput">__Integer__</code> type is a signed integer type but its actual type is library implementation specific.</p>
+<p><span class="bold"><strong>Note:</strong></span> While the loop variant expression type is signed, the loop variant value is asserted to be always positive (<code class="computeroutput">&gt; 0</code>).</p>
+<p>For example, you can use this type to convert (not cast) the variant expression into the variant type: </p>
+<pre class="programlisting">    CONTRACT_INIT_LOOP_VARIANT;
+    for (size_t i = 0; i &lt; v.size(); ++i) {
+        CONTRACT_ASSERT_LOOP_VARIANT( loop_variant_type(v.size() - i) );
+        ...
+    }
+</pre>
+<p> Note this is <span class="bold"><strong>not</strong></span> a type cast so it will generate a compile-time error if the type conversion if not possible. </p>
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright © 2009 -2010 Lorenzo Caminiti<p>
+        Distributed under the Contract++ Software License, Version 1.0 (see accompanying
+        file LICENSE_1_0.txt)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="../CONTRACT_ASSERT_MSG.html"><img src=".././doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../reference.html#header..home.lcaminiti.sandbox.dbcpp_sourceforge.boost-quickbook.doc.qbk.src.contract.block_hpp"><img src=".././doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src=".././doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="../CONTRACT_ASSERT_BLOCK_INVARIANT.html"><img src=".././doc/html/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>

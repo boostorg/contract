@@ -1,0 +1,75 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Struct template wrap&lt;void(T)&gt;</title>
+<link rel="stylesheet" href="../doc/html/boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.73.2">
+<link rel="start" href="../index.html" title="Contract++ 0.3.490">
+<link rel="up" href="../reference.html#header..home.lcaminiti.sandbox.dbcpp_sourceforge.boost-quickbook.doc.qbk.src.contract.wrap_hpp" title="Header &lt;contract/wrap.hpp&gt;">
+<link rel="prev" href="wrap.html" title="Struct template wrap">
+<link rel="next" href="../CONTRACT_WRAP_TYPE.html" title="Macro CONTRACT_WRAP_TYPE">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<div class="spirit-nav">
+<a accesskey="p" href="wrap.html"><img src=".././doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../reference.html#header..home.lcaminiti.sandbox.dbcpp_sourceforge.boost-quickbook.doc.qbk.src.contract.wrap_hpp"><img src=".././doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src=".././doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="../CONTRACT_WRAP_TYPE.html"><img src=".././doc/html/images/next.png" alt="Next"></a>
+</div>
+<hr>
+<div class="refentry" lang="en">
+<a name="contract.wrap_void(T)_id2356976"></a><div class="titlepage"></div>
+<div class="refnamediv">
+<h2><span class="refentrytitle">Struct template wrap&lt;void(T)&gt;</span></h2>
+<p>contract::wrap&lt;void(T)&gt;</p>
+</div>
+<h2 xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="refsynopsisdiv-title">Synopsis</h2>
+<div xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="refsynopsisdiv"><pre class="synopsis"><span class="emphasis"><em>// In header: &lt;<a class="link" href="../reference.html#header..home.lcaminiti.sandbox.dbcpp_sourceforge.boost-quickbook.doc.qbk.src.contract.wrap_hpp" title="Header &lt;contract/wrap.hpp&gt;">contract/wrap.hpp</a>&gt;
+
+</em></span><span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> T&gt; 
+<span class="bold"><strong>struct</strong></span> <a class="link" href="wrap_void_T__id2356976.html" title="Struct template wrap&lt;void(T)&gt;">wrap</a>&lt;<span class="bold"><strong>void</strong></span>(T)&gt; {
+  <span class="emphasis"><em>// <a class="link" href="wrap_void_T__id2356976.html#contract.wrap_void(T)_id2356976types">types</a></em></span>
+  <span class="bold"><strong>typedef</strong></span> T <a class="link" href="wrap_void_T__id2356976.html#contract.wrap_void(T)_id2356976.type">type</a>;
+};</pre></div>
+<div class="refsect1" lang="en">
+<a name="id2668994"></a><h2>Description</h2>
+<p>Metafunction used to wrap type expressions containing commas so they can be passed as macro parameters.</p>
+<p>This metafunction first wrap the specified type <code class="computeroutput">T</code> within parenthesis <code class="computeroutput"></code>() (so <code class="computeroutput">T</code> can be passed as a single macro parameter even if it contains commas) forming a void-function type with one argument of type <code class="computeroutput">T</code>. Then the application of the metafunction via its member <code class="computeroutput">type</code> returns the wrapped type <code class="computeroutput">T</code>.</p>
+<p><span class="bold"><strong>Parameters:</strong></span> </p>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<tbody><tr>
+<td><span class="bold"><strong><code class="computeroutput">T</code></strong></span></td>
+<td>Type to be wrapped so it can be passed within a macro parameter even if it contains commas. </td>
+</tr></tbody>
+</table></div>
+<p>
+</p>
+<p><span class="bold"><strong>See:</strong></span> CONTRACT_WRAP_TYPE() for more explanation and examples </p>
+<div class="refsect2" lang="en">
+<a name="id2669078"></a><h3>
+<a name="contract.wrap_void(T)_id2356976types"></a><code class="computeroutput">wrap</code> 
+        public
+       types</h3>
+<div class="orderedlist"><ol type="1"><li>
+<p>
+<span class="bold"><strong>typedef</strong></span> T <a name="contract.wrap_void(T)_id2356976.type"></a>type;</p>
+<p>The type T. </p>
+</li></ol></div>
+</div>
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright © 2009 -2010 Lorenzo Caminiti<p>
+        Distributed under the Contract++ Software License, Version 1.0 (see accompanying
+        file LICENSE_1_0.txt)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="wrap.html"><img src=".././doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../reference.html#header..home.lcaminiti.sandbox.dbcpp_sourceforge.boost-quickbook.doc.qbk.src.contract.wrap_hpp"><img src=".././doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src=".././doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="../CONTRACT_WRAP_TYPE.html"><img src=".././doc/html/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>

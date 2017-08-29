@@ -1,0 +1,74 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Class template copyable</title>
+<link rel="stylesheet" href="../doc/html/boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.73.2">
+<link rel="start" href="../index.html" title="Contract++ 0.3.490">
+<link rel="up" href="../reference.html#header..home.lcaminiti.sandbox.dbcpp_sourceforge.boost-quickbook.doc.qbk.src.contract.old_hpp" title="Header &lt;contract/old.hpp&gt;">
+<link rel="prev" href="nonstatic_member_function.html" title="Class template nonstatic_member_function">
+<link rel="next" href="copy.html" title="Class template copy">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<div class="spirit-nav">
+<a accesskey="p" href="nonstatic_member_function.html"><img src=".././doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../reference.html#header..home.lcaminiti.sandbox.dbcpp_sourceforge.boost-quickbook.doc.qbk.src.contract.old_hpp"><img src=".././doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src=".././doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="copy.html"><img src=".././doc/html/images/next.png" alt="Next"></a>
+</div>
+<hr>
+<div class="refentry" lang="en">
+<a name="contract.copyable"></a><div class="titlepage"></div>
+<div class="refnamediv">
+<h2><span class="refentrytitle">Class template copyable</span></h2>
+<p>contract::copyable</p>
+</div>
+<h2 xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="refsynopsisdiv-title">Synopsis</h2>
+<div xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="refsynopsisdiv"><pre class="synopsis"><span class="emphasis"><em>// In header: &lt;<a class="link" href="../reference.html#header..home.lcaminiti.sandbox.dbcpp_sourceforge.boost-quickbook.doc.qbk.src.contract.old_hpp" title="Header &lt;contract/old.hpp&gt;">contract/old.hpp</a>&gt;
+
+</em></span><span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> T&gt; 
+<span class="bold"><strong>class</strong></span> <a class="link" href="copyable.html" title="Class template copyable">copyable</a> {
+};</pre></div>
+<div class="refsect1" lang="en">
+<a name="id2667003"></a><h2>Description</h2>
+<p>Tag the specified type <code class="computeroutput">T</code> copyable.</p>
+<p>In general, you should tag a type copyable <span class="bold"><strong>only</strong></span> when the related variable old value (before body execution) is really needed in postconditions because:</p>
+<div class="orderedlist"><ol type="1">
+<li><p>The correspondent variable value will be copied before body execution adding run-time overhead. The library performs the extra copy to support old values in postconditions only for variables of types tagged copyable and only when the <code class="computeroutput">CONTRACT_CHECK_POSTCONDITION</code> macro is defined.</p></li>
+<li>
+<p>A type tagged copyable has the extra requirement that it must define an accessible constant-correct copy constructor (otherwise the library will generate a compile-time error). The copy constructor is constant-correct when it accesses the copied value via a constant reference argument (this way the copied value cannot be mistakenly modified while it is being copied to check contracts): </p>
+<pre class="programlisting">    T::T(const T&amp; source) { ... } // Must be accessible and construct from a const&amp;.
+</pre>
+<p> See <code class="computeroutput">contract::copy</code> to relax this requirement.</p>
+</li>
+</ol></div>
+<p>
+</p>
+<p><span class="bold"><strong>Parameters:</strong></span> </p>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<tbody><tr>
+<td><span class="bold"><strong><code class="computeroutput">T</code></strong></span></td>
+<td>The type to be tagged. The <span class="bold"><strong>entire</strong></span> type with eventual <code class="computeroutput">const</code>, <code class="computeroutput">&amp;</code>, <code class="computeroutput">*</code>, etc qualifier should be tagged copyable. For example, if the type is <code class="computeroutput">const int&amp;</code> then <code class="computeroutput">contract::copyable&lt;const int&amp;&gt;</code> should be used (and not <code class="computeroutput">const contract::copyable&lt;int&gt;&amp;</code>). </td>
+</tr></tbody>
+</table></div>
+<p>
+</p>
+<p><span class="bold"><strong>Note:</strong></span> When using the contract macros, <code class="computeroutput">(copyable)(T)</code> is used instead of <code class="computeroutput">contract::copyable&lt;T&gt;</code> to tag the type <code class="computeroutput">T</code> copyable in the macro <code class="computeroutput">sequence</code> parameter.</p>
+<p><span class="bold"><strong>See:</strong></span> <code class="computeroutput">CONTRACT_OLDOF()</code>, <code class="computeroutput">contract::copy</code> </p>
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright © 2009 -2010 Lorenzo Caminiti<p>
+        Distributed under the Contract++ Software License, Version 1.0 (see accompanying
+        file LICENSE_1_0.txt)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="nonstatic_member_function.html"><img src=".././doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../reference.html#header..home.lcaminiti.sandbox.dbcpp_sourceforge.boost-quickbook.doc.qbk.src.contract.old_hpp"><img src=".././doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src=".././doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="copy.html"><img src=".././doc/html/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>

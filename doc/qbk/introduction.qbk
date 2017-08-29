@@ -1,0 +1,61 @@
+
+[section Introduction]
+
+Contract Programming (CP) is also known as __Design_by_Contract__ [footnote /Design by Contract/ is a registered trademark of __Eiffel_Software__.] (DbC) and it was first introduced by the Eiffel programming language (see __Meyer1997__).
+All Contract Programming features of the Eiffel programming language are supported by this library, among others (see __Features__):
+
+* Optional compilation and checking of invariants, preconditions, and postconditions.
+* Customizable actions on contract failure (terminate by default but it can throw, exit, etc).
+* Subcontracting for derived classes (with support for pure virtual functions and multiple inheritance).
+* Access to "old" variable values (before body execution) and return value "result" in postconditions.
+* Support block invariants and loop variants.
+
+In brief, Contract Programming allows to specify invariants, preconditions, and postconditions that are automatically checked when functions are called at run-time.
+These conditions are used to assert the function specifications within the source code itself allowing to find bugs more quickly during testing and improving software quality.
+
+[h5 An Example]
+
+This example shows how to write a contract for the C++ STL vector `push_back()` function using this library.
+It also shows how to subcontract assuming that the vector class inherits from some `pushable` base class.
+
+[myvector_stub_cpp]
+
+When the `push_back()` function is called:
+
+# First, the class invariants and the function preconditions are checked.
+# Then, the function body is executed.
+# Lastly, the class invariants and function postconditions are checked.
+
+For example, if there is a bug in the function caller for which `push_back()` is called when `myvector` size is equal to `max_size()` then the execution will be interrupted reporting a failure of the first assertion in the preconditions and it will be evident that the bug is in the caller:
+
+[pre
+precondition: terminate called after throwing an instance of 'contract::failure'
+  what():  contract "size() < max_size()" failed at myvector.cpp:20
+Aborted
+]
+
+Instead, if there is a bug in the `push_back()` implementation for which `myvector` size is not increased by 1 after `element` has been added to the vector by the function body then the execution will be interrupted reporting a failure of the first assertion in the postconditions and it will be evident that the bug is in the `push_back()` function implementation:
+
+[pre
+postcondition: terminate called after throwing an instance of 'contract::failure'
+  what():  contract "size() == (CONTRACT_OLDOF(this)->size() + 1)" failed at myvector.cpp:20
+Aborted
+]
+    
+Note how the library error messages contain enough information to uniquely identify the failure point: contract type (precondition, postcondition, etc), assertion text, file name, and line number.
+
+[h5 Compilers and Platforms]
+
+This library is implemented using both preprocessor (__Boost_Preprocessor__) and template (__Boost_MPL__) metaprogramming.
+The library also uses templates with partial specializations and function pointer types (to implement an interface similar to the one of __Boost_Function__).
+As a consequence, this library is fairly demanding on compilers compliance with the ISO C++ standard.
+At present, this library has been successfully compiled and tested on the following compilers and platforms:
+
+# GCC 4.2.4 on Ubuntu Linux.
+# Microsoft Visual C++ 8.0 (MSVC 14) on Windows XP.
+# GCC 3.4.4 on Cygwin.
+
+(No other compiler was tried thus far.)
+
+[endsect]
+

@@ -1,0 +1,139 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Class failure</title>
+<link rel="stylesheet" href="../doc/html/boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.73.2">
+<link rel="start" href="../index.html" title="Contract++ 0.3.490">
+<link rel="up" href="../reference.html#header..home.lcaminiti.sandbox.dbcpp_sourceforge.boost-quickbook.doc.qbk.src.contract.assert_hpp" title="Header &lt;contract/assert.hpp&gt;">
+<link rel="prev" href="../reference.html" title="Reference">
+<link rel="next" href="contract_failed_handler.html" title="Type definition contract_failed_handler">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<div class="spirit-nav">
+<a accesskey="p" href="../reference.html"><img src=".././doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../reference.html#header..home.lcaminiti.sandbox.dbcpp_sourceforge.boost-quickbook.doc.qbk.src.contract.assert_hpp"><img src=".././doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src=".././doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="contract_failed_handler.html"><img src=".././doc/html/images/next.png" alt="Next"></a>
+</div>
+<hr>
+<div class="refentry" lang="en">
+<a name="contract.failure"></a><div class="titlepage"></div>
+<div class="refnamediv">
+<h2><span class="refentrytitle">Class failure</span></h2>
+<p>contract::failure</p>
+</div>
+<h2 xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="refsynopsisdiv-title">Synopsis</h2>
+<div xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="refsynopsisdiv"><pre class="synopsis"><span class="emphasis"><em>// In header: &lt;<a class="link" href="../reference.html#header..home.lcaminiti.sandbox.dbcpp_sourceforge.boost-quickbook.doc.qbk.src.contract.assert_hpp" title="Header &lt;contract/assert.hpp&gt;">contract/assert.hpp</a>&gt;
+
+</em></span>
+<span class="bold"><strong>class</strong></span> <a class="link" href="failure.html" title="Class failure">failure</a> {
+<span class="bold"><strong>public</strong></span>:
+  <span class="emphasis"><em>// <a class="link" href="failure.html#contract.failureconstruct-copy-destruct">construct/copy/destruct</a></em></span>
+  <a class="link" href="failure.html#id2296128-bb">failure</a>(<span class="bold"><strong>const</strong></span> <span class="bold"><strong>char</strong></span> *, <span class="bold"><strong>const</strong></span> <span class="bold"><strong>unsigned</strong></span> <span class="bold"><strong>long</strong></span> &amp;, <span class="bold"><strong>const</strong></span> <span class="bold"><strong>char</strong></span> * = "");
+  <a class="link" href="failure.html#id2296227-bb">failure</a>(<span class="bold"><strong>const</strong></span> <a class="link" href="failure.html" title="Class failure">failure</a> &amp;);
+  failure&amp; <a class="link" href="failure.html#id2296242-bb"><span class="bold"><strong>operator</strong></span>=</a>(<span class="bold"><strong>const</strong></span> <a class="link" href="failure.html" title="Class failure">failure</a> &amp;);
+  <a class="link" href="failure.html#id2288011-bb">~failure</a>();
+
+  <span class="emphasis"><em>// <a class="link" href="failure.html#id2296057-bb">public member functions</a></em></span>
+  <span class="type"><span class="bold"><strong>const</strong></span> <span class="bold"><strong>char</strong></span> *</span> <a class="link" href="failure.html#id2296060-bb">what</a>() <span class="bold"><strong>const</strong></span>;
+  <span class="type"><span class="bold"><strong>const</strong></span> <span class="bold"><strong>char</strong></span> *</span> <a class="link" href="failure.html#id2296088-bb">file</a>() <span class="bold"><strong>const</strong></span>;
+  <span class="type"><span class="bold"><strong>unsigned</strong></span> <span class="bold"><strong>long</strong></span></span> <a class="link" href="failure.html#id2296100-bb">line</a>() <span class="bold"><strong>const</strong></span>;
+  <span class="type"><span class="bold"><strong>const</strong></span> <span class="bold"><strong>char</strong></span> *</span> <a class="link" href="failure.html#id2296113-bb">description</a>() <span class="bold"><strong>const</strong></span>;
+};</pre></div>
+<div class="refsect1" lang="en">
+<a name="id2657723"></a><h2>Description</h2>
+<p>Default exception thrown when a contract condition is found to be false.</p>
+<p>It is recommended to assert contract conditions using the <code class="computeroutput">CONTRACT_ASSERT()</code> macro instead of throwing this exception directly.</p>
+<p>The library handles exceptions (any exception, not just this one) when thrown from within block invariants (plus loop variants), class invariants, preconditions, and postconditions invoking <code class="computeroutput">contract::block_invariant_failed()</code>, <code class="computeroutput">contract::class_invariant_failed()</code>, <code class="computeroutput">contract::precondition_failed()</code>, and <code class="computeroutput">contract::postcondition_failed()</code> respectively (see the Without the Macros section).</p>
+<p>Therefore, throwing this exception on a contract condition failure does <span class="bold"><strong>not</strong></span> imply that an exception will be thrown overall to handle the failure. It only implies that the correct contract failure handler function will be automatically invoked by the library (after checking eventual overridden contracts for subcontracting, etc). It is not possible to call the failure handler functions directly instead of throwing the exception because that will not allow the library to check overridden contracts when subcontracting. The failure handler functions will then decide the action to take (the default handlers provided by the library invoke <code class="computeroutput">std::terminate()</code> but programmers can redefine this behaviour using <code class="computeroutput">contract::set_block_invariant_failed()</code>, <code class="computeroutput">contract::set_class_invariant_failed()</code>, <code class="computeroutput">contract::set_precondition_failed()</code>, and <code class="computeroutput">contract::set_postcondition_failed()</code>).</p>
+<p>The member functions of this class do not throw (their exception specification is <code class="computeroutput">thow()</code>) so they can be safely used when checking contracts in compliance with STL C++ exception safety requirements at all times.</p>
+<p><span class="bold"><strong>See:</strong></span> Without the Macros section. </p>
+<div class="refsect2" lang="en">
+<a name="id2657839"></a><h3>
+<a name="contract.failureconstruct-copy-destruct"></a><code class="computeroutput">failure</code> 
+        public
+       construct/copy/destruct</h3>
+<div class="orderedlist"><ol type="1">
+<li>
+<pre class="literallayout"><a name="id2296128-bb"></a>failure(<span class="bold"><strong>const</strong></span> <span class="bold"><strong>char</strong></span> * file, <span class="bold"><strong>const</strong></span> <span class="bold"><strong>unsigned</strong></span> <span class="bold"><strong>long</strong></span> &amp; line, 
+        <span class="bold"><strong>const</strong></span> <span class="bold"><strong>char</strong></span> * description = "");</pre>
+<p>Create a condition failure object.</p>
+<p>All the constructor parameters are used to provide more descriptive error messages in case of contract condition failure. At least the file and line number must be specified so to uniquely identify the point of the contract condition failure.</p>
+<p><span class="bold"><strong>Parameters:</strong></span> </p>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<tbody>
+<tr>
+<td><span class="bold"><strong><code class="computeroutput">file</code></strong></span></td>
+<td>The source code file containing the failed contract condition (use <code class="computeroutput">__FILE__</code>). </td>
+</tr>
+<tr>
+<td><span class="bold"><strong><code class="computeroutput">line</code></strong></span></td>
+<td>The source code line number containing the failed contract condition (use <code class="computeroutput">__LINE__</code>). </td>
+</tr>
+<tr>
+<td><span class="bold"><strong><code class="computeroutput">description</code></strong></span></td>
+<td>An optional human readable description of the contract condition failure (<code class="computeroutput">""</code> if not specified). </td>
+</tr>
+</tbody>
+</table></div>
+<p>
+</p>
+</li>
+<li>
+<pre class="literallayout"><a name="id2296227-bb"></a>failure(<span class="bold"><strong>const</strong></span> <a class="link" href="failure.html" title="Class failure">failure</a> &amp; source);</pre>
+<p>Create a condition failure object copying it from the specified one. </p>
+</li>
+<li>
+<pre class="literallayout">failure&amp; <a name="id2296242-bb"></a><span class="bold"><strong>operator</strong></span>=(<span class="bold"><strong>const</strong></span> <a class="link" href="failure.html" title="Class failure">failure</a> &amp; source);</pre>
+<p>Copy a condition failure from the specified one. </p>
+</li>
+<li>
+<pre class="literallayout"><a name="id2288011-bb"></a>~failure();</pre>
+<p>Destroy the condition failure object. </p>
+</li>
+</ol></div>
+</div>
+<div class="refsect2" lang="en">
+<a name="id2658084"></a><h3>
+<a name="id2296057-bb"></a><code class="computeroutput">failure</code> public member functions</h3>
+<div class="orderedlist"><ol type="1">
+<li>
+<pre class="literallayout"><span class="type"><span class="bold"><strong>const</strong></span> <span class="bold"><strong>char</strong></span> *</span> <a name="id2296060-bb"></a>what() <span class="bold"><strong>const</strong></span>;</pre>
+<p>Return a human readable message explaining the nature of the condition failure.</p>
+<p><span class="bold"><strong>Returns:</strong></span> The actual message text is library implementation specific but it will contain the condition description, the file name, and the line number (when specified). For example, the returned message could look like this: </p>
+<pre class="programlisting">        contract "size increased by 1" failed at myvector.cpp:40
+</pre>
+<p> </p>
+</li>
+<li>
+<pre class="literallayout"><span class="type"><span class="bold"><strong>const</strong></span> <span class="bold"><strong>char</strong></span> *</span> <a name="id2296088-bb"></a>file() <span class="bold"><strong>const</strong></span>;</pre>
+<p>Return the condition failure source file. </p>
+</li>
+<li>
+<pre class="literallayout"><span class="type"><span class="bold"><strong>unsigned</strong></span> <span class="bold"><strong>long</strong></span></span> <a name="id2296100-bb"></a>line() <span class="bold"><strong>const</strong></span>;</pre>
+<p>Return the condition failure source line number. </p>
+</li>
+<li>
+<pre class="literallayout"><span class="type"><span class="bold"><strong>const</strong></span> <span class="bold"><strong>char</strong></span> *</span> <a name="id2296113-bb"></a>description() <span class="bold"><strong>const</strong></span>;</pre>
+<p>Return the condition failure description (<code class="computeroutput">""</code> if not specified). </p>
+</li>
+</ol></div>
+</div>
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright © 2009 -2010 Lorenzo Caminiti<p>
+        Distributed under the Contract++ Software License, Version 1.0 (see accompanying
+        file LICENSE_1_0.txt)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="../reference.html"><img src=".././doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../reference.html#header..home.lcaminiti.sandbox.dbcpp_sourceforge.boost-quickbook.doc.qbk.src.contract.assert_hpp"><img src=".././doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src=".././doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="contract_failed_handler.html"><img src=".././doc/html/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>
