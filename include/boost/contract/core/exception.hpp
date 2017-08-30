@@ -123,7 +123,7 @@ functions print an error message to @c std::cerr and terminate the program, but
 they can be customized to take any other action).
 
 @see    @RefSect{advanced.throw_on_failure__and__noexcept__, Throw on Failure},
-        @RefSect{extras.no_macros__c__11_, No Macros}
+        @RefSect{extras.no_macros__and_no_variadic_macros_, No Macros}
 */
 class BOOST_CONTRACT_DETAIL_DECLSPEC assertion_failure : // Copy (as str, etc.).
         public std::exception, public boost::contract::exception {
@@ -723,7 +723,7 @@ Set a new failure handler and returns it.
         concatenating function calls).
 
 @see    @RefSect{advanced.throw_on_failure__and__noexcept__, Throw on Failure},
-        @RefSect{advanced.old_values_at_body, Old Values at Body}
+        @RefSect{advanced.old_copies_at_body, Old Values at Body}
 */
 inline from_failure_handler const& set_old_failure(from_failure_handler const&
         f) /** @cond */ BOOST_NOEXCEPT_OR_NOTHROW /** @endcond */ {
@@ -744,7 +744,7 @@ This is often called only internally by this library.
 @return A copy of the failure handler currently set.
 
 @see    @RefSect{advanced.throw_on_failure__and__noexcept__, Throw on Failure},
-        @RefSect{advanced.old_values_at_body, Old Values at Body}
+        @RefSect{advanced.old_copies_at_body, Old Values at Body}
 */
 inline from_failure_handler get_old_failure()
         /** @cond */ BOOST_NOEXCEPT_OR_NOTHROW /** @endcond */ {
@@ -769,7 +769,7 @@ This is often called only internally by this library.
                 throw exceptions instead of terminating the program).
 
 @see    @RefSect{advanced.throw_on_failure__and__noexcept__, Throw on Failure},
-        @RefSect{advanced.old_values_at_body, Old Values at Body}
+        @RefSect{advanced.old_copies_at_body, Old Values at Body}
 */
 inline void old_failure(from where) /* can throw */ {
     #ifndef BOOST_CONTRACT_DISABLE_THREADS

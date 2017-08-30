@@ -178,6 +178,18 @@ public:
         --count_;
     }
 
+    /* Friend Helpers */
+
+    friend bool operator==(stack4 const& left, stack4 const& right) {
+        boost::contract::check inv1 = boost::contract::public_function(&left);
+        boost::contract::check inv2 = boost::contract::public_function(&right);
+        if(left.count_ != right.count_) return false;
+        for(int i = 0; i < left.count_; ++i) {
+            if(left.array_[i] != right.array_[i]) return false;
+        }
+        return true;
+    }
+
 private:
     int capacity_;
     int count_;

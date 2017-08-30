@@ -147,7 +147,8 @@ public:
     @b Throws:  This can throw (i.e., @c noexcept(false)) in case programmers
                 specify failure handlers that throw exceptions instead of
                 terminating the program (see
-                @RefSect{advanced.throw_on_failure, Throw on Failure}).
+                @RefSect{advanced.throw_on_failure__and__noexcept__,
+                Throw on Failure}).
     */
     ~specify_nothing() BOOST_NOEXCEPT_IF(false) {}
     
@@ -191,7 +192,8 @@ public:
     @b Throws:  This can throw (i.e., @c noexcept(false)) in case programmers
                 specify failure handlers that throw exceptions instead of
                 terminating the program (see
-                @RefSect{advanced.throw_on_failure, Throw on Failure}).
+                @RefSect{advanced.throw_on_failure__and__noexcept__,
+                Throw on Failure}).
     */
     ~specify_except() BOOST_NOEXCEPT_IF(false) {}
 
@@ -259,7 +261,8 @@ public:
     @b Throws:  This can throw (i.e., @c noexcept(false)) in case programmers
                 specify failure handlers that throw exceptions instead of
                 terminating the program (see
-                @RefSect{advanced.throw_on_failure, Throw on Failure}).
+                @RefSect{advanced.throw_on_failure__and__noexcept__,
+                Throw on Failure}).
     */
     ~specify_postcondition_except() BOOST_NOEXCEPT_IF(false) {}
 
@@ -351,7 +354,8 @@ public:
     @b Throws:  This can throw (i.e., @c noexcept(false)) in case programmers
                 specify failure handlers that throw exceptions instead of
                 terminating the program (see
-                @RefSect{advanced.throw_on_failure, Throw on Failure}).
+                @RefSect{advanced.throw_on_failure__and__noexcept__,
+                Throw on Failure}).
     */
     ~specify_old_postcondition_except() BOOST_NOEXCEPT_IF(false) {}
     
@@ -485,7 +489,8 @@ public:
     @b Throws:  This can throw (i.e., @c noexcept(false)) in case programmers
                 specify failure handlers that throw exceptions instead of
                 terminating the program (see
-                @RefSect{advanced.throw_on_failure, Throw on Failure}).
+                @RefSect{advanced.throw_on_failure__and__noexcept__,
+                Throw on Failure}).
     */
     ~specify_precondition_old_postcondition_except() BOOST_NOEXCEPT_IF(false) {}
     

@@ -401,7 +401,7 @@ The last three specifiers appear in user code so their names can be referred to 
     [['Old values in postconditions]]
     [
 Yes, [macroref BOOST_CONTRACT_OLD] macro and [classref boost::contract::old_ptr] (but copied before preconditions unless `.old(...)` is used as shown in __Old_Copies_at_Body__).
-For templates, [classref boost::contract::old_ptr_if_copyable] skips old value copies for non-copyable types and [classref boost::contract::condition_if] skips old value copies selectively based on old expression type requirements.
+For templates, [classref boost::contract::old_ptr_if_copyable] skips old value copies for non-copyable types and [funcref boost::contract::condition_if] skips old value copies selectively based on old expression type requirements.
     ]
     [
 Yes, `oldof` keyword (copied after preconditions and before body).
@@ -582,7 +582,7 @@ Microsoft Contract Programming for .NET programming languages.
 [ [__SpecSharp__] [C#] [
 This is a C# extension with Contract Programming language support.
 ] ]
-[ [__Chrome02__] [Object Pascal] [
+[ [__Chrome__] [Object Pascal] [
 This is the .NET version of Object Pascal and it has language support for Contract Programming.
 ] ]
 [ [__SPARKAda__] [Ada] [

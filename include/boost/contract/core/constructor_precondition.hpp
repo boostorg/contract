@@ -38,7 +38,7 @@ preventing preconditions of other base classes from being checked).
 Unions cannot have base classes in C++ so this class can be used to declare a
 local object within the constructor definition just before
 @RefFunc{boost::contract::constructor} is used (see
-@RefSect{extra_topics.unions, Unions}).
+@RefSect{extras.unions, Unions}).
 
 @see @RefSect{tutorial.constructors, Constructors}
 

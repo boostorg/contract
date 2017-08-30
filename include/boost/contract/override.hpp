@@ -101,7 +101,7 @@ Handle public function overrides (for subcontracting).
                             This macro is called just once even if the function
                             name is overloaded (the same override type is used
                             for all overloaded functions with the same name, see
-                            @RefSect{advanced_topics.function_overloads,
+                            @RefSect{advanced.function_overloads,
                             Function Overloads}).
                             (This is not a variadic macro parameter but it
                             should never contain commas because it is an
@@ -126,7 +126,7 @@ Declare the override type to pass as an explicit template parameter to
                         This macro is called just once even if the function
                         name is overloaded (the same override type is used for
                         all overloaded functions with the same name, see
-                        @RefSect{advanced_topics.function_overloads,
+                        @RefSect{advanced.function_overloads,
                         Function Overloads}).
                         (This is not a variadic macro parameter but it should
                         never contain any comma because it is an identifier.)

@@ -106,7 +106,7 @@ Configure this library compile-time and run-time behaviours.
             for public function overrides (because of similar limits in
             Boost.MPL and Boost.FunctionTypes internally used by this library).
 
-    @see @RefSect{extras.no_macros__no_c__11_, No Macros}
+    @see @RefSect{extras.no_macros__and_no_variadic_macros_, No Macros}
     */
     #define BOOST_CONTRACT_MAX_ARGS 10
 #endif
@@ -474,7 +474,7 @@ Configure this library compile-time and run-time behaviours.
     compilation from production code).
 
     @see    @RefSect{tutorial.old_values, Old Values},
-            @RefSect{advanced.old_values_at_body, Old Values at Body},
+            @RefSect{advanced.old_copies_at_body, Old Values at Body},
             @RefSect{extras.disable_contract_compilation__macro_interface_,
             Disable Contract Compilation}
     */
@@ -600,8 +600,8 @@ Configure this library compile-time and run-time behaviours.
     @see    @RefSect{tutorial.non_member_functions, Non-Member Functions},
             @RefSect{advanced.private_and_protected_functions,
             Private and Protected Functions},
-            @RefSect{advanced.lambdas__code_blocks__loops__etc_,
-            Lambdas\, Code Blocks\, Loops\, Etc.},
+            @RefSect{advanced.lambdas__loops__code_blocks__and__constexpr__,
+            Lambdas\, Loops\, Code Blocks},
             @RefSect{extras.disable_contract_compilation__macro_interface_,
             Disable Contract Compilation}
     */

@@ -366,7 +366,7 @@ For example (see [@../../example/features/public.cpp =public.cpp=]):
 [public_class_end]
 
 It is not possible to specify preconditions using `.precondition(...)` for constructors (this library will generate a compile-time error if `.precondition(...)` is used on the object returned by [funcref boost::contract::constructor]).
-Constructor preconditions are specified using the [classref boost::contract:constructor_precondition] base class instead (but the considerations from __Preconditions__ apply also to the precondition functor passed to [classref boost::contract::constructor_precondition]).
+Constructor preconditions are specified using the [classref boost::contract::constructor_precondition] base class instead (but the considerations from __Preconditions__ apply also to the precondition functor passed to [classref boost::contract::constructor_precondition]).
 Programmes should not access the object `*this` from constructor preconditions (because the object does not exists yet before the constructor body is executed).
 [footnote
 See __No_Lambda_Functions__ to enforce this constraint at compile-time (but still not recommended because of extra boiler-plate code).

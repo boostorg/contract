@@ -14,7 +14,7 @@ necessary to use its macros.
 
 Almost all the macros defined in this header file are variadic macros. On
 compilers that do not support variadic macros, programmers can manually code
-<c>#ifndef BOOST_CONTRACT_NO_...</c> statements instead (see
+<c>\#ifndef BOOST_CONTRACT_NO_...</c> statements instead (see
 @RefSect{extras.disable_contract_compilation__macro_interface_,
 Disable Contract Compilation}).
 */

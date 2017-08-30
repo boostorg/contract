@@ -113,7 +113,7 @@ See __Constructors__ and __Destructors__ on how to program contracts for private
 
 When private and protected functions are virtual they should still declare the extra virtual parameter of type [classref boost::contract::virtual_]`*` with default value `0` (see __Virtual_Public_Functions__) even if that parameter does not have to be passed to [macroref BOOST_CONTRACT_OLDOF] and [funcref boost::contract::function] takes no argument (so the extra virtual parameter will remain unused and it does not need a name).
 [footnote
-Technically, the extra virtual parameter can still be passed to [macroref BOOST_CONTRACT_OLDF] but that is not necessary and it has no effect so it is not done in this documentation.
+Technically, the extra virtual parameter can still be passed to [macroref BOOST_CONTRACT_OLDOF] but that is not necessary and it has no effect so it is not done in this documentation.
 ]
 That is necessary otherwise the private and protected virtual functions cannot be overridden by public functions in derived classes that specify contracts (because the [classref boost::contract::virtual_]`* = 0` parameter has to be part of signatures for public function overrides).
 For example (see [@../../example/features/private_protected_virtual.cpp =private_protected_virtual.cpp=]):
@@ -148,8 +148,8 @@ Friend functions are not member functions so [funcref boost::contract::function]
 For example (see [@../../example/features/friend.cpp =friend.cpp=]):
 
 [import ../example/features/friend.cpp]
-[friend_bytes]
 [friend_byte]
+[friend_bytes]
 
 However, in some cases a friend function might take an object as parameter and it can be logically considered an extension of that object's public interface (essentially at the same level as the object's public functions).
 In these cases, programmers might chose to program the friend function contracts using [funcref boost::contract::public_function] (instead of [funcref boost::contract::function]) so to also check the class invariants of the object passed as parameter (and not just the pre- and postconditions of the friend function).

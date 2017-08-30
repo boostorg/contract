@@ -50,7 +50,7 @@ used via its specializations.
 Usually this class template is instantiated only via the return value of
 @RefFunc{boost::contract::call_if} and @RefFunc{boost::contract::call_if_c}.
 
-@see    @RefSect{extra_topics.assertion_requirements__templates_,
+@see    @RefSect{extras.assertion_requirements__templates_,
         Assertion Requirements}
 
 @tparam Pred    Static boolean predicate that selects which functor template
@@ -87,7 +87,7 @@ Usually this class template is instantiated only via the return value of
         indirection necessary for the proper lazy evaluation of this result-of
         expression.
 
-@see    @RefSect{extra_topics.assertion_requirements__templates_,
+@see    @RefSect{extras.assertion_requirements__templates_,
         Assertion Requirements}
 
 @tparam Then Type of functor template to call when the static predicate is
@@ -131,7 +131,7 @@ that do not return void.
 Usually this class template is instantiated only via the return value of
 @RefFunc{boost::contract::call_if} and @RefFunc{boost::contract::call_if_c}.
 
-@see    @RefSect{extra_topics.assertion_requirements__templates_,
+@see    @RefSect{extras.assertion_requirements__templates_,
         Assertion Requirements}
 
 @tparam Then Type of functor template to call when the static predicate is
@@ -236,7 +236,7 @@ that return void.
 Usually this class template is instantiated only via the return value of
 @RefFunc{boost::contract::call_if} and @RefFunc{boost::contract::call_if_c}.
 
-@see    @RefSect{extra_topics.assertion_requirements__templates_,
+@see    @RefSect{extras.assertion_requirements__templates_,
         Assertion Requirements}
 
 @tparam Then Type of functor template to call when the static predicate if
@@ -334,7 +334,7 @@ This single specialization handles all else-branch functor template calls
 Usually this class template is instantiated only via the return value of
 @RefFunc{boost::contract::call_if} and @RefFunc{boost::contract::call_if_c}.
 
-@see    @RefSect{extra_topics.assertion_requirements__templates_,
+@see    @RefSect{extras.assertion_requirements__templates_,
         Assertion Requirements}
 
 @tparam Then Type of functor template to call when the static predicate is
@@ -466,7 +466,7 @@ boost::contract::call_if<Predicate1>(
 )
 @endcode
 
-@see    @RefSect{extra_topics.assertion_requirements__templates_,
+@see    @RefSect{extras.assertion_requirements__templates_,
         Assertion Requirements}
 
 @param f    Then-branch nullary functor template.
@@ -513,7 +513,7 @@ boost::contract::call_if<MetaFunction1>(
 @endcode
 
 
-@see    @RefSect{extra_topics.assertion_requirements__templates_,
+@see    @RefSect{extras.assertion_requirements__templates_,
         Assertion Requirements}
 
 @param f    Then-branch nullary functor template.
@@ -548,7 +548,7 @@ A call to <c>boost::contract::condition_if_c<Pred>(f, b)</c> is logically
 equivalent to <c>boost::contract::call_if_c<Pred>(f, [b] { return b; })</c> (but
 its implementation is optimized with respsect to the @c call_if_c equivalent).
 
-@see    @RefSect{extra_topics.assertion_requirements__templates_,
+@see    @RefSect{extras.assertion_requirements__templates_,
         Assertion Requirements}
 
 @param f    Nullary boolean functor template.
@@ -589,7 +589,7 @@ trivially return @p else_ (@c true by default) at run-time.
 This is equivalent to
 <c>boost::contract::condition_if_c<Pred::value>(f, else_)</c>.
 
-@see    @RefSect{extra_topics.assertion_requirements__templates_,
+@see    @RefSect{extras.assertion_requirements__templates_,
         Assertion Requirements}
 
 @param f    Nullary boolean functor template.

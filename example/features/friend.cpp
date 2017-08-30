@@ -3,9 +3,25 @@
 #include <string>
 #include <cassert>
 
-//[friend_bytes
-class byte;
+//[friend_byte
+class bytes;
 
+class byte {
+    friend bool operator==(bytes const& left, byte const& right);
+    
+private:
+    char value_;
+
+    /* ... */
+//]
+
+public:
+    // Could program invariants and contracts for following too.
+    explicit byte(char value) : value_(value) {}
+    bool empty() const { return value_ == '\0'; }
+};
+
+//[friend_bytes
 class bytes {
     // Friend functions are not member functions...
     friend bool operator==(bytes const& left, byte const& right) {
@@ -33,22 +49,6 @@ public:
     // Could program invariants and contracts for following too.
     explicit bytes(std::string const& values) : values_(values) {}
     bool empty() const { return values_ == ""; }
-};
-
-//[friend_byte
-class byte {
-    friend bool operator==(bytes const& left, byte const& right);
-    
-private:
-    char value_;
-
-    /* ... */
-//]
-
-public:
-    // Could program invariants and contracts for following too.
-    explicit byte(char value) : value_(value) {}
-    bool empty() const { return value_ == '\0'; }
 };
 
 int main() {

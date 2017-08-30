@@ -41,7 +41,7 @@ postconditions and exception guarantees, within classes that have no invariants.
             (Constructors check all class invariants, including static and
             volatile invariants, see also @RefSect{tutorial.class_invariants,
             Class Invariants} and
-            @RefSect{advanced.volatile_public_functions,
+            @RefSect{extras.volatile_public_functions,
             Volatile Public Functions}).
 
 @tparam Class   The type of the class containing the constructor declaring the

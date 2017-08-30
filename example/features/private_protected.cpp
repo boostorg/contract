@@ -48,9 +48,8 @@ private: // Private functions use `function()` (like non-members).
 public:
     int get() const {
         int result;
-        boost::contract::check c = boost::contract::public_function(
-                v, result, this)
-            .postcondition([&] (int const result) {
+        boost::contract::check c = boost::contract::public_function(this)
+            .postcondition([&] {
                 BOOST_CONTRACT_ASSERT(result <= 0);
                 BOOST_CONTRACT_ASSERT(result == n_);
             })

@@ -38,7 +38,7 @@ public:
         boost::contract::check c = boost::contract::public_function(this);
     }
 
-    static s() { // Check static invariants only.
+    static void s() { // Check static invariants only.
         boost::contract::check c = boost::contract::public_function<a>();
     }
 };

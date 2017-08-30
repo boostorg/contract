@@ -72,7 +72,7 @@ In addition, this object can be constructed from a nullary functor that is used
 to program implementation checks.
 
 @see    @RefSect{tutorial, Tutorial},
-        @RefSect{advanced_topics.implementation_checks, Implementation Checks}
+        @RefSect{advanced.implementation_checks, Implementation Checks}
 */
 class check { // Copy ctor only (as move via ptr release).
 public:
@@ -87,7 +87,8 @@ public:
     @b Throws:  This can throw (it is declared @c noexcept(false)) in case
                 programmers specify contract failure handlers that throw
                 exceptions instead of terminating the program (see
-                @RefSect{advanced_topics.throw_on_failure, Throw on Failure}).
+                @RefSect{advanced.throw_on_failure__and__noexcept__,
+                Throw on Failure}).
 
     @param f    Nullary functor that asserts implementation checks. @c f() will
                 be called as soon as this object is constructed at the point it
@@ -123,7 +124,8 @@ public:
     @b Throws:  This can throw (it is declared @c noexcept(false)) in case
                 programmers specify contract failure handlers that throw
                 exceptions instead of terminating the program (see
-                @RefSect{advanced_topics.throw_on_failure, Throw on Failure}).
+                @RefSect{advanced.throw_on_failure__and__noexcept__,
+                Throw on Failure}).
 
     @param contract Contract to be checked.
 
@@ -153,7 +155,8 @@ public:
     @b Throws:  This can throw (it is declared @c noexcept(false)) in case
                 programmers specify contract failure handlers that throw
                 exceptions instead of terminating the program (see
-                @RefSect{advanced_topics.throw_on_failure, Throw on Failure}).
+                @RefSect{advanced.throw_on_failure__and__noexcept__,
+                Throw on Failure}).
 
     @param contract Contract to be checked.
 
@@ -183,7 +186,8 @@ public:
     @b Throws:  This can throw (it is declared @c noexcept(false)) in case
                 programmers specify contract failure handlers that throw
                 exceptions instead of terminating the program (see
-                @RefSect{advanced_topics.throw_on_failure, Throw on Failure}).
+                @RefSect{advanced.throw_on_failure__and__noexcept__,
+                Throw on Failure}).
 
     @param contract Contract to be checked.
 
@@ -214,7 +218,8 @@ public:
     @b Throws:  This can throw (it is declared @c noexcept(false)) in case
                 programmers specify contract failure handlers that throw
                 exceptions instead of terminating the program (see
-                @RefSect{advanced_topics.throw_on_failure, Throw on Failure}).
+                @RefSect{advanced.throw_on_failure__and__noexcept__,
+                Throw on Failure}).
 
     @param contract Contract to be checked.
 
@@ -243,7 +248,8 @@ public:
     @b Throws:  This can throw (it is declared @c noexcept(false)) in case
                 programmers specify contract failure handlers that throw
                 exceptions instead of terminating the program (see
-                @RefSect{advanced_topics.throw_on_failure, Throw on Failure}).
+                @RefSect{advanced.throw_on_failure__and__noexcept__,
+                Throw on Failure}).
 
     @param contract Contract to be checked.
 
@@ -271,7 +277,8 @@ public:
     @b Throws:  This can throw (it is declared @c noexcept(false)) in case
                 programmers specify contract failure handlers that throw
                 exceptions instead of terminating the program (see
-                @RefSect{advanced_topics.throw_on_failure, Throw on Failure}).
+                @RefSect{advanced.throw_on_failure__and__noexcept__,
+                Throw on Failure}).
     */
     ~check() BOOST_NOEXCEPT_IF(false) {} // Allow auto_ptr dtor to throw.
 
