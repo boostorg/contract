@@ -14,6 +14,6 @@ and it was accepted into the Boost libraries. However, the authors have not had
 time yet to add this library to an official Boost release (see:
 https://groups.google.com/forum/?fromgroups=#!topic/boost-list/jQ7OjAmos_Y).
 
-Copyright (C) 2008-2016 Lorenzo Caminiti
+Copyright (C) 2008-2017 Lorenzo Caminiti
 Distributed under the Boost Software License, Version 1.0 (see accompanying
 file LICENSE_1_0.txt or a copy at http://www.boost.org/LICENSE_1_0.txt).
