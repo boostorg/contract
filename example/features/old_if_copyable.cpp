@@ -36,7 +36,7 @@ public:
     w() : num_(0) {}
     int operator+(int i) const { return num_ + i; }
     w& operator+=(int i) { num_ += i; return *this; }
-    bool operator==(int i) const { return num_ == i; }
+    bool operator==(int i) const { return long(num_) == i; }
 private:
     unsigned long num_;
 };

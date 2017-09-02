@@ -18,7 +18,7 @@ void f(bool check) {
     BOOST_CONTRACT_CHECK((
         [&] () -> bool {
             typedef boost::contract::test::detail::unprotected_commas<void,
-                    void, void> t1;
+                    void, void> t;
             out << "f::check" << std::endl;
             return check;
         }()

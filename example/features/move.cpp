@@ -75,9 +75,9 @@ public:
         boost::contract::constructor_precondition<circular_buffer>([&] {
             BOOST_CONTRACT_ASSERT(start < data.size());
         }),
+        moved_(false),
         data_(data),
-        index_(start),
-        moved_(false)
+        index_(start)
     {
         boost::contract::check c = boost::contract::constructor(this)
             .postcondition([&] {
