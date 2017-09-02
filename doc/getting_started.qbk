@@ -141,20 +141,71 @@ $ .\/introduction
 
 The above steps also work for Clang replacing =g++= with =clang++=.
 
-[heading BJam]
+[heading Boost.Build (BJam)]
 
 Alternatively, programmers can setup their build environments (BJam, Make, CMake, MSBuild, etc.) to compile this library source code into a shared library and then compile and link user code against it (if that is preferred instead of manually running the compiler as indicated by the steps above).
-For example, this library source comes with a complete set of Boost.Build (BJam) files that can be used to build the library, build and run its tests and examples (see [@../../example/Jamfile.v2 =example/Jamfile.v2=], [@../../test/Jamfile.v2 =test/Jamfile.v2=], [@../../build/Jamfile.v2 =build/Jamfile.v2=], [@../../build/boost_contract_no.jam =build/boost_contract_no.jam=], [@../../Jamroot =Jammroot=], etc.), assuming that:
+For example, this library source comes with a complete set of BJam files that can be used to build the library, build and run its tests and examples (see [@../../example/Jamfile.v2 =example/Jamfile.v2=], [@../../test/Jamfile.v2 =test/Jamfile.v2=], [@../../build/Jamfile.v2 =build/Jamfile.v2=], [@../../Jamroot =Jammroot=], [@../../build/boost_contract_no.jam =build/boost_contract_no.jam=], etc.).
 
-* Boost was installed and built from source.
-* An environment variable named `BOOST_ROOT` is set to the [^['boost-root]] directory path.
-* The `bjam` program can be found in the `PATH` environment variable.
+Prior to running BJam, it is necessary to install and configure Boost from source.
+That can be done following these instructions for Windows (and similarly for Linux, see the [@http://www.boost.org/users/index.html Boost website]):
 
-Then the following uses BJam to build and run the [@../../example/features/introduction.cpp [^['lib-root]/example/features/introduction.cpp]] program and also to automatically build this library if necessary:
+* Download the Boost source file for Windows [@http://www.boost.org/users/download/ [^boost_['version].zip]] and unzip it to some directory [^['boost-root]].
+* Run (from a developer command prompt that automatically invokes the correct =vcvarsall.bat=):
 
 [pre
-$ cd ['lib-root]/example
-$ bjam features-introduction
+> cd [^['boost-root]]
+> bootstrap.bat
+> b2
+]
+
+* Create an environment variable named `BOOST_ROOT` and set it to the [^['boost-root]] directory path.
+* Add %BOOST_ROOT% to the end of the `PATH` environment variable (so `bjam` and other Boost tools can be found).
+
+Boost and BJam are now ready to build this library.
+For example, the following uses BJam to build and run the [@../../example/features/introduction.cpp [^['lib-root]/example/features/introduction.cpp]] program and also to automatically build this library if necessary (from a developer command prompt that automatically invokes the correct =vcvarsall.bat=):
+
+[pre
+> cd ['lib-root]\example
+> bjam features-introduction
+]
+
+In addition, the following commands build this library, build and run all the examples and tests (from a developer command prompt that automatically invokes the correct =vcvarsall.bat=):
+
+[pre
+> cd ['lib-root]\build      # Build just the library (as a shared library by default).
+> bjam
+
+> cd ['lib-root]\example    # Build and run all examples (also automatically build the library if needed).
+> bjam
+
+> cd ['lib-root]\test       # Build and run all tests (also automatically build the library if needed).
+> bjam
+]
+
+From the example and test directories =bjam help= gives a list of options to build and run examples and tests individually, with some contracts turned off, using different compilers, with this library as a static or header-only library, etc.
+
+[heading Boost.QuickBook (This Documentation)]
+
+In general users will not need to rebuild this document so they can skip this section.
+
+Prior to running BJam to rebuild this documentation and regenerate its HTML pages, it is necessary to install and configure Boost from source as explained in the section above.
+In addition, it is necessary to download and configure tools required by Boost.QuickBook as explained on the [@http://www.boost.org/doc/libs/release/doc/html/quickbook/install.html Boost.QuickBook website].
+Finally, it is necessary to install [@http://www.stack.nl/~dimitri/doxygen/download.html Doxygen] to some directory [^['doxygen-root]] and add the following to the =user-config.jam= file in your home directory (for example for Windows, but similarly for Linux, etc.):
+
+[pre
+using doxygen : "['doxygen-root]/bin/doxygen.exe" ;
+]
+
+Boost.QuickBook and BJam are now ready to rebuild this documentation and generate its HTML pages under the directory [^['lib-root]\doc\html]:
+[footnote
+In theory, it is possible to use Boost.QuickBook to build this documentation into a single PDF file instead of HTML pages, running =bjam pdf= from  within the [^['lib-root]\doc] directory.
+For that, Apache FOP and Java need to be installed as explained on the [@http://www.boost.org/doc/libs/1_65_0/doc/html/boostbook/getting/started.html Boost.Book website] and a command similar to =using fop : "C:/PROGRA~1/RenderX/XEP/xep.bat -valid" : "C:/PROGRA~1/Java/jre7/bin" ;= needs to be added to =user-config.jam= (actual paths might different on specific installations).
+However, this is not configured by default and it might require extra effort to ensure that all links, code listings, tables, images, etc. correctly show in the generated PDF file.
+]
+
+[pre
+> cd ['lib-root]\doc        # Build this documentation.
+> bjam
 ]
 
 [endsect]

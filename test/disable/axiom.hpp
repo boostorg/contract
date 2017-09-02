@@ -12,7 +12,8 @@ bool no_impl(); // Test func that cannot be impl in C++ sill OK in axioms.
 
 int main() {
     #ifdef BOOST_CONTRACT_TEST_ERROR
-        BOOST_CONTRACT_ASSERT_AXIOM(some-invalid-expression);
+        BOOST_CONTRACT_ASSERT_AXIOM(
+                BOOST_CONRACT_TEST_ERROR_expected_undeclared_identifier);
     #else
         BOOST_CONTRACT_ASSERT_AXIOM(false); // Test always false, OK.
         BOOST_CONTRACT_ASSERT_AXIOM(no_impl()); // Test no implementation, OK.

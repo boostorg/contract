@@ -34,6 +34,14 @@
 
 
 
+
+
+
+
+
+
+
+
 template< class T, class Allocator = std::allocator<T> >
 class vector {
     
@@ -554,8 +562,7 @@ public:
             capacity() >= oldof(capacity());
             if(capacity() == oldof(capacity())) {
                 if constexpr(boost::has_equal_to<T>::value) {
-                    boost::algorithm::all_of_equal(boost::prior(oldof(where)),
-                            boost::prior(oldof(where)) + count, value);
+                    boost::algorithm::all_of_equal(first, last, oldof(where));
                 }
                 // [where, end()) is invalid
             }
@@ -566,8 +573,6 @@ public:
     }
 
 
-    
-    
     
     
     
@@ -657,7 +662,6 @@ public:
 
 
 
-    
     
     
     friend bool operator==(vector const& left, vector const& right) {

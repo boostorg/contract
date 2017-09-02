@@ -25,6 +25,14 @@ struct all_of_equal_to {
     result_type operator()(InputIter first, InputIter last, T const& value) {
         return boost::algorithm::all_of_equal(first, last, value);
     }
+    
+    template<typename InputIter>
+    result_type operator()(InputIter first, InputIter last, InputIter where) {
+        for(InputIter i = first, j = where; i != last; ++i, ++j) {
+            if(*i != *j) return false;
+        }
+        return true;
+    }
 };
 
 template<typename Iter>
@@ -452,7 +460,7 @@ public:
         boost::contract::check c = boost::contract::public_function(this)
             .precondition([&] {
                 BOOST_CONTRACT_ASSERT_AXIOM(
-                        !contained(begin(), end(), first, lat));
+                        !contained(begin(), end(), first, last));
             })
             .postcondition([&] {
                 BOOST_CONTRACT_ASSERT(std::distance(first, last) ==
@@ -556,7 +564,7 @@ public:
                 BOOST_CONTRACT_ASSERT(size() + std::distance(first, last) <
                         max_size());
                 BOOST_CONTRACT_ASSERT_AXIOM(
-                        !contained(first, lat, begin(), end()));
+                        !contained(first, last, begin(), end()));
             })
             .postcondition([&] {
                 BOOST_CONTRACT_ASSERT(size() == *old_size() +
@@ -565,11 +573,8 @@ public:
                 if(capacity() == *old_capacity) {
                     BOOST_CONTRACT_ASSERT(
                         boost::contract::condition_if<boost::has_equal_to<T> >(
-                            boost::bind(all_of_equal_to(),
-                                boost::prior(*old_where),
-                                boost::prior(*old_where) + count,
-                                boost::cref(value)
-                            )
+                            boost::bind(all_of_equal_to(), first, last,
+                                    *old_where)
                         )
                     );
                     BOOST_CONTRACT_ASSERT_AXIOM(!valid(where, end()));
