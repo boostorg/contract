@@ -1,0 +1,52 @@
+8
+
+dir
+50
+https://dbcpp.svn.sourceforge.net/svnroot/dbcpp/example/OO_SW_Construction/Stack4
+https://dbcpp.svn.sourceforge.net/svnroot/dbcpp
+
+
+
+2009-04-14T01:48:10.046026Z
+48
+lcaminiti
+
+
+svn:special svn:externals svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+99c725d5-dada-466e-881d-4cbda9df124f
+
+Stack4.hpp
+file
+
+
+
+
+2009-04-19T14:08:36.000000Z
+65efee9f300b1368bb938d6bcd439d77
+2009-04-12T21:42:02.858555Z
+47
+lcaminiti
+
+main.cpp
+file
+
+
+
+
+2009-04-19T14:08:36.000000Z
+ef1af6f8ac8454e1730c5b51329708bc
+2009-04-14T01:48:10.046026Z
+48
+lcaminiti
+

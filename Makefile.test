@@ -1,0 +1,91 @@
+# $Id$ #
+
+def:=-DDBC_ALL -DDBC_CONFIG_LOG_LEVEL=DBC_LOG_LEVEL_ALL
+
+inc:=-I./include
+src:=./test
+build:=./build/test
+bin:=./bin
+codedoc:=./codedoc/test
+
+
+all: Construction Subcontracting Operators Checking doc
+
+clean:
+	rm -rf $(build)
+
+force_:
+
+
+Construction: construction
+
+construction: force_
+	mkdir -p $(build)
+	g++ -Wall $(inc) $(def) $(src)/Construction/construction.cpp -o $(build)/construction
+
+
+Subcontracting: base_class base_template class_subcontracts_template template_subcontracts_template
+
+base_class: force_
+	mkdir -p $(build)
+	g++ -Wall $(inc) $(def) $(src)/Subcontracting/base_class.cpp -o $(build)/base_class
+
+class_subcontracts_class: force_
+	mkdir -p $(build)
+	g++ -Wall $(inc) $(def) $(src)/Subcontracting/class_subcontracts_class.cpp -o $(build)/class_subcontracts_class
+
+template_subcontracts_class: force_
+	mkdir -p $(build)
+	g++ -Wall $(inc) $(def) $(src)/Subcontracting/template_subcontracts_class.cpp -o $(build)/template_subcontracts_class
+
+base_template: force_
+	mkdir -p $(build)
+	g++ -Wall $(inc) $(def) $(src)/Subcontracting/base_template.cpp -o $(build)/base_template
+
+class_subcontracts_template: force_
+	mkdir -p $(build)
+	g++ -Wall $(inc) $(def) $(src)/Subcontracting/class_subcontracts_template.cpp -o $(build)/class_subcontracts_template
+
+template_subcontracts_template: force_
+	mkdir -p $(build)
+	g++ -Wall $(inc) $(def) $(src)/Subcontracting/template_subcontracts_template.cpp -o $(build)/template_subcontracts_template
+
+
+Operators: operators
+
+operators: force_
+	mkdir -p $(build)
+	g++ -Wall $(inc) $(def) $(src)/Operators/operators.cpp -o $(build)/operators
+
+
+Checking: checking
+
+checking:
+	mkdir -p $(build)
+	# Compile this test with different DBC_CHECKING... levels.
+	# Verbose log DBC_CONFIG_LOG_LEVEL set by program code itself.
+	g++ -Wall $(inc) -DDBC_NO $(src)/Checking/checking.cpp -o $(build)/checking-no
+	g++ -Wall $(inc) -DDBC_ALL $(src)/Checking/checking.cpp -o $(build)/checking-all
+	# Only one at the time
+	g++ -Wall $(inc) -DDBC_CHECK_REQUIRE $(src)/Checking/checking.cpp -o $(build)/checking-require_only
+	g++ -Wall $(inc) -DDBC_CHECK_ENSURE $(src)/Checking/checking.cpp -o $(build)/checking-ensure_only
+	g++ -Wall $(inc) -DDBC_CHECK_INVARIANT $(src)/Checking/checking.cpp -o $(build)/checking-invariant_only
+	# Eiffel like combinations.
+	g++ -Wall $(inc) -DDBC_CHECK_REQUIRE $(src)/Checking/checking.cpp -o $(build)/checking-require
+	g++ -Wall $(inc) -DDBC_CHECK_REQUIRE -DDBC_CHECK_ENSURE $(src)/Checking/checking.cpp -o $(build)/checking-require_and_ensure
+	g++ -Wall $(inc) -DDBC_CHECK_REQUIRE -DDBC_CHECK_ENSURE -DDBC_CHECK_INVARIANT $(src)/Checking/checking.cpp -o $(build)/checking-require_ensure_and_invariant
+	# Code documentation.
+	g++ -Wall $(inc) -DDBC_DOC $(src)/Checking/checking.cpp -o $(build)/checking-doc
+	# Invalid combinations -- compilation must fail.
+	$(bin)/must-fail g++ -Wall $(inc) -DDBC $(src)/Checking/checking.cpp -o $(build)/checking-dbc
+	$(bin)/must-fail g++ -Wall $(inc) -DDBC_NO -DDBC_ALL $(src)/Checking/checking.cpp -o $(build)/checking-no_and_all
+	$(bin)/must-fail g++ -Wall $(inc) -DDBC_DOC -DDBC_ALL $(src)/Checking/checking.cpp -o $(build)/checking-doc_and_all
+
+
+doc: force_
+	mkdir -p $(build)
+	g++ -Wall $(inc) $(def) $(src)/Doc/doc.cpp -o $(build)/doc
+	mkdir -p $(codedoc)
+	doxygen Doxyfile.test
+
+

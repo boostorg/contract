@@ -1,0 +1,94 @@
+8
+
+dir
+50
+https://dbcpp.svn.sourceforge.net/svnroot/dbcpp/include/dbc/detail
+https://dbcpp.svn.sourceforge.net/svnroot/dbcpp
+
+
+
+2009-04-15T12:31:31.190109Z
+50
+lcaminiti
+
+
+svn:special svn:externals svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+99c725d5-dada-466e-881d-4cbda9df124f
+
+pp
+dir
+
+checking.hpp
+file
+
+
+
+
+2009-04-19T14:08:35.000000Z
+cded3e8b1d0819fea971f966234bb017
+2009-04-05T17:53:06.055766Z
+32
+lcaminiti
+
+threading
+dir
+
+fun_macro_traits.hpp
+file
+
+
+
+
+2009-04-19T14:08:35.000000Z
+7528adb7153e1bd26032a4a50e55096f
+2009-04-14T01:48:10.046026Z
+48
+lcaminiti
+
+none.hpp
+file
+
+
+
+
+2009-04-19T14:08:35.000000Z
+518c2d14c2d4c403889b8ff1c1ecd6be
+2009-04-05T17:53:06.055766Z
+32
+lcaminiti
+
+logging.hpp
+file
+
+
+
+
+2009-04-19T14:08:35.000000Z
+40741c1f5112ca9bb7eed8f1888e015d
+2009-04-10T16:01:49.881339Z
+40
+lcaminiti
+
+type_traits.hpp
+file
+
+
+
+
+2009-04-19T14:08:35.000000Z
+ef929711bcd03b9a0eaccaee1cb96d8d
+2009-04-08T01:52:51.913456Z
+37
+lcaminiti
+

@@ -1,0 +1,49 @@
+8
+
+dir
+50
+https://dbcpp.svn.sourceforge.net/svnroot/dbcpp/example
+https://dbcpp.svn.sourceforge.net/svnroot/dbcpp
+
+
+
+2009-04-15T12:31:31.190109Z
+50
+lcaminiti
+has-props
+
+svn:special svn:externals svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+99c725d5-dada-466e-881d-4cbda9df124f
+
+OO_SW_Construction
+dir
+
+CPP_Prog_Lang
+dir
+
+README.txt
+file
+
+
+
+
+2009-04-19T14:08:36.000000Z
+7d31c34a4df089e64624ddfac161c2b2
+2009-02-20T03:42:21.482029Z
+5
+lcaminiti
+
+DBC_by_Example
+dir
+

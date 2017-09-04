@@ -1,0 +1,40 @@
+8
+
+dir
+50
+https://dbcpp.svn.sourceforge.net/svnroot/dbcpp/include/dbc/detail/threading
+https://dbcpp.svn.sourceforge.net/svnroot/dbcpp
+
+
+
+2009-04-05T17:53:06.055766Z
+32
+lcaminiti
+
+
+svn:special svn:externals svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+99c725d5-dada-466e-881d-4cbda9df124f
+
+sync.hpp
+file
+
+
+
+
+2009-04-19T14:08:35.000000Z
+dd4a6899f7186f6b8d7889059040e661
+2009-04-05T17:53:06.055766Z
+32
+lcaminiti
+
