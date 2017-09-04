@@ -1,0 +1,54 @@
+
+Begin program:
+#876 0x0804948c in main () at ./test/Subcontracting/class_subcontracts_class.cpp:7
+
+Call to f(x) on an instance of derived:
+#875 0x08050386 in derived::f (this=0xffd3bb38, x=@0xffd3bb4c) at ./test/Subcontracting/class_subcontracts_class.hpp:12
+
+Check invariant
+#874 0x0804ebca in dbc::fun<int, int const&, dbc::none_, dbc::none_>::mem<derived const, base::dbc_f_x>::operator() (this=0xffd3bae4, self=@0xffd3bb38,
+    body=&virtual derived::dbc_body_f_(int const&) const, arg0=@0xffd3bb4c, the_fun_name=@0xffd3baf8) at ./include/dbc/fun.hpp:228
+
+Check requires contract:
+#873 0x0804e93a in dbc::fun<int, int const&, dbc::none_, dbc::none_>::mem<derived const, base::dbc_f_x>::call (this=0xffd3bae4, self=@0xffd3bb38,
+    body=&virtual derived::dbc_body_f_(int const&) const, arg0=@0xffd3bb4c, the_fun_name=@0xffd3baf8, pre_invariant_check=@0xffd3ba97,
+    require_check=@0xffd3ba96, post_invariant_check=@0xffd3ba95, ensure_check=@0xffd3ba94) at ./include/dbc/fun.hpp:465
+
+Run actual body of DBC, which calls base's f(x):
+#872 0x0804a1bc in derived::dbc_body_f_ (this=0xffd3bb38, x=@0xffd3bb4c) at ./test/Subcontracting/class_subcontracts_class.hpp:28
+
+Call to f(x) on base class:
+#871 0x0804a126 in base::f (this=0xffd3bb38, x=@0xffd3bb4c) at ./test/Subcontracting/base_class.hpp:11	
+
+Check invariant (skips because it's nested):
+#870 0x0804d5be in dbc::fun<int, int const&, dbc::none_, dbc::none_>::mem<base const, dbc::fun<int, int const&, dbc::none_, dbc::none_>::no_base<base const> >::operator() (this=0xffd3b844, self=@0xffd3bb38, body=&virtual base::dbc_body_f_(int const&) const, arg0=@0xffd3bb4c, the_fun_name=@0xffd3b858)
+    at ./include/dbc/fun.hpp:228
+
+Check requires on base:
+#869 0x0804d32e in dbc::fun<int, int const&, dbc::none_, dbc::none_>::mem<base const, dbc::fun<int, int const&, dbc::none_, dbc::none_>::no_base<base const> >::call (this=0xffd3b844, self=@0xffd3bb38, body=&virtual base::dbc_body_f_(int const&) const, arg0=@0xffd3bb4c, the_fun_name=@0xffd3b858,
+    pre_invariant_check=@0xffd3b7f7, require_check=@0xffd3b7f6, post_invariant_check=@0xffd3b7f5, ensure_check=@0xffd3b7f4) at ./include/dbc/fun.hpp:465
+
+PROBLEM: base's f(x) is defined as: { return dbc_f_x()(*this, &base::DBC_BODY(f), x, "f"); } - but since dbc_f_x() is getting a reference to the function, it follows the
+trail of virtual inheritance and actually calls derived's f(x):
+#868 0x0804a1bc in derived::dbc_body_f_ (this=0xffd3bb38, x=@0xffd3bb4c) at ./test/Subcontracting/class_subcontracts_class.hpp:28	
+
+We ran derived's body, so now we're back at base and the recursion begins:
+#867 0x0804a126 in base::f (this=0xffd3bb38, x=@0xffd3bb4c) at ./test/Subcontracting/base_class.hpp:11
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

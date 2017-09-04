@@ -1,0 +1,72 @@
+# $Id$ #
+
+def:=-DDBC_ALL -DDBC_CONFIG_LOG_LEVEL=DBC_LOG_LEVEL_ALL
+
+inc:=-I./include
+src:=./example
+build:=./build/example
+codedoc:=./codedoc/example
+
+all: DBC_by_Example OO_SW_Construction CPP_Prog_Lang doc
+
+clean:
+	rm -rf build
+
+force_:
+
+Str: str str_codeapi
+str: force_
+	mkdir -p $(build)
+	# Always compile with these -D (don't use 'def') -- this is how compiled in documentation text.
+	g++ -Wall $(inc) -DDBC_ALL -DDBC_CONFIG_LOG_LEVEL=DBC_LOG_LEVEL_ALL $(src)/str/str.cpp -o $(build)/str
+str_codeapi: force_
+	mkdir -p $(build)
+	# Always compile with these -D (don't use 'def') -- this is how compiled in documentation text.
+	g++ -Wall $(inc) -DDBC_ALL -DDBC_CONFIG_LOG_LEVEL=DBC_LOG_LEVEL_ALL $(src)/str/str-codeapi.cpp -o $(build)/str-codeapi
+
+DBC_by_Example: CustomerManager Stack Dictionary SimpleQueue Courier NameList Observer Counter
+CustomerManager: force_
+	mkdir -p $(build)
+	g++ -Wall $(inc) $(def) $(src)/DBC_by_Example/CustomerManager/CustomerManager.cpp $(src)/DBC_by_Example/CustomerManager/main.cpp -o $(build)/CustomerManager
+Stack: force_
+	mkdir -p $(build)
+	g++ -Wall $(inc) $(def) $(src)/DBC_by_Example/Stack/main.cpp -o $(build)/Stack
+Dictionary: force_
+	mkdir -p $(build)
+	g++ -Wall $(inc) $(def) $(src)/DBC_by_Example/Dictionary/main.cpp -o $(build)/Dictionary
+SimpleQueue: force_
+	mkdir -p $(build)
+	g++ -Wall $(inc) $(def) $(src)/DBC_by_Example/SimpleQueue/main.cpp -o $(build)/SimpleQueue
+Courier: force_
+	mkdir -p $(build)
+	g++ -Wall $(inc) $(def) $(src)/DBC_by_Example/Courier/couriers.cpp $(src)/DBC_by_Example/Courier/main.cpp -o $(build)/Courier
+NameList: force_
+	mkdir -p $(build)
+	g++ -Wall $(inc) $(def) $(src)/DBC_by_Example/NameList/names.cpp $(src)/DBC_by_Example/NameList/main.cpp -o $(build)/NameList
+Observer: force_
+	mkdir -p $(build)
+	g++ -Wall $(inc) $(def) $(src)/DBC_by_Example/Observer/main.cpp -o $(build)/Observer
+Counter: force_
+	mkdir -p $(build)
+	g++ -Wall $(inc) $(def) $(src)/DBC_by_Example/Counter/main.cpp -o $(build)/Counter
+
+OO_SW_Construction: Gcd Stack4 Stack3
+Gcd: force_
+	mkdir -p $(build)
+	g++ -Wall $(inc) $(def) $(src)/OO_SW_Construction/Gcd/main.cpp -o $(build)/Gcd
+Stack4: force_
+	mkdir -p $(build)
+	g++ -Wall $(inc) $(def) $(src)/OO_SW_Construction/Stack4/main.cpp -o $(build)/Stack4
+Stack3: force_
+	mkdir -p $(build)
+	g++ -Wall $(inc) $(def) $(src)/OO_SW_Construction/Stack3/main.cpp -o $(build)/Stack3
+
+CPP_Prog_Lang: String
+String: force_
+	mkdir -p $(build)
+	g++ -Wall $(inc) $(def) $(src)/CPP_Prog_Lang/String/main.cpp -o $(build)/String
+
+doc: force_
+	mkdir -p $(codedoc)
+	doxygen codedoc/Doxyfile.example
+

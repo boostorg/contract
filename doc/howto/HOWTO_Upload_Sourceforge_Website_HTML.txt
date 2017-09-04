@@ -1,0 +1,18 @@
+HOWTO - Upload Sourceforce Website HTML
+=======================================
+
+Explains how to upload HTML files to Soruceforce project website.
+
+1.  Go to directory with HTML files to be uploaded.
+    $ cd doc/html
+2.  Secure FTP to website location.
+    [doc/html]$ sftp lcaminiti,dbcpp@web.sourceforge.net
+3.  Go to 'htdocs' directory and upload all HTML files (this is NOT recursive, 
+    so you have to manually do
+    > cd htdocs
+    > put *
+5.  Do the same 'str' subdirectory (if you need to create the subdirectory,
+    use the FTP `mkdir' command).
+    > cd str
+    > put str/*
+

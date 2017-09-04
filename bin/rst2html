@@ -1,0 +1,20 @@
+#!/bin/bash
+
+# On some installations rst2html is called rst2html.py. This scripts selects
+# the correct one.
+
+which rst2html &> /dev/null
+if [ $? -eq 0 ]; then
+    rst2html $*
+    exit $?
+fi
+
+which rst2html.py &> /dev/null
+if [ $? -eq 0 ]; then
+    rst2html.py $*
+    exit $?
+fi
+
+echo "ERROR: Unable to find rst2html (or rst2html.py) -- make sure it is installed and it is in your path"
+exit 1
+
