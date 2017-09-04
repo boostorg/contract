@@ -1,1 +1,0 @@
-Implemented examples from book "Design by Contract, by Example", R. Mitchell, and J. McKim.

@@ -1,7 +1,0 @@
-To install run `make install'.
-
-The library is composed of C/C++ header files only and does not need to be
-built. The library files are contained in the "include/" directory and they are:
-    "include/dbc.hpp"   Main file that includes entire library.
-    "include/dbc/*"     All other header files that implement the library.
-

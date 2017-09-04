@@ -1,3 +1,0 @@
-Copyright (C) 2009 Lorenzo Caminiti.
-Distributed under DBC++ Software License, Version 1.0 (see LICENSE_1_0.txt).
-
