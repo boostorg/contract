@@ -1,0 +1,120 @@
+
+#ifndef DBC_FUN_MACRO_TRATIS_HPP_
+#define DBC_FUN_MACRO_TRATIS_HPP_
+
+#include "../post.hpp"
+#include "pp/fun_traits.hpp"
+#include "type_traits.hpp"
+#include <boost/preprocessor.hpp>
+
+// Argument names.
+
+#define DBC_FUN_GET_ARG_NAME_OP_(z, n, f) \
+    DBC_PP_FUN_GET_ARG_NAME_(DBC_PP_FUN_GET_ARG_(n, f))
+
+#define DBC_FUN_GET_TRAILING_ARG_NAMES_(f) \
+    BOOST_PP_COMMA_IF(DBC_PP_FUN_HAS_ARGS_(f)) \
+    BOOST_PP_ENUM(BOOST_PP_SEQ_SIZE(DBC_PP_FUN_GET_ARGS_(f)), \
+            DBC_FUN_GET_ARG_NAME_OP_, f)
+
+// Argument types.
+
+#define DBC_FUN_GET_ARG_TYPE_OP_(z, n, f) \
+    DBC_PP_FUN_GET_ARG_COPYABLE_TYPE_(DBC_PP_FUN_GET_ARG_(n, f))
+
+#define DBC_FUN_GET_ARG_TYPES_(f) \
+    BOOST_PP_COMMA_IF(DBC_PP_FUN_HAS_ARGS_(f)) \
+    BOOST_PP_ENUM(BOOST_PP_SEQ_SIZE(DBC_PP_FUN_GET_ARGS_(f)), \
+            DBC_FUN_GET_ARG_TYPE_OP_, f)
+
+// Body's arguments.
+
+#define DBC_FUN_GET_BODY_ARG_OP_(z, n, f) \
+    DBC_PP_FUN_GET_ARG_TYPE_(DBC_PP_FUN_GET_ARG_(n, f)) \
+    DBC_PP_FUN_GET_ARG_NAME_(DBC_PP_FUN_GET_ARG_(n, f))
+
+#define DBC_FUN_GET_BODY_ARGS_(f) \
+    BOOST_PP_ENUM(BOOST_PP_SEQ_SIZE(DBC_PP_FUN_GET_ARGS_(f)), \
+            DBC_FUN_GET_BODY_ARG_OP_, f)
+
+// Require's arguments.
+
+#define DBC_FUN_GET_MEM_REQUIRE_ARG_OP_(z, n, f) \
+    DBC_ADD_CONST_REF_(DBC_PP_FUN_GET_TYPENAME_(f), \
+            DBC_PP_FUN_GET_ARG_TYPE_(DBC_PP_FUN_GET_ARG_(n, f))) \
+    DBC_PP_FUN_GET_ARG_NAME_(DBC_PP_FUN_GET_ARG_(n, f))
+
+#define DBC_FUN_GET_MEM_REQUIRE_ARGS_(f) \
+    /* self */ \
+    DBC_ADD_CONST_REF_(DBC_PP_FUN_GET_TYPENAME_(f), \
+            DBC_PP_FUN_GET_CLASS_TYPE_(f)) \
+    self \
+    /* args (if any) */ \
+    BOOST_PP_COMMA_IF(DBC_PP_FUN_HAS_ARGS_(f)) \
+    BOOST_PP_ENUM(BOOST_PP_SEQ_SIZE(DBC_PP_FUN_GET_ARGS_(f)), \
+            DBC_FUN_GET_MEM_REQUIRE_ARG_OP_, f)
+
+// Ensure's arguments.
+
+#define DBC_FUN_GET_MEM_ENSURE_ARG_OP_(z, n, f) \
+    DBC_ADD_POST_CONST_REF_(DBC_PP_FUN_GET_TYPENAME_(f), \
+            DBC_PP_FUN_GET_ARG_COPYABLE_TYPE_( \
+            DBC_PP_FUN_GET_ARG_(n, f))) \
+    DBC_PP_FUN_GET_ARG_NAME_(DBC_PP_FUN_GET_ARG_(n, f))
+
+#define DBC_FUN_GET_MEM_ENSURE_ARGS_(f) \
+    /* post<> self */ \
+    DBC_ADD_POST_CONST_REF_(DBC_PP_FUN_GET_TYPENAME_(f), \
+            DBC_PP_FUN_GET_CONST_CLASS_COPYABLE_TYPE_(f)) \
+    self \
+    /* post<> args (if any) */ \
+    BOOST_PP_COMMA_IF(DBC_PP_FUN_HAS_ARGS_(f)) \
+    BOOST_PP_ENUM(BOOST_PP_SEQ_SIZE(DBC_PP_FUN_GET_ARGS_(f)), \
+            DBC_FUN_GET_MEM_ENSURE_ARG_OP_, f) \
+    /* result (if non-void) */ \
+    BOOST_PP_COMMA_IF(BOOST_PP_NOT(DBC_PP_FUN_IS_VOID_(f))) \
+    BOOST_PP_IF(DBC_PP_FUN_IS_VOID_(f), BOOST_PP_EMPTY(), \
+            DBC_ADD_CONST_REF_(DBC_PP_FUN_GET_TYPENAME_(f), \
+            DBC_PP_FUN_GET_RESULT_TYPE_(f)) result)
+
+// Contract name.
+
+/** Postfix arg-names allow to somewhat handle fun overloading. */
+#define DBC_FUN_GET_CONTRACT_NAME_OP_(s, state, arg) \
+    BOOST_PP_CAT(state, BOOST_PP_CAT(DBC_PP_FUN_GET_ARG_NAME_(arg), _))
+
+#define DBC_FUN_GET_CONTRACT_NAME_(f) \
+    BOOST_PP_CAT(dbc_contract_, \
+        BOOST_PP_CAT(DBC_PP_FUN_GET_NAME_(f), BOOST_PP_CAT(_, \
+        BOOST_PP_IF(BOOST_PP_SEQ_SIZE(DBC_PP_FUN_GET_ARGS_(f)), \
+            BOOST_PP_SEQ_FOLD_LEFT, BOOST_PP_TUPLE_EAT(3) \
+        )(DBC_FUN_GET_CONTRACT_NAME_OP_, , DBC_PP_FUN_GET_ARGS_(f)) \
+    ))) \
+                
+// Contract type.
+
+#define DBC_FUN_GET_MEM_CONTRACT_TYPE_(f, inner_contract_type) \
+    ::dbc::fun< DBC_PP_FUN_GET_RESULT_TYPE_(f) \
+    DBC_FUN_GET_ARG_TYPES_(f) >:: DBC_PP_FUN_GET_TEMPLATE_(f) \
+    inner_contract_type< DBC_PP_FUN_GET_CONST_CLASS_COPYABLE_TYPE_(f) \
+            /* base contract (if any) */ \
+            BOOST_PP_COMMA_IF(DBC_PP_FUN_IS_DERIVED_(f)) \
+            BOOST_PP_IF(DBC_PP_FUN_IS_DERIVED_(f), \
+                DBC_PP_FUN_GET_TYPENAME_(f) \
+                DBC_PP_FUN_GET_BASE_TYPE_(f) \
+                :: DBC_FUN_GET_CONTRACT_NAME_(f) \
+            , /* else (no base contract) */ \
+                BOOST_PP_EMPTY()) \
+    > \
+    BOOST_PP_IF(DBC_PP_FUN_IS_TEMPLATE_(f), ::this_type, BOOST_PP_EMPTY())
+
+// Base contract type.
+
+#define DBC_FUN_GET_MEM_BASE_CONTRACT_TYPE_(f) \
+    BOOST_PP_IF(DBC_PP_FUN_IS_DERIVED_(f), \
+        DBC_PP_FUN_GET_TYPENAME_(f) DBC_PP_FUN_GET_BASE_TYPE_(f) \
+        :: DBC_FUN_GET_CONTRACT_NAME_(f) ::class_type \
+    , BOOST_PP_EMPTY())
+
+#endif // DBC_FUN_MACRO_TRATIS_HPP_
+
