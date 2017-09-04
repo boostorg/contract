@@ -1,0 +1,408 @@
+BODY.drag {
+	CURSOR: move
+}
+TH.active IMG {
+	DISPLAY: inline
+}
+TR.even {
+	PADDING-RIGHT: 0.6em; PADDING-LEFT: 0.6em; PADDING-BOTTOM: 0.1em; PADDING-TOP: 0.1em; BORDER-BOTTOM: #ccc 1px solid; BACKGROUND-COLOR: #eee
+}
+TR.odd {
+	PADDING-RIGHT: 0.6em; PADDING-LEFT: 0.6em; PADDING-BOTTOM: 0.1em; PADDING-TOP: 0.1em; BORDER-BOTTOM: #ccc 1px solid; BACKGROUND-COLOR: #eee
+}
+TR.drag {
+	BACKGROUND-COLOR: #fffff0
+}
+TR.drag-previous {
+	BACKGROUND-COLOR: #ffd
+}
+TD.active {
+	BACKGROUND-COLOR: #ddd
+}
+TD.checkbox {
+	TEXT-ALIGN: center
+}
+TH.checkbox {
+	TEXT-ALIGN: center
+}
+TBODY {
+	BORDER-TOP: #ccc 1px solid
+}
+TBODY TH {
+	BORDER-BOTTOM: #ccc 1px solid
+}
+THEAD TH {
+	PADDING-RIGHT: 1em; BORDER-BOTTOM: #ccc 3px solid; TEXT-ALIGN: left
+}
+.breadcrumb {
+	PADDING-BOTTOM: 0.5em
+}
+DIV.indentation {
+	PADDING-RIGHT: 0px; PADDING-LEFT: 0.6em; FLOAT: left; PADDING-BOTTOM: 0.42em; MARGIN: -0.4em 0.2em -0.4em -0.4em; WIDTH: 20px; PADDING-TOP: 0.42em; HEIGHT: 1.7em
+}
+DIV.tree-child {
+	BACKGROUND: url(../../misc/tree.png) no-repeat 11px center
+}
+DIV.tree-child-last {
+	BACKGROUND: url(../../misc/tree-bottom.png) no-repeat 11px center
+}
+DIV.tree-child-horizontal {
+	BACKGROUND: url(../../misc/tree.png) no-repeat -11px center
+}
+.error {
+	COLOR: #e55
+}
+DIV.error {
+	BORDER-RIGHT: #d77 1px solid; BORDER-TOP: #d77 1px solid; BORDER-LEFT: #d77 1px solid; BORDER-BOTTOM: #d77 1px solid
+}
+DIV.error {
+	PADDING-RIGHT: 2px; PADDING-LEFT: 2px; BACKGROUND: #fcc; PADDING-BOTTOM: 2px; COLOR: #200; PADDING-TOP: 2px
+}
+TR.error {
+	PADDING-RIGHT: 2px; PADDING-LEFT: 2px; BACKGROUND: #fcc; PADDING-BOTTOM: 2px; COLOR: #200; PADDING-TOP: 2px
+}
+.warning {
+	COLOR: #e09010
+}
+DIV.warning {
+	BORDER-RIGHT: #f0c020 1px solid; BORDER-TOP: #f0c020 1px solid; BORDER-LEFT: #f0c020 1px solid; BORDER-BOTTOM: #f0c020 1px solid
+}
+DIV.warning {
+	PADDING-RIGHT: 2px; PADDING-LEFT: 2px; BACKGROUND: #ffd; PADDING-BOTTOM: 2px; COLOR: #220; PADDING-TOP: 2px
+}
+TR.warning {
+	PADDING-RIGHT: 2px; PADDING-LEFT: 2px; BACKGROUND: #ffd; PADDING-BOTTOM: 2px; COLOR: #220; PADDING-TOP: 2px
+}
+.ok {
+	COLOR: #008000
+}
+DIV.ok {
+	BORDER-RIGHT: #00aa00 1px solid; BORDER-TOP: #00aa00 1px solid; BORDER-LEFT: #00aa00 1px solid; BORDER-BOTTOM: #00aa00 1px solid
+}
+DIV.ok {
+	PADDING-RIGHT: 2px; PADDING-LEFT: 2px; BACKGROUND: #dfd; PADDING-BOTTOM: 2px; COLOR: #020; PADDING-TOP: 2px
+}
+TR.ok {
+	PADDING-RIGHT: 2px; PADDING-LEFT: 2px; BACKGROUND: #dfd; PADDING-BOTTOM: 2px; COLOR: #020; PADDING-TOP: 2px
+}
+.item-list .icon {
+	CLEAR: right; PADDING-LEFT: 0.25em; FLOAT: right; COLOR: #555
+}
+.item-list .title {
+	FONT-WEIGHT: bold
+}
+.item-list UL {
+	PADDING-RIGHT: 0px; PADDING-LEFT: 0px; PADDING-BOTTOM: 0px; MARGIN: 0px 0px 0.75em; PADDING-TOP: 0px
+}
+.item-list UL LI {
+	PADDING-RIGHT: 0px; PADDING-LEFT: 0px; PADDING-BOTTOM: 0px; MARGIN: 0px 0px 0.25em 1.5em; PADDING-TOP: 0px; LIST-STYLE-TYPE: disc
+}
+OL.task-list LI.active {
+	FONT-WEIGHT: bold
+}
+.form-item {
+	MARGIN-TOP: 1em; MARGIN-BOTTOM: 1em
+}
+TR.odd .form-item {
+	MARGIN-TOP: 0px; MARGIN-BOTTOM: 0px; WHITE-SPACE: nowrap
+}
+TR.even .form-item {
+	MARGIN-TOP: 0px; MARGIN-BOTTOM: 0px; WHITE-SPACE: nowrap
+}
+TR.merge-down {
+	BORDER-BOTTOM-WIDTH: 0px! important
+}
+TR.merge-down TD {
+	BORDER-BOTTOM-WIDTH: 0px! important
+}
+TR.merge-down TH {
+	BORDER-BOTTOM-WIDTH: 0px! important
+}
+TR.merge-up {
+	BORDER-TOP-WIDTH: 0px! important
+}
+TR.merge-up TD {
+	BORDER-TOP-WIDTH: 0px! important
+}
+TR.merge-up TH {
+	BORDER-TOP-WIDTH: 0px! important
+}
+.form-item INPUT.error {
+	BORDER-RIGHT: red 2px solid; BORDER-TOP: red 2px solid; BORDER-LEFT: red 2px solid; BORDER-BOTTOM: red 2px solid
+}
+.form-item TEXTAREA.error {
+	BORDER-RIGHT: red 2px solid; BORDER-TOP: red 2px solid; BORDER-LEFT: red 2px solid; BORDER-BOTTOM: red 2px solid
+}
+.form-item SELECT.error {
+	BORDER-RIGHT: red 2px solid; BORDER-TOP: red 2px solid; BORDER-LEFT: red 2px solid; BORDER-BOTTOM: red 2px solid
+}
+.form-item .description {
+	FONT-SIZE: 0.85em
+}
+.form-item LABEL {
+	DISPLAY: block; FONT-WEIGHT: bold
+}
+.form-item LABEL.option {
+	DISPLAY: inline; FONT-WEIGHT: normal
+}
+.form-checkboxes {
+	MARGIN: 1em 0px
+}
+.form-radios {
+	MARGIN: 1em 0px
+}
+.form-checkboxes .form-item {
+	MARGIN-TOP: 0.4em; MARGIN-BOTTOM: 0.4em
+}
+.form-radios .form-item {
+	MARGIN-TOP: 0.4em; MARGIN-BOTTOM: 0.4em
+}
+.marker {
+	COLOR: #f00
+}
+.form-required {
+	COLOR: #f00
+}
+.more-link {
+	TEXT-ALIGN: right
+}
+.more-help-link {
+	FONT-SIZE: 0.85em; TEXT-ALIGN: right
+}
+.nowrap {
+	WHITE-SPACE: nowrap
+}
+.item-list .pager {
+	CLEAR: both; TEXT-ALIGN: center
+}
+.item-list .pager LI {
+	PADDING-RIGHT: 0.5em; DISPLAY: inline; PADDING-LEFT: 0.5em; BACKGROUND-IMAGE: none; PADDING-BOTTOM: 0.5em; PADDING-TOP: 0.5em; LIST-STYLE-TYPE: none
+}
+.pager-current {
+	FONT-WEIGHT: bold
+}
+.tips {
+	MARGIN-TOP: 0px; FONT-SIZE: 0.9em; MARGIN-BOTTOM: 0px; PADDING-BOTTOM: 0px; PADDING-TOP: 0px
+}
+DL.multiselect DD.b {
+	WIDTH: 14em; FONT-FAMILY: inherit
+}
+DL.multiselect DD.b .form-item {
+	WIDTH: 14em; FONT-FAMILY: inherit
+}
+DL.multiselect DD.b SELECT {
+	WIDTH: 14em; FONT-FAMILY: inherit
+}
+DL.multiselect DD.a {
+	WIDTH: 8em
+}
+DL.multiselect DD.a .form-item {
+	WIDTH: 8em
+}
+DL.multiselect DT {
+	PADDING-RIGHT: 0px; PADDING-LEFT: 0px; FLOAT: left; PADDING-BOTTOM: 0px; MARGIN: 0px 1em 0px 0px; LINE-HEIGHT: 1.75em; PADDING-TOP: 0px
+}
+DL.multiselect DD {
+	PADDING-RIGHT: 0px; PADDING-LEFT: 0px; FLOAT: left; PADDING-BOTTOM: 0px; MARGIN: 0px 1em 0px 0px; LINE-HEIGHT: 1.75em; PADDING-TOP: 0px
+}
+DL.multiselect .form-item {
+	MARGIN: 0px; HEIGHT: 1.75em
+}
+.container-inline DIV {
+	DISPLAY: inline
+}
+.container-inline LABEL {
+	DISPLAY: inline
+}
+UL.primary {
+	PADDING-RIGHT: 0px; PADDING-LEFT: 1em; PADDING-BOTTOM: 0px; MARGIN: 5px; LINE-HEIGHT: normal; PADDING-TOP: 0px; BORDER-BOTTOM: #bbb 1px solid; WHITE-SPACE: nowrap; LIST-STYLE-TYPE: none; BORDER-COLLAPSE: collapse; HEIGHT: auto
+}
+UL.primary LI {
+	DISPLAY: inline
+}
+UL.primary LI A {
+	BORDER-RIGHT: #bbb 1px solid; PADDING-RIGHT: 1em; BORDER-TOP: #bbb 1px solid; PADDING-LEFT: 1em; PADDING-BOTTOM: 0px; BORDER-LEFT: #bbb 1px solid; MARGIN-RIGHT: 0.5em; PADDING-TOP: 0px; BORDER-BOTTOM: #bbb 1px; HEIGHT: auto; BACKGROUND-COLOR: #ddd; TEXT-DECORATION: none
+}
+UL.primary LI.active A {
+	BORDER-RIGHT: #bbb 1px solid; BORDER-TOP: #bbb 1px solid; BORDER-LEFT: #bbb 1px solid; BORDER-BOTTOM: #fff 1px solid; BACKGROUND-COLOR: #fff
+}
+UL.primary LI A:hover {
+	BORDER-LEFT-COLOR: #ccc; BORDER-BOTTOM-COLOR: #eee; BORDER-TOP-COLOR: #ccc; BACKGROUND-COLOR: #eee; BORDER-RIGHT-COLOR: #ccc
+}
+UL.secondary {
+	PADDING-RIGHT: 1em; PADDING-LEFT: 1em; PADDING-BOTTOM: 0.5em; MARGIN: 5px; PADDING-TOP: 0.5em; BORDER-BOTTOM: #bbb 1px solid
+}
+UL.secondary LI {
+	BORDER-RIGHT: #ccc 1px solid; PADDING-RIGHT: 1em; DISPLAY: inline; PADDING-LEFT: 1em; PADDING-BOTTOM: 0px; PADDING-TOP: 0px
+}
+UL.secondary A {
+	PADDING-RIGHT: 0px; PADDING-LEFT: 0px; PADDING-BOTTOM: 0px; PADDING-TOP: 0px; TEXT-DECORATION: none
+}
+UL.secondary A.active {
+	BORDER-BOTTOM: #999 4px solid
+}
+#autocomplete {
+	BORDER-RIGHT: 1px solid; BORDER-TOP: 1px solid; Z-INDEX: 100; OVERFLOW: hidden; BORDER-LEFT: 1px solid; BORDER-BOTTOM: 1px solid; POSITION: absolute
+}
+#autocomplete UL {
+	PADDING-RIGHT: 0px; PADDING-LEFT: 0px; PADDING-BOTTOM: 0px; MARGIN: 0px; PADDING-TOP: 0px; LIST-STYLE-TYPE: none
+}
+#autocomplete LI {
+	BACKGROUND: #fff; CURSOR: default; COLOR: #000; WHITE-SPACE: pre
+}
+#autocomplete LI.selected {
+	BACKGROUND: #0072b9; COLOR: #fff
+}
+HTML.js INPUT.form-autocomplete {
+	BACKGROUND-POSITION: 100% 2px; BACKGROUND-IMAGE: url(../../misc/throbber.gif); BACKGROUND-REPEAT: no-repeat
+}
+HTML.js INPUT.throbbing {
+	BACKGROUND-POSITION: 100% -18px
+}
+HTML.js FIELDSET.collapsed {
+	BORDER-LEFT-WIDTH: 0px; BORDER-BOTTOM-WIDTH: 0px; MARGIN-BOTTOM: 0px; HEIGHT: 1em; BORDER-RIGHT-WIDTH: 0px
+}
+HTML.js FIELDSET.collapsed  {
+	DISPLAY: none
+}
+HTML.js FIELDSET.collapsed LEGEND {
+	DISPLAY: block
+}
+HTML.js FIELDSET.collapsible LEGEND A {
+	PADDING-LEFT: 15px; BACKGROUND: url(../../misc/menu-expanded.png) no-repeat 5px 75%
+}
+HTML.js FIELDSET.collapsed LEGEND A {
+	BACKGROUND-POSITION: 5px 50%; BACKGROUND-IMAGE: url(../../misc/menu-collapsed.png)
+}
+ HTML.js FIELDSET.collapsed LEGEND {
+	DISPLAY: inline
+}
+ HTML.js FIELDSET.collapsed LEGEND  {
+	DISPLAY: inline
+}
+ HTML.js FIELDSET.collapsed TABLE  {
+	DISPLAY: inline
+}
+HTML.js FIELDSET.collapsible {
+	POSITION: relative
+}
+HTML.js FIELDSET.collapsible LEGEND A {
+	DISPLAY: block
+}
+HTML.js FIELDSET.collapsible .fieldset-wrapper {
+	OVERFLOW: auto
+}
+.resizable-textarea {
+	WIDTH: 95%
+}
+.resizable-textarea .grippie {
+	BORDER-RIGHT: #ddd 1px solid; BORDER-TOP: #ddd 0px solid; BACKGROUND: url(../../misc/grippie.png) #eee no-repeat center 2px; OVERFLOW: hidden; BORDER-LEFT: #ddd 1px solid; CURSOR: s-resize; BORDER-BOTTOM: #ddd 1px solid; HEIGHT: 9px
+}
+HTML.js .resizable-textarea TEXTAREA {
+	DISPLAY: block; MARGIN-BOTTOM: 0px; WIDTH: 100%
+}
+.draggable A.tabledrag-handle {
+	PADDING-RIGHT: 1.5em; PADDING-LEFT: 0.5em; FLOAT: left; PADDING-BOTTOM: 0.42em; MARGIN: -0.4em 0px -0.4em -0.5em; CURSOR: move; PADDING-TOP: 0.42em; HEIGHT: 1.7em; TEXT-DECORATION: none
+}
+A.tabledrag-handle:hover {
+	TEXT-DECORATION: none
+}
+A.tabledrag-handle .handle {
+	MARGIN-TOP: 4px; BACKGROUND: url(../../misc/draggable.png) no-repeat 0px 0px; WIDTH: 13px; HEIGHT: 13px
+}
+A.tabledrag-handle-hover .handle {
+	BACKGROUND-POSITION: 0px -20px
+}
+UNKNOWN {
+	BACKGROUND-POSITION: center 1px; MARGIN-BOTTOM: -2px; HEIGHT: 5px
+}
+.teaser-checkbox {
+	PADDING-TOP: 1px
+}
+DIV.teaser-button-wrapper {
+	PADDING-RIGHT: 5%; FLOAT: right; MARGIN: 0px
+}
+.teaser-checkbox DIV.form-item {
+	PADDING-RIGHT: 0px; PADDING-LEFT: 0px; FLOAT: right; PADDING-BOTTOM: 0px; MARGIN: 0px 5% 0px 0px; PADDING-TOP: 0px
+}
+TEXTAREA.teaser {
+	DISPLAY: none
+}
+HTML.js .no-js {
+	DISPLAY: none
+}
+.progress {
+	FONT-WEIGHT: bold
+}
+.progress .bar {
+	BORDER-RIGHT: #00375a 1px solid; BORDER-TOP: #00375a 1px solid; BACKGROUND: url(../../misc/progress.gif) #fff; MARGIN: 0px 0.2em; BORDER-LEFT: #00375a 1px solid; BORDER-BOTTOM: #00375a 1px solid; HEIGHT: 1.5em
+}
+.progress .filled {
+	BACKGROUND: #0072b9; WIDTH: 0%; BORDER-BOTTOM: #004a73 0.5em solid; HEIGHT: 1em
+}
+.progress .percentage {
+	FLOAT: right
+}
+.progress-disabled {
+	FLOAT: left
+}
+.ahah-progress {
+	FLOAT: left
+}
+.ahah-progress .throbber {
+	BACKGROUND: url(../../misc/throbber.gif) no-repeat 0px -18px; FLOAT: left; MARGIN: 2px; WIDTH: 15px; HEIGHT: 15px
+}
+TR .ahah-progress .throbber {
+	MARGIN: 0px 2px
+}
+.ahah-progress-bar {
+	WIDTH: 16em
+}
+#first-time STRONG {
+	PADDING-RIGHT: 0px; DISPLAY: block; PADDING-LEFT: 0px; PADDING-BOTTOM: 0.5em; PADDING-TOP: 1.5em
+}
+TR.selected TD {
+	BACKGROUND: #ffc
+}
+TABLE.sticky-header {
+	MARGIN-TOP: 0px; BACKGROUND: #fff
+}
+.install#clean-url {
+	DISPLAY: none
+}
+HTML.js .js-hide {
+	DISPLAY: none
+}
+#system-modules DIV.incompatible {
+	FONT-WEIGHT: bold
+}
+#system-themes-form DIV.incompatible {
+	FONT-WEIGHT: bold
+}
+SPAN.password-strength {
+	VISIBILITY: hidden
+}
+INPUT.password-field {
+	MARGIN-RIGHT: 10px
+}
+DIV.password-description {
+	PADDING-RIGHT: 2px; PADDING-LEFT: 2px; FONT-SIZE: 0.85em; PADDING-BOTTOM: 0px; MARGIN: 4px 0px 0px; PADDING-TOP: 0px; max-width: 500px
+}
+DIV.password-description UL {
+	MARGIN-BOTTOM: 0px
+}
+.password-parent {
+	MARGIN: 0px
+}
+INPUT.password-confirm {
+	MARGIN-RIGHT: 10px
+}
+.confirm-parent {
+	MARGIN: 5px 0px 0px
+}
+SPAN.password-confirm {
+	VISIBILITY: hidden
+}
+SPAN.password-confirm SPAN {
+	FONT-WEIGHT: normal
+}

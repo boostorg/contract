@@ -1,0 +1,30 @@
+FIELDSET {
+	PADDING-RIGHT: 0.5em; PADDING-LEFT: 0.5em; MARGIN-BOTTOM: 1em; PADDING-BOTTOM: 0.5em; PADDING-TOP: 0.5em
+}
+FORM {
+	PADDING-RIGHT: 0px; PADDING-LEFT: 0px; PADDING-BOTTOM: 0px; MARGIN: 0px; PADDING-TOP: 0px
+}
+HR {
+	BORDER-RIGHT: gray 1px solid; BORDER-TOP: gray 1px solid; BORDER-LEFT: gray 1px solid; BORDER-BOTTOM: gray 1px solid; HEIGHT: 1px
+}
+IMG {
+	BORDER-TOP-WIDTH: 0px; BORDER-LEFT-WIDTH: 0px; BORDER-BOTTOM-WIDTH: 0px; BORDER-RIGHT-WIDTH: 0px
+}
+TABLE {
+	BORDER-COLLAPSE: collapse
+}
+TH {
+	PADDING-RIGHT: 1em; BORDER-BOTTOM: #ccc 3px solid; TEXT-ALIGN: left
+}
+.clear-block:unknown {
+	CLEAR: both; DISPLAY: block; VISIBILITY: hidden; HEIGHT: 0px; content: "."
+}
+.clear-block {
+	DISPLAY: inline-block
+}
+ HTML .clear-block {
+	HEIGHT: 1%
+}
+.clear-block {
+	DISPLAY: block
+}

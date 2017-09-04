@@ -1,0 +1,15 @@
+SPAN.inline-left {
+	DISPLAY: block; FLOAT: left; MARGIN: 5px 5px 5px 0px
+}
+SPAN.inline-right {
+	DISPLAY: block; FLOAT: right; MARGIN: 5px 0px 5px 5px
+}
+SPAN.inline-center {
+	DISPLAY: block; TEXT-ALIGN: center
+}
+SPAN.inline .caption {
+	DISPLAY: block
+}
+.image-clear {
+	CLEAR: both; DISPLAY: block; FONT-SIZE: 0px; MARGIN-BOTTOM: -1px; LINE-HEIGHT: 0px; HEIGHT: 1px
+}

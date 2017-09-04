@@ -1,0 +1,2153 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!-- saved from url=(0066)http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2004/n1669.html -->
+<HTML xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en"><HEAD><META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<META name="generator" content="Docutils 0.3.2: http://docutils.sourceforge.net/">
+<TITLE>Proposal to add Contract Programming to C++ (revision 1)</TITLE>
+<META name="author" content="Thorsten Ottosen">
+<META name="organization" content="Department of Computer Science, Aalborg University, and Dezide Aps">
+<META name="date" content="10th of September 2004">
+<META name="copyright" content="Thorsten Ottosen 2004. All rights reserved">
+<STYLE type="text/css"><!--
+
+/*
+:Author: David Goodger
+:Contact: goodger@users.sourceforge.net
+:date: $Date: 2004/01/12 02:49:54 $
+:version: $Revision: 1.2 $
+:copyright: This stylesheet has been placed in the public domain.
+
+Default cascading style sheet for the HTML output of Docutils.
+*/
+
+.first {
+  margin-top: 0 }
+
+.last {
+  margin-bottom: 0 }
+
+a.toc-backref {
+  text-decoration: none ;
+  color: black }
+
+dd {
+  margin-bottom: 0.5em }
+
+div.abstract {
+  margin: 2em 5em }
+
+div.abstract p.topic-title {
+  font-weight: bold ;
+  text-align: center }
+
+div.attention, div.caution, div.danger, div.error, div.hint,
+div.important, div.note, div.tip, div.warning, div.admonition {
+  margin: 2em ;
+  border: medium outset ;
+  padding: 1em }
+
+div.attention p.admonition-title, div.caution p.admonition-title,
+div.danger p.admonition-title, div.error p.admonition-title,
+div.warning p.admonition-title {
+  color: red ;
+  font-weight: bold ;
+  font-family: sans-serif }
+
+div.hint p.admonition-title, div.important p.admonition-title,
+div.note p.admonition-title, div.tip p.admonition-title,
+div.admonition p.admonition-title {
+  font-weight: bold ;
+  font-family: sans-serif }
+
+div.dedication {
+  margin: 2em 5em ;
+  text-align: center ;
+  font-style: italic }
+
+div.dedication p.topic-title {
+  font-weight: bold ;
+  font-style: normal }
+
+div.figure {
+  margin-left: 2em }
+
+div.footer, div.header {
+  font-size: smaller }
+
+div.sidebar {
+  margin-left: 1em ;
+  border: medium outset ;
+  padding: 0em 1em ;
+  background-color: #ffffee ;
+  width: 40% ;
+  float: right ;
+  clear: right }
+
+div.sidebar p.rubric {
+  font-family: sans-serif ;
+  font-size: medium }
+
+div.system-messages {
+  margin: 5em }
+
+div.system-messages h1 {
+  color: red }
+
+div.system-message {
+  border: medium outset ;
+  padding: 1em }
+
+div.system-message p.system-message-title {
+  color: red ;
+  font-weight: bold }
+
+div.topic {
+  margin: 2em }
+
+h1.title {
+  text-align: center }
+
+h2.subtitle {
+  text-align: center }
+
+hr {
+  width: 75% }
+
+ol.simple, ul.simple {
+  margin-bottom: 1em }
+
+ol.arabic {
+  list-style: decimal }
+
+ol.loweralpha {
+  list-style: lower-alpha }
+
+ol.upperalpha {
+  list-style: upper-alpha }
+
+ol.lowerroman {
+  list-style: lower-roman }
+
+ol.upperroman {
+  list-style: upper-roman }
+
+p.attribution {
+  text-align: right ;
+  margin-left: 50% }
+
+p.caption {
+  font-style: italic }
+
+p.credits {
+  font-style: italic ;
+  font-size: smaller }
+
+p.label {
+  white-space: nowrap }
+
+p.rubric {
+  font-weight: bold ;
+  font-size: larger ;
+  color: maroon ;
+  text-align: center }
+
+p.sidebar-title {
+  font-family: sans-serif ;
+  font-weight: bold ;
+  font-size: larger }
+
+p.sidebar-subtitle {
+  font-family: sans-serif ;
+  font-weight: bold }
+
+p.topic-title {
+  font-weight: bold }
+
+pre.address {
+  margin-bottom: 0 ;
+  margin-top: 0 ;
+  font-family: serif ;
+  font-size: 100% }
+
+pre.line-block {
+  font-family: serif ;
+  font-size: 100% }
+
+pre.literal-block, pre.doctest-block {
+  margin-left: 2em ;
+  margin-right: 2em ;
+  background-color: #eeeeee }
+
+span.classifier {
+  font-family: sans-serif ;
+  font-style: oblique }
+
+span.classifier-delimiter {
+  font-family: sans-serif ;
+  font-weight: bold }
+
+span.interpreted {
+  font-family: sans-serif }
+
+span.option {
+  white-space: nowrap }
+
+span.option-argument {
+  font-style: italic }
+
+span.pre {
+  white-space: pre }
+
+span.problematic {
+  color: red }
+
+table {
+  margin-top: 0.5em ;
+  margin-bottom: 0.5em }
+
+table.citation {
+  border-left: solid thin gray ;
+  padding-left: 0.5ex }
+
+table.docinfo {
+  margin: 2em 4em }
+
+table.footnote {
+  border-left: solid thin black ;
+  padding-left: 0.5ex }
+
+td, th {
+  padding-left: 0.5em ;
+  padding-right: 0.5em ;
+  vertical-align: top }
+
+th.docinfo-name, th.field-name {
+  font-weight: bold ;
+  text-align: left ;
+  white-space: nowrap }
+
+h1 tt, h2 tt, h3 tt, h4 tt, h5 tt, h6 tt {
+  font-size: 100% }
+
+tt {
+  background-color: #eeeeee }
+
+ul.auto-toc {
+  list-style-type: none }
+  
+pre{
+  BORDER-RIGHT: gray 1pt solid;
+  PADDING-RIGHT: 2pt;
+  BORDER-TOP: gray 1pt solid;
+  DISPLAY: block;
+  PADDING-LEFT: 2pt;
+  PADDING-BOTTOM: 2pt;
+  BORDER-LEFT: gray 1pt solid;
+  MARGIN-RIGHT: 32pt;
+  PADDING-TOP: 2pt;
+  BORDER-BOTTOM: gray 1pt solid;
+  FONT-FAMILY: "Courier New", Courier, mono; 
+  background-color: #EEEEEE; 
+}
+
+
+.keyword{color: #0000FF;}
+.identifier{}
+.comment{font-style: italic; color: #008000;}
+.special{color: #800040;}
+.preprocessor{color: #3F007F;}
+.string{font-style: italic; color: #666666;}
+.literal{/*font-style: italic;*/ color: #000000;}
+
+--></STYLE>
+<TITLE> </TITLE><TITLE> </TITLE><TITLE> </TITLE><TITLE> </TITLE><TITLE> </TITLE></HEAD><BODY>
+<H1 class="title">Proposal to add Contract Programming to C++ (revision 1)</H1>
+<TABLE class="docinfo" frame="void" rules="none">
+<COL class="docinfo-name">
+<COL class="docinfo-content">
+<TBODY valign="top">
+<TR><TH class="docinfo-name">Author:</TH>
+<TD>Thorsten Ottosen</TD></TR>
+<TR><TH class="docinfo-name">Contact:</TH>
+<TD><A class="first last reference" href="mailto:nesotto@cs.auc.dk">nesotto@cs.auc.dk</A></TD></TR>
+<TR><TH class="docinfo-name">Organization:</TH>
+<TD><A class="first reference" href="http://www.cs.auc.dk/">Department of Computer Science</A>, Aalborg University, and <A class="last reference" href="http://www.dezide.com/">Dezide Aps</A></TD></TR>
+<TR><TH class="docinfo-name">Date:</TH>
+<TD>10th of September 2004</TD></TR>
+<TR class="field"><TH class="docinfo-name">Number:</TH><TD class="field-body">WG21/N1669 and J16/04-0109. This proposal is a
+revision of paper <A class="reference" href="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2004/n1613.pdf">n1613</A>.</TD>
+</TR>
+<TR class="field"><TH class="docinfo-name">Working Group:</TH><TD class="field-body">Evolution</TD>
+</TR>
+<TR><TH class="docinfo-name">Copyright:</TH>
+<TD>Thorsten Ottosen 2004. All rights reserved</TD></TR>
+</TBODY>
+</TABLE>
+<DIV class="document" id="proposal-to-add-contract-programming-to-c-revision-1">
+<DIV class="abstract topic">
+<P class="topic-title">Abstract</P>
+<P>Contract Programming <A class="footnote-reference" href="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2004/n1669.html#id27" id="id1" name="id1"><SUP>1</SUP></A> is about providing the programmer with stronger tools 
+for expressing correctness arguments directly in the source code. 
+This proposal describes a small assertion sub-language 
+that unifies compile-time and run-time assertions.
+The benefits 
+are among others a higher degree of self-documenting source code,
+better design tools, 
+and easier debugging and testing.</P>
+</DIV>
+<DIV class="contents topic" id="table-of-contents">
+<P class="topic-title"><A name="table-of-contents">Table of Contents</A></P>
+<UL class="auto-toc simple">
+<LI><A class="reference" href="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2004/n1669.html#motivation" id="id36" name="id36">1&nbsp;&nbsp;&nbsp;Motivation</A></LI>
+<LI><A class="reference" href="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2004/n1669.html#the-proposal" id="id37" name="id37">2&nbsp;&nbsp;&nbsp;The proposal</A><UL class="auto-toc">
+<LI><A class="reference" href="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2004/n1669.html#assertions" id="id38" name="id38">2.1&nbsp;&nbsp;&nbsp;Assertions</A><UL class="auto-toc">
+<LI><A class="reference" href="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2004/n1669.html#static-assertions" id="id39" name="id39">2.1.1&nbsp;&nbsp;&nbsp;Static assertions</A></LI>
+<LI><A class="reference" href="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2004/n1669.html#runtime-assertions" id="id40" name="id40">2.1.2&nbsp;&nbsp;&nbsp;Runtime assertions</A></LI>
+</UL>
+</LI>
+<LI><A class="reference" href="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2004/n1669.html#function-std-old" id="id41" name="id41">2.2&nbsp;&nbsp;&nbsp;Function <TT class="literal"><SPAN class="pre">std::old()</SPAN></TT></A></LI>
+<LI><A class="reference" href="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2004/n1669.html#function-pre-and-postconditions" id="id42" name="id42">2.3&nbsp;&nbsp;&nbsp;Function pre- and postconditions</A><UL class="auto-toc">
+<LI><A class="reference" href="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2004/n1669.html#virtual-functions" id="id43" name="id43">2.3.1&nbsp;&nbsp;&nbsp;Virtual functions</A></LI>
+<LI><A class="reference" href="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2004/n1669.html#constructors" id="id44" name="id44">2.3.2&nbsp;&nbsp;&nbsp;Constructors</A></LI>
+<LI><A class="reference" href="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2004/n1669.html#destructors" id="id45" name="id45">2.3.3&nbsp;&nbsp;&nbsp;Destructors</A></LI>
+</UL>
+</LI>
+<LI><A class="reference" href="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2004/n1669.html#class-invariants" id="id46" name="id46">2.4&nbsp;&nbsp;&nbsp;Class invariants</A></LI>
+<LI><A class="reference" href="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2004/n1669.html#loop-invariants" id="id47" name="id47">2.5&nbsp;&nbsp;&nbsp;Loop invariants</A><UL class="auto-toc">
+<LI><A class="reference" href="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2004/n1669.html#for-loop" id="id48" name="id48">2.5.1&nbsp;&nbsp;&nbsp;for-loop</A></LI>
+<LI><A class="reference" href="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2004/n1669.html#while-loop" id="id49" name="id49">2.5.2&nbsp;&nbsp;&nbsp;while-loop</A></LI>
+<LI><A class="reference" href="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2004/n1669.html#do-while-loop" id="id50" name="id50">2.5.3&nbsp;&nbsp;&nbsp;do-while-loop</A></LI>
+</UL>
+</LI>
+<LI><A class="reference" href="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2004/n1669.html#namespace-invariants" id="id51" name="id51">2.6&nbsp;&nbsp;&nbsp;Namespace invariants</A></LI>
+<LI><A class="reference" href="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2004/n1669.html#failure-handler-functions" id="id52" name="id52">2.7&nbsp;&nbsp;&nbsp;Failure handler functions</A></LI>
+</UL>
+</LI>
+<LI><A class="reference" href="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2004/n1669.html#open-issues" id="id53" name="id53">3&nbsp;&nbsp;&nbsp;Open issues</A><UL class="auto-toc">
+<LI><A class="reference" href="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2004/n1669.html#allow-more-statements-in-contracts" id="id54" name="id54">3.1&nbsp;&nbsp;&nbsp;Allow more statements in contracts</A></LI>
+<LI><A class="reference" href="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2004/n1669.html#allow-mutable-functions-in-contracts" id="id55" name="id55">3.2&nbsp;&nbsp;&nbsp;Allow mutable functions in contracts</A></LI>
+<LI><A class="reference" href="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2004/n1669.html#how-do-contracts-interact-with-function-try-blocks" id="id56" name="id56">3.3&nbsp;&nbsp;&nbsp;How do contracts interact with function-try-blocks?</A></LI>
+<LI><A class="reference" href="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2004/n1669.html#should-we-allow-templated-contracts" id="id57" name="id57">3.4&nbsp;&nbsp;&nbsp;Should we allow templated contracts?</A></LI>
+<LI><A class="reference" href="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2004/n1669.html#are-failure-handler-functions-wrongly-specified" id="id58" name="id58">3.5&nbsp;&nbsp;&nbsp;Are failure handler functions wrongly specified?</A></LI>
+<LI><A class="reference" href="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2004/n1669.html#do-not-make-invariant-a-keyword" id="id59" name="id59">3.6&nbsp;&nbsp;&nbsp;Do not make <TT class="literal"><SPAN class="pre">invariant</SPAN></TT> a keyword</A></LI>
+</UL>
+</LI>
+<LI><A class="reference" href="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2004/n1669.html#major-changes-from-n1613" id="id60" name="id60">4&nbsp;&nbsp;&nbsp;Major changes from n1613</A></LI>
+<LI><A class="reference" href="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2004/n1669.html#list-of-proposals-that-could-be-affected-by-this-proposal" id="id61" name="id61">5&nbsp;&nbsp;&nbsp;List of proposals that could be affected by this proposal</A></LI>
+<LI><A class="reference" href="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2004/n1669.html#list-of-features-that-would-make-contract-programming-stronger" id="id62" name="id62">6&nbsp;&nbsp;&nbsp;List of features that would make Contract Programming stronger</A><UL class="auto-toc">
+<LI><A class="reference" href="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2004/n1669.html#more-compiler-magic" id="id63" name="id63">6.1&nbsp;&nbsp;&nbsp;More compiler magic</A></LI>
+<LI><A class="reference" href="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2004/n1669.html#changing-exception-specifications" id="id64" name="id64">6.2&nbsp;&nbsp;&nbsp;Changing exception specifications</A></LI>
+<LI><A class="reference" href="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2004/n1669.html#allow-test-of-any-precondition" id="id65" name="id65">6.3&nbsp;&nbsp;&nbsp;Allow test of any precondition</A></LI>
+</UL>
+</LI>
+<LI><A class="reference" href="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2004/n1669.html#implementability" id="id66" name="id66">7&nbsp;&nbsp;&nbsp;Implementability</A></LI>
+<LI><A class="reference" href="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2004/n1669.html#list-of-examples" id="id67" name="id67">8&nbsp;&nbsp;&nbsp;List of examples</A><UL class="auto-toc">
+<LI><A class="reference" href="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2004/n1669.html#vector-example-hpp" id="id68" name="id68">8.1&nbsp;&nbsp;&nbsp;vector_example.hpp</A></LI>
+<LI><A class="reference" href="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2004/n1669.html#factorial-example-hpp" id="id69" name="id69">8.2&nbsp;&nbsp;&nbsp;factorial_example.hpp</A></LI>
+<LI><A class="reference" href="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2004/n1669.html#restrict-replacement-example-hpp" id="id70" name="id70">8.3&nbsp;&nbsp;&nbsp;restrict_replacement_example.hpp</A></LI>
+<LI><A class="reference" href="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2004/n1669.html#subcontracting-example-hpp" id="id71" name="id71">8.4&nbsp;&nbsp;&nbsp;subcontracting_example.hpp</A></LI>
+<LI><A class="reference" href="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2004/n1669.html#pointer-container-replace-example-hpp" id="id72" name="id72">8.5&nbsp;&nbsp;&nbsp;pointer_container_replace_example.hpp</A></LI>
+</UL>
+</LI>
+<LI><A class="reference" href="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2004/n1669.html#comparison-of-contract-programming-in-d-eiffel-and-c" id="id73" name="id73">9&nbsp;&nbsp;&nbsp;Comparison of Contract Programming in D, Eiffel and C++</A></LI>
+<LI><A class="reference" href="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2004/n1669.html#acknowledgements" id="id74" name="id74">10&nbsp;&nbsp;&nbsp;Acknowledgements</A></LI>
+<LI><A class="reference" href="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2004/n1669.html#footnotes" id="id75" name="id75">11&nbsp;&nbsp;&nbsp;Footnotes</A></LI>
+</UL>
+</DIV>
+<DIV class="section" id="motivation">
+<H1><A class="toc-backref" href="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2004/n1669.html#id36" name="motivation">1&nbsp;&nbsp;&nbsp;Motivation</A></H1>
+<P>Language support for Contract Programming has several benefits:</P>
+<OL class="arabic simple">
+<LI>it can remove the need for separation of documentation and implementation (see <A class="reference" href="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2004/n1669.html#factorial-example-hpp">factorial_example.hpp</A>)</LI>
+<LI>it can make debugging and testing much easier</LI>
+<LI>it can improve communication between designers and programmers in large C++ projects</LI>
+<LI>it can enable the compiler to generate faster code (see <A class="reference" href="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2004/n1669.html#restrict-replacement-example-hpp">restrict_replacement_example.hpp</A>)</LI>
+<LI>it can make inheritance easier to use correctly (see <A class="reference" href="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2004/n1669.html#subcontracting-example-hpp">subcontracting_example.hpp</A> )</LI>
+<LI>it can ensure that every programmer understands the contract metaphors <A class="footnote-reference" href="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2004/n1669.html#id28" id="id2" name="id2"><SUP>2</SUP></A></LI>
+<LI>it might make static analysis tools much more powerful</LI>
+</OL>
+<P>Please refer to <A class="reference" href="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2004/n1613.pdf">n1613</A> for an extensive discussion of these benefits.</P>
+<P>Already with the current proposal, it is quite remarkable how much
+of an interface that can be documented. For a good example, please
+see how <TT class="literal"><SPAN class="pre">std::vector</SPAN></TT> is declared in <A class="reference" href="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2004/n1669.html#vector-example-hpp">vector_example.hpp</A>; there is only a small
+portion of the specification of <TT class="literal"><SPAN class="pre">std::vector</SPAN></TT> that cannot be described in the 
+contracts.</P>
+</DIV>
+<DIV class="section" id="the-proposal">
+<H1><A class="toc-backref" href="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2004/n1669.html#id37" name="the-proposal">2&nbsp;&nbsp;&nbsp;The proposal</A></H1>
+<P>The idea is to extend C++</P>
+<UL class="simple">
+<LI>function declarations with <A class="reference" href="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2004/n1669.html#function-pre-and-postconditions">pre- and postconditions</A>,</LI>
+<LI>class declarations with <A class="reference" href="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2004/n1669.html#class-invariants">class invariants</A>,</LI>
+<LI>loops with <A class="reference" href="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2004/n1669.html#loop-invariants">loop invariants</A>,</LI>
+<LI>namespace declarations with <A class="reference" href="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2004/n1669.html#namespace-invariants">namespace invariants</A>.</LI>
+</UL>
+<P>These new <EM>contract scopes</EM> can contain <A class="reference" href="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2004/n1669.html#assertions">assertions</A> that
+may be evaluated either at compiler-time or at
+run-time as part of the program to verify their correctness.</P>
+<DIV class="section" id="assertions">
+<H2><A class="toc-backref" href="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2004/n1669.html#id38" name="assertions">2.1&nbsp;&nbsp;&nbsp;Assertions</A></H2>
+<P>The basic building blocks of contracts are 
+<EM>assertions</EM>. Assertions come in two categories:</P>
+<UL class="simple">
+<LI><A class="reference" href="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2004/n1669.html#static-assertions">static assertions</A></LI>
+<LI><A class="reference" href="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2004/n1669.html#runtime-assertions">runtime assertions</A></LI>
+</UL>
+<DIV class="section" id="static-assertions">
+<H3><A class="toc-backref" href="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2004/n1669.html#id39" name="static-assertions">2.1.1&nbsp;&nbsp;&nbsp;Static assertions</A></H3>
+<P>There are two flavors of <EM>static</EM> assertions:</P>
+<OL class="arabic">
+<LI><P class="first"><EM>default</EM> assertions</P>
+<BLOCKQUOTE>
+<DL>
+<DT>syntax: </DT>
+<DD><P class="first last"><TT class="literal"><SPAN class="pre">static</SPAN></TT> <EM>constant-expression</EM> <TT class="literal"><SPAN class="pre">:</SPAN></TT> <EM>string-literal</EM> <TT class="literal"><SPAN class="pre">;</SPAN></TT></P>
+</DD>
+<DT>example: </DT>
+<DD><P class="first last"><TT class="literal"><SPAN class="pre">static</SPAN> <SPAN class="pre">is_pod&lt;T&gt;::value</SPAN> <SPAN class="pre">:</SPAN> <SPAN class="pre">"T</SPAN> <SPAN class="pre">must</SPAN> <SPAN class="pre">model</SPAN> <SPAN class="pre">a</SPAN> <SPAN class="pre">POD";</SPAN></TT></P>
+</DD>
+</DL>
+</BLOCKQUOTE>
+</LI>
+<LI><P class="first"><EM>select</EM> assertions</P>
+<BLOCKQUOTE>
+<DL>
+<DT>syntax:</DT>
+<DD><OL class="first last arabic simple">
+<LI><TT class="literal"><SPAN class="pre">if(</SPAN></TT> <EM>constant-expression</EM> <TT class="literal"><SPAN class="pre">)</SPAN></TT> <EM>static-assertion</EM></LI>
+<LI><TT class="literal"><SPAN class="pre">if(</SPAN></TT> <EM>constant-expression</EM> <TT class="literal"><SPAN class="pre">)</SPAN></TT> <EM>static-assertion</EM> <TT class="literal"><SPAN class="pre">else</SPAN></TT> <EM>static-assertion</EM></LI>
+</OL>
+</DD>
+<DT>example:</DT>
+<DD><DL class="first last">
+<DT><TT class="literal"><SPAN class="pre">if(</SPAN> <SPAN class="pre">is_pod&lt;T&gt;::value</SPAN> <SPAN class="pre">)</SPAN></TT></DT>
+<DD><P class="first last"><TT class="literal"><SPAN class="pre">static</SPAN> <SPAN class="pre">sizeof(</SPAN> <SPAN class="pre">T</SPAN> <SPAN class="pre">)</SPAN> <SPAN class="pre">&lt;=</SPAN> <SPAN class="pre">sizeof(</SPAN> <SPAN class="pre">long</SPAN> <SPAN class="pre">)</SPAN> <SPAN class="pre">:</SPAN> <SPAN class="pre">"Only</SPAN> <SPAN class="pre">PODs</SPAN> <SPAN class="pre">smaller</SPAN> <SPAN class="pre">than</SPAN> <SPAN class="pre">long</SPAN> <SPAN class="pre">supported";</SPAN></TT></P>
+</DD>
+</DL>
+</DD>
+</DL>
+</BLOCKQUOTE>
+</LI>
+</OL>
+<P>The static assertions are exactly like the ones described in <A class="reference" href="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2004/n1617.html">n1617</A>. The 
+main difference is that we</P>
+<OL class="arabic simple">
+<LI>reuse the keyword <TT class="literal"><SPAN class="pre">static</SPAN></TT> instead of adding a new one,</LI>
+<LI>confine the scope of the static assertion to contract scope, and</LI>
+<LI>allow compile-time select statements to avoid duplication of conditions.</LI>
+</OL>
+</DIV>
+<DIV class="section" id="runtime-assertions">
+<H3><A class="toc-backref" href="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2004/n1669.html#id40" name="runtime-assertions">2.1.2&nbsp;&nbsp;&nbsp;Runtime assertions</A></H3>
+<P>There are three flavors of <EM>runtime</EM> assertions:</P>
+<OL class="arabic">
+<LI><P class="first"><EM>default</EM> assertions</P>
+<BLOCKQUOTE>
+<DL>
+<DT>syntax:</DT>
+<DD><P class="first last"><EM>boolean-expression</EM> <TT class="literal"><SPAN class="pre">;</SPAN></TT></P>
+</DD>
+<DT>example:</DT>
+<DD><P class="first last"><TT class="literal"><SPAN class="pre">std::cout.good();</SPAN></TT></P>
+</DD>
+</DL>
+</BLOCKQUOTE>
+</LI>
+<LI><P class="first"><EM>compound</EM> assertions</P>
+<BLOCKQUOTE>
+<DL>
+<DT>syntax:</DT>
+<DD><P class="first last"><EM>boolean-expression</EM> <TT class="literal"><SPAN class="pre">:</SPAN></TT> <EM>expression</EM> <TT class="literal"><SPAN class="pre">;</SPAN></TT></P>
+</DD>
+<DT>example: </DT>
+<DD><P class="first last"><TT class="literal"><SPAN class="pre">std::cout.good()</SPAN> <SPAN class="pre">:</SPAN> <SPAN class="pre">terminate();</SPAN></TT></P>
+</DD>
+</DL>
+</BLOCKQUOTE>
+</LI>
+<LI><P class="first"><EM>select</EM> assertions</P>
+<BLOCKQUOTE>
+<DL>
+<DT>syntax:</DT>
+<DD><OL class="first last arabic simple">
+<LI><TT class="literal"><SPAN class="pre">if(</SPAN></TT> <EM>condition</EM> <TT class="literal"><SPAN class="pre">)</SPAN></TT> <EM>runtime-assertion</EM></LI>
+<LI><TT class="literal"><SPAN class="pre">if(</SPAN></TT> <EM>condition</EM> <TT class="literal"><SPAN class="pre">)</SPAN></TT> <EM>runtime-assertion</EM> <TT class="literal"><SPAN class="pre">else</SPAN></TT> <EM>runtime-assertion</EM></LI>
+</OL>
+</DD>
+<DT>example:</DT>
+<DD><DL class="first last">
+<DT><TT class="literal"><SPAN class="pre">if(</SPAN> <SPAN class="pre">empty()</SPAN> <SPAN class="pre">)</SPAN></TT> </DT>
+<DD><P class="first last"><TT class="literal"><SPAN class="pre">result</SPAN> <SPAN class="pre">==</SPAN> <SPAN class="pre">end();</SPAN></TT></P>
+</DD>
+</DL>
+</DD>
+</DL>
+</BLOCKQUOTE>
+</LI>
+</OL>
+<P>We shall call the left hand side of a compound assertion the <EM>condition</EM>
+and the right hand side the <EM>action</EM>.
+The following general points are worth noting:</P>
+<OL class="arabic simple">
+<LI>Default assertions defaults to calling <TT class="literal"><SPAN class="pre">terminate()</SPAN></TT>, but the behavior can be <A class="reference" href="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2004/n1669.html#failure-handler-functions">customized</A>.</LI>
+</OL>
+<OL class="arabic" start="2">
+<LI><P class="first">The select assertions remove the need for the implication operator that was discussed in <A class="reference" href="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2004/n1613.pdf">n1613</A>.</P>
+</LI>
+<LI><P class="first">The syntactic freedom have been kept minimal to ensure a good documentation effect (see also <A class="reference" href="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2004/n1669.html#allow-more-statements-in-contracts">Allow more statements in contracts</A>).</P>
+</LI>
+<LI><P class="first"><A class="target" id="every-visible-variable-or-parameter" name="every-visible-variable-or-parameter">Every visible variable or parameter</A> is considered <TT class="literal"><SPAN class="pre">const</SPAN></TT> within the scope of contracts (even <TT class="literal"><SPAN class="pre">mutable</SPAN></TT> variables).</P>
+</LI>
+<LI><P class="first"><A class="target" id="every-function-call-within" name="every-function-call-within">Every function call within</A> the assertions must be either</P>
+<BLOCKQUOTE>
+<OL class="loweralpha simple">
+<LI>a <TT class="literal"><SPAN class="pre">const</SPAN></TT> member function with no non-<TT class="literal"><SPAN class="pre">const</SPAN></TT> reference or pointer arguments</LI>
+<LI>a free-standing function with no non-<TT class="literal"><SPAN class="pre">const</SPAN></TT> reference or pointer arguments</LI>
+<LI>if the return value is a non-<TT class="literal"><SPAN class="pre">const</SPAN></TT> reference or pointer, it must not be used in any context that would not
+allow a <TT class="literal"><SPAN class="pre">const</SPAN></TT> qualified reference or pointer</LI>
+</OL>
+</BLOCKQUOTE>
+<P>(see also <A class="reference" href="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2004/n1669.html#allow-mutable-functions-in-contracts">Allow mutable functions in contracts</A>.)</P>
+</LI>
+<LI><P class="first">Function calls within assertions do not check assertions; this is to prevent infinite recursion and to provide
+reasonable performance (as seen in the <A class="reference" href="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2004/n1669.html#factorial-example-hpp">factorial_example.hpp</A>).</P>
+</LI>
+<LI><P class="first">Throwing an exception is sometimes convenient; bounds-checking is a good example (see also how it is done in <A class="reference" href="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2004/n1669.html#vector-example-hpp">vector_example.hpp</A> ).</P>
+</LI>
+<LI><P class="first">If the compiler can determine that the condition of an assertion is true, it may choose not to evaluate 
+that assertion.</P>
+</LI>
+<LI><P class="first">If the compiler can determine that the condition of an assertion is false, it may choose 
+to call the <A class="reference" href="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2004/n1669.html#failure-handler-functions">broken contract handler</A> or call the action without evaluating that condition.</P>
+</LI>
+</OL>
+<OL class="arabic simple" start="10">
+<LI>Compound assertions can never be removed by the compiler <EM>unless</EM> the compiler can prove that the condition
+is true <EM>or unless</EM> the action has no effect <A class="footnote-reference" href="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2004/n1669.html#id29" id="id6" name="id6"><SUP>3</SUP></A>.</LI>
+</OL>
+<P>The last rule opens up the door for other types of contracts where we can use the comma-operator as seen in the
+<A class="reference" href="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2004/n1669.html#pointer-container-replace-example-hpp">pointer_container_replace_example.hpp</A>.</P>
+</DIV>
+</DIV>
+<DIV class="section" id="function-std-old">
+<H2><A class="toc-backref" href="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2004/n1669.html#id41" name="function-std-old">2.2&nbsp;&nbsp;&nbsp;Function <TT class="literal"><SPAN class="pre">std::old()</SPAN></TT></A></H2>
+<P>It is very useful to be able to take a copy of a variable to compare
+it with other values later. In particular, this is true in <A class="reference" href="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2004/n1669.html#function-pre-and-postconditions">function postconditions</A>
+and in <A class="reference" href="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2004/n1669.html#loop-invariants">loop invariants</A>. These two contract scopes are also the only scopes
+where <TT class="literal"><SPAN class="pre">std::old()</SPAN></TT> is allowed to appear.</P>
+<P>The function can be said to have the following pseudo-declaration:</P>
+<PRE class="literal-block">namespace std
+{
+    template&lt; class T &gt;
+    const T&amp; old( const T&amp; r )
+        precondition 
+        {
+            static is_copy_constructible&lt;T&gt;::value : "old() requires the type to be Copy Constructible";
+        }
+}
+</PRE>
+<P>The function must return a reference to a temporary variable. Assume <TT class="literal"><SPAN class="pre">i</SPAN></TT> is a visible <TT class="literal"><SPAN class="pre">int</SPAN></TT>, then the compiler translates</P>
+<PRE class="literal-block">{
+    std::old( i ) == 42;
+}
+</PRE>
+<P>into</P>
+<PRE class="literal-block">{
+    const int __old_i( i );
+    __old_i == 42;
+}
+</PRE>
+<P>A set of rules govern how <TT class="literal"><SPAN class="pre">std::old()</SPAN></TT> behaves within a certain contract:</P>
+<OL class="arabic">
+<LI><P class="first">if it is applied to the same expression <EM>n</EM> times, that expression is only evaluated once and there only exists one
+copy of the expression,</P>
+</LI>
+<LI><P class="first">the copy of its argument is taken</P>
+<BLOCKQUOTE>
+<OL class="loweralpha simple">
+<LI><EM>after</EM> the precondition is evaluated if <TT class="literal"><SPAN class="pre">std::old()</SPAN></TT> appears in <A class="reference" href="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2004/n1669.html#function-pre-and-postconditions">function postconditions</A>,</LI>
+<LI><EM>before</EM> each loop iteration if <TT class="literal"><SPAN class="pre">std::old()</SPAN></TT> appears in <A class="reference" href="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2004/n1669.html#loop-invariants">loop invariants</A>.</LI>
+</OL>
+</BLOCKQUOTE>
+</LI>
+</OL>
+<P>The precondition should be evaluated first to allow it to report its errors first.
+Notice that we can only apply <TT class="literal"><SPAN class="pre">std::old()</SPAN></TT> to objects of a type that defines a copy-constructor 
+taking a <TT class="literal"><SPAN class="pre">const</SPAN></TT> reference (ie., <TT class="literal"><SPAN class="pre">std::auto_ptr</SPAN></TT> cannot be used).</P>
+</DIV>
+<DIV class="section" id="function-pre-and-postconditions">
+<H2><A class="toc-backref" href="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2004/n1669.html#id42" name="function-pre-and-postconditions">2.3&nbsp;&nbsp;&nbsp;Function pre- and postconditions</A></H2>
+<P>The function declaration and definition
+are changed into:</P>
+<BLOCKQUOTE>
+<BLOCKQUOTE>
+<OL class="arabic simple">
+<LI><EM>function-declaration1</EM> : <EM>function-head</EM></LI>
+<LI><EM>function-declaration2</EM> : <EM>function-head</EM> <EM>function-contract</EM></LI>
+<LI><EM>function-definition1</EM> : <EM>function-declaration1</EM> <TT class="literal"><SPAN class="pre">{</SPAN></TT> <EM>function-body</EM> <TT class="literal"><SPAN class="pre">}</SPAN></TT></LI>
+<LI><EM>function-definition2</EM> : <EM>function-declaration2</EM> <TT class="literal"><SPAN class="pre">do</SPAN> <SPAN class="pre">{</SPAN></TT> <EM>function-body</EM> <TT class="literal"><SPAN class="pre">}</SPAN></TT></LI>
+<LI><EM>function-contract</EM> : <EM>precondition-contract</EM><SUB>opt</SUB> <EM>postcondition-contract</EM><SUB>opt</SUB></LI>
+<LI><EM>precondition-contract</EM> : <TT class="literal"><SPAN class="pre">precondition</SPAN> <SPAN class="pre">{</SPAN></TT> <EM>assertion-sequence</EM> <TT class="literal"><SPAN class="pre">}</SPAN></TT></LI>
+<LI><EM>postcondition-contract</EM> : <TT class="literal"><SPAN class="pre">postcondition</SPAN></TT> <EM>return-value-declaration</EM><SUB>opt</SUB> <TT class="literal"><SPAN class="pre">{</SPAN></TT> <EM>assertion-sequence</EM> <TT class="literal"><SPAN class="pre">}</SPAN></TT></LI>
+<LI><EM>return-value-declaration</EM>: <TT class="literal"><SPAN class="pre">(</SPAN></TT> <EM>identifier</EM> <TT class="literal"><SPAN class="pre">)</SPAN></TT></LI>
+</OL>
+</BLOCKQUOTE>
+<P>example:</P>
+<PRE class="literal-block">double sqrt( double r )
+    precondition
+    {
+        r &gt; 0.;
+    }
+    postcondition( result )
+    {
+        equal_within_precision( result * result, r );
+    }
+</PRE>
+</BLOCKQUOTE>
+<P>In the <EM>return-value-declaration</EM> we declare a local variable that acts as a <TT class="literal"><SPAN class="pre">const</SPAN></TT> reference to the computed 
+return value. It follows that a <EM>return-value-declaration</EM> is illegal if the return type is <TT class="literal"><SPAN class="pre">void</SPAN></TT>.</P>
+<P>The following general rules apply:</P>
+<OL class="arabic">
+<LI><P class="first">If a function has both a declaration and a definition, the contracts must appear on the declaration.</P>
+</LI>
+<LI><P class="first"><A class="target" id="the-execution-of-a-function" name="the-execution-of-a-function">The execution of a function</A> is now</P>
+<BLOCKQUOTE>
+<OL class="loweralpha simple">
+<LI>evaluate the precondition assertion by assertion in order starting from the top,</LI>
+<LI>evaluate <A class="reference" href="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2004/n1669.html#function-std-old">std::old()</A> occurrences in the postcondition,</LI>
+<LI>evaluate the function body,</LI>
+<LI>evaluate the postcondition assertion by assertion in order starting from the top.</LI>
+</OL>
+</BLOCKQUOTE>
+</LI>
+</OL>
+<OL class="arabic" start="3">
+<LI><P class="first">The execution of a member function is now as in 2, but</P>
+<BLOCKQUOTE>
+<OL class="loweralpha">
+<LI><P class="first"><TT class="literal"><SPAN class="pre">2.a</SPAN></TT> is <EM>preceded</EM> by a call to the <A class="reference" href="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2004/n1669.html#class-invariants">class invariant</A>,</P>
+</LI>
+<LI><P class="first"><TT class="literal"><SPAN class="pre">2.d</SPAN></TT> is <EM>preceded</EM> by a call to the class invariant,</P>
+<BLOCKQUOTE>
+<UL class="simple">
+<LI>rationale: the contracts might call public functions in the class which require the invariant to be established.</LI>
+</UL>
+</BLOCKQUOTE>
+</LI>
+</OL>
+</BLOCKQUOTE>
+</LI>
+</OL>
+<BLOCKQUOTE>
+(See also <A class="reference" href="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2004/n1669.html#if-the-body-of-a-public-function">when the class invariant is disabled</A>.)</BLOCKQUOTE>
+<DIV class="section" id="virtual-functions">
+<H3><A class="toc-backref" href="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2004/n1669.html#id43" name="virtual-functions">2.3.1&nbsp;&nbsp;&nbsp;Virtual functions</A></H3>
+<P>If the function <TT class="literal"><SPAN class="pre">F</SPAN></TT> is virtual, we must require that</P>
+<OL class="arabic simple">
+<LI>only the first declaration/definition of <TT class="literal"><SPAN class="pre">F</SPAN></TT> can have a precondition,</LI>
+<LI>if subsequent declarations/definitions of <TT class="literal"><SPAN class="pre">F</SPAN></TT> in derived classes provide
+a precondition anyway, it results in a compile time error.</LI>
+</OL>
+<P>Section <TT class="literal"><SPAN class="pre">3.5</SPAN></TT> of <A class="reference" href="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2004/n1613.pdf">n1613</A> explains how little redefinition of preconditions is used. Even though
+subcontracting is theoretically sound, it ends up being useless in practice since
+the user cannot take advantage of the weaker precondition by performing a downcast <A class="footnote-reference" href="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2004/n1669.html#id30" id="id12" name="id12"><SUP>4</SUP></A>.
+Also, the derived class can provide a separate function with a weaker precondition or the
+precondition can be specified via a virtual function.</P>
+<P>Postconditions can be made stronger in a derived class as seen in the <A class="reference" href="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2004/n1669.html#subcontracting-example-hpp">subcontracting_example.hpp</A>.
+We can summarize the remaining rules for virtual functions as</P>
+<OL class="arabic simple" start="3">
+<LI>pure virtual functions can have contracts</LI>
+<LI>postconditions from a function in a base class and the overridden version in a derived class
+are <EM>AND</EM>ed together</LI>
+</OL>
+<P>The last rule ensures that the function in the derived class has a stronger postcondition <EM>by design</EM>.
+A programmer can via a downcast obtain the stronger guarantee, but the runtime check must still
+follow rule 4 above.</P>
+</DIV>
+<DIV class="section" id="constructors">
+<H3><A class="toc-backref" href="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2004/n1669.html#id44" name="constructors">2.3.2&nbsp;&nbsp;&nbsp;Constructors</A></H3>
+<P>Constructors behaves much like member functions. This means that a constructor</P>
+<OL class="arabic simple">
+<LI>can have a precondition and a postcondition,</LI>
+<LI>disables the <A class="reference" href="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2004/n1669.html#class-invariants">class invariant</A> when calling public functions</LI>
+<LI>calls the class invariant <EM>before</EM> the postcondition</LI>
+</OL>
+<P>The differences are that a constructor:</P>
+<OL class="arabic simple" start="4">
+<LI>does not evaluate the class invariant before the precondition,</LI>
+<LI>has special rules for evaluating invariants of base-classes (see <A class="reference" href="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2004/n1669.html#class-invariants">class invariants</A>).</LI>
+</OL>
+</DIV>
+<DIV class="section" id="destructors">
+<H3><A class="toc-backref" href="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2004/n1669.html#id45" name="destructors">2.3.3&nbsp;&nbsp;&nbsp;Destructors</A></H3>
+<P>Destructors cannot have preconditions and postconditions. The class invariant, however, is executed <EM>before</EM> the destructor body.
+Notice that the <A class="reference" href="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2004/n1669.html#it-is-always-called">rules</A> for evaluating the class invariant ensures that exceptions thrown during evaluation of the class invariant
+cannot escape.</P>
+</DIV>
+</DIV>
+<DIV class="section" id="class-invariants">
+<H2><A class="toc-backref" href="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2004/n1669.html#id46" name="class-invariants">2.4&nbsp;&nbsp;&nbsp;Class invariants</A></H2>
+<P>Within class scope it is possible to define a class invariant:</P>
+<BLOCKQUOTE>
+<DL>
+<DT>syntax:        </DT>
+<DD><TT class="literal"><SPAN class="pre">invariant</SPAN> <SPAN class="pre">{</SPAN></TT> <EM>assertion-sequence</EM> <TT class="literal"><SPAN class="pre">}</SPAN></TT></DD>
+<DT>example: </DT>
+<DD>see <A class="reference" href="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2004/n1669.html#vector-example-hpp">vector_example.hpp</A></DD>
+</DL>
+</BLOCKQUOTE>
+<P>The class invariant has the following properties:</P>
+<OL class="arabic">
+<LI><P class="first">It must appear in the declaration of a class.</P>
+</LI>
+<LI><P class="first">It is inherited in the sense that the invariant of a derived class <EM>implicitly</EM> will have the super-class invariant
+<EM>AND</EM>ed to it (see also item 6-7).</P>
+<BLOCKQUOTE>
+<P>example:</P>
+<PRE class="literal-block">struct base { invariant { ... } };
+struct derived : base
+{
+    invariant
+    {
+        base::invariant(); // implicitly generated
+        ...
+    }
+};
+</PRE>
+<P>(Remark: the above is pseudo-code and is <EM>not</EM> affected by the disabling of assertions within assertions.)</P>
+</BLOCKQUOTE>
+</LI>
+<LI><P class="first">It can always be called from within or outside the class as if it was a member function with the declaration <TT class="literal"><SPAN class="pre">void</SPAN> <SPAN class="pre">invariant()</SPAN> <SPAN class="pre">const;</SPAN></TT>.</P>
+</LI>
+<LI><P class="first">It is called <EM>implicitly</EM> from public</P>
+<BLOCKQUOTE>
+<OL class="loweralpha simple">
+<LI><A class="reference" href="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2004/n1669.html#the-execution-of-a-function">pre- and postconditions</A>,</LI>
+</OL>
+<OL class="loweralpha simple" start="2">
+<LI><A class="reference" href="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2004/n1669.html#constructors">constructors</A>,</LI>
+</OL>
+<OL class="loweralpha simple" start="3">
+<LI><A class="reference" href="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2004/n1669.html#destructors">destructors</A>,</LI>
+</OL>
+<OL class="loweralpha simple" start="4">
+<LI>member functions that exit abnormally via an exception <A class="footnote-reference" href="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2004/n1669.html#id31" id="id18" name="id18"><SUP>5</SUP></A></LI>
+</OL>
+</BLOCKQUOTE>
+</LI>
+<LI><P class="first"><A class="target" id="it-is-always-called" name="it-is-always-called">It is always called</A> as if surrounded by a try-catch block:</P>
+<PRE class="literal-block">try
+{
+    class_invariant();
+}
+catch( ... )
+{
+    std::class_invariant_broken();
+}
+</PRE>
+</LI>
+</OL>
+<BLOCKQUOTE>
+<UL class="simple">
+<LI>rationale: this ensures that exceptions thrown in the invariant cannot escape from functions 
+and in particular not from the destructor. <A class="footnote-reference" href="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2004/n1669.html#id32" id="id19" name="id19"><SUP>6</SUP></A></LI>
+</UL>
+</BLOCKQUOTE>
+<OL class="arabic" start="6">
+<LI><P class="first">For its execution <EM>during</EM> construction <A class="footnote-reference" href="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2004/n1669.html#id33" id="id20" name="id20"><SUP>7</SUP></A> holds that:</P>
+<BLOCKQUOTE>
+<OL class="loweralpha">
+<LI><P class="first">each assertion is executed in order starting from the top <EM>excluding</EM> any part inherited,</P>
+<BLOCKQUOTE>
+<UL class="simple">
+<LI>rationale: if we do not exclude inherited parts, those parts would be evaluated multiple times.</LI>
+</UL>
+</BLOCKQUOTE>
+</LI>
+</OL>
+</BLOCKQUOTE>
+</LI>
+<LI><P class="first">For its execution <EM>after</EM> construction holds that:</P>
+<BLOCKQUOTE>
+<OL class="loweralpha simple">
+<LI>each assertion is executed in order starting from the top <EM>including</EM> any part inherited,</LI>
+<LI>if the class has any sub-classes, then the inherited portion is executed first,</LI>
+<LI>if the class has several sub-classes the order of the classes in the base-clause is followed.</LI>
+</OL>
+</BLOCKQUOTE>
+</LI>
+<LI><P class="first"><A class="target" id="if-the-body-of-a-public-function" name="if-the-body-of-a-public-function">If the body of a public function</A> <TT class="literal"><SPAN class="pre">F1</SPAN></TT> calls another public member function <TT class="literal"><SPAN class="pre">F2</SPAN></TT> <EM>of the same instance</EM>, the invariant is <EM>not</EM> called implicitly during that call. <A class="footnote-reference" href="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2004/n1669.html#id34" id="id21" name="id21"><SUP>8</SUP></A></P>
+</LI>
+</OL>
+<P>Section <TT class="literal"><SPAN class="pre">7.4</SPAN></TT> of <A class="reference" href="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2004/n1613.pdf">n1613</A> discusses the last issue in more detail. In general it seems reasonable 
+to enforce invariants across class boundaries, but to allow a class some more latitude internally.</P>
+</DIV>
+<DIV class="section" id="loop-invariants">
+<H2><A class="toc-backref" href="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2004/n1669.html#id47" name="loop-invariants">2.5&nbsp;&nbsp;&nbsp;Loop invariants</A></H2>
+<P>This revision introduces loop invariants. Loop invariants make it easier
+to verify correct loop behavior. The syntax is</P>
+<BLOCKQUOTE>
+<EM>loop-invariant</EM>: <TT class="literal"><SPAN class="pre">invariant</SPAN> <SPAN class="pre">{</SPAN></TT> <EM>assertion-sequence</EM> <TT class="literal"><SPAN class="pre">}</SPAN></TT></BLOCKQUOTE>
+<P>An example can be found in <A class="reference" href="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2004/n1669.html#factorial-example-hpp">factorial_example.hpp</A>. The special function <A class="reference" href="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2004/n1669.html#function-std-old">std::old()</A> has a particular meaning inside a loop invariant.
+Assume <TT class="literal"><SPAN class="pre">i</SPAN></TT> is a visible <TT class="literal"><SPAN class="pre">int</SPAN></TT>; then when the compiler sees</P>
+<PRE class="literal-block">invariant
+{
+    std::old( i ) == i + 2;
+}
+</PRE>
+<P>it is translated into something like</P>
+<PRE class="literal-block">invariant
+{
+    const int __old_i = i; // this executes before each loop iteration
+    __old_i == i + 2;      // this executes after each loop iteration
+}
+</PRE>
+<P>To summarize the rules, we have</P>
+<OL class="arabic">
+<LI><P class="first"><TT class="literal"><SPAN class="pre">std::old()</SPAN></TT> takes its copy <EM>before</EM> each loop iteration,</P>
+</LI>
+<LI><P class="first">the assertions are evaluated <EM>after</EM> each loop iteration in order starting from the top,</P>
+</LI>
+<LI><P class="first">the entire loop-invariant is evaluated as if it was surrounded by a try-catch block:</P>
+<PRE class="literal-block">try
+{
+    loop_invariant();
+}
+catch( ... ) 
+{
+    std::loop_invariant_broken();
+}
+</PRE>
+</LI>
+<LI><P class="first">variables that have a greater scope than the loop are visible in the loop-invariant and <TT class="literal"><SPAN class="pre">std::old()</SPAN></TT>
+can be applied to them,</P>
+</LI>
+<LI><P class="first">loop-variables declared in the loop-body are visible in the loop-invariant as well and <TT class="literal"><SPAN class="pre">std::old()</SPAN></TT>
+can be applied to them. <A class="footnote-reference" href="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2004/n1669.html#id35" id="id23" name="id23"><SUP>9</SUP></A></P>
+</LI>
+</OL>
+<P>Notice that <TT class="literal"><SPAN class="pre">std::old()</SPAN></TT> is used to specify <EM>variant</EM> behavior within the loop invariant---something
+that usually requires another keyword.</P>
+<DIV class="section" id="for-loop">
+<H3><A class="toc-backref" href="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2004/n1669.html#id48" name="for-loop">2.5.1&nbsp;&nbsp;&nbsp;for-loop</A></H3>
+<BLOCKQUOTE>
+<P>syntax:</P>
+<BLOCKQUOTE>
+<TT class="literal"><SPAN class="pre">for</SPAN> <SPAN class="pre">(</SPAN></TT> <EM>for-init-statement</EM> <TT class="literal"><SPAN class="pre">;</SPAN></TT> <EM>condition</EM><SUB>opt</SUB> <TT class="literal"><SPAN class="pre">;</SPAN></TT> <EM>expression</EM><SUB>opt</SUB> <TT class="literal"><SPAN class="pre">)</SPAN></TT> <EM>statement</EM> <EM>loop-invariant</EM><SUB>opt</SUB></BLOCKQUOTE>
+<P>example:</P>
+<PRE class="literal-block">for( int i = 0; i != 10; ++i )
+{
+    std::cout &lt;&lt; i;
+}
+invariant
+{
+   i &gt;= 1 &amp;&amp; i &lt;= 10;
+   i == std::old( i ) + 1; 
+}
+</PRE>
+</BLOCKQUOTE>
+</DIV>
+<DIV class="section" id="while-loop">
+<H3><A class="toc-backref" href="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2004/n1669.html#id49" name="while-loop">2.5.2&nbsp;&nbsp;&nbsp;while-loop</A></H3>
+<BLOCKQUOTE>
+<P>syntax:</P>
+<BLOCKQUOTE>
+<TT class="literal"><SPAN class="pre">while</SPAN> <SPAN class="pre">(</SPAN></TT> <EM>condition</EM> <TT class="literal"><SPAN class="pre">)</SPAN></TT> <EM>statement</EM> <EM>loop-invariant</EM><SUB>opt</SUB></BLOCKQUOTE>
+<P>example:</P>
+<PRE class="literal-block">int i = 0;
+while( i != 10 )
+{
+    std::cout &lt;&lt; i;
+    ++i;
+}
+invariant 
+{
+    i &gt;= 1 &amp;&amp; i &lt;= 10;
+    i == std::old( i ) + 1;
+}
+</PRE>
+</BLOCKQUOTE>
+</DIV>
+<DIV class="section" id="do-while-loop">
+<H3><A class="toc-backref" href="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2004/n1669.html#id50" name="do-while-loop">2.5.3&nbsp;&nbsp;&nbsp;do-while-loop</A></H3>
+<BLOCKQUOTE>
+<P>syntax:</P>
+<BLOCKQUOTE>
+<TT class="literal"><SPAN class="pre">do</SPAN></TT> <EM>statement</EM> <EM>loop-invariant</EM><SUB>opt</SUB> <TT class="literal"><SPAN class="pre">while</SPAN> <SPAN class="pre">(</SPAN></TT> expression <TT class="literal"><SPAN class="pre">)</SPAN> <SPAN class="pre">;</SPAN></TT></BLOCKQUOTE>
+<P>example:</P>
+<PRE class="literal-block">int i = 0;
+do
+{
+    std::cout &lt;&lt; i;
+    ++i;
+}
+invariant
+{
+    i &gt;= 1 &amp;&amp; i &lt;= 10;
+    i == std::old( i ) + 1;
+}
+while( i != 10 );
+</PRE>
+</BLOCKQUOTE>
+</DIV>
+</DIV>
+<DIV class="section" id="namespace-invariants">
+<H2><A class="toc-backref" href="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2004/n1669.html#id51" name="namespace-invariants">2.6&nbsp;&nbsp;&nbsp;Namespace invariants</A></H2>
+<P>To better support global state or namespace state this revision introduces namespace invariants:</P>
+<BLOCKQUOTE>
+<DL>
+<DT>syntax:</DT>
+<DD><EM>namespace-invariant</EM>: <TT class="literal"><SPAN class="pre">invariant</SPAN> <SPAN class="pre">{</SPAN></TT> <EM>assertion-sequence</EM> <TT class="literal"><SPAN class="pre">}</SPAN></TT></DD>
+</DL>
+<P>example:</P>
+<PRE class="literal-block">namespace foo
+{
+    int     buffer_size;
+    int*    buffer;
+
+    invariant
+    {
+        static  sizeof( int ) &gt;= 4 : "int must be 32 bit"; 
+        buffer_size &gt; 0;
+        buffer     != 0;
+    }
+}
+</PRE>
+</BLOCKQUOTE>
+<P>The properties of namespace invariants are:</P>
+<OL class="arabic">
+<LI><P class="first">they can appear multiple times in the same namespace across multiple translation units,</P>
+</LI>
+<LI><P class="first">for each translation unit, the present invariants are executed once 
+after the static initialization phase, that is, conceptually as the 
+last part of the static initialization phase,</P>
+</LI>
+<LI><P class="first">they are always called as if surrounded by a try-catch block:</P>
+<PRE class="literal-block">try
+{
+    namespace_invariant();
+}
+catch( ... )
+{
+    std::namespace_invariant_broken();
+}
+</PRE>
+</LI>
+<LI><P class="first">the order of evaluation of the invariants is unspecified,</P>
+</LI>
+<LI><P class="first">the order of evaluation of the assertions in an invariant is from top to bottom,</P>
+</LI>
+<LI><P class="first">for any namespace <TT class="literal"><SPAN class="pre">N</SPAN></TT>, <TT class="literal"><SPAN class="pre">N::invariant()</SPAN></TT> executes all invariants from namespace <TT class="literal"><SPAN class="pre">N</SPAN></TT>.</P>
+</LI>
+</OL>
+</DIV>
+<DIV class="section" id="failure-handler-functions">
+<H2><A class="toc-backref" href="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2004/n1669.html#id52" name="failure-handler-functions">2.7&nbsp;&nbsp;&nbsp;Failure handler functions</A></H2>
+<P>The default behavior for all default assertions is to call <TT class="literal"><SPAN class="pre">terminate()</SPAN></TT> via a call
+to their respective handler. As seen below, we have a handler for each type of contract.
+If the default behavior
+is undesirable, the standard library provides the following handlers:</P>
+<PRE class="literal-block">namespace std
+{        
+    void precondition_broken();
+    void postcondition_broken();
+    void class_invariant_broken();
+    void loop_invariant_broken();
+    void namespace_invariant_broken();
+    
+    typedef void (*broken_contract_handler)();
+    
+    broken_contract_handler  set_precondition_broken_handler( broken_contract_handler r ) throw();
+    broken_contract_handler  set_postcondition_broken_handler( broken_contract_handler r ) throw();
+    broken_contract_handler  set_class_invariant_broken_handler( broken_contract_handler r ) throw();
+    broken_contract_handler  set_loop_invariant_broken_handler( broken_contract_handler r ) throw();
+    broken_contract_handler  set_namespace_invariant_broken_handler( broken_contract_handler r ) throw();
+}
+</PRE>
+<P>This should provide plenty of room for customization. The precondition for all the <TT class="literal"><SPAN class="pre">set_XX_handler</SPAN></TT>
+functions should be <TT class="literal"><SPAN class="pre">r</SPAN> <SPAN class="pre">!=</SPAN> <SPAN class="pre">0</SPAN></TT>.</P>
+</DIV>
+</DIV>
+<DIV class="section" id="open-issues">
+<H1><A class="toc-backref" href="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2004/n1669.html#id53" name="open-issues">3&nbsp;&nbsp;&nbsp;Open issues</A></H1>
+<UL class="simple">
+<LI><A class="reference" href="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2004/n1669.html#allow-more-statements-in-contracts">Allow more statements in contracts</A></LI>
+<LI><A class="reference" href="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2004/n1669.html#allow-mutable-functions-in-contracts">Allow mutable functions in contracts</A></LI>
+<LI><A class="reference" href="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2004/n1669.html#how-do-contracts-interact-with-function-try-blocks">How do contracts interact with function-try-blocks?</A></LI>
+<LI><A class="reference" href="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2004/n1669.html#should-we-allow-templated-contracts">Should we allow templated contracts?</A></LI>
+<LI><A class="reference" href="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2004/n1669.html#are-failure-handler-functions-wrongly-specified">Are failure handler functions wrongly specified?</A></LI>
+<LI><A class="reference" href="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2004/n1669.html#do-not-make-invariant-a-keyword">Do not make invariant a keyword</A></LI>
+</UL>
+<!-- - `Should std::old() be allowed in more contexts?`_ -->
+<DIV class="section" id="allow-more-statements-in-contracts">
+<H2><A class="toc-backref" href="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2004/n1669.html#id54" name="allow-more-statements-in-contracts">3.1&nbsp;&nbsp;&nbsp;Allow more statements in contracts</A></H2>
+<P>The only control structure that this proposal allows inside contracts is 
+an <TT class="literal"><SPAN class="pre">if</SPAN></TT>-statement. The questions are then</P>
+<OL class="arabic">
+<LI><P class="first">why not allow all forms of control structures?</P>
+<BLOCKQUOTE>
+<P>example:</P>
+<PRE class="literal-block">{
+    for( size_type i = 0; i != size(); ++i )
+        *this[i] == T();
+} 
+</PRE>
+</BLOCKQUOTE>
+</LI>
+<LI><P class="first">why not just treat a contract block as any normal C++ block?</P>
+</LI>
+</OL>
+<P>For the first question we can observe that</P>
+<P><STRONG>pros:</STRONG></P>
+<BLOCKQUOTE>
+<OL class="arabic simple">
+<LI>one can avoid calling a function that embeds the control structure</LI>
+</OL>
+</BLOCKQUOTE>
+<P><STRONG>cons:</STRONG></P>
+<BLOCKQUOTE>
+<OL class="arabic simple">
+<LI>more complex specification</LI>
+<LI>a reduced documentation effect since the abstraction level is lowered</LI>
+</OL>
+</BLOCKQUOTE>
+<P>If we make a contract block a normal C++ block, we make problem 2 above worse. 
+In addition we must ask</P>
+<P><STRONG>cons:</STRONG></P>
+<BLOCKQUOTE>
+<OL class="arabic simple" start="3">
+<LI>how should the compiler know what constitutes a run-time assertion?</LI>
+<LI>how should the compiler know what constitutes a static assertion?</LI>
+</OL>
+</BLOCKQUOTE>
+<P>The obvious answer to the last question is to add a new special keyword as 
+proposed in <A class="reference" href="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2004/n1617.html">n1617</A>.</P>
+</DIV>
+<DIV class="section" id="allow-mutable-functions-in-contracts">
+<H2><A class="toc-backref" href="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2004/n1669.html#id55" name="allow-mutable-functions-in-contracts">3.2&nbsp;&nbsp;&nbsp;Allow mutable functions in contracts</A></H2>
+<P>The current proposal prohibits side-effects <A class="reference" href="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2004/n1669.html#every-visible-variable-or-parameter">as much as possible</A>. Otherwise 
+we could end up with different run-time behavior depending on whether or not an assertion
+is executed. Because C++ knows about constness, C++ really shines in this regard compared
+to other languages.</P>
+<P>So the question is</P>
+<UL class="simple">
+<LI>should we allow mutable functions in contracts?</LI>
+</UL>
+<P>If we were to provide a little more latitude, there could be
+at least two different ways to reuse <TT class="literal"><SPAN class="pre">mutable</SPAN></TT>:</P>
+<BLOCKQUOTE>
+<OL class="arabic">
+<LI><P class="first">make the whole block mutable:</P>
+<PRE class="literal-block">void X::foo( int i )
+precondition mutable
+{
+    ...
+}
+</PRE>
+</LI>
+<LI><P class="first">make individual assertions mutable:</P>
+<PRE class="literal-block">void X::foo( int i )
+precondition
+{
+    mutable foo( i );
+}
+</PRE>
+</LI>
+</OL>
+</BLOCKQUOTE>
+<!-- Should we allow/use ``else`` instead of a colon to separate condition from action
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+The question is simply if compound assertions
+
+    *boolean-expression* ``:`` *expression* ``;`` 
+    
+should be written as
+
+    *boolean-expression* ``else`` *expression* ``;`` 
+
+instead? -->
+</DIV>
+<DIV class="section" id="how-do-contracts-interact-with-function-try-blocks">
+<H2><A class="toc-backref" href="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2004/n1669.html#id56" name="how-do-contracts-interact-with-function-try-blocks">3.3&nbsp;&nbsp;&nbsp;How do contracts interact with function-try-blocks?</A></H2>
+<P>There seems to be at least two solutions:</P>
+<OL class="arabic">
+<LI><P class="first">Forbid function-try-blocks and contracts on the same function.</P>
+</LI>
+<LI><P class="first">Allow it as in this example:</P>
+<PRE class="literal-block">void foo( int i )
+    precondition
+    {
+        i &gt; 0;
+    }
+    try
+    {
+        // ...
+    }
+    catch( ... )
+    {
+    }
+</PRE>
+</LI>
+</OL>
+<P>In case of 2, then the question would be</P>
+<UL class="simple">
+<LI>should the try-block catch exceptions from the pre- and postcondition?</LI>
+</UL>
+</DIV>
+<DIV class="section" id="should-we-allow-templated-contracts">
+<H2><A class="toc-backref" href="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2004/n1669.html#id57" name="should-we-allow-templated-contracts">3.4&nbsp;&nbsp;&nbsp;Should we allow templated contracts?</A></H2>
+<P>Pavel Vozenilek asks why contracts cannot be 
+templated. Examples could be</P>
+<PRE class="literal-block">template&lt; class T &gt;
+class Foo
+{
+    invariant&lt;T*&gt; // partial specialization of invariant
+    {
+       // ...
+    }
+    
+    invariant // default invariant here
+    {
+       // ...
+    }
+};    
+    
+template&lt; class T &gt;
+void foo( T r )
+    precondition&lt;double&gt;
+    { /* only allow full specialization for functions */ }
+    precondition
+    { /* default */ }
+</PRE>
+</DIV>
+<DIV class="section" id="are-failure-handler-functions-wrongly-specified">
+<H2><A class="toc-backref" href="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2004/n1669.html#id58" name="are-failure-handler-functions-wrongly-specified">3.5&nbsp;&nbsp;&nbsp;Are failure handler functions wrongly specified?</A></H2>
+<P>Currently a <A class="reference" href="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2004/n1669.html#failure-handler-functions">failure handler function</A> does not
+allow one to</P>
+<OL class="arabic simple">
+<LI>see the context of the broken assertion, or</LI>
+<LI>use other functions than free-standing functions.</LI>
+</OL>
+<P>It might be desirable to change the functions to</P>
+<PRE class="literal-block">namespace std
+{
+    class assertion_context
+    {
+        contract_context( const char* where, const char* assertion ) throw();
+        ~contract_context() throw();
+        const char* context() const throw();
+    };
+
+    void precondition_broken( const assertion_context&amp; cc );
+    // ... etc
+}
+</PRE>
+<P>or even</P>
+<PRE class="literal-block">namespace std
+{
+    extern std::function&lt; void ( const assertion_context&amp; ) &gt; precondition_broken;
+    // ... etc
+}
+</PRE>
+<P>This would hopefully ensure good error-messages.</P>
+<!-- Question for verification people:
++++++++++++++++++++++++++++++++++
+    
+The specification of object state when an assertion is raised, either via an exceptional postcondition or an
+exception predicate, is very desirable if programs are to be formally verified.
+
+The Java Modeling Language fulfills this key point admirably, while Eiffel fails in this regard. -->
+<!--  Should ``std::old()`` be allowed in more contexts?
+++++++++++++++++++++++++++++++++++++++++++++++++++
+
+It might possible to relax the rules about `where`__ ``std::old()`` can appear. 
+
+__ `Function std::old()`_ -->
+</DIV>
+<DIV class="section" id="do-not-make-invariant-a-keyword">
+<H2><A class="toc-backref" href="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2004/n1669.html#id59" name="do-not-make-invariant-a-keyword">3.6&nbsp;&nbsp;&nbsp;Do not make <TT class="literal"><SPAN class="pre">invariant</SPAN></TT> a keyword</A></H2>
+<P>It could be considered that any static function</P>
+<PRE class="literal-block">void invariant();
+</PRE>
+<P>and any member function</P>
+<PRE class="literal-block">void X::invariant() const;
+</PRE>
+<P>automatically defines a namespace invariant and a class invariant,
+respectively. This would have the following consequences:</P>
+<P><STRONG>pros</STRONG>:</P>
+<BLOCKQUOTE>
+<OL class="arabic simple">
+<LI>it saves a keyword,</LI>
+</OL>
+</BLOCKQUOTE>
+<P><STRONG>cons</STRONG>:</P>
+<BLOCKQUOTE>
+<OL class="arabic simple">
+<LI>it could change the behavior of those programs that already defines
+an invariant,</LI>
+<LI>it would make the syntax and semantics of invariant contracts
+different from pre- and postcondition contracts.</LI>
+</OL>
+</BLOCKQUOTE>
+<P>It might also be worth considering a <TT class="literal"><SPAN class="pre">--no_invariant_keyword</SPAN></TT> compiler
+option for backward compatibility instead.</P>
+</DIV>
+</DIV>
+<DIV class="section" id="major-changes-from-n1613">
+<H1><A class="toc-backref" href="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2004/n1669.html#id60" name="major-changes-from-n1613">4&nbsp;&nbsp;&nbsp;Major changes from </A><A class="reference" href="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2004/n1613.pdf">n1613</A></H1>
+<OL class="arabic">
+<LI><P class="first">added <A class="reference" href="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2004/n1669.html#loop-invariants">loop invariants</A></P>
+</LI>
+<LI><P class="first">added <A class="reference" href="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2004/n1669.html#namespace-invariants">namespace invariants</A></P>
+</LI>
+<LI><P class="first">added <A class="reference" href="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2004/n1669.html#static-assertions">static assertions</A></P>
+</LI>
+<LI><P class="first">changed use of keywords:</P>
+<BLOCKQUOTE>
+<TABLE border="" class="table">
+<COLGROUP>
+<COL width="40%">
+<COL width="60%">
+</COLGROUP>
+<TBODY valign="top">
+<TR><TD><P class="first last"><STRONG>before</STRONG></P>
+</TD>
+<TD><P class="first last"><STRONG>now</STRONG></P>
+</TD>
+</TR>
+<TR><TD><P class="first last"><TT class="literal"><SPAN class="pre">in</SPAN></TT></P>
+</TD>
+<TD><P class="first last"><TT class="literal"><SPAN class="pre">precondition</SPAN></TT></P>
+</TD>
+</TR>
+<TR><TD><P class="first last"><TT class="literal"><SPAN class="pre">out</SPAN></TT></P>
+</TD>
+<TD><P class="first last"><TT class="literal"><SPAN class="pre">postcondition</SPAN></TT></P>
+</TD>
+</TR>
+<TR><TD><P class="first last"><TT class="literal"><SPAN class="pre">return</SPAN></TT></P>
+</TD>
+<TD><P class="first last">a local variable</P>
+</TD>
+</TR>
+<TR><TD><P class="first last"><TT class="literal"><SPAN class="pre">implies</SPAN></TT></P>
+</TD>
+<TD><P class="first last"><TT class="literal"><SPAN class="pre">if</SPAN></TT></P>
+</TD>
+</TR>
+<TR><TD><P class="first last"><TT class="literal"><SPAN class="pre">in</SPAN></TT></P>
+</TD>
+<TD><P class="first last"><TT class="literal"><SPAN class="pre">std::old()</SPAN></TT></P>
+</TD>
+</TR>
+</TBODY>
+</TABLE>
+</BLOCKQUOTE>
+</LI>
+<LI><P class="first">simplified <A class="reference" href="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2004/n1669.html#virtual-functions">subcontracting</A>: now preconditions cannot be weakened</P>
+</LI>
+</OL>
+</DIV>
+<DIV class="section" id="list-of-proposals-that-could-be-affected-by-this-proposal">
+<H1><A class="toc-backref" href="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2004/n1669.html#id61" name="list-of-proposals-that-could-be-affected-by-this-proposal">5&nbsp;&nbsp;&nbsp;List of proposals that could be affected by this proposal</A></H1>
+<OL class="arabic simple">
+<LI>static assertions as described in <A class="reference" href="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2004/n1617.html">n1617</A></LI>
+<LI>concepts as described in <A class="reference" href="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2003/n1510.pdf">n1510</A>, <A class="reference" href="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2003/n1522.pdf">n1522</A> and <A class="reference" href="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2003/n1536.pdf">n1536</A></LI>
+<LI>any proposal that seeks to enhance meta-programming capabilities</LI>
+</OL>
+</DIV>
+<DIV class="section" id="list-of-features-that-would-make-contract-programming-stronger">
+<H1><A class="toc-backref" href="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2004/n1669.html#id62" name="list-of-features-that-would-make-contract-programming-stronger">6&nbsp;&nbsp;&nbsp;List of features that would make Contract Programming stronger</A></H1>
+<P>This section describes some crazy ideas that might serve as
+a basis for further discussion.</P>
+<UL class="simple">
+<LI><A class="reference" href="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2004/n1669.html#more-compiler-magic">More compiler magic</A></LI>
+<LI><A class="reference" href="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2004/n1669.html#changing-exception-specifications">Changing exception specifications</A></LI>
+<LI><A class="reference" href="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2004/n1669.html#allow-test-of-any-precondition">Allow test of any precondition</A></LI>
+</UL>
+<DIV class="section" id="more-compiler-magic">
+<H2><A class="toc-backref" href="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2004/n1669.html#id63" name="more-compiler-magic">6.1&nbsp;&nbsp;&nbsp;More compiler magic</A></H2>
+<P>For the purpose of static analysis either by the compiler or
+a special tool, it might be convenient to be able to indicate
+certain functions were invalid for a period of time.</P>
+<P>For example, calling <TT class="literal"><SPAN class="pre">operator*()</SPAN></TT>
+on an iterator could be invalid, yet we cannot explain that to the
+compiler.</P>
+<P>Imagine a magic function <TT class="literal"><SPAN class="pre">std::invalid_operation()</SPAN></TT>:</P>
+<PRE class="literal-block">iterator end()
+    postcondition( result )
+    {
+        //
+        // expression style
+        //
+        std::invalid_operation( *result, ++result, result++ );
+        
+        //
+        // function style
+        //
+        std::invalid_operation( operator*(), operator++(), operator+() );
+    }
+</PRE>
+<P>These operations would then be invalid until a new member function
+was called that did not have the same invalid operation. For example</P>
+<PRE class="literal-block">iterator i = container.end();
+--i;                  // now the operations becomes valid
+*i         = a_value; // ok
+++i;                  // ok 
+</PRE>
+<P>A compiler could choose to either</P>
+<OL class="arabic simple">
+<LI>treat the function as documentation only by doing a syntax check, or</LI>
+<LI>see if it can deduce a compile-time error too.</LI>
+</OL>
+</DIV>
+<DIV class="section" id="changing-exception-specifications">
+<H2><A class="toc-backref" href="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2004/n1669.html#id64" name="changing-exception-specifications">6.2&nbsp;&nbsp;&nbsp;Changing exception specifications</A></H2>
+<P>C++'s exception specifications 
+are not used very much in practice. This is unfortunate since
+documenting what exceptions (if any) a function throws is important.</P>
+<P>In other words, the exception specification seems to be an important
+part of a functions <EM>contract</EM>. This proposal already checks the
+basic guarantee of exception-safety (by checking invariants),
+and we can already check the strong guarantee in a post-condition:</P>
+<PRE class="literal-block">postcondition
+{
+   *this == std::old( *this );
+}
+</PRE>
+<P>But there seem two other important cases as well:</P>
+<OL class="arabic simple">
+<LI>the nothrow exception-safety guarantee</LI>
+<LI>a guarantee somewhere between the basic and the strong exception-safety guarantee in case an exception is thrown</LI>
+</OL>
+<P>So what if we changed the rules for</P>
+<PRE class="literal-block">iterator begin() throw();
+</PRE>
+<P>to mean</P>
+<OL class="loweralpha simple">
+<LI>this function <EM>promises</EM> not to throw exceptions and the compiler can assume that when optimizing</LI>
+<LI>if it does, the behavior is undefined</LI>
+</OL>
+<P>? If that were the case, <TT class="literal"><SPAN class="pre">throw()</SPAN></TT> would be used much more.</P>
+<P>The second situation is when a function exits via an exception, but we still want to guarantee more than
+the basic guarantee. Imagine that we could do something like this:</P>
+<PRE class="literal-block">postcondition
+{
+    if( throws( std::exception ) )
+    {
+       std::old( foo ) == foo; // this variable has not changed
+       std::old( bar ) != bar; // but this one has
+    }
+}
+</PRE>
+<P>This might provide a way to make stronger assertions in the presence of exceptions.</P>
+</DIV>
+<DIV class="section" id="allow-test-of-any-precondition">
+<H2><A class="toc-backref" href="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2004/n1669.html#id65" name="allow-test-of-any-precondition">6.3&nbsp;&nbsp;&nbsp;Allow test of any precondition</A></H2>
+<P>Alf Steinbach suggests that preconditions
+should be checkable without calling the function:</P>
+<PRE class="literal-block">void foo( ... ) 
+    precondition { ... }
+
+// ... 
+      
+if( foo.precondition( ... ) ) 
+   foo( ... )
+else
+   report_error();   
+</PRE>
+</DIV>
+</DIV>
+<DIV class="section" id="implementability">
+<H1><A class="toc-backref" href="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2004/n1669.html#id66" name="implementability">7&nbsp;&nbsp;&nbsp;Implementability</A></H1>
+<P>Walter Bright has extensive experience from implementing Contract Programming in the 
+C++ and D compilers from <A class="reference" href="http://www.digitalmars.com/">Digital Mars</A>. He asserts that it will take about
+one man month to implement this proposal.</P>
+</DIV>
+<DIV class="section" id="list-of-examples">
+<H1><A class="toc-backref" href="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2004/n1669.html#id67" name="list-of-examples">8&nbsp;&nbsp;&nbsp;List of examples</A></H1>
+<UL class="simple">
+<LI><A class="reference" href="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2004/n1669.html#vector-example-hpp">vector_example.hpp</A></LI>
+<LI><A class="reference" href="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2004/n1669.html#factorial-example-hpp">factorial_example.hpp</A></LI>
+<LI><A class="reference" href="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2004/n1669.html#restrict-replacement-example-hpp">restrict_replacement_example.hpp</A></LI>
+<LI><A class="reference" href="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2004/n1669.html#subcontracting-example-hpp">subcontracting_example.hpp</A></LI>
+<LI><A class="reference" href="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2004/n1669.html#pointer-container-replace-example-hpp">pointer_container_replace_example.hpp</A></LI>
+</UL>
+<DIV class="section" id="vector-example-hpp">
+<H2><A class="toc-backref" href="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2004/n1669.html#id68" name="vector-example-hpp">8.1&nbsp;&nbsp;&nbsp;vector_example.hpp</A></H2>
+
+
+
+
+<LINK rel="stylesheet" href="./Ottosen2004_Proposal_Rev1-n1669_files/style.css" type="text/css">
+
+
+
+
+<PRE><SPAN class="comment">///////////////////////////////////////
+// Tools
+///////////////////////////////////////</SPAN>
+
+<SPAN class="keyword">template</SPAN><SPAN class="special">&lt;</SPAN> <SPAN class="keyword">class</SPAN> <SPAN class="identifier">Iter</SPAN><SPAN class="special">,</SPAN> <SPAN class="keyword">class</SPAN> <SPAN class="identifier">T</SPAN> <SPAN class="special">&gt;</SPAN>
+<SPAN class="keyword">bool</SPAN> <SPAN class="identifier">all_equals</SPAN><SPAN class="special">(</SPAN> <SPAN class="identifier">Iter</SPAN> <SPAN class="identifier">first</SPAN><SPAN class="special">,</SPAN> <SPAN class="identifier">Iter</SPAN> <SPAN class="identifier">last</SPAN><SPAN class="special">,</SPAN> <SPAN class="keyword">const</SPAN> <SPAN class="identifier">T</SPAN><SPAN class="special">&amp;</SPAN> <SPAN class="identifier">val</SPAN> <SPAN class="special">)</SPAN>
+<SPAN class="special">{</SPAN> <SPAN class="comment">/* for simplicity, let us assume T's can be compared */</SPAN> <SPAN class="special">}</SPAN>
+
+<SPAN class="keyword">template</SPAN><SPAN class="special">&lt;</SPAN> <SPAN class="keyword">class</SPAN> <SPAN class="identifier">Iter</SPAN><SPAN class="special">,</SPAN> <SPAN class="keyword">class</SPAN> <SPAN class="identifier">Size</SPAN> <SPAN class="special">&gt;</SPAN>
+<SPAN class="keyword">bool</SPAN> <SPAN class="identifier">equal_distance</SPAN><SPAN class="special">(</SPAN> <SPAN class="identifier">Iter</SPAN> <SPAN class="identifier">first</SPAN><SPAN class="special">,</SPAN> <SPAN class="identifier">Iter</SPAN> <SPAN class="identifier">last</SPAN><SPAN class="special">,</SPAN> <SPAN class="identifier">Size</SPAN> <SPAN class="identifier">size</SPAN> <SPAN class="special">)</SPAN>
+<SPAN class="special">{</SPAN> <SPAN class="comment">/* internal tagging mechnism so even input iterators can be passed */</SPAN> <SPAN class="special">}</SPAN>
+
+<SPAN class="comment">///////////////////////////////////////
+// New vector interface
+///////////////////////////////////////</SPAN>
+
+<SPAN class="keyword">template</SPAN><SPAN class="special">&lt;</SPAN> <SPAN class="keyword">class</SPAN> <SPAN class="identifier">T</SPAN><SPAN class="special">,</SPAN> <SPAN class="keyword">class</SPAN> <SPAN class="identifier">Alloc</SPAN> <SPAN class="special">=</SPAN> <SPAN class="identifier">allocator</SPAN><SPAN class="special">&lt;</SPAN><SPAN class="identifier">T</SPAN><SPAN class="special">&gt;</SPAN> <SPAN class="special">&gt;</SPAN>
+<SPAN class="keyword">class</SPAN> <SPAN class="identifier">vector</SPAN> 
+<SPAN class="special">{</SPAN>
+    <SPAN class="keyword">invariant</SPAN>
+    <SPAN class="special">{</SPAN>
+        <SPAN class="special">(</SPAN> <SPAN class="identifier">size</SPAN><SPAN class="special">()</SPAN> <SPAN class="special">==</SPAN> <SPAN class="number">0</SPAN> <SPAN class="special">)</SPAN> <SPAN class="special">==</SPAN> <SPAN class="identifier">empty</SPAN><SPAN class="special">();</SPAN>
+        <SPAN class="identifier">size</SPAN><SPAN class="special">()</SPAN> <SPAN class="special">==</SPAN> <SPAN class="identifier">std</SPAN><SPAN class="special">::</SPAN><SPAN class="identifier">distance</SPAN><SPAN class="special">(</SPAN> <SPAN class="identifier">begin</SPAN><SPAN class="special">(),</SPAN> <SPAN class="identifier">end</SPAN><SPAN class="special">()</SPAN> <SPAN class="special">);</SPAN>
+        <SPAN class="identifier">size</SPAN><SPAN class="special">()</SPAN> <SPAN class="special">==</SPAN> <SPAN class="identifier">std</SPAN><SPAN class="special">::</SPAN><SPAN class="identifier">distance</SPAN><SPAN class="special">(</SPAN> <SPAN class="identifier">rbegin</SPAN><SPAN class="special">(),</SPAN> <SPAN class="identifier">rend</SPAN><SPAN class="special">()</SPAN> <SPAN class="special">);</SPAN>
+        <SPAN class="identifier">size</SPAN><SPAN class="special">()</SPAN> <SPAN class="special">&lt;=</SPAN> <SPAN class="identifier">capacity</SPAN><SPAN class="special">();</SPAN>
+        <SPAN class="identifier">capacity</SPAN><SPAN class="special">()</SPAN> <SPAN class="special">&lt;=</SPAN> <SPAN class="identifier">max_size</SPAN><SPAN class="special">();</SPAN>
+        
+        <SPAN class="keyword">static</SPAN> <SPAN class="identifier">is_assignable</SPAN><SPAN class="special">&lt;</SPAN><SPAN class="identifier">T</SPAN><SPAN class="special">&gt;::</SPAN><SPAN class="identifier">value</SPAN>         <SPAN class="special">:</SPAN> <SPAN class="string">"value_type must be Assignable"</SPAN> <SPAN class="special">;</SPAN>
+        <SPAN class="keyword">static</SPAN> <SPAN class="identifier">is_copy_constructible</SPAN><SPAN class="special">&lt;</SPAN><SPAN class="identifier">T</SPAN><SPAN class="special">&gt;::</SPAN><SPAN class="identifier">value</SPAN> <SPAN class="special">:</SPAN> <SPAN class="string">"value_type must be CopyConstructible"</SPAN> <SPAN class="special">;</SPAN>
+    <SPAN class="special">}</SPAN>
+    
+<SPAN class="keyword">public</SPAN><SPAN class="special">:</SPAN>
+    <SPAN class="keyword">typedef</SPAN> <SPAN class="identifier">Alloc</SPAN>                             <SPAN class="identifier">allocator_type</SPAN><SPAN class="special">;</SPAN>
+    <SPAN class="keyword">typedef</SPAN> <SPAN class="keyword">typename</SPAN> <SPAN class="identifier">Alloc</SPAN><SPAN class="special">::</SPAN><SPAN class="identifier">pointer</SPAN>           <SPAN class="identifier">pointer</SPAN><SPAN class="special">;</SPAN>
+    <SPAN class="keyword">typedef</SPAN> <SPAN class="keyword">typename</SPAN> <SPAN class="identifier">Alloc</SPAN><SPAN class="special">::</SPAN><SPAN class="identifier">const_pointer</SPAN>     <SPAN class="identifier">const_pointer</SPAN><SPAN class="special">;</SPAN>
+    <SPAN class="keyword">typedef</SPAN> <SPAN class="keyword">typename</SPAN> <SPAN class="identifier">Alloc</SPAN><SPAN class="special">::</SPAN><SPAN class="identifier">reference</SPAN>         <SPAN class="identifier">reference</SPAN><SPAN class="special">;</SPAN>
+    <SPAN class="keyword">typedef</SPAN> <SPAN class="keyword">typename</SPAN> <SPAN class="identifier">Alloc</SPAN><SPAN class="special">::</SPAN><SPAN class="identifier">const_reference</SPAN>   <SPAN class="identifier">const_reference</SPAN><SPAN class="special">;</SPAN>
+    <SPAN class="keyword">typedef</SPAN> <SPAN class="keyword">typename</SPAN> <SPAN class="identifier">Alloc</SPAN><SPAN class="special">::</SPAN><SPAN class="identifier">value_type</SPAN>        <SPAN class="identifier">value_type</SPAN><SPAN class="special">;</SPAN>
+    <SPAN class="keyword">typedef</SPAN> <SPAN class="special">...</SPAN>                               <SPAN class="identifier">iterator</SPAN><SPAN class="special">;</SPAN>
+    <SPAN class="keyword">typedef</SPAN> <SPAN class="special">...</SPAN>                               <SPAN class="identifier">const_iterator</SPAN><SPAN class="special">;</SPAN>
+    <SPAN class="keyword">typedef</SPAN> <SPAN class="special">...</SPAN>                               <SPAN class="identifier">size_type</SPAN><SPAN class="special">;</SPAN>
+    <SPAN class="keyword">typedef</SPAN> <SPAN class="special">...</SPAN>                               <SPAN class="identifier">difference_type</SPAN><SPAN class="special">;</SPAN>
+    <SPAN class="keyword">typedef</SPAN> <SPAN class="identifier">reverse_iterator</SPAN><SPAN class="special">&lt;</SPAN><SPAN class="identifier">iterator</SPAN><SPAN class="special">&gt;</SPAN>        <SPAN class="identifier">reverse_iterator</SPAN><SPAN class="special">;</SPAN>
+    <SPAN class="keyword">typedef</SPAN> <SPAN class="identifier">reverse_iterator</SPAN><SPAN class="special">&lt;</SPAN><SPAN class="identifier">const_iterator</SPAN><SPAN class="special">&gt;</SPAN>  <SPAN class="identifier">const_reverse_iterator</SPAN><SPAN class="special">;</SPAN>
+
+             <SPAN class="identifier">vector</SPAN><SPAN class="special">()</SPAN>                  
+                 <SPAN class="keyword">postcondition</SPAN> <SPAN class="special">{</SPAN> <SPAN class="identifier">empty</SPAN><SPAN class="special">();</SPAN> <SPAN class="special">}</SPAN> 
+                 
+    <SPAN class="keyword">explicit</SPAN> <SPAN class="identifier">vector</SPAN><SPAN class="special">(</SPAN> <SPAN class="keyword">const</SPAN> <SPAN class="identifier">Alloc</SPAN><SPAN class="special">&amp;</SPAN> <SPAN class="identifier">al</SPAN> <SPAN class="special">)</SPAN> 
+                 <SPAN class="keyword">postcondition</SPAN> <SPAN class="special">{</SPAN> <SPAN class="identifier">empty</SPAN><SPAN class="special">();</SPAN> 
+                                 <SPAN class="identifier">al</SPAN> <SPAN class="special">==</SPAN> <SPAN class="identifier">get_allocator</SPAN><SPAN class="special">();</SPAN> <SPAN class="special">}</SPAN>
+                 
+    <SPAN class="keyword">explicit</SPAN> <SPAN class="identifier">vector</SPAN><SPAN class="special">(</SPAN> <SPAN class="identifier">size_type</SPAN> <SPAN class="identifier">count</SPAN> <SPAN class="special">)</SPAN> 
+                 <SPAN class="keyword">postcondition</SPAN> <SPAN class="special">{</SPAN> <SPAN class="identifier">size</SPAN><SPAN class="special">()</SPAN> <SPAN class="special">==</SPAN> <SPAN class="identifier">count</SPAN><SPAN class="special">;</SPAN> 
+                                 <SPAN class="identifier">all_equals</SPAN><SPAN class="special">(</SPAN> <SPAN class="identifier">begin</SPAN><SPAN class="special">(),</SPAN> <SPAN class="identifier">end</SPAN><SPAN class="special">(),</SPAN> <SPAN class="identifier">T</SPAN><SPAN class="special">()</SPAN> <SPAN class="special">);</SPAN> <SPAN class="special">}</SPAN>
+                 
+             <SPAN class="identifier">vector</SPAN><SPAN class="special">(</SPAN> <SPAN class="identifier">size_type</SPAN> <SPAN class="identifier">count</SPAN><SPAN class="special">,</SPAN> <SPAN class="keyword">const</SPAN> <SPAN class="identifier">T</SPAN><SPAN class="special">&amp;</SPAN> <SPAN class="identifier">val</SPAN> <SPAN class="special">)</SPAN> 
+                 <SPAN class="keyword">postcondition</SPAN> <SPAN class="special">{</SPAN> <SPAN class="identifier">size</SPAN><SPAN class="special">()</SPAN> <SPAN class="special">==</SPAN> <SPAN class="identifier">count</SPAN><SPAN class="special">;</SPAN> 
+                                 <SPAN class="identifier">all_equals</SPAN><SPAN class="special">(</SPAN> <SPAN class="identifier">begin</SPAN><SPAN class="special">(),</SPAN> <SPAN class="identifier">end</SPAN><SPAN class="special">(),</SPAN> <SPAN class="identifier">val</SPAN> <SPAN class="special">);</SPAN> <SPAN class="special">}</SPAN>
+             
+             <SPAN class="identifier">vector</SPAN><SPAN class="special">(</SPAN> <SPAN class="identifier">size_type</SPAN> <SPAN class="identifier">count</SPAN><SPAN class="special">,</SPAN> <SPAN class="keyword">const</SPAN> <SPAN class="identifier">T</SPAN><SPAN class="special">&amp;</SPAN> <SPAN class="identifier">val</SPAN><SPAN class="special">,</SPAN> <SPAN class="keyword">const</SPAN> <SPAN class="identifier">Alloc</SPAN><SPAN class="special">&amp;</SPAN> <SPAN class="identifier">al</SPAN> <SPAN class="special">)</SPAN> 
+                 <SPAN class="keyword">postcondition</SPAN> <SPAN class="special">{</SPAN> <SPAN class="identifier">size</SPAN> <SPAN class="special">==</SPAN> <SPAN class="identifier">count</SPAN><SPAN class="special">;</SPAN> 
+                                 <SPAN class="identifier">all_equals</SPAN><SPAN class="special">(</SPAN> <SPAN class="identifier">begin</SPAN><SPAN class="special">(),</SPAN> <SPAN class="identifier">end</SPAN><SPAN class="special">(),</SPAN> <SPAN class="identifier">val</SPAN> <SPAN class="special">);</SPAN> 
+                                 <SPAN class="identifier">al</SPAN> <SPAN class="special">==</SPAN> <SPAN class="identifier">get_allocator</SPAN><SPAN class="special">();</SPAN> <SPAN class="special">}:</SPAN>
+             
+             <SPAN class="identifier">vector</SPAN><SPAN class="special">(</SPAN> <SPAN class="keyword">const</SPAN> <SPAN class="identifier">vector</SPAN><SPAN class="special">&amp;</SPAN> <SPAN class="identifier">right</SPAN> <SPAN class="special">)</SPAN> 
+                 <SPAN class="keyword">postcondition</SPAN> <SPAN class="special">{</SPAN> <SPAN class="identifier">right</SPAN> <SPAN class="special">==</SPAN> <SPAN class="special">*</SPAN><SPAN class="keyword">this</SPAN><SPAN class="special">;</SPAN> <SPAN class="special">}</SPAN>
+    
+             <SPAN class="keyword">template</SPAN><SPAN class="special">&lt;</SPAN> <SPAN class="keyword">class</SPAN> <SPAN class="identifier">InIt</SPAN> <SPAN class="special">&gt;</SPAN>
+             <SPAN class="identifier">vector</SPAN><SPAN class="special">(</SPAN> <SPAN class="identifier">InIt</SPAN> <SPAN class="identifier">first</SPAN><SPAN class="special">,</SPAN> <SPAN class="identifier">InIt</SPAN> <SPAN class="identifier">last</SPAN> <SPAN class="special">)</SPAN> 
+                 <SPAN class="keyword">precondition</SPAN>  <SPAN class="special">{</SPAN> <SPAN class="keyword">static</SPAN> <SPAN class="identifier">is_input_iterator</SPAN><SPAN class="special">&lt;</SPAN><SPAN class="identifier">InIt</SPAN><SPAN class="special">&gt;::</SPAN><SPAN class="identifier">value</SPAN> <SPAN class="special">:</SPAN> <SPAN class="string">"Iterator argument must model an InputIterator"</SPAN><SPAN class="special">;</SPAN> <SPAN class="special">}</SPAN>
+                 <SPAN class="keyword">postcondition</SPAN> <SPAN class="special">{</SPAN> <SPAN class="identifier">equal_distance</SPAN><SPAN class="special">(</SPAN> <SPAN class="identifier">first</SPAN><SPAN class="special">,</SPAN> <SPAN class="identifier">last</SPAN><SPAN class="special">,</SPAN> <SPAN class="identifier">size</SPAN><SPAN class="special">()</SPAN> <SPAN class="special">);</SPAN> <SPAN class="special">}</SPAN>
+                 
+             <SPAN class="keyword">template</SPAN><SPAN class="special">&lt;</SPAN> <SPAN class="keyword">class</SPAN> <SPAN class="identifier">InIt</SPAN> <SPAN class="special">&gt;</SPAN>
+             <SPAN class="identifier">vector</SPAN><SPAN class="special">(</SPAN> <SPAN class="identifier">InIt</SPAN> <SPAN class="identifier">first</SPAN><SPAN class="special">,</SPAN> <SPAN class="identifier">InIt</SPAN> <SPAN class="identifier">last</SPAN><SPAN class="special">,</SPAN> <SPAN class="keyword">const</SPAN> <SPAN class="identifier">Alloc</SPAN><SPAN class="special">&amp;</SPAN> <SPAN class="identifier">al</SPAN> <SPAN class="special">);</SPAN>
+                 <SPAN class="keyword">precondition</SPAN>  <SPAN class="special">{</SPAN> <SPAN class="keyword">static</SPAN> <SPAN class="identifier">is_input_iterator</SPAN><SPAN class="special">&lt;</SPAN><SPAN class="identifier">InIt</SPAN><SPAN class="special">&gt;::</SPAN><SPAN class="identifier">value</SPAN> <SPAN class="special">:</SPAN> <SPAN class="string">"Iterator argument must model an InputIterator"</SPAN><SPAN class="special">;</SPAN> <SPAN class="special">}</SPAN>
+                 <SPAN class="keyword">postcondition</SPAN> <SPAN class="special">{</SPAN> <SPAN class="identifier">equal_distance</SPAN><SPAN class="special">(</SPAN> <SPAN class="identifier">first</SPAN><SPAN class="special">,</SPAN> <SPAN class="identifier">last</SPAN><SPAN class="special">,</SPAN> <SPAN class="identifier">size</SPAN><SPAN class="special">()</SPAN> <SPAN class="special">);</SPAN> 
+                                 <SPAN class="identifier">al</SPAN> <SPAN class="special">=</SPAN> <SPAN class="identifier">get_allocator</SPAN><SPAN class="special">();</SPAN> <SPAN class="special">}</SPAN>
+
+             <SPAN class="keyword">void</SPAN> <SPAN class="identifier">reserve</SPAN><SPAN class="special">(</SPAN> <SPAN class="identifier">size_type</SPAN> <SPAN class="identifier">count</SPAN> <SPAN class="special">)</SPAN> 
+                 <SPAN class="keyword">precondition</SPAN> <SPAN class="special">{</SPAN> <SPAN class="identifier">count</SPAN> <SPAN class="special">&lt;</SPAN> <SPAN class="identifier">max_size</SPAN><SPAN class="special">()</SPAN> <SPAN class="special">:</SPAN> <SPAN class="keyword">throw</SPAN> <SPAN class="identifier">length_error</SPAN><SPAN class="special">();</SPAN> <SPAN class="special">}</SPAN>
+                 <SPAN class="keyword">postcondition</SPAN> <SPAN class="special">{</SPAN> <SPAN class="identifier">capacity</SPAN><SPAN class="special">()</SPAN> <SPAN class="special">&gt;=</SPAN> <SPAN class="identifier">count</SPAN><SPAN class="special">;</SPAN> <SPAN class="special">}</SPAN>
+                 
+             <SPAN class="identifier">size_type</SPAN> <SPAN class="identifier">capacity</SPAN><SPAN class="special">()</SPAN> <SPAN class="keyword">const</SPAN><SPAN class="special">;</SPAN>
+                 <SPAN class="keyword">postcondition</SPAN><SPAN class="special">(</SPAN> <SPAN class="keyword">result</SPAN> <SPAN class="special">)</SPAN> <SPAN class="special">{</SPAN> <SPAN class="keyword">result</SPAN> <SPAN class="special">&gt;=</SPAN> <SPAN class="identifier">size</SPAN><SPAN class="special">();</SPAN> <SPAN class="special">}</SPAN>
+                 
+             <SPAN class="identifier">iterator</SPAN> <SPAN class="identifier">begin</SPAN><SPAN class="special">()</SPAN>
+                 <SPAN class="keyword">postcondition</SPAN><SPAN class="special">(</SPAN> <SPAN class="keyword">result</SPAN> <SPAN class="special">)</SPAN> <SPAN class="special">{</SPAN> <SPAN class="keyword">if</SPAN><SPAN class="special">(</SPAN> <SPAN class="identifier">empty</SPAN><SPAN class="special">()</SPAN> <SPAN class="special">)</SPAN> <SPAN class="keyword">result</SPAN> <SPAN class="special">==</SPAN> <SPAN class="identifier">end</SPAN><SPAN class="special">();</SPAN> <SPAN class="special">}</SPAN>
+             
+             <SPAN class="identifier">const_iterator</SPAN> <SPAN class="identifier">begin</SPAN><SPAN class="special">()</SPAN> <SPAN class="keyword">const</SPAN>
+                 <SPAN class="keyword">postcondition</SPAN><SPAN class="special">(</SPAN> <SPAN class="keyword">result</SPAN> <SPAN class="special">)</SPAN> <SPAN class="special">{</SPAN> <SPAN class="keyword">if</SPAN><SPAN class="special">(</SPAN> <SPAN class="identifier">empty</SPAN><SPAN class="special">()</SPAN> <SPAN class="special">)</SPAN> <SPAN class="keyword">result</SPAN> <SPAN class="special">==</SPAN> <SPAN class="identifier">end</SPAN><SPAN class="special">();</SPAN> <SPAN class="special">}</SPAN>
+             
+             <SPAN class="identifier">iterator</SPAN> <SPAN class="identifier">end</SPAN><SPAN class="special">();</SPAN>
+             <SPAN class="identifier">const_iterator</SPAN> <SPAN class="identifier">end</SPAN><SPAN class="special">()</SPAN> <SPAN class="keyword">const</SPAN><SPAN class="special">;</SPAN>
+             
+             <SPAN class="identifier">reverse_iterator</SPAN> <SPAN class="identifier">rbegin</SPAN><SPAN class="special">()</SPAN>
+                 <SPAN class="keyword">postcondition</SPAN><SPAN class="special">(</SPAN> <SPAN class="keyword">result</SPAN> <SPAN class="special">)</SPAN> <SPAN class="special">{</SPAN> <SPAN class="keyword">if</SPAN><SPAN class="special">(</SPAN> <SPAN class="identifier">empty</SPAN><SPAN class="special">()</SPAN> <SPAN class="special">)</SPAN> <SPAN class="keyword">result</SPAN> <SPAN class="special">==</SPAN> <SPAN class="identifier">rend</SPAN><SPAN class="special">();</SPAN> <SPAN class="special">}</SPAN>
+             
+             <SPAN class="identifier">const_reverse_iterator</SPAN> <SPAN class="identifier">rbegin</SPAN><SPAN class="special">()</SPAN> <SPAN class="keyword">const</SPAN>
+                 <SPAN class="keyword">postcondition</SPAN><SPAN class="special">(</SPAN> <SPAN class="keyword">result</SPAN> <SPAN class="special">)</SPAN> <SPAN class="special">{</SPAN> <SPAN class="keyword">if</SPAN><SPAN class="special">(</SPAN> <SPAN class="identifier">empty</SPAN><SPAN class="special">()</SPAN> <SPAN class="special">)</SPAN> <SPAN class="keyword">result</SPAN> <SPAN class="special">==</SPAN> <SPAN class="identifier">rend</SPAN><SPAN class="special">();</SPAN> <SPAN class="special">}</SPAN>
+             
+             <SPAN class="identifier">reverse_iterator</SPAN> <SPAN class="identifier">rend</SPAN><SPAN class="special">();</SPAN>
+             <SPAN class="identifier">const_reverse_iterator</SPAN> <SPAN class="identifier">rend</SPAN><SPAN class="special">()</SPAN> <SPAN class="keyword">const</SPAN><SPAN class="special">;</SPAN>
+             
+             <SPAN class="keyword">void</SPAN> <SPAN class="identifier">resize</SPAN><SPAN class="special">(</SPAN> <SPAN class="identifier">size_type</SPAN> <SPAN class="identifier">newsize</SPAN> <SPAN class="special">)</SPAN>
+                 <SPAN class="keyword">postcondition</SPAN> <SPAN class="comment">// version 1: with an if</SPAN>
+                 <SPAN class="special">{</SPAN> 
+                     <SPAN class="identifier">size</SPAN><SPAN class="special">()</SPAN> <SPAN class="special">==</SPAN> <SPAN class="identifier">newsize</SPAN><SPAN class="special">;</SPAN> 
+                     <SPAN class="keyword">if</SPAN><SPAN class="special">(</SPAN> <SPAN class="identifier">newsize</SPAN> <SPAN class="special">&gt;</SPAN> <SPAN class="identifier">std</SPAN><SPAN class="special">::</SPAN><SPAN class="identifier">old</SPAN><SPAN class="special">(</SPAN><SPAN class="identifier">size</SPAN><SPAN class="special">())</SPAN> <SPAN class="special">)</SPAN>
+                         <SPAN class="identifier">all_equals</SPAN><SPAN class="special">(</SPAN> <SPAN class="identifier">begin</SPAN><SPAN class="special">()</SPAN> <SPAN class="special">+</SPAN> <SPAN class="identifier">std</SPAN><SPAN class="special">::</SPAN><SPAN class="identifier">old</SPAN><SPAN class="special">(</SPAN><SPAN class="identifier">size</SPAN><SPAN class="special">()),</SPAN> <SPAN class="identifier">end</SPAN><SPAN class="special">(),</SPAN> <SPAN class="identifier">T</SPAN><SPAN class="special">()</SPAN> <SPAN class="special">);</SPAN>
+                 <SPAN class="special">}</SPAN>
+             
+             <SPAN class="keyword">void</SPAN> <SPAN class="identifier">resize</SPAN><SPAN class="special">(</SPAN> <SPAN class="identifier">size_type</SPAN> <SPAN class="identifier">newsize</SPAN><SPAN class="special">,</SPAN> <SPAN class="identifier">T</SPAN> <SPAN class="identifier">val</SPAN> <SPAN class="special">)</SPAN>
+                 <SPAN class="keyword">postcondition</SPAN> <SPAN class="comment">// version 2: with ternary operator</SPAN>
+                 <SPAN class="special">{</SPAN>
+                     <SPAN class="identifier">size</SPAN><SPAN class="special">()</SPAN> <SPAN class="special">==</SPAN> <SPAN class="identifier">newsize</SPAN><SPAN class="special">;</SPAN> 
+                     <SPAN class="identifier">newsize</SPAN> <SPAN class="special">&gt;</SPAN> <SPAN class="identifier">std</SPAN><SPAN class="special">::</SPAN><SPAN class="identifier">old</SPAN><SPAN class="special">(</SPAN><SPAN class="identifier">size</SPAN><SPAN class="special">())</SPAN> <SPAN class="special">?</SPAN> 
+                         <SPAN class="identifier">all_equals</SPAN><SPAN class="special">(</SPAN> <SPAN class="identifier">begin</SPAN><SPAN class="special">()</SPAN> <SPAN class="special">+</SPAN> <SPAN class="identifier">std</SPAN><SPAN class="special">::</SPAN><SPAN class="identifier">old</SPAN><SPAN class="special">(</SPAN><SPAN class="identifier">size</SPAN><SPAN class="special">()),</SPAN> <SPAN class="identifier">end</SPAN><SPAN class="special">(),</SPAN> <SPAN class="identifier">val</SPAN> <SPAN class="special">)</SPAN> <SPAN class="special">:</SPAN> <SPAN class="keyword">true</SPAN><SPAN class="special">;</SPAN>
+                 <SPAN class="special">}</SPAN>
+         
+             <SPAN class="identifier">size_type</SPAN> <SPAN class="identifier">size</SPAN><SPAN class="special">()</SPAN> <SPAN class="keyword">const</SPAN>
+                 <SPAN class="keyword">postcondition</SPAN><SPAN class="special">(</SPAN> <SPAN class="keyword">result</SPAN> <SPAN class="special">)</SPAN> <SPAN class="special">{</SPAN> <SPAN class="keyword">result</SPAN> <SPAN class="special">&lt;=</SPAN> <SPAN class="identifier">capacity</SPAN><SPAN class="special">();</SPAN> <SPAN class="special">}</SPAN>
+                 
+             <SPAN class="identifier">size_type</SPAN> <SPAN class="identifier">max_size</SPAN><SPAN class="special">()</SPAN> <SPAN class="keyword">const</SPAN>
+                 <SPAN class="keyword">postcondition</SPAN><SPAN class="special">(</SPAN> <SPAN class="keyword">result</SPAN> <SPAN class="special">)</SPAN> <SPAN class="special">{</SPAN> <SPAN class="keyword">result</SPAN> <SPAN class="special">&gt;=</SPAN> <SPAN class="identifier">capacity</SPAN><SPAN class="special">();</SPAN> <SPAN class="special">}</SPAN>
+             
+             <SPAN class="keyword">bool</SPAN> <SPAN class="identifier">empty</SPAN><SPAN class="special">()</SPAN> <SPAN class="keyword">const</SPAN>
+                 <SPAN class="keyword">postcondition</SPAN><SPAN class="special">(</SPAN> <SPAN class="keyword">result</SPAN> <SPAN class="special">)</SPAN> <SPAN class="special">{</SPAN> <SPAN class="keyword">result</SPAN> <SPAN class="special">==</SPAN> <SPAN class="special">(</SPAN> <SPAN class="identifier">size</SPAN><SPAN class="special">()</SPAN> <SPAN class="special">==</SPAN> <SPAN class="number">0</SPAN> <SPAN class="special">);</SPAN> <SPAN class="special">}</SPAN>
+             
+             <SPAN class="identifier">Alloc</SPAN> <SPAN class="identifier">get_allocator</SPAN><SPAN class="special">()</SPAN> <SPAN class="keyword">const</SPAN><SPAN class="special">;</SPAN>
+             
+             <SPAN class="identifier">reference</SPAN> <SPAN class="identifier">at</SPAN><SPAN class="special">(</SPAN> <SPAN class="identifier">size_type</SPAN> <SPAN class="identifier">off</SPAN> <SPAN class="special">);</SPAN>
+                 <SPAN class="keyword">precondition</SPAN> <SPAN class="special">{</SPAN> <SPAN class="identifier">off</SPAN> <SPAN class="special">&lt;</SPAN> <SPAN class="identifier">size</SPAN><SPAN class="special">()</SPAN> <SPAN class="special">:</SPAN> <SPAN class="keyword">throw</SPAN> <SPAN class="identifier">out_of_range</SPAN><SPAN class="special">();</SPAN> <SPAN class="special">}</SPAN>
+             
+             <SPAN class="identifier">const_reference</SPAN> <SPAN class="identifier">at</SPAN><SPAN class="special">(</SPAN> <SPAN class="identifier">size_type</SPAN> <SPAN class="identifier">off</SPAN> <SPAN class="special">)</SPAN> <SPAN class="keyword">const</SPAN><SPAN class="special">;</SPAN>
+                 <SPAN class="keyword">precondition</SPAN> <SPAN class="special">{</SPAN> <SPAN class="identifier">off</SPAN> <SPAN class="special">&lt;</SPAN> <SPAN class="identifier">size</SPAN><SPAN class="special">()</SPAN> <SPAN class="special">:</SPAN> <SPAN class="keyword">throw</SPAN> <SPAN class="identifier">out_of_range</SPAN><SPAN class="special">();</SPAN> <SPAN class="special">}</SPAN>
+                 
+             <SPAN class="identifier">reference</SPAN> <SPAN class="keyword">operator</SPAN><SPAN class="special">[](</SPAN> <SPAN class="identifier">size_type</SPAN> <SPAN class="identifier">off</SPAN> <SPAN class="special">)</SPAN>
+                 <SPAN class="keyword">precondition</SPAN> <SPAN class="special">{</SPAN> <SPAN class="identifier">off</SPAN> <SPAN class="special">&lt;</SPAN> <SPAN class="identifier">size</SPAN><SPAN class="special">();</SPAN> <SPAN class="special">}</SPAN>
+
+             <SPAN class="identifier">const_reference</SPAN> <SPAN class="keyword">operator</SPAN><SPAN class="special">[](</SPAN> <SPAN class="identifier">size_type</SPAN> <SPAN class="identifier">off</SPAN> <SPAN class="special">)</SPAN>
+                 <SPAN class="keyword">precondition</SPAN> <SPAN class="special">{</SPAN> <SPAN class="identifier">off</SPAN> <SPAN class="special">&lt;</SPAN> <SPAN class="identifier">size</SPAN><SPAN class="special">();</SPAN> <SPAN class="special">}</SPAN>
+    
+             <SPAN class="identifier">reference</SPAN> <SPAN class="identifier">front</SPAN><SPAN class="special">();</SPAN>
+                 <SPAN class="keyword">precondition</SPAN> <SPAN class="special">{</SPAN> <SPAN class="keyword">not</SPAN> <SPAN class="identifier">empty</SPAN><SPAN class="special">();</SPAN> <SPAN class="special">}</SPAN>
+             
+             <SPAN class="identifier">const_reference</SPAN> <SPAN class="identifier">front</SPAN><SPAN class="special">()</SPAN> <SPAN class="keyword">const</SPAN><SPAN class="special">;</SPAN>
+                 <SPAN class="keyword">precondition</SPAN> <SPAN class="special">{</SPAN> <SPAN class="keyword">not</SPAN> <SPAN class="identifier">empty</SPAN><SPAN class="special">();</SPAN> <SPAN class="special">}</SPAN>
+    
+             <SPAN class="identifier">reference</SPAN> <SPAN class="identifier">back</SPAN><SPAN class="special">()</SPAN>
+                 <SPAN class="keyword">precondition</SPAN> <SPAN class="special">{</SPAN> <SPAN class="keyword">not</SPAN> <SPAN class="identifier">empty</SPAN><SPAN class="special">();</SPAN> <SPAN class="special">}</SPAN>
+             
+             <SPAN class="identifier">const_reference</SPAN> <SPAN class="identifier">back</SPAN><SPAN class="special">()</SPAN> <SPAN class="keyword">const</SPAN><SPAN class="special">;</SPAN>
+                 <SPAN class="keyword">precondition</SPAN> <SPAN class="special">{</SPAN> <SPAN class="keyword">not</SPAN> <SPAN class="identifier">empty</SPAN><SPAN class="special">();</SPAN> <SPAN class="special">}</SPAN>
+                 
+             <SPAN class="keyword">void</SPAN> <SPAN class="identifier">push_back</SPAN><SPAN class="special">(</SPAN> <SPAN class="keyword">const</SPAN> <SPAN class="identifier">T</SPAN><SPAN class="special">&amp;</SPAN> <SPAN class="identifier">val</SPAN> <SPAN class="special">)</SPAN>
+                 <SPAN class="keyword">precondition</SPAN>  <SPAN class="special">{</SPAN> <SPAN class="identifier">size</SPAN><SPAN class="special">()</SPAN> <SPAN class="special">&lt;</SPAN> <SPAN class="identifier">max_size</SPAN><SPAN class="special">();</SPAN> <SPAN class="special">}</SPAN>
+                 <SPAN class="keyword">postcondition</SPAN> <SPAN class="special">{</SPAN> <SPAN class="identifier">back</SPAN><SPAN class="special">()</SPAN> <SPAN class="special">==</SPAN> <SPAN class="identifier">val</SPAN><SPAN class="special">;</SPAN> 
+                                 <SPAN class="identifier">size</SPAN><SPAN class="special">()</SPAN> <SPAN class="special">==</SPAN> <SPAN class="identifier">std</SPAN><SPAN class="special">::</SPAN><SPAN class="identifier">old</SPAN><SPAN class="special">(</SPAN><SPAN class="identifier">size</SPAN><SPAN class="special">())</SPAN> <SPAN class="special">+</SPAN> <SPAN class="number">1</SPAN><SPAN class="special">;</SPAN> 
+                                 <SPAN class="identifier">capacity</SPAN><SPAN class="special">()</SPAN> <SPAN class="special">&lt;=</SPAN> <SPAN class="identifier">std</SPAN><SPAN class="special">::</SPAN><SPAN class="identifier">old</SPAN><SPAN class="special">(</SPAN><SPAN class="identifier">capacity</SPAN><SPAN class="special">());</SPAN> <SPAN class="special">}</SPAN>
+                 
+             <SPAN class="keyword">void</SPAN> <SPAN class="identifier">pop_back</SPAN><SPAN class="special">()</SPAN>
+                 <SPAN class="keyword">precondition</SPAN>  <SPAN class="special">{</SPAN> <SPAN class="keyword">not</SPAN> <SPAN class="identifier">empty</SPAN><SPAN class="special">();</SPAN> <SPAN class="special">}</SPAN>
+                 <SPAN class="keyword">postcondition</SPAN> <SPAN class="special">{</SPAN> <SPAN class="identifier">size</SPAN><SPAN class="special">()</SPAN> <SPAN class="special">==</SPAN> <SPAN class="identifier">std</SPAN><SPAN class="special">::</SPAN><SPAN class="identifier">old</SPAN><SPAN class="special">(</SPAN><SPAN class="identifier">size</SPAN><SPAN class="special">())</SPAN> <SPAN class="special">-</SPAN> <SPAN class="number">1</SPAN><SPAN class="special">;</SPAN> <SPAN class="special">}</SPAN>
+             
+             <SPAN class="keyword">template</SPAN><SPAN class="special">&lt;</SPAN> <SPAN class="keyword">class</SPAN> <SPAN class="identifier">InIt</SPAN> <SPAN class="special">&gt;</SPAN>
+             <SPAN class="keyword">void</SPAN> <SPAN class="identifier">assign</SPAN><SPAN class="special">(</SPAN> <SPAN class="identifier">InIt</SPAN> <SPAN class="identifier">first</SPAN><SPAN class="special">,</SPAN> <SPAN class="identifier">InIt</SPAN> <SPAN class="identifier">last</SPAN> <SPAN class="special">)</SPAN>
+                 <SPAN class="keyword">precondition</SPAN>  
+                 <SPAN class="special">{</SPAN>
+                     <SPAN class="keyword">static</SPAN> <SPAN class="identifier">is_input_iterator</SPAN><SPAN class="special">&lt;</SPAN><SPAN class="identifier">InIt</SPAN><SPAN class="special">&gt;::</SPAN><SPAN class="identifier">value</SPAN> <SPAN class="special">:</SPAN> <SPAN class="string">"Iterator argument must model an InputIterator"</SPAN><SPAN class="special">;</SPAN> 
+                     <SPAN class="string">"The range [first,last) is not a sub-range of [begin(),end())"</SPAN><SPAN class="special">;</SPAN>
+                 <SPAN class="special">}</SPAN>
+                 <SPAN class="keyword">postcondition</SPAN> <SPAN class="special">{</SPAN> <SPAN class="identifier">equal_distance</SPAN><SPAN class="special">(</SPAN> <SPAN class="identifier">first</SPAN><SPAN class="special">,</SPAN> <SPAN class="identifier">last</SPAN><SPAN class="special">,</SPAN> <SPAN class="identifier">size</SPAN><SPAN class="special">()</SPAN> <SPAN class="special">);</SPAN> <SPAN class="special">}</SPAN>
+             
+             <SPAN class="keyword">void</SPAN> <SPAN class="identifier">assign</SPAN><SPAN class="special">(</SPAN> <SPAN class="identifier">size_type</SPAN> <SPAN class="identifier">count</SPAN><SPAN class="special">,</SPAN> <SPAN class="keyword">const</SPAN> <SPAN class="identifier">T</SPAN><SPAN class="special">&amp;</SPAN> <SPAN class="identifier">val</SPAN> <SPAN class="special">)</SPAN>
+                 <SPAN class="keyword">precondition</SPAN>  <SPAN class="special">{</SPAN> <SPAN class="identifier">count</SPAN> <SPAN class="special">&lt;=</SPAN> <SPAN class="identifier">max_size</SPAN><SPAN class="special">();</SPAN> <SPAN class="special">}</SPAN>
+                 <SPAN class="keyword">postcondition</SPAN> <SPAN class="special">{</SPAN> <SPAN class="identifier">all_equals</SPAN><SPAN class="special">(</SPAN> <SPAN class="identifier">begin</SPAN><SPAN class="special">(),</SPAN> <SPAN class="identifier">end</SPAN><SPAN class="special">(),</SPAN> <SPAN class="identifier">val</SPAN> <SPAN class="special">);</SPAN> <SPAN class="special">}</SPAN>
+                 
+             <SPAN class="identifier">iterator</SPAN> <SPAN class="identifier">insert</SPAN><SPAN class="special">(</SPAN> <SPAN class="identifier">iterator</SPAN> <SPAN class="identifier">where</SPAN><SPAN class="special">,</SPAN> <SPAN class="keyword">const</SPAN> <SPAN class="identifier">T</SPAN><SPAN class="special">&amp;</SPAN> <SPAN class="identifier">val</SPAN> <SPAN class="special">)</SPAN>
+                 <SPAN class="keyword">precondition</SPAN>  <SPAN class="special">{</SPAN> <SPAN class="identifier">size</SPAN><SPAN class="special">()</SPAN> <SPAN class="special">&lt;</SPAN> <SPAN class="identifier">max_size</SPAN><SPAN class="special">();</SPAN> <SPAN class="special">}</SPAN>
+                 <SPAN class="keyword">postcondition</SPAN><SPAN class="special">(</SPAN> <SPAN class="keyword">result</SPAN> <SPAN class="special">)</SPAN> 
+                 <SPAN class="special">{</SPAN>
+                     <SPAN class="special">*</SPAN><SPAN class="keyword">result</SPAN> <SPAN class="special">==</SPAN> <SPAN class="identifier">val</SPAN><SPAN class="special">;</SPAN>
+                     <SPAN class="identifier">size</SPAN><SPAN class="special">()</SPAN>  <SPAN class="special">==</SPAN> <SPAN class="identifier">std</SPAN><SPAN class="special">::</SPAN><SPAN class="identifier">old</SPAN><SPAN class="special">(</SPAN><SPAN class="identifier">size</SPAN><SPAN class="special">())</SPAN> <SPAN class="special">+</SPAN> <SPAN class="number">1</SPAN><SPAN class="special">;</SPAN>
+                     <SPAN class="identifier">capacity</SPAN><SPAN class="special">()</SPAN> <SPAN class="special">&gt;=</SPAN> <SPAN class="identifier">std</SPAN><SPAN class="special">::</SPAN><SPAN class="identifier">old</SPAN><SPAN class="special">(</SPAN><SPAN class="identifier">capacity</SPAN><SPAN class="special">());</SPAN>
+                     
+                     <SPAN class="keyword">if</SPAN><SPAN class="special">(</SPAN> <SPAN class="identifier">capacity</SPAN><SPAN class="special">()</SPAN> <SPAN class="special">&gt;</SPAN> <SPAN class="identifier">std</SPAN><SPAN class="special">::</SPAN><SPAN class="identifier">old</SPAN><SPAN class="special">(</SPAN><SPAN class="identifier">capacity</SPAN><SPAN class="special">())</SPAN> <SPAN class="special">)</SPAN>
+                         <SPAN class="string">"All iterators have been invalidated"</SPAN><SPAN class="special">;</SPAN>
+                     <SPAN class="keyword">else</SPAN>
+                         <SPAN class="string">"All iterators in the range [where,end()) have been invalidated"</SPAN><SPAN class="special">;</SPAN>
+                 <SPAN class="special">}</SPAN>
+             
+             <SPAN class="keyword">void</SPAN> <SPAN class="identifier">insert</SPAN><SPAN class="special">(</SPAN> <SPAN class="identifier">iterator</SPAN> <SPAN class="identifier">where</SPAN><SPAN class="special">,</SPAN> <SPAN class="identifier">size_type</SPAN> <SPAN class="identifier">count</SPAN><SPAN class="special">,</SPAN> <SPAN class="keyword">const</SPAN> <SPAN class="identifier">T</SPAN><SPAN class="special">&amp;</SPAN> <SPAN class="identifier">val</SPAN> <SPAN class="special">)</SPAN>
+                 <SPAN class="keyword">precondition</SPAN>  <SPAN class="special">{</SPAN> <SPAN class="identifier">size</SPAN><SPAN class="special">()</SPAN> <SPAN class="special">+</SPAN> <SPAN class="identifier">count</SPAN> <SPAN class="special">&lt;=</SPAN> <SPAN class="identifier">max_size</SPAN><SPAN class="special">();</SPAN> <SPAN class="special">}</SPAN>
+                 <SPAN class="keyword">postcondition</SPAN> 
+                 <SPAN class="special">{</SPAN>
+                     <SPAN class="identifier">size</SPAN><SPAN class="special">()</SPAN> <SPAN class="special">==</SPAN> <SPAN class="identifier">std</SPAN><SPAN class="special">::</SPAN><SPAN class="identifier">old</SPAN><SPAN class="special">(</SPAN><SPAN class="identifier">size</SPAN><SPAN class="special">())</SPAN> <SPAN class="special">+</SPAN> <SPAN class="identifier">count</SPAN><SPAN class="special">;</SPAN>
+                     <SPAN class="identifier">capacity</SPAN><SPAN class="special">()</SPAN> <SPAN class="special">&gt;=</SPAN> <SPAN class="identifier">std</SPAN><SPAN class="special">::</SPAN><SPAN class="identifier">old</SPAN><SPAN class="special">(</SPAN><SPAN class="identifier">capacity</SPAN><SPAN class="special">());</SPAN>
+                     
+                     <SPAN class="keyword">if</SPAN><SPAN class="special">(</SPAN> <SPAN class="identifier">capacity</SPAN><SPAN class="special">()</SPAN> <SPAN class="special">==</SPAN> <SPAN class="identifier">std</SPAN><SPAN class="special">::</SPAN><SPAN class="identifier">old</SPAN><SPAN class="special">(</SPAN><SPAN class="identifier">capacity</SPAN><SPAN class="special">())</SPAN> <SPAN class="special">)</SPAN>
+                     <SPAN class="special">{</SPAN>
+                         <SPAN class="identifier">all_equals</SPAN><SPAN class="special">(</SPAN> <SPAN class="identifier">std</SPAN><SPAN class="special">::</SPAN><SPAN class="identifier">old</SPAN><SPAN class="special">(</SPAN><SPAN class="identifier">prior</SPAN><SPAN class="special">(</SPAN><SPAN class="identifier">where</SPAN><SPAN class="special">)),</SPAN> <SPAN class="identifier">std</SPAN><SPAN class="special">::</SPAN><SPAN class="identifier">old</SPAN><SPAN class="special">(</SPAN><SPAN class="identifier">prior</SPAN><SPAN class="special">(</SPAN><SPAN class="identifier">where</SPAN><SPAN class="special">))</SPAN> <SPAN class="special">+</SPAN> <SPAN class="identifier">count</SPAN><SPAN class="special">,</SPAN> <SPAN class="identifier">val</SPAN> <SPAN class="special">);</SPAN>
+                         <SPAN class="string">"All iterators in the range [where,end()) have been invalidated"</SPAN><SPAN class="special">;</SPAN>
+                     <SPAN class="special">}</SPAN>
+                     <SPAN class="keyword">else</SPAN>
+                         <SPAN class="string">"All iterators have been invalidated"</SPAN><SPAN class="special">;</SPAN>
+                 <SPAN class="special">}</SPAN>
+                 
+             <SPAN class="keyword">template</SPAN><SPAN class="special">&lt;</SPAN> <SPAN class="keyword">class</SPAN> <SPAN class="identifier">InIt</SPAN> <SPAN class="special">&gt;</SPAN>
+             <SPAN class="keyword">void</SPAN> <SPAN class="identifier">insert</SPAN><SPAN class="special">(</SPAN> <SPAN class="identifier">iterator</SPAN> <SPAN class="identifier">where</SPAN><SPAN class="special">,</SPAN> <SPAN class="identifier">InIt</SPAN> <SPAN class="identifier">first</SPAN><SPAN class="special">,</SPAN> <SPAN class="identifier">InIt</SPAN> <SPAN class="identifier">last</SPAN> <SPAN class="special">)</SPAN>
+                 <SPAN class="keyword">precondition</SPAN>  
+                 <SPAN class="special">{</SPAN> 
+                     <SPAN class="keyword">static</SPAN> <SPAN class="identifier">is_input_iterator</SPAN><SPAN class="special">&lt;</SPAN><SPAN class="identifier">InIt</SPAN><SPAN class="special">&gt;::</SPAN><SPAN class="identifier">value</SPAN> <SPAN class="special">:</SPAN> <SPAN class="string">"Iterator argument must model an InputIterator"</SPAN><SPAN class="special">;</SPAN>
+                     <SPAN class="string">"The range [first,last) is not a sub-range of [begin(),end())"</SPAN><SPAN class="special">;</SPAN>
+                     <SPAN class="identifier">size</SPAN><SPAN class="special">()</SPAN> <SPAN class="special">+</SPAN> <SPAN class="identifier">count</SPAN> <SPAN class="special">&lt;=</SPAN> <SPAN class="identifier">max_size</SPAN><SPAN class="special">();</SPAN> 
+                 <SPAN class="special">}</SPAN>
+                 <SPAN class="keyword">postcondition</SPAN>
+                 <SPAN class="special">{</SPAN>
+                     <SPAN class="identifier">size</SPAN><SPAN class="special">()</SPAN> <SPAN class="special">==</SPAN> <SPAN class="identifier">std</SPAN><SPAN class="special">::</SPAN><SPAN class="identifier">old</SPAN><SPAN class="special">(</SPAN><SPAN class="identifier">size</SPAN><SPAN class="special">())</SPAN> <SPAN class="special">+</SPAN> <SPAN class="identifier">count</SPAN><SPAN class="special">;</SPAN>
+                     <SPAN class="identifier">capacity</SPAN><SPAN class="special">()</SPAN> <SPAN class="special">&gt;=</SPAN> <SPAN class="identifier">std</SPAN><SPAN class="special">::</SPAN><SPAN class="identifier">old</SPAN><SPAN class="special">(</SPAN><SPAN class="identifier">capacity</SPAN><SPAN class="special">());</SPAN>
+        
+                     <SPAN class="keyword">if</SPAN><SPAN class="special">(</SPAN> <SPAN class="identifier">capacity</SPAN><SPAN class="special">()</SPAN> <SPAN class="special">==</SPAN> <SPAN class="identifier">std</SPAN><SPAN class="special">::</SPAN><SPAN class="identifier">old</SPAN><SPAN class="special">(</SPAN><SPAN class="identifier">capacity</SPAN><SPAN class="special">())</SPAN> <SPAN class="special">)</SPAN>
+                     <SPAN class="special">{</SPAN>
+                         <SPAN class="identifier">all_equals</SPAN><SPAN class="special">(</SPAN> <SPAN class="identifier">std</SPAN><SPAN class="special">::</SPAN><SPAN class="identifier">old</SPAN><SPAN class="special">(</SPAN><SPAN class="identifier">prior</SPAN><SPAN class="special">(</SPAN><SPAN class="identifier">where</SPAN><SPAN class="special">)),</SPAN> <SPAN class="identifier">std</SPAN><SPAN class="special">::</SPAN><SPAN class="identifier">old</SPAN><SPAN class="special">(</SPAN><SPAN class="identifier">prior</SPAN><SPAN class="special">(</SPAN><SPAN class="identifier">where</SPAN><SPAN class="special">))</SPAN> <SPAN class="special">+</SPAN> <SPAN class="identifier">count</SPAN><SPAN class="special">,</SPAN> <SPAN class="identifier">val</SPAN> <SPAN class="special">);</SPAN>
+                         <SPAN class="string">"All iterators in the range [where,end()) have been invalidated"</SPAN><SPAN class="special">;</SPAN>
+                     <SPAN class="special">}</SPAN>
+                     <SPAN class="keyword">else</SPAN>
+                         <SPAN class="string">"All iterators have been invalidated"</SPAN><SPAN class="special">;</SPAN>
+                 <SPAN class="special">}</SPAN>
+
+             <SPAN class="identifier">iterator</SPAN> <SPAN class="identifier">erase</SPAN><SPAN class="special">(</SPAN> <SPAN class="identifier">iterator</SPAN> <SPAN class="identifier">where</SPAN> <SPAN class="special">);</SPAN>
+                 <SPAN class="keyword">precondition</SPAN>  
+                 <SPAN class="special">{</SPAN> 
+                     <SPAN class="keyword">not</SPAN> <SPAN class="identifier">empty</SPAN><SPAN class="special">();</SPAN> 
+                     <SPAN class="identifier">where</SPAN> <SPAN class="special">!=</SPAN> <SPAN class="identifier">end</SPAN><SPAN class="special">();</SPAN>
+                 <SPAN class="special">}</SPAN>
+                 <SPAN class="keyword">postcondition</SPAN><SPAN class="special">(</SPAN> <SPAN class="keyword">result</SPAN> <SPAN class="special">)</SPAN> 
+                 <SPAN class="special">{</SPAN>
+                      <SPAN class="identifier">size</SPAN><SPAN class="special">()</SPAN> <SPAN class="special">==</SPAN> <SPAN class="identifier">std</SPAN><SPAN class="special">::</SPAN><SPAN class="identifier">old</SPAN><SPAN class="special">(</SPAN><SPAN class="identifier">size</SPAN><SPAN class="special">())</SPAN> <SPAN class="special">-</SPAN> <SPAN class="number">1</SPAN><SPAN class="special">;</SPAN> 
+                      <SPAN class="keyword">if</SPAN><SPAN class="special">(</SPAN> <SPAN class="identifier">empty</SPAN><SPAN class="special">()</SPAN> <SPAN class="special">)</SPAN>
+                          <SPAN class="keyword">result</SPAN> <SPAN class="special">==</SPAN> <SPAN class="identifier">end</SPAN><SPAN class="special">();</SPAN>
+                      <SPAN class="string">"All iterators in the range [where,end()) have been invalidated"</SPAN><SPAN class="special">;</SPAN>
+                 <SPAN class="special">}</SPAN>
+                 
+             <SPAN class="identifier">iterator</SPAN> <SPAN class="identifier">erase</SPAN><SPAN class="special">(</SPAN> <SPAN class="identifier">iterator</SPAN> <SPAN class="identifier">first</SPAN><SPAN class="special">,</SPAN> <SPAN class="identifier">iterator</SPAN> <SPAN class="identifier">last</SPAN> <SPAN class="special">)</SPAN>
+                 <SPAN class="keyword">precondition</SPAN>  <SPAN class="special">{</SPAN> <SPAN class="identifier">size</SPAN><SPAN class="special">()</SPAN> <SPAN class="special">&gt;=</SPAN> <SPAN class="identifier">std</SPAN><SPAN class="special">::</SPAN><SPAN class="identifier">distance</SPAN><SPAN class="special">(</SPAN> <SPAN class="identifier">first</SPAN><SPAN class="special">,</SPAN> <SPAN class="identifier">last</SPAN> <SPAN class="special">);</SPAN> <SPAN class="special">}</SPAN>
+                 <SPAN class="keyword">postcondition</SPAN><SPAN class="special">(</SPAN> <SPAN class="keyword">result</SPAN> <SPAN class="special">)</SPAN> 
+                 <SPAN class="special">{</SPAN>
+                      <SPAN class="identifier">size</SPAN><SPAN class="special">()</SPAN> <SPAN class="special">==</SPAN> <SPAN class="identifier">std</SPAN><SPAN class="special">::</SPAN><SPAN class="identifier">old</SPAN><SPAN class="special">(</SPAN><SPAN class="identifier">size</SPAN><SPAN class="special">())</SPAN> <SPAN class="special">-</SPAN> <SPAN class="identifier">std</SPAN><SPAN class="special">::</SPAN><SPAN class="identifier">distance</SPAN><SPAN class="special">(</SPAN> <SPAN class="identifier">first</SPAN><SPAN class="special">,</SPAN> <SPAN class="identifier">last</SPAN> <SPAN class="special">);</SPAN> 
+                      <SPAN class="keyword">if</SPAN><SPAN class="special">(</SPAN> <SPAN class="identifier">empty</SPAN><SPAN class="special">()</SPAN> <SPAN class="special">)</SPAN>
+                          <SPAN class="keyword">result</SPAN> <SPAN class="special">==</SPAN> <SPAN class="identifier">end</SPAN><SPAN class="special">();</SPAN>
+                      <SPAN class="string">"All iterators in the range [first,end()) have been invalidated"</SPAN><SPAN class="special">;</SPAN>
+                 <SPAN class="special">}</SPAN>
+
+             <SPAN class="keyword">void</SPAN> <SPAN class="identifier">clear</SPAN><SPAN class="special">();</SPAN>
+                 <SPAN class="keyword">postcondition</SPAN> <SPAN class="special">{</SPAN> <SPAN class="identifier">empty</SPAN><SPAN class="special">();</SPAN> <SPAN class="special">}</SPAN>
+                 
+             <SPAN class="keyword">void</SPAN> <SPAN class="identifier">swap</SPAN><SPAN class="special">(</SPAN> <SPAN class="identifier">vector</SPAN><SPAN class="special">&amp;</SPAN> <SPAN class="identifier">right</SPAN> <SPAN class="special">)</SPAN>
+                 <SPAN class="keyword">postcondition</SPAN> 
+                 <SPAN class="special">{</SPAN> 
+                     <SPAN class="identifier">std</SPAN><SPAN class="special">::</SPAN><SPAN class="identifier">old</SPAN><SPAN class="special">(</SPAN> <SPAN class="special">*</SPAN><SPAN class="keyword">this</SPAN> <SPAN class="special">)</SPAN> <SPAN class="special">==</SPAN> <SPAN class="identifier">right</SPAN><SPAN class="special">;</SPAN>
+                     <SPAN class="identifier">std</SPAN><SPAN class="special">::</SPAN><SPAN class="identifier">old</SPAN><SPAN class="special">(</SPAN> <SPAN class="identifier">right</SPAN> <SPAN class="special">)</SPAN> <SPAN class="special">==</SPAN> <SPAN class="special">*</SPAN><SPAN class="keyword">this</SPAN><SPAN class="special">;</SPAN>
+                 <SPAN class="special">}</SPAN>
+             
+<SPAN class="special">};</SPAN> <SPAN class="comment">// class 'vector'</SPAN>
+</PRE>
+
+
+
+
+
+
+
+</DIV>
+<DIV class="section" id="factorial-example-hpp">
+<H2><A class="toc-backref" href="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2004/n1669.html#id69" name="factorial-example-hpp">8.2&nbsp;&nbsp;&nbsp;factorial_example.hpp</A></H2>
+
+
+
+
+<LINK rel="stylesheet" href="./Ottosen2004_Proposal_Rev1-n1669_files/style.css" type="text/css">
+
+
+
+
+<PRE><SPAN class="comment">//
+// This example shows how Contract Programming removes duplicate
+// knowledge because it can turn comments into code.
+//
+// It also shows a very interesting way of checking that 
+// the function's postcondition holds: the implementation
+// uses iteration, but the postcondition uses recursion
+// to verify the return value.
+//
+// remark: there is no deep/infinite recursion because
+//         contracts are not checked while evaluating
+//         a contract. 
+//
+
+///////////////////////////////////////////////////////////
+// Ordinary form of documentation
+///////////////////////////////////////////////////////////
+
+//! Factorial algorithm
+/*!
+
+   \pre 'n &gt;= 0'
+   \post returns '1' if 'n == 0'
+         returns 'factorial(n-1)*n' otherwise
+*/</SPAN>
+          
+<SPAN class="keyword">template</SPAN><SPAN class="special">&lt;</SPAN> <SPAN class="keyword">class</SPAN> <SPAN class="identifier">T</SPAN> <SPAN class="special">&gt;</SPAN>
+<SPAN class="keyword">inline</SPAN> <SPAN class="identifier">T</SPAN> <SPAN class="identifier">factorial</SPAN><SPAN class="special">(</SPAN> <SPAN class="identifier">T</SPAN> <SPAN class="identifier">n</SPAN> <SPAN class="special">)</SPAN>
+<SPAN class="special">{</SPAN>
+    <SPAN class="identifier">BOOST_ASSERT</SPAN><SPAN class="special">(</SPAN> <SPAN class="identifier">n</SPAN> <SPAN class="special">&gt;=</SPAN> <SPAN class="number">0</SPAN> <SPAN class="special">);</SPAN>
+
+    <SPAN class="keyword">if</SPAN><SPAN class="special">(</SPAN> <SPAN class="identifier">n</SPAN> <SPAN class="special">==</SPAN> <SPAN class="number">0</SPAN> <SPAN class="special">)</SPAN>
+        <SPAN class="keyword">return</SPAN> <SPAN class="number">1</SPAN><SPAN class="special">;</SPAN>
+    
+    <SPAN class="identifier">T</SPAN> <SPAN class="keyword">result</SPAN>     <SPAN class="special">=</SPAN> <SPAN class="identifier">n</SPAN><SPAN class="special">;</SPAN>
+    <SPAN class="identifier">T</SPAN> <SPAN class="identifier">old_result</SPAN> <SPAN class="special">=</SPAN> <SPAN class="keyword">result</SPAN><SPAN class="special">;</SPAN>
+    <SPAN class="keyword">for</SPAN><SPAN class="special">(</SPAN> <SPAN class="special">--</SPAN><SPAN class="identifier">n</SPAN><SPAN class="special">;</SPAN> <SPAN class="identifier">n</SPAN> <SPAN class="special">!=</SPAN> <SPAN class="number">0</SPAN><SPAN class="special">;</SPAN> <SPAN class="special">--</SPAN><SPAN class="identifier">n</SPAN> <SPAN class="special">)</SPAN>
+    <SPAN class="special">{</SPAN>
+        <SPAN class="keyword">result</SPAN> <SPAN class="special">*=</SPAN> <SPAN class="identifier">n</SPAN><SPAN class="special">;</SPAN>
+        <SPAN class="identifier">BOOST_ASSERT</SPAN><SPAN class="special">(</SPAN> <SPAN class="identifier">n</SPAN> <SPAN class="special">&gt;</SPAN> <SPAN class="number">0</SPAN> <SPAN class="special">);</SPAN>
+        <SPAN class="identifier">BOOST_ASSERT</SPAN><SPAN class="special">(</SPAN> <SPAN class="keyword">result</SPAN> <SPAN class="special">&gt;</SPAN> <SPAN class="identifier">old_result</SPAN> <SPAN class="special">&amp;&amp;</SPAN> <SPAN class="string">"integer has wrapped around"</SPAN> <SPAN class="special">);</SPAN>
+        <SPAN class="identifier">old_result</SPAN> <SPAN class="special">=</SPAN> <SPAN class="keyword">result</SPAN><SPAN class="special">;</SPAN>
+    <SPAN class="special">}</SPAN>
+    
+    <SPAN class="keyword">return</SPAN> <SPAN class="keyword">result</SPAN><SPAN class="special">;</SPAN>
+<SPAN class="special">}</SPAN>
+
+<SPAN class="comment">///////////////////////////////////////////////////////////
+// Contract Programming-style documentation
+///////////////////////////////////////////////////////////</SPAN>
+
+<SPAN class="keyword">template</SPAN><SPAN class="special">&lt;</SPAN> <SPAN class="keyword">class</SPAN> <SPAN class="identifier">T</SPAN> <SPAN class="special">&gt;</SPAN>
+<SPAN class="keyword">inline</SPAN> <SPAN class="identifier">T</SPAN> <SPAN class="identifier">factorial</SPAN><SPAN class="special">(</SPAN> <SPAN class="identifier">T</SPAN> <SPAN class="identifier">n</SPAN> <SPAN class="special">)</SPAN>
+<SPAN class="keyword">precondition</SPAN> 
+<SPAN class="special">{</SPAN>
+    <SPAN class="identifier">n</SPAN> <SPAN class="special">&gt;=</SPAN> <SPAN class="number">0</SPAN><SPAN class="special">;</SPAN> 
+<SPAN class="special">}</SPAN>
+<SPAN class="keyword">postcondition</SPAN><SPAN class="special">(</SPAN> <SPAN class="keyword">result</SPAN> <SPAN class="special">)</SPAN>
+<SPAN class="special">{</SPAN>
+    <SPAN class="keyword">if</SPAN><SPAN class="special">(</SPAN> <SPAN class="identifier">n</SPAN> <SPAN class="special">==</SPAN> <SPAN class="number">0</SPAN> <SPAN class="special">)</SPAN>
+        <SPAN class="keyword">result</SPAN> <SPAN class="special">==</SPAN> <SPAN class="number">1</SPAN><SPAN class="special">;</SPAN>
+    <SPAN class="keyword">else</SPAN>
+        <SPAN class="keyword">result</SPAN> <SPAN class="special">==</SPAN> <SPAN class="identifier">n</SPAN> <SPAN class="special">*</SPAN> <SPAN class="identifier">factorial</SPAN><SPAN class="special">(</SPAN><SPAN class="identifier">n</SPAN><SPAN class="special">-</SPAN><SPAN class="number">1</SPAN><SPAN class="special">);</SPAN>
+<SPAN class="special">}</SPAN>
+<SPAN class="keyword">do</SPAN>
+<SPAN class="special">{</SPAN>
+    <SPAN class="keyword">if</SPAN><SPAN class="special">(</SPAN> <SPAN class="identifier">n</SPAN> <SPAN class="special">==</SPAN> <SPAN class="number">0</SPAN> <SPAN class="special">)</SPAN>
+        <SPAN class="keyword">return</SPAN> <SPAN class="number">1</SPAN><SPAN class="special">;</SPAN>
+    
+    <SPAN class="identifier">T</SPAN> <SPAN class="keyword">result</SPAN> <SPAN class="special">=</SPAN> <SPAN class="identifier">n</SPAN><SPAN class="special">;</SPAN>
+    <SPAN class="keyword">for</SPAN><SPAN class="special">(</SPAN> <SPAN class="special">--</SPAN><SPAN class="identifier">n</SPAN><SPAN class="special">;</SPAN> <SPAN class="identifier">n</SPAN> <SPAN class="special">!=</SPAN> <SPAN class="number">0</SPAN><SPAN class="special">;</SPAN> <SPAN class="special">--</SPAN><SPAN class="identifier">n</SPAN> <SPAN class="special">)</SPAN>
+        <SPAN class="keyword">result</SPAN> <SPAN class="special">*=</SPAN> <SPAN class="identifier">n</SPAN><SPAN class="special">;</SPAN>
+    <SPAN class="keyword">invariant</SPAN>
+    <SPAN class="special">{</SPAN>
+        <SPAN class="identifier">n</SPAN> <SPAN class="special">&gt;=</SPAN> <SPAN class="number">0</SPAN><SPAN class="special">;</SPAN>
+        <SPAN class="keyword">result</SPAN> <SPAN class="special">&gt;</SPAN> <SPAN class="identifier">std</SPAN><SPAN class="special">::</SPAN><SPAN class="identifier">old</SPAN><SPAN class="special">(</SPAN> <SPAN class="keyword">result</SPAN> <SPAN class="special">)</SPAN> <SPAN class="special">&amp;&amp;</SPAN> <SPAN class="string">"integer has wrapped around"</SPAN><SPAN class="special">;</SPAN> 
+    <SPAN class="special">}</SPAN>
+    
+    <SPAN class="keyword">return</SPAN> <SPAN class="keyword">result</SPAN><SPAN class="special">;</SPAN>
+<SPAN class="special">}</SPAN>
+</PRE>
+
+
+
+
+
+
+
+</DIV>
+<DIV class="section" id="restrict-replacement-example-hpp">
+<H2><A class="toc-backref" href="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2004/n1669.html#id70" name="restrict-replacement-example-hpp">8.3&nbsp;&nbsp;&nbsp;restrict_replacement_example.hpp</A></H2>
+
+
+
+
+<LINK rel="stylesheet" href="./Ottosen2004_Proposal_Rev1-n1669_files/style.css" type="text/css">
+
+
+
+
+<PRE><SPAN class="comment">//
+// This example shows how Contract Programming can
+// provide all the functionality of the 'restrict'
+// keyword. Moreover, it will work for iterators that
+// are not just pointers.
+//
+// Caveat: The iterators of eg. std::deque are random-access, but will
+//         still work erroneously with this example.
+//</SPAN>
+
+<SPAN class="keyword">namespace</SPAN> <SPAN class="identifier">std</SPAN>
+<SPAN class="special">{</SPAN>
+    <SPAN class="keyword">template</SPAN><SPAN class="special">&lt;</SPAN> <SPAN class="keyword">class</SPAN> <SPAN class="identifier">RandomAccessIterator</SPAN> 
+    <SPAN class="keyword">bool</SPAN> <SPAN class="identifier">arrays_dont_overlap</SPAN><SPAN class="special">(</SPAN> <SPAN class="identifier">RandomAccessIterator</SPAN> <SPAN class="identifier">first</SPAN><SPAN class="special">,</SPAN> <SPAN class="identifier">RandomAccessIterator</SPAN> <SPAN class="identifier">last</SPAN><SPAN class="special">,</SPAN>
+                              <SPAN class="identifier">RandomAccessIterator</SPAN> <SPAN class="identifier">first2</SPAN><SPAN class="special">,</SPAN> <SPAN class="identifier">RandomAccessIterator</SPAN> <SPAN class="identifier">last2</SPAN> <SPAN class="special">)</SPAN>
+    <SPAN class="special">{</SPAN>
+        <SPAN class="keyword">return</SPAN> <SPAN class="identifier">std</SPAN><SPAN class="special">::</SPAN><SPAN class="identifier">less</SPAN><SPAN class="special">&lt;</SPAN> <SPAN class="keyword">typename</SPAN> <SPAN class="identifier">iterator_value</SPAN><SPAN class="special">&lt;</SPAN><SPAN class="identifier">T</SPAN><SPAN class="special">&gt;::</SPAN><SPAN class="identifier">type</SPAN><SPAN class="special">*</SPAN> <SPAN class="special">&gt;(</SPAN> <SPAN class="special">&amp;*</SPAN><SPAN class="identifier">prior</SPAN><SPAN class="special">(</SPAN><SPAN class="identifier">last</SPAN><SPAN class="special">),</SPAN> <SPAN class="special">&amp;*</SPAN><SPAN class="identifier">first2</SPAN> <SPAN class="special">)</SPAN> <SPAN class="special">||</SPAN>
+               <SPAN class="identifier">std</SPAN><SPAN class="special">::</SPAN><SPAN class="identifier">less</SPAN><SPAN class="special">&lt;</SPAN> <SPAN class="keyword">typename</SPAN> <SPAN class="identifier">iterator_value</SPAN><SPAN class="special">&lt;</SPAN><SPAN class="identifier">T</SPAN><SPAN class="special">&gt;::</SPAN><SPAN class="identifier">type</SPAN><SPAN class="special">*</SPAN> <SPAN class="special">&gt;(</SPAN> <SPAN class="special">&amp;*</SPAN><SPAN class="identifier">prior</SPAN><SPAN class="special">(</SPAN><SPAN class="identifier">last2</SPAN><SPAN class="special">),</SPAN> <SPAN class="special">&amp;*</SPAN><SPAN class="identifier">first</SPAN> <SPAN class="special">);</SPAN>
+    <SPAN class="special">}</SPAN>
+    
+    
+    
+    <SPAN class="keyword">template</SPAN><SPAN class="special">&lt;</SPAN> <SPAN class="keyword">class</SPAN> <SPAN class="identifier">RandomAccessIterator</SPAN> <SPAN class="special">&gt;</SPAN>
+    <SPAN class="keyword">void</SPAN> <SPAN class="identifier">fast_copy</SPAN><SPAN class="special">(</SPAN> <SPAN class="identifier">RandomAccessIterator</SPAN> <SPAN class="identifier">first</SPAN><SPAN class="special">,</SPAN> <SPAN class="identifier">RandomAccessIterator</SPAN> <SPAN class="identifier">last</SPAN><SPAN class="special">,</SPAN>
+                    <SPAN class="identifier">RandomAccessIterator</SPAN> <SPAN class="keyword">out</SPAN> <SPAN class="special">)</SPAN>
+    <SPAN class="keyword">precondition</SPAN>
+    <SPAN class="special">{</SPAN>
+        <SPAN class="keyword">static</SPAN> <SPAN class="identifier">is_pod</SPAN><SPAN class="special">&lt;</SPAN> <SPAN class="keyword">typename</SPAN> <SPAN class="identifier">iterator_value</SPAN><SPAN class="special">&lt;</SPAN><SPAN class="identifier">RandomAccessIterator</SPAN><SPAN class="special">&gt;::</SPAN><SPAN class="identifier">type</SPAN> <SPAN class="special">&gt;::</SPAN><SPAN class="identifier">value</SPAN> <SPAN class="special">:</SPAN> <SPAN class="string">"Only PODs can be copied"</SPAN><SPAN class="special">;</SPAN>
+        <SPAN class="keyword">static</SPAN> <SPAN class="identifier">is_random_access_iterator</SPAN><SPAN class="special">&lt;</SPAN><SPAN class="identifier">RandomAccessIterator</SPAN><SPAN class="special">&gt;::</SPAN><SPAN class="identifier">value</SPAN> <SPAN class="special">:</SPAN> <SPAN class="string">"The iterator must model a Random Access Iterator"</SPAN><SPAN class="special">;</SPAN>
+        <SPAN class="identifier">arrays_dont_overlap</SPAN><SPAN class="special">(</SPAN> <SPAN class="identifier">first</SPAN><SPAN class="special">,</SPAN> <SPAN class="identifier">last</SPAN><SPAN class="special">,</SPAN> <SPAN class="keyword">out</SPAN><SPAN class="special">,</SPAN> <SPAN class="keyword">out</SPAN> <SPAN class="special">+</SPAN> <SPAN class="identifier">std</SPAN><SPAN class="special">::</SPAN><SPAN class="identifier">distance</SPAN><SPAN class="special">(</SPAN><SPAN class="identifier">first</SPAN><SPAN class="special">,</SPAN><SPAN class="identifier">last</SPAN><SPAN class="special">)</SPAN> <SPAN class="special">);</SPAN>  
+    <SPAN class="special">}</SPAN>
+    <SPAN class="keyword">do</SPAN>
+    <SPAN class="special">{</SPAN>
+        <SPAN class="identifier">memcpy</SPAN><SPAN class="special">(</SPAN> <SPAN class="special">&amp;*</SPAN><SPAN class="keyword">out</SPAN><SPAN class="special">,</SPAN> <SPAN class="special">&amp;*</SPAN><SPAN class="identifier">first</SPAN><SPAN class="special">,</SPAN> <SPAN class="identifier">std</SPAN><SPAN class="special">::</SPAN><SPAN class="identifier">distance</SPAN><SPAN class="special">(</SPAN><SPAN class="identifier">first</SPAN><SPAN class="special">,</SPAN><SPAN class="identifier">last</SPAN><SPAN class="special">)</SPAN> <SPAN class="special">);</SPAN>
+    <SPAN class="special">}</SPAN>
+<SPAN class="special">}</SPAN>
+</PRE>
+
+
+
+
+
+
+
+</DIV>
+<DIV class="section" id="subcontracting-example-hpp">
+<H2><A class="toc-backref" href="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2004/n1669.html#id71" name="subcontracting-example-hpp">8.4&nbsp;&nbsp;&nbsp;subcontracting_example.hpp</A></H2>
+
+
+
+
+<LINK rel="stylesheet" href="./Ottosen2004_Proposal_Rev1-n1669_files/style.css" type="text/css">
+
+
+
+
+<PRE><SPAN class="comment">//
+// This example shows how Contract Programming 
+// allows one to keep the virtual function public 
+// and still enforce the contract of the function
+//</SPAN>
+
+<SPAN class="keyword">class</SPAN> <SPAN class="identifier">shape</SPAN>
+<SPAN class="special">{</SPAN>
+<SPAN class="keyword">public</SPAN><SPAN class="special">:</SPAN>
+    <SPAN class="keyword">virtual</SPAN> <SPAN class="special">~</SPAN><SPAN class="identifier">shape</SPAN><SPAN class="special">()</SPAN> <SPAN class="special">{}</SPAN>
+    
+    <SPAN class="keyword">virtual</SPAN> <SPAN class="keyword">int</SPAN> <SPAN class="identifier">compute_area</SPAN><SPAN class="special">()</SPAN> <SPAN class="keyword">const</SPAN> <SPAN class="special">=</SPAN> <SPAN class="number">0</SPAN>
+        <SPAN class="keyword">postcondition</SPAN><SPAN class="special">(</SPAN> <SPAN class="keyword">result</SPAN> <SPAN class="special">)</SPAN> 
+        <SPAN class="special">{</SPAN>
+            <SPAN class="keyword">result</SPAN> <SPAN class="special">&gt;</SPAN> <SPAN class="number">0</SPAN><SPAN class="special">;</SPAN>
+        <SPAN class="special">}</SPAN>
+<SPAN class="special">};</SPAN>
+
+<SPAN class="keyword">class</SPAN> <SPAN class="identifier">circle</SPAN> <SPAN class="special">:</SPAN> <SPAN class="keyword">public</SPAN> <SPAN class="identifier">shape</SPAN>
+<SPAN class="special">{</SPAN>
+<SPAN class="keyword">public</SPAN><SPAN class="special">:</SPAN>
+    <SPAN class="keyword">int</SPAN> <SPAN class="identifier">radius</SPAN><SPAN class="special">()</SPAN> <SPAN class="keyword">const</SPAN><SPAN class="special">;</SPAN>
+    
+    <SPAN class="keyword">virtual</SPAN> <SPAN class="keyword">int</SPAN> <SPAN class="identifier">compute_area</SPAN><SPAN class="special">()</SPAN> <SPAN class="keyword">const</SPAN>
+        <SPAN class="keyword">postcondition</SPAN><SPAN class="special">(</SPAN> <SPAN class="keyword">result</SPAN> <SPAN class="special">)</SPAN>
+        <SPAN class="special">{</SPAN>
+            <SPAN class="keyword">result</SPAN> <SPAN class="special">==</SPAN> <SPAN class="identifier">pi</SPAN> <SPAN class="special">*</SPAN> <SPAN class="identifier">radius</SPAN><SPAN class="special">()</SPAN> <SPAN class="special">*</SPAN> <SPAN class="identifier">radius</SPAN><SPAN class="special">();</SPAN>
+        <SPAN class="special">}</SPAN>
+<SPAN class="special">};</SPAN>
+</PRE>
+
+
+
+
+
+
+
+</DIV>
+<DIV class="section" id="pointer-container-replace-example-hpp">
+<H2><A class="toc-backref" href="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2004/n1669.html#id72" name="pointer-container-replace-example-hpp">8.5&nbsp;&nbsp;&nbsp;pointer_container_replace_example.hpp</A></H2>
+
+
+
+
+<LINK rel="stylesheet" href="./Ottosen2004_Proposal_Rev1-n1669_files/style.css" type="text/css">
+
+
+
+
+<PRE><SPAN class="comment">//
+// This example shows how we can perform
+// a clean-up action as a side-effect in a precondition.
+//
+// Side-effects are normally banned from contracts, but in this
+// we do it to obhold exception-safety requirements.
+//</SPAN>
+
+<SPAN class="keyword">template</SPAN><SPAN class="special">&lt;</SPAN> <SPAN class="keyword">class</SPAN> <SPAN class="identifier">T</SPAN> <SPAN class="special">&gt;</SPAN>
+<SPAN class="keyword">class</SPAN> <SPAN class="identifier">ptr_vector</SPAN>
+<SPAN class="special">{</SPAN>
+<SPAN class="keyword">public</SPAN><SPAN class="special">:</SPAN>
+    <SPAN class="comment">// ...</SPAN>
+      
+    <SPAN class="keyword">void</SPAN> <SPAN class="identifier">replace</SPAN><SPAN class="special">(</SPAN> <SPAN class="identifier">T</SPAN><SPAN class="special">*</SPAN> <SPAN class="identifier">p</SPAN><SPAN class="special">,</SPAN> <SPAN class="identifier">size_type</SPAN> <SPAN class="identifier">where</SPAN> <SPAN class="special">)</SPAN>
+        <SPAN class="keyword">precondition</SPAN>
+        <SPAN class="special">{</SPAN>
+            <SPAN class="identifier">p</SPAN> <SPAN class="special">!=</SPAN> <SPAN class="number">0</SPAN>          <SPAN class="special">:</SPAN> <SPAN class="keyword">throw</SPAN> <SPAN class="identifier">bad_ptr</SPAN><SPAN class="special">();</SPAN>
+            <SPAN class="identifier">where</SPAN> <SPAN class="special">&lt;</SPAN> <SPAN class="identifier">size</SPAN><SPAN class="special">();</SPAN> <SPAN class="special">:</SPAN> <SPAN class="keyword">delete</SPAN> <SPAN class="identifier">p</SPAN><SPAN class="special">,</SPAN> <SPAN class="keyword">throw</SPAN> <SPAN class="identifier">bad_index</SPAN><SPAN class="special">();</SPAN>
+        <SPAN class="special">}</SPAN>
+<SPAN class="special">};</SPAN>
+</PRE>
+
+
+
+
+
+
+
+</DIV>
+</DIV>
+<DIV class="section" id="comparison-of-contract-programming-in-d-eiffel-and-c">
+<H1><A class="toc-backref" href="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2004/n1669.html#id73" name="comparison-of-contract-programming-in-d-eiffel-and-c">9&nbsp;&nbsp;&nbsp;Comparison of Contract Programming in D, Eiffel and C++</A></H1>
+<P>The table below contains a comparison of how Contract
+Programming is implemented in D, Eiffel and C++.</P>
+<TABLE border="" class="table">
+<COLGROUP>
+<COL width="25%">
+<COL width="21%">
+<COL width="20%">
+<COL width="34%">
+</COLGROUP>
+<TBODY valign="top">
+<TR><TD><STRONG>Feature</STRONG></TD>
+<TD><STRONG>ISE Eiffel 5.4</STRONG></TD>
+<TD><STRONG>D</STRONG></TD>
+<TD><STRONG>C++ Proposal</STRONG></TD>
+</TR>
+<TR><TD><EM>keywords</EM></TD>
+<TD><TT class="literal"><SPAN class="pre">require</SPAN></TT>, <TT class="literal"><SPAN class="pre">ensure</SPAN></TT>,
+<TT class="literal"><SPAN class="pre">do</SPAN></TT>, <TT class="literal"><SPAN class="pre">require</SPAN> <SPAN class="pre">else</SPAN></TT>,
+<TT class="literal"><SPAN class="pre">ensure</SPAN> <SPAN class="pre">then</SPAN></TT>, <TT class="literal"><SPAN class="pre">invariant</SPAN></TT>,
+<TT class="literal"><SPAN class="pre">old</SPAN></TT>, <TT class="literal"><SPAN class="pre">result</SPAN></TT>,
+<TT class="literal"><SPAN class="pre">variant</SPAN></TT></TD>
+<TD><TT class="literal"><SPAN class="pre">in</SPAN></TT>, <TT class="literal"><SPAN class="pre">out</SPAN></TT>, <TT class="literal"><SPAN class="pre">body</SPAN></TT>,
+<TT class="literal"><SPAN class="pre">invariant</SPAN></TT>, <TT class="literal"><SPAN class="pre">assert</SPAN></TT>,
+<TT class="literal"><SPAN class="pre">static</SPAN></TT></TD>
+<TD><TT class="literal"><SPAN class="pre">precondition</SPAN></TT>,
+<TT class="literal"><SPAN class="pre">postcondition</SPAN></TT>, <TT class="literal"><SPAN class="pre">do</SPAN></TT>,
+<TT class="literal"><SPAN class="pre">invariant</SPAN></TT>, <TT class="literal"><SPAN class="pre">static</SPAN></TT></TD>
+</TR>
+<TR><TD><EM>on failure</EM></TD>
+<TD>throws exception</TD>
+<TD>throws exception</TD>
+<TD>defaults to <TT class="literal"><SPAN class="pre">terminate()</SPAN></TT>,
+defaults can be customized,
+might throw</TD>
+</TR>
+<TR><TD><EM>expression copying in postconditions</EM></TD>
+<TD>yes, <TT class="literal"><SPAN class="pre">old</SPAN></TT> keyword</TD>
+<TD>no</TD>
+<TD>yes, <TT class="literal"><SPAN class="pre">std::old()</SPAN></TT>
+function</TD>
+</TR>
+<TR><TD><EM>subcontracting</EM></TD>
+<TD>yes</TD>
+<TD>yes</TD>
+<TD>yes, but only considers
+postconditions</TD>
+</TR>
+<TR><TD><EM>contracts on abstract functions</EM></TD>
+<TD>yes</TD>
+<TD>no</TD>
+<TD>yes</TD>
+</TR>
+<TR><TD><EM>arbitrary code contracts</EM></TD>
+<TD>yes</TD>
+<TD>yes</TD>
+<TD>no, must be const correct</TD>
+</TR>
+<TR><TD><EM>function code ordering</EM></TD>
+<TD>pre -&gt; body -&gt; post</TD>
+<TD>pre -&gt; post -&gt; body</TD>
+<TD>pre -&gt; post -&gt; body</TD>
+</TR>
+<TR><TD><EM>compile-time assertions</EM></TD>
+<TD>no</TD>
+<TD>yes</TD>
+<TD>yes</TD>
+</TR>
+<TR><TD><EM>loop invariants</EM></TD>
+<TD>yes</TD>
+<TD>no</TD>
+<TD>yes</TD>
+</TR>
+<TR><TD><EM>loop variants</EM></TD>
+<TD>yes</TD>
+<TD>no</TD>
+<TD>yes, <TT class="literal"><SPAN class="pre">std::old()</SPAN></TT> inside
+loop invariants</TD>
+</TR>
+<TR><TD><EM>const-correct</EM></TD>
+<TD>no</TD>
+<TD>no</TD>
+<TD>yes</TD>
+</TR>
+<TR><TD><EM>invariant calls</EM></TD>
+<TD><UL class="first last simple">
+<LI>end of "constructor"</LI>
+<LI>around public functions</LI>
+</UL>
+</TD>
+<TD><UL class="first last simple">
+<LI>end of constructor</LI>
+<LI>around public functions</LI>
+<LI>start of destructor</LI>
+</UL>
+</TD>
+<TD><UL class="first last simple">
+<LI>as in D</LI>
+<LI>when a function exits due to an exception</LI>
+</UL>
+</TD>
+</TR>
+<TR><TD><EM>disabling of checks during assertions</EM></TD>
+<TD>yes</TD>
+<TD>no</TD>
+<TD>yes</TD>
+</TR>
+<TR><TD><EM>when public func. call public func.</EM></TD>
+<TD>disable all checks</TD>
+<TD>disable nothing</TD>
+<TD>disable invariant</TD>
+</TR>
+<TR><TD><EM>removable from object code</EM></TD>
+<TD>yes</TD>
+<TD>yes</TD>
+<TD>only default assertions</TD>
+</TR>
+</TBODY>
+</TABLE>
+</DIV>
+<DIV class="section" id="acknowledgements">
+<H1><A class="toc-backref" href="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2004/n1669.html#id74" name="acknowledgements">10&nbsp;&nbsp;&nbsp;Acknowledgements</A></H1>
+<P>Special thanks goes to</P>
+<UL class="simple">
+<LI>Reece Dunn</LI>
+<LI>Douglas Gregor</LI>
+<LI>Alf Steinbach</LI>
+<LI>Matthew Wilson</LI>
+<LI>Berend de Boer</LI>
+<LI>Darren Cook</LI>
+<LI>Pavel Vozenilek</LI>
+<LI>Scott Meyers</LI>
+<LI>Attila Fehér</LI>
+<LI>Walter Bright</LI>
+<LI>Per Madsen</LI>
+<LI>Kevlin Henney</LI>
+<LI>Sergey Vlasov</LI>
+<LI>Bob Bell</LI>
+<LI>John Nagle</LI>
+</UL>
+<!-- ############################################### -->
+<!-- ################## Links ###################### -->
+<!-- ############################################### -->
+</DIV>
+<DIV class="section" id="footnotes">
+<H1><A class="toc-backref" href="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2004/n1669.html#id75" name="footnotes">11&nbsp;&nbsp;&nbsp;Footnotes</A></H1>
+<!-- ############################################### -->
+<!-- ################## Footnotes ################## -->
+<!-- ############################################### -->
+<TABLE class="footnote" frame="void" id="id27" rules="none">
+<COLGROUP><COL class="label"><COL></COLGROUP>
+<TBODY valign="top">
+<TR><TD class="label"><A class="fn-backref" href="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2004/n1669.html#id1" name="id27">[1]</A></TD><TD>The original term "Design by Contract" is abandoned 
+for good since it appears to have been trademarked in 2003. The term "Contract Programming"
+was suggested by Walter Bright.</TD></TR>
+</TBODY>
+</TABLE>
+<TABLE class="footnote" frame="void" id="id28" rules="none">
+<COLGROUP><COL class="label"><COL></COLGROUP>
+<TBODY valign="top">
+<TR><TD class="label"><A class="fn-backref" href="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2004/n1669.html#id2" name="id28">[2]</A></TD><TD><P>Even experienced programmers can choke on the word "invariant" and what it
+means for a class to have one. There are a few simple rules we want  
+all programmers to learn:</P>
+<OL class="arabic simple">
+<LI>that classes can have invariants and that subclasses have stronger or equally strong invariants,</LI>
+<LI>that functions have pre- and postconditions: the implementer has as his obligation to fulfill the 
+postcondition assuming the precondition holds; the user has as his obligation to fulfill the precondition
+and receives the benefits of the postcondition in return,</LI>
+<LI>that public functions cannot break the class invariant.</LI>
+</OL>
+</TD></TR>
+</TBODY>
+</TABLE>
+<!-- Specifying invariants also leads to simpler designs. -->
+<TABLE class="footnote" frame="void" id="id29" rules="none">
+<COLGROUP><COL class="label"><COL></COLGROUP>
+<TBODY valign="top">
+<TR><TD class="label"><A class="fn-backref" href="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2004/n1669.html#id6" name="id29">[3]</A></TD><TD><P>This latitude allows programmers to turn off and on compound assertions using appropriate macros and can be helpful
+if the more levels of assertions are wanted. For example, an assertion like</P>
+<PRE class="literal-block">is_foo() : (void)0;
+</PRE>
+<P>can be discarded.</P>
+</TD></TR>
+</TBODY>
+</TABLE>
+<TABLE class="footnote" frame="void" id="id30" rules="none">
+<COLGROUP><COL class="label"><COL></COLGROUP>
+<TBODY valign="top">
+<TR><TD class="label"><A class="fn-backref" href="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2004/n1669.html#id12" name="id30">[4]</A></TD><TD><P>Assume we want to take advantage of a weaker precondition. Normally that precondition is weaker <EM>by design</EM>,
+that is, the two preconditions are <EM>OR</EM>ed no matter
+what they contain. Even <EM>if</EM> we perform a downcast, the runtime system must call first the 
+original contract (which will then fail). Then the control is handled to the derived precondition
+which can then fail or not. This seems extremely messy and might require <TT class="literal"><SPAN class="pre">try-catch</SPAN></TT> block around the 
+first precondition.</P>
+<P>The alternative is to only check the derived precondition if we have performed a downcast. The consequence
+is that we might have a precondition that is in fact <EM>stronger</EM> than the original! In general it is probably
+also impossible to verify that a contract is weaker given that it can contain arbitrary expressions.
+This approach does not seem very attractive either.</P>
+<P>If we also take into consideration that good examples with weakened preconditions are extremely rare,
+it is be better to abandon the idea all together.</P>
+<P>Thanks goes to Scott Meyers and Attila Fehér for their input on this issue.</P>
+</TD></TR>
+</TBODY>
+</TABLE>
+<TABLE class="footnote" frame="void" id="id31" rules="none">
+<COLGROUP><COL class="label"><COL></COLGROUP>
+<TBODY valign="top">
+<TR><TD class="label"><A class="fn-backref" href="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2004/n1669.html#id18" name="id31">[5]</A></TD><TD>To ensure that the function gives the basic guarantee of exception-safety.</TD></TR>
+</TBODY>
+</TABLE>
+<TABLE class="footnote" frame="void" id="id32" rules="none">
+<COLGROUP><COL class="label"><COL></COLGROUP>
+<TBODY valign="top">
+<TR><TD class="label"><A class="fn-backref" href="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2004/n1669.html#id19" name="id32">[6]</A></TD><TD>One can imagine an approach where exceptions could escape from an invariant by not checking
+invariants when functions exit via an exception. The benefits of such an approach are not
+obvious and it will complicate flow analysis unnecessarily.</TD></TR>
+</TBODY>
+</TABLE>
+<TABLE class="footnote" frame="void" id="id33" rules="none">
+<COLGROUP><COL class="label"><COL></COLGROUP>
+<TBODY valign="top">
+<TR><TD class="label"><A class="fn-backref" href="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2004/n1669.html#id20" name="id33">[7]</A></TD><TD>During construction means until the post-condition of the constructor has ended.</TD></TR>
+</TBODY>
+</TABLE>
+<TABLE class="footnote" frame="void" id="id34" rules="none">
+<COLGROUP><COL class="label"><COL></COLGROUP>
+<TBODY valign="top">
+<TR><TD class="label"><A class="fn-backref" href="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2004/n1669.html#id21" name="id34">[8]</A></TD><TD>An implementation would not be required to detect when control leaves a class in general
+but merely to disable invariants until the function returns. This means that if <TT class="literal"><SPAN class="pre">A::foo()</SPAN></TT>
+calls <TT class="literal"><SPAN class="pre">B::foo()</SPAN></TT> which calls <TT class="literal"><SPAN class="pre">A::bar()</SPAN></TT>, then the invariant of <TT class="literal"><SPAN class="pre">A</SPAN></TT> will not be checked on entry
+to or exit of <TT class="literal"><SPAN class="pre">A::bar()</SPAN></TT>. However, <TT class="literal"><SPAN class="pre">B::foo()</SPAN></TT> may choose to check the invariant of <TT class="literal"><SPAN class="pre">A</SPAN></TT> manually.</TD></TR>
+</TBODY>
+</TABLE>
+<TABLE class="footnote" frame="void" id="id35" rules="none">
+<COLGROUP><COL class="label"><COL></COLGROUP>
+<TBODY valign="top">
+<TR><TD class="label"><A class="fn-backref" href="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2004/n1669.html#id23" name="id35">[9]</A></TD><TD>This is contrary to the loop condition which cannot see these variables.</TD></TR>
+</TBODY>
+</TABLE>
+</DIV>
+</DIV>
+
+
+</BODY></HTML>

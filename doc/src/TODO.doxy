@@ -1,0 +1,387 @@
+
+/** 
+
+@page todo Annex: Work In Progress
+
+List of library to-dos.
+
+-#  Revisit the source to sync it with the doc (especially type traits).
+@n@n
+-#  Make library thread-safe if DBC_THREADING is "#define".
+In this case: DbC++ will also require Boost.Threading. sync_<> must have mutex.
+dbc_global_checking_ must have a mutex. Executing inv+require+body+inv+ensure
+must be atomic (sync'd by a mutex) so that effectively only 1 operation at the
+time for class can be exec among the operations w/ contracts. Consider impl
+waiting pre/post conditions. What would this do to performances? This will add
+quite a bit on sync at the class level but also at a global level via
+dbc_global_checking_...
+@n@n
+-#  Fix all Boost.MPL static assertions in dbc::fun<>. Do I need to
+add any more static assertions?
+@n@n
+-#  Indicate vimrc config to avoid red curly brackets {} when passing code
+    blocks as macro params.
+@n@n
+-#  Read and refer DBC for C++ Std proposal rev 4
+    http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2006/n1962.html
+@n@n
+-#  Use boost::mpl::void_ (or dbc::void_ as it is done by Boost.Parameter --
+    why Boost.Parameter does not use boost::mpl::void_?) instead of dbc::none_.
+@n@n
+-#  Decide how to handle contracts for non-member functions and static member
+    functions. Shall these be handeled the same? Maybe, bacause for both it
+    might only make sense to check pre and post conditions (no invariants),
+    self is not available, and what about subcontracts for static mem-fun??
+    What does Eiffel do (does it allow static mem-fun?)? Does any of the C++
+    std proposal, D, etc say anything about this?
+@n@n
+-#  Support contracts for template member functions.
+        class F1 {
+        public:
+            template<typename X> void f(X x);
+        };
+        // and what about
+        template<typename Y>
+        class F2 {
+        public:
+            template<typename X> Y f(X x);
+        };
+    This will probably require to allow (template) not just before class type
+    but also before function name, and to allos to specify tparam names.
+        Now:        [(template)](class-type) ... (fun-name)
+        Maybe fix:  [(template)](class-type) ... [(template)(X)](fun-name)
+    What about template variables? Can DBC handle them?
+        template<typename Y, Y y0 = Y()>
+        class F2 {
+        public:
+            template<typename X, X x0 = X()> Y f(X x);
+        };
+@n@n
+-#  Support contracts for non-member functions (via dbc::fun<> and DBC_FUN())
+    and for static member functions (probably still via dbc::fun<> but allowing
+    (static) instead of (virtual) in DBC_MEM_FUN()).
+    Can I handle static mem fun as non-mem fun via same dbc::fun<>? One
+    difference is that static mem fun could still check a "static" invariant
+    while no invariant can be checked for non-mem fun. However, this would
+    require the introdution of a DBC_STATIC_INVARIANT() (without the self arg)
+    that should be checked in and any time DBC_INVARIANT() is checked, it
+    should be checked alone for static mem fun, it shoudl be "optional" but I
+    cannot see how that could be... user will have to always say
+    DBC_STATIC_INVARIANT(class-name, {}) even if there is no static mem-fun
+    with a contract if the static inv is checked in and with the inv...
+@n@n
+-#  Suggest code of script to ignore g++ "duplicate friend" warning (from bin).
+@n@n
+-#  Renamed "include/ dir to src/ dir."
+@n@n
+-#  DBC++ is currently using BOOST_PP_IS_UNARY() to recognize keywords (public,
+    virtual, const, etc) when parsing macro-based API function signatures.
+    BOOST_PP_IS_UNARY() is NOT part of Boost.Preprocessor public API (it is
+    instead in boost/preprocessor/detail) because of compiler compatibility
+    issues (I think just with an old version of the C++ Borland compiler...).
+    Other Boost libraries that use BOOST_PP_IS_UNARY() are:
+        boost/typeof/template_encoding.hpp
+        boost/spirit/home/classic/utility/rule_parser.hpp
+        boost/range/detail/microsoft.hpp
+    How much complier compatibility issues does the use of BOOST_PP_IS_UNARY()
+    really raise? Is there a work-around to implement BOOST_PP_IS_UNARY?
+@n@n
+-#  Allow runtime pre/post/inv checking enable/disable based on class name.
+    What for non-member functions?
+    Use Case. I have a template library that is well tested so I want to
+    disable postcondition checking. However, that is a template so it cannot be
+    precompiled into a separate .so with postconditions off. I must compile it
+    together witht the rest of the code. Therefore, if the rest of the code
+    needs to check postconditions, I must check postconditions for the template
+    library as well!
+    I could do this a run time using a map<class-name, enable-or-diable> then
+    providing macros ENABLE_PRE(class-name) that set the map.
+    Can I do this a compile-time (better so I do not have to compile post if I
+    do not check them)? Maybe I can using a #ifdef CONFIG_ENABLE_PRE_class-name
+    and the user will have to #define CONFIG_ENABLE_PRE_class-name... look more
+    into this.
+    Does Eiffel allow enable/disable pre/post/inv per class? pre function? per
+    compilation unit? (Current DBC++ allows this only pre compilation unit but
+    that's not enough because template libraries need to be recompiled into
+    every compilation unit as indicated by the use case above.)
+@n@n
+-#  Consider value in addition contracts to all STL classes.
+    For example a dbc::list<> class can wrap std::list<> and add contracts to
+    it. Post/Inv checking here is likely not interesting given that STL code is
+    well tested to work. Pre checking might be interesting instead.
+@n@n
+-#  [Ottosen2006] suggests to OR pre / AND post from *all* base classes in case
+    of multiple inheritance. DBC++ currently only allow subcontracting from one
+    specific base mem fun but not from multiple ones... what does Eiffel do?
+    I might be able to allow DBC_BASES(3, (baseA, baseB, baseC)) and then
+    OR/AND *all* base pre/post (but what about invariants? AND all base inv?).
+    Is this usefull?
+@n@n
+-#  [Ottosen2006] indicates that "old" values should be copied *after* pre
+    checking and *before* body execution so to avoid the copy in case of
+    errors.
+    This makes sense. DBC++ currently copies the "old" values, then checks Inv,
+    checks Pre, exec Body, etc. This should be changed to: Check Inv, check
+    Pre, copy "old" values, exec Body, etc (its trivial to change but test
+    it!).
+@n@n
+-#  [Ottosen2006] allows "old" only for types that have a copy constructor
+    taking a const&.
+    This makes sense as the copy operation must not alter self or the arg.
+    DBC++ currently does not enforce this. For example, self for non mem-fun
+    is not const& (but just &) in exec() and that is passed to the copy
+    contructor that could eventually modify self (same if for arg that are not
+    const). This is essentially a bug!! Fix it! (The fix should be trivial,
+    either cast to const& or better declare a "const Class& const_ref_self" and
+    copy const_ref_self instead of self, same for arg.)
+@n@n
+-#  [Ottosen2006] requires Inv to be checked also by mem fun that exit
+    abnormally via an exception (understand exactly why, ther is reference
+    [5] that I need to study...).
+    DBC++ currently does not do that but this should be easy to implement in
+    exec() handling excetions (different from conditions_violation) and
+    checking Inv in that case. However, if Inv is violated shall I throw
+    invariant_violation or the originally exection raised by Body? I think the
+    invariant_violation because if Inv terminates or exit that takes
+    precendence over reporting Body exception (so Inv throw should also take
+    precende over Body throw). However, I think it would be good to log the
+    Body throw in this case so it is not lost because of the overriding Inv
+    throw, terminate, or exit... think about this more...
+@n@n
+-#  Understand the relationship between contracts and concepts ([Ottosen2006]
+    cites all concepts C++ proposals as being affected by the contract
+    proposal).
+@n@n
+-#  Would it be easier to avoid to forget .now/.old in postconditions if also
+    pre/inv required .now?
+    Currently, I occasionally use self/arg without .now in postconditions and
+    I get cryptic compiler errors "undefined operator for type ...". For
+    consistency, I could require .now all the times also in pre and inv, then I
+    could offer .old only in post for copyable types. Would that be better? (If
+    so, also "result" should really be "result.now".)
+@n@n
+-#  Consider the addition of a DBC_CONFIG_AUTO_SIGNATURE that if defined by the
+    user requires the library to generate the function signaures automatically.
+    I intentionally required the user to write the signature before the
+    macro-based API because I think the code is more readable that way.
+    However, that requires more effort for programmers and given the code
+    duplication of the signature it allows for errors (most signature
+    missmatches will generate compile-time errors but not necessarly all).
+@n@n
+-#  Document MSVC error "warning ... not enough actual parameters for macro 
+    'BOOST_PP_SEQ...'" repeated many, many times when using "(f)( )" instead of
+    "(f)( (void) )" to specify empty argument list.
+@n@n
+-#  Shall I try to compile on MSVC with /Wall?? It gives a LOT of warning also
+    in Boost... (It compiles with no warnings but the "already friend" one on
+    g++ with -Wall!)
+@n@n
+-#  Adopt a more consistent macro syntax:
+    1) Change the macro syntax so token apper in the exact same order as they
+    appear in the class declaration (NO EXCETION). This way I don't have to
+    remember in which order the tokens come.
+    2) Adopt the use of '.now' every where (pre/post/inv). In post, .old is
+    availabe for copyable<> types only. (In the code, I make all pre and inv
+    args of type nowof<T> instead of T, for post I just rename post<> to
+    oldof<>. oldof<T> for non copyable<T> is same as nowof<T>.) This way I do
+    not have to remember when to use .now -- I should always use it!
+    3) Also change "err" stream variable in DBC_ASSERT_STREAM to "violation".
+    For example:
+
+    #include <contract.hpp>
+    #include <iostream>
+    #include <string>
+
+    // Token Order Rule
+    // This way token in the macro syntax "simply" follow the order in which
+    // they appear in the class definition (no need to refer to the class
+    // delcaration).
+
+    // (inherit) Order
+    // Following the token order rule above, (inherit)(base-class-type) should
+    // came after the class-type (template) and before the access (public),
+    // (protected), or (private) because that is the order in which the base
+    // class appear in the class declaration.
+    // Note ':' is not a valid macro token so (inherit) is used instead.
+
+    // (template) for Class-Type
+    // If C++0x will allow to use 'typename' outside templates, the leading
+    // (template) referring to the class-type (which is already optional) will
+    // no longer be needed (but it may still be specified to ensure backward
+    // compatibility).
+
+    template<typename D>
+    class converter: public abstract_converter, 
+            public lengther_interface /* Removed need for _INHERIT_OBJECT */ {
+        CONTRACT_INVARIANT(convert, {})
+        // Will expand to:
+        //  CONTRACT_CLASS(convert)
+        //  friend void CONTRACT_INVARIANT_FUNCTION_NAME() {}
+        // And CONTRACT_CLASS will define special contract state and:
+        //  typedef convert contract_class_type_;
+        // so functions will not need to specify the class type anymore.
+
+        // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        // NO!  If function do not specify class-type the they cannot specify
+        //      copyable self!
+        // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+    public:
+        converter(void) {}
+        // Also require constructor to specify function name (that should match
+        // class name by STATIC_ASSERT(this-fun-name == contract_class_type_)).
+        CONTRACT_CONSTRUCTOR( (template) (converter) /* no (inherit) */
+                (public) (converter)( (void ) ), {
+        }, {
+        }, ;)
+
+        ~converter(void) {}
+        // Also require destructor to specify function name (that should match
+        // class name by STATIC_ASSERT(this-fun-name == contract_class_type_)).
+        // Note, I must separate macros from CONSTR and DESTR otherwise I
+        // cannot distinguish them with each other (the signature passed to the
+        // macros is the same in this case!! both fun name equal
+        // contract_class_type_, no arguments, and no virtual... I cannot use i
+        // '~' to make this distinction between constr and destr because '~' is
+        // not a valid macro token... so I need the two macros). Plust the two 
+        // macros are needed because destr does not take pre/post conditions...
+        CONTRACT_DESTUCTOR( (template) (converter) /* no (inherit) */
+                (public) (converter)( (void ) ), ;)
+
+        template<typename S>
+        static D convert(const S& s);
+        CONTRACT_FUNCTION( (template) (converter) (inherit)(abstract_converter) 
+                (public) (template)(<typename S>)
+                /* (static) for static member functions */
+                /** @todo Do I need to support static-invariants? */
+                (static) (D) (convert)( (const S&)(s) ), {
+        }, {
+        }, ;)
+
+        template<typename L>
+        /* this CANNOT be 'virtual'! */ D length(const L& l) const;
+        // If 1st token is either template, public, protected, or private then
+        // it is a member function, otherwise it is a non-member function. This
+        // way just one macro _FUNCTION is needed (no MEMBER_FUNCTION, etc).
+        CONTRACT_FUNCTION( (template) (copyable)(converter)
+                /** @todo Multiple (inherit) could be supported as proposed by
+                 * [Ottosen2006] -- but what does Eiffel do for multiple
+                 * inheritance? */
+                (inherit)(abstract_converter) (inherit)(lengher_interface)
+                (public) (template)(<typename L>)
+                /* cannot be 'virtual' */ 
+                (D) (length)( (const L&)(l) ) (const), {
+        }, {
+        } ;)
+    };
+        
+    template<typename D> template<typename S>
+    D converter<D>::convert(const S& s) { return D(s); }
+
+    template<typename D> template<typename L>
+    D converter<D>::length(const L& l) const { return D(l.size()); }
+
+    int main() {
+        converter<int> c;
+        std::cout << c.convert(1.23) << std::endl;
+        std::cout << c.length(std::string("abc")) << std::endl;
+        return 0;
+    }
+
+CONTRACT_FUNCTION(signature, preconditions, bostconditions, body)
+    signature: Preprocessor sequence of tokens with the following syntax.
+        [(tempate)] [(copyable)](class-type)
+        [(inherit)(base-class-type)]*
+        {(public) || (protected) || (private)}
+        [(template)(<function-template-parameters>)]
+        [{(static) || (virtual)}]
+        (return-type)
+        (function-name)
+        ( {(void) || [[(copyable)](argument-type)(argument-name)]*} )
+        [(const)]
+    The keyword tokens in signature appear in the same order they appear in the
+    C++ class declaration.
+    Notes:
+    a.  The leading (template) that specifies if class-type is a template class
+        could be made optional if C++0x was to allow to use typename outside
+        templates (now it is used to add typename but only for template types).
+    b.  For C99 or later, (void) for empty function argument list is not
+        required and you can simply use "(function-name)()" instead of
+        "(function-name)( (void) )" (however, only the later syntax using
+        (void) is supported by C++ standards previous to C99).
+    preconditions: Code block "{ ... }" listing preconditions.
+    postconditions: Code block "{ ... }" listing preconditions.
+    body: Function declaration. All usual C++ syntax is supported: "{ ... }" to 
+        defined the function in place together with its declaration; ";" to
+        separate function definiiton from its declaration; " = 0;" for a pure
+        virtual function; Etc.
+
+CONTRACT_CONSTRUCTOR(signature, preconditions, bostconditions, body)
+    signature: Preprocessor sequence of tokens with the following syntax.
+        [(tempate)](class-type)
+        {(public) || (protected) || (private)}
+        [(template)(<function-template-parameters>)]
+        (class-name)
+        ( {(void) || [[(copyable)](argument-type)(argument-name)]*} )
+    Notes:
+    1.  As usual in C++, function name class-name must equal class-type name.
+    2.  class-type cannot be (copyable) (there is no object to copy before
+        constructor bosy execution, see Constructor Contract Semantics).
+    3.  Constructors cannot (inherit) (base class contracts are automatically
+        checked using C++ contructing mechanism that invokes base class
+        constructors checking their contracts).
+    4.  As usual in C++, constructors cannot be (static) or (virtual).
+    5.  As usual in C++, constructors cannot have a (return-type).
+    6.  As usual in C++, constructors cannot be (const) member functions.
+    preconditions: Code block "{ ... }" listing preconditions.
+    postconditions: Code block "{ ... }" listing preconditions.
+    body: Function declaration. All usual C++ syntax is supported: "{ ... }" to 
+        defined the function in place together with its declaration; ";" Etc.
+
+CONTRACT_DESTRUCTOR(signature, body)
+    signature: Preprocessor sequence of tokens with the following syntax.
+        [(tempate)](class-type)
+        {(public) || (protected) || (private)}
+        [(virtual)]
+        (class-name)( (void) )
+    Notes:
+    1.  As usual in C++, function name class-name must equal class-type name
+        (the '~' cannot be specified as it is not a valid C++ preprocessor
+        token).
+    2.  class-type cannot be (copyable) (there will be no object to check after
+        destructor bosy execution, see Destructor Contract Semantics).
+    3.  Destructor cannot (inherit) (base class contracts are automatically
+        checked using C++ destructing mechanism that invokes base class
+        destructors checking their contracts).
+    4.  As usual in C++, destructors cannot be (static) (but it can be
+        (virtual)).
+    5.  As usual in C++, destructors cannot have a (return-type).
+    6.   As usual in C++, destructors must have (void) arguments.
+    7.  As usual in C++, destructors cannot be (const) member functions.
+    Note that there are no preconditions for destructors because they have no
+    input arguments and no postcondition because there is no object after
+    destructor body execution, only invariants are checked before destructor
+    body execution (see Destructor Contract Semantics).
+    body: Function declaration. All usual C++ syntax is supported: "{ ... }" to 
+        defined the function in place together with its declaration; ";" Etc.
+@n@n
+-#  Warning "obsolete declaration style: please user 'C<T>::~C' instead'
+    (on MSVC 8 only).
+    On MSVC 8, the macro (only for template destructors with declaration
+    separated from definition, i.e., only the DESTRUCTOR_BODY for templates and
+    when DBC is off):
+        template<typename T>
+        DBC_DESTRUCTOR_BODY(C<T>) {}
+    when DBC is off, expands to:
+        template<typename T>
+        C<T>:~C<T> {}
+    The warning is requesting to drop <T> from ~C<T>.
+    Tthis will require the DESTRUCTOR_BODY to take separately "C" and "<T>"
+    because "C<T>" must be used for the class part of the destructor name
+    "C<T>::". This will make the DESTRUCTOR_BODY much more complex... just
+    disable the warning on MSVC.
+    Shall I disable the MSVC warning in the library? Maybe, I can have a
+    DBC_CONFIG_NO_WARNINGS which will disable warnings known to be raised...
+
+*/
+
