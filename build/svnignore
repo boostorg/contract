@@ -1,7 +1,0 @@
-#!/bin/bash
-
-svn propset svn:ignore '
-doc
-example
-test
-' .

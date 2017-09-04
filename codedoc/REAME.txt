@@ -1,1 +1,0 @@
-Source code documentation (see "doc/" for user's manuals instead).
