@@ -1,0 +1,426 @@
+
+[/ Copyright (C) 2008-2012 Lorenzo Caminiti ]
+[/ Distributed under the Boost Software License, Version 1.0 ]
+[/ (see accompanying file LICENSE_1_0.txt or a copy at ]
+[/ http://www.boost.org/LICENSE_1_0.txt) ]
+[/ Home at http://sourceforge.net/projects/contractpp ]
+
+[section Named Parameters]
+
+This section explains how to use this library to program named parameters and deduced named parameters which are used instead of C++ usual positional parameters to specify arguments to function calls.
+Parameter names are part of the program specifications and therefore named parameters are within the scope of this library.
+
+This library internally uses __Boost_Parameter__ to implement named parameters.
+This library only offers an easier syntax for constructor and class template named parameters with respect the functionality already provided by __Boost_Parameter__, but this library allows to specify named parameters, concepts, and contracts all together within a unified syntax.
+
+[section Overview]
+
+In C++, parameters are identified with respect to their declaration position within the parameter list: The first call /argument/ (i.e., the specific value assigned to the formal parameter at the call site) maps to the first declared parameter, the second call argument maps to the second declared parameter, etc.
+For example:
+    
+    window* make_window (
+            char const& name,
+            size_t width = 10,
+            bool moveable = true,
+            bool visible = true
+        )
+    ;
+
+This protocol is sufficient when there is at most one parameter with a useful default value but when there are even a few useful default parameters the positional interface becomes difficult to use at the calling site.
+For example, in the following call we need to repeat the default parameter value `10`:
+    
+    bool const unmoveable = false;
+    make_window("warning", 10, unmoveable); // Positional (usual).
+
+Furthermore, it would be easier to understand the meaning of the arguments at the calling site if the parameters could be referred by their names.
+For example, in order to understand if the following window is moveable and invisible, or unmoveable and visible, programmers at the calling site need to remember the order of the parameter declarations:
+
+    make_window("note", 10, true, false); // Positional (usual).
+
+These issues would be solved if the parameter names could be referred at the calling site and that is what [@http://en.wikipedia.org/wiki/Named_parameter ['named parameters]] allow to do:
+
+    make_window("warning", moveable = false); // Named.
+    make_widnow("note", visible = false);
+
+Named parameters were proposed for addition to early versions of C++ but the proposal was never accepted (see ["keyword arguments] in __Stroustrup94__).
+Other programming languages support named parameters (__Ada__, __Python__, etc).
+
+Furthermore, /deduced named parameters/ are named parameters that can be passed in any position and without supplying their names.
+These are useful when functions have parameters that can be uniquely identified (or /deduced/) based on the argument types of the function call.
+For example, the `name` parameter is such a parameter, it can be deduced because no other argument, if valid, can be reasonably converted into a `char const*`.
+Therefore, with a deduced parameter interface, we could pass the window name in any position without causing any ambiguity (with an appropriately designed deduced parameter interface, the caller might not even have to remember the actual parameter names):
+
+    make_window(moveable = false, "warning"); // Deduced.
+    make_window("note", visible = false);
+
+The same reasoning applies to named template parameters and deduced named template parameters:
+
+    template< typename ValueType, bool Shared = true >
+    class smart_ptr ;
+
+    smart_ptr<std::string, false> p1;                       // Positional (usual).
+    smart_ptr<false, std::string> p2;                       // Deduced.
+    smart_ptr<Shared = false, ValueType = std::string> p3;  // Named.
+
+[endsect]
+
+[section Named Function Parameters]
+
+To show how to program named parameters, we will program a named parameter interface for the [@http://www.boost.org/doc/libs/1_49_0/libs/graph/doc/depth_first_search.html Depth First Search (DFS)] algorithm of the __Boost_Graph__ library:
+
+    template<
+        class Graph,
+        class Visitor,
+        class IndexMap,
+        class ColorMap
+    > requires
+        is_incidence_and_vertex_list_graph<Graph>,
+        is_integral_property_map_of_key<IndexMap, vertext_descriptor<Graph> >,
+        is_property_map_of_key<ColorMap, vertex_descriptor<Graph> >
+    void depth_first_search (
+            Graph const& graph,
+            Visitor const& visitor = dfs_visitor<>(),
+            vertex_descriptor<Graph> const& root_vertex =
+                    *vertices(graph).first,
+            IndexMap const& index_map = get(vertex_index, graph),
+            ColorMap& color_map =
+                    default_color_map(num_vertices(graph), index_map)
+        )
+    ;
+
+This is non-valid C++ code but it can be considered pseudo-code to illustrate the function interface that we need to program.
+The concept syntax `requires` was ["borrowed] here to express parameter type requirements but a failure to satisfy such requirements is intended to fail the function call resolution and not to cause a concept error as usual.
+
+[variablelist
+[ [=graph=] [
+This is an input parameter (`const&`), its type must match a model of both `IndicenceGraph` and `VertexListGraph`, and it has no default value (required parameter).
+] ]
+[ [=visitor=] [
+This is an input parameter (`const&`), its type has no requirement, and its value defaults to a DFS visitor (optional parameter).
+] ]
+[ [=root_vertex=] [
+This is an input parameter (`const&`), its type must be `vertex_descriptor<Graph>`, and its value defaults to the first vertex of the specified graph (optional parameter).
+] ]
+[ [=index_map=] [
+This is an input parameter (`const&`), its type must match a model of `IntegralPropertyMap` with key type `vertex_descriptor<Graph>`, its value defaults to the vertex index of the specified graph (optional parameter).
+] ]
+[ [=color_map=] [
+This is an input and output parameter (non-constant reference `&`), its type must match a model of `PropertyMap` with key type `vertex_descriptor<Graph>`, its value defaults to a map with size equal to the number of vertices of the specified graph and created from the specified `index_map` (optional parameter).
+] ]
+]
+
+[*Parameter Identifiers]
+
+First of all, it is necessary to declare special elements that will serve as the parameter and argument identifiers (see also [file example/named_parameters named_params_dfs.cpp]):
+
+[import ../example/named_parameters/named_params_dfs.cpp]
+[named_params_dfs_keywords]
+
+For example, the first [macroref CONTRACT_PARAMETER] macro declares an identifier `graph` that is used as the parameter name in the function declaration and also an identifier `graph_` (note the trailing underscore `_`) that is used to name the argument at the call site.
+
+[note
+By default, argument identifiers are differentiated from parameter identifiers using a trailing underscore `_` to avoid name clashes (see also the __Parameter_Identifiers__ section).
+Furthermore, it is recommended to always declare these identifiers within a namespace to avoid name clashes (because different functions in different sections of the code might very well use the same parameter names so namespaces can be used to control overlapping names).
+]
+
+For example, for a library named Graphs, all named parameter identifiers could be declared under the `graphs` namespace and maybe in a single header =graphs_params.hpp=.
+Many different functions within `graphs` (for example `graphs::depth_first_search` and `graphs::breadth_first_search`) will share a number of common parameter names (for example a parameter named `graph` with parameter identifier `graphs::graph` and argument identifier `graphs::graph_`).
+All these named parameters will be defined in one places in =graphs_params.hpp= and within the `graphs` namespace so programmers can conveniently control and avoid named clashes.
+
+[*Function Declaration]
+
+The function is declared using the following syntax (see also [file example/named_parameters named_params_dfs.cpp]):
+
+[named_params_dfs_decl]
+
+This example required no preconditions and no postconditions.
+
+[*In, In Out, and Out Parameters]
+
+Input parameters (i.e., constant references `const&`) are prefixed by the specifier `in` (see also the __Grammar__ section):
+
+    in ... graph // Input parameter.
+
+Input and output parameters (i.e., non-constant reference `&`) are prefixed by both specifiers `in out` (in this order, see also the __Grammar__ section):
+
+    in out ... color_map // Input-output parameter.
+
+Output parameters can be prefixed just by the specifier `out` but their implementation is equivalent to using the specifiers `in out` (i.e., non-constant reference `&`).
+[footnote
+*Rationale.*
+C++ cannot express the semantics that an output parameter should be written and never read within a function because references can always be both written and read.
+]
+Note that a named parameter must always be specified either `in`, `in out`, or `out` (and that is what distinguish syntactically a named parameter from a positional parameter; this use of `in`, `in out`, and `out` resembles __Ada__'s syntax).
+Named and positional parameters cannot be used together in the same function declaration.
+
+[*Parameter Types]
+
+Exact parameter types are specified just before the parameter name and within parenthesis (unless they are fundamental types containing no symbol, see also the __Grammar__ section):
+
+    in (vertex_descriptor<CONTRACT_PARAMETER_TYPEOF(graph)>) root_vertex // Exact parameter type requirement.
+
+Generic parameter types (i.e., parameter types with no requirement, same as usual type template parameters) are specified using `auto` instead of the parameter type (see also the __Grammar__ section):
+
+    in auto visitor // No parameter type requirement.
+
+Predicate parameter type requirements are specified using `requires(`[^['unary-boolean-metafunction]]`)` instead of the parameter type, the type of the argument specified by the function call will be required to match the specified unary boolean meta-function in order for the call to be resolved (see also the __Grammar__ section):
+
+    in requires(is_incidence_and_vertex_list_graph<boost::mpl::_>) graph // Predicate parameter type requirement.
+
+The placeholder `boost::mpl::_` makes this expression a unary meta-function (see __Boost_MPL__) and the library will substitute such a placeholder with the argument type specified at the call site when resolving the function call.
+
+[*Default Parameter Values]
+
+Default parameter values are specified using `, default `[^['default-parameter-value]] right after the parameter declaration (see also the __Grammar__ section):
+
+    in auto visitor, default boost::dfs_visitor<>()
+
+Default parameter values are not evaluated and their types are not even instantiated if an actual argument is specified by the function call.
+
+[note
+The type and value of a parameters can be used within the declaration of other parameters.
+The type of a named parameter can be accessed using the [macroref CONTRACT_PARAMETER_TYPEOF] macro (this is especially useful for generic parameter types and for parameter types with predicate requirements because these types are not known until the function call is resolved).
+]
+
+[*Function Call]
+
+The `graphs::depth_first_search` function can be called using argument identifiers to name its parameters (see also [file example/named_parameters named_params_dfs.cpp]):
+
+[named_params_dfs_call]
+
+[endsect]
+
+[section Deduced Function Parameters]
+
+To show how to program deduced named parameters, we program the parameter interface for the [@http://www.boost.org/doc/libs/1_49_0/libs/python/doc/v2/def.html#def-spec `def`] function of the __Boost_Python__ library (see also [file example/named_parameters deduced_params_pydef.cpp]):
+
+[import ../example/named_parameters/deduced_params_pydef.cpp]
+[deduced_params_pydef_decl]
+
+Also a precondition was specified in this example.
+(Concepts for named parameters are explained later in this section.)
+
+Deduced parameters are named parameter that are prefixed by the `deduce` specifier (see also the __Grammar__ section):
+
+    deduce in (char const*) docstring // Deduced input parameter.
+
+When calling the function `py::def` only two arguments are required `name` and `func`.
+The association between any addition argument and its parameter can be deduced based on the types of the arguments specified by the function call (so the caller is neither required to remember the parameter positions nor to explicitly specify the parameter names for these arguments).
+
+For example, the first two calls below are equivalent and if programmers need to pass a `policy` argument that is also, for some reason, convertible to `char const*`, they can always specify the parameter name as in the third call below (see also [file example/named_parameters deduced_params_pydef.cpp]):
+
+[deduced_params_pydef_calls]
+
+[endsect]
+
+[section Member Function Parameters]
+
+The same syntax is used to specify named and deduced parameters for member functions (see also [file example/named_parameters member_named_params_callable2.cpp]):
+
+[import ../example/named_parameters/member_named_params_callable2.cpp]
+[member_named_params_callable2]
+
+No contracts were specified in this example.
+
+[note
+When the body definition of a function with named parameters is deferred from the function declaration, the body must be declared as a template function when it is defined and the special macro [macroref CONTRACT_PARAMETER_BODY] must be used to name the function.
+]
+
+The same macro is used to name both free and member body functions because the class type is specified outside this macro.
+The constructor body definition cannot be deferred from the constructor declaration (because of the lack of delegating constructors in __CXX03__).
+Destructors have no named parameters (because they have no parameter).
+Named parameters are not supported for operators (because of a __Boost_Parameter__ bug).
+[footnote
+*Rationale.*
+This library syntax supports named and deduced parameters for operators.
+However, __Boost_Parameter__ does not compile when used with operators because of a bug (__Boost_Parameter__ documentation claims support for operators but later revisions of __Boost_Parameter__ no longer compile when operators are used).
+If __Boost_Parameter__ were to be fixed to work with operators then this library named and deduced parameters should also work with operators.
+]
+Therefore the [macroref CONTRACT_PARAMETER_BODY] macro is used only with free and member functions that are not operators.
+[footnote
+*Rationale.*
+A macro [macroref CONTRACT_PARAMETER_BODY] different from [macroref CONTRACT_MEMBER_BODY] and [macroref CONTRACT_FREE_BODY] is necessary because named parameters will still be enabled even when contracts are turned off using [macroref CONTRACT_CONFIG_NO_PRECONDITIONS], etc.
+]
+
+In this example, named parameters were specified for all `callable2::call` overloads and for the `static` member function `callable2:static_call`:
+
+[member_named_params_callable2_calls]
+
+[endsect]
+
+[section Constructor Parameters]
+
+The same syntax is used to specify named and deduced parameters for constructors (see also [file example/named_parameters constructor_named_params_family.cpp]):
+[footnote
+Arguably, this library offers a better syntax than __Boost_Parameter__ for constructor named and deduced parameters (because __Boost_Parameter__ requires boiler-plate code and an extra base class in order to handle constructors).
+]
+
+[import ../example/named_parameters/constructor_named_params_family.cpp]
+[constructor_named_params_family]
+
+Both preconditions and postconditions were specified for the constructor.
+
+[important
+Member initializers must access named and deduced parameters using the special macro [macroref CONTRACT_CONSTRUCTOR_ARG] (otherwise the compiler will generate an error).
+[footnote
+*Rationale.*
+This limitation comes from the lacks of delegating constructors in __CXX03__ (as with all other limitations of this library related to member initializers).
+]
+]
+
+Named and deduced parameters can be used to specify the arguments when constructing the object:
+
+[constructor_named_params_family_call]
+
+[endsect]
+
+[section Class Template Parameters]
+
+Only class templates are discussed in this section because function templates are effectively always declared when a function uses named or deduced parameters.
+In fact, a function with named or deduced parameters is always a function template (possibly with fully generic templated types when the named and deduced parameters types are specified `auto`).
+
+To show how to program named and deduced template parameters, we will program a named parameter interface for the [@http://www.boost.org/doc/libs/1_49_0/libs/python/doc/v2/class.html#class_-spec `class_`] class template of the __Boost_Python__ library:
+
+    template<
+        class ClassType,
+        class Bases = bases<>,
+        typename HeldType = not_sepcified,
+        typename Copyable = not_specified
+    > requires
+        is_class<ClassType>
+    class class_ ;
+
+[variablelist
+[ [ClassType] [
+This type parameter must be a class and it has no default value (required parameter).
+] ]
+[ [Bases] [
+This type parameter must be a specialization of `boost::python::bases` specifying base classes if any (see `boost::python::detail::specifies_bases`) and its value defaults to `boost::python::bases<>`.
+] ]
+[ [HeldType] [
+This type parameter has no constraint and it is not specified by default (see `boost::python::detail::not_specified`).
+] ]
+[ [Copyable] [
+This type parameter must be `boost::noncopyable` if specified and it is not specified by default (see `boost::python::detail::not_specified`).
+] ]
+]
+
+[important
+Unfortunately, named and deduced template parameters can only handle type template parameters (i.e., value template parameters and template template parameters are not supported).
+[footnote
+*Rationale.*
+This library only supports named and deduced type template parameter because it internally uses __Boost_Parameter__ and __Boost_Parameter__ does not support non-type template parameters.
+However, this library syntax would support named and deduced value template parameters and template template parameters if these were ever supported by __Boost_Parameter__ (see template parameters within the __Grammar__ section).
+Named and deduced value template parameters can be emulated by wrapping their values into types (using `boost::mpl::int_`, `boos::mpl::bool_`, etc) at the cost of a somewhat cumbersome syntax.
+]
+]
+
+First of all, it is necessary to declare elements that will serve as template parameter and argument identifiers (see also [file example/named_parameters named_template_params_pyclass.cpp]):
+
+[import ../example/named_parameters/named_template_params_pyclass.cpp]
+[named_template_params_pyclass_keywords]
+
+For example, the first [macroref CONTRACT_TEMPLATE_PARAMETER] macro declares a specifier `ClassType` that can be used as the parameter name in the class template declaration and a specifier `ClassType_` (note the trailing underscore `_`) that can be used for the template argument at the template instantiation site.
+
+[note
+By default, template argument identifiers are differentiated from template parameter identifiers using a trailing underscore `_` to avoid name clashes (see also the __Parameter_Identifiers__ section).
+Furthermore, it is recommended to always declare these identifiers within a namespace to avoid name clashes (because different class templates in different sections of the code might very well use the same template parameter names so namespaces can be used to control overlapping names).
+]
+
+The class template is declared using a syntax similar to the one we have seen so far for named and deduced function parameters (see also [file example/named_parameters named_template_params_pyclass.cpp]):
+[footnote
+Arguably, this library offers a better syntax than __Boost_Parameter__ for named and deduced template parameters (because __Boost_Parameter__ requires boiler-plate code and the additional argument packing types to be programmed manually).
+]
+
+[named_template_params_pyclass]
+
+Note that template parameters are always specified using `in` because they are always input parameters (they are static types).
+Furthermore, `typename` or `class` must always follow the `in` specifier for type template parameters.
+[footnote
+*Rationale.*
+This syntax was designed so it can support non-type template parameters if this library and __Boost_Parameter__ were ever extended to support value template parameters and template template parameters (see template parameters in the __Grammar__ section).
+]
+Predicate type requirements `requires(`[^['unary-boolean-metafunction]]`)` are optional and they are specified right after `typename` or `class` if present.
+Default template parameter values are specified using `, default `[^['default-parameter-value]] as usual.
+(See also the __Grammar__ section.)
+
+The class template `py::class_` can be instantiated using the template parameter identifiers to name the arguments (see also [file example/named_parameters named_template_params_pyclass.cpp]):
+[footnote
+This named and deduced parameter syntax is not entirely ideal because it uses angular parenthesis `py::ClassType_<bx>` instead of the more readable assignment operator `py::ClassType_ = bx` to name the arguments (but that is how __Boost_Parameter__ is implemented and also this library authors see no way to implement the assignment operator syntax for named and deduced template parameters).
+]
+
+[named_template_params_pyclass_calls]
+
+[endsect]
+
+[section Concepts]
+
+As shown in the `py::class_` example above, it is possible to specify concepts for named and deduced template parameters.
+Concepts are specified using `requires` after the class template parameter declaration:
+
+    template( ... ) requires( ``[^['concept1]]``, ``[^['concept2]]``, ... )
+    class (class_) ...
+
+As shown in the `py::def` example earlier in this section, it is also possible to specify concepts for named and deduced function parameters (because named and deduced function parameter can be generic, as function template parameters are, when their types are specified `auto` or via a predicate type requirement).
+However, in this case concepts are specified using `requires` after the function parameter list (because there is not `template` declaration for functions with named and deduced parameters):
+
+    void (def) ( ... ) requires( ``[^['concept1]]``, ``[^['concept2]]``, ... )
+
+Note the following differences between specifying predicate type requirements and concepts for named and deduced parameters:
+
+* If predicate type requirements are not met, the function or class template will be taken out from the set of possible function overloads or template specializations in the function call or template instantiation resolution (this might ultimately generate a compiler error but only if there is no other function overload or template specialization that can be used).
+* If a concept check fails, the compiler will always generate a compiler error.
+
+[endsect]
+
+[section Parameter Identifiers]
+
+When using the [macroref CONTRACT_PARAMETER] and [macroref CONTRACT_TEMPLATE_PARAMETER] macros (see also the __Grammar__ section):
+
+# It is possible to specify a namespace that will contain the parameter identifiers using `namespace(`[^['parameter-identifier-namespace]]`)`.
+# It is also possible to specify the name of the argument identifier instead of using the automatic underscore `_` postfix using `(`[^['argument-identifier]]`)`.
+
+The following example generates parameter identifiers within the `params` namespace, and argument identifiers `NumberArg` and `value_arg` instead of the default `Number_` and `value_` for the `Number` and `value` parameters respectively (see also [file example/named_parameters named_param_identifiers_positive.cpp]):
+
+[import ../example/named_parameters/named_param_identifiers_positive.cpp]
+[named_param_identifiers_positive_keywords]
+
+When the parameter identifier namespace is specified, it must be repeated in the named and deduced parameter declaration list (see also the __Grammar__ section):
+
+    using namespace ``/paraemeter-identifier-namespace/``, ... // named and deduced parameters follow
+
+The authors find this syntax confusing so they recommend to never specify the parameter identifier namespace when using the [macroref CONTRACT_PARAMETER] and [macroref CONTRACT_TEMPLATE_PARAMETER] macros.
+[footnote
+*Rationale.*
+The ability to specify the parameter identifier (or tag) namespace is offered because it is offered by __Boost_Parameter__ and it gives programmers greater control.
+However, it should be rarely if ever needed because this library provides the [macro CONTRACT_PARAMETER_TYPEOF] macro.
+]
+Instead programmers are encouraged to use these macros within an enclosing namespace as done by the rest of the examples in this documentation.
+
+For example (see also [file example/named_parameters named_param_identifiers_positive.cpp]):
+
+[named_param_identifiers_positive]
+
+Class invariants, preconditions, and postconditions were also specified in this example.
+
+At the template instantiation and function call site, the specified argument identifiers `NumberArg` and `value_arg` can be used instead of the usual trailing underscore (see also [file example/named_parameters named_param_identifiers_positive.cpp]):
+
+[named_param_identifiers_positive_call]
+
+It is not necessary to specify both the parameter identifier namespace and the argument identifier as they are both and independently optional (see also the __Grammar__ section):
+
+    CONTRACT_TEMPLATE_PARAMETER( (NumberArg) Number )   // Specify only argument identifier.
+    CONTRACT_PARAMETER( namespace(params) value )       // Specify only parameter identifier namespace.
+
+It is recommended to never specify the argument identifiers to have the same names as the parameter identifiers in order to avoid the following usually silent bug (see also [file example/named_parameters named_param_identifiers_failure.cpp]):
+
+[import ../example/named_parameters/named_param_identifiers_failure.cpp]
+[named_param_identifiers_failure]
+
+The call `print(age = 3);` will assign `3` to `f`'s parameter `age` instead than passing `3` as the argument of `print`'s parameter `age`.
+The trailing underscore `_` convention and enclosing the named parameter declaration macros [macroref CONTRACT_PARAMETER] and [macroref CONTRACT_TEMPLATE_PARAMETER] within a namespace make this type of name clashes unlikely.
+
+[endsect]
+
+[endsect]
+

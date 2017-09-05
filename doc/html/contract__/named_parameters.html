@@ -1,0 +1,1165 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<title>Named Parameters</title>
+<link rel="stylesheet" href="../../../doc/src/boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.76.1">
+<link rel="home" href="../index.html" title="Chapter&#160;1.&#160;Contract++ 0.4.1">
+<link rel="up" href="../index.html" title="Chapter&#160;1.&#160;Contract++ 0.4.1">
+<link rel="prev" href="concepts.html" title="Concepts">
+<link rel="next" href="examples.html" title="Examples">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><a href="http://sourceforge.net/projects/contractpp/"><img alt="Logo" width="277" height="86" src="../../../logo.png"></a></td>
+<td align="center"><a href="http://sourceforge.net/projects/contractpp/files/latest/download">Download</a></td>
+<td align="center"><a href="http://sourceforge.net/apps/trac/contractpp/report/3">Bugs</a></td>
+<td align="center"><a href="http://sourceforge.net/projects/contractpp/reviews/">Reviews</a></td>
+<td align="center"><a href="mailto:lorcaminiti@gmail.com">Contact Us</a></td>
+<td align="center"><a href="http://sourceforge.net/projects/contractpp/forums/forum/920163">Help</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="concepts.html"><img src="../../..//doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../..//doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../..//doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="examples.html"><img src="../../..//doc/src/images/next.png" alt="Next"></a>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="contract__.named_parameters"></a><a class="link" href="named_parameters.html" title="Named Parameters">Named Parameters</a>
+</h2></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="named_parameters.html#contract__.named_parameters.overview">Overview</a></span></dt>
+<dt><span class="section"><a href="named_parameters.html#contract__.named_parameters.named_function_parameters">Named
+      Function Parameters</a></span></dt>
+<dt><span class="section"><a href="named_parameters.html#contract__.named_parameters.deduced_function_parameters">Deduced
+      Function Parameters</a></span></dt>
+<dt><span class="section"><a href="named_parameters.html#contract__.named_parameters.member_function_parameters">Member
+      Function Parameters</a></span></dt>
+<dt><span class="section"><a href="named_parameters.html#contract__.named_parameters.constructor_parameters">Constructor
+      Parameters</a></span></dt>
+<dt><span class="section"><a href="named_parameters.html#contract__.named_parameters.class_template_parameters">Class
+      Template Parameters</a></span></dt>
+<dt><span class="section"><a href="named_parameters.html#contract__.named_parameters.concepts">Concepts</a></span></dt>
+<dt><span class="section"><a href="named_parameters.html#contract__.named_parameters.parameter_identifiers">Parameter
+      Identifiers</a></span></dt>
+</dl></div>
+<p>
+      This section explains how to use this library to program named parameters and
+      deduced named parameters which are used instead of C++ usual positional parameters
+      to specify arguments to function calls. Parameter names are part of the program
+      specifications and therefore named parameters are within the scope of this
+      library.
+    </p>
+<p>
+      This library internally uses <a href="http://www.boost.org/doc/libs/release/libs/parameter" target="_top">Boost.Parameter</a>
+      to implement named parameters. This library only offers an easier syntax for
+      constructor and class template named parameters with respect the functionality
+      already provided by <a href="http://www.boost.org/doc/libs/release/libs/parameter" target="_top">Boost.Parameter</a>,
+      but this library allows to specify named parameters, concepts, and contracts
+      all together within a unified syntax.
+    </p>
+<div class="section">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="contract__.named_parameters.overview"></a><a class="link" href="named_parameters.html#contract__.named_parameters.overview" title="Overview">Overview</a>
+</h3></div></div></div>
+<p>
+        In C++, parameters are identified with respect to their declaration position
+        within the parameter list: The first call <span class="emphasis"><em>argument</em></span> (i.e.,
+        the specific value assigned to the formal parameter at the call site) maps
+        to the first declared parameter, the second call argument maps to the second
+        declared parameter, etc. For example:
+      </p>
+<pre class="programlisting"><span class="identifier">window</span><span class="special">*</span> <span class="identifier">make_window</span> <span class="special">(</span>
+        <span class="keyword">char</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">name</span><span class="special">,</span>
+        <span class="identifier">size_t</span> <span class="identifier">width</span> <span class="special">=</span> <span class="number">10</span><span class="special">,</span>
+        <span class="keyword">bool</span> <span class="identifier">moveable</span> <span class="special">=</span> <span class="keyword">true</span><span class="special">,</span>
+        <span class="keyword">bool</span> <span class="identifier">visible</span> <span class="special">=</span> <span class="keyword">true</span>
+    <span class="special">)</span>
+<span class="special">;</span>
+</pre>
+<p>
+        This protocol is sufficient when there is at most one parameter with a useful
+        default value but when there are even a few useful default parameters the
+        positional interface becomes difficult to use at the calling site. For example,
+        in the following call we need to repeat the default parameter value <code class="computeroutput"><span class="number">10</span></code>:
+      </p>
+<pre class="programlisting"><span class="keyword">bool</span> <span class="keyword">const</span> <span class="identifier">unmoveable</span> <span class="special">=</span> <span class="keyword">false</span><span class="special">;</span>
+<span class="identifier">make_window</span><span class="special">(</span><span class="string">"warning"</span><span class="special">,</span> <span class="number">10</span><span class="special">,</span> <span class="identifier">unmoveable</span><span class="special">);</span> <span class="comment">// Positional (usual).</span>
+</pre>
+<p>
+        Furthermore, it would be easier to understand the meaning of the arguments
+        at the calling site if the parameters could be referred by their names. For
+        example, in order to understand if the following window is moveable and invisible,
+        or unmoveable and visible, programmers at the calling site need to remember
+        the order of the parameter declarations:
+      </p>
+<pre class="programlisting"><span class="identifier">make_window</span><span class="special">(</span><span class="string">"note"</span><span class="special">,</span> <span class="number">10</span><span class="special">,</span> <span class="keyword">true</span><span class="special">,</span> <span class="keyword">false</span><span class="special">);</span> <span class="comment">// Positional (usual).</span>
+</pre>
+<p>
+        These issues would be solved if the parameter names could be referred at
+        the calling site and that is what <a href="http://en.wikipedia.org/wiki/Named_parameter" target="_top"><span class="emphasis"><em>named
+        parameters</em></span></a> allow to do:
+      </p>
+<pre class="programlisting"><span class="identifier">make_window</span><span class="special">(</span><span class="string">"warning"</span><span class="special">,</span> <span class="identifier">moveable</span> <span class="special">=</span> <span class="keyword">false</span><span class="special">);</span> <span class="comment">// Named.</span>
+<span class="identifier">make_widnow</span><span class="special">(</span><span class="string">"note"</span><span class="special">,</span> <span class="identifier">visible</span> <span class="special">=</span> <span class="keyword">false</span><span class="special">);</span>
+</pre>
+<p>
+        Named parameters were proposed for addition to early versions of C++ but
+        the proposal was never accepted (see <span class="quote">&#8220;<span class="quote">keyword arguments</span>&#8221;</span> in
+        <a class="link" href="bibliography.html#Stroustrup94_anchor">[Stroustrup94]</a>). Other programming
+        languages support named parameters (<a href="http://en.wikipedia.org/wiki/Ada_(programming_language)" target="_top">Ada</a>,
+        <a href="http://www.python.org/" target="_top">Python</a>, etc).
+      </p>
+<p>
+        Furthermore, <span class="emphasis"><em>deduced named parameters</em></span> are named parameters
+        that can be passed in any position and without supplying their names. These
+        are useful when functions have parameters that can be uniquely identified
+        (or <span class="emphasis"><em>deduced</em></span>) based on the argument types of the function
+        call. For example, the <code class="computeroutput"><span class="identifier">name</span></code>
+        parameter is such a parameter, it can be deduced because no other argument,
+        if valid, can be reasonably converted into a <code class="computeroutput"><span class="keyword">char</span>
+        <span class="keyword">const</span><span class="special">*</span></code>.
+        Therefore, with a deduced parameter interface, we could pass the window name
+        in any position without causing any ambiguity (with an appropriately designed
+        deduced parameter interface, the caller might not even have to remember the
+        actual parameter names):
+      </p>
+<pre class="programlisting"><span class="identifier">make_window</span><span class="special">(</span><span class="identifier">moveable</span> <span class="special">=</span> <span class="keyword">false</span><span class="special">,</span> <span class="string">"warning"</span><span class="special">);</span> <span class="comment">// Deduced.</span>
+<span class="identifier">make_window</span><span class="special">(</span><span class="string">"note"</span><span class="special">,</span> <span class="identifier">visible</span> <span class="special">=</span> <span class="keyword">false</span><span class="special">);</span>
+</pre>
+<p>
+        The same reasoning applies to named template parameters and deduced named
+        template parameters:
+      </p>
+<pre class="programlisting"><span class="keyword">template</span><span class="special">&lt;</span> <span class="keyword">typename</span> <span class="identifier">ValueType</span><span class="special">,</span> <span class="keyword">bool</span> <span class="identifier">Shared</span> <span class="special">=</span> <span class="keyword">true</span> <span class="special">&gt;</span>
+<span class="keyword">class</span> <span class="identifier">smart_ptr</span> <span class="special">;</span>
+
+<span class="identifier">smart_ptr</span><span class="special">&lt;</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">,</span> <span class="keyword">false</span><span class="special">&gt;</span> <span class="identifier">p1</span><span class="special">;</span>                       <span class="comment">// Positional (usual).</span>
+<span class="identifier">smart_ptr</span><span class="special">&lt;</span><span class="keyword">false</span><span class="special">,</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">&gt;</span> <span class="identifier">p2</span><span class="special">;</span>                       <span class="comment">// Deduced.</span>
+<span class="identifier">smart_ptr</span><span class="special">&lt;</span><span class="identifier">Shared</span> <span class="special">=</span> <span class="keyword">false</span><span class="special">,</span> <span class="identifier">ValueType</span> <span class="special">=</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">&gt;</span> <span class="identifier">p3</span><span class="special">;</span>  <span class="comment">// Named.</span>
+</pre>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="contract__.named_parameters.named_function_parameters"></a><a class="link" href="named_parameters.html#contract__.named_parameters.named_function_parameters" title="Named Function Parameters">Named
+      Function Parameters</a>
+</h3></div></div></div>
+<p>
+        To show how to program named parameters, we will program a named parameter
+        interface for the <a href="http://www.boost.org/doc/libs/1_49_0/libs/graph/doc/depth_first_search.html" target="_top">Depth
+        First Search (DFS)</a> algorithm of the <a href="http://www.boost.org/doc/libs/release/libs/graph" target="_top">Boost.Graph</a>
+        library:
+      </p>
+<pre class="programlisting"><span class="keyword">template</span><span class="special">&lt;</span>
+    <span class="keyword">class</span> <span class="identifier">Graph</span><span class="special">,</span>
+    <span class="keyword">class</span> <span class="identifier">Visitor</span><span class="special">,</span>
+    <span class="keyword">class</span> <span class="identifier">IndexMap</span><span class="special">,</span>
+    <span class="keyword">class</span> <span class="identifier">ColorMap</span>
+<span class="special">&gt;</span> <span class="identifier">requires</span>
+    <span class="identifier">is_incidence_and_vertex_list_graph</span><span class="special">&lt;</span><span class="identifier">Graph</span><span class="special">&gt;,</span>
+    <span class="identifier">is_integral_property_map_of_key</span><span class="special">&lt;</span><span class="identifier">IndexMap</span><span class="special">,</span> <span class="identifier">vertext_descriptor</span><span class="special">&lt;</span><span class="identifier">Graph</span><span class="special">&gt;</span> <span class="special">&gt;,</span>
+    <span class="identifier">is_property_map_of_key</span><span class="special">&lt;</span><span class="identifier">ColorMap</span><span class="special">,</span> <span class="identifier">vertex_descriptor</span><span class="special">&lt;</span><span class="identifier">Graph</span><span class="special">&gt;</span> <span class="special">&gt;</span>
+<span class="keyword">void</span> <span class="identifier">depth_first_search</span> <span class="special">(</span>
+        <span class="identifier">Graph</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">graph</span><span class="special">,</span>
+        <span class="identifier">Visitor</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">visitor</span> <span class="special">=</span> <span class="identifier">dfs_visitor</span><span class="special">&lt;&gt;(),</span>
+        <span class="identifier">vertex_descriptor</span><span class="special">&lt;</span><span class="identifier">Graph</span><span class="special">&gt;</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">root_vertex</span> <span class="special">=</span>
+                <span class="special">*</span><span class="identifier">vertices</span><span class="special">(</span><span class="identifier">graph</span><span class="special">).</span><span class="identifier">first</span><span class="special">,</span>
+        <span class="identifier">IndexMap</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">index_map</span> <span class="special">=</span> <span class="identifier">get</span><span class="special">(</span><span class="identifier">vertex_index</span><span class="special">,</span> <span class="identifier">graph</span><span class="special">),</span>
+        <span class="identifier">ColorMap</span><span class="special">&amp;</span> <span class="identifier">color_map</span> <span class="special">=</span>
+                <span class="identifier">default_color_map</span><span class="special">(</span><span class="identifier">num_vertices</span><span class="special">(</span><span class="identifier">graph</span><span class="special">),</span> <span class="identifier">index_map</span><span class="special">)</span>
+    <span class="special">)</span>
+<span class="special">;</span>
+</pre>
+<p>
+        This is non-valid C++ code but it can be considered pseudo-code to illustrate
+        the function interface that we need to program. The concept syntax <code class="computeroutput"><span class="identifier">requires</span></code> was <span class="quote">&#8220;<span class="quote">borrowed</span>&#8221;</span> here
+        to express parameter type requirements but a failure to satisfy such requirements
+        is intended to fail the function call resolution and not to cause a concept
+        error as usual.
+      </p>
+<div class="variablelist">
+<p class="title"><b></b></p>
+<dl>
+<dt><span class="term"><code class="literal">graph</code></span></dt>
+<dd><p>
+              This is an input parameter (<code class="computeroutput"><span class="keyword">const</span><span class="special">&amp;</span></code>), its type must match a model
+              of both <code class="computeroutput"><span class="identifier">IndicenceGraph</span></code>
+              and <code class="computeroutput"><span class="identifier">VertexListGraph</span></code>,
+              and it has no default value (required parameter).
+            </p></dd>
+<dt><span class="term"><code class="literal">visitor</code></span></dt>
+<dd><p>
+              This is an input parameter (<code class="computeroutput"><span class="keyword">const</span><span class="special">&amp;</span></code>), its type has no requirement,
+              and its value defaults to a DFS visitor (optional parameter).
+            </p></dd>
+<dt><span class="term"><code class="literal">root_vertex</code></span></dt>
+<dd><p>
+              This is an input parameter (<code class="computeroutput"><span class="keyword">const</span><span class="special">&amp;</span></code>), its type must be <code class="computeroutput"><span class="identifier">vertex_descriptor</span><span class="special">&lt;</span><span class="identifier">Graph</span><span class="special">&gt;</span></code>,
+              and its value defaults to the first vertex of the specified graph (optional
+              parameter).
+            </p></dd>
+<dt><span class="term"><code class="literal">index_map</code></span></dt>
+<dd><p>
+              This is an input parameter (<code class="computeroutput"><span class="keyword">const</span><span class="special">&amp;</span></code>), its type must match a model
+              of <code class="computeroutput"><span class="identifier">IntegralPropertyMap</span></code>
+              with key type <code class="computeroutput"><span class="identifier">vertex_descriptor</span><span class="special">&lt;</span><span class="identifier">Graph</span><span class="special">&gt;</span></code>, its value defaults to the vertex
+              index of the specified graph (optional parameter).
+            </p></dd>
+<dt><span class="term"><code class="literal">color_map</code></span></dt>
+<dd><p>
+              This is an input and output parameter (non-constant reference <code class="computeroutput"><span class="special">&amp;</span></code>), its type must match a model
+              of <code class="computeroutput"><span class="identifier">PropertyMap</span></code> with
+              key type <code class="computeroutput"><span class="identifier">vertex_descriptor</span><span class="special">&lt;</span><span class="identifier">Graph</span><span class="special">&gt;</span></code>, its value defaults to a map with
+              size equal to the number of vertices of the specified graph and created
+              from the specified <code class="computeroutput"><span class="identifier">index_map</span></code>
+              (optional parameter).
+            </p></dd>
+</dl>
+</div>
+<p>
+        <span class="bold"><strong>Parameter Identifiers</strong></span>
+      </p>
+<p>
+        First of all, it is necessary to declare special elements that will serve
+        as the parameter and argument identifiers (see also <a href="../../../example/named_parameters/named_params_dfs.cpp" target="_top"><code class="literal">named_params_dfs.cpp</code></a>):
+      </p>
+<p>
+</p>
+<pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">graphs</span> <span class="special">{</span>
+
+<span class="identifier">CONTRACT_PARAMETER</span><span class="special">(</span><span class="identifier">graph</span><span class="special">)</span>
+<span class="identifier">CONTRACT_PARAMETER</span><span class="special">(</span><span class="identifier">visitor</span><span class="special">)</span>
+<span class="identifier">CONTRACT_PARAMETER</span><span class="special">(</span><span class="identifier">root_vertex</span><span class="special">)</span>
+<span class="identifier">CONTRACT_PARAMETER</span><span class="special">(</span><span class="identifier">index_map</span><span class="special">)</span>
+<span class="identifier">CONTRACT_PARAMETER</span><span class="special">(</span><span class="identifier">color_map</span><span class="special">)</span>
+
+<span class="special">}</span> <span class="comment">// namespace</span>
+</pre>
+<p>
+      </p>
+<p>
+        For example, the first <code class="computeroutput"><a class="link" href="../CONTRACT_PARAMETER.html" title="Macro CONTRACT_PARAMETER">CONTRACT_PARAMETER</a></code>
+        macro declares an identifier <code class="computeroutput"><span class="identifier">graph</span></code>
+        that is used as the parameter name in the function declaration and also an
+        identifier <code class="computeroutput"><span class="identifier">graph_</span></code> (note the
+        trailing underscore <code class="computeroutput"><span class="identifier">_</span></code>) that
+        is used to name the argument at the call site.
+      </p>
+<div class="note"><table border="0" summary="Note">
+<tr>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="../../../doc/src/images/note.png"></td>
+<th align="left">Note</th>
+</tr>
+<tr><td align="left" valign="top"><p>
+          By default, argument identifiers are differentiated from parameter identifiers
+          using a trailing underscore <code class="computeroutput"><span class="identifier">_</span></code>
+          to avoid name clashes (see also the <a class="link" href="named_parameters.html#contract__.named_parameters.parameter_identifiers" title="Parameter Identifiers">Parameter
+          Identifiers</a> section). Furthermore, it is recommended to always declare
+          these identifiers within a namespace to avoid name clashes (because different
+          functions in different sections of the code might very well use the same
+          parameter names so namespaces can be used to control overlapping names).
+        </p></td></tr>
+</table></div>
+<p>
+        For example, for a library named Graphs, all named parameter identifiers
+        could be declared under the <code class="computeroutput"><span class="identifier">graphs</span></code>
+        namespace and maybe in a single header <code class="literal">graphs_params.hpp</code>.
+        Many different functions within <code class="computeroutput"><span class="identifier">graphs</span></code>
+        (for example <code class="computeroutput"><span class="identifier">graphs</span><span class="special">::</span><span class="identifier">depth_first_search</span></code> and <code class="computeroutput"><span class="identifier">graphs</span><span class="special">::</span><span class="identifier">breadth_first_search</span></code>)
+        will share a number of common parameter names (for example a parameter named
+        <code class="computeroutput"><span class="identifier">graph</span></code> with parameter identifier
+        <code class="computeroutput"><span class="identifier">graphs</span><span class="special">::</span><span class="identifier">graph</span></code> and argument identifier <code class="computeroutput"><span class="identifier">graphs</span><span class="special">::</span><span class="identifier">graph_</span></code>). All these named parameters will
+        be defined in one places in <code class="literal">graphs_params.hpp</code> and within
+        the <code class="computeroutput"><span class="identifier">graphs</span></code> namespace so programmers
+        can conveniently control and avoid named clashes.
+      </p>
+<p>
+        <span class="bold"><strong>Function Declaration</strong></span>
+      </p>
+<p>
+        The function is declared using the following syntax (see also <a href="../../../example/named_parameters/named_params_dfs.cpp" target="_top"><code class="literal">named_params_dfs.cpp</code></a>):
+      </p>
+<p>
+</p>
+<pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">graphs</span> <span class="special">{</span>
+
+<span class="identifier">CONTRACT_FUNCTION</span><span class="special">(</span>
+    <span class="keyword">void</span> <span class="special">(</span><span class="identifier">depth_first_search</span><span class="special">)</span> <span class="special">(</span>
+            <span class="comment">// Required parameter (no default value) with requirement predicate.</span>
+            <span class="identifier">in</span> <span class="identifier">requires</span><span class="special">(</span><span class="identifier">is_incidence_and_vertex_list_graph</span><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">mpl</span><span class="special">::</span><span class="identifier">_</span><span class="special">&gt;)</span>
+                    <span class="identifier">graph</span><span class="special">,</span>
+            <span class="comment">// Optional (default value) of any type (auto).</span>
+            <span class="identifier">in</span> <span class="keyword">auto</span> <span class="identifier">visitor</span><span class="special">,</span> <span class="keyword">default</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">dfs_visitor</span><span class="special">&lt;&gt;(),</span>
+            <span class="comment">// Exact type specified.</span>
+            <span class="identifier">in</span> <span class="special">(</span><span class="identifier">vertex_descriptor</span><span class="special">&lt;</span><span class="identifier">CONTRACT_PARAMETER_TYPEOF</span><span class="special">(</span><span class="identifier">graph</span><span class="special">)&gt;)</span>
+                    <span class="identifier">root_vertex</span><span class="special">,</span> <span class="keyword">default</span> <span class="special">(*</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">vertices</span><span class="special">(</span><span class="identifier">graph</span><span class="special">).</span><span class="identifier">first</span><span class="special">),</span>
+            <span class="comment">// Any type matching requirement predicate (unary meta-function).</span>
+            <span class="identifier">in</span> <span class="identifier">requires</span><span class="special">(</span>
+                <span class="identifier">is_integral_property_map_of_key</span><span class="special">&lt;</span>
+                      <span class="identifier">boost</span><span class="special">::</span><span class="identifier">mpl</span><span class="special">::</span><span class="identifier">_</span>
+                    <span class="special">,</span> <span class="identifier">vertex_descriptor</span><span class="special">&lt;</span><span class="identifier">CONTRACT_PARAMETER_TYPEOF</span><span class="special">(</span><span class="identifier">graph</span><span class="special">)&gt;</span>
+                <span class="special">&gt;</span>
+            <span class="special">)</span> <span class="identifier">index_map</span><span class="special">,</span> <span class="keyword">default</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">get</span><span class="special">(</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">vertex_index</span><span class="special">,</span> <span class="identifier">graph</span><span class="special">),</span>
+            <span class="comment">// In-out parameter.</span>
+            <span class="identifier">in</span> <span class="identifier">out</span> <span class="identifier">requires</span><span class="special">(</span>
+                <span class="identifier">is_property_map_of_key</span><span class="special">&lt;</span>
+                      <span class="identifier">boost</span><span class="special">::</span><span class="identifier">mpl</span><span class="special">::</span><span class="identifier">_</span>
+                    <span class="special">,</span> <span class="identifier">vertex_descriptor</span><span class="special">&lt;</span><span class="identifier">CONTRACT_PARAMETER_TYPEOF</span><span class="special">(</span><span class="identifier">graph</span><span class="special">)&gt;</span>
+                <span class="special">&gt;</span>
+            <span class="special">)</span> <span class="identifier">color_map</span><span class="special">,</span> <span class="keyword">default</span> <span class="identifier">default_color_map</span><span class="special">(</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">num_vertices</span><span class="special">(</span><span class="identifier">graph</span><span class="special">),</span>
+                    <span class="identifier">index_map</span><span class="special">)</span>
+        <span class="special">)</span>
+        <span class="comment">// No `precondition(...)` or `postcondition(...)` in this example.</span>
+<span class="special">)</span> <span class="special">{</span>
+    <span class="comment">// Also function definition can use `PARAMETER_TYPEOF`.</span>
+    <span class="keyword">typedef</span> <span class="identifier">CONTRACT_PARAMETER_TYPEOF</span><span class="special">(</span><span class="identifier">graph</span><span class="special">)&amp;</span> <span class="identifier">graph_ref</span><span class="special">;</span> <span class="comment">// Unused by example.</span>
+    <span class="identifier">boost</span><span class="special">::</span><span class="identifier">depth_first_search</span><span class="special">(</span><span class="identifier">graph</span><span class="special">,</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">visitor</span><span class="special">(</span><span class="identifier">visitor</span><span class="special">).</span>
+            <span class="identifier">color_map</span><span class="special">(</span><span class="identifier">color_map</span><span class="special">).</span><span class="identifier">root_vertex</span><span class="special">(</span><span class="identifier">root_vertex</span><span class="special">).</span>
+            <span class="identifier">vertex_index_map</span><span class="special">(</span><span class="identifier">index_map</span><span class="special">));</span>
+<span class="special">}</span>
+
+<span class="special">}</span> <span class="comment">// namespace</span>
+</pre>
+<p>
+      </p>
+<p>
+        This example required no preconditions and no postconditions.
+      </p>
+<p>
+        <span class="bold"><strong>In, In Out, and Out Parameters</strong></span>
+      </p>
+<p>
+        Input parameters (i.e., constant references <code class="computeroutput"><span class="keyword">const</span><span class="special">&amp;</span></code>) are prefixed by the specifier <code class="computeroutput"><span class="identifier">in</span></code> (see also the <a class="link" href="grammar.html" title="Grammar">Grammar</a>
+        section):
+      </p>
+<pre class="programlisting"><span class="identifier">in</span> <span class="special">...</span> <span class="identifier">graph</span> <span class="comment">// Input parameter.</span>
+</pre>
+<p>
+        Input and output parameters (i.e., non-constant reference <code class="computeroutput"><span class="special">&amp;</span></code>)
+        are prefixed by both specifiers <code class="computeroutput"><span class="identifier">in</span>
+        <span class="identifier">out</span></code> (in this order, see also the
+        <a class="link" href="grammar.html" title="Grammar">Grammar</a> section):
+      </p>
+<pre class="programlisting"><span class="identifier">in</span> <span class="identifier">out</span> <span class="special">...</span> <span class="identifier">color_map</span> <span class="comment">// Input-output parameter.</span>
+</pre>
+<p>
+        Output parameters can be prefixed just by the specifier <code class="computeroutput"><span class="identifier">out</span></code>
+        but their implementation is equivalent to using the specifiers <code class="computeroutput"><span class="identifier">in</span> <span class="identifier">out</span></code>
+        (i.e., non-constant reference <code class="computeroutput"><span class="special">&amp;</span></code>).
+        <sup>[<a name="contract__.named_parameters.named_function_parameters.f0" href="#ftn.contract__.named_parameters.named_function_parameters.f0" class="footnote">60</a>]</sup> Note that a named parameter must always be specified either
+        <code class="computeroutput"><span class="identifier">in</span></code>, <code class="computeroutput"><span class="identifier">in</span>
+        <span class="identifier">out</span></code>, or <code class="computeroutput"><span class="identifier">out</span></code>
+        (and that is what distinguish syntactically a named parameter from a positional
+        parameter; this use of <code class="computeroutput"><span class="identifier">in</span></code>,
+        <code class="computeroutput"><span class="identifier">in</span> <span class="identifier">out</span></code>,
+        and <code class="computeroutput"><span class="identifier">out</span></code> resembles <a href="http://en.wikipedia.org/wiki/Ada_(programming_language)" target="_top">Ada</a>'s
+        syntax). Named and positional parameters cannot be used together in the same
+        function declaration.
+      </p>
+<p>
+        <span class="bold"><strong>Parameter Types</strong></span>
+      </p>
+<p>
+        Exact parameter types are specified just before the parameter name and within
+        parenthesis (unless they are fundamental types containing no symbol, see
+        also the <a class="link" href="grammar.html" title="Grammar">Grammar</a> section):
+      </p>
+<pre class="programlisting"><span class="identifier">in</span> <span class="special">(</span><span class="identifier">vertex_descriptor</span><span class="special">&lt;</span><span class="identifier">CONTRACT_PARAMETER_TYPEOF</span><span class="special">(</span><span class="identifier">graph</span><span class="special">)&gt;)</span> <span class="identifier">root_vertex</span> <span class="comment">// Exact parameter type requirement.</span>
+</pre>
+<p>
+        Generic parameter types (i.e., parameter types with no requirement, same
+        as usual type template parameters) are specified using <code class="computeroutput"><span class="keyword">auto</span></code>
+        instead of the parameter type (see also the <a class="link" href="grammar.html" title="Grammar">Grammar</a>
+        section):
+      </p>
+<pre class="programlisting"><span class="identifier">in</span> <span class="keyword">auto</span> <span class="identifier">visitor</span> <span class="comment">// No parameter type requirement.</span>
+</pre>
+<p>
+        Predicate parameter type requirements are specified using <code class="computeroutput"><span class="identifier">requires</span><span class="special">(</span></code><code class="literal"><span class="emphasis"><em>unary-boolean-metafunction</em></span></code><code class="computeroutput"><span class="special">)</span></code> instead of the parameter type, the type
+        of the argument specified by the function call will be required to match
+        the specified unary boolean meta-function in order for the call to be resolved
+        (see also the <a class="link" href="grammar.html" title="Grammar">Grammar</a> section):
+      </p>
+<pre class="programlisting"><span class="identifier">in</span> <span class="identifier">requires</span><span class="special">(</span><span class="identifier">is_incidence_and_vertex_list_graph</span><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">mpl</span><span class="special">::</span><span class="identifier">_</span><span class="special">&gt;)</span> <span class="identifier">graph</span> <span class="comment">// Predicate parameter type requirement.</span>
+</pre>
+<p>
+        The placeholder <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">mpl</span><span class="special">::</span><span class="identifier">_</span></code>
+        makes this expression a unary meta-function (see <a href="http://www.boost.org/doc/libs/release/libs/mpl" target="_top">Boost.MPL</a>)
+        and the library will substitute such a placeholder with the argument type
+        specified at the call site when resolving the function call.
+      </p>
+<p>
+        <span class="bold"><strong>Default Parameter Values</strong></span>
+      </p>
+<p>
+        Default parameter values are specified using <code class="computeroutput"><span class="special">,</span>
+        <span class="keyword">default</span> </code><code class="literal"><span class="emphasis"><em>default-parameter-value</em></span></code>
+        right after the parameter declaration (see also the <a class="link" href="grammar.html" title="Grammar">Grammar</a>
+        section):
+      </p>
+<pre class="programlisting"><span class="identifier">in</span> <span class="keyword">auto</span> <span class="identifier">visitor</span><span class="special">,</span> <span class="keyword">default</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">dfs_visitor</span><span class="special">&lt;&gt;()</span>
+</pre>
+<p>
+        Default parameter values are not evaluated and their types are not even instantiated
+        if an actual argument is specified by the function call.
+      </p>
+<div class="note"><table border="0" summary="Note">
+<tr>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="../../../doc/src/images/note.png"></td>
+<th align="left">Note</th>
+</tr>
+<tr><td align="left" valign="top"><p>
+          The type and value of a parameters can be used within the declaration of
+          other parameters. The type of a named parameter can be accessed using the
+          <code class="computeroutput"><a class="link" href="../CONTRACT_PARAMETER_TYPEOF.html" title="Macro CONTRACT_PARAMETER_TYPEOF">CONTRACT_PARAMETER_TYPEOF</a></code>
+          macro (this is especially useful for generic parameter types and for parameter
+          types with predicate requirements because these types are not known until
+          the function call is resolved).
+        </p></td></tr>
+</table></div>
+<p>
+        <span class="bold"><strong>Function Call</strong></span>
+      </p>
+<p>
+        The <code class="computeroutput"><span class="identifier">graphs</span><span class="special">::</span><span class="identifier">depth_first_search</span></code> function can be called
+        using argument identifiers to name its parameters (see also <a href="../../../example/named_parameters/named_params_dfs.cpp" target="_top"><code class="literal">named_params_dfs.cpp</code></a>):
+      </p>
+<p>
+</p>
+<pre class="programlisting"><span class="identifier">graphs</span><span class="special">::</span><span class="identifier">depth_first_search</span><span class="special">(</span><span class="identifier">graphs</span><span class="special">::</span><span class="identifier">visitor_</span> <span class="special">=</span> <span class="identifier">vis</span><span class="special">,</span> <span class="identifier">graphs</span><span class="special">::</span><span class="identifier">graph_</span> <span class="special">=</span> <span class="identifier">g</span><span class="special">);</span>
+</pre>
+<p>
+      </p>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="contract__.named_parameters.deduced_function_parameters"></a><a class="link" href="named_parameters.html#contract__.named_parameters.deduced_function_parameters" title="Deduced Function Parameters">Deduced
+      Function Parameters</a>
+</h3></div></div></div>
+<p>
+        To show how to program deduced named parameters, we program the parameter
+        interface for the <a href="http://www.boost.org/doc/libs/1_49_0/libs/python/doc/v2/def.html#def-spec" target="_top"><code class="computeroutput"><span class="identifier">def</span></code></a> function of the <a href="http://www.boost.org/doc/libs/release/libs/python" target="_top">Boost.Python</a>
+        library (see also <a href="../../../example/named_parameters/deduced_params_pydef.cpp" target="_top"><code class="literal">deduced_params_pydef.cpp</code></a>):
+      </p>
+<p>
+</p>
+<pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">py</span> <span class="special">{</span>
+
+<span class="identifier">CONTRACT_PARAMETER</span><span class="special">(</span><span class="identifier">name</span><span class="special">)</span>
+<span class="identifier">CONTRACT_PARAMETER</span><span class="special">(</span><span class="identifier">func</span><span class="special">)</span>
+<span class="identifier">CONTRACT_PARAMETER</span><span class="special">(</span><span class="identifier">docstring</span><span class="special">)</span>
+<span class="identifier">CONTRACT_PARAMETER</span><span class="special">(</span><span class="identifier">keywords</span><span class="special">)</span>
+<span class="identifier">CONTRACT_PARAMETER</span><span class="special">(</span><span class="identifier">policies</span><span class="special">)</span>
+
+<span class="identifier">CONTRACT_FUNCTION</span><span class="special">(</span>
+    <span class="keyword">void</span> <span class="special">(</span><span class="identifier">def</span><span class="special">)</span> <span class="special">(</span>
+            <span class="comment">// Non-deduced (and also required) named parameters.</span>
+            <span class="identifier">in</span> <span class="special">(</span><span class="keyword">char</span> <span class="keyword">const</span><span class="special">*)</span> <span class="identifier">name</span><span class="special">,</span>
+            <span class="identifier">in</span> <span class="keyword">auto</span> <span class="identifier">func</span><span class="special">,</span>
+            <span class="comment">// Deduced (and also optional) named parameters.</span>
+            <span class="identifier">deduce</span> <span class="identifier">in</span> <span class="special">(</span><span class="keyword">char</span> <span class="keyword">const</span><span class="special">*)</span> <span class="identifier">docstring</span><span class="special">,</span> <span class="keyword">default</span> <span class="special">(</span><span class="string">""</span><span class="special">),</span>
+            <span class="identifier">deduce</span> <span class="identifier">in</span> <span class="identifier">requires</span><span class="special">(</span><span class="identifier">is_keyword_expression</span><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">mpl</span><span class="special">::</span><span class="identifier">_</span><span class="special">&gt;)</span> <span class="identifier">keywords</span><span class="special">,</span>
+                    <span class="keyword">default</span> <span class="identifier">no_keywords</span><span class="special">(),</span>
+            <span class="comment">// Type requirements also used to uniquely deduce parameters.</span>
+            <span class="identifier">deduce</span> <span class="identifier">in</span> <span class="identifier">requires</span><span class="special">(</span>
+                <span class="identifier">boost</span><span class="special">::</span><span class="identifier">mpl</span><span class="special">::</span><span class="identifier">not_</span><span class="special">&lt;</span>
+                    <span class="identifier">boost</span><span class="special">::</span><span class="identifier">mpl</span><span class="special">::</span><span class="identifier">or_</span><span class="special">&lt;</span>
+                          <span class="identifier">boost</span><span class="special">::</span><span class="identifier">is_convertible</span><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">mpl</span><span class="special">::</span><span class="identifier">_</span><span class="special">,</span> <span class="keyword">char</span> <span class="keyword">const</span><span class="special">*&gt;</span>
+                        <span class="special">,</span> <span class="identifier">is_keyword_expression</span><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">mpl</span><span class="special">::</span><span class="identifier">_</span><span class="special">&gt;</span>
+                    <span class="special">&gt;</span>
+                <span class="special">&gt;</span>
+            <span class="special">)</span> <span class="identifier">policies</span><span class="special">,</span> <span class="keyword">default</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">python</span><span class="special">::</span><span class="identifier">default_call_policies</span><span class="special">()</span>
+        <span class="comment">// Concepts for named parameters.</span>
+        <span class="special">)</span> <span class="identifier">requires</span><span class="special">(</span> <span class="identifier">CallPolicies</span><span class="special">&lt;</span><span class="identifier">CONTRACT_PARAMETER_TYPEOF</span><span class="special">(</span><span class="identifier">policies</span><span class="special">)&gt;</span> <span class="special">)</span>
+        <span class="identifier">precondition</span><span class="special">(</span> <span class="identifier">is_identifier</span><span class="special">(</span><span class="identifier">name</span><span class="special">)</span> <span class="special">)</span> <span class="comment">// Contracts.</span>
+<span class="special">)</span> <span class="special">{</span>
+    <span class="identifier">boost</span><span class="special">::</span><span class="identifier">python</span><span class="special">::</span><span class="identifier">def</span><span class="special">(</span><span class="identifier">name</span><span class="special">,</span> <span class="identifier">func</span><span class="special">,</span> <span class="identifier">docstring</span><span class="special">,</span> <span class="identifier">keywords</span><span class="special">,</span> <span class="identifier">policies</span><span class="special">);</span>
+<span class="special">}</span>
+
+<span class="special">}</span> <span class="comment">// namespace</span>
+</pre>
+<p>
+      </p>
+<p>
+        Also a precondition was specified in this example. (Concepts for named parameters
+        are explained later in this section.)
+      </p>
+<p>
+        Deduced parameters are named parameter that are prefixed by the <code class="computeroutput"><span class="identifier">deduce</span></code> specifier (see also the <a class="link" href="grammar.html" title="Grammar">Grammar</a>
+        section):
+      </p>
+<pre class="programlisting"><span class="identifier">deduce</span> <span class="identifier">in</span> <span class="special">(</span><span class="keyword">char</span> <span class="keyword">const</span><span class="special">*)</span> <span class="identifier">docstring</span> <span class="comment">// Deduced input parameter.</span>
+</pre>
+<p>
+        When calling the function <code class="computeroutput"><span class="identifier">py</span><span class="special">::</span><span class="identifier">def</span></code> only
+        two arguments are required <code class="computeroutput"><span class="identifier">name</span></code>
+        and <code class="computeroutput"><span class="identifier">func</span></code>. The association
+        between any addition argument and its parameter can be deduced based on the
+        types of the arguments specified by the function call (so the caller is neither
+        required to remember the parameter positions nor to explicitly specify the
+        parameter names for these arguments).
+      </p>
+<p>
+        For example, the first two calls below are equivalent and if programmers
+        need to pass a <code class="computeroutput"><span class="identifier">policy</span></code> argument
+        that is also, for some reason, convertible to <code class="computeroutput"><span class="keyword">char</span>
+        <span class="keyword">const</span><span class="special">*</span></code>,
+        they can always specify the parameter name as in the third call below (see
+        also <a href="../../../example/named_parameters/deduced_params_pydef.cpp" target="_top"><code class="literal">deduced_params_pydef.cpp</code></a>):
+      </p>
+<p>
+</p>
+<pre class="programlisting"><span class="identifier">py</span><span class="special">::</span><span class="identifier">def</span><span class="special">(</span><span class="string">"f"</span><span class="special">,</span> <span class="identifier">print</span><span class="special">&lt;</span><span class="char">'f'</span><span class="special">&gt;,</span> <span class="identifier">nonstring_policies</span><span class="special">,</span> <span class="string">"Documentation for f"</span><span class="special">);</span>
+<span class="identifier">py</span><span class="special">::</span><span class="identifier">def</span><span class="special">(</span><span class="string">"g"</span><span class="special">,</span> <span class="identifier">print</span><span class="special">&lt;</span><span class="char">'g'</span><span class="special">&gt;,</span> <span class="string">"Documentation for g"</span><span class="special">,</span> <span class="identifier">nonstring_policies</span><span class="special">);</span>
+<span class="identifier">py</span><span class="special">::</span><span class="identifier">def</span><span class="special">(</span><span class="string">"h"</span><span class="special">,</span> <span class="identifier">print</span><span class="special">&lt;</span><span class="char">'h'</span><span class="special">&gt;,</span> <span class="identifier">py</span><span class="special">::</span><span class="identifier">policies_</span> <span class="special">=</span> <span class="identifier">string_policies</span><span class="special">,</span>
+        <span class="string">"Documentation for h"</span><span class="special">);</span>
+</pre>
+<p>
+      </p>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="contract__.named_parameters.member_function_parameters"></a><a class="link" href="named_parameters.html#contract__.named_parameters.member_function_parameters" title="Member Function Parameters">Member
+      Function Parameters</a>
+</h3></div></div></div>
+<p>
+        The same syntax is used to specify named and deduced parameters for member
+        functions (see also <a href="../../../example/named_parameters/member_named_params_callable2.cpp" target="_top"><code class="literal">member_named_params_callable2.cpp</code></a>):
+      </p>
+<p>
+</p>
+<pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">calls</span> <span class="special">{</span>
+
+<span class="identifier">CONTRACT_PARAMETER</span><span class="special">(</span><span class="identifier">arg1</span><span class="special">)</span>
+<span class="identifier">CONTRACT_PARAMETER</span><span class="special">(</span><span class="identifier">arg2</span><span class="special">)</span>
+
+<span class="identifier">CONTRACT_CLASS</span><span class="special">(</span>
+    <span class="keyword">struct</span> <span class="special">(</span><span class="identifier">callable2</span><span class="special">)</span>
+<span class="special">)</span> <span class="special">{</span>
+    <span class="identifier">CONTRACT_CLASS_INVARIANT</span><span class="special">(</span> <span class="keyword">void</span> <span class="special">)</span>
+
+    <span class="identifier">CONTRACT_FUNCTION</span><span class="special">(</span> <span class="comment">// Member function with named parameters.</span>
+        <span class="keyword">public</span> <span class="keyword">void</span> <span class="special">(</span><span class="identifier">call</span><span class="special">)</span> <span class="special">(</span> <span class="identifier">in</span> <span class="keyword">int</span> <span class="identifier">arg1</span><span class="special">,</span> <span class="identifier">in</span> <span class="keyword">int</span> <span class="identifier">arg2</span> <span class="special">)</span>
+    <span class="special">)</span> <span class="special">;</span> <span class="comment">// Body definition can be separated...</span>
+
+    <span class="identifier">CONTRACT_FUNCTION</span><span class="special">(</span> <span class="comment">// Constant member with named parameters.</span>
+        <span class="keyword">public</span> <span class="keyword">void</span> <span class="special">(</span><span class="identifier">call</span><span class="special">)</span> <span class="special">(</span> <span class="identifier">in</span> <span class="keyword">int</span> <span class="identifier">arg1</span><span class="special">,</span> <span class="identifier">in</span> <span class="keyword">int</span> <span class="identifier">arg2</span> <span class="special">)</span> <span class="keyword">const</span>
+    <span class="special">)</span> <span class="special">{</span>
+        <span class="identifier">total</span> <span class="special">=</span> <span class="identifier">arg1</span> <span class="special">+</span> <span class="identifier">arg2</span><span class="special">;</span>
+    <span class="special">}</span>
+
+    <span class="identifier">CONTRACT_FUNCTION</span><span class="special">(</span> <span class="comment">// Static member with named parameters.</span>
+        <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="special">(</span><span class="identifier">static_call</span><span class="special">)</span> <span class="special">(</span> <span class="identifier">in</span> <span class="keyword">int</span> <span class="identifier">arg1</span><span class="special">,</span> <span class="identifier">in</span> <span class="keyword">int</span> <span class="identifier">arg2</span> <span class="special">)</span>
+    <span class="special">)</span> <span class="special">{</span>
+        <span class="identifier">total</span> <span class="special">=</span> <span class="identifier">arg1</span> <span class="special">+</span> <span class="identifier">arg2</span><span class="special">;</span>
+    <span class="special">}</span>
+
+    <span class="keyword">static</span> <span class="keyword">int</span> <span class="identifier">total</span><span class="special">;</span>
+<span class="special">};</span>
+
+<span class="comment">// ... but body definition uses template parameters and special `BODY` macro.</span>
+<span class="keyword">template</span><span class="special">&lt;</span> <span class="keyword">typename</span> <span class="identifier">Arg1</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">Arg2</span> <span class="special">&gt;</span>
+<span class="keyword">void</span> <span class="identifier">callable2</span><span class="special">::</span><span class="identifier">CONTRACT_PARAMETER_BODY</span><span class="special">(</span><span class="identifier">call</span><span class="special">)(</span> <span class="identifier">Arg1</span> <span class="identifier">arg1</span><span class="special">,</span> <span class="identifier">Arg2</span> <span class="identifier">arg2</span> <span class="special">)</span>
+<span class="special">{</span>
+    <span class="identifier">total</span> <span class="special">=</span> <span class="identifier">arg1</span> <span class="special">+</span> <span class="identifier">arg2</span><span class="special">;</span>
+<span class="special">}</span>
+
+<span class="keyword">int</span> <span class="identifier">callable2</span><span class="special">::</span><span class="identifier">total</span> <span class="special">=</span> <span class="number">0</span><span class="special">;</span>
+
+<span class="special">}</span> <span class="comment">// namespace</span>
+</pre>
+<p>
+      </p>
+<p>
+        No contracts were specified in this example.
+      </p>
+<div class="note"><table border="0" summary="Note">
+<tr>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="../../../doc/src/images/note.png"></td>
+<th align="left">Note</th>
+</tr>
+<tr><td align="left" valign="top"><p>
+          When the body definition of a function with named parameters is deferred
+          from the function declaration, the body must be declared as a template
+          function when it is defined and the special macro <code class="computeroutput"><a class="link" href="../CONTRACT_PARAMETER_BODY.html" title="Macro CONTRACT_PARAMETER_BODY">CONTRACT_PARAMETER_BODY</a></code>
+          must be used to name the function.
+        </p></td></tr>
+</table></div>
+<p>
+        The same macro is used to name both free and member body functions because
+        the class type is specified outside this macro. The constructor body definition
+        cannot be deferred from the constructor declaration (because of the lack
+        of delegating constructors in <a href="http://en.wikipedia.org/wiki/C%2B%2B" target="_top">C++03</a>).
+        Destructors have no named parameters (because they have no parameter). Named
+        parameters are not supported for operators (because of a <a href="http://www.boost.org/doc/libs/release/libs/parameter" target="_top">Boost.Parameter</a>
+        bug). <sup>[<a name="contract__.named_parameters.member_function_parameters.f0" href="#ftn.contract__.named_parameters.member_function_parameters.f0" class="footnote">61</a>]</sup> Therefore the <code class="computeroutput"><a class="link" href="../CONTRACT_PARAMETER_BODY.html" title="Macro CONTRACT_PARAMETER_BODY">CONTRACT_PARAMETER_BODY</a></code>
+        macro is used only with free and member functions that are not operators.
+        <sup>[<a name="contract__.named_parameters.member_function_parameters.f1" href="#ftn.contract__.named_parameters.member_function_parameters.f1" class="footnote">62</a>]</sup>
+      </p>
+<p>
+        In this example, named parameters were specified for all <code class="computeroutput"><span class="identifier">callable2</span><span class="special">::</span><span class="identifier">call</span></code>
+        overloads and for the <code class="computeroutput"><span class="keyword">static</span></code>
+        member function <code class="computeroutput"><span class="identifier">callable2</span><span class="special">:</span><span class="identifier">static_call</span></code>:
+      </p>
+<p>
+</p>
+<pre class="programlisting"><span class="identifier">calls</span><span class="special">::</span><span class="identifier">callable2</span><span class="special">::</span><span class="identifier">static_call</span><span class="special">(</span><span class="identifier">calls</span><span class="special">::</span><span class="identifier">arg2_</span> <span class="special">=</span> <span class="number">2</span><span class="special">,</span> <span class="identifier">calls</span><span class="special">::</span><span class="identifier">arg1_</span> <span class="special">=</span> <span class="number">1</span><span class="special">);</span>
+<span class="identifier">BOOST_TEST</span><span class="special">(</span><span class="identifier">calls</span><span class="special">::</span><span class="identifier">callable2</span><span class="special">::</span><span class="identifier">total</span> <span class="special">==</span> <span class="number">3</span><span class="special">);</span>
+
+<span class="identifier">calls</span><span class="special">::</span><span class="identifier">callable2</span> <span class="identifier">c</span><span class="special">;</span>
+<span class="identifier">c</span><span class="special">.</span><span class="identifier">call</span><span class="special">(</span><span class="identifier">calls</span><span class="special">::</span><span class="identifier">arg2_</span> <span class="special">=</span> <span class="number">3</span><span class="special">,</span> <span class="identifier">calls</span><span class="special">::</span><span class="identifier">arg1_</span> <span class="special">=</span> <span class="number">4</span><span class="special">);</span>
+<span class="identifier">BOOST_TEST</span><span class="special">(</span><span class="identifier">calls</span><span class="special">::</span><span class="identifier">callable2</span><span class="special">::</span><span class="identifier">total</span> <span class="special">==</span> <span class="number">7</span><span class="special">);</span>
+
+<span class="identifier">calls</span><span class="special">::</span><span class="identifier">callable2</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">cc</span> <span class="special">=</span> <span class="identifier">c</span><span class="special">;</span>
+<span class="identifier">cc</span><span class="special">.</span><span class="identifier">call</span><span class="special">(</span><span class="identifier">calls</span><span class="special">::</span><span class="identifier">arg2_</span> <span class="special">=</span> <span class="number">5</span><span class="special">,</span> <span class="identifier">calls</span><span class="special">::</span><span class="identifier">arg1_</span> <span class="special">=</span> <span class="number">6</span><span class="special">);</span>
+<span class="identifier">BOOST_TEST</span><span class="special">(</span><span class="identifier">calls</span><span class="special">::</span><span class="identifier">callable2</span><span class="special">::</span><span class="identifier">total</span> <span class="special">==</span> <span class="number">11</span><span class="special">);</span>
+</pre>
+<p>
+      </p>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="contract__.named_parameters.constructor_parameters"></a><a class="link" href="named_parameters.html#contract__.named_parameters.constructor_parameters" title="Constructor Parameters">Constructor
+      Parameters</a>
+</h3></div></div></div>
+<p>
+        The same syntax is used to specify named and deduced parameters for constructors
+        (see also <a href="../../../example/named_parameters/constructor_named_params_family.cpp" target="_top"><code class="literal">constructor_named_params_family.cpp</code></a>):
+        <sup>[<a name="contract__.named_parameters.constructor_parameters.f0" href="#ftn.contract__.named_parameters.constructor_parameters.f0" class="footnote">63</a>]</sup>
+      </p>
+<p>
+</p>
+<pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">family</span> <span class="special">{</span>
+
+<span class="identifier">CONTRACT_PARAMETER</span><span class="special">(</span><span class="identifier">name</span><span class="special">)</span>
+<span class="identifier">CONTRACT_PARAMETER</span><span class="special">(</span><span class="identifier">age</span><span class="special">)</span>
+<span class="identifier">CONTRACT_PARAMETER</span><span class="special">(</span><span class="identifier">relatives</span><span class="special">)</span>
+<span class="identifier">CONTRACT_PARAMETER</span><span class="special">(</span><span class="identifier">weight</span><span class="special">)</span>
+
+<span class="identifier">CONTRACT_CLASS</span><span class="special">(</span>
+    <span class="keyword">struct</span> <span class="special">(</span><span class="identifier">member</span><span class="special">)</span> <span class="identifier">extends</span><span class="special">(</span> <span class="keyword">public</span> <span class="identifier">person</span> <span class="special">)</span>
+<span class="special">)</span> <span class="special">{</span>
+    <span class="identifier">CONTRACT_CLASS_INVARIANT</span><span class="special">(</span> <span class="keyword">void</span> <span class="special">)</span>
+
+    <span class="identifier">CONTRACT_CONSTRUCTOR</span><span class="special">(</span>
+        <span class="keyword">public</span> <span class="special">(</span><span class="identifier">member</span><span class="special">)</span> <span class="special">(</span>
+                <span class="identifier">in</span> <span class="keyword">auto</span> <span class="identifier">name</span><span class="special">,</span>
+                <span class="identifier">in</span> <span class="identifier">out</span> <span class="keyword">auto</span> <span class="identifier">age</span><span class="special">,</span> <span class="comment">//default 32,</span>
+                <span class="identifier">deduce</span> <span class="identifier">out</span> <span class="special">(</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span><span class="identifier">person</span><span class="special">&gt;)</span> <span class="identifier">relatives</span><span class="special">,</span>
+                <span class="identifier">deduce</span> <span class="identifier">in</span> <span class="identifier">requires</span><span class="special">(</span>
+                    <span class="identifier">boost</span><span class="special">::</span><span class="identifier">is_convertible</span><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">mpl</span><span class="special">::</span><span class="identifier">_</span><span class="special">,</span> <span class="keyword">double</span><span class="special">&gt;</span>
+                <span class="special">)</span> <span class="identifier">weight</span> <span class="comment">//, default(75.0)</span>
+            <span class="special">)</span> <span class="comment">// Preconditions, body, etc access arguments as usual...</span>
+            <span class="identifier">precondition</span><span class="special">(</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">(</span><span class="identifier">name</span><span class="special">)</span> <span class="special">!=</span> <span class="string">""</span><span class="special">,</span> <span class="identifier">age</span> <span class="special">&gt;=</span> <span class="number">0</span><span class="special">,</span> <span class="identifier">weight</span> <span class="special">&gt;=</span> <span class="number">0.0</span> <span class="special">)</span>
+            <span class="identifier">postcondition</span><span class="special">(</span>
+                <span class="keyword">auto</span> <span class="identifier">old_relatives_size</span> <span class="special">=</span> <span class="identifier">CONTRACT_OLDOF</span> <span class="identifier">relatives</span><span class="special">.</span><span class="identifier">size</span><span class="special">(),</span>
+                <span class="identifier">relatives</span><span class="special">.</span><span class="identifier">size</span><span class="special">()</span> <span class="special">==</span> <span class="identifier">old_relatives_size</span> <span class="special">+</span> <span class="number">1</span>
+            <span class="special">)</span>
+            <span class="identifier">initialize</span><span class="special">(</span> <span class="comment">// ... but initializers must use the `..._ARG` macro.</span>
+                <span class="identifier">person</span><span class="special">(</span><span class="identifier">CONTRACT_CONSTRUCTOR_ARG</span><span class="special">(</span><span class="identifier">name</span><span class="special">),</span>
+                        <span class="identifier">CONTRACT_CONSTRUCTOR_ARG</span><span class="special">(</span><span class="identifier">age</span><span class="special">),</span>
+                        <span class="identifier">CONTRACT_CONSTRUCTOR_ARG</span><span class="special">(</span><span class="identifier">weight</span><span class="special">)),</span>
+                <span class="identifier">family_</span><span class="special">(</span><span class="identifier">CONTRACT_CONSTRUCTOR_ARG</span><span class="special">(</span><span class="identifier">relatives</span><span class="special">))</span>
+            <span class="special">)</span>
+    <span class="special">)</span> <span class="special">{</span>
+        <span class="identifier">relatives</span><span class="special">.</span><span class="identifier">push_back</span><span class="special">(*</span><span class="keyword">this</span><span class="special">);</span>
+    <span class="special">}</span>
+
+    <span class="keyword">private</span><span class="special">:</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span><span class="identifier">person</span><span class="special">&gt;&amp;</span> <span class="identifier">family_</span><span class="special">;</span>
+<span class="special">};</span>
+
+<span class="special">}</span> <span class="comment">// namespace</span>
+</pre>
+<p>
+      </p>
+<p>
+        Both preconditions and postconditions were specified for the constructor.
+      </p>
+<div class="important"><table border="0" summary="Important">
+<tr>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Important]" src="../../../doc/src/images/important.png"></td>
+<th align="left">Important</th>
+</tr>
+<tr><td align="left" valign="top"><p>
+          Member initializers must access named and deduced parameters using the
+          special macro <code class="computeroutput"><a class="link" href="../CONTRACT_CONSTRUCTOR_ARG.html" title="Macro CONTRACT_CONSTRUCTOR_ARG">CONTRACT_CONSTRUCTOR_ARG</a></code>
+          (otherwise the compiler will generate an error). <sup>[<a name="contract__.named_parameters.constructor_parameters.f1" href="#ftn.contract__.named_parameters.constructor_parameters.f1" class="footnote">64</a>]</sup>
+        </p></td></tr>
+</table></div>
+<p>
+        Named and deduced parameters can be used to specify the arguments when constructing
+        the object:
+      </p>
+<p>
+</p>
+<pre class="programlisting"><span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span><span class="identifier">family</span><span class="special">::</span><span class="identifier">person</span><span class="special">&gt;</span> <span class="identifier">r</span><span class="special">;/*</span>
+<span class="identifier">family</span><span class="special">::</span><span class="identifier">member</span> <span class="identifier">m1</span><span class="special">(</span><span class="identifier">family</span><span class="special">::</span><span class="identifier">name_</span> <span class="special">=</span> <span class="string">"Mary"</span><span class="special">,</span> <span class="identifier">family</span><span class="special">::</span><span class="identifier">relatives_</span> <span class="special">=</span> <span class="identifier">r</span><span class="special">);</span>
+</pre>
+<p>
+      </p>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="contract__.named_parameters.class_template_parameters"></a><a class="link" href="named_parameters.html#contract__.named_parameters.class_template_parameters" title="Class Template Parameters">Class
+      Template Parameters</a>
+</h3></div></div></div>
+<p>
+        Only class templates are discussed in this section because function templates
+        are effectively always declared when a function uses named or deduced parameters.
+        In fact, a function with named or deduced parameters is always a function
+        template (possibly with fully generic templated types when the named and
+        deduced parameters types are specified <code class="computeroutput"><span class="keyword">auto</span></code>).
+      </p>
+<p>
+        To show how to program named and deduced template parameters, we will program
+        a named parameter interface for the <a href="http://www.boost.org/doc/libs/1_49_0/libs/python/doc/v2/class.html#class_-spec" target="_top"><code class="computeroutput"><span class="identifier">class_</span></code></a> class template of the <a href="http://www.boost.org/doc/libs/release/libs/python" target="_top">Boost.Python</a>
+        library:
+      </p>
+<pre class="programlisting"><span class="keyword">template</span><span class="special">&lt;</span>
+    <span class="keyword">class</span> <span class="identifier">ClassType</span><span class="special">,</span>
+    <span class="keyword">class</span> <span class="identifier">Bases</span> <span class="special">=</span> <span class="identifier">bases</span><span class="special">&lt;&gt;,</span>
+    <span class="keyword">typename</span> <span class="identifier">HeldType</span> <span class="special">=</span> <span class="identifier">not_sepcified</span><span class="special">,</span>
+    <span class="keyword">typename</span> <span class="identifier">Copyable</span> <span class="special">=</span> <span class="identifier">not_specified</span>
+<span class="special">&gt;</span> <span class="identifier">requires</span>
+    <span class="identifier">is_class</span><span class="special">&lt;</span><span class="identifier">ClassType</span><span class="special">&gt;</span>
+<span class="keyword">class</span> <span class="identifier">class_</span> <span class="special">;</span>
+</pre>
+<div class="variablelist">
+<p class="title"><b></b></p>
+<dl>
+<dt><span class="term">ClassType</span></dt>
+<dd><p>
+              This type parameter must be a class and it has no default value (required
+              parameter).
+            </p></dd>
+<dt><span class="term">Bases</span></dt>
+<dd><p>
+              This type parameter must be a specialization of <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">python</span><span class="special">::</span><span class="identifier">bases</span></code>
+              specifying base classes if any (see <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">python</span><span class="special">::</span><span class="identifier">detail</span><span class="special">::</span><span class="identifier">specifies_bases</span></code>)
+              and its value defaults to <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">python</span><span class="special">::</span><span class="identifier">bases</span><span class="special">&lt;&gt;</span></code>.
+            </p></dd>
+<dt><span class="term">HeldType</span></dt>
+<dd><p>
+              This type parameter has no constraint and it is not specified by default
+              (see <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">python</span><span class="special">::</span><span class="identifier">detail</span><span class="special">::</span><span class="identifier">not_specified</span></code>).
+            </p></dd>
+<dt><span class="term">Copyable</span></dt>
+<dd><p>
+              This type parameter must be <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">noncopyable</span></code>
+              if specified and it is not specified by default (see <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">python</span><span class="special">::</span><span class="identifier">detail</span><span class="special">::</span><span class="identifier">not_specified</span></code>).
+            </p></dd>
+</dl>
+</div>
+<div class="important"><table border="0" summary="Important">
+<tr>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Important]" src="../../../doc/src/images/important.png"></td>
+<th align="left">Important</th>
+</tr>
+<tr><td align="left" valign="top"><p>
+          Unfortunately, named and deduced template parameters can only handle type
+          template parameters (i.e., value template parameters and template template
+          parameters are not supported). <sup>[<a name="contract__.named_parameters.class_template_parameters.f0" href="#ftn.contract__.named_parameters.class_template_parameters.f0" class="footnote">65</a>]</sup>
+        </p></td></tr>
+</table></div>
+<p>
+        First of all, it is necessary to declare elements that will serve as template
+        parameter and argument identifiers (see also <a href="../../../example/named_parameters/named_template_params_pyclass.cpp" target="_top"><code class="literal">named_template_params_pyclass.cpp</code></a>):
+      </p>
+<p>
+</p>
+<pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">py</span> <span class="special">{</span>
+
+<span class="identifier">CONTRACT_TEMPLATE_PARAMETER</span><span class="special">(</span><span class="identifier">ClassType</span><span class="special">)</span>
+<span class="identifier">CONTRACT_TEMPLATE_PARAMETER</span><span class="special">(</span><span class="identifier">Bases</span><span class="special">)</span>
+<span class="identifier">CONTRACT_TEMPLATE_PARAMETER</span><span class="special">(</span><span class="identifier">HeldType</span><span class="special">)</span>
+<span class="identifier">CONTRACT_TEMPLATE_PARAMETER</span><span class="special">(</span><span class="identifier">Copyable</span><span class="special">)</span>
+<span class="identifier">CONTRACT_PARAMETER</span><span class="special">(</span><span class="identifier">name</span><span class="special">)</span>
+
+<span class="special">}</span> <span class="comment">// namespace</span>
+</pre>
+<p>
+      </p>
+<p>
+        For example, the first <code class="computeroutput"><a class="link" href="../CONTRACT_TEMPLATE_PARAMETER.html" title="Macro CONTRACT_TEMPLATE_PARAMETER">CONTRACT_TEMPLATE_PARAMETER</a></code>
+        macro declares a specifier <code class="computeroutput"><span class="identifier">ClassType</span></code>
+        that can be used as the parameter name in the class template declaration
+        and a specifier <code class="computeroutput"><span class="identifier">ClassType_</span></code>
+        (note the trailing underscore <code class="computeroutput"><span class="identifier">_</span></code>)
+        that can be used for the template argument at the template instantiation
+        site.
+      </p>
+<div class="note"><table border="0" summary="Note">
+<tr>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="../../../doc/src/images/note.png"></td>
+<th align="left">Note</th>
+</tr>
+<tr><td align="left" valign="top"><p>
+          By default, template argument identifiers are differentiated from template
+          parameter identifiers using a trailing underscore <code class="computeroutput"><span class="identifier">_</span></code>
+          to avoid name clashes (see also the <a class="link" href="named_parameters.html#contract__.named_parameters.parameter_identifiers" title="Parameter Identifiers">Parameter
+          Identifiers</a> section). Furthermore, it is recommended to always declare
+          these identifiers within a namespace to avoid name clashes (because different
+          class templates in different sections of the code might very well use the
+          same template parameter names so namespaces can be used to control overlapping
+          names).
+        </p></td></tr>
+</table></div>
+<p>
+        The class template is declared using a syntax similar to the one we have
+        seen so far for named and deduced function parameters (see also <a href="../../../example/named_parameters/named_template_params_pyclass.cpp" target="_top"><code class="literal">named_template_params_pyclass.cpp</code></a>):
+        <sup>[<a name="contract__.named_parameters.class_template_parameters.f1" href="#ftn.contract__.named_parameters.class_template_parameters.f1" class="footnote">66</a>]</sup>
+      </p>
+<p>
+</p>
+<pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">py</span> <span class="special">{</span>
+
+<span class="identifier">CONTRACT_CLASS</span><span class="special">(</span>
+    <span class="keyword">template</span><span class="special">(</span>
+        <span class="comment">// Required named template parameter.</span>
+        <span class="identifier">in</span> <span class="keyword">typename</span> <span class="identifier">requires</span><span class="special">(</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">is_class</span><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">mpl</span><span class="special">::</span><span class="identifier">_</span><span class="special">&gt;)</span> <span class="identifier">ClassType</span><span class="special">,</span>
+        <span class="comment">// Optional deduced named template parameters with requirements.</span>
+        <span class="identifier">deduce</span> <span class="identifier">in</span> <span class="keyword">typename</span> <span class="identifier">requires</span><span class="special">(</span>
+            <span class="identifier">boost</span><span class="special">::</span><span class="identifier">python</span><span class="special">::</span><span class="identifier">detail</span><span class="special">::</span><span class="identifier">specifies_bases</span><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">mpl</span><span class="special">::</span><span class="identifier">_</span><span class="special">&gt;</span>
+        <span class="special">)</span> <span class="identifier">Bases</span><span class="special">,</span> <span class="keyword">default</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">python</span><span class="special">::</span><span class="identifier">bases</span><span class="special">&lt;&gt;,</span>
+        <span class="identifier">deduce</span> <span class="identifier">in</span> <span class="keyword">typename</span> <span class="identifier">requires</span><span class="special">(</span>
+            <span class="identifier">boost</span><span class="special">::</span><span class="identifier">mpl</span><span class="special">::</span><span class="identifier">not_</span><span class="special">&lt;</span>
+                <span class="identifier">boost</span><span class="special">::</span><span class="identifier">mpl</span><span class="special">::</span><span class="identifier">or_</span><span class="special">&lt;</span>
+                      <span class="identifier">boost</span><span class="special">::</span><span class="identifier">python</span><span class="special">::</span><span class="identifier">detail</span><span class="special">::</span><span class="identifier">specifies_bases</span><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">mpl</span><span class="special">::</span><span class="identifier">_</span><span class="special">&gt;</span>
+                    <span class="special">,</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">is_same</span><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">noncopyable</span><span class="special">,</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">mpl</span><span class="special">::</span><span class="identifier">_</span><span class="special">&gt;</span>
+                <span class="special">&gt;</span>
+            <span class="special">&gt;</span>
+        <span class="special">)</span> <span class="identifier">HeldType</span><span class="special">,</span> <span class="keyword">default</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">python</span><span class="special">::</span><span class="identifier">detail</span><span class="special">::</span><span class="identifier">not_specified</span><span class="special">,</span>
+        <span class="identifier">deduce</span> <span class="identifier">in</span> <span class="keyword">typename</span> <span class="identifier">requires</span><span class="special">(</span>
+            <span class="identifier">boost</span><span class="special">::</span><span class="identifier">is_same</span><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">noncopyable</span><span class="special">,</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">mpl</span><span class="special">::</span><span class="identifier">_</span><span class="special">&gt;</span>
+        <span class="special">)</span> <span class="identifier">Copyable</span><span class="special">,</span> <span class="keyword">default</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">python</span><span class="special">::</span><span class="identifier">detail</span><span class="special">::</span><span class="identifier">not_specified</span>
+        <span class="comment">// Unfortunately, non-type named template parameters are not supported.</span>
+    <span class="comment">// Concepts named template parameters.</span>
+    <span class="special">)</span> <span class="identifier">requires</span><span class="special">(</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">DefaultConstructible</span><span class="special">&lt;</span><span class="identifier">ClassType</span><span class="special">&gt;</span> <span class="special">)</span>
+    <span class="keyword">class</span> <span class="special">(</span><span class="identifier">class_</span><span class="special">)</span>
+        <span class="identifier">extends</span><span class="special">(</span> <span class="special">(</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">python</span><span class="special">::</span><span class="identifier">class_</span><span class="special">&lt;</span><span class="identifier">ClassType</span><span class="special">,</span> <span class="identifier">Bases</span><span class="special">,</span> <span class="identifier">HeldType</span><span class="special">,</span> <span class="identifier">Copyable</span><span class="special">&gt;)</span> <span class="special">)</span>
+<span class="special">)</span> <span class="special">{</span>
+    <span class="identifier">CONTRACT_CLASS_INVARIANT_TPL</span><span class="special">(</span> <span class="keyword">void</span> <span class="special">)</span> <span class="comment">// Contracts.</span>
+
+    <span class="keyword">public</span><span class="special">:</span> <span class="keyword">typedef</span> <span class="identifier">ClassType</span> <span class="identifier">class_type</span><span class="special">;</span>
+    <span class="keyword">public</span><span class="special">:</span> <span class="keyword">typedef</span> <span class="identifier">Bases</span> <span class="identifier">bases</span><span class="special">;</span>
+    <span class="keyword">public</span><span class="special">:</span> <span class="keyword">typedef</span> <span class="identifier">HeldType</span> <span class="identifier">held_type</span><span class="special">;</span>
+    <span class="keyword">public</span><span class="special">:</span> <span class="keyword">typedef</span> <span class="identifier">Copyable</span> <span class="identifier">copyable</span><span class="special">;</span>
+
+    <span class="identifier">CONTRACT_CONSTRUCTOR_TPL</span><span class="special">(</span>
+        <span class="keyword">public</span> <span class="keyword">explicit</span> <span class="special">(</span><span class="identifier">class_</span><span class="special">)</span> <span class="special">(</span> <span class="identifier">in</span> <span class="special">(</span><span class="keyword">char</span> <span class="keyword">const</span><span class="special">*)</span> <span class="identifier">name</span> <span class="special">)</span>
+            <span class="identifier">precondition</span><span class="special">(</span> <span class="identifier">is_identifier</span><span class="special">(</span><span class="identifier">name</span><span class="special">)</span> <span class="special">)</span>
+            <span class="identifier">initialize</span><span class="special">(</span>
+                <span class="special">(</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">python</span><span class="special">::</span><span class="identifier">class_</span><span class="special">&lt;</span><span class="identifier">ClassType</span><span class="special">,</span> <span class="identifier">Bases</span><span class="special">,</span> <span class="identifier">HeldType</span><span class="special">,</span> <span class="identifier">Copyable</span><span class="special">&gt;(</span>
+                        <span class="identifier">CONTRACT_CONSTRUCTOR_ARG</span><span class="special">(</span><span class="identifier">name</span><span class="special">)))</span>
+            <span class="special">)</span>
+    <span class="special">)</span> <span class="special">{}</span>
+<span class="special">};</span>
+
+<span class="special">}</span> <span class="comment">// namespace</span>
+</pre>
+<p>
+      </p>
+<p>
+        Note that template parameters are always specified using <code class="computeroutput"><span class="identifier">in</span></code>
+        because they are always input parameters (they are static types). Furthermore,
+        <code class="computeroutput"><span class="keyword">typename</span></code> or <code class="computeroutput"><span class="keyword">class</span></code>
+        must always follow the <code class="computeroutput"><span class="identifier">in</span></code>
+        specifier for type template parameters. <sup>[<a name="contract__.named_parameters.class_template_parameters.f2" href="#ftn.contract__.named_parameters.class_template_parameters.f2" class="footnote">67</a>]</sup> Predicate type requirements <code class="computeroutput"><span class="identifier">requires</span><span class="special">(</span></code><code class="literal"><span class="emphasis"><em>unary-boolean-metafunction</em></span></code><code class="computeroutput"><span class="special">)</span></code> are optional and they are specified right
+        after <code class="computeroutput"><span class="keyword">typename</span></code> or <code class="computeroutput"><span class="keyword">class</span></code> if present. Default template parameter
+        values are specified using <code class="computeroutput"><span class="special">,</span> <span class="keyword">default</span> </code><code class="literal"><span class="emphasis"><em>default-parameter-value</em></span></code>
+        as usual. (See also the <a class="link" href="grammar.html" title="Grammar">Grammar</a>
+        section.)
+      </p>
+<p>
+        The class template <code class="computeroutput"><span class="identifier">py</span><span class="special">::</span><span class="identifier">class_</span></code> can be instantiated using the template
+        parameter identifiers to name the arguments (see also <a href="../../../example/named_parameters/named_template_params_pyclass.cpp" target="_top"><code class="literal">named_template_params_pyclass.cpp</code></a>):
+        <sup>[<a name="contract__.named_parameters.class_template_parameters.f3" href="#ftn.contract__.named_parameters.class_template_parameters.f3" class="footnote">68</a>]</sup>
+      </p>
+<p>
+</p>
+<pre class="programlisting"><span class="comment">// Named parameters.</span>
+<span class="identifier">py</span><span class="special">::</span><span class="identifier">class_</span><span class="special">&lt;</span><span class="identifier">py</span><span class="special">::</span><span class="identifier">ClassType_</span><span class="special">&lt;</span><span class="identifier">bx</span><span class="special">&gt;,</span> <span class="identifier">py</span><span class="special">::</span><span class="identifier">Copyable_</span><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">noncopyable</span><span class="special">&gt;</span> <span class="special">&gt;(</span><span class="string">"bx"</span><span class="special">);</span>
+<span class="identifier">py</span><span class="special">::</span><span class="identifier">class_</span><span class="special">&lt;</span><span class="identifier">x</span><span class="special">,</span> <span class="identifier">py</span><span class="special">::</span><span class="identifier">HeldType_</span><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">x</span><span class="special">&gt;</span> <span class="special">&gt;,</span>
+        <span class="identifier">py</span><span class="special">::</span><span class="identifier">Bases_</span><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">python</span><span class="special">::</span><span class="identifier">bases</span><span class="special">&lt;</span><span class="identifier">bx</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="special">&gt;(</span><span class="string">"x"</span><span class="special">);</span>
+<span class="comment">// Deduced parameters.</span>
+<span class="identifier">py</span><span class="special">::</span><span class="identifier">class_</span><span class="special">&lt;</span><span class="identifier">by</span><span class="special">,</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">noncopyable</span><span class="special">&gt;(</span><span class="string">"by"</span><span class="special">);</span>
+<span class="identifier">py</span><span class="special">::</span><span class="identifier">class_</span><span class="special">&lt;</span><span class="identifier">y</span><span class="special">,</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">y</span><span class="special">&gt;,</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">python</span><span class="special">::</span><span class="identifier">bases</span><span class="special">&lt;</span><span class="identifier">by</span><span class="special">&gt;</span> <span class="special">&gt;(</span>
+        <span class="identifier">py</span><span class="special">::</span><span class="identifier">name_</span> <span class="special">=</span> <span class="string">"y"</span><span class="special">);</span>
+</pre>
+<p>
+      </p>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="contract__.named_parameters.concepts"></a><a class="link" href="named_parameters.html#contract__.named_parameters.concepts" title="Concepts">Concepts</a>
+</h3></div></div></div>
+<p>
+        As shown in the <code class="computeroutput"><span class="identifier">py</span><span class="special">::</span><span class="identifier">class_</span></code> example above, it is possible to
+        specify concepts for named and deduced template parameters. Concepts are
+        specified using <code class="computeroutput"><span class="identifier">requires</span></code>
+        after the class template parameter declaration:
+      </p>
+<pre class="programlisting"><span class="keyword">template</span><span class="special">(</span> <span class="special">...</span> <span class="special">)</span> <span class="identifier">requires</span><span class="special">(</span> <code class="literal"><span class="emphasis"><em>concept1</em></span></code><span class="special">,</span> <code class="literal"><span class="emphasis"><em>concept2</em></span></code><span class="special">,</span> <span class="special">...</span> <span class="special">)</span>
+<span class="keyword">class</span> <span class="special">(</span><span class="identifier">class_</span><span class="special">)</span> <span class="special">...</span>
+</pre>
+<p>
+        As shown in the <code class="computeroutput"><span class="identifier">py</span><span class="special">::</span><span class="identifier">def</span></code> example earlier in this section, it
+        is also possible to specify concepts for named and deduced function parameters
+        (because named and deduced function parameter can be generic, as function
+        template parameters are, when their types are specified <code class="computeroutput"><span class="keyword">auto</span></code>
+        or via a predicate type requirement). However, in this case concepts are
+        specified using <code class="computeroutput"><span class="identifier">requires</span></code>
+        after the function parameter list (because there is not <code class="computeroutput"><span class="keyword">template</span></code>
+        declaration for functions with named and deduced parameters):
+      </p>
+<pre class="programlisting"><span class="keyword">void</span> <span class="special">(</span><span class="identifier">def</span><span class="special">)</span> <span class="special">(</span> <span class="special">...</span> <span class="special">)</span> <span class="identifier">requires</span><span class="special">(</span> <code class="literal"><span class="emphasis"><em>concept1</em></span></code><span class="special">,</span> <code class="literal"><span class="emphasis"><em>concept2</em></span></code><span class="special">,</span> <span class="special">...</span> <span class="special">)</span>
+</pre>
+<p>
+        Note the following differences between specifying predicate type requirements
+        and concepts for named and deduced parameters:
+      </p>
+<div class="itemizedlist"><ul class="itemizedlist" type="disc">
+<li class="listitem">
+            If predicate type requirements are not met, the function or class template
+            will be taken out from the set of possible function overloads or template
+            specializations in the function call or template instantiation resolution
+            (this might ultimately generate a compiler error but only if there is
+            no other function overload or template specialization that can be used).
+          </li>
+<li class="listitem">
+            If a concept check fails, the compiler will always generate a compiler
+            error.
+          </li>
+</ul></div>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="contract__.named_parameters.parameter_identifiers"></a><a class="link" href="named_parameters.html#contract__.named_parameters.parameter_identifiers" title="Parameter Identifiers">Parameter
+      Identifiers</a>
+</h3></div></div></div>
+<p>
+        When using the <code class="computeroutput"><a class="link" href="../CONTRACT_PARAMETER.html" title="Macro CONTRACT_PARAMETER">CONTRACT_PARAMETER</a></code>
+        and <code class="computeroutput"><a class="link" href="../CONTRACT_TEMPLATE_PARAMETER.html" title="Macro CONTRACT_TEMPLATE_PARAMETER">CONTRACT_TEMPLATE_PARAMETER</a></code>
+        macros (see also the <a class="link" href="grammar.html" title="Grammar">Grammar</a> section):
+      </p>
+<div class="orderedlist"><ol class="orderedlist" type="1">
+<li class="listitem">
+            It is possible to specify a namespace that will contain the parameter
+            identifiers using <code class="computeroutput"><span class="keyword">namespace</span><span class="special">(</span></code><code class="literal"><span class="emphasis"><em>parameter-identifier-namespace</em></span></code><code class="computeroutput"><span class="special">)</span></code>.
+          </li>
+<li class="listitem">
+            It is also possible to specify the name of the argument identifier instead
+            of using the automatic underscore <code class="computeroutput"><span class="identifier">_</span></code>
+            postfix using <code class="computeroutput"><span class="special">(</span></code><code class="literal"><span class="emphasis"><em>argument-identifier</em></span></code><code class="computeroutput"><span class="special">)</span></code>.
+          </li>
+</ol></div>
+<p>
+        The following example generates parameter identifiers within the <code class="computeroutput"><span class="identifier">params</span></code> namespace, and argument identifiers
+        <code class="computeroutput"><span class="identifier">NumberArg</span></code> and <code class="computeroutput"><span class="identifier">value_arg</span></code> instead of the default <code class="computeroutput"><span class="identifier">Number_</span></code> and <code class="computeroutput"><span class="identifier">value_</span></code>
+        for the <code class="computeroutput"><span class="identifier">Number</span></code> and <code class="computeroutput"><span class="identifier">value</span></code> parameters respectively (see also
+        <a href="../../../example/named_parameters/named_param_identifiers_positive.cpp" target="_top"><code class="literal">named_param_identifiers_positive.cpp</code></a>):
+      </p>
+<p>
+</p>
+<pre class="programlisting"><span class="identifier">CONTRACT_TEMPLATE_PARAMETER</span><span class="special">(</span> <span class="keyword">namespace</span><span class="special">(</span><span class="identifier">params</span><span class="special">)</span> <span class="special">(</span><span class="identifier">NumberArg</span><span class="special">)</span> <span class="identifier">Number</span> <span class="special">)</span>
+<span class="identifier">CONTRACT_PARAMETER</span><span class="special">(</span> <span class="keyword">namespace</span><span class="special">(</span><span class="identifier">params</span><span class="special">)</span> <span class="special">(</span><span class="identifier">value_arg</span><span class="special">)</span> <span class="identifier">value</span> <span class="special">)</span>
+</pre>
+<p>
+      </p>
+<p>
+        When the parameter identifier namespace is specified, it must be repeated
+        in the named and deduced parameter declaration list (see also the <a class="link" href="grammar.html" title="Grammar">Grammar</a>
+        section):
+      </p>
+<pre class="programlisting"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="emphasis"><em>paraemeter-identifier-namespace</em></span><span class="special">,</span> <span class="special">...</span> <span class="comment">// named and deduced parameters follow</span>
+</pre>
+<p>
+        The authors find this syntax confusing so they recommend to never specify
+        the parameter identifier namespace when using the <code class="computeroutput"><a class="link" href="../CONTRACT_PARAMETER.html" title="Macro CONTRACT_PARAMETER">CONTRACT_PARAMETER</a></code>
+        and <code class="computeroutput"><a class="link" href="../CONTRACT_TEMPLATE_PARAMETER.html" title="Macro CONTRACT_TEMPLATE_PARAMETER">CONTRACT_TEMPLATE_PARAMETER</a></code>
+        macros. <sup>[<a name="contract__.named_parameters.parameter_identifiers.f0" href="#ftn.contract__.named_parameters.parameter_identifiers.f0" class="footnote">69</a>]</sup> macro. ] Instead programmers are encouraged to use these macros
+        within an enclosing namespace as done by the rest of the examples in this
+        documentation.
+      </p>
+<p>
+        For example (see also <a href="../../../example/named_parameters/named_param_identifiers_positive.cpp" target="_top"><code class="literal">named_param_identifiers_positive.cpp</code></a>):
+      </p>
+<p>
+</p>
+<pre class="programlisting"><span class="identifier">CONTRACT_CLASS</span><span class="special">(</span>
+    <span class="comment">// Named template parameters must specify `params` namespace.</span>
+    <span class="keyword">template</span><span class="special">(</span> <span class="keyword">using</span> <span class="keyword">namespace</span> <span class="identifier">params</span><span class="special">,</span> <span class="identifier">in</span> <span class="keyword">typename</span> <span class="identifier">Number</span> <span class="special">)</span>
+    <span class="keyword">struct</span> <span class="special">(</span><span class="identifier">positive</span><span class="special">)</span>
+<span class="special">)</span> <span class="special">{</span>
+    <span class="identifier">CONTRACT_CLASS_INVARIANT_TPL</span><span class="special">(</span> <span class="identifier">get</span><span class="special">()</span> <span class="special">&gt;</span> <span class="number">0</span> <span class="special">)</span>
+
+    <span class="identifier">CONTRACT_CONSTRUCTOR_TPL</span><span class="special">(</span>
+        <span class="comment">// Named parameters must specify `params` namespace.</span>
+        <span class="keyword">public</span> <span class="special">(</span><span class="identifier">positive</span><span class="special">)</span> <span class="special">(</span> <span class="keyword">using</span> <span class="keyword">namespace</span> <span class="identifier">params</span><span class="special">,</span> <span class="identifier">in</span> <span class="special">(</span><span class="identifier">Number</span><span class="special">)</span> <span class="identifier">value</span> <span class="special">)</span>
+            <span class="identifier">precondition</span><span class="special">(</span> <span class="identifier">value</span> <span class="special">&gt;</span> <span class="number">0</span> <span class="special">)</span>
+            <span class="identifier">postcondition</span><span class="special">(</span> <span class="identifier">get</span><span class="special">()</span> <span class="special">==</span> <span class="identifier">value</span> <span class="special">)</span>
+            <span class="identifier">initialize</span><span class="special">(</span> <span class="identifier">value_</span><span class="special">(</span><span class="identifier">CONTRACT_CONSTRUCTOR_ARG</span><span class="special">(</span><span class="identifier">value</span><span class="special">))</span> <span class="special">)</span>
+    <span class="special">)</span> <span class="special">{</span> <span class="special">}</span>
+
+    <span class="identifier">CONTRACT_FUNCTION_TPL</span><span class="special">(</span>
+        <span class="keyword">public</span> <span class="special">(</span><span class="identifier">Number</span> <span class="keyword">const</span><span class="special">&amp;)</span> <span class="special">(</span><span class="identifier">get</span><span class="special">)</span> <span class="special">(</span> <span class="keyword">void</span> <span class="special">)</span> <span class="keyword">const</span>
+    <span class="special">)</span> <span class="special">{</span>
+        <span class="keyword">return</span> <span class="identifier">value_</span><span class="special">;</span>
+    <span class="special">}</span>
+
+    <span class="keyword">private</span><span class="special">:</span> <span class="identifier">Number</span> <span class="identifier">value_</span><span class="special">;</span>
+<span class="special">};</span>
+</pre>
+<p>
+      </p>
+<p>
+        Class invariants, preconditions, and postconditions were also specified in
+        this example.
+      </p>
+<p>
+        At the template instantiation and function call site, the specified argument
+        identifiers <code class="computeroutput"><span class="identifier">NumberArg</span></code> and
+        <code class="computeroutput"><span class="identifier">value_arg</span></code> can be used instead
+        of the usual trailing underscore (see also <a href="../../../example/named_parameters/named_param_identifiers_positive.cpp" target="_top"><code class="literal">named_param_identifiers_positive.cpp</code></a>):
+      </p>
+<p>
+</p>
+<pre class="programlisting"><span class="identifier">positive</span><span class="special">&lt;</span><span class="identifier">NumberArg</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="identifier">n</span><span class="special">(</span><span class="identifier">value_arg</span> <span class="special">=</span> <span class="number">123</span><span class="special">);</span> <span class="comment">// Use ...Arg and ..._arg.</span>
+</pre>
+<p>
+      </p>
+<p>
+        It is not necessary to specify both the parameter identifier namespace and
+        the argument identifier as they are both and independently optional (see
+        also the <a class="link" href="grammar.html" title="Grammar">Grammar</a> section):
+      </p>
+<pre class="programlisting"><span class="identifier">CONTRACT_TEMPLATE_PARAMETER</span><span class="special">(</span> <span class="special">(</span><span class="identifier">NumberArg</span><span class="special">)</span> <span class="identifier">Number</span> <span class="special">)</span>   <span class="comment">// Specify only argument identifier.</span>
+<span class="identifier">CONTRACT_PARAMETER</span><span class="special">(</span> <span class="keyword">namespace</span><span class="special">(</span><span class="identifier">params</span><span class="special">)</span> <span class="identifier">value</span> <span class="special">)</span>       <span class="comment">// Specify only parameter identifier namespace.</span>
+</pre>
+<p>
+        It is recommended to never specify the argument identifiers to have the same
+        names as the parameter identifiers in order to avoid the following usually
+        silent bug (see also <a href="../../../example/named_parameters/named_param_identifiers_failure.cpp" target="_top"><code class="literal">named_param_identifiers_failure.cpp</code></a>):
+      </p>
+<p>
+</p>
+<pre class="programlisting"><span class="identifier">CONTRACT_PARAMETER</span><span class="special">(</span> <span class="special">(</span><span class="identifier">name</span><span class="special">)</span> <span class="identifier">name</span> <span class="special">)</span>   <span class="comment">// Both parameter and argument </span>
+<span class="identifier">CONTRACT_PARAMETER</span><span class="special">(</span> <span class="special">(</span><span class="identifier">age</span><span class="special">)</span> <span class="identifier">age</span> <span class="special">)</span>     <span class="comment">// have same name, but...</span>
+
+<span class="identifier">CONTRACT_FUNCTION</span><span class="special">(</span>
+    <span class="keyword">void</span> <span class="special">(</span><span class="identifier">print</span><span class="special">)</span> <span class="special">(</span> <span class="identifier">in</span> <span class="keyword">auto</span> <span class="identifier">name</span><span class="special">,</span> <span class="keyword">default</span><span class="special">(</span><span class="string">"bob"</span><span class="special">),</span> <span class="identifier">in</span> <span class="keyword">auto</span> <span class="identifier">age</span><span class="special">,</span> <span class="keyword">default</span> <span class="number">42</span> <span class="special">)</span>
+        <span class="identifier">precondition</span><span class="special">(</span> <span class="identifier">age</span> <span class="special">&gt;</span> <span class="number">0</span> <span class="special">)</span>
+<span class="special">)</span> <span class="special">{</span>
+    <span class="keyword">if</span><span class="special">(</span><span class="identifier">age</span> <span class="special">&gt;=</span> <span class="number">40</span><span class="special">)</span> <span class="keyword">throw</span> <span class="identifier">too_old</span><span class="special">();</span> <span class="comment">// Will throw because age defaulted to 42.</span>
+<span class="special">}</span>
+
+<span class="keyword">void</span> <span class="identifier">f</span> <span class="special">(</span> <span class="keyword">int</span> <span class="identifier">age</span> <span class="special">)</span> <span class="comment">// Another parameter with the same name.</span>
+<span class="special">{</span>
+    <span class="identifier">print</span><span class="special">(</span><span class="identifier">age</span> <span class="special">=</span> <span class="number">3</span><span class="special">);</span> <span class="comment">// So incorrect call but no compiler-error.</span>
+<span class="special">}</span>
+</pre>
+<p>
+      </p>
+<p>
+        The call <code class="computeroutput"><span class="identifier">print</span><span class="special">(</span><span class="identifier">age</span> <span class="special">=</span> <span class="number">3</span><span class="special">);</span></code> will assign
+        <code class="computeroutput"><span class="number">3</span></code> to <code class="computeroutput"><span class="identifier">f</span></code>'s
+        parameter <code class="computeroutput"><span class="identifier">age</span></code> instead than
+        passing <code class="computeroutput"><span class="number">3</span></code> as the argument of
+        <code class="computeroutput"><span class="identifier">print</span></code>'s parameter <code class="computeroutput"><span class="identifier">age</span></code>. The trailing underscore <code class="computeroutput"><span class="identifier">_</span></code> convention and enclosing the named parameter
+        declaration macros <code class="computeroutput"><a class="link" href="../CONTRACT_PARAMETER.html" title="Macro CONTRACT_PARAMETER">CONTRACT_PARAMETER</a></code>
+        and <code class="computeroutput"><a class="link" href="../CONTRACT_TEMPLATE_PARAMETER.html" title="Macro CONTRACT_TEMPLATE_PARAMETER">CONTRACT_TEMPLATE_PARAMETER</a></code>
+        within a namespace make this type of name clashes unlikely.
+      </p>
+</div>
+<div class="footnotes">
+<br><hr width="100" align="left">
+<div class="footnote"><p><sup>[<a id="ftn.contract__.named_parameters.named_function_parameters.f0" href="#contract__.named_parameters.named_function_parameters.f0" class="para">60</a>] </sup>
+          <span class="bold"><strong>Rationale.</strong></span> C++ cannot express the semantics
+          that an output parameter should be written and never read within a function
+          because references can always be both written and read.
+        </p></div>
+<div class="footnote"><p><sup>[<a id="ftn.contract__.named_parameters.member_function_parameters.f0" href="#contract__.named_parameters.member_function_parameters.f0" class="para">61</a>] </sup>
+          <span class="bold"><strong>Rationale.</strong></span> This library syntax supports
+          named and deduced parameters for operators. However, <a href="http://www.boost.org/doc/libs/release/libs/parameter" target="_top">Boost.Parameter</a>
+          does not compile when used with operators because of a bug (<a href="http://www.boost.org/doc/libs/release/libs/parameter" target="_top">Boost.Parameter</a>
+          documentation claims support for operators but later revisions of <a href="http://www.boost.org/doc/libs/release/libs/parameter" target="_top">Boost.Parameter</a>
+          no longer compile when operators are used). If <a href="http://www.boost.org/doc/libs/release/libs/parameter" target="_top">Boost.Parameter</a>
+          were to be fixed to work with operators then this library named and deduced
+          parameters should also work with operators.
+        </p></div>
+<div class="footnote"><p><sup>[<a id="ftn.contract__.named_parameters.member_function_parameters.f1" href="#contract__.named_parameters.member_function_parameters.f1" class="para">62</a>] </sup>
+          <span class="bold"><strong>Rationale.</strong></span> A macro <code class="computeroutput"><a class="link" href="../CONTRACT_PARAMETER_BODY.html" title="Macro CONTRACT_PARAMETER_BODY">CONTRACT_PARAMETER_BODY</a></code>
+          different from <code class="computeroutput"><a class="link" href="../CONTRACT_MEMBER_BODY.html" title="Macro CONTRACT_MEMBER_BODY">CONTRACT_MEMBER_BODY</a></code>
+          and <code class="computeroutput"><a class="link" href="../CONTRACT_FREE_BODY.html" title="Macro CONTRACT_FREE_BODY">CONTRACT_FREE_BODY</a></code>
+          is necessary because named parameters will still be enabled even when contracts
+          are turned off using <code class="computeroutput"><a class="link" href="../CONTRACT_CONFIG_NO_PRECONDITIONS.html" title="Macro CONTRACT_CONFIG_NO_PRECONDITIONS">CONTRACT_CONFIG_NO_PRECONDITIONS</a></code>,
+          etc.
+        </p></div>
+<div class="footnote"><p><sup>[<a id="ftn.contract__.named_parameters.constructor_parameters.f0" href="#contract__.named_parameters.constructor_parameters.f0" class="para">63</a>] </sup>
+          Arguably, this library offers a better syntax than <a href="http://www.boost.org/doc/libs/release/libs/parameter" target="_top">Boost.Parameter</a>
+          for constructor named and deduced parameters (because <a href="http://www.boost.org/doc/libs/release/libs/parameter" target="_top">Boost.Parameter</a>
+          requires boiler-plate code and an extra base class in order to handle constructors).
+        </p></div>
+<div class="footnote"><p><sup>[<a id="ftn.contract__.named_parameters.constructor_parameters.f1" href="#contract__.named_parameters.constructor_parameters.f1" class="para">64</a>] </sup>
+            <span class="bold"><strong>Rationale.</strong></span> This limitation comes from
+            the lacks of delegating constructors in <a href="http://en.wikipedia.org/wiki/C%2B%2B" target="_top">C++03</a>
+            (as with all other limitations of this library related to member initializers).
+          </p></div>
+<div class="footnote"><p><sup>[<a id="ftn.contract__.named_parameters.class_template_parameters.f0" href="#contract__.named_parameters.class_template_parameters.f0" class="para">65</a>] </sup>
+            <span class="bold"><strong>Rationale.</strong></span> This library only supports
+            named and deduced type template parameter because it internally uses
+            <a href="http://www.boost.org/doc/libs/release/libs/parameter" target="_top">Boost.Parameter</a>
+            and <a href="http://www.boost.org/doc/libs/release/libs/parameter" target="_top">Boost.Parameter</a>
+            does not support non-type template parameters. However, this library
+            syntax would support named and deduced value template parameters and
+            template template parameters if these were ever supported by <a href="http://www.boost.org/doc/libs/release/libs/parameter" target="_top">Boost.Parameter</a>
+            (see template parameters within the <a class="link" href="grammar.html" title="Grammar">Grammar</a>
+            section). Named and deduced value template parameters can be emulated
+            by wrapping their values into types (using <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">mpl</span><span class="special">::</span><span class="identifier">int_</span></code>,
+            <code class="computeroutput"><span class="identifier">boos</span><span class="special">::</span><span class="identifier">mpl</span><span class="special">::</span><span class="identifier">bool_</span></code>, etc) at the cost of a somewhat
+            cumbersome syntax.
+          </p></div>
+<div class="footnote"><p><sup>[<a id="ftn.contract__.named_parameters.class_template_parameters.f1" href="#contract__.named_parameters.class_template_parameters.f1" class="para">66</a>] </sup>
+          Arguably, this library offers a better syntax than <a href="http://www.boost.org/doc/libs/release/libs/parameter" target="_top">Boost.Parameter</a>
+          for named and deduced template parameters (because <a href="http://www.boost.org/doc/libs/release/libs/parameter" target="_top">Boost.Parameter</a>
+          requires boiler-plate code and the additional argument packing types to
+          be programmed manually).
+        </p></div>
+<div class="footnote"><p><sup>[<a id="ftn.contract__.named_parameters.class_template_parameters.f2" href="#contract__.named_parameters.class_template_parameters.f2" class="para">67</a>] </sup>
+          <span class="bold"><strong>Rationale.</strong></span> This syntax was designed so
+          it can support non-type template parameters if this library and <a href="http://www.boost.org/doc/libs/release/libs/parameter" target="_top">Boost.Parameter</a>
+          were ever extended to support value template parameters and template template
+          parameters (see template parameters in the <a class="link" href="grammar.html" title="Grammar">Grammar</a>
+          section).
+        </p></div>
+<div class="footnote"><p><sup>[<a id="ftn.contract__.named_parameters.class_template_parameters.f3" href="#contract__.named_parameters.class_template_parameters.f3" class="para">68</a>] </sup>
+          This named and deduced parameter syntax is not entirely ideal because it
+          uses angular parenthesis <code class="computeroutput"><span class="identifier">py</span><span class="special">::</span><span class="identifier">ClassType_</span><span class="special">&lt;</span><span class="identifier">bx</span><span class="special">&gt;</span></code> instead of the more readable assignment
+          operator <code class="computeroutput"><span class="identifier">py</span><span class="special">::</span><span class="identifier">ClassType_</span> <span class="special">=</span>
+          <span class="identifier">bx</span></code> to name the arguments (but
+          that is how <a href="http://www.boost.org/doc/libs/release/libs/parameter" target="_top">Boost.Parameter</a>
+          is implemented and also this library authors see no way to implement the
+          assignment operator syntax for named and deduced template parameters).
+        </p></div>
+<div class="footnote"><p><sup>[<a id="ftn.contract__.named_parameters.parameter_identifiers.f0" href="#contract__.named_parameters.parameter_identifiers.f0" class="para">69</a>] </sup>
+          <span class="bold"><strong>Rationale.</strong></span> The ability to specify the
+          parameter identifier (or tag) namespace is offered because it is offered
+          by <a href="http://www.boost.org/doc/libs/release/libs/parameter" target="_top">Boost.Parameter</a>
+          and it gives programmers greater control. However, it should be rarely
+          if ever needed because this library provides the [macro CONTRACT_PARAMETER_TYPEOF
+        </p></div>
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright &#169; 2008-2012 Lorenzo Caminiti<p>
+        Distributed under the Boost Software License, Version 1.0 (see accompanying
+        file LICENSE_1_0.txt or a copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="concepts.html"><img src="../../..//doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../..//doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../..//doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="examples.html"><img src="../../..//doc/src/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>

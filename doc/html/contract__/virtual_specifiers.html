@@ -1,0 +1,420 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<title>Virtual Specifiers</title>
+<link rel="stylesheet" href="../../../doc/src/boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.76.1">
+<link rel="home" href="../index.html" title="Chapter&#160;1.&#160;Contract++ 0.4.1">
+<link rel="up" href="../index.html" title="Chapter&#160;1.&#160;Contract++ 0.4.1">
+<link rel="prev" href="advanced_topics.html" title="Advanced Topics">
+<link rel="next" href="concepts.html" title="Concepts">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><a href="http://sourceforge.net/projects/contractpp/"><img alt="Logo" width="277" height="86" src="../../../logo.png"></a></td>
+<td align="center"><a href="http://sourceforge.net/projects/contractpp/files/latest/download">Download</a></td>
+<td align="center"><a href="http://sourceforge.net/apps/trac/contractpp/report/3">Bugs</a></td>
+<td align="center"><a href="http://sourceforge.net/projects/contractpp/reviews/">Reviews</a></td>
+<td align="center"><a href="mailto:lorcaminiti@gmail.com">Contact Us</a></td>
+<td align="center"><a href="http://sourceforge.net/projects/contractpp/forums/forum/920163">Help</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="advanced_topics.html"><img src="../../..//doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../..//doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../..//doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="concepts.html"><img src="../../..//doc/src/images/next.png" alt="Next"></a>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="contract__.virtual_specifiers"></a><a class="link" href="virtual_specifiers.html" title="Virtual Specifiers">Virtual Specifiers</a>
+</h2></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="virtual_specifiers.html#contract__.virtual_specifiers.final_classes">Final Classes</a></span></dt>
+<dt><span class="section"><a href="virtual_specifiers.html#contract__.virtual_specifiers.final_member_functions">Final
+      Member Functions</a></span></dt>
+<dt><span class="section"><a href="virtual_specifiers.html#contract__.virtual_specifiers.overriding_member_functions">Overriding
+      Member Functions</a></span></dt>
+<dt><span class="section"><a href="virtual_specifiers.html#contract__.virtual_specifiers.new_member_functions">New
+      Member Functions</a></span></dt>
+</dl></div>
+<p>
+      This section explains how to use this library to program virtual specifiers
+      <code class="computeroutput"><span class="identifier">final</span></code>, <code class="computeroutput"><span class="identifier">override</span></code>,
+      and <code class="computeroutput"><span class="keyword">new</span></code>. Virtual specifiers are
+      part of the program specifications because they enforce inheritance constraints
+      at compile-time and therefore they are within the scope of this library.
+    </p>
+<div class="important"><table border="0" summary="Important">
+<tr>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Important]" src="../../../doc/src/images/important.png"></td>
+<th align="left">Important</th>
+</tr>
+<tr><td align="left" valign="top"><p>
+        This library implements virtual specifiers for <a href="http://en.wikipedia.org/wiki/C%2B%2B" target="_top">C++03</a>
+        and without using any <a href="http://en.wikipedia.org/wiki/C%2B%2B11" target="_top">C++11</a>
+        feature. <sup>[<a name="contract__.virtual_specifiers.f0" href="#ftn.contract__.virtual_specifiers.f0" class="footnote">59</a>]</sup> Obviously, virtual specifiers are supported only if both the
+        base and derived classes and member functions in question are declared using
+        this library macros (otherwise this library has no control over usual C++
+        declarations).
+      </p></td></tr>
+</table></div>
+<p>
+      The examples presented in this section are rather simple (and they do not define
+      virtual destructors for brevity). These examples only aim to illustrate the
+      syntax of this library virtual specifiers and not to make a case about the
+      utility of these specifiers. Virtual specifiers were adopted by <a href="http://en.wikipedia.org/wiki/C%2B%2B11" target="_top">C++11</a>
+      and in some form are part of other languages like <a href="http://en.wikipedia.org/wiki/Java_(programming_language)" target="_top">Java</a>,
+      programmers can refer to the web and to the <a class="link" href="examples.html" title="Examples">Examples</a>
+      section for more interesting examples.
+    </p>
+<div class="section">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="contract__.virtual_specifiers.final_classes"></a><a class="link" href="virtual_specifiers.html#contract__.virtual_specifiers.final_classes" title="Final Classes">Final Classes</a>
+</h3></div></div></div>
+<p>
+        Final classes cannot be derived, otherwise the compiler will generated an
+        error. This library allows to declare a class final by specifying <code class="computeroutput"><span class="identifier">final</span></code> within the <code class="computeroutput"><a class="link" href="../CONTRACT_CLASS.html" title="Macro CONTRACT_CLASS">CONTRACT_CLASS</a></code>
+        macro after the class name, after template specialization types but before
+        base classes if present (see also the <a class="link" href="grammar.html" title="Grammar">Grammar</a>
+        section).
+      </p>
+<p>
+        For example (see also <a href="../../../example/virtual_specifiers/final_class.hpp" target="_top"><code class="literal">final_class.hpp</code></a> and
+        <a href="../../../example/virtual_specifiers/final_class.cpp" target="_top"><code class="literal">final_class.cpp</code></a>):
+      </p>
+<p>
+</p>
+<pre class="programlisting"><span class="identifier">CONTRACT_CLASS</span><span class="special">(</span>
+    <span class="keyword">class</span> <span class="special">(</span><span class="identifier">x</span><span class="special">)</span> <span class="identifier">final</span> <span class="comment">// A final class.</span>
+<span class="special">)</span> <span class="special">{</span>
+    <span class="identifier">CONTRACT_CLASS_INVARIANT</span><span class="special">(</span> <span class="keyword">void</span> <span class="special">)</span>
+<span class="special">};</span>
+</pre>
+<p>
+      </p>
+<p>
+        If a derived class declared using <code class="computeroutput"><a class="link" href="../CONTRACT_CLASS.html" title="Macro CONTRACT_CLASS">CONTRACT_CLASS</a></code>
+        attempts to inherit from a final base class, the compiler will generate a
+        compile-time error (this is true only if both the base and derived classes
+        are declared using this library macro <code class="computeroutput"><a class="link" href="../CONTRACT_CLASS.html" title="Macro CONTRACT_CLASS">CONTRACT_CLASS</a></code>).
+        For example, consider the following derived class (see also <a href="../../../example/virtual_specifiers/final_class_error.cpp" target="_top"><code class="literal">final_class_error.cpp</code></a>):
+      </p>
+<p>
+</p>
+<pre class="programlisting"><span class="identifier">CONTRACT_CLASS</span><span class="special">(</span>
+    <span class="keyword">class</span> <span class="special">(</span><span class="identifier">y</span><span class="special">)</span> <span class="identifier">extends</span><span class="special">(</span> <span class="keyword">public</span> <span class="identifier">x</span> <span class="special">)</span> <span class="comment">// Correctly errors because `x` is final.</span>
+<span class="special">)</span> <span class="special">{</span>
+    <span class="identifier">CONTRACT_CLASS_INVARIANT</span><span class="special">(</span> <span class="keyword">void</span> <span class="special">)</span>
+<span class="special">};</span>
+</pre>
+<p>
+      </p>
+<p>
+        This will generate a compile-time error similar to the following because
+        <code class="computeroutput"><span class="identifier">x</span></code> is final (note that the
+        number of the base class that violates the <code class="computeroutput"><span class="identifier">final</span></code>
+        specifier is reported so it is clear which base class is causing the error
+        also in case of multiple-inheritance):
+      </p>
+<pre class="programlisting">final_class_error.cpp:8 ... ERROR_cannot_extend_final_base_class_number_1 ...
+</pre>
+<p>
+        Final class checks are performed at compile-time even when contracts are
+        disabled (using <code class="computeroutput"><a class="link" href="../CONTRACT_CONFIG_NO_PRECONDITIONS.html" title="Macro CONTRACT_CONFIG_NO_PRECONDITIONS">CONTRACT_CONFIG_NO_PRECONDITIONS</a></code>,
+        <code class="computeroutput"><a class="link" href="../CONTRACT_CONFIG_NO_POSTCONDITIONS.html" title="Macro CONTRACT_CONFIG_NO_POSTCONDITIONS">CONTRACT_CONFIG_NO_POSTCONDITIONS</a></code>,
+        <code class="computeroutput"><a class="link" href="../CONTRACT_CONFIG_NO_CLASS_INVARIANTS.html" title="Macro CONTRACT_CONFIG_NO_CLASS_INVARIANTS">CONTRACT_CONFIG_NO_CLASS_INVARIANTS</a></code>,
+        etc).
+      </p>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="contract__.virtual_specifiers.final_member_functions"></a><a class="link" href="virtual_specifiers.html#contract__.virtual_specifiers.final_member_functions" title="Final Member Functions">Final
+      Member Functions</a>
+</h3></div></div></div>
+<p>
+        Final member functions cannot be overridden by derived classes, otherwise
+        the compiler will generate an error. This library allows to declare a member
+        function final by specifying <code class="computeroutput"><span class="identifier">final</span></code>
+        within the <code class="computeroutput"><a class="link" href="../CONTRACT_FUNCTION.html" title="Macro CONTRACT_FUNCTION">CONTRACT_FUNCTION</a></code>
+        macro, after the cv-qualifier but before exception specifications if present
+        (see also the <a class="link" href="grammar.html" title="Grammar">Grammar</a> section).
+      </p>
+<p>
+        For example (see also <a href="../../../example/virtual_specifiers/final_member.hpp" target="_top"><code class="literal">final_member.hpp</code></a> and
+        <a href="../../../example/virtual_specifiers/final_member.cpp" target="_top"><code class="literal">final_member.cpp</code></a>):
+      </p>
+<p>
+</p>
+<pre class="programlisting"><span class="identifier">CONTRACT_CLASS</span><span class="special">(</span>
+    <span class="keyword">class</span> <span class="special">(</span><span class="identifier">x</span><span class="special">)</span>
+<span class="special">)</span> <span class="special">{</span>
+    <span class="identifier">CONTRACT_CLASS_INVARIANT</span><span class="special">(</span> <span class="keyword">void</span> <span class="special">)</span>
+
+    <span class="identifier">CONTRACT_FUNCTION</span><span class="special">(</span>
+        <span class="keyword">public</span> <span class="keyword">virtual</span> <span class="keyword">void</span> <span class="special">(</span><span class="identifier">f</span><span class="special">)</span> <span class="special">(</span> <span class="keyword">void</span> <span class="special">)</span>
+    <span class="special">)</span> <span class="special">{}</span>
+<span class="special">};</span>
+
+<span class="identifier">CONTRACT_CLASS</span><span class="special">(</span>
+    <span class="keyword">class</span> <span class="special">(</span><span class="identifier">y</span><span class="special">)</span> <span class="identifier">extends</span><span class="special">(</span> <span class="keyword">public</span> <span class="identifier">x</span> <span class="special">)</span>
+<span class="special">)</span> <span class="special">{</span>
+    <span class="identifier">CONTRACT_CLASS_INVARIANT</span><span class="special">(</span> <span class="keyword">void</span> <span class="special">)</span>
+
+    <span class="identifier">CONTRACT_FUNCTION</span><span class="special">(</span>
+        <span class="keyword">public</span> <span class="keyword">void</span> <span class="special">(</span><span class="identifier">f</span><span class="special">)</span> <span class="special">(</span> <span class="keyword">void</span> <span class="special">)</span> <span class="identifier">final</span> <span class="comment">// Final member function.</span>
+    <span class="special">)</span> <span class="special">{}</span>
+<span class="special">};</span>
+</pre>
+<p>
+      </p>
+<p>
+        If a member function of a derived class is declared using <code class="computeroutput"><a class="link" href="../CONTRACT_FUNCTION.html" title="Macro CONTRACT_FUNCTION">CONTRACT_FUNCTION</a></code>
+        and attempts to override a final member function from one of the base classes,
+        the compiler will generate a compile-time error (this is true only if both
+        the overriding and overridden functions are declared using this library macro
+        <code class="computeroutput"><a class="link" href="../CONTRACT_FUNCTION.html" title="Macro CONTRACT_FUNCTION">CONTRACT_FUNCTION</a></code>). For example,
+        consider the following derived class (see also <a href="../../../example/virtual_specifiers/final_member_error.cpp" target="_top"><code class="literal">final_member_error.cpp</code></a>):
+      </p>
+<p>
+</p>
+<pre class="programlisting"><span class="identifier">CONTRACT_CLASS</span><span class="special">(</span>
+    <span class="keyword">class</span> <span class="special">(</span><span class="identifier">z</span><span class="special">)</span> <span class="identifier">extends</span><span class="special">(</span> <span class="keyword">public</span> <span class="identifier">y</span> <span class="special">)</span>
+<span class="special">)</span> <span class="special">{</span>
+    <span class="identifier">CONTRACT_CLASS_INVARIANT</span><span class="special">(</span> <span class="keyword">void</span> <span class="special">)</span>
+
+    <span class="identifier">CONTRACT_FUNCTION</span><span class="special">(</span>
+        <span class="keyword">public</span> <span class="keyword">void</span> <span class="special">(</span><span class="identifier">f</span><span class="special">)</span> <span class="special">(</span> <span class="keyword">void</span> <span class="special">)</span> <span class="comment">// Correctly errors because `y::f` is final.</span>
+    <span class="special">)</span> <span class="special">{}</span>
+<span class="special">};</span>
+</pre>
+<p>
+      </p>
+<p>
+        This will generate a compile-time error similar to the following because
+        <code class="computeroutput"><span class="identifier">y</span><span class="special">::</span><span class="identifier">f</span></code> is final (note that the number of the
+        base class that violates the <code class="computeroutput"><span class="identifier">final</span></code>
+        specifier is reported so it is clear which overridden member function is
+        causing the error also in case of multiple-inheritance):
+      </p>
+<pre class="programlisting">final_member_error.cpp:13 ... ERROR_cannot_override_final_function_from_base_class_number_1 ...
+</pre>
+<p>
+        In order to correctly handle overloaded functions, the overriding function
+        and the final function must have the same name, parameter types, and cv-qualifier
+        to generate this error.
+      </p>
+<p>
+        Final member function checks are performed at compile-time but only when
+        class invariants are enabled (<code class="computeroutput"><a class="link" href="../CONTRACT_CONFIG_NO_CLASS_INVARIANTS.html" title="Macro CONTRACT_CONFIG_NO_CLASS_INVARIANTS">CONTRACT_CONFIG_NO_CLASS_INVARIANTS</a></code>
+        is left not defined).
+      </p>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="contract__.virtual_specifiers.overriding_member_functions"></a><a class="link" href="virtual_specifiers.html#contract__.virtual_specifiers.overriding_member_functions" title="Overriding Member Functions">Overriding
+      Member Functions</a>
+</h3></div></div></div>
+<p>
+        Overriding member functions must override a virtual member function from
+        one or more of the base classes, otherwise the compiler will generate an
+        error. This library allows to declare an overriding member function by specifying
+        <code class="computeroutput"><span class="identifier">override</span></code> within the <code class="computeroutput"><a class="link" href="../CONTRACT_FUNCTION.html" title="Macro CONTRACT_FUNCTION">CONTRACT_FUNCTION</a></code> macro, after the cv-qualifier
+        but before the <code class="computeroutput"><span class="identifier">final</span></code> specifier
+        if present (<code class="computeroutput"><span class="identifier">override</span></code> and
+        <code class="computeroutput"><span class="identifier">final</span></code> can be used together,
+        see also the <a class="link" href="grammar.html" title="Grammar">Grammar</a> section).
+      </p>
+<p>
+        For example (see also <a href="../../../example/virtual_specifiers/override_member.hpp" target="_top"><code class="literal">override_member.hpp</code></a> and
+        <a href="../../../example/virtual_specifiers/override_member.cpp" target="_top"><code class="literal">override_member.cpp</code></a>):
+      </p>
+<p>
+</p>
+<pre class="programlisting"><span class="identifier">CONTRACT_CLASS</span><span class="special">(</span>
+    <span class="keyword">class</span> <span class="special">(</span><span class="identifier">x</span><span class="special">)</span>
+<span class="special">)</span> <span class="special">{</span>
+    <span class="identifier">CONTRACT_CLASS_INVARIANT</span><span class="special">(</span> <span class="keyword">void</span> <span class="special">)</span>
+
+    <span class="identifier">CONTRACT_FUNCTION</span><span class="special">(</span>
+        <span class="keyword">public</span> <span class="keyword">virtual</span> <span class="keyword">void</span> <span class="special">(</span><span class="identifier">f</span><span class="special">)</span> <span class="special">(</span> <span class="keyword">void</span> <span class="special">)</span> <span class="comment">// Virtual so it can be overridden.</span>
+    <span class="special">)</span> <span class="special">{}</span>
+
+    <span class="identifier">CONTRACT_FUNCTION</span><span class="special">(</span>
+        <span class="keyword">public</span> <span class="keyword">void</span> <span class="special">(</span><span class="identifier">g</span><span class="special">)</span> <span class="special">(</span> <span class="keyword">void</span> <span class="special">)</span> <span class="comment">// Not virtual so it cannot be overridden.</span>
+    <span class="special">)</span> <span class="special">{}</span>
+<span class="special">};</span>
+
+<span class="identifier">CONTRACT_CLASS</span><span class="special">(</span>
+    <span class="keyword">class</span> <span class="special">(</span><span class="identifier">y</span><span class="special">)</span> <span class="identifier">extends</span><span class="special">(</span> <span class="keyword">public</span> <span class="identifier">x</span> <span class="special">)</span>
+<span class="special">)</span> <span class="special">{</span>
+    <span class="identifier">CONTRACT_CLASS_INVARIANT</span><span class="special">(</span> <span class="keyword">void</span> <span class="special">)</span>
+
+    <span class="identifier">CONTRACT_FUNCTION</span><span class="special">(</span>
+        <span class="keyword">public</span> <span class="keyword">void</span> <span class="special">(</span><span class="identifier">f</span><span class="special">)</span> <span class="special">(</span> <span class="keyword">void</span> <span class="special">)</span> <span class="identifier">override</span> <span class="comment">// OK, overriding virtual `x::f`.</span>
+    <span class="special">)</span> <span class="special">{}</span>
+<span class="special">};</span>
+</pre>
+<p>
+      </p>
+<p>
+        If a member function of a derived class is declared using <code class="computeroutput"><a class="link" href="../CONTRACT_FUNCTION.html" title="Macro CONTRACT_FUNCTION">CONTRACT_FUNCTION</a></code>
+        and attempts to override an non-virtual or non-existing member function from
+        one of the base classes, the compiler will generate a compile-time error
+        (this is true only if both the overriding and overridden functions are declared
+        using this library macro <code class="computeroutput"><a class="link" href="../CONTRACT_FUNCTION.html" title="Macro CONTRACT_FUNCTION">CONTRACT_FUNCTION</a></code>).
+        For example, consider the following derived class (see also <a href="../../../example/virtual_specifiers/override_member_error.cpp" target="_top"><code class="literal">override_member_error.cpp</code></a>):
+      </p>
+<p>
+</p>
+<pre class="programlisting"><span class="identifier">CONTRACT_CLASS</span><span class="special">(</span>
+    <span class="keyword">class</span> <span class="special">(</span><span class="identifier">z</span><span class="special">)</span> <span class="identifier">extends</span><span class="special">(</span> <span class="keyword">public</span> <span class="identifier">x</span> <span class="special">)</span>
+<span class="special">)</span> <span class="special">{</span>
+    <span class="identifier">CONTRACT_CLASS_INVARIANT</span><span class="special">(</span> <span class="keyword">void</span> <span class="special">)</span>
+
+    <span class="identifier">CONTRACT_FUNCTION</span><span class="special">(</span>
+        <span class="keyword">public</span> <span class="keyword">void</span> <span class="special">(</span><span class="identifier">g</span><span class="special">)</span> <span class="special">(</span> <span class="keyword">void</span> <span class="special">)</span> <span class="identifier">override</span> <span class="comment">// Correctly errors, cannot override.</span>
+    <span class="special">)</span> <span class="special">{}</span>
+<span class="special">};</span>
+</pre>
+<p>
+      </p>
+<p>
+        This will generate a compile-time error similar to the following because
+        <code class="computeroutput"><span class="identifier">x</span><span class="special">::</span><span class="identifier">g</span></code> is not virtual:
+      </p>
+<pre class="programlisting">override_member_error.cpp:12 ... ERROR_no_base_class_declares_matching_virtual_function_to_override_at_line_12 ...
+</pre>
+<p>
+        In order to correctly handle overloaded functions, the overriding function
+        and the overridden virtual function must have the same name, parameter types,
+        and cv-qualifier to <span class="emphasis"><em>not</em></span> generate this error.
+      </p>
+<p>
+        Overriding member function checks are performed at compile-time but only
+        if at least one between preconditions, postconditions, and class invariants
+        is enabled (<code class="computeroutput"><a class="link" href="../CONTRACT_CONFIG_NO_PRECONDITIONS.html" title="Macro CONTRACT_CONFIG_NO_PRECONDITIONS">CONTRACT_CONFIG_NO_PRECONDITIONS</a></code>,
+        <code class="computeroutput"><a class="link" href="../CONTRACT_CONFIG_NO_POSTCONDITIONS.html" title="Macro CONTRACT_CONFIG_NO_POSTCONDITIONS">CONTRACT_CONFIG_NO_POSTCONDITIONS</a></code>
+        and <code class="computeroutput"><a class="link" href="../CONTRACT_CONFIG_NO_CLASS_INVARIANTS.html" title="Macro CONTRACT_CONFIG_NO_CLASS_INVARIANTS">CONTRACT_CONFIG_NO_CLASS_INVARIANTS</a></code>
+        are not all defined at the same time).
+      </p>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="contract__.virtual_specifiers.new_member_functions"></a><a class="link" href="virtual_specifiers.html#contract__.virtual_specifiers.new_member_functions" title="New Member Functions">New
+      Member Functions</a>
+</h3></div></div></div>
+<p>
+        New member functions shall not override member functions from any of the
+        base classes, otherwise the compiler will generate an error. This library
+        allows to declare a new member function by specifying <code class="computeroutput"><span class="keyword">new</span></code>
+        within the <code class="computeroutput"><a class="link" href="../CONTRACT_FUNCTION.html" title="Macro CONTRACT_FUNCTION">CONTRACT_FUNCTION</a></code>
+        macro, after the cv-qualifier but before the <code class="computeroutput"><span class="identifier">final</span></code>
+        specifier if present (<code class="computeroutput"><span class="keyword">new</span></code> and
+        <code class="computeroutput"><span class="identifier">final</span></code> can be used together,
+        see also the <a class="link" href="grammar.html" title="Grammar">Grammar</a> section).
+      </p>
+<p>
+        For example (see also <a href="../../../example/virtual_specifiers/new_member.hpp" target="_top"><code class="literal">new_member.hpp</code></a> and
+        <a href="../../../example/virtual_specifiers/new_member.cpp" target="_top"><code class="literal">new_member.cpp</code></a>):
+      </p>
+<p>
+</p>
+<pre class="programlisting"><span class="identifier">CONTRACT_CLASS</span><span class="special">(</span>
+    <span class="keyword">class</span> <span class="special">(</span><span class="identifier">x</span><span class="special">)</span>
+<span class="special">)</span> <span class="special">{</span>
+    <span class="identifier">CONTRACT_CLASS_INVARIANT</span><span class="special">(</span> <span class="keyword">void</span> <span class="special">)</span>
+
+    <span class="identifier">CONTRACT_FUNCTION</span><span class="special">(</span>
+        <span class="keyword">public</span> <span class="keyword">virtual</span> <span class="keyword">void</span> <span class="special">(</span><span class="identifier">f</span><span class="special">)</span> <span class="special">(</span> <span class="keyword">void</span> <span class="special">)</span> <span class="keyword">new</span> <span class="comment">// OK, no base so no `f` override.</span>
+    <span class="special">)</span> <span class="special">{}</span>
+<span class="special">};</span>
+
+<span class="identifier">CONTRACT_CLASS</span><span class="special">(</span>
+    <span class="keyword">class</span> <span class="special">(</span><span class="identifier">y</span><span class="special">)</span> <span class="identifier">extends</span><span class="special">(</span> <span class="keyword">public</span> <span class="identifier">x</span> <span class="special">)</span>
+<span class="special">)</span> <span class="special">{</span>
+    <span class="identifier">CONTRACT_CLASS_INVARIANT</span><span class="special">(</span> <span class="keyword">void</span> <span class="special">)</span>
+
+    <span class="identifier">CONTRACT_FUNCTION</span><span class="special">(</span>
+        <span class="keyword">public</span> <span class="keyword">virtual</span> <span class="keyword">void</span> <span class="special">(</span><span class="identifier">g</span><span class="special">)</span> <span class="special">(</span> <span class="keyword">void</span> <span class="special">)</span> <span class="keyword">new</span> <span class="comment">// OK, there is no `x::g`.</span>
+    <span class="special">)</span> <span class="special">{}</span>
+<span class="special">};</span>
+</pre>
+<p>
+      </p>
+<p>
+        If a new member function of a derived class is declared using <code class="computeroutput"><a class="link" href="../CONTRACT_FUNCTION.html" title="Macro CONTRACT_FUNCTION">CONTRACT_FUNCTION</a></code> but it overrides an
+        existing member function from one of the base classes, the compiler will
+        generate a compile-time error (this is true only if both the overriding and
+        overridden functions are declared using this library macro <code class="computeroutput"><a class="link" href="../CONTRACT_FUNCTION.html" title="Macro CONTRACT_FUNCTION">CONTRACT_FUNCTION</a></code>).
+        For example, consider the following derived class (see also <a href="../../../example/virtual_specifiers/new_member_error.cpp" target="_top"><code class="literal">new_member_error.cpp</code></a>):
+      </p>
+<p>
+</p>
+<pre class="programlisting"><span class="identifier">CONTRACT_CLASS</span><span class="special">(</span>
+    <span class="keyword">class</span> <span class="special">(</span><span class="identifier">z</span><span class="special">)</span> <span class="identifier">extends</span><span class="special">(</span> <span class="keyword">public</span> <span class="identifier">y</span> <span class="special">)</span>
+<span class="special">)</span> <span class="special">{</span>
+    <span class="identifier">CONTRACT_CLASS_INVARIANT</span><span class="special">(</span> <span class="keyword">void</span> <span class="special">)</span>
+
+    <span class="identifier">CONTRACT_FUNCTION</span><span class="special">(</span>
+        <span class="keyword">public</span> <span class="keyword">virtual</span> <span class="keyword">void</span> <span class="special">(</span><span class="identifier">g</span><span class="special">)</span> <span class="special">(</span> <span class="keyword">void</span> <span class="special">)</span> <span class="keyword">new</span> <span class="comment">// Correctly errors because `y::g`.</span>
+    <span class="special">)</span> <span class="special">{}</span>
+<span class="special">};</span>
+</pre>
+<p>
+      </p>
+<p>
+        This will generate a compile-time error similar to the following because
+        <code class="computeroutput"><span class="identifier">f</span></code> was already declared in
+        <code class="computeroutput"><span class="identifier">x</span></code> (note that the number of
+        the base class that violates the <code class="computeroutput"><span class="keyword">new</span></code>
+        specifier is reported so it is clear which overridden member function is
+        causing the error also in case of multiple-inheritance):
+      </p>
+<pre class="programlisting">new_member_error.cpp:12 ... ERROR_matching_virtual_function_already_declared_by_base_class_number_1 ...
+</pre>
+<p>
+        In order to correctly handle overloaded functions, the new function and the
+        overridden function must have the same name, parameter types, and cv-qualifier
+        to generate this error.
+      </p>
+<p>
+        New member function checks are performed at compile-time but only if at least
+        one between preconditions, postconditions, and class invariants is enabled
+        (<code class="computeroutput"><a class="link" href="../CONTRACT_CONFIG_NO_PRECONDITIONS.html" title="Macro CONTRACT_CONFIG_NO_PRECONDITIONS">CONTRACT_CONFIG_NO_PRECONDITIONS</a></code>,
+        <code class="computeroutput"><a class="link" href="../CONTRACT_CONFIG_NO_POSTCONDITIONS.html" title="Macro CONTRACT_CONFIG_NO_POSTCONDITIONS">CONTRACT_CONFIG_NO_POSTCONDITIONS</a></code>
+        and <code class="computeroutput"><a class="link" href="../CONTRACT_CONFIG_NO_CLASS_INVARIANTS.html" title="Macro CONTRACT_CONFIG_NO_CLASS_INVARIANTS">CONTRACT_CONFIG_NO_CLASS_INVARIANTS</a></code>
+        are not all defined at the same time).
+      </p>
+</div>
+<div class="footnotes">
+<br><hr width="100" align="left">
+<div class="footnote"><p><sup>[<a id="ftn.contract__.virtual_specifiers.f0" href="#contract__.virtual_specifiers.f0" class="para">59</a>] </sup>
+          This library declares special member functions to <span class="quote">&#8220;<span class="quote">tag</span>&#8221;</span> virtual
+          traits of a given member function in a base class (if it is <code class="computeroutput"><span class="keyword">virtual</span></code>, <code class="computeroutput"><span class="identifier">final</span></code>,
+          etc). Then template meta-programming introspection is used by the derived
+          class to inspect virtual trait in its base classes and generate compiler
+          errors if the virtual specifiers are not satisfied. These techniques do
+          not use any <a href="http://en.wikipedia.org/wiki/C%2B%2B11" target="_top">C++11</a>
+          feature however, future revisions of this library might use <a href="http://en.wikipedia.org/wiki/C%2B%2B11" target="_top">C++11</a>
+          native support for virtual specifiers so to eliminate the extra compilation
+          time required by template meta-programming introspection and correct a
+          number of bugs associated with the current implementation of virtual specifiers
+          in this library (see also <a href="http://sourceforge.net/apps/trac/contractpp/ticket/53" target="_top">Ticket
+          53</a>, <a href="http://sourceforge.net/apps/trac/contractpp/ticket/53" target="_top">Ticket
+          55</a>, and <a href="http://sourceforge.net/apps/trac/contractpp/ticket/53" target="_top">Ticket
+          56</a>).
+        </p></div>
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright &#169; 2008-2012 Lorenzo Caminiti<p>
+        Distributed under the Boost Software License, Version 1.0 (see accompanying
+        file LICENSE_1_0.txt or a copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="advanced_topics.html"><img src="../../..//doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../..//doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../..//doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="concepts.html"><img src="../../..//doc/src/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>

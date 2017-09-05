@@ -1,0 +1,836 @@
+
+[/ Copyright (C) 2008-2012 Lorenzo Caminiti ]
+[/ Distributed under the Boost Software License, Version 1.0 ]
+[/ (see accompanying file LICENSE_1_0.txt or a copy at ]
+[/ http://www.boost.org/LICENSE_1_0.txt) ]
+[/ Home at http://sourceforge.net/projects/contractpp ]
+
+[section Advanced Topics]
+
+This section explains advanced usages of this library in programming contracts.
+See the __Grammar__ section for a complete guide on this library syntax.
+
+[section Commas and Leading Symbols in Macros]
+
+C++ macros cannot correctly parse a macro parameter if it contains a comma `,` that is not wrapped within round parenthesis `()` (because the preprocessor interprets such a comma as separation between two distinct macro parameters instead that as part of one single macro parameter, see also __Boost_Utility_IdentityType__).
+Furthermore, syntactic elements specified to this library macros cannot start with a non-alphanumeric symbol (`-1`, `1.23`, `"abc"`, `::`, etc).
+[footnote
+Note that for the preprocessor a number with decimal period `1.23`, `0.12`, `.34` is considered a symbol (because its concatenation will not result in a valid macro identifier).
+]
+For example, the parameter type `::std::pair<OtherKey, OtherT> const&` cannot be passed to this library for two reasons: It starts with the non-alphanumeric symbol `::` and it contains the comma `OtherKey, OtherT` which is not wrapped by round parenthesis.
+
+The __Boost_Utility_IdentityType__ macro `BOOST_IDENTITY_TYPE` can be used as usual to overcome this issue.
+However, using the `BOOST_IDENTITY_TYPE` macro presents two limitations: It makes the syntax of this library macros more cumbersome and, more importantly, it does not allow C++ to automatically deduce function template parameters (see __Boost_Utility_IdentityType__ for more information).
+Therefore, the syntax of this library provides an alternative to `BOOST_IDENTITY_TYPE` to handle commas and leading symbols within macro parameters:
+
+# Commas and leading symbols can be used freely within elements of the syntax that already require wrapping parenthesis (e.g., non-fundamental parameter types `(::std::pair<OtherKey, OtherT> const&)`).
+# Extra parenthesis can always be used to wrap elements of the syntax that might contain commas and leading symbols (e.g, the base class type `public (::sizeable<Key, T>)`).
+# Extra parenthesis can always be used to wrap value expressions so they can contain commas and leading symbols (e.g., a class invariants assertion `(::sizeable<Key, T>::max_size >= size()`).
+
+For example (see also [file example/contracts macro_commas_symbols_integral_map.cpp]):
+
+[import ../example/contracts/macro_commas_symbols_integral_map.cpp]
+[macro_commas_symbols_integral_map]
+
+(Concepts and other advanced constructs used in this example are explained in the rest of this section and in later sections of this documentation.)
+
+All these extra wrapping parenthesis are optional when there is no unwrapped comma and no leading symbol.
+Programmers could chose to always program the extra parenthesis for consistency but it is the authors' opinion that the syntax is harder to read with the extra parenthesis so it is recommended to use them only when strictly necessary.
+
+It is also recommended to avoid using commas and leading symbols whenever possible so to limit the cases when it is necessary to use the extra wrapping parenthesis.
+For example, in many cases the leading symbol `::` might not be necessary and leading symbols like `!` can be replaced by the alternative `not` keyword.
+Furthermore, in some cases `typedef` can be programmed just before class and function declarations to avoid passing types within multiple template parameters separated by commas.
+Declarations of class templates and function templates are the most common cases were commas cannot be avoided and extra wrapping parenthesis are necessarily used.
+
+[warning
+Preconditions, postconditions, and class invariants composed of one single assertion that needs to be wrapped within extra parenthesis need to use double parenthesis (this should be a relatively rare case).
+[footnote
+*Rationale.*
+This limitation is introduced by the need to support also the sequence syntax for preprocessor without variadic macros (see the __No_Variadic_Macros__ section).
+]
+This is the case in the above example for `precondition( ((!full())) )` (but note that these extra parenthesis could have been avoided all together simply using `not` instead of `!` as in the more readable `precondition( not full() )`).
+]
+
+[endsect]
+
+[section Static Assertions]
+
+This library allows to use [@http://en.wikipedia.org/wiki/C%2B%2B11#Static_assertions /static assertions/] to program preconditions, postconditions, class invariants, and block invariants so that they are checked at compile-time instead of at run-time.
+The __CXX11__ syntax is used (but __Boost_MPL__ `BOOST_MPL_ASSERT_MSG` is used to implement static assertions so no __CXX11__ feature is required):
+
+    static_assert(``/constant-boolean-condition/``, ``/constant-string-literal/``)
+
+For example (see also [file example/contracts static_assertion_memcopy.cpp]):
+
+[import ../example/contracts/static_assertion_memcopy.cpp]
+[static_assertion_memcopy]
+
+Static assertions are always checked at compile-time (regardless of them appearing in preconditions, postconditions, etc).
+However, static assertions can be selectively disabled depending on where they are specified using [macroref CONTRACT_CONFIG_NO_PRECONDITIONS], [macroref CONTRACT_CONFIG_NO_POSTCONDITIONS], etc so it is still important to logically associate them with preconditions, postconditions, etc.
+
+The string message passed as the second parameter of `static_assert` is ignored by the current implementation of this library (but it could be used by future revisions of this library that take advantage of __CXX11__ features).
+It is recommended to always specify meaningful messages for static assertions to increase the readability and documentation of contracts.
+Similarly, it might be useful to put a short code comment following each assertions (`// pointer not null`, etc) to increase contract readability and documentation.
+[footnote
+*Rationale.*
+__Eiffel__ supports /assertion labeling/ to further documenting assertions.
+However, when designing this library for C++, the authors judged that it is sufficient to add a short code comment after each assertion to achieve a similar effect.
+]
+
+In case of a static assertion failure, this library will generated a compile-time error containing text similar to the following:
+
+[pre
+static_assertion_memcopy.cpp:18 ... ERROR_statically_checked_precondition_number_1_failed_at_line_18 ...
+]
+
+This message is similar to the run-time assertion errors generated by this library, note how it contains all the information to uniquely identify the assertion that failed.
+
+[endsect]
+
+[section Constant Assertions]
+
+As explained in the __Constant_Correctness__ section, contract assertions shall not change the state of the program because contracts are only supposed to check (and not alter) the state of the program.
+This library automatically makes member functions, function parameters, function result, and old values constant so the compiler will correctly generate an error if assertions mistakenly try to change the object, the function parameters, the function result, or the old values (this should be sufficient in most cases when programming contracts).
+
+[important
+This library cannot automatically make constant other variables that might be accessible by the contract assertions (e.g., global and static variables).
+[footnote
+*Rationale.*
+The library needs to know at least the variable name in order to make it constant.
+There is no way for this library to know the name of a global variable that is implicitly accessible from the contract assertion scope so such a variable cannot be automatically made constant.
+Non-static data members are automatically made constant by making constant the member function that checks the contract, but that does not apply to static data members.
+Not even __CXX11__ lambda implicit captures could be used in this context because they make variables constant only when captured by value and that introduces a __CopyConstructible__ requirement of the captured variable types.
+]
+]
+
+This library provides /constant assertions/ that can be used by programmers to explicitly make constant the variables used by the asserted condition:
+
+    const( ``/variable1/``, ``/variable2/``, ...) ``/boolean-expression-using-variable1-variable2-.../``
+
+The following example calculates the next even and odd numbers that are stored (for some reason) in a global variable and static data member respectively (see also [file example/contracts const_assertion_number.cpp]):
+
+[import ../example/contracts/const_assertion_number.cpp]
+[const_assertion_number]
+
+Note know the postconditions use constant assertions to force the `even` and `odd` variables to be constant within each boolean expression that evaluates the assertion.
+If for example the assignment operator `=` were mistakenly used instead of the equality operator `==` in the above postconditions, the compiler would correctly generate an error.
+
+[endsect]
+
+[section Select Assertions]
+
+In the __Tutorial__ section we have used the ternary operator `:?` to program assertions that are guarded by a boolean condition:
+
+    old_found ? true : std::find(begin(), end(), id) != end(),
+    old_found ? true : size() == old_size + 1
+
+However, in cases like this one when the same boolean condition guards multiple assertions, it might be more efficient to evaluate the guard condition only once using one /select assertion/ instead of multiple ternary operators `:?`.
+In addition, some programmers might find the select assertion syntax more readable than the ternary operator `:?`.
+For example, the above guarded assertions could have been programmed using select assertions as:
+
+    if(not old_found) ( // Guard condition evaluated only once.
+        std::find(begin(), end(), id) != end(),
+        size() == old_size + 1
+    )
+
+Select assertion allow to specify an optional else-block:
+
+    if(``/boolean-condition/``) (   // Round parenthesis `()`.
+        ...                   // Comma-separated assertions.
+    ) else (                  // Else optional as usual.
+        ...                   // Comma-separated assertions.
+    )
+
+Note that round parenthesis `( ... )` are used to program the then-block and else-block instead of the usual C++ curly parenthesis `{ ... }`:
+Select assertions can be nested into one another (the [macroref CONTRACT_LIMIT_NESTED_SELECT_ASSERTIONS] macro specifies the maximum nesting level for select assertions).
+
+For example, consider the postconditions of the following function which calculates the factorial of a natural number (see also [file example/contracts select_assertion_factorial.cpp]):
+
+[import ../example/contracts/select_assertion_factorial.cpp]
+[select_assertion_factorial]
+
+Using the same syntax used for constant assertions, it is possible to force all variables (global, static, etc) used to evaluate the if-condition of the select assertion to be constant (see also [file example/contracts const_select_assertion_factorial.cpp]):
+
+[import ../example/contracts/const_select_assertion_factorial.cpp]
+[const_select_assertion_factorial]
+
+[endsect]
+
+[section Assertion Statements]
+
+Only assertions can be programmed within the contracts while normal C++ statements are not allowed.
+This is keeps contracts simple making programming errors within the contracts less likely and therefore increasing the probably that error-free contracts can properly check the correctness of the implementation.
+
+However, `using` directives, `namespace` aliases, and `typedef` statements are allowed within the contracts because they only affect compilation (not altering the state of the program at run-time) and they can be used to write more readable contracts (for example, shortening namespaces within contract assertions).
+When used, these statements have affect only locally within the preconditions, postconditions, class invariants, etc where they appear.
+[footnote
+Assertion statements might be especially useful because contracts appear with the class and function declarations usually in header files where `using` directives and `namespace` aliases should only be used with extreme care and, for example, at local scope as assertion statements allow to do.
+]
+
+For example (see also [file example/contracts assertion_statement_ialloc.cpp]):
+
+[import ../example/contracts/assertion_statement_ialloc.cpp]
+[assertion_statement_ialloc]
+
+These statements follow their usual C++ syntax but they are terminated with a comma `,` instead of a semicolon `;`.
+(The `BOOST_IDENTITY_TYPE` macro can be used to wrap eventual commas within the `typedef` statement.)
+
+[endsect]
+
+[section Assertion Requirements]
+
+In general, programming contract assertions can introduce a new set of requirements on the types used by the program.
+Some of these type requirements might be necessary only to program the assertions and they might not be required by the implementation itself.
+In such cases, if the code is compiled with contracts disabled ([macroref CONTRACT_CONFIG_NO_PRECONDITIONS], etc), the program might compile but it might no longer compile when contracts are enabled because some of the types do not provide all the operations necessary to check the contract assertions.
+
+# More in general, in some cases it might be acceptable or even desirable to cause a compile-time error when a program uses types that do not provide all the operations needed to check the contracts (because it is not possible to fully check the correctness of the program).
+In these cases, programmers specify contract assertions as we have seen so far (and maybe even use concepts to explicitly specify the contract type requirements, see the __Concepts__ section).
+# However, in other cases it might be desirable that adding contracts to a program does not change its type requirements and that assertions are simply not checked when the types do not provide all the operations necessary to evaluate the asserted conditions.
+In these cases, programmers can use /assertion requirements/ to disable compilation and run-time checking of specific assertions:
+[footnote
+*Rationale.*
+The assertion requirement syntax takes a constant boolean expression instead of a nullary boolean meta-function because the authors have found no reason to use a meta-function in this context.
+Furthermore, constant boolean expressions can be manipulated via the usual operators `not`, `and`, etc, therefore more naturally than boolean meta-functions which need to use `boost::mpl::not_`, `boost::mpl::and_`, etc instead.
+]
+
+    ``/assertion/``, requires ``/constant-boolean-expression/``
+
+(The constant boolean expression of an assertion requirement can be wrapped within round parenthesis `()` if it contains unwrapped commas.)
+
+Let's consider the STL `std::vector<T>` class template.
+This template normally does not require the value type `T` to be __EqualityComparable__ (i.e., to have an equality operator `==`), it only requires `T` to be __CopyConstructible__ (i.e., to have a copy constructor).
+However, in order to check the following `std::vector<T>::push_back` postcondition:
+
+    back() == value // Compiler error if not `EqualityComparable<T>`.
+
+The type `T` must to be __EqualityComparable__.
+Therefore, the __EqualityComparable__ requirement on `T` is introduced only by the contract assertions and it is not required by the `std::vector<T>` implementation.
+
+In some cases, programmers might want compilation to fail when `T` is not __EqualityComparable__ because in these cases it is not possible to fully check the `std::vector<T>` contract and therefore its correctness (in these cases programmers do not specify assertion requirements and let the compilation fail, or even better programmers can explicitly specify the assertion type requirements using concepts which will also fail compilation but hopefully with more informative error messages, see the __Concepts__ section).
+
+However, in other cases programmers might want to use the contracted version of `std::vector<T>` exactly as they use the non-contracted version of the template and therefore without failing compilation if `T` is not __EqualityComparable__.
+This can be achieved specifying assertion requirements for the `std::vector<T>::push_back` postcondition:
+
+    back() == value, requires boost::has_equal_to<T>::value // No error if not `EqualityComparable<T>`.
+
+This postcondition will be checked only when `T` is __EqualityComparable__, otherwise the postcondition will be ignored otherwise causing no compilation error.
+    
+For example (see also [file example/contracts assertion_requirements_push_back.cpp]):
+[footnote
+Future revisions of this library might provide wrappers that program contracts for the STL in appropriate header files =contract/std/vector.hpp=, =contract/std/algorithm.hpp=, etc (see also [@http://www.sgi.com/tech/stl/ SGI STL] and [@http://sourceforge.net/apps/trac/contractpp/ticket/47 Ticket 47]).
+However, given that STL implementations are usually considered to be ["correct], it is not clear if STL class invariants and postconditions would add any value, maybe programmers would only find STL preconditions useful.
+]
+
+[import ../example/contracts/assertion_requirements_push_back.cpp]
+[assertion_requirements_push_back]
+[assertion_requirements_push_back_call]
+
+The `i.push_back(123)` call will check the postcondition `back() == value` because `int` is __EqualityComparable__ and the assertion requirement `boost::has_equal_to<int>::value` is true.
+However, the `n.push_back(num(123))` call will not check, and in fact not even compile, the postconditions `back() == value` because `num` is not __EqualityComparable__ and the assertion requirement `boost::has_equal_to<num>::value` is false.
+[footnote
+Assertion requirements where first introduced by this library and they are not supported by __N1962__, __D__, or __Eiffel__ (even if they all allow to write contracts for templates).
+Based on the authors' experience, assertion requirements are necessary for a language that make extensive use of templates like C++.
+Furthermore, C++ does not automatically define equality operators `==` while it automatically defines copy constructors and that make the use of the assertion requirements for __EqualityComparable__ a rather common practise (in __Eiffel__ instead types can be both copied and compared for equality by default).
+It has been argued that it is not possible to check a program for correctness if types that are copyable cannot also be compared for equality and the authors experience with programming contracts confirms such an argument.
+]
+
+The __Boost_TypeTraits__ library provides a set of meta-functions that are very useful to program assertion requirements.
+[footnote
+As of __Boost__ 1.50, `boost::has_equal_to` and similar traits always return true for an STL container even if the value type of the container does not have an operator `==`.
+This is arguably a defect of the STL that always defines an operator `==` for its containers even when a container template is instantiated with a value type that has no operator `==`, in which case the container operator `==` will produce a compiler error (the STL should instead use __SFINAE__ to disable the declaration of the container operator `==` when the value type has no operator `==`).
+Future versions of __Boost_TypeTraits__ will probably specialize `boost::has_equal_to` and similar traits to work around this behaviour of the STL.
+In the meanwhile, programmers can specialize these traits themselves if needed:
+``
+// Header: std_has_equal_to.hpp
+#include <boost/type_traits/has_equal_to.hpp>
+#include <boost/type_traits/is_convertible.hpp>
+#include <boost/mpl/and.hpp>
+#include <vector>
+
+// STL defines `operator==` only between two identical containers (same value
+// type, allocator, etc) and returning a type convertible to `bool`.
+
+namespace boost {
+
+// Specializations for `std::vector`.
+
+template< typename T, class Alloc >
+struct has_equal_to < std::vector<T, Alloc>, std::vector<T, Alloc> > :
+    has_equal_to<T, T, bool>
+{};
+
+template< typename T, class Alloc, typename Ret >
+struct has_equal_to < std::vector<T, Alloc>, std::vector<T, Alloc>, Ret > :
+    mpl::and_<
+          has_equal_to<T, T, bool>
+        , is_convertible<Ret, bool>
+    >
+{};
+
+// ... specialize `has_equal_to` for more STL containers.
+
+} // namespace
+``
+]
+However, C++ does not allow to inspect every trait of a type so there might be some assertion requirements that unfortunately cannot be programmed within the language.
+
+Another interesting use of assertion requirements is to model assertion computational complexity.
+In some cases, checking assertions can be as computationally expensive as executing the function body or even more.
+While preconditions, postconditions, etc can be disabled in groups at compile-time to improve performance (using [macroref CONTRACT_CONFIG_NO_PRECONDITIONS], [macroref CONTRACT_CONFIG_NO_POSTCONDITIONS], etc), it is also useful to be able to disable only specific assertions that are very computationally expensive while keeping all other preconditions, postconditions, etc enabled.
+For example (see also [file example/contracts assertion_complexity_factorial.cpp]):
+
+[import ../example/contracts/assertion_complexity_factorial.cpp]
+[assertion_complexity_factorial]
+
+In this case the postcondition `result = n * factorial(n - 1)` has factorial computation complexity and it is compiled and checked at run-time only if the macro `COMPLEXITY_MAX` is defined to be `O_FACTN` or greater.
+Similarly, macros like `O_SMALLER_BODY`, `O_BODY`, and `O_GREATER_BODY` could have been defined to express computational complexity in relative terms with respect to the body computational complexity (see the __Examples__ section).
+[footnote
+__N1866__, an earlier version of __N1962__, introduced the notion of /importance ordering/ that could be used to selectively disable assertions that where too expensive computationally.
+Important ordering was then dropped by __N1962__.
+Among other things, assertion requirements can be used to achieve the importance ordering functionality.
+]
+
+Assertion requirements can be used with assertions, constant assertions, and static assertions but they cannot be used with assertion statements and with the if-then-else statements of select assertions (however, if select assertions are programmed using the ternary operator `:?` then assertion requirements will disable the entire ternary operator `:?` expression including its if-condition).
+
+[endsect]
+
+[section Old-Of Requirements]
+
+Assertion requirements can be specified also for postconditions that use old values.
+However, old values have the additional requirement that the type of the expression passed to the [macroref CONTRACT_OLDOF] macro must be __ConstantCopyConstructible__.
+If such a requirement is not met:
+
+# Either, programmers want the compiler to error because the postconditions using the old value cannot be evaluated (in which case programmers will not specify assertion requirements and they might explicitly specify type requirements using concepts so to get more informative error messages, see the __Concepts__ section).
+# Or, programmers want the old value declaration that uses the [macroref CONTRACT_OLDOF] macro to have no effect (because the old value cannot be copied) and the postconditions using such an old value to not be evaluated.
+
+Unfortunately, C++ cannot automatically detect if a type has a copy constructor therefore a special trait [classref contract::has_oldof] had to be introduced to support this second case.
+The `contract::has_oldof<T>` trait is a unary boolean meta-function which is `boost::mpl::true_` by default for any type `T` and it must be specialized by programmers for types which old values cannot be copied.
+
+For example, consider the following increment function (see also [file example/contracts has_oldof_inc.cpp]):
+
+[import ../example/contracts/has_oldof_inc.cpp]
+[has_oldof_inc]
+[has_oldof_inc_call]
+
+In this example, the `num` type is non-copyable so the `contract::has_oldof<num>` specialization inherits from `boost::mpl::false_`.
+As a consequence, the call `inc(n, m)` will automatically skip the old value declaration:
+
+    auto old_value = CONTRACT_OLDOF value
+
+The following postcondition will also be skipped because its assertion requirement lists `contract::has_oldof<T>` (where `T` is indeed the type of `value` passed to the [macroref CONTRACT_OLDOF] macro):
+
+    value == old_value + offset, requires contract::has_oldof<T>::value && ...
+
+Note how this postcondition actually requires the type `T` to have an old value, a plus operator `+`, and an equality operator `==` thus all of these requirements are programmed in the assertion requirements.
+
+Finally, return value declarations are never skipped so there is no `has_result` trait.
+[footnote
+*Rationale.*
+The result type needs to be copyable in order for the function itself to return a value so this library can always evaluate return value declarations.
+]
+
+[endsect]
+
+[section Old and Result Value Copies]
+
+This library uses the class template [classref contract::copy] to copy old values and the result value for postconditions.
+    
+    namespace contract
+    {
+        template< typename T >
+        class copy
+        {
+            public: copy ( T const& object ) ;
+            public: T const& value ( void ) const ;
+        };
+    } // namespace
+
+The default implementation of the [classref contract::copy] class template requires that the type of the old value expression passed to the [macroref CONTRACT_OLDOF] macro and the result type are __ConstantCopyConstructible__ (i.e., these types provide a copy constructor that copies the object from a constant reference, the reference has to be constant so to ensure the constant-correctness of the copy operations that are executed within the contracts, see also the __Constant_Correctness__ section):
+
+    // `ConstantCopyConstructible<T>` (which implies `CopyConstructible<T>`):
+    T::T ( T const& source ) ;  // OK: constant-correct copy constructor.
+
+    // `CopyConstructible<T>` (but not `ConstantCopyConstructible<T>`):
+    T::T ( T& source ) ;        // Error, copy constructor is not constant-correct.
+
+Programmers can specialize the [classref contract::copy] class template to allow old value and result value copies even for types that are not __ConstantCopyConstructible__ (in this case it is the programmers' responsibility to make sure that the copy operations that they define are constant-correct, otherwise the contracts will no longer be constant-correct).
+[footnote
+Currently, it is not possible to force constant-correctness of the expression passed to the [macroref CONTRACT_OLDOF] macro.
+Future revisions of this library will support `CONTRACT_OLDOF const( ... ) ...` to allow to make constant all variables (including global, static, etc) used by old value expressions (see also [@http://sourceforge.net/apps/trac/contractpp/ticket/52 Ticket 52]).
+]
+
+In the following example the old and result value declarations use the specialization `contract::copy<num>` so it is possible to access the old and result value of variables of type `num` even if `num` is non-copyable (see also [file example/contracts copy_inc.cpp]):
+
+[import ../example/contracts/copy_inc.cpp]
+[copy_inc]
+[copy_inc_call]
+
+Both calls `inc(i, j)` and `inc(n, m)` check all postconditions.
+The first call copies the old and result values using `int`'s default copy constructor, the second call copies the old and result values using the copy operation implemented by the `contract::copy<num>` specialization.
+
+[endsect]
+
+[section Pure Virtual Functions]
+
+It is possible to program contracts for pure virtual functions.
+Pure virtual functions are specified with the usual `= 0;` symbol replacing the function definition just after the contract macros, for example (see also [file example/contracts pushable.hpp]):
+
+[import ../example/contracts/pushable.hpp]
+[pushable]
+
+Furthermore, using the [macroref CONTRACT_MEMBER_BODY] macro, a derived class can be programmed without using the [macroref CONTRACT_CLASS] and [macroref CONTRACT_FUNCTION] macros even when the base class has pure virtual functions (see also [file example/contracts default_subcontracting_base.cpp]):
+
+[import ../example/contracts/default_subcontracting_base.cpp]
+[default_subcontracting_base]
+
+This use of the [macroref CONTRACT_MEMBER_BODY] macro does not force programmers of derived classes to use the library macros [macroref CONTRACT_CLASS] and [macroref CONTRACT_FUNCTION] which would otherwise introduce the unusual library syntax in the derived class declaration.
+However, in this case the derived class is forced to inherit the base class invariants, preconditions, and postconditions exactly as they are without the possibility to truly subcontract the base class (which is instead possible when the [macroref CONTRACT_CLASS] and [macroref CONTRACT_FUNCTION] macros are used in declaring the derived class).
+[footnote
+*Rationale.*
+Older revisions of this library defined the macro `CONTRACT_MEMBER_BODY(class_type, function_name)` taking two parameters so this macro could not be used in declaring derived classes and the [macroref CONTRACT_CLASS] and [macroref CONTRACT_FUNCTION] macros where required when programming a class inheriting from a base class with contracts.
+However, the authors prefer to leave the choice of programming full contracts for derived classes to the derived class programmers because of the unusual declaration syntax introduced by this library might not be necessary when derived classes do not need to alter the base's class contract.
+]
+Correctly, the derived class can never avoid checking the base class contracts neither when declared using the [macroref CONTRACT_CLASS] and [macroref CONTRACT_FUNCTION] macros, nor when declared using the [macroref CONTRACT_MEMBER_BODY] macro.
+
+[endsect]
+
+[section Subcontracting Preconditions]
+
+While subcontracting is theoretically sound and justified by the __substitution_principle__, in practise subcontracted preconditions might be confusing for programmers because of the implications of evaluating overriding preconditions in __logic_or__ with overridden preconditions (this is not the case for subcontracted postconditions and class invariants which usually behave as programmers expect because they are evaluated in __logic_and__).
+
+For example, consider the following base class `integer` which holds an integral value and its derived class `natural` which holds a natural (i.e., non-negative integer) value (see also [file example/contracts subcontract_pre_natural_failure.cpp]):
+
+[import ../example/contracts/subcontract_pre_natural_failure.cpp]
+[subcontract_pre_natural_failure]
+
+From reading the contracts we conclude that:
+
+* `integer::get` returns the latest value set (as specified by `integer::set` postconditions).
+* There is no constraint on the integer value that is passed to `integer::set` (because `integer::set` has no precondition).
+* `natural::get` always returns a non-negative value (as specified by the `natural` class invariants).
+* Only non-negative values can be passed to `natural::set` (as specified by `natural::set` preconditions).
+
+This last conclusion is incorrect!
+Negative values can be passed to `natural::set` because they can be passed to its base virtual function `integral::set` (preconditions cannot only be weakened).
+The complete set of `natural::set` preconditions is given by its base virtual function `integer::set` preconditions (which are always `true` because they are not specified) evaluated in __logic_or__ with the preconditions explicitly specified by `natural::set` (i.e., `value >= 0`):
+
+    (true) or (value >= 0)
+
+Obviously, this always evaluates to `true` regardless of `value` being non-negative.
+This is correct in accordance with the __substitution_principle__ for which `natural::set` can be called in any context where `integer::set` is called because `natural` inherits from `integer`.
+Given that `integer::set` can be called regardless of `value` being non-negative (because it has no precondition) there is no precondition that we can later specify for `natural::set` that will change that and in fact `natural::set` can also be called with negative values without failing its subcontracted preconditions.
+For example, the call:
+
+[subcontract_pre_natural_failure_call]
+
+Fails the class invariants checked while exiting `natural::set`:
+
+[pre
+class invariant (on exit) number 1 "get() >= 0" failed: file "natural_subcontractpre.cpp", line 30
+]
+
+Ideally, this call would have failed much earlier at `natural::set` preconditions (in fact, the `natural::set` body is executed with the logically invalid negative value `-123` which could in general lead to catastrophic errors and mysterious bugs).
+
+The issue here is in the design.
+A natural number is not an integer number because while it is valid to use an integer number in a context where it is assigned to a negative number, it is not valid to use a natural number in such a context so a natural number should not inherit from an integer number.
+Inheritance models the [@http://en.wikipedia.org/wiki/Is-a /is-a/] relationship which should not be used in this case as the contracts and the __substitution_principle__ are telling us.
+
+[note
+Note that if a virtual member function has no preconditions, it means that it is always valid to call it, and (in accordance with the __substitution_principle__) this semantic cannot be changed by the contracts of any overriding function no matter what preconditions we specify for it.
+Similarly, if an overriding member function has no preconditions, it means that is is always valid to call it regardless of possible preconditions specified by any function that it overrides.
+]
+
+An overriding function can specify `precondition( false )` if it wants to keep the same preconditions of the functions that is overriding.
+A pure virtual function can specify `precondition( false )` to indicate that overriding functions will specify preconditions (this only makes sense for pure virtual functions because a function with `precondition( false )` can never be called successfully unless it is overridden and its preconditions are weakened, that might be acceptable for pure virtual because they must always be overridden).
+
+If programmers find subcontracted preconditions confusing, this library allows to forbid them by defining the configuration macro [macroref CONTRACT_CONFIG_DO_NOT_SUBCONTRACT_PRECONDITIONS].
+When this macro if defined, the library will generate a compile-time error if a derived class tries to override preconditions of member functions of any of its base classes (this is also the subcontracting behaviour specified by __N1962__).
+However, note that in case of multiple-inheritance preconditions from the overridden function from all bases classes will always be checked in __logic_or__ with each other so preconditions from a base class could still be weaken by the preconditions of another base class even when the [macroref CONTRACT_CONFIG_DO_NOT_SUBCONTRACT_PRECONDITIONS] macro is defined.
+By default the [macroref CONTRACT_CONFIG_DO_NOT_SUBCONTRACT_PRECONDITIONS] macro is not defined and this library allows to override preconditions (as specified by for __Eiffel__ by __Meyer97__ and in accordance with the __substitution_principle__).
+
+Another difference between subcontracted preconditions and subcontracted postconditions or class invariants is that subcontracted preconditions will always report a failure of the overridden preconditions.
+For example, consider a set of base classes [^b['N]] and a derived class `d`:
+    
+    CONTRACT_CLASS(
+        struct (a)
+    ) {
+        ... // No member function `f`.
+    };
+
+    CONTRACT_CLASS(
+        struct (b``/N/``)
+    ) {
+        CONTRACT_CLASS_INVARIANT( ... )
+
+        CONTRACT_FUNCTION(
+            public virtual void (f) ( void ) // Overridden function.
+                precondition( ... )
+                postcondition( ... )
+        ) {}
+
+        ...
+    };
+    
+    CONTRACT_CLASS(
+        struct (c)
+    ) {
+        ... // No member function `f`.
+    };
+
+    CONTRACT_CLASS(
+        struct (d) extends( b1, a, b2, c, b3 )
+    ) {
+        CONTRACT_CLASS_INVARIANT( ... )
+        
+        CONTRACT_FUNCTION(
+            public virtual void (f) ( void ) // Overriding function.
+                precondition( ... )
+                postcondition( ... )
+        ) {}
+        
+        ...
+    };
+
+When `d::f` is called, its subcontracted class invariants, postconditions, and preconditions are evaluated using the following expressions (the base classes `a` and `c` do not declare a virtual function `f` so they are automatically excluded from `d::f` subcontracting):
+
+    b1::``/class-invariants/``  and b2::``/class-invariants/``  and b3::``/class-invariants/``  and d::``/class-invariants/``  // `d::f` subcontracted class invariants.
+    b1::f::``/postconditions/`` and b2::f::``/postconditions/`` and b3::f::``/postconditions/`` and d::f::``/postconditions/`` // `d::f` subcontracted postconditions.
+    b1::f::``/preconditions/``  or  b2::f::``/preconditions/``  or  b3::f::``/preconditions/``  or  d::f::``/preconditions/``  // `d::f` subcontracted preconditions.
+
+When subcontracted class invariants or subcontracted postconditions fail, this library reports the first failed condition which can in general be in the base class contracts because they are checked first in the __logic_and__ chain (this can report a failure from any subcontracted class invariants [^b['N]::/class-invariants/] or [^d::/class-invariants/], and subcontracted postconditions [^b['N]::f::/postconditions/] or [^d::f::/postconditions/]).
+However, when subcontracted preconditions fail it means that all overridden preconditions as well as the overriding preconditions have failed (because subcontracted preconditions are evaluated in __logic_or__).
+In this case, this library will report the last evaluated failure which will always be in the overriding preconditions (always report a failure from [^d::f::/preconditions/]).
+If programmers want instead the library to report the failure from the first overridden precondition that failed, they can define the configuration macro [macroref CONTRACT_CONFIG_REPORT_BASE_PRECONDITION_FAILURE] (always report a failure from [^b1::f::/preconditions/]).
+
+[endsect]
+
+[section Static Member Functions]
+
+It is possible to program contracts for static member functions.
+Static member functions cannot access the object therefore their preconditions and postconditions also cannot access the object and they can only access other static members.
+This library allows to specify a subset of class invariants called /static class invariants/ which do not access the object and that are checked at entry and exit of every constructor, destructor, and member functions even if static.
+(Non-static class invariants are instead not checked at constructor entry, at destructor exit, and at entry and exit of static member functions because they require accessing the object, see also the __Contract_Programming_Overview__ section.)
+
+Static class invariants are empty (`void`) by default unless they are explicitly specified within the [macroref CONTRACT_CLASS_INVARIANT] macro using the following syntax:
+[footnote
+Static class invariants are not part of __N1962__ and they were first introduced by this library.
+]
+
+    static class( ``/assertion1/``, ``/assertion2/``, ... )
+
+For example (see also [file example/contracts static_contract_instance_counter.cpp]):
+
+[import ../example/contracts/static_contract_instance_counter.cpp]
+[static_contract_instance_counter]
+
+In this example there is only one static class invariant assertion `count() >= 0` and it is checked at entry and exit of every constructor, destructor, and member function including the static member function `count`.
+If the static member function `count` had preconditions or postconditions, they would not be able to access the object (i.e., preconditions and postconditions will also be executed in static context).
+
+[endsect]
+
+[section Volatile Member Functions]
+
+It is possible to program contracts for volatile member functions.
+Volatile member functions access the object as volatile therefore their preconditions and postconditions also access the object as volatile and can only access other volatile members.
+This library allows to specify a different set of class invariants called /volatile class invariants/ which can only access the object as volatile and that are checked at entry and exit of every volatile member function.
+(Constructors and destructors never access the object as volatile so volatile class invariants are not checked by constructors and destructors, see also the __Contract_Programming_Overview__ section.)
+
+Volatile class invariants are assumed to be the same as non-volatile class invariants unless they are explicitly specified within the [macroref CONTRACT_CLASS_INVARIANT] macro using the  following syntax:
+[footnote
+Volatile class invariants are not part of __N1962__ and they were first introduced by this library.
+It is not clear if there are real applications for volatile class invariants mainly because real applications of `volatile` itself are not clear in C++.
+One very interesting use of `volatile` has been to [@http://www.drdobbs.com/cpp/184403766 avoid race conditions] in concurrent programming (but contracts are not useful for such an application of `volatile`).
+]
+
+
+    volatile class( ``/assertion1/``, ``/assertion2/``, ... )
+
+In most cases, it will be necessary to explicitly specify volatile class invariants when using volatile member functions (unless volatile overloads are provided for every member function that is used by the non-volatile class invariants).
+
+For example (see also [file example/contracts volatile_contract_shared_instance.cpp]):
+
+[import ../example/contracts/volatile_contract_shared_instance.cpp]
+[volatile_contract_shared_instance]
+
+As usual, contracts are checked in constant-correct context therefore only `const volatile` members can be accessed from volatile class invariants, preconditions, and postconditions.
+
+[endsect]
+
+[section Operators]
+
+It is possible to program contracts for operators (both member function operators and free function operators).
+The operator name must be specified using the following syntax when passed to the [macroref CONTRACT_FUNCTION], [macroref CONTRACT_FREE_BODY], and [macroref CONTRACT_MEMBER_BODY] macros:
+
+    operator(``/symbol/``)(``/arbitrary-alphanumeric-name/``)
+
+The first parameter is the usual operator symbol (`==`, `+`, etc) the second parameter is an arbitrary but alphanumeric name (`equal`, `plus`, etc).
+The operator `new`, the operator `delete`, and implicit type conversion operators for fundamental types containing no symbol can also be specified simply as:
+
+    operator new
+    operator delete
+    operator ``/fundamental-type-without-symbols/``
+
+The comma operator must be specified as:
+[footnote
+*Rationale.*
+The comma operator cannot be specified using the comma symbol as in `operator(,)(my_comma_operator)` because the preprocessor uses commas to separate macro parameters so it is not possible to distinguish that from an implicit type conversion operator like `operator(std::vector<T, Allocator>)(std_vector)` (note that the operator name is arbitrary so it also cannot be used to distinguish these two cases).
+]
+
+    operator comma
+
+For example (see also [file example/contracts member_operator_string.cpp]):
+
+[import ../example/contracts/member_operator_string.cpp]
+[member_operator_string]
+
+The memory operators `new`, `delete`, `new[]`, and `delete[]` must always be specified `static` when they are programmed as member function operators.
+[footnote
+*Rationale.*
+C++ automatically promotes memory member operators to static members so the `static` keyword is optional for these member operators.
+However, this library cannot inspect the operator symbol using the preprocessor to check if the operator is a memory member operator or not because the symbol contains non-alphanumeric tokens (which cannot be concatenated by the preprocessor).
+Therefore, this library always requires memory member operators to be explicitly declared as static member functions.
+]
+
+Free function operators are programmed using the same syntax for the operator names.
+
+[endsect]
+
+[section Nested Classes]
+
+It is possible to program contracts for nested classes noting that:
+
+# The access level `public`, `protected`, or `private` must be specified for contracted members and therefore also for nested classes. 
+# The `_TPL` macros must be used within templates so the [macroref CONTRACT_CLASS_TPL] macro needs to be used when programming a class nested within a class template.
+
+For example (see also [file example/contracts nested_class_bitset.cpp] and the __Concepts__ section):
+
+[import ../example/contracts/nested_class_bitset.cpp]
+[nested_class_bitset]
+
+[endsect]
+
+[section Friends]
+
+It is possible to program contracts for friend classes and friend functions.
+Classes can be declared friends and later contracted using the [macroref CONTRACT_CLASS] macro as usual:
+
+    CONTRACT_CLASS( // Not even necessary to contract this class.
+        class (x)
+    ) {
+        CONTRACT_CLASS_INVARIANT( void )
+
+        friend class y ;
+
+        // ...
+    };
+    
+    CONTRACT_CLASS(
+        class (y)
+    ) {
+        CONTRACT_CLASS_INVARIANT( void )
+
+        // ...
+    };
+
+Friend functions that are declared and defined within the enclosing class use the `friend` keyword within the [macroref CONTRACT_FUNCTION] macro (note that the access level `public`, `protected`, or `private` is optional in this case because these friend functions are not member functions).
+Friend functions that are either forward declared friends or that are defined friends within the enclosing class, must use the [macroref CONTRACT_FREE_BODY] macro.
+For example (see also [file example/contracts friend_counter.cpp]):
+
+[import ../example/contracts/friend_counter.cpp]
+[friend_counter]
+
+The class enclosing the friend declarations might or might not be contracted.
+
+[endsect]
+
+[section Template Specializations]
+
+It is possible to program contracts for class template specializations.
+The generic class template might or might not be contracted (see also [file example/contracts template_specializations_vector.cpp]):
+
+[import ../example/contracts/template_specializations_vector.cpp]
+[template_specializations_vector]
+
+The template specialization types follow the class name as usual but they are wrapped within round parenthesis `( bool, Allocator )` instead than angular parenthesis `< bool, Allocator >` as in the following partial specialization:
+
+[template_specializations_vector_bool_allocator]
+
+The syntax `template( void )` must be used instead of `template< >` to indicate explicit specializations:
+
+[template_specializations_vector_bool]
+
+[endsect]
+
+[section Exception Specifications and Function-Try Blocks]
+
+It is possible to program exception specifications and function-try blocks for constructors, destructors, member functions, and free functions with contracts.
+Exception specifications are part of the function declarations therefore they are programmed within the contract macros but the special syntax `throw( void )` must be used instead of `throw( )` to specify that no exception is thrown:
+
+    throw( ``/exception-type1/``, ``/exception-type2/``, ... ) // As usual.
+    throw( void ) // Instead of `throw( )`.
+
+Function-try blocks are part of the function definition so they are normally programmed outside the contract macros.
+However, for constructors with member initializers, the member initializers must be programmed within the [macroref CONTRACT_CONSTRUCTOR] macro and therefore also the function-try blocks must be programmed within the macro using the following syntax:
+
+    try initialize( ``/initializer1/``, ``/initializer2/``, ... )
+    catch(``/exception-declaration1/``) ( ``/instruction1/``; ``/instruction2/``; ... )
+    catch(``/exception-declaration2/``) ( ``/instruction1/``; ``/instruction2/``; ... )
+    catch(...) ( ``/instruction1/``; ``/instruction2/``; ... )
+
+As usual, only one catch statement must be specified and the other catch statements are optional plus `catch(...)` can be used to catch all exceptions.
+Note however that round parenthesis `( ... )` are used instead of curly parenthesis `{ ... }` to wrap the catch statement instructions (then the catch instructions are programmed with the usual syntax and separated by semicolons `;`).
+(The maximum number of catch statements that can be programmed for constructor-try blocks is specified by the [macroref CONTRACT_LIMIT_CONSTRUCTOR_TRY_BLOCK_CATCHES] macro.)
+
+In the following example the constructor uses a function-try block to throw only `out_of_memory` and `error` exceptions while the destructor uses exception specifications to throw no exception (see also [file example/contracts exception_array.cpp]):
+
+[import ../example/contracts/exception_array.cpp]
+[exception_array]
+
+(The `BOOST_IDENTITY_TYPE` macro can be used to wrap the catch statement exception declaration types if they contain unwrapped commas.)
+
+Exception specifications and function-try blocks apply only to exceptions thrown by the function body and not to exceptions thrown by the contracts themselves (if any) and by the contract checking code generated by this library macros.
+[footnote
+*Rationale.*
+__N1962__ specifies that function-try blocks should only apply to the body code and not to the contract code.
+No explicit requirement is stated in __N1962__ for exception specifications but the authors have decided to adopt the same requirement that applies to function-try blocks (because it seemed of little use for the contract to throw an exception just so it is handled by the exception specification).
+]
+
+[endsect]
+
+[section Specifying Types (no Boost.Typeof)]
+
+This library uses __Boost_Typeof__ to automatically deduces postcondition old value types and constant assertion variable types.
+If programmers do not want the library to use __Boost_Typeof__ they can explicitly specify these types.
+
+The types of postcondition old values are specified instead of using `auto` and they must be wrapped within round parenthesis unless they are fundamental types containing no symbol (these must match the type of the specified old-of expressions):
+
+    (``/type/``) ``/variable/`` = CONTRACT_OLDOF ``/oldof-expression/``
+
+The types of constant assertion variables are specified just before each variable name and they also must be wrapped within round parenthesis unless they are fundamental types containing no symbol:
+
+    const( (``/type1/``) ``/variable1/``, (``/type2/``) ``/variable2/``, ... ) ``/boolean-expression/``
+
+For example (see also [file example/contracts typed_counter.cpp]):
+
+[import ../example/contracts/typed_counter.cpp]
+[typed_counter]
+
+Note that postcondition result values are always specified using `auto`:
+
+    auto ``/result-variable/`` = return
+    
+This is because the function return type is know by the library as specified in the function declaration within the [macroref CONTRACT_FUNCTION] macro.
+Therefore, the postcondition result value type is never explicitly specified by programmers (but __Boost_Typeof__ is never used to deduce it).
+
+[note
+It is recommended to not specify these types explicitly and let the library internally use __Boost_Typeof__ to deduce them because the library syntax is more readable without the explicit types.
+However, all types must be properly registered with __Boost_Typeof__ as usual in order to use type-of emulation mode on __CXX03__ compilers that do not support native type-of (see __Boost_Typeof__ for more information).
+]
+
+[endsect]
+
+[section Block Invariants and Loop Variants]
+
+/Block invariants/ can be used anywhere within the function body and they are used to assert correctness conditions of the implementation (very much like `assert`).
+They are programmed specifying a list of assertions to the [macroref CONTRACT_BLOCK_INVARIANT] macro (including static, constant, and select assertions):
+
+    CONTRACT_BLOCK_INVARIANT( ``/assertion1/``, ``/assertion2/``, ... )
+
+When block invariants are used within a loop, they are also called /loop invariants/ (e.g., __Eiffel__ uses this terminology).
+
+Furthermore, this library allows to specify [@http://en.wikipedia.org/wiki/Loop_variant ['loop variants]].
+A loop variant is a non-negative monotonically decreasing number that is updated at each iteration of the loop.
+The specified loop variant expression is calculated by this library at each iteration of the loop and it is automatically asserted to be non-negative (`>= 0`) and to decrease monotonically from the previous loop iteration.
+Because the loop variant monotonically decreases and it cannot be smaller than zero, either the loop terminates or one of the two library assertions will eventually fail in which case the library will call the [funcref contract::loop_variant_broken] handler therefore detecting and stopping infinite loops.
+Each given loop can only have one variant which is specified using the [macroref CONTRACT_LOOP_VARIANT] macro.
+The enclosing loop (`while`, `for`, `do`, etc) must be declared using the [macroref CONTRACT_LOOP] macro:
+
+    CONTRACT_LOOP( ``/loop-declaration/`` ) {
+        CONTRACT_LOOP_VARIANT( ``/non-negative-monotonically-decreasing-expression/`` )
+        ...
+    }
+
+Note that the library cannot automatically make constant any of the variables within the function body therefore constant block invariant assertions and constant loop variant expressions should be used by programmers if they want to enforce constant-correctness for block invariants and loop variants.
+
+The following example uses a loop to calculate the [@http://en.wikipedia.org/wiki/Greatest_common_divisor Greatest Common Divisor (GCD)] of two integral numbers (see also [file example/contracts blockinv_loopvar_gcd.cpp]):
+
+[import ../example/contracts/blockinv_loopvar_gcd.cpp]
+[blockinv_loopvar_gcd]
+
+__Eiffel__ supports loop variants but __N1962__ does not.
+Loop variants might not be very useful especially if __Boost_Foreach__ or similar constructs are used to ensure loop termination.
+
+[endsect]
+
+[section Contract Broken Handlers (Throw on Failure)]
+
+When a contract assertion fails, this library prints a message on the standard error `std::cerr` and it terminates the program calling `std::terminate`.
+Programmers can change this behavior customizing the actions that the library takes on contract assertion failure by setting the contract broken handler functions.
+By default the library terminates the program because a contract failure indicates that the program is in an invalid state that programmers specified it should never happen (so the only sensible assumption is that the program execution should not continue).
+However, in some cases programmers might need to handle even such catastrophic failures by executing some fail-safe code instead of terminating the program and that can be done customizing the contract broken handlers.
+
+The library functions [funcref contract::set_precondition_broken], [funcref contract::set_postcondition_broken], [funcref contract::set_class_invariant_broken], [funcref contract::set_block_invariant_broken], and [funcref contract::set_loop_variant_broken] can be used to customize the action to taken in case of precondition, postcondition, class invariant, block invariant, and loop variant failure respectively.
+Furthermore, class invariants are checked at entry, at normal exit, and at exit but when exceptions are thrown so more granular handlers can be set for each of these cases using [funcref contract::set_class_invariant_broken_on_entry], [funcref contract::set_class_invariant_broken_on_exit], and [funcref contract::set_class_invariant_broken_on_throw] (using [funcref contract::set_class_invariant_broken] is equivalent to setting all these class invariant broken handles to the same handler).
+[footnote
+__N1962__ does not allow to configure class invariant broken handlers differently for entry, exit, and throw.
+]
+
+This library passes a parameter of type [enumref contract::from] to the contract broken handler functions indicating the context that failed the contract assertion (e.g., this parameter will be set to `contract::FROM_DESTRUCTOR` if the contract assertion failed from a destructor):
+[footnote
+The `contract::from` parameter was not part of __N1962__ contract broken handlers but the proposal hinted that it might be needed (need that was confirmed by the implementation of this library).
+]
+
+    void ``/contract-broken-handler/`` ( contract::from const& context )
+
+[important
+In order to comply with the STL exception safety requirements, destructors should never throw.
+Therefore, even if programmers customize the contract broken handlers to throw exceptions instead of terminating, the handlers should never throw when contract assertions fail from a destructor (and the [enumref contract::from] parameter can be used to discriminate this case).
+]
+
+The contract broken handlers are always invoked with an active exception that refers to the exception that failed the contract:
+[footnote
+*Rationale.*
+Exceptions are used to signal a contract assertion failure because it is not possible to directly call the contract broken handler ([funcref contract::precondition_broken], etc) instead of throwing the exception in oder to properly implement subcontracting.
+For example, if an overriding precondition fails but the overridden precondition is true then the library will not call the broken handler even if the overriding precondition threw an exception (as required by subcontracting).
+Contract assertion failures are critical error conditions so it is actually natural that the library uses exceptions to signal them (note that the library will always handle the exceptions by calling the contract broken handlers which terminate the program by default so the fact that the library signals contract assertion failures using exceptions does not imply that an exception will be thrown if a contract assertion fails, that is entirely decided by the implementation of the broken handlers).
+]
+
+# Either an exception that was explicitly thrown by the user from the contract (e.g. `not_a_number` in the example blow).
+# Or, an exception that was thrown ["behind the scene] while evaluating a contract assertion (e.g., the assertion calls an STL algorithm and that throws `std::bad_alloc`).
+# Or, an exception automatically thrown by this library in case a contract assertion is evaluated to be false (these exceptions are always [classref contract::broken] objects and they contained detailed information about the contract assertion that was evaluated to be false: file name, line number, assertion number, and assertion code).
+[footnote
+The assertion number is meaningful only within a specific handler.
+For example, if assertion number `2` failed within the class invariant broken handler that mean that the class invariant number `2` failed.
+Therefore, the assertion number is not useful if a single handler is programmed for all types of contracts because such an handler can no longer distinguish between class invariants, preconditions, postconditions, etc.
+]
+
+In all these cases the contract assertion is considered failed because it was not evaluated to be true (and that is the case not only for assertions that are evaluated to be false but also for assertions that throw exceptions while being evaluated).
+[footnote
+*Rationale.*
+Threating an exception thrown while evaluating an assertion as a failure of the contract assertion is a clear policy established by this library under the principle that a contract assertion fails unless it is evaluated to be true.
+__N1962__ does not completely clarify this point.
+]
+The customized contract broken handlers can re-throw the active exception and catch it so to inspect it for logging or for any other customized behaviour that might need to be implemented by the programmers.
+
+The following example customizes the contract broken handlers to throw exceptions (both user-defined exceptions like `not_a_number` and the [classref contract::broken] exception that the library automatically throws in case of a contract assertion failure).
+However, the customized handlers never throw from within a destructor to comply with STL exception safety requirements (see also [file example/contracts broken_handler_sqrt.cpp]):
+[footnote
+In this example, contract failures from destructors are logged and then simply ignored.
+That might be acceptable in this simple example but it is probably a very bad idea in general.
+]
+
+[import ../example/contracts/broken_handler_sqrt.cpp]
+[broken_handler_sqrt]
+
+Note how the ternary operator `:?` can be used to program assertions that throw exceptions on failure:
+
+    x >= 0.0 ? true : throw not_a_number
+
+Then the contract broken handlers are customized to propagate the exceptions instead of handling them by calling `std::terminate` (default behaviour).
+
+See also [file example/contracts contract_failure.cpp] for a more complex example that redefines the contract broken handlers to throw exceptions in order to automatically check that the correct contract broken handlers are called when assertions fail in accordance with the call semantics explained in the __Contract_Programming_Overview__ section.
+
+[endsect]
+
+[endsect]
+

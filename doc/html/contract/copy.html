@@ -1,0 +1,96 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<title>Class template copy</title>
+<link rel="stylesheet" href="../../../doc/src/boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.76.1">
+<link rel="home" href="../index.html" title="Chapter&#160;1.&#160;Contract++ 0.4.1">
+<link rel="up" href="../reference.html#header.contract.copy_hpp" title="Header &lt;contract/copy.hpp&gt;">
+<link rel="prev" href="../CONTRACT_CONSTRUCTOR_TPL.html" title="Macro CONTRACT_CONSTRUCTOR_TPL">
+<link rel="next" href="../CONTRACT_DESTRUCTOR.html" title="Macro CONTRACT_DESTRUCTOR">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><a href="http://sourceforge.net/projects/contractpp/"><img alt="Logo" width="277" height="86" src="../../../logo.png"></a></td>
+<td align="center"><a href="http://sourceforge.net/projects/contractpp/files/latest/download">Download</a></td>
+<td align="center"><a href="http://sourceforge.net/apps/trac/contractpp/report/3">Bugs</a></td>
+<td align="center"><a href="http://sourceforge.net/projects/contractpp/reviews/">Reviews</a></td>
+<td align="center"><a href="mailto:lorcaminiti@gmail.com">Contact Us</a></td>
+<td align="center"><a href="http://sourceforge.net/projects/contractpp/forums/forum/920163">Help</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="../CONTRACT_CONSTRUCTOR_TPL.html"><img src="../../..//doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../reference.html#header.contract.copy_hpp"><img src="../../..//doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../..//doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="../CONTRACT_DESTRUCTOR.html"><img src="../../..//doc/src/images/next.png" alt="Next"></a>
+</div>
+<div class="refentry">
+<a name="contract.copy"></a><div class="titlepage"></div>
+<div class="refnamediv">
+<h2><span class="refentrytitle">Class template copy</span></h2>
+<p>contract::copy &#8212; Copy result value and old values for postconditions. </p>
+</div>
+<h2 xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="refsynopsisdiv-title">Synopsis</h2>
+<div xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="refsynopsisdiv"><pre class="synopsis"><span class="comment">// In header: &lt;<a class="link" href="../reference.html#header.contract.copy_hpp" title="Header &lt;contract/copy.hpp&gt;">contract/copy.hpp</a>&gt;
+
+</span><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> T<span class="special">&gt;</span> 
+<span class="keyword">class</span> <a class="link" href="copy.html" title="Class template copy">copy</a> <span class="special">{</span>
+<span class="keyword">public</span><span class="special">:</span>
+  <span class="comment">// types</span>
+  <span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">add_reference</span><span class="special">&lt;</span> <span class="keyword">typename</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">add_const</span><span class="special">&lt;</span> <span class="identifier">T</span> <span class="special">&gt;</span><span class="special">::</span><span class="identifier">type</span> <span class="special">&gt;</span><span class="special">::</span><span class="identifier">type</span> <a name="contract.copy.const_reference_type"></a><span class="identifier">const_reference_type</span><span class="special">;</span>
+
+  <span class="comment">// <a class="link" href="copy.html#contract.copyconstruct-copy-destruct">construct/copy/destruct</a></span>
+  <span class="keyword">explicit</span> <a class="link" href="copy.html#id489911-bb"><span class="identifier">copy</span></a><span class="special">(</span><span class="identifier">const_reference_type</span><span class="special">)</span><span class="special">;</span>
+
+  <span class="comment">// <a class="link" href="copy.html#id489895-bb">public member functions</a></span>
+  <span class="identifier">const_reference_type</span> <a class="link" href="copy.html#id489898-bb"><span class="identifier">value</span></a><span class="special">(</span><span class="keyword">void</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span>
+<span class="special">}</span><span class="special">;</span></pre></div>
+<div class="refsect1">
+<a name="id1047414"></a><h2>Description</h2>
+<p>The default implementation of his class template can copy values of any type that is <code class="computeroutput">ConstantCopyConstructible</code> which is of any type <code class="computeroutput">T</code> that has a constant-correct copy constructor of the form:</p>
+<pre class="programlisting">    <span class="identifier">T</span><span class="special">::</span><span class="identifier">T</span><span class="special">(</span> <span class="identifier">T</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">source</span> <span class="special">)</span> <span class="special">;</span>
+</pre>
+<p><span class="bold"><strong>Parameters:</strong></span> </p>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<tbody><tr>
+<td><span class="bold"><strong><code class="computeroutput">T</code></strong></span></td>
+<td>The type of the value to copy (it is either the result type of the type of an old-of expression).  </td>
+</tr></tbody>
+</table></div>
+<p>
+</p>
+<p>Programmers can specialize this class template to copy a specific type differently (and even for types that are not <code class="computeroutput">ConstantCopyConstructible</code>, or not <code class="computeroutput">CopyConstructible</code> at all).</p>
+<p><span class="bold"><strong>Warning:</strong></span> When specializing this class template, programmers must make sure that their code is constant-correct otherwise the contracts will no longer be constant-correct.</p>
+<p><span class="bold"><strong>See also:</strong></span>  <a class="link" href="../contract__/advanced_topics.html" title="Advanced Topics"> Advanced Topics</a> section. </p>
+<div class="refsect2">
+<a name="id1047533"></a><h3>
+<a name="contract.copyconstruct-copy-destruct"></a><code class="computeroutput">copy</code> 
+        public
+       construct/copy/destruct</h3>
+<div class="orderedlist"><ol class="orderedlist" type="1"><li class="listitem">
+<pre class="literallayout"><span class="keyword">explicit</span> <a name="id489911-bb"></a><span class="identifier">copy</span><span class="special">(</span><span class="identifier">const_reference_type</span> value<span class="special">)</span><span class="special">;</span></pre>Construct this object copying the specified value assuming <code class="computeroutput">T</code> has a constant-correct copy constructor. </li></ol></div>
+</div>
+<div class="refsect2">
+<a name="id1047586"></a><h3>
+<a name="id489895-bb"></a><code class="computeroutput">copy</code> public member functions</h3>
+<div class="orderedlist"><ol class="orderedlist" type="1"><li class="listitem">
+<pre class="literallayout"><span class="identifier">const_reference_type</span> <a name="id489898-bb"></a><span class="identifier">value</span><span class="special">(</span><span class="keyword">void</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span></pre>Return a constant reference to the copied value. </li></ol></div>
+</div>
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright &#169; 2008-2012 Lorenzo Caminiti<p>
+        Distributed under the Boost Software License, Version 1.0 (see accompanying
+        file LICENSE_1_0.txt or a copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="../CONTRACT_CONSTRUCTOR_TPL.html"><img src="../../..//doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../reference.html#header.contract.copy_hpp"><img src="../../..//doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../..//doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="../CONTRACT_DESTRUCTOR.html"><img src="../../..//doc/src/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>

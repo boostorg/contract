@@ -1,0 +1,33 @@
+
+[/ Copyright (C) 2008-2012 Lorenzo Caminiti ]
+[/ Distributed under the Boost Software License, Version 1.0 ]
+[/ (see accompanying file LICENSE_1_0.txt or a copy at ]
+[/ http://www.boost.org/LICENSE_1_0.txt) ]
+[/ Home at http://sourceforge.net/projects/contractpp ]
+
+[section Acknowledgments]
+
+This section aims to recognize the contributions of /all/ the different people that participated directly or indirectly to the design and development of this library.
+
+Sincere thanks to my parents for their support with my education and my studies in computer science.
+
+Sincere thanks to Marina for her kindness and continuous support.
+
+Many thanks to Bertrand Meyer for his pioneering and thorough work on Contract Programming in __Meyer97__.
+
+Many thanks to Thorsten Ottosen for his work with __N1962__ (and previous revisions) and for clarifying the __N1962__ requirements directly with the library authors when needed.
+
+Many thanks to Andrzej Krzemienski for reviewing earlier versions of this library providing valuable insights, for exchanging ideas on implementing assertion requirements, and for suggesting to support named parameters.
+
+Many thanks to Vicente J. Botet Escriba for reviewing earlier versions of this library providing valuable insights and for suggesting to sue `contract::copy`.
+
+Thanks to Steven Watanabe for providing valuable insights on C++ and for hinting to use template meta-programming introspection to detect if a base class has a given member function (technique which turned out to be essential to fully automate subcontracting).
+
+Thanks to Dave Abrahams for providing valuable comments on the library syntax and especially on the syntax to support named parameters.
+
+Thanks to David Maley for having shared source code form his inspiring work in __Maley99__ on emulating Contract Programming in C++.
+
+Finally, many thanks to the entire __Boost__ community and [@http://lists.boost.org mailing list] for providing valuable comments about this library and great insights on the C++ programming language.
+
+[endsect]
+

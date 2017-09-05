@@ -1,0 +1,68 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<title>Macro CONTRACT_LOOP_VARIANT</title>
+<link rel="stylesheet" href="../../doc/src/boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.76.1">
+<link rel="home" href="index.html" title="Chapter&#160;1.&#160;Contract++ 0.4.1">
+<link rel="up" href="reference.html#header.contract.loop_variant_hpp" title="Header &lt;contract/loop_variant.hpp&gt;">
+<link rel="prev" href="CONTRACT_LOOP.html" title="Macro CONTRACT_LOOP">
+<link rel="next" href="CONTRACT_LOOP_VARIANT_TPL.html" title="Macro CONTRACT_LOOP_VARIANT_TPL">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><a href="http://sourceforge.net/projects/contractpp/"><img alt="Logo" width="277" height="86" src="../../logo.png"></a></td>
+<td align="center"><a href="http://sourceforge.net/projects/contractpp/files/latest/download">Download</a></td>
+<td align="center"><a href="http://sourceforge.net/apps/trac/contractpp/report/3">Bugs</a></td>
+<td align="center"><a href="http://sourceforge.net/projects/contractpp/reviews/">Reviews</a></td>
+<td align="center"><a href="mailto:lorcaminiti@gmail.com">Contact Us</a></td>
+<td align="center"><a href="http://sourceforge.net/projects/contractpp/forums/forum/920163">Help</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="CONTRACT_LOOP.html"><img src="../..//doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="reference.html#header.contract.loop_variant_hpp"><img src="../..//doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="index.html"><img src="../..//doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="CONTRACT_LOOP_VARIANT_TPL.html"><img src="../..//doc/src/images/next.png" alt="Next"></a>
+</div>
+<div class="refentry">
+<a name="CONTRACT_LOOP_VARIANT"></a><div class="titlepage"></div>
+<div class="refnamediv">
+<h2><span class="refentrytitle">Macro CONTRACT_LOOP_VARIANT</span></h2>
+<p>CONTRACT_LOOP_VARIANT &#8212; Macro used to specify a loop variant. </p>
+</div>
+<h2 xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="refsynopsisdiv-title">Synopsis</h2>
+<div xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="refsynopsisdiv"><pre class="synopsis"><span class="comment">// In header: &lt;<a class="link" href="reference.html#header.contract.loop_variant_hpp" title="Header &lt;contract/loop_variant.hpp&gt;">contract/loop_variant.hpp</a>&gt;
+
+</span>CONTRACT_LOOP_VARIANT(loop_variant)</pre></div>
+<div class="refsect1">
+<a name="id1049599"></a><h2>Description</h2>
+<p>This macro is used to specify loop variants which ensure that loops terminate. This macro must be used within the body <code class="computeroutput">{ ... }</code> of a loop declared using the  <code class="computeroutput"><a class="link" href="CONTRACT_LOOP.html" title="Macro CONTRACT_LOOP">CONTRACT_LOOP</a></code> macro. Each loop can have at most one loop variant.</p>
+<p><span class="bold"><strong>Parameters:</strong></span> </p>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<tbody><tr>
+<td><span class="bold"><strong><code class="computeroutput">loop_variant</code></strong></span></td>
+<td>The loop variant must be a non-negative integral expression that monotonically decreases when calculated at each subsequent loop iteration (constant-expressions can also be used, see the  <a class="link" href="contract__/grammar.html" title="Grammar"> Grammar</a> section).  </td>
+</tr></tbody>
+</table></div>
+<p>
+</p>
+<p>Within type-dependent scope (e.g., within templates), the  <code class="computeroutput"><a class="link" href="CONTRACT_LOOP_VARIANT_TPL.html" title="Macro CONTRACT_LOOP_VARIANT_TPL">CONTRACT_LOOP_VARIANT_TPL</a></code> macro must be used instead of this macro.</p>
+<p><span class="bold"><strong>See also:</strong></span>  <a class="link" href="contract__/advanced_topics.html" title="Advanced Topics"> Advanced Topics</a> section. </p>
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright &#169; 2008-2012 Lorenzo Caminiti<p>
+        Distributed under the Boost Software License, Version 1.0 (see accompanying
+        file LICENSE_1_0.txt or a copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="CONTRACT_LOOP.html"><img src="../..//doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="reference.html#header.contract.loop_variant_hpp"><img src="../..//doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="index.html"><img src="../..//doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="CONTRACT_LOOP_VARIANT_TPL.html"><img src="../..//doc/src/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>

@@ -1,0 +1,100 @@
+
+[/ Copyright (C) 2008-2012 Lorenzo Caminiti ]
+[/ Distributed under the Boost Software License, Version 1.0 ]
+[/ (see accompanying file LICENSE_1_0.txt or a copy at ]
+[/ http://www.boost.org/LICENSE_1_0.txt) ]
+[/ Home at http://sourceforge.net/projects/contractpp ]
+
+[section Introduction]
+
+[@http://en.wikipedia.org/wiki/Design_by_contract Contract Programming] (CP) allows to specify preconditions, postconditions, and class invariants that are automatically checked when functions are executed at run-time.
+These conditions assert program specifications within the source code itself allowing to find bugs more quickly during testing, making the code self-documenting, and increasing overall software quality.
+
+Contract Programming is also known as Design by Contract (DbC)
+[footnote
+Design by Contract is a registered trademark of [@http://en.wikipedia.org/wiki/Eiffel_Software Eiffel Software].
+]
+and it was first introduced by the __Eiffel__ programming language (see __Meyer97__).
+All Contract Programming features of the __Eiffel__ programming language are supported by this library, among others (see also the __Features__ section):
+
+# Support for preconditions, postconditions, class invariants, block invariants, and loop variants.
+# Subcontract derived classes (with support for pure virtual functions and multiple inheritance).
+# Access expression old values and function return value in postconditions.
+# Optional compilation and checking of preconditions, postconditions, class invariants, block invariants, and loop variants.
+# Customizable actions on contract assertion failure (terminate by default but it can throw, exit, etc).
+
+In addition, this library supports virtual specifiers, concept checking, and named parameters which together with contracts specify requirements of the program interface.
+This library is implemented for the __CXX03__ standard and it does not require __CXX11__.
+
+[heading An Example]
+
+The example below shows how to use this library to program contracts for the C++ Standard Template Library (STL) member function [@http://www.sgi.com/tech/stl/BackInsertionSequence.html `std::vector::push_back`] (in order to illustrate subcontracting, the `vector` class inherits from the somewhat arbitrary `pushable` base class).
+The syntax used by this library is compared side-by-side with the syntax proposed by __N1962__ for adding Contract Programming to C++ (see also [@../../example/contracts/push_back.cpp =push_back.cpp=] and [@../../example/contracts/pushable.hpp =pushable.hpp=]):
+
+[import ../example/contracts/push_back.cpp]
+[import ../example/contracts/push_back_lines.cpp]
+[import ../example/contracts/push_back_npaper.cpp]
+[table
+    [ [#] [This Library (C++03)] [N1962 and N2081 Proposals (not adopted by C++11)
+[footnote
+Unfortunately, the Contract Programming proposal __N1962__ and the concept proposal __N2081__ were never adopted by the C++ standard so the example on the right hand side will not compile.
+]   
+    ] ]
+    [ [[push_back_lines]] [[push_back]] [[push_back_npaper]] ]
+]
+
+Classes and functions are declared using the [macroref CONTRACT_CLASS] and [macroref CONTRACT_FUNCTION] macros respectively.
+Class invariants must appear at the very beginning of the class definition and they are specified using the [macroref CONTRACT_CLASS_INVARIANT] macro.
+The `TPL` postfixes indicate versions of the macros that need to be used within templates.
+
+Note the following differences between the syntax used by this library macros and the usual C++ declaration syntax (see the __Differences_with_CXX_Syntax__ section for a complete list):
+
+* Round parenthesis `template( ... )` are used instead of angular parenthesis `template< ... >` to declare templates (line 7).
+* Similarly to __N2081__, the specifier `requires( ... )` is used to specify concepts to check (line 7).
+* The class and function names are wrapped within round parenthesis `(vector)` and `(push_back)` (lines 8 and 18).
+* The specifier `extends( ... )` is used instead of the column symbol `:` to inherit from base classes (line 8).
+This automatically subcontracts `vector` from `pushable` (when subcontracting, derived and base preconditions are checked in __logic_or__, derived and base postconditions are checked in __logic_and__, derived and base class invariants are checked __logic_and__).
+* The access level `public`, `protected`, or `private` must always be specified for member functions but without the trailing column symbol `:` (line 18).
+* The function result and parameter types are wrapped within round parenthesis `(T const&)` (line 18).
+The parenthesis are allowed but not required for fundamental types that contain no symbol (e.g., the function result type `void` at line 18, but also `bool`, `unsigned int const`, etc).
+* Similarly to __CXX11__, the specifier `override` is used to check that a member function is indeed overriding a base member function (line 18).
+* The specifiers `precondition( ... )` and `postcondition( ... )` are used to program function preconditions and postconditions (lines 19 and 22).
+Furthermore, the [macroref CONTRACT_OLDOF] macro can be used within postconditions to declare variables and initialize them to old values that the specified expressions had before executing the function body (line 23).
+* Class invariants, preconditions, and postconditions assert boolean expressions separated by commas `,` (lines 11, 20, and 24).
+
+Finally, note that the class and function definitions are programmed outside the macros so they retain their usual C++ syntax (e.g., the function body at line 27).
+
+The library executes the following steps when the `push_back` function is called at run-time (see also the __Contract_Programming_Overview__ section):
+
+# First, the class invariants and the function preconditions are checked.
+# Then, the function body is executed.
+# Last, the class invariants and the function postconditions are checked.
+
+For example, if there is a bug in the function caller for which `push_back` is called when `size` is equal to `max_size` then the execution of the program will be interrupted reporting a failure of the first assertion in the preconditions and it will be evident that the bug is in the caller:
+
+[pre
+    precondition number 1 "size() < max_size()" failed: file "push_back.cpp", line 26
+]
+
+Instead, if there is a bug in the `push_back` implementation for which `size` is not increased by one after `value` is added to `vector` by the function body then the execution will be interrupted reporting a failure of the first assertion in the postconditions and it will be evident that the bug is in `push_back` body:
+
+[pre
+    postcondition number 1 "size() == old_size + 1" failed: file "push_back.cpp", line 26
+]
+
+By default, when assertions fail this library prints the above error messages to the standard error `std::cerr` and it terminates the program calling `std::terminate` (this behaviour can be customized to throw an exception, exit the program, etc, see the __Broken_Contracts__ section).
+Note that the library error messages contain enough information to uniquely identify the contract failure: Assertion type (class invariant, precondition, postcondition, etc), assertion number, asserted expression, file name, and line number.
+(The line number refers to the single line on which each macro expands so it will be the same for class invariants, preconditions, and postconditions of a given class or function but it can still be used together with the assertion number to uniquely identity which assertion failed.)
+
+[heading Language Support]
+
+This library suffers of two limitations:
+
+# The unusual syntax used to declare classes and functions within the macros which causes cryptic compiler errors when not used correctly (syntax error checking and reporting could be somewhat improved in future revisions of the library but there are fundamental limitations on what can be done using the preprocessor, see also the [link syntax_error_warning_anchor Grammar] section).
+# High compilation times (the authors will try to reduce compilation times in future revisions of the library, see also the [link compilation_time_warning_anchor Cost]  section).
+
+With the addition of contracts, concepts, and named parameters, C++ could introduce formal program specification into main-stream programming.
+The authors wish the work done in developing this library will persuade the C++ community and the C++ standard committee to add these features to the core language so to support formal program specification without the unusual macro syntax and avoiding high compilation times (unfortunately, this has not been the direction taken for __CXX11__ with the rejection of the concept proposal __N2081__ and the lack of consideration for the Contract Programming proposal __N1962__, but there might still be hope for C++1x with x > 1).
+
+[endsect]
+

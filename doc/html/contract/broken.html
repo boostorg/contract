@@ -1,0 +1,109 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<title>Class broken</title>
+<link rel="stylesheet" href="../../../doc/src/boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.76.1">
+<link rel="home" href="../index.html" title="Chapter&#160;1.&#160;Contract++ 0.4.1">
+<link rel="up" href="../reference.html#header.contract.broken_hpp" title="Header &lt;contract/broken.hpp&gt;">
+<link rel="prev" href="../CONTRACT_DESTRUCTOR_BODY.html" title="Macro CONTRACT_DESTRUCTOR_BODY">
+<link rel="next" href="from.html" title="Type from">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><a href="http://sourceforge.net/projects/contractpp/"><img alt="Logo" width="277" height="86" src="../../../logo.png"></a></td>
+<td align="center"><a href="http://sourceforge.net/projects/contractpp/files/latest/download">Download</a></td>
+<td align="center"><a href="http://sourceforge.net/apps/trac/contractpp/report/3">Bugs</a></td>
+<td align="center"><a href="http://sourceforge.net/projects/contractpp/reviews/">Reviews</a></td>
+<td align="center"><a href="mailto:lorcaminiti@gmail.com">Contact Us</a></td>
+<td align="center"><a href="http://sourceforge.net/projects/contractpp/forums/forum/920163">Help</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="../CONTRACT_DESTRUCTOR_BODY.html"><img src="../../..//doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../reference.html#header.contract.broken_hpp"><img src="../../..//doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../..//doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="from.html"><img src="../../..//doc/src/images/next.png" alt="Next"></a>
+</div>
+<div class="refentry">
+<a name="contract.broken"></a><div class="titlepage"></div>
+<div class="refnamediv">
+<h2><span class="refentrytitle">Class broken</span></h2>
+<p>contract::broken &#8212; Exception automatically thrown by the library to signal a contract assertion failure. </p>
+</div>
+<h2 xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="refsynopsisdiv-title">Synopsis</h2>
+<div xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="refsynopsisdiv"><pre class="synopsis"><span class="comment">// In header: &lt;<a class="link" href="../reference.html#header.contract.broken_hpp" title="Header &lt;contract/broken.hpp&gt;">contract/broken.hpp</a>&gt;
+
+</span>
+<span class="keyword">class</span> <a class="link" href="broken.html" title="Class broken">broken</a> <span class="special">{</span>
+<span class="keyword">public</span><span class="special">:</span>
+  <span class="comment">// <a class="link" href="broken.html#contract.brokenconstruct-copy-destruct">construct/copy/destruct</a></span>
+  <span class="keyword">explicit</span> <a class="link" href="broken.html#id488229-bb"><span class="identifier">broken</span></a><span class="special">(</span><span class="keyword">char</span> <span class="keyword">const</span> <span class="special">*</span><span class="special">,</span> <span class="keyword">unsigned</span> <span class="keyword">long</span> <span class="keyword">const</span> <span class="special">&amp;</span><span class="special">,</span> <span class="keyword">char</span> <span class="keyword">const</span> <span class="special">*</span><span class="special">,</span> 
+                  <span class="keyword">unsigned</span> <span class="keyword">int</span> <span class="keyword">const</span> <span class="special">&amp;</span> <span class="special">=</span> <span class="number">0</span><span class="special">)</span><span class="special">;</span>
+  <a class="link" href="broken.html#id488259-bb"><span class="identifier">broken</span></a><span class="special">(</span><a class="link" href="broken.html" title="Class broken">broken</a> <span class="keyword">const</span> <span class="special">&amp;</span><span class="special">)</span><span class="special">;</span>
+  broken&amp; <a class="link" href="broken.html#id488270-bb"><span class="keyword">operator</span><span class="special">=</span></a><span class="special">(</span><a class="link" href="broken.html" title="Class broken">broken</a> <span class="keyword">const</span> <span class="special">&amp;</span><span class="special">)</span><span class="special">;</span>
+  <a class="link" href="broken.html#id488281-bb"><span class="special">~</span><span class="identifier">broken</span></a><span class="special">(</span><span class="keyword">void</span><span class="special">)</span><span class="special">;</span>
+
+  <span class="comment">// <a class="link" href="broken.html#id488152-bb">public member functions</a></span>
+  <span class="keyword">char</span> <span class="keyword">const</span> <span class="special">*</span> <a class="link" href="broken.html#id488155-bb"><span class="identifier">what</span></a><span class="special">(</span><span class="keyword">void</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span>
+  <span class="keyword">char</span> <span class="keyword">const</span> <span class="special">*</span> <a class="link" href="broken.html#id488169-bb"><span class="identifier">file_name</span></a><span class="special">(</span><span class="keyword">void</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span>
+  <span class="keyword">unsigned</span> <span class="keyword">long</span> <span class="keyword">const</span> <a class="link" href="broken.html#id488182-bb"><span class="identifier">line_number</span></a><span class="special">(</span><span class="keyword">void</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span>
+  <span class="keyword">char</span> <span class="keyword">const</span> <span class="special">*</span> <a class="link" href="broken.html#id488196-bb"><span class="identifier">assertion_code</span></a><span class="special">(</span><span class="keyword">void</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span>
+  <span class="keyword">unsigned</span> <span class="keyword">int</span> <span class="keyword">const</span> <a class="link" href="broken.html#id488210-bb"><span class="identifier">assertion_number</span></a><span class="special">(</span><span class="keyword">void</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span>
+<span class="special">}</span><span class="special">;</span></pre></div>
+<div class="refsect1">
+<a name="id1043225"></a><h2>Description</h2>
+<p>This exception contains detailed information about the failed contract assertion (file name, line number, etc).</p>
+<p>A contract assertion is considered failed if it cannot be evaluated to be true (so if it is evaluated to be false but also if an exception is thrown by the code that evaluates the assertion condition). In case a contract assertion fails, the library automatically calls the appropriate contract broken handler with this exception as the active exception (the fact that assertion failures are signaled by this library by throwing this exception does not necessarily mean that the exception will be ultimately thrown by the broken contract, that is entirely up to the implementation of the contract broken handlers). By default, contract broken handlers print an error message to <code class="computeroutput">std::cerr</code> and terminate the program calling <code class="computeroutput">std::terminate</code>, but programmers can redefine this behaviour by customizing the contract broken handlers (for example to have the handlers throw exceptions instead of terminating the program). Within customized contract broken handlers, programmers can re-throw and catch this exception to obtained information about the failed asserted condition (file name, line number, etc).</p>
+<p><span class="bold"><strong>Note:</strong></span> This exception is guaranteed to publicly inherit from <code class="computeroutput">std::logic_error</code> (because <code class="computeroutput">std::logic_error</code> models programming errors and those are the type of errors that contract assertions detect).</p>
+<p><span class="bold"><strong>See also:</strong></span>  <a class="link" href="../contract__/advanced_topics.html" title="Advanced Topics"> Advanced Topics</a> section. </p>
+<div class="refsect2">
+<a name="id1043269"></a><h3>
+<a name="contract.brokenconstruct-copy-destruct"></a><code class="computeroutput">broken</code> 
+        public
+       construct/copy/destruct</h3>
+<div class="orderedlist"><ol class="orderedlist" type="1">
+<li class="listitem">
+<pre class="literallayout"><span class="keyword">explicit</span> <a name="id488229-bb"></a><span class="identifier">broken</span><span class="special">(</span><span class="keyword">char</span> <span class="keyword">const</span> <span class="special">*</span> file_name<span class="special">,</span> <span class="keyword">unsigned</span> <span class="keyword">long</span> <span class="keyword">const</span> <span class="special">&amp;</span> line_number<span class="special">,</span> 
+                <span class="keyword">char</span> <span class="keyword">const</span> <span class="special">*</span> assertion_code<span class="special">,</span> 
+                <span class="keyword">unsigned</span> <span class="keyword">int</span> <span class="keyword">const</span> <span class="special">&amp;</span> assertion_number <span class="special">=</span> <span class="number">0</span><span class="special">)</span><span class="special">;</span></pre>Construct this exception specifying the failed assertion file name, line number, assertion code, and assertion number (no-throw). <p>The assertion number is optional and it defaults to zero (an assertion number equal to zero is ignored and not shown in the error description). </p>
+</li>
+<li class="listitem">
+<pre class="literallayout"><a name="id488259-bb"></a><span class="identifier">broken</span><span class="special">(</span><a class="link" href="broken.html" title="Class broken">broken</a> <span class="keyword">const</span> <span class="special">&amp;</span> source<span class="special">)</span><span class="special">;</span></pre>Copy constructor (no-throw). </li>
+<li class="listitem">
+<pre class="literallayout">broken&amp; <a name="id488270-bb"></a><span class="keyword">operator</span><span class="special">=</span><span class="special">(</span><a class="link" href="broken.html" title="Class broken">broken</a> <span class="keyword">const</span> <span class="special">&amp;</span> source<span class="special">)</span><span class="special">;</span></pre>Copy operator (no-throw). </li>
+<li class="listitem">
+<pre class="literallayout"><a name="id488281-bb"></a><span class="special">~</span><span class="identifier">broken</span><span class="special">(</span><span class="keyword">void</span><span class="special">)</span><span class="special">;</span></pre>Virtual destructor (no-throw). </li>
+</ol></div>
+</div>
+<div class="refsect2">
+<a name="id1043591"></a><h3>
+<a name="id488152-bb"></a><code class="computeroutput">broken</code> public member functions</h3>
+<div class="orderedlist"><ol class="orderedlist" type="1">
+<li class="listitem">
+<pre class="literallayout"><span class="keyword">char</span> <span class="keyword">const</span> <span class="special">*</span> <a name="id488155-bb"></a><span class="identifier">what</span><span class="special">(</span><span class="keyword">void</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span></pre>Return a description of the assertion failure (no-throw). </li>
+<li class="listitem">
+<pre class="literallayout"><span class="keyword">char</span> <span class="keyword">const</span> <span class="special">*</span> <a name="id488169-bb"></a><span class="identifier">file_name</span><span class="special">(</span><span class="keyword">void</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span></pre>Return the name of the file containing the failed assertion (no-throw). </li>
+<li class="listitem">
+<pre class="literallayout"><span class="keyword">unsigned</span> <span class="keyword">long</span> <span class="keyword">const</span> <a name="id488182-bb"></a><span class="identifier">line_number</span><span class="special">(</span><span class="keyword">void</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span></pre>Return the number of the line containing the failed assertion (no-throw). </li>
+<li class="listitem">
+<pre class="literallayout"><span class="keyword">char</span> <span class="keyword">const</span> <span class="special">*</span> <a name="id488196-bb"></a><span class="identifier">assertion_code</span><span class="special">(</span><span class="keyword">void</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span></pre>Return the text of the asserted code that failed (no-throw). </li>
+<li class="listitem">
+<pre class="literallayout"><span class="keyword">unsigned</span> <span class="keyword">int</span> <span class="keyword">const</span> <a name="id488210-bb"></a><span class="identifier">assertion_number</span><span class="special">(</span><span class="keyword">void</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span></pre>Return the number of the failed assertion (no-throw). <p>The assertion number is useful only within the context of a specific contract broken handler that can differentiates between broken preconditions, postconditions, etc because different preconditions, postconditions, etc will in general have the same assertion number (the first precondition is assertion number 1, the first postcondition is also assertion number 1, etc).</p>
+<p>If this number is zero then no sensible assertion number was specified and it should be ignored (e.g., loop variant assertions have no assertion number because there can only be one single variant for a loop). </p>
+</li>
+</ol></div>
+</div>
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright &#169; 2008-2012 Lorenzo Caminiti<p>
+        Distributed under the Boost Software License, Version 1.0 (see accompanying
+        file LICENSE_1_0.txt or a copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="../CONTRACT_DESTRUCTOR_BODY.html"><img src="../../..//doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../reference.html#header.contract.broken_hpp"><img src="../../..//doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../..//doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="from.html"><img src="../../..//doc/src/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>

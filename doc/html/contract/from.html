@@ -1,0 +1,72 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<title>Type from</title>
+<link rel="stylesheet" href="../../../doc/src/boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.76.1">
+<link rel="home" href="../index.html" title="Chapter&#160;1.&#160;Contract++ 0.4.1">
+<link rel="up" href="../reference.html#header.contract.broken_hpp" title="Header &lt;contract/broken.hpp&gt;">
+<link rel="prev" href="broken.html" title="Class broken">
+<link rel="next" href="broken_contract_handler.html" title="Type definition broken_contract_handler">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><a href="http://sourceforge.net/projects/contractpp/"><img alt="Logo" width="277" height="86" src="../../../logo.png"></a></td>
+<td align="center"><a href="http://sourceforge.net/projects/contractpp/files/latest/download">Download</a></td>
+<td align="center"><a href="http://sourceforge.net/apps/trac/contractpp/report/3">Bugs</a></td>
+<td align="center"><a href="http://sourceforge.net/projects/contractpp/reviews/">Reviews</a></td>
+<td align="center"><a href="mailto:lorcaminiti@gmail.com">Contact Us</a></td>
+<td align="center"><a href="http://sourceforge.net/projects/contractpp/forums/forum/920163">Help</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="broken.html"><img src="../../..//doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../reference.html#header.contract.broken_hpp"><img src="../../..//doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../..//doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="broken_contract_handler.html"><img src="../../..//doc/src/images/next.png" alt="Next"></a>
+</div>
+<div class="refentry">
+<a name="contract.from"></a><div class="titlepage"></div>
+<div class="refnamediv">
+<h2><span class="refentrytitle">Type from</span></h2>
+<p>contract::from &#8212; Specify the context from which the contract assertion failed. </p>
+</div>
+<h2 xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="refsynopsisdiv-title">Synopsis</h2>
+<div xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="refsynopsisdiv"><pre class="synopsis"><span class="comment">// In header: &lt;<a class="link" href="../reference.html#header.contract.broken_hpp" title="Header &lt;contract/broken.hpp&gt;">contract/broken.hpp</a>&gt;
+
+</span>
+
+<span class="keyword">enum</span> <span class="identifier">from</span> <span class="special">{</span> <a class="link" href="from.html#contract.from.FROM_CONSTRUCTOR">FROM_CONSTRUCTOR</a>, <a class="link" href="from.html#contract.from.FROM_DESTRUCTOR">FROM_DESTRUCTOR</a>, <a class="link" href="from.html#contract.from.FROM_NONSTATIC_MEMBER_FUNCTION">FROM_NONSTATIC_MEMBER_FUNCTION</a>, 
+            <a class="link" href="from.html#contract.from.FROM_STATIC_MEMBER_FUNCTION">FROM_STATIC_MEMBER_FUNCTION</a>, <a class="link" href="from.html#contract.from.FROM_FREE_FUNCTION">FROM_FREE_FUNCTION</a>, <a class="link" href="from.html#contract.from.FROM_BODY">FROM_BODY</a> <span class="special">}</span><span class="special">;</span></pre></div>
+<div class="refsect1">
+<a name="id1043925"></a><h2>Description</h2>
+<p>This information is important because in order to comply with STL exception safety requirements, destructors shall never throw an exception. Therefore, even if programmers customize the contract broken handlers to throw an exception instead of terminating the program, it is still important to know at least if the assertion failed from a destructor's contract so programmers can avoid throwing an exception from the broken handlers in such a case.</p>
+<p><span class="bold"><strong>Note:</strong></span> All the different contexts identified by this enumeration have different contract checking semantics (see also  <a class="link" href="../contract__/contract_programming_overview.html" title="Contract Programming Overview"> Contract Programming Overview</a>) so it might be relevant to differentiate between them in the contract broken handlers.</p>
+<p><span class="bold"><strong>See also:</strong></span>  <a class="link" href="../contract__/advanced_topics.html" title="Advanced Topics"> Advanced Topics</a> section. </p>
+<div class="variablelist"><dl>
+<dt><span class="term"><code class="computeroutput">FROM_CONSTRUCTOR</code><a name="contract.from.FROM_CONSTRUCTOR"></a></span></dt>
+<dd>Assertion failed from within constructor contracts. </dd>
+<dt><span class="term"><code class="computeroutput">FROM_DESTRUCTOR</code><a name="contract.from.FROM_DESTRUCTOR"></a></span></dt>
+<dd>Assertion failed from within destructor contracts. </dd>
+<dt><span class="term"><code class="computeroutput">FROM_NONSTATIC_MEMBER_FUNCTION</code><a name="contract.from.FROM_NONSTATIC_MEMBER_FUNCTION"></a></span></dt>
+<dd>Assertion failed from within non-static member function contracts. </dd>
+<dt><span class="term"><code class="computeroutput">FROM_STATIC_MEMBER_FUNCTION</code><a name="contract.from.FROM_STATIC_MEMBER_FUNCTION"></a></span></dt>
+<dd>Assertion failed from within static member function contracts. </dd>
+<dt><span class="term"><code class="computeroutput">FROM_FREE_FUNCTION</code><a name="contract.from.FROM_FREE_FUNCTION"></a></span></dt>
+<dd>Assertion failed from within free function contracts. </dd>
+<dt><span class="term"><code class="computeroutput">FROM_BODY</code><a name="contract.from.FROM_BODY"></a></span></dt>
+<dd>Assertion failed from within body contracts (for both block invariants and loop variants). </dd>
+</dl></div>
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright &#169; 2008-2012 Lorenzo Caminiti<p>
+        Distributed under the Boost Software License, Version 1.0 (see accompanying
+        file LICENSE_1_0.txt or a copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="broken.html"><img src="../../..//doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../reference.html#header.contract.broken_hpp"><img src="../../..//doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../..//doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="broken_contract_handler.html"><img src="../../..//doc/src/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>

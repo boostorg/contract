@@ -1,0 +1,888 @@
+
+[/ Copyright (C) 2008-2012 Lorenzo Caminiti ]
+[/ Distributed under the Boost Software License, Version 1.0 ]
+[/ (see accompanying file LICENSE_1_0.txt or a copy at ]
+[/ http://www.boost.org/LICENSE_1_0.txt) ]
+[/ Home at http://sourceforge.net/projects/contractpp ]
+
+[def __assertion__ [link assertion_anchor [^['assertion]]]]
+[def __assertion_condition__ [link assertion_condition_anchor [^['assertion-condition]]]]
+[def __assertion_expression__ [link assertion_expression_anchor [^['assertion-expression]]]]
+[def __assertions__ [link assertions_anchor [^['assertions]]]]
+[def __base_classes__ [link base_classes_anchor [^['base-classes]]]]
+[def __boolean_condition__ [link boolean_condition_anchor [^['boolean-condition]]]]
+[def __class_declaration__ [link class_declaration_anchor [^['class-declaration]]]]
+[def __class_invariant__ [link class_invariant_anchor [^['class-invariant]]]]
+[def __class_invariants__ [link class_invariants_anchor [^['class-invariants]]]]
+[def __concepts__ [link concepts_anchor [^['concepts]]]]
+[def __exception_specifications__ [link exception_specifications_anchor [^['exception-specifications]]]]
+[def __function_declaration__ [link function_declaration_anchor [^['function-declaration]]]]
+[def __function_name__ [link function_name_anchor [^['function-name]]]]
+[def __function_parameters__ [link function_parameters_anchor [^['function-parameters]]]]
+[def __fundamental_type__ [link fundamental_type_anchor [^['fundamental-type]]]]
+[def __inscope_variables__ [link inscope_variables_anchor [^['inscope-variables]]]]
+[def __loop_variant__ [link loop_variant_anchor [^['loop-variant]]]]
+[def __member_initializers__ [link member_initializers_anchor [^['member-initializers]]]]
+[def __named_function_parameter__ [link named_function_parameter_anchor [^['named-function-parameter]]]]
+[def __named_function_parameters__ [link named_function_parameters_anchor [^['named-function-parameters]]]]
+[def __named_parameter_declaration__ [link named_parameter_declaration_anchor [^['named-parameter-declaration]]]]
+[def __named_template_parameter__ [link named_template_parameter_anchor [^['named-template-parameter]]]]
+[def __named_template_parameters__ [link named_template_parameters_anchor [^['named-template-parameters]]]]
+[def __named_template_template_parameter__ [link named_template_template_parameter_anchor [^['named-template-template-parameter]]]]
+[def __named_type_template_parameter__ [link named_type_template_parameter_anchor [^['named-type-template-parameter]]]]
+[def __named_value_template_parameter__ [link named_value_template_parameter_anchor [^['named-value-template-parameter]]]]
+[def __oldof_declaration__ [link oldof_declaration_anchor [^['oldof-declaration]]]]
+[def __operator_name__ [link operator_name_anchor [^['operator-name]]]]
+[def __positional_function_parameter__ [link positional_function_parameter_anchor [^['positional-function-parameter]]]]
+[def __positional_function_parameters__ [link positional_function_parameters_anchor [^['positional-function-parameters]]]]
+[def __positional_template_parameter__ [link positional_template_parameter_anchor [^['positional-template-parameter]]]]
+[def __positional_template_parameters__ [link positional_template_parameters_anchor [^['positional-template-parameters]]]]
+[def __positional_template_template_parameter__ [link positional_template_template_parameter_anchor [^['positional-template-template-parameter]]]]
+[def __positional_type_template_parameter__ [link positional_type_template_parameter_anchor [^['positional-type-template-parameter]]]]
+[def __positional_value_template_parameter__ [link positional_value_template_parameter_anchor [^['positional-value-template-parameter]]]]
+[def __result_oldof_assertions__ [link result_oldof_assertions_anchor [^['result-oldof-assertions]]]]
+[def __result_type__ [link result_type_anchor [^['result-type]]]]
+[def __select_assertion__ [link select_assertion_anchor [^['select-assertion]]]]
+[def __template_parameters__ [link template_parameters_anchor [^['template-parameters]]]]
+[def __template_specializations__ [link template_specializations_anchor [^['template-specializations]]]]
+[def __type_keyword__ [link type_keyword_anchor [^['type-keyword]]]]
+[def __type_qualifier__ [link type_qualifier_anchor [^['type-qualifier]]]]
+[def __wrapped_type__ [link wrapped_type_anchor [^['wrapped-type]]]]
+
+[def __boolean_expression__ [link boolean_expression_anchor [^[*boolean-expression]]]]
+[def __boolean_expression_using_inscope_variables__ [link boolean_expression_using_inscope_variables_anchor [^[*boolean-expression-using-inscope-variables]]]]
+[def __boost_concept__ [link boost_concept_anchor [^[*boost-concept]]]]
+[def __catch_declaration__ [link catch_declaration_anchor [^[*catch-declaration]]]]
+[def __catch_instructions__ [link catch_instructions_anchor [^[*catch-instructions]]]]
+[def __class_name__ [link class_name_anchor [^[*class-name]]]]
+[def __class_type__ [link class_type_anchor [^[*class-type]]]]
+[def __constant_boolean_expression__ [link constant_boolean_expression_anchor [^[*constant-boolean-expression]]]]
+[def __constant_string_literal__ [link constant_string_literal_anchor [^[*constant-string-literal]]]]
+[def __exception_type__ [link exception_type_anchor [^[*exception-type]]]]
+[def __function_identifier__ [link function_identifier_anchor [^[*function-identifier]]]]
+[def __inscope_variable__ [link inscope_variable_anchor [^[*inscope-variable]]]]
+[def __loop_declaration__ [link loop_declaration_anchor [^[*loop-declaration]]]]
+[def __member_initializer__ [link member_initializer_anchor [^[*member-initializer]]]]
+[def __named_argument_identifier_name__ [link named_argument_identifier_anchor [^[*named-argument-identifier]]]]
+[def __named_parameter_identifier_namespace__ [link named_parameter_identifier_namespace_anchor [^[*named-parameter-identifier-namespace]]]]
+[def __namespace_alias__ [link namespace_alias_anchor [^[*namespace-alias]]]]
+[def __natural_expression__ [link natural_expression_anchor [^[*natural-expression]]]]
+[def __natural_expression_using_inscope_variables__ [link natural_expression_using_inscope_variables_anchor [^[*natural-expression-using-inscope-variables]]]]
+[def __new_type_name__ [link new_type_name_anchor [^[*new-type-name]]]]
+[def __oldof_expression__ [link oldof_expression_anchor [^[*oldof-expression]]]]
+[def __operator_identifier__ [link operator_identifier_anchor [^[*operator-identifier]]]]
+[def __operator_symbol__ [link operator_symbol_anchor [^[*operator-symbol]]]]
+[def __parameter_default__ [link parameter_default_anchor [^[*parameter-default]]]]
+[def __parameter_name__ [link parameter_name_anchor [^[*parameter-name]]]]
+[def __template_parameter__ [link template_parameter_anchor [^[*template-parameter]]]]
+[def __template_specialization__ [link template_specialization_anchor [^[*template-specialization]]]]
+[def __type__ [link type_anchor [^[*type]]]]
+[def __typedef_type__ [link typedef_type_anchor [^[*typedef-type]]]]
+[def __unary_boolean_metafunction__ [link unary_boolean_metafunction_anchor [^[*unary-boolean-metafunction]]]]
+[def __using_directive__ [link using_directive_anchor [^[*using-directive]]]]
+[def __variable_name__ [link variable_name_anchor [^[*variable-name]]]]
+
+[section Grammar]
+
+[:['["Almost every macro demonstrates a flaw in the programming language, in the program, or in the programmer.]]]
+[:['--Stroustrup (see __Stroustrup97__ page 160)]]
+
+This library uses macros to overcome a limitation of C++, namely the fact that the core language does not support preconditions, postconditions, class invariants, old values, and subcontracting.
+This section lists the complete grammar of the syntax used by this library macros.
+
+[#syntax_error_warning_anchor]
+[warning
+In general, an error in programming this library syntax will generate cryptic compiler errors (often exposing internal code from this library and from __Boost_Preprocessor__).
+[footnote
+Usually, the complexity of C++ definitions is greater than the complexity of C++ declaration and the fact that this library macros only affect declarations would help by preserving the usefulness of the compiler error messages for the definition code.
+However, this library aims to make declarations more complex by adding program specifications to them (preconditions, postconditions, etc).
+Therefore, it can no longer be argued that declarations are significantly simpler than definitions and it would be rather helpful to have sensible compiler error messages at least for the declarations with contracts.
+]
+
+There are intrinsic limitations on the amount of error checking that can be implemented by this library because it uses the preprocessor to parse its syntax (e.g., there is no way the preprocessor can gracefully detect and report unbalanced round parenthesis `( ... /* missing closing parenthesis here */` or an invalid concatenation symbol `BOOST_PP_CAT(xyz, ::std::vector)`).
+In addition, for a given macro all compiler error messages report the same line number (because macros always expand on a single line) so line numbers are not very useful in identifying syntactic errors.
+
+While the preprocessor imposes limits on the error checking that can be implemented, the current version of this library does not focus on providing the best possible syntax error messages (this will be the focus of future releases, see also [@https://sourceforge.net/apps/trac/contractpp/ticket/44 Ticket 44]).
+]
+
+The best way to resolve syntactic errors is for programmers to inspect the code ["by eye] instead of trying to make sense of the compiler errors.
+This section is very useful for programmers to make sure that they are using the syntax correctly.
+
+[section Preprocessor DSEL]
+
+The syntax used by this library macros effectively defies a new language within C++.
+More precisely, this library macros define a [@http://en.wikipedia.org/wiki/Domain-specific_language Domain-Specific Embedded Language (DSEL)] that replaces the usual C++ syntax for class and function declarations.
+This is the ['Language of Contract++] (or ['LC++] for short).
+
+In contrast with other DSEL hosted by C++ which are parsed using template meta-programming (e.g., __Boost_Phoenix__), this library DSEL is parsed ["one meta-programming level higher] using preprocessor meta-programming.
+Using both processor meta-programming and template meta-programming allows this library to implement rules like this:
+
+    ``/if a member function is not public then it does not check the class invariants/``
+
+This rule cannot be implemented using only template meta-programming because it is not possible to check if a function is public using template meta-programming introspection techniques.
+For example, it is not possible to implement a boolean meta-function like the following:
+[footnote
+Using __CXX11__, it /might/ be possible to implement the `is_public` template because __SFINAE__ was extended to support access level (but to the authors' knowledge such a meta-function has not been implemented yet so the authors cannot be sure that `is_public` can be properly implemented even using __CXX11__ __SFINAE__).
+Even if that were possible in __CXX11__, this library still needs declaration traits other than `public` in oder to properly implement Contract Programming (e.g., if a function is `virtual` or not in order to implement subcontracting, and there are examples like that).
+Therefore, the arguments made here for the need to use a preprocessor DSEL in oder to properly implement Contract Programming in C++ hold even if `is_public` could be implemented in __CXX11__.
+]
+
+    template< ... >
+    struct is_public { ... }; // Unfortunately, this cannot be implemented.
+
+Instead a macro can be programmed to parse the following function declarations and expand to `1` if and only if the function is public:
+
+    #define IS_PUBLIC(function_declaration) ... // This can be implemented.
+
+    IS_PUBLIC( public  void (f) ( int x ) )     // Expand to 1.
+    IS_PUBLIC( private void (g) ( int y ) )     // Expand to 0.
+    IS_PUBLIC(         void (h) ( int z ) )     // Expand to 0.
+
+There are more examples of class and function declaration traits (`virtual`, etc) that need to be known to correctly implement Contract Programming but that cannot be inspected using template meta-programming.
+This library macros can instead parse the specified class and function declarations extracting /any/ declaration trait (if a constructor is `explicit`, if a member function is `virtual`, if a base class is `protected`, if a parameter has a default value, etc).
+
+It should be noted that while the syntax of the DSEL defined by this library macros is rather extensive and complex, macros always define a DSEL that is intrinsically different from the core C++ language.
+For example, consider the following function-like macro:
+
+    #define F(x, y) (int(x) - int(y))
+
+    template< typename X, typename Y >
+    int f ( X const& x, Y const& y ) { return (int(x) - int(y)); }
+
+    int main ( void )
+    {
+        std::cout << F( , 2) << std::endl; // OK, no syntax error, it prints `-2`.
+        std::cout << f( , 2) << std::endl; // Compiler generates a syntax error.
+        return 0;
+    }
+
+Note how it is valid to invoke the macro with an empty parameter `F( , 2)` while it is syntactically invalid to invoke a function with an empty parameter `f( , 2)`.
+This very simple macro already shows fundamental differences between the syntax of macros and the syntax of the core language.
+
+[endsect]
+
+[section Differences with C++ Syntax]
+
+The following is a summary of all the differences between the syntax of this library macros and the usual C++ class and function declaration syntax.
+
+[table
+[ [Rule] [Syntactic Element] [Syntax Differences] ]
+[ [1] [Template Declarations] [
+Use round parenthesis `template( `[^['template-parameters]]` )` instead of angular parenthesis `template< `[^['template-parameters]]` >` to declare templates (note that template instantiations are not template declarations and they use angular parenthesis as usual).
+] ]
+[ [2] [Template Specializations] [
+Use round parenthesis `( `[^['template-specializations]]` )` instead of angular parenthesis `< `[^['template-specializations]]` >` after a class template name to specify template specialization arguments.
+] ]
+[ [3] [Class, Function, and Operator Names] [
+Wrap class and function declaration names within round parenthesis `(`[^['class-name]]`)` and `(`[^['function-name]]`)`.
+Use `operator(`[^['symbol]]`)(`[^['arbitrary-name]]`)` for operators (allowed but not required for `operator new`, `operator delete`, and implicit type conversion operators for fundamental types with no symbol).
+Always use `operator comma` for comma operator.
+Memory member operators must always be explicitly declared `static`.
+] ]
+[ [4] [Base Classes] [
+Use `extends( `[^['base-classes]]` )` instead of the column symbol `: `[^['base-classes]] to inherit from base classes.
+] ]
+[ [5] [Default Parameters] [
+Use `default `[^['parameter-default]] instead of the assignment symbol `= `[^['parameter-default]] to specify template and function parameter default values.
+] ]
+[ [6] [Member Access Levels] [
+Always specify the access level `public`, `protected`, or `private` (note no trailing comma `:`) for every constructor, destructor, member function, and nested class declaration.
+] ]
+[ [7] [Result and Parameter Types] [
+Wrap function result and parameter types within round parenthesis `(`[^['type]]`)`.
+The wrapping parenthesis are allowed but not required for fundamental types containing only alphanumeric tokens (e.g., both `(const unsigned int)` and `const unsigned int` are allowed, only `(int&)` and not `int&` is allowed because of the non-alphanumeric symbol `&`, only `(mytype)` is allowed because `mytype` is not a fundamental type).
+] ]
+[ [8] [Member Initializers] [
+Use `initialize( `[^['member-initializers]]` )` instead of the column symbol `: `[^['member-initializers]] to specify constructor member initializers.
+] ]
+[ [9] [Empty Lists] [
+Specify empty lists (parameters, exception specifications, template specializations, etc) using `( void )` instead of `( )` or `< >`.
+] ]
+[ [10] [Commas and Leading Symbols] [
+Syntactic elements containing commas and leading non-alphanumeric symbols must be wrapped within extra round parenthesis `(...)`.
+(Note that `'a'`, `"abc"`, `1.23`, etc are not alphanumeric so they need to be wrapped as `('a')`, `("abc")`, `(1.23)`, etc when specified as default parameters or similar.)
+] ]
+]
+
+[important
+In general, every token which is not a known keyword (`int` is a known keyword but the function name is not) or that contains a non-alphanumeric symbol (e.g., `int&`) must be wrapped within round parenthesis `(...)` unless it is the very last token of a syntactic element (e.g., the function parameter name).
+]
+
+Sometimes the C++ syntax allows to equivalently specify elements in different orders (e.g., `const volatile` and `volatile const` are both allowed for member functions and they have the same meaning).
+The syntax of this library requires instead to specify the elements exactly in the order listed by this grammar (e.g., only `const volatile` is allowed for member functions).
+[footnote
+*Rationale.*
+This library macros could be implemented to allow to specify syntactic elements in different orders but that would complicate the macro implementation and this grammar with no additional feature for the user.
+]
+
+[endsect]
+
+[section Macro Interface]
+
+This library uses the following macros.
+
+    ``[macroref CONTRACT_CLASS]``(__class_declaration__)
+    ``[macroref CONTRACT_CLASS_TPL]``(__class_declaration__)
+
+    ``[macroref CONTRACT_CLASS_INVARIANT]``(__class_invariants__)
+    ``[macroref CONTRACT_CLASS_INVARIANT_TPL]``(__class_invariants__)
+
+    ``[macroref CONTRACT_FUNCTION]``(__function_declaration__)
+    ``[macroref CONTRACT_FUNCTION_TPL]``(__function_declaration__)
+    ``[macroref CONTRACT_CONSTRUCTOR]``(__function_declaration__)
+    ``[macroref CONTRACT_CONSTRUCTOR_TPL]``(__function_declaration__)
+    ``[macroref CONTRACT_DESTRUCTOR]``(__function_declaration__)
+    ``[macroref CONTRACT_DESTRUCTOR_TPL]``(__function_declaration__)
+
+    ``[macroref CONTRACT_FREE_BODY]``(__function_name__)
+    ``[macroref CONTRACT_MEMBER_BODY]``(__function_name__)
+    ``[macroref CONTRACT_CONSTRUCTOR_BODY]``(__class_type__, __class_name__)
+    ``[macroref CONTRACT_DESTRUCTOR_BODY]``(__class_type__, ~__class_name__)
+
+    ``[macroref CONTRACT_BLOCK_INVARIANT]``(__assertions__)
+    ``[macroref CONTRACT_BLOCK_INVARIANT_TPL]``(__assertions__)
+
+    ``[macroref CONTRACT_LOOP]``(__loop_declaration__)
+    ``[macroref CONTRACT_LOOP_VARIANT]``(__loop_variant__)
+    ``[macroref CONTRACT_LOOP_VARIANT_TPL]``(__loop_variant__)
+    
+    ``[macroref CONTRACT_CONSTRUCTOR_ARG]``(__parameter_name__)
+    ``[macroref CONTRACT_PARAMETER_TYPEOF]``(__parameter_name__)
+    ``[macroref CONTRACT_PARAMETER]``(__named_parameter_declaration__)
+    ``[macroref CONTRACT_TEMPLATE_PARAMETER]``(__named_parameter_declaration__)
+    ``[macroref CONTRACT_PARAMETER_BODY]``(__function_name__)
+    
+The macros with the trailing `_TPL` must be used when the enclosing scope is type-dependent (e.g., within templates).
+
+[endsect]
+
+[section Lexical Conventions]
+
+The following conventions are used to express this grammar.
+
+[table
+[ [Lexical Expression] [Meaning] ]
+[ [[^['[]tokens['\]]]] [
+Either `tokens` or nothing (optional tokens).
+] ]
+[ [[^['{]expression['}]]] [
+The result of the enclosed expression `expression` (evaluation order).
+] ]
+[ [[^tokens1 ['|] tokens2]] [
+Either `tokens1` or `tokens2` (["or] operation).
+] ]
+[ [[^tokens['*]]] [
+`tokens` repeated zero or more times (repetition starting from zero).
+] ]
+[ [[^tokens['+]]] [
+`tokens` repeated one or more times (repetition starting from one).
+] ]
+[ [[^token, ...]] [
+A comma separated list of tokens that could also have one single element (i.e., `token` or `token1, token2` or `token1, token2, token3`).
+See the __No_Variadic_Macros__ section for compilers that do not support variadic macros.
+] ]
+[ [[^[*tokens]]] [
+Terminal symbols (in bold font).
+] ]
+[ [[^['tokens]]] [
+Non-terminal symbols (in italic font).
+] ]
+]
+
+[endsect]
+
+[section Class Declarations]
+
+    __class_declaration__``: [#class_declaration_anchor]``
+            ``/[/````/[/``export``/]/`` template( __template_parameters__ ) ``/[/``requires( __concepts__ )``/]/````/]/``
+            ``/[/``friend``/]/`` ``/{/``class ``/|/`` struct``/}/`` (__class_name__)``/[/``( __template_specializations__ )``/]/`` ``/[/``final``/]/``
+            ``/[/``extends( __base_classes__ )``/]/``
+
+[endsect]
+
+[section Base Classes]
+
+    __base_classes__``: [#base_classes_anchor]``
+            ``/[/``public ``/|/`` protected ``/|/`` private``/]/`` ``/[/``virtual``/]/`` __class_type__, ...
+
+Note that when specified, `virtual` must appear after the inheritance access level for a base class.
+
+[endsect]
+
+[section Template Specializations]
+
+    __template_specializations__``: [#template_specializations_anchor]``
+            __template_specialization__, ...
+
+[endsect]
+
+[section Template Parameters]
+
+    __template_parameters__``: [#template_parameters_anchor]``
+            void ``/|/``
+            __positional_template_parameters__ ``/|/``
+            __named_template_parameters__
+
+    __positional_template_parameters__``: [#positional_template_parameters_anchor]``
+            __positional_template_parameter__, ...
+    __positional_template_parameter__``: [#positional_template_parameter_anchor]``
+            __positional_type_template_parameter__ ``/|/``
+            __positional_value_template_parameter__ ``/|/``
+            __positional_template_template_parameter__
+    __positional_type_template_parameter__``: [#positional_type_template_parameter_anchor]``
+            ``/{/``class ``/|/`` typename``/}/`` __parameter_name__
+            ``/[/``, default __parameter_default__``/]/``
+    __positional_value_template_parameter__``: [#positional_value_template_parameter_anchor]``
+            __wrapped_type__ __parameter_name__
+            ``/[/``, default __parameter_default__``/]/``
+    __positional_template_template_parameter__``: [#positional_template_template_parameter_anchor]``
+            template( __template_parameter__, ... ) class __parameter_name__
+            ``/[/``, default __parameter_default__``/]/``
+
+    __named_template_parameters__``: [#named_template_parameters_anchor]``
+            ``/[/``using namespace __named_parameter_identifier_namespace__,``/]/``
+            __named_type_template_parameter__, ...
+    __named_type_template_parameter__``: [#named_type_template_parameter_anchor]``
+            ``/[/``deduce``/]/`` in ``/{/``class ``/|/`` typename``/}/``
+            ``/[/``requires(__unary_boolean_metafunction__)``/]/`` __parameter_name__
+            ``/[/``, default __parameter_default__``/]/``
+
+Note that if `typename` appears within __wrapped_type__ for a value template parameter then it will be wrapped within parenthesis `(typename ...)` so it is syntactically distinguishable from the `typename` leading a type template parameter.
+
+Unfortunately, named template parameters only support type template parameters.
+Named value template parameters and named template template parameters are not supported because they are not supported by __Boost_Parameter__ but if they were ever supported, they could follow this syntax:
+
+    __named_template_parameters__``:``
+            __named_template_parameter__, ...
+    __named_template_parameter__``: [#named_template_parameter_anchor]``
+            __named_type_template_parameter__ ``/|/``
+            __named_value_template_parameter__ ``/|/``
+            __named_template_template_parameter__
+    __named_value_template_parameter__``: [#named_value_template_parameter_anchor]``// Not supported.
+            ``/[/``deduce``/]/`` in
+            ``/{/``__wrapped_type__ ``/|/`` auto ``/|/`` requires(__unary_boolean_metafunction__)``/}/`` __parameter_name__
+            ``/[/``, default __parameter_default__``/]/``
+    __named_template_template_parameter__``: [#named_template_template_parameter_anchor]``// Not supported.
+            ``/[/``deduce``/]/`` in template( __positional_template_parameter__, ... ) class
+            ``/[/``requires(__unary_boolean_metafunction__)``/]/`` __parameter_name__
+            ``/[/``, default __parameter_default__``/]/``
+
+    template( // For example...
+        // Named type template parameter (supported).
+          in typename requires(is_const<_>) T, default int
+        // Named value template parameter (not supported).
+        , in requires(is_converible<_, T>) val, default 0
+        // Named template template parameter (not supported).
+        , in template(
+              typename A
+            , template(
+                  typename X
+                , typename Y, default int
+              ) class B, default b
+          ) class requires(pred1< _<T> >) Tpl, default tpl
+    )
+
+[endsect]
+
+[section Concepts]
+
+    __concepts__``: [#concepts_anchor]``
+            __boost_concept__, ...
+
+[endsect]
+
+[section Types]
+
+    __wrapped_type__``: [#wrapped_type_anchor]``
+            __fundamental_type__ ``/|/`` (__fundamental_type__) ``/|/`` (__type__)
+
+    __fundamental_type__``: [#fundamental_type_anchor]``
+            __type_qualifier__``/*/`` __type_keyword__ __type_qualifier__``/*/``
+    __type_qualifier__``: [#type_qualifier_anchor]``
+            const ``/|/`` volatile ``/|/`` long ``/|/`` short ``/|/`` signed ``/|/`` unsigned
+    __type_keyword__``: [#type_keyword_anchor]``
+            void ``/|/`` bool ``/|/`` char ``/|/`` double ``/|/`` float ``/|/`` int ``/|/`` wchar_t ``/|/`` size_t ``/|/`` ptrdiff_t
+
+This is the syntax used to specify the function result type, the function parameter types, the types of value template parameters, etc.
+As indicated by the syntax, extra parenthesis around the specified type are always allowed but they are required only for user-defined types `(mytype)` and types containing non-alphanumeric symbols `(int&)` while the parenthesis are optional for fundamental types containing no symbol `unsigned long int const` (or equivalently `(unsigned long int const)`).
+
+[endsect]
+
+[section Function Declarations]
+
+    __function_declaration__``: [#function_declaration_anchor]``
+            ``/[/``public ``/|/`` protected ``/|/`` private``/]/``
+            ``/[/````/[/``export``/]/`` ``/[/``template( __template_parameters__ ) ``/[/``requires( __concepts__ )``/]/````/]/``
+            ``/[/``explicit``/]/`` ``/[/``inline``/]/`` ``/[/``extern``/]/`` ``/[/``static``/]/`` ``/[/``virtual``/]/`` ``/[/``friend``/]/``
+            ``/[/``__result_type__``/]/`` __function_name__ ( __function_parameters__ )
+            ``/[/``requires( __concepts__ )``/]/``
+            ``/[/``const``/]/`` ``/[/``volatile``/]/`` ``/[/``override ``/|/`` new``/]/`` ``/[/``final``/]/``
+            ``/[/``throw( __exception_specifications__ )``/]/``
+            ``/[/``precondition( __assertions__ )``/]/``
+            ``/[/``postcondition( __result_oldof_assertions__ )``/]/``
+            ``/[/``__member_initializers__``/]/``
+
+This is the syntax used to declare all functions: Free functions, member functions, constructors, destructors, and operators.
+The usual constraints of C++ function declarations apply: It is not possible to declare a static virtual member function, only constructors can use the class name as the function name, constructors and destructors have no result type, etc.
+The `static` specifier can only be used for member functions (because it was deprecated for free functions from C to __CXX03__).
+The `volatile` specifier must always appear after `const` when they are both specified.
+
+[endsect]
+
+[section Result Type]
+
+    __result_type__``: [#result_type_anchor]``
+            __wrapped_type__
+
+Note that fundamental types containing no symbol can be specified without extra parenthesis: `void`, `bool`, `int`, `unsigned long const`, etc.
+
+[endsect]
+            
+[section Function and Operator Names]
+
+    __function_name__``: [#function_name_anchor]``
+            (__function_identifier__) ``/|/`` (__class_name__) ``/|/`` (~__class_name__) ``/|/`` __operator_name__
+    
+    __operator_name__``: [#operator_name_anchor]``
+            operator(__operator_symbol__)(__operator_identifier__) ``/|/`` operator __fundamental_type__ ``/|/``
+            operator new ``/|/`` operator delete ``/|/`` operator comma
+
+Names for free functions, member functions, constructors, and destructors are specified as usual but wrapped within parenthesis.
+
+Operator names are specified wrapping within parenthesis the usual operator symbol followed by an arbitrary but alphanumeric identifier:
+
+    operator([])(at)
+    operator(+)(plus)
+    operator(())(call)
+    operator(new[])(new_array)
+    operator(delete[])(delete_array)
+
+Implicit type conversion operators use the same syntax:
+
+    operator(int*)(int_ptr)
+    operator(mytype const&)(mytype_const_ref)
+    operator(std::map<char, int>)(std_map)
+
+However, if the type is a fundamental type containing no symbol, the identifier is optional:
+
+    operator(const int)(const_int)  // Allowed but...
+    operator const int              // ... more readable.
+
+Similarly, the parenthesis and identifier are optional for the `new` and `delete` operators:
+
+    operator(new)(new_ptr)          // Allowed but...
+    operator new                    // ... more readable.
+
+    operator(delete)(delete_ptr)    // Allowed but...
+    operator delete                 // ... more readable.
+
+Finally, the comma symbol `,` cannot be used to specify the comma operator
+[footnote
+*Rationale.*
+Within macros a comma `,` has the special meaning of separating the macro parameters so it cannot be used to indicate the comma operator otherwise `operator(,)(mycomma)` and `operator(std::map<char, int>)(stdmap)` could not be distinguished from one another by the preprocessor.
+]
+so the specifier `comma` must always be used to name the comma operator:
+
+    operator comma      // OK.
+    operator(,)(comma)  // Error.
+
+C++ automatically promotes the memory member operators `operator new`, `operator delete`, `operator new[]`, and `operator delete[]` to be static members so the `static` specifier is allowed but optional for these member operators.
+This library cannot automatically perform such a promotion so the `static` specifier is always required by this library for the memory member operators.
+
+[endsect]
+
+[section Exception Specifications]
+
+    __exception_specifications__``: [#exception_specifications_anchor]``
+            void | __exception_type__, ...
+
+Note that the syntax `throw( void )` is used instead of `throw( )` for no-throw specifications.
+
+Exception specifications apply only to exceptions thrown by the function body and not to exceptions thrown by the contracts themselves (if any) and by the contract checking code generated by this library macros.
+
+[endsect]
+
+[section Member Initializers]
+
+    __member_initializers__``: [#member_initializers_anchor]``
+            ``/[/``try``/]/`` initialize( __member_initializer__, ... )
+            ``/{/``catch(__catch_declaration__) ( __catch_instructions__ )``/}*/``
+    
+As indicated by this syntax, it is possible to specify function-try blocks for constructor member initializers:
+
+    struct vector_error { ... };
+
+    CONTRACT_CONSTRUCTOR( // Constructor with member initializers.
+    explicit (vector) ( int count )
+        precondition( count >= 0 )
+        postcondition( size() == count )
+
+        try initialize( ptr_(new T[count]) )
+        catch(std::bad_alloc& ex) (
+            std::cerr << "not enough memory for " << count << " elements vector: " << ex.what() << std::endl;
+            throw vector_error(1);
+        ) catch(std::exception& ex) (
+            std::cerr << "error for " << count << " elements vector: " << ex.what() << std::endl;
+            throw vector_error(2);
+        ) catch(...) (
+            std::cerr << "unknown error for " << count << " elements vector" << std::endl;
+            throw vector_error(3);
+        )
+    ) { // Above function-try block only applies to exceptions thrown by the body (and not by the contracts).
+        ...
+    }
+
+For functions other than constructors and for constructors without member initializers, function-try blocks are programmed outside the macros and around the body definition as usual.
+As specified by __N1962__, function-try blocks apply only to exceptions thrown by the function body and not to exceptions thrown by the contracts themselves (if any) and by the contract checking code generated by the library macros.
+
+Member initializers (and their function-try blocks) are part of the constructor definition and not of the constructor declaration.
+However, __CXX03__ lack of delegating constructors requires member initializers (and their function-try blocks) to be specified within this library macros and constructors must be defined together with their declarations when they use member initializers.
+
+[endsect]
+
+[section Function Parameters]
+
+    __function_parameters__``: [#function_parameters_anchor]``
+            void ``/|/``
+            __positional_function_parameters__ ``/|/``
+            __named_function_parameters__
+
+    __positional_function_parameters__``: [#positional_function_parameters_anchor]``
+            __positional_function_parameter__, ...
+    __positional_function_parameter__``: [#positional_function_parameter_anchor]``
+            ``/[/``auto ``/|/`` register``/]/`` __wrapped_type__ __parameter_name__
+            ``/[/``, default __parameter_default__``/]/``
+
+    __named_function_parameters__``: [#named_function_parameters_anchor]``
+            ``/[/``using namespace __named_parameter_identifier_namespace__,``/]/``
+            __named_function_parameter__, ...
+    __named_function_parameter__``: [#named_function_parameter_anchor]``
+            ``/[/``deduce``/]/`` ``/{/``in ``/|/`` out ``/|/`` in out``/}/``
+            ``/{/``__wrapped_type__ ``/|/`` auto ``/|/`` requires(__unary_boolean_metafunction__)``/}/`` __parameter_name__
+            ``/[/``, default __parameter_default__``/]/``
+
+Note that the positional parameter storage classifier `auto` is supported by this library because it is part of __CXX03__ (but the `auto` keyword changed meaning in __CXX11__ so use it with the usual care when writing code portable to __CXX11__).
+
+[endsect]
+
+[section Result and Old Values]
+
+    __result_oldof_assertions__``: [#result_oldof_assertions_anchor]``
+            ``/[/``auto __variable_name__ = return,``/]/``
+            ``/[/``__oldof_declaration__, ...``/]/``
+            __assertion__, ...
+    
+    __oldof_declaration__``: [#oldof_declaration_anchor]``
+            ``/{/``auto ``/|/`` __wrapped_type__``/}/`` __variable_name__ = ``[macroref CONTRACT_OLDOF]`` __oldof_expression__
+
+If present, result and old-of declarations should appear at the very beginning of the postconditions because they will always be visible to all assertions plus these declarations cannot be nested (within select-assertions, etc).
+
+The result declaration type is always `auto` because the function result type is know and already specified by the function declaration (so no result type deduction is ever needed).
+The old-of declaration type is automatically deduced (using __Boost_Typeof__) when its type is specified `auto` instead of __wrapped_type__.
+The macro `CONTRACT_OLDOF` does not require but allows parenthesis around the value expression __oldof_expression__ (this is as specified for the `oldof` operator in __N1962__ and similar to the `sizeof` operator which requires parenthesis when applied to a type expression `sizeof(size_type)` but not when applied to a value expression `sizeof size()`).
+For example, all the followings are valid:
+
+    auto old_size = CONTRACT_OLDOF size()
+    auto old_size = CONTRACT_OLDOF(size())          // Extra parenthesis around expression (optional).
+    (size_type) old_size = CONTRACT_OLDOF size()    // Do not use Boost.Typeof.
+    (size_type) old_size = CONTRACT_OLDOF(size())   // No Boost.Typeof and extra parenthesis.
+
+If an old-of copy is performed on a type that is not __ConstantCopyConstructible__, the old-of declaration itself will not fail compilation but it will produce an old variable that will cause a compiler-error as soon as it is used in an assertion (unless the assertion specifies a requirement using a properly specialized [classref contract::has_oldof] trait).
+
+[endsect]
+
+[section Class Invariants]
+
+    __class_invariants__``: [#class_invariants_anchor]``
+            void ``/|/`` __class_invariant__, ...
+
+    __class_invariant__``: [#class_invariant_anchor]``
+            __assertion__ ``/|/``
+            static class( void ``/|/`` __assertion__, ... ) ``/|/``
+            volatile class( void ``/|/`` __assertion__, ... )
+
+Volatile class invariants are assumed to have the same assertions as non-volatile class invariants unless they are explicitly specified.
+Static class invariants are assumed to assert nothing unless they are explicitly specified.
+
+[endsect]
+
+[section Assertions]
+
+    __assertions__``: [#assertions_anchor]``
+            __assertion__, ...
+    __assertion__``: [#assertion_anchor]``
+            using __using_directive__ ``/|/``
+            namespace __namespace_alias__ ``/|/``
+            typedef __typedef_type__ __new_type_name__ ``/|/``
+            __assertion_condition__
+
+    __assertion_condition__``: [#assertion_condition_anchor]``
+            __assertion_expression__ ``/|/``
+            __select_assertion__
+    __assertion_expression__``: [#assertion_expression_anchor]``
+            __boolean_condition__ ``/|/``
+            static_assert(__constant_boolean_expression__, __constant_string_literal__)
+            ``/[/``, requires __constant_boolean_expression__``/]/``
+    __select_assertion__``: [#select_assertion_anchor]``
+            if(__boolean_condition__) ( __assertion_condition__, ... )
+            ``/[/``else ( __assertion_condition__, ... )``/]/``
+    
+    __boolean_condition__``: [#boolean_condition_anchor]``
+            __boolean_expression__ ``/|/``
+            const( __inscope_variables__ ) __boolean_expression_using_inscope_variables__
+    __inscope_variables__``: [#inscope_variables_anchor]``
+            ``/[/``__wrapped_type__``/]/`` __inscope_variable__, ...
+
+Some basic name manipulations are allowed at the local scope where the assertions are being declared in case they are ever needed to simplify the assertion expressions.
+Specifically, using-directives, namespace-aliases, and type-definitions are allowed (these will always affect all assertions within the given preconditions, postconditions, etc so it is recommended to always use these statement at the very beginning before the actual assertion conditions).
+Note that these name manipulations have no effect on the program run-time state and therefore they do not compromise the contract constant-correctness requirement.
+
+As indicated by the grammar above, it is not possible to specify assertion requirements (using `requires`) for the entire select assertion if-then-else expression.
+Eventual assertion requirements must be specified for the single assertions within the select assertion if-then-else statement and they will never disable compilation and checking of the select assertion if-condition.
+Programmers can use the ternary operator `?:` instead of a select assertion if they need to specify a guarded assertion with a condition that is also disabled by the assertion requirements:
+
+    ``/boolean-guard/`` ? __boolean_expression__ : true, requires __constant_boolean_expression__
+
+Constant expressions `const( ... ) `[^['expression]] can be used to assert conditions and to check the select assertion if-condition so to fully enforce the assertion constant-correctness requirement.
+However, function arguments, result value, old-of values, and the object `this` are automatically made constant by this library so constant expressions only need to be used to assert conditions on global variables, static variables, etc.
+The type of the in-scope variable __inscope_variable__ is optional and it is automatically deduced using __Boost_Typeof__ when it is not specified.
+
+[endsect]
+
+[section Loop Variants]
+
+    __loop_variant__``: [#loop_variant_anchor]``
+            __natural_expression__ ``/|/``
+            const( __inscope_variables__ ) __natural_expression_using_inscope_variables__
+
+A loop variant must specify a non-negative integral expression that monotonically decreases at each subsequent loop iteration (the library will automatically check these two conditions at each loop iteration and terminate the loop if they are not met by calling the loop variant broken handler).
+The loop variant can be specified using a constant-expression `const( ... ) `[^['expression]] so to fully enforce the contract constant-correctness requirement.
+
+[endsect]
+
+[section Named Parameter Declarations]
+
+    __named_parameter_declaration__``: [#named_parameter_declaration_anchor]``
+            ``/[/``namespace(__named_parameter_identifier_namespace__)``/]/``
+            ``/[/``(__named_argument_identifier_name__)``/]/`` __parameter_name__
+
+[endsect]
+
+[section Terminals]
+
+[table
+[
+[Terminal]
+[Description]
+[If terminal contains unwrapped commas or leading symbols]
+] [
+[__boolean_expression__[#boolean_expression_anchor]]
+[A boolean expression: `x == 1`.]
+[Wrap value within parenthesis: `(vey_sizeof<Key, T>::value)`.]
+] [
+[__boolean_expression_using_inscope_variables__[#boolean_expression_using_inscope_variables_anchor]]
+[A boolean expression that only uses in-scope variables captured as constants by a constant expression `const( ... ) `[^['expression]].]
+[Wrap value within parenthesis: `(key_sizeof<Key, T>::value + x)`.]
+] [
+[__boost_concept__[#boost_concept_anchor]]
+[A concept class defined using __Boost_ConceptCheck__: `boost::CopyConstructible`.]
+[Wrap type within parenthesis: `(boost::Convertible<T, int>)`.]
+] [
+[__catch_declaration__[#catch_declaration_anchor]]
+[The declaration of an exception for a `catch` statement: `std::runtime_error& error`.]
+[Wrap type using __Boost_Utility_IdentityType__: `BOOST_IDENTITY_TYPE((map<char, int>::exception&)) error`.]
+] [
+[__catch_instructions__[#catch_instructions_anchor]]
+[The instructions of a `catch` statement terminated by semicolons `;`: `std::cout << "error" << std::endl; exit(255);`.]
+[Wrap types using __Boost_Utility_IdentityType__ and values within parenthesis: `typedef BOOST_UTILITY_TYPE(std::map<char, int>) mtype; (mtype m, m['a'] = 1);`.]
+] [
+[__class_name__[#class_name_anchor]]
+[The class name: `myclass`. For class templates this must not include the template instantiation parameters: `vector`. (For non-template classes, the class type and name are the same.)]
+[Never the case.]
+] [
+[__class_type__[#class_type_anchor]]
+[The class type, for class templates this must include the template instantiation parameters: `vector<T>`.]
+[Wrap type within parenthesis: `(map<Key, T>)`.]
+] [
+[__constant_boolean_expression__[#constant_boolean_expression_anchor]]
+[A compile-time constant boolean expression: `sizeof(T) >= sizeof(int)`.]
+[Wrap value within parenthesis: `(boost::is_convertible<T, int>::value)`.]
+] [
+[__constant_string_literal__[#constant_string_literal_anchor]]
+[A compile-time constant string literal: `"abc"`.]
+[Do nothing: `"abc"`.]
+] [
+[__exception_type__[#exception_type_anchor]]
+[A type: `std::exception`, `int`, `mytype`.]
+[Wrap type within parenthesis: `(map<char, int>::exception)`.]
+] [
+[__function_identifier__[#function_identifier_anchor]]
+[A valid function name identifier (C++ requires it to be alphanumeric): `f`, `push_back`, `myfunc`.]
+[Never the case.]
+] [
+[__inscope_variable__[#inscope_variable_anchor]]
+[A variable in-scope.]
+[Never the case.]
+] [
+[__loop_declaration__[#loop_declaration_anchor]]
+[A loop declaration: `for(int i = 0; i < 10; ++i)`, `while(i < 10)`.]
+[Never the case.]
+] [
+[__member_initializer__[#member_initializer_anchor]]
+[A member initialization expression: `vector_(count)`.]
+[Wrap object initializations within parenthesis: `(base_map<char, int>())`.]
+] [
+[__named_argument_identifier_name__[#named_argument_identifier_anchor]]
+[The argument name to use at the calling site to pass named and deduced parameter values: `value_arg`, `NumberArg`.]
+[Never the case.]
+] [
+[__named_parameter_identifier_namespace__[#named_parameter_identifier_namespace_anchor]]
+[The internal namespace for named and deduced parameter identifiers: `params`.]
+[Never the case.]
+] [
+[__namespace_alias__[#namespace_alias_anchor]]
+[The argument to pass to namespace aliasing: `mpl = boost::mpl`.]
+[Never the case.]
+] [
+[__natural_expression__[#natural_expression_anchor]]
+[A natural (i.e., non-negative integral) expression: `2 - 1`.]
+[Wrap value within parenthesis: `(key_sizeof<Key, T>::value)`.]
+] [
+[__natural_expression_using_inscope_variables__[#natural_expression_using_inscope_variables_anchor]]
+[A natural (i.e., non-negative integral) expression that only uses in-scope variables captured as constant by a constant-expression: `x + 10`.]
+[Wrap value within parenthesis: `(key_sizeof<Key, T>::value + x)`.]
+] [
+[__new_type_name__[#new_type_name_anchor]]
+[A new type name for `typedef` statement: `myint`.]
+[Never the case.]
+] [
+[__oldof_expression__[#oldof_expression_anchor]]
+[A expression of type __ConstantCopyConstructible__ to pass to the [macroref CONTRACT_OLDOF] macro: `value`, `size()`.]
+[Wrap value within parenthesis: `(x, y)`.]
+] [
+[__operator_identifier__[#operator_identifier_anchor]]
+[An arbitrary but alphanumeric identifier: `equal`, `less`, `call`.]
+[Never the case.]
+] [
+[__operator_symbol__[#operator_symbol_anchor]]
+[The usual operator symbols: `==`, `<=`, `()`.]
+[Do nothing: `std::map<char, int>`.]
+] [
+[__parameter_default__[#parameter_default_anchor]]
+[A function or template parameter default value (either a value, a type, or a template depending on the kind of parameter): `123`.]
+[Wrap value within parenthesis: `("abc")`, `('a')`, `(-123)`, `(1.23)`.]
+] [
+[__parameter_name__[#parameter_name_anchor]]
+[A function or template parameter name: `value`, `T`.]
+[Never the case.]
+] [
+[__template_parameter__[#template_parameter_anchor]]
+[A usual C++ type template parameter, value template parameter, or template template parameter): `typename T`, `class U`, `int Number`, `T Value`, `template< typename X, class Y > class Template`.]
+[Do nothing: `std::map<Key, T> Default`, `template< typename X, class Y > class Template`.]
+] [
+[__template_specialization__[#template_specialization_anchor]]
+[A template specialization argument (type, value, etc) that follow the class name in the declaration to specialize a template: `void (int, T)`.]
+[Wrap types within parenthesis: `(std::map<char, int>)`.]
+] [
+[__type__[#type_anchor]]
+[A type: `int`, `int const&`, `mytype`.]
+[Do nothing: `std::map<char, int>`.]
+] [
+[__typedef_type__[#typedef_type_anchor]]
+[A type: `int`, `mytype`.]
+[Wrap type using __Boost_Utility_IdentityType__: `BOOST_IDENTITY_TYPE((std::map<char, int>))`.]
+] [
+[__unary_boolean_metafunction__[#unary_boolean_metafunction_anchor]]
+[A boolean meta-function that takes one parameter: `boost::is_class<boost::mpl::_>`.]
+[Do nothing: `boost:is_convertible<boost::mpl::_, int>`.]
+] [
+[__using_directive__[#using_directive_anchor]]
+[The argument to pass to a using directive: `namespace std`, `std::vector`.]
+[Never the case.]
+] [
+[__variable_name__[#variable_name_anchor]]
+[A valid name to use to declare a variable: `result`, `old_size`.]
+[Never the case.]
+]
+]
+
+If terminals contain commas not already wrapped by round parenthesis or if they start with a non-alphanumeric symbol (including tokens like `'a'`, `"abc"`, `-123`, and `1.23`),
+[footnote
+The C++ preprocessor cannot concatenate `1.23` because it contains the `.` symbol (even if that symbol is technically not the leading symbol).
+The precise preprocessor requirement is that the concatenated symbol must be a valid macro identifier and concatenating `1.23` with any token will never give a valid macro identifier because of the presence of the dot symbol `.` (e.g., `BOOST_PP_CAT(XYZ, 1.23)` gives `XYZ1.23` which is not a valid macro identifier).
+]
+they need to be wrapped by extra round parenthesis `(...)` or by the __Boost_Utility_IdentityType__ `BOOST_IDENTITY_TYPE((...))` macro.
+Value expressions can always be wrapped within extra around parenthesis in C++.
+Type expressions can always be wrapped using __Boost_Utility_IdentityType__ but that will make the syntax less readable (and it prevents C++ from automatically deducing function template parameters) so this syntax allows to wrap type expressions within extra round parenthesis `(...)` for most terminals, including types, as indicated by the table above.
+
+[endsect]
+
+[section Alternative Assertion Syntax (Not Implemented)]
+
+The following alternative syntax could have been implemented to program the contract assertions:
+
+[table
+[ [This Library Syntax] [Alternative Syntax (not implemented)] ]
+[ [``
+CONTRACT_CLASS(
+    template( typename T )
+    class (vector)
+) {
+    ...
+
+    CONTRACT_FUNCTION_TPL(
+        public (iterator) (erase) ( (iterator) where )
+            precondition(
+                not empty(),
+                where != end(),
+                static_assert(sizeof(T) >= sizeof(int), "large enough")
+            )
+            postcondition(
+                auto result = return,
+                auto old_size = CONTRACT_OLDOF size(),
+                size() == old_size - 1,
+                if(const( this ) this->empty()) (
+                    result == end()
+                )
+            )
+    ) {
+        return vector_.erase(where);
+    }
+};
+`` ] [``
+CONTRACT_CLASS(
+    template( typename T )
+    class (vector)
+) {
+    ...
+
+    CONTRACT_FUNCTION_TPL(
+        public (iterator) (erase) ( (iterator) where )
+            precondition(
+                assert(not empty())
+                assert(where != end())
+                static_assert(sizeof(T) >= sizeof(int), "large enough")
+            )
+            postcondition(
+                decl(auto result = return)
+                decl(auto old_size = CONTRACT_OLDOF size())
+                assert(size() == old_size - 1)
+                if(const(this, this->empty())) (
+                    assert(result == end())
+                )
+            )
+    ) {
+        return vector_.erase(where);
+    }
+};
+``] ]
+]
+
+An advantage of this alternative syntax is that it does not require commas at the end of each assertion.
+However, when compared with this library syntax, the alternative syntax is overall more verbose, it uses more parenthesis, it deviates more from __N1962__ and __Eiffel__ (even if it is more similar to __D__), and it looks less readable at least because of `decl(...)` (in many ways this alternative syntax is equivalent to the already supported sequencing syntax from the __No_Variadic_Macros__ section with the addition of ["decoration identifiers] like `assert` which might make the code more readable but are not needed syntactically).
+Therefore, the authors opted for implementing the syntax on the left hand side.
+
+[endsect]
+
+[endsect]
+

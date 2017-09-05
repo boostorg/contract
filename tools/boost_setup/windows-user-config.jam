@@ -1,0 +1,24 @@
+
+# Copyright (C) 2009-2011 Lorenzo Caminiti
+# Use, modification, and distribution is subject to the Boost Software
+# License, Version 1.0 (see accompanying file LICENSE_1_0.txt or a
+# copy at http://www.boost.org/LICENSE_1_0.txt).
+
+# Toolset.
+using msvc ;
+using python ;
+ 
+# Documentation tools
+using quickbook : "C:/PROGRA~2/boost/xml/bin/quickbook.exe" : ; 
+using xsltproc : "C:/PROGRA~2/boost/xml/bin/xsltproc.exe" ; 
+using boostbook
+    : "C:/PROGRA~2/boost/xml/docbook-xsl"
+    : "C:/PROGRA~2/boost/xml/docbook-xml"
+    ;
+using doxygen : "C:/PROGRA~2/doxygen/bin/doxygen.exe" ; 
+# For PDF documentation.
+using fop
+    : "C:/PROGRA~1/RenderX/XEP/xep.bat"
+    : "C:/PROGRA~1/Java/jre6/bin"
+    ;
+

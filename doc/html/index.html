@@ -1,0 +1,482 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<title>Chapter&#160;1.&#160;Contract++ 0.4.1</title>
+<link rel="stylesheet" href="../../doc/src/boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.76.1">
+<link rel="home" href="index.html" title="Chapter&#160;1.&#160;Contract++ 0.4.1">
+<link rel="next" href="contract__/full_table_of_contents.html" title="Full Table of Contents">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><a href="http://sourceforge.net/projects/contractpp/"><img alt="Logo" width="277" height="86" src="../../logo.png"></a></td>
+<td align="center"><a href="http://sourceforge.net/projects/contractpp/files/latest/download">Download</a></td>
+<td align="center"><a href="http://sourceforge.net/apps/trac/contractpp/report/3">Bugs</a></td>
+<td align="center"><a href="http://sourceforge.net/projects/contractpp/reviews/">Reviews</a></td>
+<td align="center"><a href="mailto:lorcaminiti@gmail.com">Contact Us</a></td>
+<td align="center"><a href="http://sourceforge.net/projects/contractpp/forums/forum/920163">Help</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav"><a accesskey="n" href="contract__/full_table_of_contents.html"><img src="../..//doc/src/images/next.png" alt="Next"></a></div>
+<div class="chapter">
+<div class="titlepage"><div>
+<div><h2 class="title">
+<a name="contract__"></a>Chapter&#160;1.&#160;Contract++ 0.4.1</h2></div>
+<div><div class="author"><h3 class="author">
+<span class="firstname">Lorenzo</span> <span class="surname">Caminiti <code class="email">&lt;<a class="email" href="mailto:lorcaminiti@gmail.com">lorcaminiti@gmail.com</a>&gt;</code></span>
+</h3></div></div>
+<div><p class="copyright">Copyright &#169; 2008-2012 Lorenzo Caminiti</p></div>
+<div><div class="legalnotice">
+<a name="contract__.legal"></a><p>
+        Distributed under the Boost Software License, Version 1.0 (see accompanying
+        file LICENSE_1_0.txt or a copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></div>
+</div></div>
+<div class="toc">
+<p><b>Table of Contents</b></p>
+<dl>
+<dt><span class="section"><a href="index.html#contract__.introduction">Introduction</a></span></dt>
+<dt><span class="section"><a href="contract__/full_table_of_contents.html">Full Table of Contents</a></span></dt>
+<dt><span class="section"><a href="contract__/getting_started.html">Getting Started</a></span></dt>
+<dt><span class="section"><a href="contract__/contract_programming_overview.html">Contract Programming
+    Overview</a></span></dt>
+<dt><span class="section"><a href="contract__/tutorial.html">Tutorial</a></span></dt>
+<dt><span class="section"><a href="contract__/advanced_topics.html">Advanced Topics</a></span></dt>
+<dt><span class="section"><a href="contract__/virtual_specifiers.html">Virtual Specifiers</a></span></dt>
+<dt><span class="section"><a href="contract__/concepts.html">Concepts</a></span></dt>
+<dt><span class="section"><a href="contract__/named_parameters.html">Named Parameters</a></span></dt>
+<dt><span class="section"><a href="contract__/examples.html">Examples</a></span></dt>
+<dt><span class="section"><a href="contract__/grammar.html">Grammar</a></span></dt>
+<dt><span class="section"><a href="contract__/no_variadic_macros.html">No Variadic Macros</a></span></dt>
+<dt><span class="section"><a href="reference.html">Reference</a></span></dt>
+<dt><span class="section"><a href="contract__/release_notes.html">Release Notes</a></span></dt>
+<dt><span class="section"><a href="contract__/bibliography.html">Bibliography</a></span></dt>
+<dt><span class="section"><a href="contract__/acknowledgments.html">Acknowledgments</a></span></dt>
+</dl>
+</div>
+<div class="blockquote"><blockquote class="blockquote"><p>
+      <span class="emphasis"><em><span class="quote">&#8220;<span class="quote">Our field needs more formality, but the profession has not
+      realized it yet.</span>&#8221;</span></em></span>
+    </p></blockquote></div>
+<div class="blockquote"><blockquote class="blockquote"><p>
+      <span class="emphasis"><em>--Meyer (see <a class="link" href="contract__/bibliography.html#Meyer97_anchor">[Meyer97]</a> page
+      400)</em></span>
+    </p></blockquote></div>
+<p>
+    This library implements Contract Programming for the C++ programming language.
+    In addition, the library implements virtual specifiers (<code class="computeroutput"><span class="identifier">final</span></code>,
+    <code class="computeroutput"><span class="identifier">override</span></code>, and <code class="computeroutput"><span class="keyword">new</span></code>,
+    see <a href="http://en.wikipedia.org/wiki/C%2B%2B11" target="_top">C++11</a>), concept
+    checking, and named parameters.
+  </p>
+<p>
+    Consult this documentation in <a href="index.html" target="_top">HTML</a> or <a href="contractpp.pdf" target="_top">PDF</a> format.
+  </p>
+<div class="section">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="contract__.introduction"></a><a class="link" href="index.html#contract__.introduction" title="Introduction">Introduction</a>
+</h2></div></div></div>
+<p>
+      <a href="http://en.wikipedia.org/wiki/Design_by_contract" target="_top">Contract Programming</a>
+      (CP) allows to specify preconditions, postconditions, and class invariants
+      that are automatically checked when functions are executed at run-time. These
+      conditions assert program specifications within the source code itself allowing
+      to find bugs more quickly during testing, making the code self-documenting,
+      and increasing overall software quality.
+    </p>
+<p>
+      Contract Programming is also known as Design by Contract (DbC) <sup>[<a name="contract__.introduction.f0" href="#ftn.contract__.introduction.f0" class="footnote">1</a>]</sup> and it was first introduced by the <a href="http://en.wikipedia.org/wiki/Eiffel_(programming_language)" target="_top">Eiffel</a>
+      programming language (see <a class="link" href="contract__/bibliography.html#Meyer97_anchor">[Meyer97]</a>).
+      All Contract Programming features of the <a href="http://en.wikipedia.org/wiki/Eiffel_(programming_language)" target="_top">Eiffel</a>
+      programming language are supported by this library, among others (see also
+      the <a class="link" href="contract__/contract_programming_overview.html#contract__.contract_programming_overview.features" title="Features">Features</a>
+      section):
+    </p>
+<div class="orderedlist"><ol class="orderedlist" type="1">
+<li class="listitem">
+          Support for preconditions, postconditions, class invariants, block invariants,
+          and loop variants.
+        </li>
+<li class="listitem">
+          Subcontract derived classes (with support for pure virtual functions and
+          multiple inheritance).
+        </li>
+<li class="listitem">
+          Access expression old values and function return value in postconditions.
+        </li>
+<li class="listitem">
+          Optional compilation and checking of preconditions, postconditions, class
+          invariants, block invariants, and loop variants.
+        </li>
+<li class="listitem">
+          Customizable actions on contract assertion failure (terminate by default
+          but it can throw, exit, etc).
+        </li>
+</ol></div>
+<p>
+      In addition, this library supports virtual specifiers, concept checking, and
+      named parameters which together with contracts specify requirements of the
+      program interface. This library is implemented for the <a href="http://en.wikipedia.org/wiki/C%2B%2B" target="_top">C++03</a>
+      standard and it does not require <a href="http://en.wikipedia.org/wiki/C%2B%2B11" target="_top">C++11</a>.
+    </p>
+<h4>
+<a name="contract__.introduction.h0"></a>
+      <span><a name="contract__.introduction.an_example"></a></span><a class="link" href="index.html#contract__.introduction.an_example">An
+      Example</a>
+    </h4>
+<p>
+      The example below shows how to use this library to program contracts for the
+      C++ Standard Template Library (STL) member function <a href="http://www.sgi.com/tech/stl/BackInsertionSequence.html" target="_top"><code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">::</span><span class="identifier">push_back</span></code></a>
+      (in order to illustrate subcontracting, the <code class="computeroutput"><span class="identifier">vector</span></code>
+      class inherits from the somewhat arbitrary <code class="computeroutput"><span class="identifier">pushable</span></code>
+      base class). The syntax used by this library is compared side-by-side with
+      the syntax proposed by <a class="link" href="contract__/bibliography.html#N1962_anchor">[N1962]</a> for adding
+      Contract Programming to C++ (see also <a href="../../example/contracts/push_back.cpp" target="_top"><code class="literal">push_back.cpp</code></a>
+      and <a href="../../example/contracts/pushable.hpp" target="_top"><code class="literal">pushable.hpp</code></a>):
+    </p>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+              <p>
+                #
+              </p>
+            </th>
+<th>
+              <p>
+                This Library (C++03)
+              </p>
+            </th>
+<th>
+              <p>
+                N1962 and N2081 Proposals (not adopted by C++11) <sup>[<a name="contract__.introduction.f1" href="#ftn.contract__.introduction.f1" class="footnote">a</a>]</sup>
+              </p>
+            </th>
+</tr></thead>
+<tbody><tr>
+<td>
+              <p>
+</p>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"> <span class="number">1</span>
+ <span class="number">2</span>
+ <span class="number">3</span>
+ <span class="number">4</span>
+ <span class="number">5</span>
+ <span class="number">6</span>
+ <span class="number">7</span>
+ <span class="number">8</span>
+ <span class="number">9</span>
+<span class="number">10</span>
+<span class="number">11</span>
+<span class="number">12</span>
+<span class="number">13</span>
+<span class="number">14</span>
+<span class="number">15</span>
+<span class="number">16</span>
+<span class="number">17</span>
+<span class="number">18</span>
+<span class="number">19</span>
+<span class="number">20</span>
+<span class="number">21</span>
+<span class="number">22</span>
+<span class="number">23</span>
+<span class="number">24</span>
+<span class="number">25</span>
+<span class="number">26</span>
+<span class="number">27</span>
+<span class="number">28</span>
+<span class="number">29</span>
+<span class="number">30</span>
+<span class="number">31</span>
+<span class="number">32</span>
+<span class="number">33</span>
+<span class="number">34</span>
+<span class="number">35</span>
+<span class="number">36</span>
+<span class="number">37</span>
+</pre>
+<p>
+              </p>
+            </td>
+<td>
+              <p>
+</p>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">contract</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span> <span class="comment">// This library.</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">concept_check</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">vector</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="string">"pushable.hpp"</span> <span class="comment">// Some base class.</span>
+
+<span class="identifier">CONTRACT_CLASS</span><span class="special">(</span>
+    <span class="keyword">template</span><span class="special">(</span> <span class="keyword">typename</span> <span class="identifier">T</span> <span class="special">)</span> <span class="identifier">requires</span><span class="special">(</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">CopyConstructible</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span> <span class="special">)</span> <span class="comment">// Concepts.</span>
+    <span class="keyword">class</span> <span class="special">(</span><span class="identifier">vector</span><span class="special">)</span> <span class="identifier">extends</span><span class="special">(</span> <span class="keyword">public</span> <span class="identifier">pushable</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span> <span class="special">)</span> <span class="comment">// Subcontracting.</span>
+<span class="special">)</span> <span class="special">{</span>
+    <span class="identifier">CONTRACT_CLASS_INVARIANT_TPL</span><span class="special">(</span>
+        <span class="identifier">empty</span><span class="special">()</span> <span class="special">==</span> <span class="special">(</span><span class="identifier">size</span><span class="special">()</span> <span class="special">==</span> <span class="number">0</span><span class="special">)</span> <span class="comment">// More class invariants here...</span>
+    <span class="special">)</span>
+
+    <span class="keyword">public</span><span class="special">:</span> <span class="keyword">typedef</span> <span class="keyword">typename</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;::</span><span class="identifier">size_type</span> <span class="identifier">size_type</span><span class="special">;</span>
+    <span class="keyword">public</span><span class="special">:</span> <span class="keyword">typedef</span> <span class="keyword">typename</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;::</span><span class="identifier">const_reference</span> <span class="identifier">const_reference</span><span class="special">;</span>
+
+    <span class="identifier">CONTRACT_FUNCTION_TPL</span><span class="special">(</span>
+        <span class="keyword">public</span> <span class="keyword">void</span> <span class="special">(</span><span class="identifier">push_back</span><span class="special">)</span> <span class="special">(</span> <span class="special">(</span><span class="identifier">T</span> <span class="keyword">const</span><span class="special">&amp;)</span> <span class="identifier">value</span> <span class="special">)</span> <span class="identifier">override</span>
+            <span class="identifier">precondition</span><span class="special">(</span>
+                <span class="identifier">size</span><span class="special">()</span> <span class="special">&lt;</span> <span class="identifier">max_size</span><span class="special">()</span> <span class="comment">// More preconditions here...</span>
+            <span class="special">)</span>
+            <span class="identifier">postcondition</span><span class="special">(</span>
+                <span class="keyword">auto</span> <span class="identifier">old_size</span> <span class="special">=</span> <span class="identifier">CONTRACT_OLDOF</span> <span class="identifier">size</span><span class="special">(),</span> <span class="comment">// Old-of values.</span>
+                <span class="identifier">size</span><span class="special">()</span> <span class="special">==</span> <span class="identifier">old_size</span> <span class="special">+</span> <span class="number">1</span> <span class="comment">// More postconditions here...</span>
+            <span class="special">)</span>
+    <span class="special">)</span> <span class="special">{</span>
+        <span class="identifier">vector_</span><span class="special">.</span><span class="identifier">push_back</span><span class="special">(</span><span class="identifier">value</span><span class="special">);</span> <span class="comment">// Original function body.</span>
+    <span class="special">}</span>
+
+    <span class="comment">// Rest of class here (possibly with more contracts)...</span>
+    <span class="keyword">public</span><span class="special">:</span> <span class="keyword">bool</span> <span class="identifier">empty</span> <span class="special">(</span> <span class="keyword">void</span> <span class="special">)</span> <span class="keyword">const</span> <span class="special">{</span> <span class="keyword">return</span> <span class="identifier">vector_</span><span class="special">.</span><span class="identifier">empty</span><span class="special">();</span> <span class="special">}</span>
+    <span class="keyword">public</span><span class="special">:</span> <span class="identifier">size_type</span> <span class="identifier">size</span> <span class="special">(</span> <span class="keyword">void</span> <span class="special">)</span> <span class="keyword">const</span> <span class="special">{</span> <span class="keyword">return</span> <span class="identifier">vector_</span><span class="special">.</span><span class="identifier">size</span><span class="special">();</span> <span class="special">}</span>
+    <span class="keyword">public</span><span class="special">:</span> <span class="identifier">size_type</span> <span class="identifier">max_size</span> <span class="special">(</span> <span class="keyword">void</span> <span class="special">)</span> <span class="keyword">const</span> <span class="special">{</span> <span class="keyword">return</span> <span class="identifier">vector_</span><span class="special">.</span><span class="identifier">max_size</span><span class="special">();</span> <span class="special">}</span>
+    <span class="keyword">public</span><span class="special">:</span> <span class="identifier">const_reference</span> <span class="identifier">back</span> <span class="special">(</span> <span class="keyword">void</span> <span class="special">)</span> <span class="keyword">const</span> <span class="special">{</span> <span class="keyword">return</span> <span class="identifier">vector_</span><span class="special">.</span><span class="identifier">back</span><span class="special">();</span> <span class="special">}</span>
+
+    <span class="keyword">private</span><span class="special">:</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span> <span class="identifier">vector_</span><span class="special">;</span>
+<span class="special">};</span>
+</pre>
+<p>
+              </p>
+            </td>
+<td>
+              <p>
+</p>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="comment">// Extra spaces, newlines, etc used to align text with this library code.</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">concept</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">vector</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="string">"pushable.hpp"</span> <span class="comment">// Some base class.</span>
+
+
+<span class="keyword">template</span><span class="special">&lt;</span> <span class="keyword">typename</span> <span class="identifier">T</span> <span class="special">&gt;</span> <span class="identifier">requires</span> <span class="identifier">CopyConstructible</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span> <span class="comment">// Concepts.</span>
+<span class="keyword">class</span> <span class="identifier">vector</span> <span class="special">:</span> <span class="keyword">public</span> <span class="identifier">pushable</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span> <span class="comment">// Subcontracting.</span>
+<span class="special">{</span>
+    <span class="identifier">invariant</span> <span class="special">{</span>
+        <span class="identifier">empty</span><span class="special">()</span> <span class="special">==</span> <span class="special">(</span><span class="identifier">size</span><span class="special">()</span> <span class="special">==</span> <span class="number">0</span><span class="special">);</span> <span class="comment">// More class invariants here...</span>
+    <span class="special">}</span>
+
+    <span class="keyword">public</span><span class="special">:</span> <span class="keyword">typedef</span> <span class="keyword">typename</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;::</span><span class="identifier">size_type</span> <span class="identifier">size_type</span><span class="special">;</span>
+    <span class="keyword">public</span><span class="special">:</span> <span class="keyword">typedef</span> <span class="keyword">typename</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;::</span><span class="identifier">const_reference</span> <span class="identifier">const_reference</span><span class="special">;</span>
+
+
+    <span class="keyword">public</span><span class="special">:</span> <span class="keyword">void</span> <span class="identifier">push_back</span> <span class="special">(</span> <span class="identifier">T</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">value</span> <span class="special">)</span> <span class="identifier">override</span>
+        <span class="identifier">precondition</span> <span class="special">{</span>
+            <span class="identifier">size</span><span class="special">()</span> <span class="special">&lt;</span> <span class="identifier">max_size</span><span class="special">();</span> <span class="comment">// More preconditions here...</span>
+        <span class="special">}</span>
+        <span class="identifier">postcondition</span> <span class="special">{</span>
+            <span class="comment">// Old-of values use `oldof` operator.</span>
+            <span class="identifier">size</span><span class="special">()</span> <span class="special">==</span> <span class="identifier">oldof</span> <span class="identifier">size</span><span class="special">()</span> <span class="special">+</span> <span class="number">1</span><span class="special">;</span> <span class="comment">// More postconditions here...</span>
+        <span class="special">}</span>
+    <span class="special">{</span>
+        <span class="identifier">vector_</span><span class="special">.</span><span class="identifier">push_back</span><span class="special">(</span><span class="identifier">value</span><span class="special">);</span> <span class="comment">// Original function body.</span>
+    <span class="special">}</span>
+
+    <span class="comment">// Rest of class here (with possibly more contracts)...</span>
+    <span class="keyword">public</span><span class="special">:</span> <span class="keyword">bool</span> <span class="identifier">empty</span> <span class="special">(</span> <span class="keyword">void</span> <span class="special">)</span> <span class="keyword">const</span> <span class="special">{</span> <span class="keyword">return</span> <span class="identifier">vector_</span><span class="special">.</span><span class="identifier">empty</span><span class="special">();</span> <span class="special">}</span>
+    <span class="keyword">public</span><span class="special">:</span> <span class="identifier">size_type</span> <span class="identifier">size</span> <span class="special">(</span> <span class="keyword">void</span> <span class="special">)</span> <span class="keyword">const</span> <span class="special">{</span> <span class="keyword">return</span> <span class="identifier">vector_</span><span class="special">.</span><span class="identifier">size</span><span class="special">();</span> <span class="special">}</span>
+    <span class="keyword">public</span><span class="special">:</span> <span class="identifier">size_type</span> <span class="identifier">max_size</span> <span class="special">(</span> <span class="keyword">void</span> <span class="special">)</span> <span class="keyword">const</span> <span class="special">{</span> <span class="keyword">return</span> <span class="identifier">vector_</span><span class="special">.</span><span class="identifier">max_size</span><span class="special">();</span> <span class="special">}</span>
+    <span class="keyword">public</span><span class="special">:</span> <span class="identifier">const_reference</span> <span class="identifier">back</span> <span class="special">(</span> <span class="keyword">void</span> <span class="special">)</span> <span class="keyword">const</span> <span class="special">{</span> <span class="keyword">return</span> <span class="identifier">vector_</span><span class="special">.</span><span class="identifier">back</span><span class="special">();</span> <span class="special">}</span>
+
+    <span class="keyword">private</span><span class="special">:</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span> <span class="identifier">vector_</span><span class="special">;</span>
+<span class="special">};</span>
+</pre>
+<p>
+              </p>
+            </td>
+</tr></tbody>
+<tbody class="footnotes"><tr><td colspan="3"><div class="footnote"><p><sup>[<a id="ftn.contract__.introduction.f1" href="#contract__.introduction.f1" class="para">a</a>] </sup>
+                  Unfortunately, the Contract Programming proposal <a class="link" href="contract__/bibliography.html#N1962_anchor">[N1962]</a>
+                  and the concept proposal <a class="link" href="contract__/bibliography.html#N2081_anchor">[N2081]</a>
+                  were never adopted by the C++ standard so the example on the right
+                  hand side will not compile.
+                </p></div></td></tr></tbody>
+</table></div>
+<p>
+      Classes and functions are declared using the <code class="computeroutput"><a class="link" href="CONTRACT_CLASS.html" title="Macro CONTRACT_CLASS">CONTRACT_CLASS</a></code>
+      and <code class="computeroutput"><a class="link" href="CONTRACT_FUNCTION.html" title="Macro CONTRACT_FUNCTION">CONTRACT_FUNCTION</a></code> macros
+      respectively. Class invariants must appear at the very beginning of the class
+      definition and they are specified using the <code class="computeroutput"><a class="link" href="CONTRACT_CLASS_INVARIANT.html" title="Macro CONTRACT_CLASS_INVARIANT">CONTRACT_CLASS_INVARIANT</a></code>
+      macro. The <code class="computeroutput"><span class="identifier">TPL</span></code> postfixes indicate
+      versions of the macros that need to be used within templates.
+    </p>
+<p>
+      Note the following differences between the syntax used by this library macros
+      and the usual C++ declaration syntax (see the <a class="link" href="contract__/grammar.html#contract__.grammar.differences_with_c___syntax" title="Differences with C++ Syntax">Differences
+      with C++ Syntax</a> section for a complete list):
+    </p>
+<div class="itemizedlist"><ul class="itemizedlist" type="disc">
+<li class="listitem">
+          Round parenthesis <code class="computeroutput"><span class="keyword">template</span><span class="special">(</span> <span class="special">...</span> <span class="special">)</span></code>
+          are used instead of angular parenthesis <code class="computeroutput"><span class="keyword">template</span><span class="special">&lt;</span> <span class="special">...</span> <span class="special">&gt;</span></code> to declare templates (line 7).
+        </li>
+<li class="listitem">
+          Similarly to <a class="link" href="contract__/bibliography.html#N2081_anchor">[N2081]</a>, the specifier
+          <code class="computeroutput"><span class="identifier">requires</span><span class="special">(</span>
+          <span class="special">...</span> <span class="special">)</span></code>
+          is used to specify concepts to check (line 7).
+        </li>
+<li class="listitem">
+          The class and function names are wrapped within round parenthesis <code class="computeroutput"><span class="special">(</span><span class="identifier">vector</span><span class="special">)</span></code> and <code class="computeroutput"><span class="special">(</span><span class="identifier">push_back</span><span class="special">)</span></code>
+          (lines 8 and 18).
+        </li>
+<li class="listitem">
+          The specifier <code class="computeroutput"><span class="identifier">extends</span><span class="special">(</span>
+          <span class="special">...</span> <span class="special">)</span></code>
+          is used instead of the column symbol <code class="computeroutput"><span class="special">:</span></code>
+          to inherit from base classes (line 8). This automatically subcontracts
+          <code class="computeroutput"><span class="identifier">vector</span></code> from <code class="computeroutput"><span class="identifier">pushable</span></code> (when subcontracting, derived
+          and base preconditions are checked in <a class="link" href="contract__/contract_programming_overview.html#logic_or_anchor">logic-or</a>,
+          derived and base postconditions are checked in <a class="link" href="contract__/contract_programming_overview.html#logic_and_anchor">logic-and</a>,
+          derived and base class invariants are checked <a class="link" href="contract__/contract_programming_overview.html#logic_and_anchor">logic-and</a>).
+        </li>
+<li class="listitem">
+          The access level <code class="computeroutput"><span class="keyword">public</span></code>,
+          <code class="computeroutput"><span class="keyword">protected</span></code>, or <code class="computeroutput"><span class="keyword">private</span></code> must always be specified for member
+          functions but without the trailing column symbol <code class="computeroutput"><span class="special">:</span></code>
+          (line 18).
+        </li>
+<li class="listitem">
+          The function result and parameter types are wrapped within round parenthesis
+          <code class="computeroutput"><span class="special">(</span><span class="identifier">T</span>
+          <span class="keyword">const</span><span class="special">&amp;)</span></code>
+          (line 18). The parenthesis are allowed but not required for fundamental
+          types that contain no symbol (e.g., the function result type <code class="computeroutput"><span class="keyword">void</span></code> at line 18, but also <code class="computeroutput"><span class="keyword">bool</span></code>, <code class="computeroutput"><span class="keyword">unsigned</span>
+          <span class="keyword">int</span> <span class="keyword">const</span></code>,
+          etc).
+        </li>
+<li class="listitem">
+          Similarly to <a href="http://en.wikipedia.org/wiki/C%2B%2B11" target="_top">C++11</a>,
+          the specifier <code class="computeroutput"><span class="identifier">override</span></code>
+          is used to check that a member function is indeed overriding a base member
+          function (line 18).
+        </li>
+<li class="listitem">
+          The specifiers <code class="computeroutput"><span class="identifier">precondition</span><span class="special">(</span> <span class="special">...</span> <span class="special">)</span></code>
+          and <code class="computeroutput"><span class="identifier">postcondition</span><span class="special">(</span>
+          <span class="special">...</span> <span class="special">)</span></code>
+          are used to program function preconditions and postconditions (lines 19
+          and 22). Furthermore, the <code class="computeroutput"><a class="link" href="CONTRACT_OLDOF.html" title="Macro CONTRACT_OLDOF">CONTRACT_OLDOF</a></code>
+          macro can be used within postconditions to declare variables and initialize
+          them to old values that the specified expressions had before executing
+          the function body (line 23).
+        </li>
+<li class="listitem">
+          Class invariants, preconditions, and postconditions assert boolean expressions
+          separated by commas <code class="computeroutput"><span class="special">,</span></code> (lines
+          11, 20, and 24).
+        </li>
+</ul></div>
+<p>
+      Finally, note that the class and function definitions are programmed outside
+      the macros so they retain their usual C++ syntax (e.g., the function body at
+      line 27).
+    </p>
+<p>
+      The library executes the following steps when the <code class="computeroutput"><span class="identifier">push_back</span></code>
+      function is called at run-time (see also the <a class="link" href="contract__/contract_programming_overview.html" title="Contract Programming Overview">Contract
+      Programming Overview</a> section):
+    </p>
+<div class="orderedlist"><ol class="orderedlist" type="1">
+<li class="listitem">
+          First, the class invariants and the function preconditions are checked.
+        </li>
+<li class="listitem">
+          Then, the function body is executed.
+        </li>
+<li class="listitem">
+          Last, the class invariants and the function postconditions are checked.
+        </li>
+</ol></div>
+<p>
+      For example, if there is a bug in the function caller for which <code class="computeroutput"><span class="identifier">push_back</span></code> is called when <code class="computeroutput"><span class="identifier">size</span></code>
+      is equal to <code class="computeroutput"><span class="identifier">max_size</span></code> then the
+      execution of the program will be interrupted reporting a failure of the first
+      assertion in the preconditions and it will be evident that the bug is in the
+      caller:
+    </p>
+<pre class="programlisting">precondition number 1 "size() &lt; max_size()" failed: file "push_back.cpp", line 26
+</pre>
+<p>
+      Instead, if there is a bug in the <code class="computeroutput"><span class="identifier">push_back</span></code>
+      implementation for which <code class="computeroutput"><span class="identifier">size</span></code>
+      is not increased by one after <code class="computeroutput"><span class="identifier">value</span></code>
+      is added to <code class="computeroutput"><span class="identifier">vector</span></code> by the function
+      body then the execution will be interrupted reporting a failure of the first
+      assertion in the postconditions and it will be evident that the bug is in
+      <code class="computeroutput"><span class="identifier">push_back</span></code> body:
+    </p>
+<pre class="programlisting">postcondition number 1 "size() == old_size + 1" failed: file "push_back.cpp", line 26
+</pre>
+<p>
+      By default, when assertions fail this library prints the above error messages
+      to the standard error <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">cerr</span></code> and it terminates the program calling
+      <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">terminate</span></code> (this behaviour can be customized
+      to throw an exception, exit the program, etc, see the <a class="link" href="contract__/contract_programming_overview.html#contract__.contract_programming_overview.broken_contracts" title="Broken Contracts">Broken
+      Contracts</a> section). Note that the library error messages contain enough
+      information to uniquely identify the contract failure: Assertion type (class
+      invariant, precondition, postcondition, etc), assertion number, asserted expression,
+      file name, and line number. (The line number refers to the single line on which
+      each macro expands so it will be the same for class invariants, preconditions,
+      and postconditions of a given class or function but it can still be used together
+      with the assertion number to uniquely identity which assertion failed.)
+    </p>
+<h4>
+<a name="contract__.introduction.h1"></a>
+      <span><a name="contract__.introduction.language_support"></a></span><a class="link" href="index.html#contract__.introduction.language_support">Language
+      Support</a>
+    </h4>
+<p>
+      This library suffers of two limitations:
+    </p>
+<div class="orderedlist"><ol class="orderedlist" type="1">
+<li class="listitem">
+          The unusual syntax used to declare classes and functions within the macros
+          which causes cryptic compiler errors when not used correctly (syntax error
+          checking and reporting could be somewhat improved in future revisions of
+          the library but there are fundamental limitations on what can be done using
+          the preprocessor, see also the <a class="link" href="contract__/grammar.html#syntax_error_warning_anchor">Grammar</a>
+          section).
+        </li>
+<li class="listitem">
+          High compilation times (the authors will try to reduce compilation times
+          in future revisions of the library, see also the <a class="link" href="contract__/contract_programming_overview.html#compilation_time_warning_anchor">Cost</a>
+          section).
+        </li>
+</ol></div>
+<p>
+      With the addition of contracts, concepts, and named parameters, C++ could introduce
+      formal program specification into main-stream programming. The authors wish
+      the work done in developing this library will persuade the C++ community and
+      the C++ standard committee to add these features to the core language so to
+      support formal program specification without the unusual macro syntax and avoiding
+      high compilation times (unfortunately, this has not been the direction taken
+      for <a href="http://en.wikipedia.org/wiki/C%2B%2B11" target="_top">C++11</a> with
+      the rejection of the concept proposal <a class="link" href="contract__/bibliography.html#N2081_anchor">[N2081]</a>
+      and the lack of consideration for the Contract Programming proposal <a class="link" href="contract__/bibliography.html#N1962_anchor">[N1962]</a>,
+      but there might still be hope for C++1x with x &gt; 1).
+    </p>
+</div>
+<div class="footnotes">
+<br><hr width="100" align="left">
+<div class="footnote"><p><sup>[<a id="ftn.contract__.introduction.f0" href="#contract__.introduction.f0" class="para">1</a>] </sup>
+        Design by Contract is a registered trademark of <a href="http://en.wikipedia.org/wiki/Eiffel_Software" target="_top">Eiffel
+        Software</a>.
+      </p></div>
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"><p><small>Last revised: August 20, 2012 at 20:25:09 GMT</small></p></td>
+<td align="right"><div class="copyright-footer"></div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav"><a accesskey="n" href="contract__/full_table_of_contents.html"><img src="../..//doc/src/images/next.png" alt="Next"></a></div>
+</body>
+</html>

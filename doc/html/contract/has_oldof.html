@@ -1,0 +1,71 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<title>Struct template has_oldof</title>
+<link rel="stylesheet" href="../../../doc/src/boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.76.1">
+<link rel="home" href="../index.html" title="Chapter&#160;1.&#160;Contract++ 0.4.1">
+<link rel="up" href="../reference.html#header.contract.oldof_hpp" title="Header &lt;contract/oldof.hpp&gt;">
+<link rel="prev" href="../CONTRACT_LOOP_VARIANT_TPL.html" title="Macro CONTRACT_LOOP_VARIANT_TPL">
+<link rel="next" href="../CONTRACT_OLDOF.html" title="Macro CONTRACT_OLDOF">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><a href="http://sourceforge.net/projects/contractpp/"><img alt="Logo" width="277" height="86" src="../../../logo.png"></a></td>
+<td align="center"><a href="http://sourceforge.net/projects/contractpp/files/latest/download">Download</a></td>
+<td align="center"><a href="http://sourceforge.net/apps/trac/contractpp/report/3">Bugs</a></td>
+<td align="center"><a href="http://sourceforge.net/projects/contractpp/reviews/">Reviews</a></td>
+<td align="center"><a href="mailto:lorcaminiti@gmail.com">Contact Us</a></td>
+<td align="center"><a href="http://sourceforge.net/projects/contractpp/forums/forum/920163">Help</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="../CONTRACT_LOOP_VARIANT_TPL.html"><img src="../../..//doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../reference.html#header.contract.oldof_hpp"><img src="../../..//doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../..//doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="../CONTRACT_OLDOF.html"><img src="../../..//doc/src/images/next.png" alt="Next"></a>
+</div>
+<div class="refentry">
+<a name="contract.has_oldof"></a><div class="titlepage"></div>
+<div class="refnamediv">
+<h2><span class="refentrytitle">Struct template has_oldof</span></h2>
+<p>contract::has_oldof &#8212; Trait used to determine if a type can be copied for an old value or not. </p>
+</div>
+<h2 xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="refsynopsisdiv-title">Synopsis</h2>
+<div xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="refsynopsisdiv"><pre class="synopsis"><span class="comment">// In header: &lt;<a class="link" href="../reference.html#header.contract.oldof_hpp" title="Header &lt;contract/oldof.hpp&gt;">contract/oldof.hpp</a>&gt;
+
+</span><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> OldofExpressionType<span class="special">&gt;</span> 
+<span class="keyword">struct</span> <a class="link" href="has_oldof.html" title="Struct template has_oldof">has_oldof</a> <span class="special">{</span>
+<span class="special">}</span><span class="special">;</span></pre></div>
+<div class="refsect1">
+<a name="id1049860"></a><h2>Description</h2>
+<p>A type can be used for a postcondition old value if and only if it can be copied using the  <code class="computeroutput"><a class="link" href="copy.html" title="Class template copy">contract::copy</a></code> template. By default, all types that have a constant-correct copy constructor (i.e., that are <code class="computeroutput">ConstantCopyConstructible</code>) can be copied by  <code class="computeroutput"><a class="link" href="copy.html" title="Class template copy">contract::copy</a></code>.</p>
+<p>If a type cannot be copied, an old value declaration using such a type will not fail but it will generate an old value that will cause a compile-time error as soon as it is used in a contract assertion. Therefore, this trait can be used to program assertion requirements for those assertions that use old values on generic types that are not always known to be copyable. This way, the assertions will be disabled by the requirement instead of generating a compile-time error when the old values they use cannot be copied.</p>
+<p><span class="bold"><strong>Parameters:</strong></span> </p>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<tbody><tr>
+<td><span class="bold"><strong><code class="computeroutput">OldofExpressionType</code></strong></span></td>
+<td>The type of the expression specified to the  <code class="computeroutput"><a class="link" href="../CONTRACT_OLDOF.html" title="Macro CONTRACT_OLDOF">CONTRACT_OLDOF</a></code> macro for a given postcondition old value declaration.  </td>
+</tr></tbody>
+</table></div>
+<p>
+</p>
+<p>Unfortunately, in C++ it is not possible to portably implement a template meta-function that checks if a generic type has a constant-correct copy constructor (or even just a copy constructor). Therefore, the default implementation of this trait is <code class="computeroutput">boost::mpl::true_</code> for any type <code class="computeroutput">OdlofExpressionType</code>. This will cause compile-time errors for old value types that cannot be copied in which case users can specialize this unary boolean meta-function to inherit from <code class="computeroutput">boost::mpl::false_</code> for such types.</p>
+<p><span class="bold"><strong>See also:</strong></span>  <a class="link" href="../contract__/advanced_topics.html" title="Advanced Topics"> Advanced Topics</a> section. </p>
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright &#169; 2008-2012 Lorenzo Caminiti<p>
+        Distributed under the Boost Software License, Version 1.0 (see accompanying
+        file LICENSE_1_0.txt or a copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="../CONTRACT_LOOP_VARIANT_TPL.html"><img src="../../..//doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../reference.html#header.contract.oldof_hpp"><img src="../../..//doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../..//doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="../CONTRACT_OLDOF.html"><img src="../../..//doc/src/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>

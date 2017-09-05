@@ -1,0 +1,479 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<title>No Variadic Macros</title>
+<link rel="stylesheet" href="../../../doc/src/boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.76.1">
+<link rel="home" href="../index.html" title="Chapter&#160;1.&#160;Contract++ 0.4.1">
+<link rel="up" href="../index.html" title="Chapter&#160;1.&#160;Contract++ 0.4.1">
+<link rel="prev" href="grammar.html" title="Grammar">
+<link rel="next" href="../reference.html" title="Reference">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><a href="http://sourceforge.net/projects/contractpp/"><img alt="Logo" width="277" height="86" src="../../../logo.png"></a></td>
+<td align="center"><a href="http://sourceforge.net/projects/contractpp/files/latest/download">Download</a></td>
+<td align="center"><a href="http://sourceforge.net/apps/trac/contractpp/report/3">Bugs</a></td>
+<td align="center"><a href="http://sourceforge.net/projects/contractpp/reviews/">Reviews</a></td>
+<td align="center"><a href="mailto:lorcaminiti@gmail.com">Contact Us</a></td>
+<td align="center"><a href="http://sourceforge.net/projects/contractpp/forums/forum/920163">Help</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="grammar.html"><img src="../../..//doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../..//doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../..//doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="../reference.html"><img src="../../..//doc/src/images/next.png" alt="Next"></a>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="contract__.no_variadic_macros"></a><a class="link" href="no_variadic_macros.html" title="No Variadic Macros">No Variadic Macros</a>
+</h2></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="no_variadic_macros.html#contract__.no_variadic_macros.sequence_syntax">Sequence
+      Syntax</a></span></dt>
+<dt><span class="section"><a href="no_variadic_macros.html#contract__.no_variadic_macros.commas_and_leading_symbols_in_macros">Commas
+      and Leading Symbols in Macros</a></span></dt>
+</dl></div>
+<p>
+      This section illustrates an alternative syntax, the <span class="emphasis"><em>sequence syntax</em></span>,
+      that can be used on compilers that do not support variadic macros. Most modern
+      compilers support <a href="http://en.wikipedia.org/wiki/Variadic_macro" target="_top">variadic
+      macros</a> (notably, these include GCC, MSVC, and all <a href="http://en.wikipedia.org/wiki/C%2B%2B11" target="_top">C++11</a>
+      compilers).
+    </p>
+<div class="warning"><table border="0" summary="Warning">
+<tr>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Warning]" src="../../../doc/src/images/warning.png"></td>
+<th align="left">Warning</th>
+</tr>
+<tr><td align="left" valign="top"><p>
+        The sequence syntax presented in this section has not been fully tested yet.
+        Future revisions of the library are expected to test and support the sequence
+        syntax more thoroughly (see also <a href="https://sourceforge.net/apps/trac/contractpp/ticket/58" target="_top">Ticket
+        58</a>).
+      </p></td></tr>
+</table></div>
+<p>
+      The sequence syntax uses many extra parenthesis and it is significantly less
+      readable than the comma-separated syntax that we have seen so far. Therefore,
+      it is strongly recommended to not use the sequence syntax unless it is absolutely
+      necessary to program contracts that are portable to compilers that do not support
+      variadic macros.
+    </p>
+<div class="section">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="contract__.no_variadic_macros.sequence_syntax"></a><a class="link" href="no_variadic_macros.html#contract__.no_variadic_macros.sequence_syntax" title="Sequence Syntax">Sequence
+      Syntax</a>
+</h3></div></div></div>
+<p>
+        In the rare case that programmers need to use this library on compliers without
+        variadic macros, this library also allows to specify its macro parameters
+        using a <a href="http://www.boost.org/doc/libs/release/libs/preprocessor" target="_top">Boost.Preprocessor</a>
+        sequence in which tokens are separated using round parenthesis <code class="computeroutput"><span class="special">()</span></code>:
+      </p>
+<pre class="programlisting"><span class="special">(</span><span class="identifier">token1</span><span class="special">)</span> <span class="special">(</span><span class="identifier">token2</span><span class="special">)</span> <span class="special">...</span> <span class="comment">// All compilers.</span>
+</pre>
+<p>
+        Instead of the comma-separated lists that we have seen so far which require
+        variadic macros:
+      </p>
+<pre class="programlisting"><span class="identifier">token1</span><span class="special">,</span> <span class="identifier">token2</span><span class="special">,</span> <span class="special">...</span> <span class="comment">// Only compilers with variadic macros (preferred).</span>
+</pre>
+<p>
+        This library detects preprocessor support for variadic macros using the
+        <a href="http://www.boost.org/doc/libs/release/libs/config" target="_top">Boost.Config</a>
+        macro <code class="computeroutput"><span class="identifier">BOOST_NO_VARIADIC_MACROS</span></code>.
+        <a href="http://www.boost.org/doc/libs/release/libs/config" target="_top">Boost.Config</a>
+        defines the <code class="computeroutput"><span class="identifier">BOOST_NO_VARIADIC_MACROS</span></code>
+        only on compilers that do not support variadic macros furthermore programmers
+        can forcefully define this macro also on compilers that support variadic
+        macros. When this macro is not defined, this library macros support both
+        the camma-separated and sequence syntax, otherwise only the sequence syntax
+        is supported.
+      </p>
+<div class="note"><table border="0" summary="Note">
+<tr>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="../../../doc/src/images/note.png"></td>
+<th align="left">Note</th>
+</tr>
+<tr><td align="left" valign="top"><p>
+          The same macros accept both syntaxes on compilers with variadic macros
+          and only the sequence syntax on compilers without variadic macros.
+        </p></td></tr>
+</table></div>
+<p>
+        For example, the syntax on the left hand side works on all compilers with
+        and without variaidic macros (see also <a href="../../../example/contracts/class_template_vector_seq.cpp" target="_top"><code class="literal">class_template_vector_seq.cpp</code></a>,
+        <a href="../../../example/contracts/pushable_seq.hpp" target="_top"><code class="literal">pushable_seq.hpp</code></a>, <a href="../../../example/contracts/class_template_vector.cpp" target="_top"><code class="literal">class_template_vector.cpp</code></a>,
+        and <a href="../../../example/contracts/pushable.hpp" target="_top"><code class="literal">pushable.hpp</code></a>):
+      </p>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                <p>
+                  Sequence Syntax (all compilers)
+                </p>
+              </th>
+<th>
+                <p>
+                  Comma-Separated Syntax (variadic macros only, preferred)
+                </p>
+              </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+                <p>
+</p>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="identifier">CONTRACT_CLASS</span><span class="special">(</span>
+    <span class="keyword">template</span><span class="special">(</span> <span class="special">(</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">)</span> <span class="special">)</span>
+    <span class="keyword">class</span> <span class="special">(</span><span class="identifier">pushable</span><span class="special">)</span>
+<span class="special">)</span> <span class="special">{</span>
+    <span class="comment">// Subcontracting: In `and` with derived class invariants.</span>
+    <span class="identifier">CONTRACT_CLASS_INVARIANT_TPL</span><span class="special">(</span> <span class="special">(</span><span class="keyword">void</span><span class="special">)</span> <span class="special">)</span>
+
+    <span class="keyword">public</span><span class="special">:</span> <span class="keyword">typedef</span> <span class="keyword">typename</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;::</span><span class="identifier">const_reference</span> <span class="identifier">const_reference</span><span class="special">;</span>
+
+    <span class="identifier">CONTRACT_FUNCTION_TPL</span><span class="special">(</span>
+        <span class="keyword">public</span> <span class="keyword">virtual</span> <span class="keyword">void</span> <span class="special">(</span><span class="identifier">push_back</span><span class="special">)</span> <span class="special">(</span> <span class="special">((</span><span class="identifier">T</span> <span class="keyword">const</span><span class="special">&amp;)</span> <span class="identifier">value</span><span class="special">)</span> <span class="special">)</span> <span class="keyword">new</span>
+            <span class="comment">// Subcontracting: In `or` with overriding function preconditions.</span>
+            <span class="identifier">precondition</span><span class="special">(</span> <span class="special">(</span><span class="keyword">false</span><span class="special">)</span> <span class="special">)</span> <span class="comment">// Force check to overriding preconditions.</span>
+            <span class="comment">// Subcontracting: In `and` with overriding function postconditions.</span>
+            <span class="identifier">postcondition</span><span class="special">(</span>
+                <span class="special">(</span><span class="identifier">back</span><span class="special">()</span> <span class="special">==</span> <span class="identifier">value</span><span class="special">)(</span><span class="identifier">requires</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">has_equal_to</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;::</span><span class="identifier">value</span><span class="special">)</span>
+            <span class="special">)</span>
+    <span class="special">)</span> <span class="special">=</span> <span class="number">0</span><span class="special">;</span> <span class="comment">// Contract for pure virtual function.</span>
+
+    <span class="keyword">public</span><span class="special">:</span> <span class="keyword">virtual</span> <span class="identifier">const_reference</span> <span class="identifier">back</span> <span class="special">(</span> <span class="keyword">void</span> <span class="special">)</span> <span class="keyword">const</span> <span class="special">=</span> <span class="number">0</span><span class="special">;</span>
+<span class="special">};</span>
+</pre>
+<p>
+                </p>
+              </td>
+<td>
+                <p>
+</p>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="identifier">CONTRACT_CLASS</span><span class="special">(</span>
+    <span class="keyword">template</span><span class="special">(</span> <span class="keyword">typename</span> <span class="identifier">T</span> <span class="special">)</span>
+    <span class="keyword">class</span> <span class="special">(</span><span class="identifier">pushable</span><span class="special">)</span>
+<span class="special">)</span> <span class="special">{</span>
+    <span class="comment">// Subcontracting: In `and` with derived class invariants.</span>
+    <span class="identifier">CONTRACT_CLASS_INVARIANT_TPL</span><span class="special">(</span> <span class="keyword">void</span> <span class="special">)</span>
+
+    <span class="keyword">public</span><span class="special">:</span> <span class="keyword">typedef</span> <span class="keyword">typename</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;::</span><span class="identifier">const_reference</span> <span class="identifier">const_reference</span><span class="special">;</span>
+
+    <span class="identifier">CONTRACT_FUNCTION_TPL</span><span class="special">(</span>
+        <span class="keyword">public</span> <span class="keyword">virtual</span> <span class="keyword">void</span> <span class="special">(</span><span class="identifier">push_back</span><span class="special">)</span> <span class="special">(</span> <span class="special">(</span><span class="identifier">T</span> <span class="keyword">const</span><span class="special">&amp;)</span> <span class="identifier">value</span> <span class="special">)</span> <span class="keyword">new</span>
+            <span class="comment">// Subcontracting: In `or` with overriding function preconditions.</span>
+            <span class="identifier">precondition</span><span class="special">(</span> <span class="keyword">false</span> <span class="special">)</span> <span class="comment">// Force check to overriding preconditions.</span>
+            <span class="comment">// Subcontracting: In `and` with overriding function postconditions.</span>
+            <span class="identifier">postcondition</span><span class="special">(</span>
+                <span class="identifier">back</span><span class="special">()</span> <span class="special">==</span> <span class="identifier">value</span><span class="special">,</span> <span class="identifier">requires</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">has_equal_to</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;::</span><span class="identifier">value</span>
+            <span class="special">)</span>
+    <span class="special">)</span> <span class="special">=</span> <span class="number">0</span><span class="special">;</span> <span class="comment">// Contract for pure virtual function.</span>
+
+    <span class="keyword">public</span><span class="special">:</span> <span class="keyword">virtual</span> <span class="identifier">const_reference</span> <span class="identifier">back</span> <span class="special">(</span> <span class="keyword">void</span> <span class="special">)</span> <span class="keyword">const</span> <span class="special">=</span> <span class="number">0</span><span class="special">;</span>
+<span class="special">};</span>
+</pre>
+<p>
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+</p>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="preprocessor">#include</span> <span class="string">"pushable_seq.hpp"</span>
+
+<span class="identifier">CONTRACT_CLASS</span><span class="special">(</span>
+    <span class="keyword">template</span><span class="special">(</span> <span class="special">(</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">)</span> <span class="special">)</span>
+    <span class="keyword">class</span> <span class="special">(</span><span class="identifier">vector</span><span class="special">)</span> <span class="identifier">extends</span><span class="special">(</span> <span class="special">(</span><span class="keyword">public</span> <span class="identifier">pushable</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;)</span> <span class="special">)</span>
+<span class="special">)</span> <span class="special">{</span>
+    <span class="comment">// Use preprocessor sequences instead of variadic comma-separated lists.</span>
+
+    <span class="identifier">CONTRACT_CLASS_INVARIANT_TPL</span><span class="special">(</span>
+        <span class="special">(</span><span class="identifier">empty</span><span class="special">()</span> <span class="special">==</span> <span class="special">(</span><span class="identifier">size</span><span class="special">()</span> <span class="special">==</span> <span class="number">0</span><span class="special">))</span>
+        <span class="special">(</span><span class="identifier">size</span><span class="special">()</span> <span class="special">&lt;=</span> <span class="identifier">capacity</span><span class="special">())</span>
+        <span class="special">(</span><span class="identifier">capacity</span><span class="special">()</span> <span class="special">&lt;=</span> <span class="identifier">max_size</span><span class="special">())</span>
+        <span class="special">(</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">distance</span><span class="special">(</span><span class="identifier">begin</span><span class="special">(),</span> <span class="identifier">end</span><span class="special">())</span> <span class="special">==</span> <span class="keyword">int</span><span class="special">(</span><span class="identifier">size</span><span class="special">()))</span>
+    <span class="special">)</span>
+
+    <span class="keyword">public</span><span class="special">:</span> <span class="keyword">typedef</span> <span class="keyword">typename</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;::</span><span class="identifier">size_type</span> <span class="identifier">size_type</span><span class="special">;</span>
+    <span class="keyword">public</span><span class="special">:</span> <span class="keyword">typedef</span> <span class="keyword">typename</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;::</span><span class="identifier">const_reference</span> <span class="identifier">const_reference</span><span class="special">;</span>
+    <span class="keyword">public</span><span class="special">:</span> <span class="keyword">typedef</span> <span class="keyword">typename</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;::</span><span class="identifier">const_iterator</span> <span class="identifier">const_iterator</span><span class="special">;</span>
+
+    <span class="identifier">CONTRACT_CONSTRUCTOR_TPL</span><span class="special">(</span>
+        <span class="keyword">public</span> <span class="keyword">explicit</span> <span class="special">(</span><span class="identifier">vector</span><span class="special">)</span> <span class="special">(</span> <span class="special">((</span><span class="identifier">size_type</span><span class="special">)</span> <span class="identifier">count</span><span class="special">)</span> <span class="special">)</span>
+            <span class="identifier">precondition</span><span class="special">(</span> <span class="special">(</span><span class="identifier">count</span> <span class="special">&gt;=</span> <span class="number">0</span><span class="special">)</span> <span class="special">)</span>
+            <span class="identifier">postcondition</span><span class="special">(</span>
+                <span class="special">(</span><span class="identifier">size</span><span class="special">()</span> <span class="special">==</span> <span class="identifier">count</span><span class="special">)</span>
+                <span class="special">(</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">algorithm</span><span class="special">::</span><span class="identifier">all_of_equal</span><span class="special">(</span><span class="identifier">begin</span><span class="special">(),</span> <span class="identifier">end</span><span class="special">(),</span> <span class="identifier">T</span><span class="special">()))</span>
+            <span class="special">)</span>
+            <span class="identifier">initialize</span><span class="special">(</span> <span class="special">(</span><span class="identifier">vector_</span><span class="special">(</span><span class="identifier">count</span><span class="special">))</span> <span class="special">)</span>
+    <span class="special">)</span> <span class="special">{}</span>
+
+    <span class="identifier">CONTRACT_DESTRUCTOR_TPL</span><span class="special">(</span>
+        <span class="keyword">public</span> <span class="keyword">virtual</span> <span class="special">(~</span><span class="identifier">vector</span><span class="special">)</span> <span class="special">(</span> <span class="keyword">void</span> <span class="special">)</span>
+    <span class="special">)</span> <span class="special">{}</span>
+
+    <span class="identifier">CONTRACT_FUNCTION_TPL</span><span class="special">(</span>
+        <span class="keyword">public</span> <span class="keyword">void</span> <span class="special">(</span><span class="identifier">push_back</span><span class="special">)</span> <span class="special">(</span> <span class="special">((</span><span class="identifier">T</span> <span class="keyword">const</span><span class="special">&amp;)</span> <span class="identifier">value</span><span class="special">)</span> <span class="special">)</span>
+            <span class="identifier">precondition</span><span class="special">(</span> <span class="special">(</span><span class="identifier">size</span><span class="special">()</span> <span class="special">&lt;</span> <span class="identifier">max_size</span><span class="special">())</span> <span class="special">)</span>
+            <span class="identifier">postcondition</span><span class="special">(</span>
+                <span class="special">(</span><span class="keyword">auto</span> <span class="identifier">old_size</span> <span class="special">=</span> <span class="identifier">CONTRACT_OLDOF</span> <span class="identifier">size</span><span class="special">())</span>
+                <span class="special">(</span><span class="keyword">auto</span> <span class="identifier">old_capacity</span> <span class="special">=</span> <span class="identifier">CONTRACT_OLDOF</span> <span class="identifier">capacity</span><span class="special">())</span>
+                <span class="special">(</span><span class="identifier">size</span><span class="special">()</span> <span class="special">==</span> <span class="identifier">old_size</span> <span class="special">+</span> <span class="number">1</span><span class="special">)</span>
+                <span class="special">(</span><span class="identifier">capacity</span><span class="special">()</span> <span class="special">&gt;=</span> <span class="identifier">old_capacity</span><span class="special">)</span>
+                <span class="comment">// Overridden postconditions also check `back() == value`.</span>
+            <span class="special">)</span>
+    <span class="special">)</span> <span class="special">{</span>
+        <span class="identifier">vector_</span><span class="special">.</span><span class="identifier">push_back</span><span class="special">(</span><span class="identifier">value</span><span class="special">);</span>
+    <span class="special">}</span>
+
+    <span class="comment">// ...</span>
+</pre>
+<p>
+                </p>
+              </td>
+<td>
+                <p>
+</p>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="preprocessor">#include</span> <span class="string">"pushable.hpp"</span>
+
+<span class="identifier">CONTRACT_CLASS</span><span class="special">(</span>
+    <span class="keyword">template</span><span class="special">(</span> <span class="keyword">typename</span> <span class="identifier">T</span> <span class="special">)</span>
+    <span class="keyword">class</span> <span class="special">(</span><span class="identifier">vector</span><span class="special">)</span> <span class="identifier">extends</span><span class="special">(</span> <span class="keyword">public</span> <span class="identifier">pushable</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span> <span class="special">)</span> <span class="comment">// Subcontract.</span>
+<span class="special">)</span> <span class="special">{</span>
+    <span class="comment">// Within templates, use contract macros postfixed by `_TPL`.</span>
+
+    <span class="identifier">CONTRACT_CLASS_INVARIANT_TPL</span><span class="special">(</span>
+        <span class="identifier">empty</span><span class="special">()</span> <span class="special">==</span> <span class="special">(</span><span class="identifier">size</span><span class="special">()</span> <span class="special">==</span> <span class="number">0</span><span class="special">),</span>
+        <span class="identifier">size</span><span class="special">()</span> <span class="special">&lt;=</span> <span class="identifier">capacity</span><span class="special">(),</span>
+        <span class="identifier">capacity</span><span class="special">()</span> <span class="special">&lt;=</span> <span class="identifier">max_size</span><span class="special">(),</span>
+        <span class="identifier">std</span><span class="special">::</span><span class="identifier">distance</span><span class="special">(</span><span class="identifier">begin</span><span class="special">(),</span> <span class="identifier">end</span><span class="special">())</span> <span class="special">==</span> <span class="keyword">int</span><span class="special">(</span><span class="identifier">size</span><span class="special">())</span>
+    <span class="special">)</span>
+
+    <span class="keyword">public</span><span class="special">:</span> <span class="keyword">typedef</span> <span class="keyword">typename</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;::</span><span class="identifier">size_type</span> <span class="identifier">size_type</span><span class="special">;</span>
+    <span class="keyword">public</span><span class="special">:</span> <span class="keyword">typedef</span> <span class="keyword">typename</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;::</span><span class="identifier">const_reference</span> <span class="identifier">const_reference</span><span class="special">;</span>
+    <span class="keyword">public</span><span class="special">:</span> <span class="keyword">typedef</span> <span class="keyword">typename</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;::</span><span class="identifier">const_iterator</span> <span class="identifier">const_iterator</span><span class="special">;</span>
+
+    <span class="identifier">CONTRACT_CONSTRUCTOR_TPL</span><span class="special">(</span>
+        <span class="keyword">public</span> <span class="keyword">explicit</span> <span class="special">(</span><span class="identifier">vector</span><span class="special">)</span> <span class="special">(</span> <span class="special">(</span><span class="identifier">size_type</span><span class="special">)</span> <span class="identifier">count</span> <span class="special">)</span>
+            <span class="identifier">precondition</span><span class="special">(</span> <span class="identifier">count</span> <span class="special">&gt;=</span> <span class="number">0</span> <span class="special">)</span>
+            <span class="identifier">postcondition</span><span class="special">(</span>
+                <span class="identifier">size</span><span class="special">()</span> <span class="special">==</span> <span class="identifier">count</span><span class="special">,</span>
+                <span class="identifier">boost</span><span class="special">::</span><span class="identifier">algorithm</span><span class="special">::</span><span class="identifier">all_of_equal</span><span class="special">(</span><span class="identifier">begin</span><span class="special">(),</span> <span class="identifier">end</span><span class="special">(),</span> <span class="identifier">T</span><span class="special">())</span>
+            <span class="special">)</span>
+            <span class="identifier">initialize</span><span class="special">(</span> <span class="identifier">vector_</span><span class="special">(</span><span class="identifier">count</span><span class="special">)</span> <span class="special">)</span>
+    <span class="special">)</span> <span class="special">{}</span>
+
+    <span class="identifier">CONTRACT_DESTRUCTOR_TPL</span><span class="special">(</span>
+        <span class="keyword">public</span> <span class="keyword">virtual</span> <span class="special">(~</span><span class="identifier">vector</span><span class="special">)</span> <span class="special">(</span> <span class="keyword">void</span> <span class="special">)</span>
+    <span class="special">)</span> <span class="special">{}</span>
+
+    <span class="identifier">CONTRACT_FUNCTION_TPL</span><span class="special">(</span>
+        <span class="keyword">public</span> <span class="keyword">void</span> <span class="special">(</span><span class="identifier">push_back</span><span class="special">)</span> <span class="special">(</span> <span class="special">(</span><span class="identifier">T</span> <span class="keyword">const</span><span class="special">&amp;)</span> <span class="identifier">value</span> <span class="special">)</span>
+            <span class="identifier">precondition</span><span class="special">(</span> <span class="identifier">size</span><span class="special">()</span> <span class="special">&lt;</span> <span class="identifier">max_size</span><span class="special">()</span> <span class="special">)</span>
+            <span class="identifier">postcondition</span><span class="special">(</span>
+                <span class="keyword">auto</span> <span class="identifier">old_size</span> <span class="special">=</span> <span class="identifier">CONTRACT_OLDOF</span> <span class="identifier">size</span><span class="special">(),</span>
+                <span class="keyword">auto</span> <span class="identifier">old_capacity</span> <span class="special">=</span> <span class="identifier">CONTRACT_OLDOF</span> <span class="identifier">capacity</span><span class="special">(),</span>
+                <span class="identifier">size</span><span class="special">()</span> <span class="special">==</span> <span class="identifier">old_size</span> <span class="special">+</span> <span class="number">1</span><span class="special">,</span>
+                <span class="identifier">capacity</span><span class="special">()</span> <span class="special">&gt;=</span> <span class="identifier">old_capacity</span>
+                <span class="comment">// Overridden postconditions also check `back() == value`.</span>
+            <span class="special">)</span>
+    <span class="special">)</span> <span class="special">{</span>
+        <span class="identifier">vector_</span><span class="special">.</span><span class="identifier">push_back</span><span class="special">(</span><span class="identifier">value</span><span class="special">);</span>
+    <span class="special">}</span>
+
+    <span class="comment">// ...</span>
+</pre>
+<p>
+                </p>
+              </td>
+</tr>
+</tbody>
+</table></div>
+<p>
+        Note the many extra parenthesis around all tokens within the lists: template
+        parameters <code class="computeroutput"><span class="special">(</span><span class="keyword">typename</span>
+        <span class="identifier">T</span><span class="special">)</span></code>,
+        base classes <code class="computeroutput"><span class="special">(</span><span class="keyword">public</span>
+        <span class="identifier">pushable</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;)</span></code>,
+        function parameters <code class="computeroutput"><span class="special">(</span><span class="identifier">size_type</span><span class="special">)</span> <span class="identifier">count</span></code>,
+        all assertions, etc. Furthermore, empty lists need to be specified using
+        <code class="computeroutput"><span class="special">(</span><span class="keyword">void</span><span class="special">)</span></code> instead of just <code class="computeroutput"><span class="keyword">void</span></code>.
+      </p>
+<p>
+        When using the sequence syntax, the macro <code class="computeroutput"><a class="link" href="../CONTRACT_LIMIT_OLDOFS.html" title="Macro CONTRACT_LIMIT_OLDOFS">CONTRACT_LIMIT_OLDOFS</a></code>
+        specifies the maximum number of postconditions sequence elements (instead
+        of the maximum possible number of old value declarations as for variadic
+        macros).
+      </p>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="contract__.no_variadic_macros.commas_and_leading_symbols_in_macros"></a><a class="link" href="no_variadic_macros.html#contract__.no_variadic_macros.commas_and_leading_symbols_in_macros" title="Commas and Leading Symbols in Macros">Commas
+      and Leading Symbols in Macros</a>
+</h3></div></div></div>
+<p>
+        As we have seen in the <a class="link" href="advanced_topics.html" title="Advanced Topics">Advanced
+        Topics</a> section, syntactic elements containing unwrapped commas and
+        leading symbols need to be wrapped within extra round parenthesis:
+      </p>
+<pre class="programlisting"><span class="special">(::</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">map</span><span class="special">&lt;</span><span class="keyword">char</span><span class="special">,</span> <span class="keyword">int</span><span class="special">,</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">less</span><span class="special">&lt;</span><span class="keyword">char</span><span class="special">&gt;</span> <span class="special">&gt;)</span>           <span class="comment">// With variadic macros.</span>
+</pre>
+<p>
+        However, without variadic macros this is no longer sufficient and the number
+        of commas needs to be explicitly specified using the following syntax: <sup>[<a name="contract__.no_variadic_macros.commas_and_leading_symbols_in_macros.f0" href="#ftn.contract__.no_variadic_macros.commas_and_leading_symbols_in_macros.f0" class="footnote">75</a>]</sup>
+      </p>
+<pre class="programlisting"><span class="identifier">comma</span><span class="special">(</span><span class="number">2</span><span class="special">)(::</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">map</span><span class="special">&lt;</span><span class="keyword">char</span><span class="special">,</span> <span class="keyword">int</span><span class="special">,</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">less</span><span class="special">&lt;</span><span class="keyword">char</span><span class="special">&gt;</span> <span class="special">&gt;)</span>   <span class="comment">// Without variadic macros.</span>
+</pre>
+<p>
+        For example (see also <a href="../../../example/contracts/macro_commas_symbols_integral_map_seq.cpp" target="_top"><code class="literal">macro_commas_symbols_integral_map_seq.cpp</code></a> and
+        <a href="../../../example/contracts/macro_commas_symbols_integral_map.cpp" target="_top"><code class="literal">macro_commas_symbols_integral_map.cpp</code></a>):
+      </p>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                <p>
+                  Sequence Syntax (all compilers)
+                </p>
+              </th>
+<th>
+                <p>
+                  Comma-Separated Syntax (variadic macros only, preferred)
+                </p>
+              </th>
+</tr></thead>
+<tbody><tr>
+<td>
+                <p>
+</p>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="identifier">CONTRACT_CLASS</span><span class="special">(</span>
+    <span class="keyword">template</span><span class="special">(</span>
+        <span class="special">(</span><span class="keyword">typename</span> <span class="identifier">Key</span><span class="special">)</span>
+        <span class="special">(</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">)</span>
+        <span class="special">(</span><span class="keyword">class</span> <span class="identifier">Allocator</span><span class="special">)</span>
+                <span class="special">(</span><span class="keyword">default</span> <span class="identifier">comma</span><span class="special">(</span><span class="number">1</span><span class="special">)(::</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">allocator</span><span class="special">&lt;</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">pair</span><span class="special">&lt;</span><span class="identifier">Key</span> <span class="keyword">const</span><span class="special">,</span> <span class="identifier">T</span><span class="special">&gt;</span> <span class="special">&gt;))</span>
+        <span class="special">(</span><span class="identifier">comma</span><span class="special">(</span><span class="number">1</span><span class="special">)(</span><span class="keyword">typename</span> <span class="special">::</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">map</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">,</span> <span class="identifier">T</span><span class="special">&gt;::</span><span class="identifier">key_type</span><span class="special">)</span> <span class="identifier">default_key</span><span class="special">)</span>
+                <span class="special">(</span><span class="keyword">default</span> <span class="special">(-</span><span class="number">1</span><span class="special">))</span>
+    <span class="special">)</span> <span class="identifier">requires</span><span class="special">(</span> <span class="special">(</span><span class="identifier">comma</span><span class="special">(</span><span class="number">1</span><span class="special">)(</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">Convertible</span><span class="special">&lt;</span><span class="identifier">Key</span><span class="special">,</span> <span class="keyword">int</span><span class="special">&gt;))</span> <span class="special">)</span>
+    <span class="keyword">class</span> <span class="special">(</span><span class="identifier">integral_map</span><span class="special">)</span>
+        <span class="identifier">extends</span><span class="special">(</span> <span class="special">(</span><span class="keyword">public</span> <span class="identifier">comma</span><span class="special">(</span><span class="number">1</span><span class="special">)(::</span><span class="identifier">sizeable</span><span class="special">&lt;</span><span class="identifier">Key</span><span class="special">,</span> <span class="identifier">T</span><span class="special">&gt;))</span> <span class="special">)</span>
+<span class="special">)</span> <span class="special">{</span>
+    <span class="identifier">CONTRACT_CLASS_INVARIANT_TPL</span><span class="special">(</span>
+        <span class="special">(((::</span><span class="identifier">sizeable</span><span class="special">&lt;</span><span class="identifier">Key</span><span class="special">,</span> <span class="identifier">T</span><span class="special">&gt;::</span><span class="identifier">max_size</span><span class="special">))</span> <span class="special">&gt;=</span> <span class="identifier">size</span><span class="special">())</span>
+    <span class="special">)</span>
+
+    <span class="keyword">public</span><span class="special">:</span> <span class="keyword">typedef</span> <span class="keyword">typename</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">map</span><span class="special">&lt;</span><span class="identifier">Key</span><span class="special">,</span> <span class="identifier">T</span><span class="special">,</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">less</span><span class="special">&lt;</span><span class="identifier">Key</span><span class="special">&gt;,</span> <span class="identifier">Allocator</span><span class="special">&gt;::</span>
+            <span class="identifier">iterator</span> <span class="identifier">iterator</span><span class="special">;</span>
+
+    <span class="identifier">CONTRACT_FUNCTION_TPL</span><span class="special">(</span>
+        <span class="keyword">public</span> <span class="keyword">template</span><span class="special">(</span> <span class="special">(</span><span class="keyword">typename</span> <span class="identifier">OtherKey</span><span class="special">)</span> <span class="special">(</span><span class="keyword">typename</span> <span class="identifier">OtherT</span><span class="special">)</span> <span class="special">)</span>
+            <span class="identifier">requires</span><span class="special">(</span>
+                <span class="special">(</span><span class="identifier">comma</span><span class="special">(</span><span class="number">1</span><span class="special">)(::</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">Convertible</span><span class="special">&lt;</span><span class="identifier">OtherKey</span><span class="special">,</span> <span class="identifier">Key</span><span class="special">&gt;))</span>
+                <span class="special">(</span><span class="identifier">comma</span><span class="special">(</span><span class="number">1</span><span class="special">)(::</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">Convertible</span><span class="special">&lt;</span><span class="identifier">OtherT</span><span class="special">,</span> <span class="identifier">T</span><span class="special">&gt;))</span>
+            <span class="special">)</span>
+        <span class="identifier">comma</span><span class="special">(</span><span class="number">1</span><span class="special">)(::</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">pair</span><span class="special">&lt;</span><span class="identifier">iterator</span><span class="special">,</span> <span class="keyword">bool</span><span class="special">&gt;)</span> <span class="special">(</span><span class="identifier">insert</span><span class="special">)</span> <span class="special">(</span>
+                <span class="special">(</span><span class="identifier">comma</span><span class="special">(</span><span class="number">1</span><span class="special">)(::</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">pair</span><span class="special">&lt;</span><span class="identifier">OtherKey</span><span class="special">,</span> <span class="identifier">OtherT</span><span class="special">&gt;</span> <span class="keyword">const</span><span class="special">&amp;)</span> <span class="identifier">other_value</span><span class="special">)</span>
+                        <span class="special">(</span><span class="keyword">default</span> <span class="identifier">comma</span><span class="special">(</span><span class="number">1</span><span class="special">)(::</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">pair</span><span class="special">&lt;</span><span class="identifier">Key</span><span class="special">,</span><span class="identifier">T</span><span class="special">&gt;(</span><span class="identifier">default_key</span><span class="special">,</span> <span class="identifier">T</span><span class="special">())))</span>
+            <span class="special">)</span> <span class="keyword">throw</span><span class="special">(</span> <span class="special">(</span><span class="identifier">comma</span><span class="special">(</span><span class="number">1</span><span class="special">)(::</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">pair</span><span class="special">&lt;</span><span class="identifier">Key</span><span class="special">,</span> <span class="identifier">T</span><span class="special">&gt;))</span> <span class="special">)</span>
+            <span class="identifier">precondition</span><span class="special">(</span>
+                <span class="special">((!</span><span class="identifier">full</span><span class="special">()))</span>
+            <span class="special">)</span>
+            <span class="identifier">postcondition</span><span class="special">(</span>
+                <span class="special">(</span><span class="keyword">auto</span> <span class="identifier">result</span> <span class="special">=</span> <span class="keyword">return</span><span class="special">)</span>
+                <span class="special">(</span><span class="identifier">comma</span><span class="special">(</span><span class="number">1</span><span class="special">)(</span><span class="keyword">typename</span> <span class="identifier">sizeable</span><span class="special">&lt;</span><span class="identifier">OtherKey</span><span class="special">,</span> <span class="identifier">OtherT</span><span class="special">&gt;::</span><span class="identifier">size_type</span><span class="special">)</span>
+                        <span class="identifier">old_other_size</span> <span class="special">=</span> <span class="identifier">CONTRACT_OLDOF</span>
+                                <span class="special">(</span><span class="identifier">size</span><span class="special">&lt;</span><span class="identifier">OtherKey</span><span class="special">,</span> <span class="identifier">OtherT</span><span class="special">&gt;()))</span>
+                <span class="special">(((::</span><span class="identifier">sizeable</span><span class="special">&lt;</span><span class="identifier">Key</span><span class="special">,</span> <span class="identifier">T</span><span class="special">&gt;::</span><span class="identifier">max_size</span><span class="special">))</span> <span class="special">&gt;=</span> <span class="identifier">size</span><span class="special">())</span>
+                <span class="special">(</span><span class="identifier">size</span><span class="special">()</span> <span class="special">==</span> <span class="identifier">old_other_size</span> <span class="special">+</span> <span class="special">(</span><span class="identifier">result</span><span class="special">.</span><span class="identifier">second</span> <span class="special">?</span> <span class="number">1</span> <span class="special">:</span> <span class="number">0</span><span class="special">))</span>
+            <span class="special">)</span>
+    <span class="special">)</span> <span class="special">{</span>
+        <span class="comment">// ...</span>
+</pre>
+<p>
+                </p>
+              </td>
+<td>
+                <p>
+</p>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="identifier">CONTRACT_CLASS</span><span class="special">(</span>
+    <span class="keyword">template</span><span class="special">(</span>
+        <span class="keyword">typename</span> <span class="identifier">Key</span><span class="special">,</span>
+        <span class="keyword">typename</span> <span class="identifier">T</span><span class="special">,</span> <span class="comment">// Commas in following template params.</span>
+        <span class="keyword">class</span> <span class="identifier">Allocator</span><span class="special">,</span>
+                <span class="keyword">default</span> <span class="special">(::</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">allocator</span><span class="special">&lt;</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">pair</span><span class="special">&lt;</span><span class="identifier">Key</span> <span class="keyword">const</span><span class="special">,</span> <span class="identifier">T</span><span class="special">&gt;</span> <span class="special">&gt;),</span>
+        <span class="special">(</span><span class="keyword">typename</span> <span class="special">::</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">map</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">,</span> <span class="identifier">T</span><span class="special">&gt;::</span><span class="identifier">key_type</span><span class="special">)</span> <span class="identifier">default_key</span><span class="special">,</span>
+                <span class="keyword">default</span> <span class="special">(-</span><span class="number">1</span><span class="special">)</span>
+    <span class="special">)</span> <span class="identifier">requires</span><span class="special">(</span> <span class="special">(</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">Convertible</span><span class="special">&lt;</span><span class="identifier">Key</span><span class="special">,</span> <span class="keyword">int</span><span class="special">&gt;)</span> <span class="special">)</span> <span class="comment">// Commas in concepts.</span>
+    <span class="keyword">class</span> <span class="special">(</span><span class="identifier">integral_map</span><span class="special">)</span>
+        <span class="identifier">extends</span><span class="special">(</span> <span class="keyword">public</span> <span class="special">(::</span><span class="identifier">sizeable</span><span class="special">&lt;</span><span class="identifier">Key</span><span class="special">,</span> <span class="identifier">T</span><span class="special">&gt;)</span> <span class="special">)</span> <span class="comment">// Commas in bases.</span>
+<span class="special">)</span> <span class="special">{</span>
+    <span class="identifier">CONTRACT_CLASS_INVARIANT_TPL</span><span class="special">(</span> <span class="comment">// Commas in class invariants.</span>
+        <span class="special">(::</span><span class="identifier">sizeable</span><span class="special">&lt;</span><span class="identifier">Key</span><span class="special">,</span> <span class="identifier">T</span><span class="special">&gt;::</span><span class="identifier">max_size</span><span class="special">)</span> <span class="special">&gt;=</span> <span class="identifier">size</span><span class="special">()</span>
+    <span class="special">)</span>
+
+    <span class="keyword">public</span><span class="special">:</span> <span class="keyword">typedef</span> <span class="keyword">typename</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">map</span><span class="special">&lt;</span><span class="identifier">Key</span><span class="special">,</span> <span class="identifier">T</span><span class="special">,</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">less</span><span class="special">&lt;</span><span class="identifier">Key</span><span class="special">&gt;,</span> <span class="identifier">Allocator</span><span class="special">&gt;::</span>
+            <span class="identifier">iterator</span> <span class="identifier">iterator</span><span class="special">;</span>
+
+    <span class="identifier">CONTRACT_FUNCTION_TPL</span><span class="special">(</span>
+        <span class="keyword">public</span> <span class="keyword">template</span><span class="special">(</span> <span class="keyword">typename</span> <span class="identifier">OtherKey</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">OtherT</span> <span class="special">)</span>
+            <span class="identifier">requires</span><span class="special">(</span>
+                <span class="special">(::</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">Convertible</span><span class="special">&lt;</span><span class="identifier">OtherKey</span><span class="special">,</span> <span class="identifier">Key</span><span class="special">&gt;),</span>
+                <span class="special">(::</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">Convertible</span><span class="special">&lt;</span><span class="identifier">OtherT</span><span class="special">,</span> <span class="identifier">T</span><span class="special">&gt;)</span>
+            <span class="special">)</span>
+        <span class="special">(::</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">pair</span><span class="special">&lt;</span><span class="identifier">iterator</span><span class="special">,</span> <span class="keyword">bool</span><span class="special">&gt;)</span> <span class="special">(</span><span class="identifier">insert</span><span class="special">)</span> <span class="special">(</span> <span class="comment">// Commas in result and params.</span>
+                <span class="special">(::</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">pair</span><span class="special">&lt;</span><span class="identifier">OtherKey</span><span class="special">,</span> <span class="identifier">OtherT</span><span class="special">&gt;</span> <span class="keyword">const</span><span class="special">&amp;)</span> <span class="identifier">other_value</span><span class="special">,</span>
+                        <span class="keyword">default</span> <span class="special">(::</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">pair</span><span class="special">&lt;</span><span class="identifier">Key</span><span class="special">,</span> <span class="identifier">T</span><span class="special">&gt;(</span><span class="identifier">default_key</span><span class="special">,</span> <span class="identifier">T</span><span class="special">()))</span>
+            <span class="special">)</span> <span class="keyword">throw</span><span class="special">(</span> <span class="special">(::</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">pair</span><span class="special">&lt;</span><span class="identifier">Key</span><span class="special">,</span> <span class="identifier">T</span><span class="special">&gt;)</span> <span class="special">)</span> <span class="comment">// Commas in exception specs.</span>
+            <span class="identifier">precondition</span><span class="special">(</span> <span class="comment">// Leading symbols in preconditions (same for commas).</span>
+                <span class="special">((!</span><span class="identifier">full</span><span class="special">()))</span> <span class="comment">// LIMITATION: Two sets `((...))` (otherwise seq.).</span>
+            <span class="special">)</span>
+            <span class="identifier">postcondition</span><span class="special">(</span> <span class="comment">// Commas in postconditions.</span>
+                <span class="keyword">auto</span> <span class="identifier">result</span> <span class="special">=</span> <span class="keyword">return</span><span class="special">,</span>
+                <span class="special">(</span><span class="keyword">typename</span> <span class="identifier">sizeable</span><span class="special">&lt;</span><span class="identifier">OtherKey</span><span class="special">,</span> <span class="identifier">OtherT</span><span class="special">&gt;::</span><span class="identifier">size_type</span><span class="special">)</span>
+                        <span class="identifier">old_other_size</span> <span class="special">=</span> <span class="identifier">CONTRACT_OLDOF</span>
+                                <span class="special">(</span><span class="identifier">size</span><span class="special">&lt;</span><span class="identifier">OtherKey</span><span class="special">,</span> <span class="identifier">OtherT</span><span class="special">&gt;()),</span>
+                <span class="special">(::</span><span class="identifier">sizeable</span><span class="special">&lt;</span><span class="identifier">Key</span><span class="special">,</span> <span class="identifier">T</span><span class="special">&gt;::</span><span class="identifier">max_size</span><span class="special">)</span> <span class="special">&gt;=</span> <span class="identifier">size</span><span class="special">(),</span>
+                <span class="identifier">size</span><span class="special">()</span> <span class="special">==</span> <span class="identifier">old_other_size</span> <span class="special">+</span> <span class="special">(</span><span class="identifier">result</span><span class="special">.</span><span class="identifier">second</span> <span class="special">?</span> <span class="number">1</span> <span class="special">:</span> <span class="number">0</span><span class="special">)</span>
+            <span class="special">)</span>
+    <span class="special">)</span> <span class="special">{</span>
+        <span class="comment">// ...</span>
+</pre>
+<p>
+                </p>
+              </td>
+</tr></tbody>
+</table></div>
+</div>
+<div class="footnotes">
+<br><hr width="100" align="left">
+<div class="footnote"><p><sup>[<a id="ftn.contract__.no_variadic_macros.commas_and_leading_symbols_in_macros.f0" href="#contract__.no_variadic_macros.commas_and_leading_symbols_in_macros.f0" class="para">75</a>] </sup>
+          <span class="bold"><strong>Rationale.</strong></span> Using variadic macros, the
+          preprocessor can automatically determine the number of commas within a
+          tuple but without variadic macros that is no longer possible so programmers
+          must manually specify the number of commas.
+        </p></div>
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright &#169; 2008-2012 Lorenzo Caminiti<p>
+        Distributed under the Boost Software License, Version 1.0 (see accompanying
+        file LICENSE_1_0.txt or a copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="grammar.html"><img src="../../..//doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../..//doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../..//doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="../reference.html"><img src="../../..//doc/src/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>

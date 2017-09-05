@@ -1,0 +1,26 @@
+
+# Copyright (C) 2008-2012 Lorenzo Caminiti
+# Use, modification, and distribution is subject to the
+# Boost Software License, Version 1.0 (see accompanying file
+# LICENSE_1_0.txt or a copy at http://www.boost.org/LICENSE_1_0.txt).
+# Documentation at http://contractpp.sourceforge.net.
+
+import os ;
+
+if ! [ os.environ BOOST_ROOT ]
+{
+    exit "Error: Set BOOST_ROOT environment variable to the Boost root directory" ;
+}
+local BOOST_ROOT = [ os.environ BOOST_ROOT ] ;
+echo "Using Boost libraries from:" $(BOOST_ROOT) ;
+
+use-project boost : $(BOOST_ROOT) ;
+
+project
+    :   requirements
+        # Add this library headers to include path.
+        <include>"./include"
+        # Add Boost library headers to include path.
+        <include>$(BOOST_ROOT)
+    ;
+

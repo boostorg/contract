@@ -1,0 +1,815 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<title>Concepts</title>
+<link rel="stylesheet" href="../../../doc/src/boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.76.1">
+<link rel="home" href="../index.html" title="Chapter&#160;1.&#160;Contract++ 0.4.1">
+<link rel="up" href="../index.html" title="Chapter&#160;1.&#160;Contract++ 0.4.1">
+<link rel="prev" href="virtual_specifiers.html" title="Virtual Specifiers">
+<link rel="next" href="named_parameters.html" title="Named Parameters">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><a href="http://sourceforge.net/projects/contractpp/"><img alt="Logo" width="277" height="86" src="../../../logo.png"></a></td>
+<td align="center"><a href="http://sourceforge.net/projects/contractpp/files/latest/download">Download</a></td>
+<td align="center"><a href="http://sourceforge.net/apps/trac/contractpp/report/3">Bugs</a></td>
+<td align="center"><a href="http://sourceforge.net/projects/contractpp/reviews/">Reviews</a></td>
+<td align="center"><a href="mailto:lorcaminiti@gmail.com">Contact Us</a></td>
+<td align="center"><a href="http://sourceforge.net/projects/contractpp/forums/forum/920163">Help</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="virtual_specifiers.html"><img src="../../..//doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../..//doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../..//doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="named_parameters.html"><img src="../../..//doc/src/images/next.png" alt="Next"></a>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="contract__.concepts"></a><a class="link" href="concepts.html" title="Concepts">Concepts</a>
+</h2></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="concepts.html#contract__.concepts.class_templates">Class Templates</a></span></dt>
+<dt><span class="section"><a href="concepts.html#contract__.concepts.function_templates">Function Templates</a></span></dt>
+<dt><span class="section"><a href="concepts.html#contract__.concepts.concept_definitions__not_implemented_">Concept
+      Definitions (Not Implemented)</a></span></dt>
+</dl></div>
+<p>
+      This section explains how to use this library to check concepts. Concepts are
+      part of the program specifications because they enforce requirements on generic
+      types at compile-time and therefore they are within the scope of this library.
+    </p>
+<p>
+      Concepts were proposed for addition to <a href="http://en.wikipedia.org/wiki/C%2B%2B11" target="_top">C++11</a>
+      but they were unfortunately never adopted (see <a class="link" href="bibliography.html#N2081_anchor">[N2081]</a>).
+      The concepts that are checked using this library need to be defined using the
+      <a href="http://www.boost.org/doc/libs/release/libs/concept_check" target="_top">Boost.ConceptCheck</a>
+      library. This library does not add any extra functionality with respect to
+      the concept checking features already provided by <a href="http://www.boost.org/doc/libs/release/libs/concept_check" target="_top">Boost.ConceptCheck</a>
+      but it allows to specify both concepts and contracts together within a unified
+      syntax.
+    </p>
+<div class="section">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="contract__.concepts.class_templates"></a><a class="link" href="concepts.html#contract__.concepts.class_templates" title="Class Templates">Class Templates</a>
+</h3></div></div></div>
+<p>
+        It is possible to list the concepts to check for class templates using <code class="computeroutput"><span class="identifier">requires</span></code> within the <code class="computeroutput"><a class="link" href="../CONTRACT_CLASS.html" title="Macro CONTRACT_CLASS">CONTRACT_CLASS</a></code>
+        macro, after the template parameter declarations (see also the <a class="link" href="grammar.html" title="Grammar">Grammar</a>
+        section):
+      </p>
+<pre class="programlisting"><span class="keyword">template</span><span class="special">(</span> <span class="emphasis"><em>template-parameter1</em></span><span class="special">,</span> <span class="emphasis"><em>template-parameter2</em></span><span class="special">,</span> <span class="special">...</span> <span class="special">)</span> <span class="identifier">requires</span><span class="special">(</span> <span class="emphasis"><em>concept1</em></span><span class="special">,</span> <span class="emphasis"><em>concept2</em></span><span class="special">,</span> <span class="special">...</span> <span class="special">)</span>
+</pre>
+<p>
+        The following example requires that the generic type <code class="computeroutput"><span class="identifier">T</span></code>
+        specified for the class template <code class="computeroutput"><span class="identifier">vector</span></code>
+        is always <a href="http://www.boost.org/doc/libs/release/libs/utility/CopyConstructible.html" target="_top"><code class="literal">CopyConstructible</code></a>
+        and it uses the <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">CopyConstructible</span></code> concept defined by <a href="http://www.boost.org/doc/libs/release/libs/concept_check" target="_top">Boost.ConceptCheck</a>
+        (see also <a href="../../../example/concepts/class_member_concept_vector.hpp" target="_top"><code class="literal">class_member_concept_vector.hpp</code></a>,
+        <a href="../../../example/concepts/class_member_concept_vector_error.cpp" target="_top"><code class="literal">class_member_concept_vector_error.cpp</code></a>,
+        and <a href="../../../example/concepts/class_member_concept_vector.cpp" target="_top"><code class="literal">class_member_concept_vector.cpp</code></a>):
+      </p>
+<p>
+</p>
+<pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">concept_check</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span> <span class="comment">// Boost.ConceptCheck predefined concepts.</span>
+
+<span class="identifier">CONTRACT_CLASS</span><span class="special">(</span>
+    <span class="keyword">template</span><span class="special">(</span> <span class="keyword">typename</span> <span class="identifier">T</span> <span class="special">)</span>
+        <span class="identifier">requires</span><span class="special">(</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">CopyConstructible</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span> <span class="special">)</span> <span class="comment">// Check concepts.</span>
+    <span class="keyword">class</span> <span class="special">(</span><span class="identifier">vector</span><span class="special">)</span>
+<span class="special">)</span> <span class="special">{</span>
+    <span class="identifier">CONTRACT_CLASS_INVARIANT_TPL</span><span class="special">(</span>
+        <span class="identifier">size</span><span class="special">()</span> <span class="special">&lt;=</span> <span class="identifier">capacity</span><span class="special">(),</span>
+        <span class="identifier">capacity</span><span class="special">()</span> <span class="special">&lt;=</span> <span class="identifier">max_size</span><span class="special">()</span>
+    <span class="special">)</span>
+
+    <span class="comment">// ...</span>
+</pre>
+<p>
+      </p>
+<p>
+        If the class template <code class="computeroutput"><span class="identifier">vector</span></code>
+        is instantiated on a type <code class="computeroutput"><span class="identifier">T</span></code>
+        that is not <a href="http://www.boost.org/doc/libs/release/libs/utility/CopyConstructible.html" target="_top"><code class="literal">CopyConstructible</code></a>,
+        the compiler will generate an error (with the usual format of <a href="http://www.boost.org/doc/libs/release/libs/concept_check" target="_top">Boost.ConceptCheck</a>
+        errors).
+      </p>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="contract__.concepts.function_templates"></a><a class="link" href="concepts.html#contract__.concepts.function_templates" title="Function Templates">Function Templates</a>
+</h3></div></div></div>
+<p>
+        It is possible to list concepts to check for function templates using <code class="computeroutput"><span class="identifier">requires</span></code> within the <code class="computeroutput"><a class="link" href="../CONTRACT_FUNCTION.html" title="Macro CONTRACT_FUNCTION">CONTRACT_FUNCTION</a></code>
+        macro, after the template parameter declarations (see also the <a class="link" href="grammar.html" title="Grammar">Grammar</a>
+        section).
+      </p>
+<p>
+        For example, for a constructor function template (see also <a href="../../../example/concepts/class_member_concept_vector.hpp" target="_top"><code class="literal">class_member_concept_vector.hpp</code></a>,
+        <a href="../../../example/concepts/class_member_concept_vector_constructor_error.cpp" target="_top"><code class="literal">class_member_concept_vector_constructor_error.cpp</code></a>,
+        and <a href="../../../example/concepts/class_member_concept_vector.cpp" target="_top"><code class="literal">class_member_concept_vector.cpp</code></a>):
+      </p>
+<p>
+</p>
+<pre class="programlisting"><span class="identifier">CONTRACT_CONSTRUCTOR_TPL</span><span class="special">(</span>
+    <span class="keyword">public</span> <span class="keyword">template</span><span class="special">(</span> <span class="keyword">class</span> <span class="identifier">Iterator</span> <span class="special">)</span>
+        <span class="identifier">requires</span><span class="special">(</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">InputIterator</span><span class="special">&lt;</span><span class="identifier">Iterator</span><span class="special">&gt;</span> <span class="special">)</span> <span class="comment">// Check concepts.</span>
+    <span class="special">(</span><span class="identifier">vector</span><span class="special">)</span> <span class="special">(</span> <span class="special">(</span><span class="identifier">Iterator</span><span class="special">)</span> <span class="identifier">first</span><span class="special">,</span> <span class="special">(</span><span class="identifier">Iterator</span><span class="special">)</span> <span class="identifier">last</span> <span class="special">)</span>
+        <span class="identifier">postcondition</span><span class="special">(</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">distance</span><span class="special">(</span><span class="identifier">first</span><span class="special">,</span> <span class="identifier">last</span><span class="special">)</span> <span class="special">==</span> <span class="keyword">int</span><span class="special">(</span><span class="identifier">size</span><span class="special">())</span> <span class="special">)</span>
+        <span class="identifier">initialize</span><span class="special">(</span> <span class="identifier">vector_</span><span class="special">(</span><span class="identifier">first</span><span class="special">,</span> <span class="identifier">last</span><span class="special">)</span> <span class="special">)</span>
+<span class="special">)</span> <span class="special">{}</span>
+</pre>
+<p>
+      </p>
+<p>
+        And, for a member function template (see also <a href="../../../example/concepts/class_member_concept_vector.hpp" target="_top"><code class="literal">class_member_concept_vector.hpp</code></a>,
+        <a href="../../../example/concepts/class_member_concept_vector_member_error.cpp" target="_top"><code class="literal">class_member_concept_vector_member_error.cpp</code></a>,
+        and <a href="../../../example/concepts/class_member_concept_vector.cpp" target="_top"><code class="literal">class_member_concept_vector.cpp</code></a>):
+      </p>
+<p>
+</p>
+<pre class="programlisting"><span class="identifier">CONTRACT_FUNCTION_TPL</span><span class="special">(</span>
+    <span class="keyword">public</span> <span class="keyword">template</span><span class="special">(</span> <span class="keyword">class</span> <span class="identifier">Iterator</span> <span class="special">)</span>
+        <span class="identifier">requires</span><span class="special">(</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">InputIterator</span><span class="special">&lt;</span><span class="identifier">Iterator</span><span class="special">&gt;</span> <span class="special">)</span> <span class="comment">// Check concepts.</span>
+    <span class="keyword">void</span> <span class="special">(</span><span class="identifier">insert</span><span class="special">)</span> <span class="special">(</span> <span class="special">(</span><span class="identifier">Iterator</span><span class="special">)</span> <span class="identifier">where</span><span class="special">,</span> <span class="special">(</span><span class="identifier">Iterator</span><span class="special">)</span> <span class="identifier">first</span><span class="special">,</span> <span class="special">(</span><span class="identifier">Iterator</span><span class="special">)</span> <span class="identifier">last</span> <span class="special">)</span>
+        <span class="identifier">precondition</span><span class="special">(</span> <span class="identifier">size</span><span class="special">()</span> <span class="special">+</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">distance</span><span class="special">(</span><span class="identifier">first</span><span class="special">,</span> <span class="identifier">last</span><span class="special">)</span> <span class="special">&lt;</span> <span class="identifier">max_size</span><span class="special">()</span> <span class="special">)</span>
+        <span class="identifier">postcondition</span><span class="special">(</span>
+            <span class="keyword">auto</span> <span class="identifier">old_increased_size</span> <span class="special">=</span> <span class="identifier">CONTRACT_OLDOF</span>
+                    <span class="identifier">size</span><span class="special">()</span> <span class="special">+</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">distance</span><span class="special">(</span><span class="identifier">first</span><span class="special">,</span> <span class="identifier">last</span><span class="special">),</span>
+            <span class="keyword">auto</span> <span class="identifier">old_capacity</span> <span class="special">=</span> <span class="identifier">CONTRACT_OLDOF</span> <span class="identifier">capacity</span><span class="special">(),</span>
+            <span class="identifier">size</span><span class="special">()</span> <span class="special">==</span> <span class="identifier">old_increased_size</span><span class="special">,</span>
+            <span class="identifier">capacity</span><span class="special">()</span> <span class="special">&gt;=</span> <span class="identifier">old_capacity</span>
+        <span class="special">)</span>
+<span class="special">)</span> <span class="special">{</span>
+    <span class="identifier">vector_</span><span class="special">.</span><span class="identifier">insert</span><span class="special">(</span><span class="identifier">where</span><span class="special">,</span> <span class="identifier">first</span><span class="special">,</span> <span class="identifier">last</span><span class="special">);</span>
+<span class="special">}</span>
+</pre>
+<p>
+      </p>
+<p>
+        If the <code class="computeroutput"><span class="identifier">vector</span></code> constructor
+        template or the <code class="computeroutput"><span class="identifier">vector</span><span class="special">::</span><span class="identifier">insert</span></code> member function template are instantiated
+        on a type <code class="computeroutput"><span class="identifier">Iterator</span></code> that is
+        not an <a href="http://www.sgi.com/tech/stl/InputIterator.html" target="_top"><code class="literal">InputIterator</code></a>,
+        the compiler will generate an error (with the usual format of <a href="http://www.boost.org/doc/libs/release/libs/concept_check" target="_top">Boost.ConceptCheck</a>
+        errors).
+      </p>
+<p>
+        So far we have used concepts that are predefined by <a href="http://www.boost.org/doc/libs/release/libs/concept_check" target="_top">Boost.ConceptCheck</a>
+        but it is also possible to check user-defined concepts as long as they are
+        defined using <a href="http://www.boost.org/doc/libs/release/libs/concept_check" target="_top">Boost.ConceptCheck</a>.
+        For example, consider the following user-defined <code class="computeroutput"><span class="identifier">Addable</span></code>
+        concept (see also <a href="../../../example/concepts/free_concept_operator_preinc.hpp" target="_top"><code class="literal">free_concept_operator_preinc.hpp</code></a>,
+        <a href="../../../example/concepts/free_concept_operator_preinc_error.cpp" target="_top"><code class="literal">free_concept_operator_preinc_error.cpp</code></a>,
+        and <a href="../../../example/concepts/free_concept_operator_preinc.cpp" target="_top"><code class="literal">free_concept_operator_preinc.cpp</code></a>):
+      </p>
+<p>
+</p>
+<pre class="programlisting"><span class="keyword">template</span><span class="special">&lt;</span> <span class="keyword">typename</span> <span class="identifier">T</span> <span class="special">&gt;</span>
+<span class="keyword">struct</span> <span class="identifier">Addable</span> <span class="comment">// New concept defined and implemented using Boost.ConceptCheck.</span>
+<span class="special">{</span>
+    <span class="identifier">BOOST_CONCEPT_USAGE</span><span class="special">(</span><span class="identifier">Addable</span><span class="special">)</span>
+    <span class="special">{</span>
+        <span class="identifier">return_type</span><span class="special">(</span><span class="identifier">x</span> <span class="special">+</span> <span class="identifier">y</span><span class="special">);</span>
+    <span class="special">}</span>
+
+<span class="keyword">private</span><span class="special">:</span>
+    <span class="keyword">void</span> <span class="identifier">return_type</span> <span class="special">(</span> <span class="identifier">T</span> <span class="special">)</span> <span class="special">{}</span>
+    <span class="keyword">static</span> <span class="identifier">T</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">x</span><span class="special">;</span>
+    <span class="keyword">static</span> <span class="identifier">T</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">y</span><span class="special">;</span>
+<span class="special">};</span>
+
+<span class="identifier">CONTRACT_FUNCTION</span><span class="special">(</span>
+    <span class="keyword">template</span><span class="special">(</span> <span class="keyword">typename</span> <span class="identifier">T</span> <span class="special">)</span>
+        <span class="identifier">requires</span><span class="special">(</span>
+            <span class="identifier">boost</span><span class="special">::</span><span class="identifier">Assignable</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;,</span>   <span class="comment">// Check both predefined and</span>
+            <span class="identifier">Addable</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span>              <span class="comment">// newly defined concepts.</span>
+        <span class="special">)</span>
+    <span class="special">(</span><span class="identifier">T</span><span class="special">&amp;)</span> <span class="keyword">operator</span><span class="special">(++)(</span><span class="identifier">preinc</span><span class="special">)</span> <span class="special">(</span> <span class="special">(</span><span class="identifier">T</span><span class="special">&amp;)</span> <span class="identifier">value</span> <span class="special">)</span>
+        <span class="identifier">postcondition</span><span class="special">(</span>
+            <span class="keyword">auto</span> <span class="identifier">result</span> <span class="special">=</span> <span class="keyword">return</span><span class="special">,</span>
+            <span class="keyword">auto</span> <span class="identifier">old_value</span> <span class="special">=</span> <span class="identifier">CONTRACT_OLDOF</span> <span class="identifier">value</span><span class="special">,</span>
+            <span class="identifier">value</span> <span class="special">==</span> <span class="identifier">old_value</span> <span class="special">+</span> <span class="identifier">T</span><span class="special">(</span><span class="number">1</span><span class="special">),</span> <span class="identifier">requires</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">has_equal_to</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;::</span><span class="identifier">value</span>
+            <span class="identifier">result</span> <span class="special">==</span> <span class="identifier">value</span><span class="special">,</span> <span class="identifier">requires</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">has_equal_to</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;::</span><span class="identifier">value</span>
+        <span class="special">)</span>
+<span class="special">)</span> <span class="special">{</span>
+    <span class="keyword">return</span> <span class="identifier">value</span> <span class="special">=</span> <span class="identifier">value</span> <span class="special">+</span> <span class="identifier">T</span><span class="special">(</span><span class="number">1</span><span class="special">);</span>
+<span class="special">}</span>
+</pre>
+<p>
+      </p>
+<p>
+        If this templated operator <code class="computeroutput"><span class="special">++</span></code>
+        is instantiated on a type <code class="computeroutput"><span class="identifier">T</span></code>
+        that is not <a href="http://www.boost.org/doc/libs/release/libs/utility/Assignable.html" target="_top"><code class="literal">Assignable</code></a>
+        or not <code class="computeroutput"><span class="identifier">Addable</span></code>, the compiler
+        will generate an error (with the usual format of <a href="http://www.boost.org/doc/libs/release/libs/concept_check" target="_top">Boost.ConceptCheck</a>
+        error).
+      </p>
+<p>
+        Note that concepts can also be specified for free function templates, for
+        free operator templates, and for member operator templates (as illustrated
+        in some of the above examples).
+      </p>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="contract__.concepts.concept_definitions__not_implemented_"></a><a class="link" href="concepts.html#contract__.concepts.concept_definitions__not_implemented_" title="Concept Definitions (Not Implemented)">Concept
+      Definitions (Not Implemented)</a>
+</h3></div></div></div>
+<p>
+        Using the preprocessor parsing techniques introduced by the library, it should
+        be possible to implement the following syntax to define <a href="http://en.wikipedia.org/wiki/Concepts_(C%2B%2B)" target="_top">concepts</a>.
+        Note how this syntax resembles the syntax proposed by <a class="link" href="bibliography.html#N2081_anchor">[N2081]</a>
+        for adding concepts to <a href="http://en.wikipedia.org/wiki/C%2B%2B11" target="_top">C++11</a>
+        (<a class="link" href="bibliography.html#N2081_anchor">[N2081]</a> and concepts were unfortunately
+        not adopted by the standard committee).
+      </p>
+<pre class="programlisting"><span class="identifier">CONTRACT_CONCEPT</span><span class="special">(</span> <span class="comment">// A concept definition.</span>
+    <span class="keyword">auto</span> <span class="identifier">concept</span> <span class="special">(</span><span class="identifier">LessThanComparable</span><span class="special">)</span> <span class="special">(</span> <span class="keyword">typename</span> <span class="identifier">T</span> <span class="special">)</span>
+    <span class="special">(</span>
+        <span class="keyword">bool</span> <span class="keyword">operator</span><span class="special">(&lt;)(</span><span class="identifier">less</span><span class="special">)</span> <span class="special">(</span> <span class="identifier">T</span> <span class="special">,</span> <span class="identifier">T</span> <span class="special">)</span>
+    <span class="special">)</span>
+<span class="special">)</span>
+
+<span class="identifier">CONTRACT_CONCEPT</span><span class="special">(</span> <span class="comment">// Concepts with multiple parameters.</span>
+    <span class="keyword">auto</span> <span class="identifier">concept</span> <span class="special">(</span><span class="identifier">Convertible</span><span class="special">)</span> <span class="special">(</span> <span class="keyword">typename</span> <span class="identifier">T</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">U</span> <span class="special">)</span>
+    <span class="special">(</span>
+        <span class="keyword">operator</span><span class="special">(</span><span class="identifier">U</span><span class="special">)(</span><span class="identifier">U_type</span><span class="special">)</span> <span class="special">(</span> <span class="identifier">T</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="special">)</span>
+    <span class="special">)</span>
+<span class="special">)</span>
+
+<span class="identifier">CONTRACT_CONCEPT</span><span class="special">(</span> <span class="comment">// Concept composition.</span>
+    <span class="identifier">concept</span> <span class="special">(</span><span class="identifier">InputIterator</span><span class="special">)</span> <span class="special">(</span> <span class="keyword">typename</span> <span class="identifier">Iterator</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">Value</span> <span class="special">)</span>
+    <span class="special">(</span>
+        <span class="identifier">requires</span> <span class="identifier">Regular</span><span class="special">&lt;</span><span class="identifier">Iterator</span><span class="special">&gt;,</span>
+
+        <span class="special">(</span><span class="identifier">Value</span><span class="special">)</span> <span class="keyword">operator</span><span class="special">(*)(</span><span class="identifier">deref</span><span class="special">)</span> <span class="special">(</span> <span class="identifier">Iterator</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="special">),</span>
+        <span class="special">(</span><span class="identifier">Iterator</span><span class="special">&amp;)</span> <span class="keyword">operator</span><span class="special">(++)(</span><span class="identifier">preinc</span><span class="special">)</span> <span class="special">(</span> <span class="identifier">Iterator</span><span class="special">&amp;</span> <span class="special">),</span>
+        <span class="special">(</span><span class="identifier">Iterator</span><span class="special">)</span> <span class="keyword">operator</span><span class="special">(++)(</span><span class="identifier">postinc</span><span class="special">)</span> <span class="special">(</span> <span class="identifier">Iterator</span><span class="special">&amp;,</span> <span class="keyword">int</span> <span class="special">)</span>
+    <span class="special">)</span>
+<span class="special">)</span>
+
+<span class="identifier">CONTRACT_CONCEPT</span><span class="special">(</span> <span class="comment">// Derived concepts.</span>
+    <span class="identifier">concept</span> <span class="special">(</span><span class="identifier">ForwardIterator</span><span class="special">)</span> <span class="special">(</span> <span class="keyword">typename</span> <span class="identifier">Iterator</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">Value</span> <span class="special">)</span>
+        <span class="identifier">extends</span><span class="special">(</span> <span class="identifier">InputIterator</span><span class="special">&lt;</span><span class="identifier">Iterator</span><span class="special">,</span> <span class="identifier">Value</span><span class="special">&gt;</span> <span class="special">)</span>
+    <span class="special">(</span>
+        <span class="comment">// Other requirements here...</span>
+    <span class="special">)</span>
+<span class="special">)</span>
+
+<span class="identifier">CONTRACT_CONCEPT</span><span class="special">(</span> <span class="comment">// Typenames within concepts.</span>
+    <span class="identifier">concept</span> <span class="special">(</span><span class="identifier">InputIterator</span><span class="special">)</span> <span class="special">(</span> <span class="keyword">typename</span> <span class="identifier">Iterator</span> <span class="special">)</span>
+    <span class="special">(</span>
+        <span class="keyword">typename</span> <span class="identifier">value_type</span><span class="special">,</span>
+        <span class="keyword">typename</span> <span class="identifier">reference</span><span class="special">,</span>
+        <span class="keyword">typename</span> <span class="identifier">pointer</span><span class="special">,</span>
+        <span class="keyword">typename</span> <span class="identifier">difference_type</span><span class="special">,</span>
+
+        <span class="identifier">requires</span> <span class="identifier">Regular</span><span class="special">&lt;</span><span class="identifier">Iterator</span><span class="special">&gt;,</span>
+        <span class="identifier">requires</span> <span class="special">(</span><span class="identifier">Convertible</span><span class="special">&lt;</span><span class="identifier">reference</span><span class="special">,</span> <span class="identifier">value_type</span><span class="special">&gt;),</span>
+
+        <span class="special">(</span><span class="identifier">reference</span><span class="special">)</span> <span class="keyword">operator</span><span class="special">(*)(</span><span class="identifier">deref</span><span class="special">)</span> <span class="special">(</span> <span class="keyword">const</span> <span class="identifier">Iterator</span><span class="special">&amp;</span> <span class="special">),</span>
+        <span class="special">(</span><span class="identifier">Iterator</span><span class="special">&amp;)</span> <span class="keyword">operator</span><span class="special">(++)(</span><span class="identifier">preinc</span><span class="special">)</span> <span class="special">(</span> <span class="identifier">Iterator</span><span class="special">&amp;</span> <span class="special">),</span>
+        <span class="special">(</span><span class="identifier">Iterator</span><span class="special">)</span> <span class="keyword">operator</span><span class="special">(++)(</span><span class="identifier">postinc</span><span class="special">)</span> <span class="special">(</span> <span class="identifier">Iterator</span><span class="special">&amp;,</span> <span class="keyword">int</span> <span class="special">)</span>
+    <span class="special">)</span>
+<span class="special">)</span>
+
+<span class="identifier">CONTRACT_CONCEPT</span><span class="special">(</span> <span class="comment">// Concept maps.</span>
+    <span class="identifier">concept_map</span> <span class="special">(</span><span class="identifier">InputIterator</span><span class="special">&lt;</span><span class="keyword">char</span><span class="special">*&gt;)</span>
+    <span class="special">(</span>
+        <span class="keyword">typedef</span> <span class="keyword">char</span> <span class="identifier">value_type</span><span class="special">,</span>
+        <span class="keyword">typedef</span> <span class="special">(</span><span class="keyword">char</span><span class="special">&amp;)</span> <span class="identifier">reference</span><span class="special">,</span>
+        <span class="keyword">typedef</span> <span class="special">(</span><span class="keyword">char</span><span class="special">*)</span> <span class="identifier">pointer</span><span class="special">,</span>
+        <span class="keyword">typedef</span> <span class="identifier">ptrdiff_t</span> <span class="identifier">difference_type</span>
+    <span class="special">)</span>
+<span class="special">)</span>
+
+<span class="identifier">CONTRACT_CONCEPT</span><span class="special">(</span> <span class="comment">// Concept maps can be templated.</span>
+    <span class="keyword">template</span><span class="special">(</span> <span class="keyword">typename</span> <span class="identifier">T</span> <span class="special">)</span>
+    <span class="identifier">concept_map</span> <span class="special">(</span><span class="identifier">InputIterator</span><span class="special">)</span> <span class="special">(</span> <span class="identifier">T</span><span class="special">*</span> <span class="special">)</span>
+    <span class="special">(</span>
+        <span class="keyword">typedef</span> <span class="special">(</span><span class="identifier">T</span><span class="special">&amp;)</span> <span class="identifier">value_type</span><span class="special">,</span>
+        <span class="keyword">typedef</span> <span class="special">(</span><span class="identifier">T</span><span class="special">&amp;)</span> <span class="identifier">reference</span><span class="special">,</span>
+        <span class="keyword">typedef</span> <span class="special">(</span><span class="identifier">T</span><span class="special">*)</span> <span class="identifier">pointer</span><span class="special">,</span>
+        <span class="keyword">typedef</span> <span class="identifier">ptrdiff_t</span> <span class="identifier">difference_type</span>
+    <span class="special">)</span>
+<span class="special">)</span>
+
+<span class="identifier">CONTRACT_CONCEPT</span><span class="special">(</span> <span class="comment">// Concept maps as mini-types.</span>
+    <span class="identifier">concept</span> <span class="special">(</span><span class="identifier">Stack</span><span class="special">)</span> <span class="special">(</span> <span class="keyword">typename</span> <span class="identifier">X</span> <span class="special">)</span>
+    <span class="special">(</span>
+        <span class="keyword">typename</span> <span class="identifier">value_type</span><span class="special">,</span>
+
+        <span class="keyword">void</span> <span class="special">(</span><span class="identifier">push</span><span class="special">)</span> <span class="special">(</span> <span class="identifier">X</span><span class="special">&amp;,</span> <span class="identifier">value_type</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="special">),</span>
+        <span class="keyword">void</span> <span class="special">(</span><span class="identifier">pop</span><span class="special">)</span> <span class="special">(</span> <span class="identifier">X</span><span class="special">&amp;</span> <span class="special">),</span>
+        <span class="special">(</span><span class="identifier">value_type</span><span class="special">)</span> <span class="special">(</span><span class="identifier">top</span><span class="special">)</span> <span class="special">(</span> <span class="identifier">X</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="special">),</span>
+        <span class="keyword">bool</span> <span class="special">(</span><span class="identifier">empty</span><span class="special">)</span> <span class="special">(</span> <span class="identifier">X</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="special">)</span>
+    <span class="special">)</span>
+<span class="special">)</span>
+
+<span class="identifier">CONTRACT_CONCEPT</span><span class="special">(</span> <span class="comment">// Concept maps as mini-types (specializations).</span>
+    <span class="keyword">template</span><span class="special">(</span> <span class="keyword">typename</span> <span class="identifier">T</span> <span class="special">)</span>
+    <span class="identifier">concept_map</span> <span class="special">(</span><span class="identifier">Stack</span><span class="special">)</span> <span class="special">(</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span> <span class="special">)</span>
+    <span class="special">(</span>
+        <span class="keyword">typedef</span> <span class="special">(</span><span class="identifier">T</span><span class="special">)</span> <span class="identifier">value_type</span><span class="special">,</span>
+
+        <span class="keyword">void</span> <span class="special">(</span><span class="identifier">push</span><span class="special">)</span> <span class="special">(</span> <span class="special">(</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;&amp;)</span> <span class="identifier">v</span><span class="special">,</span> <span class="special">(</span><span class="identifier">T</span> <span class="keyword">const</span><span class="special">&amp;)</span> <span class="identifier">x</span> <span class="special">)</span>
+        <span class="special">(</span>
+            <span class="identifier">v</span><span class="special">.</span><span class="identifier">push_back</span><span class="special">(</span><span class="identifier">x</span><span class="special">);</span>
+        <span class="special">),</span>
+
+        <span class="keyword">void</span> <span class="special">(</span><span class="identifier">pop</span><span class="special">)</span> <span class="special">(</span> <span class="special">(</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;&amp;)</span> <span class="identifier">v</span> <span class="special">)</span>
+        <span class="special">(</span>
+            <span class="identifier">v</span><span class="special">.</span><span class="identifier">pop_back</span><span class="special">();</span>
+        <span class="special">),</span>
+
+        <span class="special">(</span><span class="identifier">T</span><span class="special">)</span> <span class="special">(</span><span class="identifier">top</span><span class="special">)</span> <span class="special">(</span> <span class="special">(</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span> <span class="keyword">const</span><span class="special">&amp;)</span> <span class="identifier">v</span> <span class="special">)</span>
+        <span class="special">(</span>
+            <span class="keyword">return</span> <span class="identifier">v</span><span class="special">.</span><span class="identifier">back</span><span class="special">();</span>
+        <span class="special">),</span>
+
+        <span class="keyword">bool</span> <span class="special">(</span><span class="identifier">empty</span><span class="special">)</span> <span class="special">(</span> <span class="special">(</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span> <span class="keyword">const</span><span class="special">&amp;)</span> <span class="identifier">v</span> <span class="special">)</span>
+        <span class="special">(</span>
+            <span class="keyword">return</span> <span class="identifier">v</span><span class="special">.</span><span class="identifier">emtpy</span><span class="special">();</span>
+        <span class="special">)</span>
+    <span class="special">)</span>
+<span class="special">)</span>
+
+<span class="identifier">CONTRACT_CONCEPT</span><span class="special">(</span> <span class="comment">// Axioms.</span>
+    <span class="identifier">concept</span> <span class="special">(</span><span class="identifier">Semigroup</span><span class="special">)</span> <span class="special">(</span> <span class="keyword">typename</span> <span class="identifier">Op</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">T</span> <span class="special">)</span>
+        <span class="identifier">extends</span><span class="special">(</span> <span class="identifier">CopyConstructible</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span> <span class="special">)</span>
+    <span class="special">(</span>
+        <span class="special">(</span><span class="identifier">T</span><span class="special">)</span> <span class="keyword">operator</span><span class="special">(())(</span><span class="identifier">call</span><span class="special">)</span> <span class="special">(</span> <span class="identifier">Op</span><span class="special">,</span> <span class="identifier">T</span><span class="special">,</span> <span class="identifier">T</span> <span class="special">),</span>
+
+        <span class="identifier">axiom</span> <span class="special">(</span><span class="identifier">Associativity</span><span class="special">)</span> <span class="special">(</span>  <span class="special">(</span><span class="identifier">Op</span><span class="special">)</span> <span class="identifier">op</span><span class="special">,</span> <span class="special">(</span><span class="identifier">T</span><span class="special">)</span> <span class="identifier">x</span><span class="special">,</span> <span class="special">(</span><span class="identifier">T</span><span class="special">)</span> <span class="identifier">y</span><span class="special">,</span> <span class="special">(</span><span class="identifier">T</span><span class="special">)</span> <span class="identifier">z</span> <span class="special">)</span>
+        <span class="special">(</span>
+            <span class="identifier">op</span><span class="special">(</span><span class="identifier">x</span><span class="special">,</span> <span class="identifier">op</span><span class="special">(</span><span class="identifier">y</span><span class="special">,</span> <span class="identifier">z</span><span class="special">))</span> <span class="special">==</span> <span class="identifier">op</span><span class="special">(</span><span class="identifier">op</span><span class="special">(</span><span class="identifier">x</span><span class="special">,</span> <span class="identifier">y</span><span class="special">),</span> <span class="identifier">z</span><span class="special">);</span>
+        <span class="special">)</span>
+    <span class="special">)</span>
+<span class="special">)</span>
+</pre>
+<p>
+        Note that:
+      </p>
+<div class="orderedlist"><ol class="orderedlist" type="1">
+<li class="listitem">
+            Parenthesis around function parameter types can be always allowed but
+            they should be required only when the parameter name is also specified.
+          </li>
+<li class="listitem">
+            The function bodies need to be specified within the macros and that will
+            make compiler errors very hard to use (because the errors will all refer
+            to the same line number, the line number on which the <code class="computeroutput"><span class="identifier">CONTRACT_CONCEPT</span></code>
+            macro expanded). However, concept definitions, including possible function
+            bodies, might be simple enough for this not to be a major issue at least
+            in the most common cases (the authors do not have enough experience with
+            programming concept definitions to truly assess this).
+          </li>
+</ol></div>
+<p>
+        The authors <span class="emphasis"><em>think</em></span> this syntax can be implemented and
+        parsed using the preprocessor however the authors have not tried to implement
+        this yet. If this syntax can indeed be implemented, it should then be investigated
+        if the actual concept definitions can be programmed from the parsed concept
+        traits using C++ (this seems possible at least for <a href="http://en.wikipedia.org/wiki/C%2B%2B11" target="_top">C++11</a>
+        based on some work done for the <a href="http://zao.se/~zao/boostcon/11/slides/Boost.Generic.pdf" target="_top">Generic</a>
+        library).
+      </p>
+<p>
+        The authors recognize that implementing concept definitions would be a nice
+        addition to this library (again, concepts are parts of the program specifications,
+        they are contracts on the type system that are checked at compile-time, so
+        both concept checking and concept definition are within the scope of this
+        library). However, at the moment there are no concrete plans for extending
+        this library with the concept definitions (see also <a href="https://sourceforge.net/apps/trac/contractpp/ticket/49" target="_top">Ticket
+        49</a>).
+      </p>
+<p>
+        The following is a side-by-side comparison of this possible concept definition
+        syntax with the syntax proposed by <a class="link" href="bibliography.html#N2081_anchor">[N2081]</a>:
+      </p>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                <p>
+                  Possible Extension of This Library (not implemented)
+                </p>
+              </th>
+<th>
+                <p>
+                  [N2081] Proposal (not part of C++)
+                </p>
+              </th>
+</tr></thead>
+<tbody><tr>
+<td>
+                <p>
+</p>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="identifier">CONTRACT_CONCEPT</span><span class="special">(</span>
+    <span class="identifier">concept</span> <span class="special">(</span><span class="identifier">ArithmeticLike</span><span class="special">)</span> <span class="special">(</span> <span class="keyword">typename</span> <span class="identifier">T</span> <span class="special">)</span>
+        <span class="identifier">extends</span><span class="special">(</span>
+            <span class="identifier">Regular</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;,</span>
+            <span class="identifier">LessThanComparable</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;,</span>
+            <span class="identifier">HasUnaryPlus</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;,</span>
+            <span class="identifier">HasNegate</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;,</span>
+            <span class="special">(</span><span class="identifier">HasPlus</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">,</span> <span class="identifier">T</span><span class="special">&gt;),</span>
+            <span class="special">(</span><span class="identifier">HasMinus</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">,</span> <span class="identifier">T</span><span class="special">&gt;)</span>
+            <span class="comment">// ...</span>
+        <span class="special">)</span>
+    <span class="special">(</span>
+        <span class="keyword">explicit</span> <span class="identifier">constructor</span><span class="special">(</span><span class="identifier">T</span><span class="special">,</span> <span class="identifier">T</span><span class="special">)</span> <span class="special">(</span> <span class="identifier">intmax_t</span><span class="special">),</span>
+        <span class="keyword">explicit</span> <span class="identifier">constructor</span><span class="special">(</span><span class="identifier">T</span><span class="special">,</span> <span class="identifier">T</span><span class="special">)</span> <span class="special">(</span> <span class="identifier">uintmax_t</span> <span class="special">),</span>
+        <span class="keyword">explicit</span> <span class="identifier">constructor</span><span class="special">(</span><span class="identifier">T</span><span class="special">,</span> <span class="identifier">T</span><span class="special">)</span> <span class="special">(</span> <span class="keyword">long</span> <span class="keyword">double</span> <span class="special">),</span>
+
+        <span class="identifier">requires</span> <span class="special">(</span><span class="identifier">Convertible</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">HasUnaryPlus</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;::</span><span class="identifier">result_type</span><span class="special">,</span> <span class="identifier">T</span><span class="special">&gt;)</span>
+        <span class="comment">// ...</span>
+    <span class="special">)</span>
+<span class="special">)</span>
+
+<span class="identifier">CONTRACT_CONCEPT</span><span class="special">(</span>
+    <span class="keyword">auto</span> <span class="identifier">concept</span> <span class="special">(</span><span class="identifier">HasFind</span><span class="special">)</span> <span class="special">(</span> <span class="keyword">typename</span> <span class="identifier">T</span> <span class="special">)</span>
+    <span class="special">(</span>
+        <span class="keyword">typename</span> <span class="identifier">key_type</span><span class="special">,</span> <span class="identifier">as</span> <span class="keyword">typename</span> <span class="identifier">T</span><span class="special">::</span><span class="identifier">key_type</span><span class="special">,</span>
+        <span class="keyword">typename</span> <span class="identifier">mapped_type</span><span class="special">,</span>
+
+        <span class="special">(</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">pair</span><span class="special">&lt;</span><span class="identifier">key_type</span><span class="special">,</span> <span class="identifier">mapped_type</span><span class="special">&gt;)</span> <span class="special">(</span><span class="identifier">find</span><span class="special">)</span> <span class="special">(</span> <span class="identifier">T</span> <span class="keyword">const</span><span class="special">&amp;,</span> <span class="identifier">key_type</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="special">)</span>
+    <span class="special">)</span>
+<span class="special">)</span>
+
+<span class="identifier">CONTRACT_CONCEPT</span><span class="special">(</span>
+    <span class="keyword">auto</span> <span class="identifier">concept</span> <span class="special">(</span><span class="identifier">HasDereference</span><span class="special">)</span> <span class="special">(</span> <span class="keyword">typename</span> <span class="identifier">T</span> <span class="special">)</span>
+    <span class="special">(</span>
+        <span class="keyword">typename</span> <span class="identifier">result_type</span><span class="special">,</span>
+
+        <span class="special">(</span><span class="identifier">result_type</span><span class="special">)</span> <span class="keyword">operator</span><span class="special">(*)(</span><span class="identifier">deref</span><span class="special">)</span> <span class="special">(</span> <span class="identifier">T</span><span class="special">&amp;</span> <span class="special">),</span>
+        <span class="special">(</span><span class="identifier">result_type</span><span class="special">)</span> <span class="keyword">operator</span><span class="special">(*)(</span><span class="identifier">deref</span><span class="special">)</span> <span class="special">(</span> <span class="identifier">T</span><span class="special">&amp;&amp;</span> <span class="special">)</span>
+    <span class="special">)</span>
+<span class="special">)</span>
+
+<span class="identifier">CONTRACT_CONCEPT</span><span class="special">(</span>
+    <span class="keyword">auto</span> <span class="identifier">concept</span> <span class="special">(</span><span class="identifier">IdentityOf</span><span class="special">)</span> <span class="special">(</span> <span class="keyword">typename</span> <span class="identifier">T</span> <span class="special">)</span>
+    <span class="special">(</span>
+        <span class="keyword">typename</span> <span class="identifier">type</span><span class="special">,</span> <span class="identifier">as</span> <span class="identifier">T</span><span class="special">,</span>
+        <span class="identifier">requires</span> <span class="special">(</span><span class="identifier">SameType</span><span class="special">&lt;</span><span class="identifier">type</span><span class="special">,</span> <span class="identifier">T</span><span class="special">&gt;)</span>
+    <span class="special">)</span>
+<span class="special">)</span>
+
+<span class="identifier">CONTRACT_CONCEPT</span><span class="special">(</span>
+    <span class="keyword">auto</span> <span class="identifier">concept</span> <span class="special">(</span><span class="identifier">MemberFunctionRequirements</span><span class="special">)</span> <span class="special">(</span> <span class="keyword">typename</span> <span class="identifier">T</span> <span class="special">)</span>
+    <span class="special">(</span>
+        <span class="identifier">constructor</span><span class="special">(</span><span class="identifier">T</span><span class="special">,</span> <span class="identifier">T</span><span class="special">)</span> <span class="special">(</span> <span class="keyword">int</span> <span class="identifier">a</span><span class="special">,</span> <span class="keyword">float</span> <span class="identifier">b</span> <span class="special">),</span>
+        <span class="identifier">destructor</span><span class="special">(</span><span class="identifier">T</span><span class="special">,</span> <span class="special">~</span><span class="identifier">T</span><span class="special">)</span> <span class="special">(</span> <span class="keyword">void</span> <span class="special">),</span>
+        <span class="keyword">void</span> <span class="identifier">member</span><span class="special">(</span><span class="identifier">T</span><span class="special">,</span> <span class="identifier">f</span><span class="special">)</span> <span class="special">(</span> <span class="keyword">void</span> <span class="special">)</span> <span class="keyword">const</span>
+    <span class="special">)</span>
+<span class="special">)</span>
+
+<span class="identifier">CONTRACT_CONCEPT</span><span class="special">(</span>
+    <span class="keyword">auto</span> <span class="identifier">concept</span> <span class="special">(</span><span class="identifier">HasEqualTo</span><span class="special">)</span> <span class="special">(</span> <span class="keyword">typename</span> <span class="identifier">T</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">U</span> <span class="special">)</span>
+    <span class="special">(</span>
+        <span class="keyword">bool</span> <span class="keyword">operator</span><span class="special">(==)(</span><span class="identifier">equal</span><span class="special">)</span> <span class="special">(</span> <span class="identifier">T</span> <span class="keyword">const</span><span class="special">&amp;,</span> <span class="identifier">U</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="special">)</span>
+    <span class="special">)</span>
+<span class="special">)</span>
+
+<span class="identifier">CONTRACT_CONCEPT</span><span class="special">(</span>
+    <span class="keyword">auto</span> <span class="identifier">concept</span> <span class="special">(</span><span class="identifier">ExplicitlyConvertible</span><span class="special">)</span> <span class="special">(</span> <span class="keyword">typename</span> <span class="identifier">T</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">U</span> <span class="special">)</span>
+    <span class="special">(</span>
+        <span class="keyword">explicit</span> <span class="keyword">operator</span><span class="special">(</span><span class="identifier">U</span><span class="special">)(</span><span class="identifier">U_type</span><span class="special">)</span> <span class="special">(</span> <span class="identifier">T</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="special">)</span>
+    <span class="special">)</span>
+<span class="special">)</span>
+
+<span class="identifier">CONTRACT_CONCEPT</span><span class="special">(</span>
+    <span class="keyword">auto</span> <span class="identifier">concept</span> <span class="special">(</span><span class="identifier">Convertible</span><span class="special">)</span> <span class="special">(</span> <span class="keyword">typename</span> <span class="identifier">T</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">U</span> <span class="special">)</span>
+        <span class="identifier">extends</span><span class="special">(</span> <span class="special">(</span><span class="identifier">ExplicitlyConvetible</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">,</span> <span class="identifier">U</span><span class="special">&gt;)</span> <span class="special">)</span>
+    <span class="special">(</span>
+        <span class="keyword">operator</span><span class="special">(</span><span class="identifier">U</span><span class="special">)(</span><span class="identifier">U_type</span><span class="special">)</span> <span class="special">(</span> <span class="identifier">T</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="special">)</span>
+    <span class="special">)</span>
+<span class="special">)</span>
+
+<span class="identifier">CONTRACT_CONCEPT</span><span class="special">(</span>
+    <span class="identifier">concept</span> <span class="special">(</span><span class="identifier">True</span><span class="special">)</span> <span class="special">(</span> <span class="keyword">bool</span> <span class="identifier">Value</span> <span class="special">)</span>
+    <span class="special">(</span>
+        <span class="keyword">void</span> <span class="comment">// Empty concept definition.</span>
+    <span class="special">)</span>
+<span class="special">)</span>
+
+<span class="identifier">CONTRACT_CONCEPT</span><span class="special">(</span>
+    <span class="identifier">concept_map</span> <span class="special">(</span><span class="identifier">True</span><span class="special">)</span> <span class="special">(</span> <span class="keyword">true</span> <span class="special">)</span>
+    <span class="special">(</span>
+        <span class="keyword">void</span> <span class="comment">// Empty concept definition.</span>
+    <span class="special">)</span>
+<span class="special">)</span>
+
+<span class="identifier">CONTRACT_CONCEPT</span><span class="special">(</span>
+    <span class="keyword">auto</span> <span class="identifier">concept</span> <span class="special">(</span><span class="identifier">IsEven</span><span class="special">)</span> <span class="special">(</span> <span class="identifier">intmax_t</span> <span class="identifier">Value</span> <span class="special">)</span>
+    <span class="special">(</span>
+        <span class="identifier">requires</span> <span class="identifier">True</span><span class="special">&lt;</span><span class="identifier">V</span> <span class="special">%</span> <span class="number">2</span> <span class="special">==</span> <span class="number">0</span><span class="special">&gt;</span>
+    <span class="special">)</span>
+<span class="special">)</span>
+
+<span class="identifier">CONTRACT_CONCEPT</span><span class="special">(</span>
+    <span class="keyword">auto</span> <span class="identifier">concept</span> <span class="special">(</span><span class="identifier">CopyConstructible</span><span class="special">)</span> <span class="special">(</span> <span class="keyword">typename</span> <span class="identifier">T</span> <span class="special">)</span>
+        <span class="identifier">extends</span><span class="special">(</span> <span class="identifier">MoveConstructible</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;,</span> <span class="special">(</span><span class="identifier">Constructible</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">,</span> <span class="identifier">T</span> <span class="keyword">const</span><span class="special">&amp;&gt;)</span> <span class="special">)</span>
+    <span class="special">(</span>
+        <span class="identifier">axiom</span> <span class="special">(</span><span class="identifier">CopyPreservation</span><span class="special">)</span> <span class="special">(</span> <span class="special">(</span><span class="identifier">T</span><span class="special">)</span> <span class="identifier">x</span> <span class="special">)</span>
+        <span class="special">(</span>
+            <span class="identifier">T</span><span class="special">(</span><span class="identifier">x</span><span class="special">)</span> <span class="special">==</span> <span class="identifier">x</span><span class="special">;</span>
+        <span class="special">)</span>
+    <span class="special">)</span>
+<span class="special">)</span>
+
+<span class="identifier">CONTRACT_CONCEPT</span><span class="special">(</span>
+    <span class="identifier">concept</span> <span class="special">(</span><span class="identifier">Iterator</span><span class="special">)</span> <span class="special">(</span> <span class="keyword">typename</span> <span class="identifier">X</span> <span class="special">)</span> <span class="identifier">extends</span><span class="special">(</span> <span class="identifier">Semiregular</span><span class="special">&lt;</span><span class="identifier">X</span><span class="special">&gt;</span> <span class="special">)</span>
+    <span class="special">(</span>
+        <span class="keyword">typename</span><span class="special">(</span><span class="identifier">MoveConstructible</span><span class="special">)</span> <span class="identifier">reference</span><span class="special">,</span> <span class="identifier">as</span> <span class="keyword">typename</span> <span class="identifier">X</span><span class="special">::</span><span class="identifier">reference</span><span class="special">,</span>
+        <span class="keyword">typename</span><span class="special">(</span><span class="identifier">MoveConstructible</span><span class="special">)</span> <span class="identifier">postinc_result</span><span class="special">,</span>
+        <span class="identifier">requires</span> <span class="identifier">HasDereference</span><span class="special">&lt;</span><span class="identifier">postinc_result</span><span class="special">&gt;,</span>
+
+        <span class="special">(</span><span class="identifier">reference</span><span class="special">)</span> <span class="keyword">operator</span><span class="special">(*)(</span><span class="identifier">deref</span><span class="special">)</span> <span class="special">(</span> <span class="identifier">X</span><span class="special">&amp;</span> <span class="special">),</span>
+        <span class="special">(</span><span class="identifier">reference</span><span class="special">)</span> <span class="keyword">operator</span><span class="special">(*)(</span><span class="identifier">deref</span><span class="special">)</span> <span class="special">(</span> <span class="identifier">X</span><span class="special">&amp;&amp;</span> <span class="special">),</span>
+        <span class="special">(</span><span class="identifier">X</span><span class="special">&amp;)</span> <span class="keyword">operator</span><span class="special">(++)(</span><span class="identifier">preinc</span><span class="special">)</span> <span class="special">(</span> <span class="identifier">X</span><span class="special">&amp;</span> <span class="special">),</span>
+        <span class="special">(</span><span class="identifier">postinc_result</span><span class="special">)</span> <span class="keyword">operator</span><span class="special">(++)(</span><span class="identifier">postinc</span><span class="special">)</span> <span class="special">(</span> <span class="identifier">X</span><span class="special">&amp;,</span> <span class="keyword">int</span> <span class="special">)</span>
+    <span class="special">)</span>
+<span class="special">)</span>
+
+<span class="identifier">CONTRACT_CONCEPT</span><span class="special">(</span>
+    <span class="identifier">concept</span> <span class="special">(</span><span class="identifier">RandomAccessIterator</span><span class="special">)</span> <span class="special">(</span> <span class="keyword">typename</span> <span class="identifier">X</span> <span class="special">)</span>
+        <span class="identifier">extends</span><span class="special">(</span> <span class="identifier">BidirectionalIterator</span><span class="special">&lt;</span><span class="identifier">X</span><span class="special">&gt;,</span> <span class="identifier">LessThanComparable</span><span class="special">&lt;</span><span class="identifier">X</span><span class="special">&gt;</span> <span class="special">)</span>
+    <span class="special">(</span>
+        <span class="keyword">typename</span><span class="special">(</span><span class="identifier">MoveConstructible</span><span class="special">)</span> <span class="identifier">reference</span><span class="special">,</span>
+        <span class="identifier">requires</span> <span class="special">(</span><span class="identifier">Convertible</span><span class="special">&lt;</span><span class="identifier">reference</span><span class="special">,</span> <span class="identifier">value_type</span> <span class="keyword">const</span><span class="special">&amp;&gt;),</span>
+
+        <span class="special">(</span><span class="identifier">X</span><span class="special">&amp;)</span> <span class="keyword">operator</span><span class="special">(+=)(</span><span class="identifier">inc</span><span class="special">)</span> <span class="special">(</span> <span class="identifier">X</span><span class="special">&amp;,</span> <span class="identifier">difference_type</span> <span class="special">),</span>
+
+        <span class="special">(</span><span class="identifier">X</span><span class="special">)</span> <span class="keyword">operator</span><span class="special">(+)(</span><span class="identifier">add</span><span class="special">)</span> <span class="special">(</span> <span class="special">(</span><span class="identifier">X</span> <span class="keyword">const</span><span class="special">&amp;)</span> <span class="identifier">x</span><span class="special">,</span> <span class="special">(</span><span class="identifier">difference_type</span><span class="special">)</span> <span class="identifier">n</span> <span class="special">)</span>
+        <span class="special">(</span>
+            <span class="identifier">X</span> <span class="identifier">y</span><span class="special">(</span><span class="identifier">x</span><span class="special">);</span>
+            <span class="identifier">y</span> <span class="special">+=</span> <span class="identifier">n</span><span class="special">;</span>
+            <span class="keyword">return</span> <span class="identifier">y</span><span class="special">;</span>
+        <span class="special">),</span>
+
+        <span class="special">(</span><span class="identifier">X</span><span class="special">)</span> <span class="keyword">operator</span><span class="special">(+)(</span><span class="identifier">add</span><span class="special">)</span> <span class="special">(</span> <span class="special">(</span><span class="identifier">difference_type</span><span class="special">)</span> <span class="identifier">n</span><span class="special">,</span> <span class="special">(</span><span class="identifier">X</span> <span class="keyword">const</span><span class="special">&amp;)</span> <span class="identifier">x</span> <span class="special">)</span>
+        <span class="special">(</span>
+            <span class="identifier">X</span> <span class="identifier">y</span><span class="special">(</span><span class="identifier">x</span><span class="special">);</span>
+            <span class="identifier">y</span> <span class="special">+=</span> <span class="identifier">n</span><span class="special">;</span>
+            <span class="keyword">return</span> <span class="identifier">y</span><span class="special">;</span>
+        <span class="special">),</span>
+
+        <span class="special">(</span><span class="identifier">X</span><span class="special">)</span> <span class="keyword">operator</span><span class="special">(-=)(</span><span class="identifier">dec</span><span class="special">)</span> <span class="special">(</span> <span class="identifier">X</span><span class="special">&amp;,</span> <span class="identifier">difference_type</span> <span class="special">),</span>
+
+        <span class="special">(</span><span class="identifier">X</span><span class="special">)</span> <span class="keyword">operator</span><span class="special">(-)(</span><span class="identifier">sub</span><span class="special">)</span> <span class="special">(</span> <span class="special">(</span><span class="identifier">X</span> <span class="keyword">const</span><span class="special">&amp;)</span> <span class="identifier">x</span><span class="special">,</span> <span class="special">(</span><span class="identifier">difference_type</span><span class="special">)</span> <span class="identifier">n</span> <span class="special">)</span>
+        <span class="special">(</span>
+            <span class="identifier">X</span> <span class="identifier">y</span><span class="special">(</span><span class="identifier">x</span><span class="special">);</span>
+            <span class="identifier">y</span> <span class="special">-=</span> <span class="identifier">n</span><span class="special">;</span>
+            <span class="keyword">return</span> <span class="identifier">y</span><span class="special">;</span>
+        <span class="special">),</span>
+
+        <span class="special">(</span><span class="identifier">difference_type</span><span class="special">)</span> <span class="keyword">operator</span><span class="special">(-)(</span><span class="identifier">sub</span><span class="special">)</span> <span class="special">(</span> <span class="identifier">X</span> <span class="keyword">const</span><span class="special">&amp;,</span> <span class="identifier">X</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="special">),</span>
+
+        <span class="special">(</span><span class="identifier">reference</span><span class="special">)</span> <span class="keyword">operator</span><span class="special">([])(</span><span class="identifier">at</span><span class="special">)</span> <span class="special">(</span> <span class="identifier">X</span> <span class="keyword">const</span><span class="special">&amp;,</span> <span class="identifier">difference_type</span> <span class="special">)</span>
+    <span class="special">)</span>
+<span class="special">)</span>
+
+<span class="identifier">CONTRACT_CONCEPT</span><span class="special">(</span>
+    <span class="keyword">template</span><span class="special">(</span> <span class="keyword">typename</span><span class="special">(</span><span class="identifier">ObjectType</span><span class="special">)</span> <span class="identifier">T</span> <span class="special">)</span>
+    <span class="identifier">concept_map</span> <span class="special">(</span><span class="identifier">RandomAccessIterator</span><span class="special">)</span> <span class="special">(</span> <span class="identifier">T</span><span class="special">*</span> <span class="special">)</span>
+    <span class="special">(</span>
+        <span class="keyword">typedef</span> <span class="special">(</span><span class="identifier">T</span><span class="special">)</span> <span class="identifier">value_type</span><span class="special">,</span>
+        <span class="keyword">typedef</span> <span class="identifier">ptrdiff_t</span> <span class="identifier">difference_type</span><span class="special">,</span>
+        <span class="keyword">typedef</span> <span class="special">(</span><span class="identifier">T</span><span class="special">&amp;)</span> <span class="identifier">reference</span><span class="special">,</span>
+        <span class="keyword">typedef</span> <span class="special">(</span><span class="identifier">T</span><span class="special">*)</span> <span class="identifier">pointer</span>
+    <span class="special">)</span>
+<span class="special">)</span>
+</pre>
+<p>
+                </p>
+              </td>
+<td>
+                <p>
+</p>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="comment">// Extra spaces, newlines, etc used to align text with this library code.</span>
+<span class="identifier">concept</span> <span class="identifier">ArithmeticLike</span> <span class="special">&lt;</span> <span class="keyword">typename</span> <span class="identifier">T</span> <span class="special">&gt;</span>
+    <span class="special">:</span>
+        <span class="identifier">Regular</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;,</span>
+        <span class="identifier">LessThanComparable</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;,</span>
+        <span class="identifier">HasUnaryPlus</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;,</span>
+        <span class="identifier">HasNegate</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;,</span>
+        <span class="identifier">HasPlus</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">,</span> <span class="identifier">T</span><span class="special">&gt;,</span>
+        <span class="identifier">HasMinus</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">,</span> <span class="identifier">T</span><span class="special">&gt;</span>
+        <span class="comment">// ...</span>
+
+<span class="special">{</span>
+    <span class="keyword">explicit</span> <span class="identifier">T</span><span class="special">::</span><span class="identifier">T</span> <span class="special">(</span> <span class="identifier">intmax_t</span> <span class="special">)</span> <span class="special">;</span>
+    <span class="keyword">explicit</span> <span class="identifier">T</span><span class="special">::</span><span class="identifier">T</span> <span class="special">(</span> <span class="identifier">uintmax_t</span> <span class="special">)</span> <span class="special">;</span>
+    <span class="keyword">explicit</span> <span class="identifier">T</span><span class="special">::</span><span class="identifier">T</span> <span class="special">(</span> <span class="keyword">long</span> <span class="keyword">double</span> <span class="special">)</span> <span class="special">;</span>
+
+    <span class="identifier">requires</span> <span class="identifier">Convertible</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">HasUnaryPlus</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;::</span><span class="identifier">result_type</span><span class="special">,</span> <span class="identifier">T</span><span class="special">&gt;</span> <span class="special">;</span>
+    <span class="comment">// ...</span>
+<span class="special">}</span>
+
+
+
+<span class="keyword">auto</span> <span class="identifier">concept</span> <span class="identifier">HasFind</span> <span class="special">&lt;</span> <span class="keyword">typename</span> <span class="identifier">T</span> <span class="special">&gt;</span>
+<span class="special">{</span>
+    <span class="keyword">typename</span> <span class="identifier">key_type</span> <span class="special">=</span> <span class="keyword">typename</span> <span class="identifier">T</span><span class="special">::</span><span class="identifier">key_type</span> <span class="special">;</span>
+    <span class="keyword">typename</span> <span class="identifier">mapped_type</span> <span class="special">;</span>
+
+    <span class="identifier">std</span><span class="special">::</span><span class="identifier">pair</span><span class="special">&lt;</span><span class="identifier">key_type</span><span class="special">,</span> <span class="identifier">mapped_type</span><span class="special">&gt;</span> <span class="identifier">find</span> <span class="special">(</span> <span class="identifier">T</span> <span class="keyword">const</span><span class="special">&amp;,</span> <span class="identifier">key_type</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="special">)</span> <span class="special">;</span>
+<span class="special">}</span>
+
+
+
+<span class="keyword">auto</span> <span class="identifier">concept</span> <span class="identifier">HasDereference</span> <span class="special">&lt;</span> <span class="keyword">typename</span> <span class="identifier">T</span> <span class="special">&gt;</span>
+<span class="special">{</span>
+    <span class="keyword">typename</span> <span class="identifier">result_type</span> <span class="special">;</span>
+
+    <span class="identifier">result_type</span> <span class="keyword">operator</span><span class="special">*</span> <span class="special">(</span> <span class="identifier">T</span><span class="special">&amp;</span> <span class="special">)</span> <span class="special">;</span>
+    <span class="identifier">result_type</span> <span class="keyword">operator</span><span class="special">*</span> <span class="special">(</span> <span class="identifier">T</span><span class="special">&amp;&amp;</span> <span class="special">)</span> <span class="special">;</span>
+<span class="special">}</span>
+
+
+
+<span class="keyword">auto</span> <span class="identifier">concept</span> <span class="identifier">IdentityOf</span> <span class="special">&lt;</span> <span class="keyword">typename</span> <span class="identifier">T</span> <span class="special">&gt;</span>
+<span class="special">{</span>
+    <span class="keyword">typename</span> <span class="identifier">type</span> <span class="special">=</span> <span class="identifier">T</span> <span class="special">;</span>
+    <span class="identifier">requires</span> <span class="identifier">SameType</span><span class="special">&lt;</span><span class="identifier">type</span><span class="special">,</span> <span class="identifier">T</span><span class="special">&gt;</span> <span class="special">;</span>
+<span class="special">}</span>
+
+
+
+<span class="keyword">auto</span> <span class="identifier">concept</span> <span class="identifier">MemberFunctionRequirements</span> <span class="special">&lt;</span> <span class="keyword">typename</span> <span class="identifier">T</span> <span class="special">&gt;</span>
+<span class="special">{</span>
+    <span class="identifier">T</span><span class="special">::</span><span class="identifier">T</span> <span class="special">(</span> <span class="keyword">int</span> <span class="identifier">a</span><span class="special">,</span> <span class="keyword">float</span> <span class="identifier">b</span> <span class="special">)</span> <span class="special">;</span>
+    <span class="identifier">T</span><span class="special">::~</span><span class="identifier">T</span> <span class="special">(</span> <span class="keyword">void</span> <span class="special">)</span> <span class="special">;</span>
+    <span class="keyword">void</span> <span class="identifier">T</span><span class="special">::</span><span class="identifier">f</span> <span class="special">(</span> <span class="keyword">void</span> <span class="special">)</span> <span class="keyword">const</span> <span class="special">;</span>
+<span class="special">}</span>
+
+
+
+<span class="keyword">auto</span> <span class="identifier">concept</span> <span class="identifier">HasEqualTo</span> <span class="special">&lt;</span> <span class="keyword">typename</span> <span class="identifier">T</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">U</span> <span class="special">&gt;</span>
+<span class="special">{</span>
+    <span class="keyword">bool</span> <span class="keyword">operator</span><span class="special">==</span> <span class="special">(</span> <span class="identifier">T</span> <span class="keyword">const</span><span class="special">&amp;,</span> <span class="identifier">U</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="special">)</span> <span class="special">;</span>
+<span class="special">}</span>
+
+
+
+<span class="keyword">auto</span> <span class="identifier">concept</span> <span class="identifier">ExplicitlyConvertible</span> <span class="special">&lt;</span> <span class="keyword">typename</span> <span class="identifier">T</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">U</span> <span class="special">&gt;</span>
+<span class="special">{</span>
+    <span class="keyword">explicit</span> <span class="keyword">operator</span> <span class="identifier">U</span> <span class="special">(</span> <span class="identifier">T</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="special">)</span> <span class="special">;</span>
+<span class="special">}</span>
+
+
+
+<span class="keyword">auto</span> <span class="identifier">concept</span> <span class="identifier">Convertible</span> <span class="special">&lt;</span> <span class="keyword">typename</span> <span class="identifier">T</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">U</span> <span class="special">&gt;</span>
+    <span class="special">:</span> <span class="identifier">ExplicitlyConvetible</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">,</span> <span class="identifier">U</span><span class="special">&gt;</span>
+<span class="special">{</span>
+    <span class="keyword">operator</span> <span class="identifier">U</span> <span class="special">(</span> <span class="identifier">T</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="special">)</span> <span class="special">;</span>
+<span class="special">}</span>
+
+
+
+<span class="identifier">concept</span> <span class="identifier">True</span> <span class="special">&lt;</span> <span class="keyword">bool</span> <span class="identifier">Value</span> <span class="special">&gt;</span>
+<span class="special">{</span>
+    <span class="comment">// No operation.</span>
+<span class="special">}</span>
+
+
+
+<span class="identifier">concept_map</span> <span class="identifier">True</span> <span class="special">&lt;</span> <span class="keyword">true</span> <span class="special">&gt;</span>
+<span class="special">{</span>
+    <span class="comment">// No operation.</span>
+<span class="special">}</span>
+
+
+
+<span class="keyword">auto</span> <span class="identifier">concept</span> <span class="identifier">IsEven</span> <span class="special">&lt;</span> <span class="identifier">intmax_t</span> <span class="identifier">Value</span> <span class="special">&gt;</span>
+<span class="special">{</span>
+    <span class="identifier">requires</span> <span class="identifier">True</span><span class="special">&lt;</span><span class="identifier">V</span> <span class="special">%</span> <span class="number">2</span> <span class="special">==</span> <span class="number">0</span><span class="special">&gt;</span> <span class="special">;</span>
+<span class="special">}</span>
+
+
+
+<span class="keyword">auto</span> <span class="identifier">concept</span> <span class="identifier">CopyConstructible</span> <span class="special">&lt;</span> <span class="keyword">typename</span> <span class="identifier">T</span> <span class="special">&gt;</span>
+    <span class="special">:</span> <span class="identifier">MoveConstructible</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;,</span> <span class="identifier">Constructible</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">,</span> <span class="identifier">T</span> <span class="keyword">const</span><span class="special">&amp;&gt;</span>
+<span class="special">{</span>
+    <span class="identifier">axiom</span> <span class="identifier">CopyPreservation</span> <span class="special">(</span> <span class="identifier">T</span> <span class="identifier">x</span> <span class="special">)</span>
+    <span class="special">{</span>
+        <span class="identifier">T</span><span class="special">(</span><span class="identifier">x</span><span class="special">)</span> <span class="special">==</span> <span class="identifier">x</span><span class="special">;</span>
+    <span class="special">}</span>
+<span class="special">}</span>
+
+
+
+<span class="identifier">concept</span> <span class="identifier">Iterator</span> <span class="special">&lt;</span> <span class="keyword">typename</span> <span class="identifier">X</span> <span class="special">&gt;</span> <span class="special">:</span> <span class="identifier">Semiregular</span><span class="special">&lt;</span><span class="identifier">X</span><span class="special">&gt;</span>
+<span class="special">{</span>
+    <span class="identifier">MoveConstructible</span> <span class="identifier">reference</span> <span class="special">=</span> <span class="keyword">typename</span> <span class="identifier">X</span><span class="special">::</span><span class="identifier">reference</span> <span class="special">;</span>
+    <span class="identifier">MoveConstructible</span> <span class="identifier">postinc_result</span> <span class="special">;</span>
+    <span class="identifier">requires</span> <span class="identifier">HasDereference</span><span class="special">&lt;</span><span class="identifier">postinc_result</span><span class="special">&gt;</span> <span class="special">;</span>
+
+    <span class="identifier">reference</span> <span class="keyword">operator</span><span class="special">*</span> <span class="special">(</span> <span class="identifier">X</span><span class="special">&amp;</span> <span class="special">)</span> <span class="special">;</span>
+    <span class="identifier">reference</span> <span class="keyword">operator</span><span class="special">*</span> <span class="special">(</span> <span class="identifier">X</span><span class="special">&amp;&amp;</span> <span class="special">)</span> <span class="special">;</span>
+    <span class="identifier">X</span><span class="special">&amp;</span> <span class="keyword">operator</span><span class="special">++</span> <span class="special">(</span> <span class="identifier">X</span><span class="special">&amp;</span> <span class="special">)</span> <span class="special">;</span>
+    <span class="identifier">postinc_result</span> <span class="keyword">operator</span><span class="special">++</span> <span class="special">(</span> <span class="identifier">X</span><span class="special">&amp;,</span> <span class="keyword">int</span> <span class="special">)</span> <span class="special">;</span>
+<span class="special">}</span>
+
+
+
+<span class="identifier">concept</span> <span class="identifier">RandomAccessIterator</span> <span class="special">&lt;</span> <span class="keyword">typename</span> <span class="identifier">X</span> <span class="special">&gt;</span>
+    <span class="special">:</span> <span class="identifier">BidirectionalIterator</span><span class="special">&lt;</span><span class="identifier">X</span><span class="special">&gt;,</span> <span class="identifier">LessThanComparable</span><span class="special">&lt;</span><span class="identifier">X</span><span class="special">&gt;</span>
+<span class="special">{</span>
+    <span class="identifier">MoveConstructible</span> <span class="identifier">reference</span> <span class="special">;</span>
+    <span class="identifier">requires</span> <span class="identifier">Convertible</span><span class="special">&lt;</span><span class="identifier">reference</span><span class="special">,</span> <span class="identifier">value_type</span> <span class="keyword">const</span><span class="special">&amp;&gt;</span> <span class="special">;</span>
+
+    <span class="identifier">X</span><span class="special">&amp;</span> <span class="keyword">operator</span><span class="special">+=</span> <span class="special">(</span> <span class="identifier">X</span><span class="special">&amp;,</span> <span class="identifier">difference_type</span> <span class="special">)</span> <span class="special">;</span>
+
+    <span class="identifier">X</span> <span class="keyword">operator</span><span class="special">+</span> <span class="special">(</span> <span class="identifier">X</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">x</span><span class="special">,</span> <span class="identifier">difference_type</span> <span class="identifier">n</span> <span class="special">)</span>
+    <span class="special">{</span>
+        <span class="identifier">X</span> <span class="identifier">y</span><span class="special">(</span><span class="identifier">x</span><span class="special">);</span>
+        <span class="identifier">y</span> <span class="special">+=</span> <span class="identifier">n</span><span class="special">;</span>
+        <span class="keyword">return</span> <span class="identifier">y</span><span class="special">;</span>
+    <span class="special">}</span>
+
+    <span class="identifier">X</span> <span class="keyword">operator</span><span class="special">+</span> <span class="special">(</span> <span class="identifier">difference_type</span> <span class="identifier">n</span><span class="special">,</span> <span class="identifier">X</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">x</span> <span class="special">)</span>
+    <span class="special">{</span>
+        <span class="identifier">X</span> <span class="identifier">y</span><span class="special">(</span><span class="identifier">x</span><span class="special">);</span>
+        <span class="identifier">x</span> <span class="special">+=</span> <span class="identifier">n</span><span class="special">;</span>
+        <span class="keyword">return</span> <span class="identifier">y</span><span class="special">;</span>
+    <span class="special">}</span>
+
+    <span class="identifier">X</span> <span class="keyword">operator</span><span class="special">-=</span> <span class="special">(</span> <span class="identifier">X</span><span class="special">&amp;,</span> <span class="identifier">difference_type</span> <span class="special">)</span> <span class="special">;</span>
+
+    <span class="identifier">X</span> <span class="keyword">operator</span><span class="special">-</span> <span class="special">(</span> <span class="identifier">X</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">x</span><span class="special">,</span> <span class="identifier">difference_type</span> <span class="identifier">n</span> <span class="special">)</span>
+    <span class="special">{</span>
+        <span class="identifier">X</span> <span class="identifier">y</span><span class="special">(</span><span class="identifier">x</span><span class="special">);</span>
+        <span class="identifier">y</span> <span class="special">-=</span> <span class="identifier">n</span><span class="special">;</span>
+        <span class="keyword">return</span> <span class="identifier">y</span><span class="special">;</span>
+    <span class="special">}</span>
+
+    <span class="identifier">difference_type</span> <span class="keyword">operator</span><span class="special">-</span> <span class="special">(</span> <span class="identifier">X</span> <span class="keyword">const</span><span class="special">&amp;,</span> <span class="identifier">X</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="special">)</span> <span class="special">;</span>
+
+    <span class="identifier">reference</span> <span class="keyword">operator</span><span class="special">[]</span> <span class="special">(</span> <span class="identifier">X</span> <span class="keyword">const</span><span class="special">&amp;,</span> <span class="identifier">difference_type</span> <span class="special">)</span> <span class="special">;</span>
+<span class="special">}</span>
+
+
+
+<span class="keyword">template</span><span class="special">&lt;</span> <span class="identifier">ObjectType</span> <span class="identifier">T</span> <span class="special">&gt;</span>
+<span class="identifier">concept_map</span> <span class="identifier">RandomAccessIterator</span> <span class="special">&lt;</span> <span class="identifier">T</span><span class="special">*</span> <span class="special">&gt;</span>
+<span class="special">{</span>
+    <span class="keyword">typedef</span> <span class="identifier">T</span> <span class="identifier">value_type</span> <span class="special">;</span>
+    <span class="keyword">typedef</span> <span class="identifier">ptrdiff_t</span> <span class="identifier">difference_type</span> <span class="special">;</span>
+    <span class="keyword">typedef</span> <span class="identifier">T</span><span class="special">&amp;</span> <span class="identifier">reference</span> <span class="special">;</span>
+    <span class="keyword">typedef</span> <span class="identifier">T</span><span class="special">*</span> <span class="identifier">pointer</span> <span class="special">;</span>
+<span class="special">}</span>
+
+</pre>
+<p>
+                </p>
+              </td>
+</tr></tbody>
+</table></div>
+<p>
+        Note that:
+      </p>
+<div class="orderedlist"><ol class="orderedlist" type="1">
+<li class="listitem">
+            Extra wrapping parenthesis are used when expressions contain unwrapped
+            commas <code class="computeroutput"><span class="special">,</span></code> or leading symbols.
+          </li>
+<li class="listitem">
+            The specifiers <code class="computeroutput"><span class="identifier">constructor</span></code>,
+            <code class="computeroutput"><span class="identifier">destructor</span></code>, and <code class="computeroutput"><span class="identifier">member</span></code> follow the same syntax as the
+            <code class="computeroutput"><a class="link" href="../CONTRACT_CONSTRUCTOR_BODY.html" title="Macro CONTRACT_CONSTRUCTOR_BODY">CONTRACT_CONSTRUCTOR_BODY</a></code>
+            and <code class="computeroutput"><a class="link" href="../CONTRACT_DESTRUCTOR_BODY.html" title="Macro CONTRACT_DESTRUCTOR_BODY">CONTRACT_DESTRUCTOR_BODY</a></code>,
+            and they serve a purpose similar to these macros in naming the constructors,
+            destructors, and member functions outside class declarations.
+          </li>
+</ol></div>
+<p>
+        If concept definitions were added to this library, concepts would still be
+        checked using the <code class="computeroutput"><span class="identifier">requires</span></code>
+        specifier in class and function declarations as we have seen so far (it might
+        even be possible for concepts defines using <a href="http://www.boost.org/doc/libs/release/libs/concept_check" target="_top">Boost.ConceptCheck</a>
+        to be still specified using some type tagging of this library concept types
+        to internally distinguish between <a href="http://www.boost.org/doc/libs/release/libs/concept_check" target="_top">Boost.ConceptCheck</a>
+        concepts and concepts define using this library). Furthermore, this library
+        could provide all the standard concepts defined in <a class="link" href="bibliography.html#N2914_anchor">[N2914]</a>
+        in an header file <code class="literal">contract/std/concept.hpp</code>.
+      </p>
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright &#169; 2008-2012 Lorenzo Caminiti<p>
+        Distributed under the Boost Software License, Version 1.0 (see accompanying
+        file LICENSE_1_0.txt or a copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="virtual_specifiers.html"><img src="../../..//doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../..//doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../..//doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="named_parameters.html"><img src="../../..//doc/src/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>

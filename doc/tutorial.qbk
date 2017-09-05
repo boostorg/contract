@@ -1,0 +1,491 @@
+
+[/ Copyright (C) 2008-2012 Lorenzo Caminiti ]
+[/ Distributed under the Boost Software License, Version 1.0 ]
+[/ (see accompanying file LICENSE_1_0.txt or a copy at ]
+[/ http://www.boost.org/LICENSE_1_0.txt) ]
+[/ Home at http://sourceforge.net/projects/contractpp ]
+
+[section Tutorial]
+
+This section explains how to program contracts using this library.
+See the __Grammar__ section for a complete guide on this library syntax.
+
+[section Free Functions]
+
+Consider the following free function `postinc` which performs a post-increment on its parameter (see also [file example/contracts no_contract_postinc.cpp]):
+
+[import ../example/contracts/no_contract_postinc.cpp]
+[no_contract_postinc]
+
+Let's now program the function declaration using the [macroref CONTRACT_FUNCTION] macro but without programming the contract yet (see also [file example/contracts no_pre_post_postinc.cpp]):
+
+[import ../example/contracts/no_pre_post_postinc.cpp]
+[no_pre_post_postinc]
+
+All necessary header files for this library are included by `#include <contract.hpp>` (see also the __Getting_Started__ section).
+
+The function body is programmed outside the library macro.
+Therefore, while this library alters the function declaration syntax, it does not change the syntax used to implement the function.
+
+The function name `(postinc)` must always be wrapped within parenthesis so it can be passed to this library macros.
+
+The function result and parameter types must be wrapped within parenthesis unless they are fundamental types containing no symbol (symbols are tokens different from the alphanumeric tokens `a-z`, `A-Z`, `0-9`).
+In this example, the result type `int const` is a fundamental type and it contains no symbol so the parenthesis around it `(int const)` are allowed but not required.
+[footnote
+In the examples presented in this documentation, extra parenthesis are in general avoided unless strictly required (for example, extra parenthesis around fundamental types containing no symbol `void`, `bool`, `unsigned int const`, etc are always omitted).
+In the authors' opinion, the syntax is more readable with lesser parenthesis.
+However, other programmers might find it more readable to always specify extra parenthesis around result and parameter types for consistency even when they are not strictly required.
+]
+Instead, the parameter type `int&` is a fundamental type but it contains the reference symbol `&` so it must be wrapped within parenthesis `(int&)`.
+
+[important
+In general, every token which is not a known keyword (`int` is a known keyword but the function name is not) or that contains a non-alphanumeric symbol (e.g., `int&`) must be wrapped within round parenthesis `(...)` unless it is the very last token of a given syntactic element (e.g., the function parameter name `value` is the last token of the parameter declaration).
+[footnote
+*Rationale.*
+This library uses preprocessor meta-programming to parse declarations and contracts of classes and functions.
+The preprocessor cannot parse a token if it is not known a priori or if it contains symbols, unless such a token is wrapped within round parenthesis `()`.
+For example, the function name is arbitrary, it cannot be known a priori, so it must always be wrapped within parenthesis.
+If a type is a fundamental type then it is known a priori (because it is composed of known C++ keywords `int`, `const`, `unsigned`, etc), and if the fundamental type also contains no symbols (`&`, `*`, etc) then the parenthesis around such a type are optional.
+]
+
+See the __Grammar__ section for more information.
+]
+
+Each function parameter must always specify both its type and its name (parameter names can instead by omitted in usual C++ declarations).
+[footnote
+*Rationale.*
+It would be possible to modify the library syntax to make parameter names optional but that will complicate the library implementation without adding any feature for programmers.
+]
+As usual, additional parameters can be specified separated by commas `,` on compilers that support variadic macros (these include most modern compilers, MSVC, GCC, and all __CXX11__ compilers, see the __No_Variadic_Macros__ section for compilers that do not support variadic macros).
+The configuration macro [macroref CONTRACT_CONFIG_FUNCTION_ARITY_MAX] indicates the maximum number of function parameters that can be specified.
+An empty parameter list must be specified using `void` (this is similar to the usual C++ syntax that allows to declare a function with no parameter using [^['result-type function-name ]]`( void )`).
+[footnote
+*Rationale.*
+Unfortunately, it is not possible to specify an empty parameter list simply as [^['result-type function-name ]]`( )` because the preprocessor can only parse `( )` if empty macro parameters are supported.
+Empty macro parameters together with variadic macros where added to __C99__ and the preferred syntax of this library uses variadic macros.
+However, not all compilers (notably MSVC) that support variadic macros also correctly support empty macro parameters so `( void )` is always used instead of `( )` to increase portability.
+]
+Default parameter values can be specified using `, default `[^['default-value]] immediately following the parameter name.
+The storage classifiers `auto` and `register` can be specified as usual as part of the parameter type.
+[footnote
+Note that the `auto` storage classifier in deprecated by __CXX11__ so it should be used with the usual care when writing programs that should be portable from __CXX03__ to __CXX11__.
+]
+Functions can be overloaded by specifying different parameter types and they can recursively call themselves as usual.
+
+For example, the following function `postinc` is overloaded to work on `long` instead of `int` numbers, it is implemented using recursion, it increments the specified number by `offset` which is stored into a register variable and it has a default value of `1` (see also [file example/contracts params_postinc.cpp]):
+
+[import ../example/contracts/params_postinc.cpp]
+[params_postinc]
+[params_postinc_call]
+
+Function and array types cannot be directly used as function parameter types within the contract macros but extra `typedef` declarations can be used to workaround this limitation (for multi-dimensional arrays, the maximum number of supported array dimensions is specified by the [macroref CONTRACT_CONFIG_ARRAY_DIMENSION_MAX] macro).
+For example (see also [file example/contracts params_funcptr_array_apply.cpp]):
+
+[import ../example/contracts/params_funcptr_array_apply.cpp]
+[params_funcptr_array_apply]
+[params_funcptr_array_apply_call]
+
+Spaces and new-lines make no syntactical difference and they can be used freely within this library macros.
+[footnote
+An MSVC preprocessor bug requires to use at least one space or newline to separate a parameter name from its type even when the parameter type is wrapped within parenthesis.
+]
+The following aesthetic conventions are followed in this documentation (because the authors think they improve readability):
+
+# Round parenthesis are spaced when a list of tokens is expected (e.g., the function parameter list): `( `[^['token1]]` )`, `( `[^['token1]]`, `[^['token2]]` )`, `( `[^['token1]]`, `[^['token2]]`, `[^['token3]]` )`, etc.
+# Round parenthesis are not spaced when only a single token is expected (e.g., the function name): `(`[^['token]]`)`.
+
+[endsect]
+
+[section Preconditions]
+
+Let's program the preconditions of `postinc` (see also [file example/contracts pre_only_postinc.cpp]):
+    
+[import ../example/contracts/pre_only_postinc.cpp]
+[pre_only_postinc]
+
+In this example, the preconditions assert only one boolean condition but additional boolean conditions can be listed separated by commas `,`.
+Preconditions are automatically checked by the library when the `postinc` function is called, immediately before the body is executed (i.e., at function /entry/).
+See also the __Free_Function_Calls__ section.
+
+Contracts are supposed to check but not to modify the state of the program (see the __Constant_Correctness__ section).
+Therefore, this library  evaluates all contract conditions in constant-correct context.
+Specifically, in this example the type of `value` type is automatically promoted from `int&` to `int const&` within the preconditions and an attempt to modify `value` within the preconditions will correctly generate a compile-time error.
+
+[endsect]
+
+[section Postconditions (Result and Old Values)]
+
+Let's program the postconditions of `postinc` completing the contract (see also [file example/contracts post_also_postinc.cpp]):
+
+[import ../example/contracts/post_also_postinc.cpp]
+[post_also_postinc]
+
+Postconditions are automatically checked by the library when the `postinc` function is called, immediately after the body is executed but only if the body does not throw an exception (i.e., at function /normal exit/).
+See also the __Free_Function_Calls__ section.
+
+Postconditions can access the function return value by declaring a variable of type `auto` 
+[footnote
+*Rationale.*
+The __CXX11__ `auto` declaration syntax was adopted for postcondition return value declarations however this library knows the result type because it is specified in the function declaration within the macros so no type deduction is actually used to implement auto declarations of return values.
+Similarly, the __CXX11__ `auto` declaration syntax was adopted for postcondition old value declarations however this library deduces the type of old value expressions using __Boost_Typeof__ so no __CXX11__ feature is actually needed (in this case programmers can optionally specify the old value type so to not use __Boost_Typeof__ as explained in the __Advanced_Topics__ section).
+]
+and assigning it to the `return` keyword (the variable name is arbitrary but `result` is often used).
+
+Postconditions can also access the /old value/ that an expression had just before the body was executed.
+This is done by declaring a variable of type `auto` and assigning it to [macroref CONTRACT_OLDOF] [^['expression]] (the variable name is arbitrary but the `old_` prefix is often used).
+Before executing the function body, the library automatically copies (once) the value of the specified expression into a variable with the specified name which is then made available to the postconditions.
+Therefore, the type of an old value expression must have a copy constructor (or, more precisely, it must be be __ConstantCopyConstructible__), otherwise the library will generate a compile-time error.
+The parenthesis around the expression passed to the [macroref CONTRACT_OLDOF] macro are allowed but not required (in this example, `CONTRACT_OLDOF(value)` could have been equivalently used instead of `CONTRACT_OLDOF value` but the latter was preferred because of lesser parenthesis).
+In this sense, the syntax of the `CONTRACT_OLDOF` macro resembles the syntax of the `sizeof` operator which also allows but does not require parenthesis when applied to value expressions (i.e., `sizeof value` and `sizeof(value)` are both valid).
+[footnote
+*Rationale.*
+This is also the syntax specified by __N1962__ for the `oldof` operator which is the equivalent of the `CONTRACT_OLDOF` macro.
+]
+(The maximum number of supported and possible old value declarations is specified by the [macroref CONTRACT_CONFIG_OLDOF_MAX] and [macroref CONTRACT_LIMIT_OLDOFS] macros respectively.)
+
+Postconditions always access result and old values in constant-correct context so that contracts cannot modify the state of the program (see the __Constant_Correctness__ section).
+
+In general, it is recommended to specify multiple assertions separated by commas and not group them together into a single condition using the operator `and` (or `&&`).
+This is because if assertion conditions are programmed together using `and` then it will not be clear which assertion condition actually failed in case the contract is broken.
+For example, if in the code above we programmed one single postcondition `(value == old_value + 1) and (result == old_value)` then in case the postcondition failed we would not know which condition failed `value == old_value + 1` or `result == old_value`.
+
+[note
+All tokens must be specified in the fixed order listed in the __Grammar__ section (it is not possible to specify postconditions before preconditions, `volatile` before `const` for member functions, etc).
+[footnote
+*Rationale.*
+This library macros could have been implemented to allow to mix the order of some tokens (preconditions and postconditions, `volatile` and `const`).
+However, that would have complicated the macro implementation without any added functionality for the user.
+]
+]
+
+[endsect]
+
+[section Classes and Class Invariants]
+
+Consider the following class `ivector` which is a vector of integers with a constructor, destructor, and the `push_back` member function (see also [file example/contracts no_contract_ivector.cpp]):
+
+[import ../example/contracts/no_contract_ivector.cpp]
+[no_contract_ivector]
+
+Let's program the class declaration and the class invariants using the [macroref CONTRACT_CLASS] and [macroref CONTRACT_CLASS_INVARIANT] macros respectively (see also [file example/contracts class_ivector.cpp]):
+
+[import ../example/contracts/class_ivector.cpp]
+[class_ivector_classinv]
+
+A class must always be declared using the [macroref CONTRACT_CLASS] macro in oder to later be able to program contracts for its constructors, destructor, and member functions.
+Similarly to function names, the class name must always be wrapped within parenthesis `(ivector)` (because the class name is not a known keyword and it is not the last element of the class declaration syntax as base classes and other elements can be specified).
+Only constructors, destructors, and member functions that are public check the class invariants while the ones that are either protected or private do not (see the __Contract_Programming_Overview__ section).
+The class invariant must always be specified for a class declared using the [macroref CONTRACT_CLASS] macro and it must appear at the very beginning of the class definition (no statement can precede the [macroref CONTRACT_CLASS_INVARIANT] macro, not even a `typedef` or a `friend` declaration).
+If a class has no class invariant, the class invariants must be specified `void`:
+
+    CONTRACT_CLASS(
+        class (ivector)
+    ) {
+        CONTRACT_CLASS_INVARIANT( void ) // No class invariant.
+
+        // ...
+
+Using the same macro, this library also allows to specify contracts for `struct`:
+[footnote
+*Rationale.*
+There is no need for a `CONTRACT_STRUCT` macro because this library macros can parse the class declaration and distinguish between the `struct` and `class` specifiers.
+]
+
+    CONTRACT_CLASS(
+        struct (ivector) // Structs with contracts.
+    ) {
+        // ...
+
+The usual differences between `struct` and `class` also apply when this library is used (i.e., default member and inheritance access levels are `public` for `struct` and `private` for `class`).
+
+[note
+Unfortunately, this library does not allow to specify contracts for `union`.
+[footnote
+*Rationale.*
+The authors have not fully investigated if this library could be extended to specify contracts for unions.
+It is possible that future revisions of this library will support contracts for unions (see also [@http://sourceforge.net/apps/trac/contractpp/ticket/50 Ticket 50]).
+]
+]
+
+No contracts are checked (not event the class invariants) when a data member is accessed directly so it might be best for both classes and structs to have no non-constant public data member (but access all data members via appropriate member functions that can check the class and sturct contracts).
+
+[endsect]
+
+[section Constructors]
+
+Let's program the `ivector` class constructor and its contract using the [macroref CONTRACT_CONSTRUCTOR] macro (see also [file example/contracts class_ivector.cpp]):
+
+[class_ivector_constructor]
+
+Constructor, destructor, and member function declarations must always repeat their access level `public`, `protected`, or `private`
+[footnote
+*Rationale*
+This library needs to know each member access level because in Contract Programming only public members are supposed to check class invariants while protected and private members only check preconditions and postconditions but not the class invariants.
+Unfortunately, in C++ it is not possible for a member to introspect its access level using template meta-programming.
+Therefore, this library requires the access level to be specified within the macros and it uses preprocessor meta-programming to detect it.
+Furthermore, given that the access level is has to be specified, the [macroref CONTRACT_FUNCTION] macro also uses it to differentiate between free and member functions so no additional macro `CONTRACT_MEMBER` is needed.
+]
+which is specified without the usual trailing column symbol `:`.
+(This use of `public`, `protected`, and `private` resembles __Java__'s syntax.)
+
+The constructor name `(ivector)` and the non-fundamental parameter type `(size_type)` must be wrapped within parenthesis (because they are not known keywords and they are not at the end of a syntactic element).
+
+Member initializers are programed as a comma-separated list but using the specifier [^initialize( /expression1/, /expression2/, ... )] instead of the usual column symbol [^: /expression1/, /expression2/, ...].
+When specified, they must appear at the very end of constructor declarations (after both preconditions and postcondition if present).
+[footnote
+*Rationale.*
+Member initializers are specified after the preconditions and postconditions because they are part of the constructor definition while preconditions and postconditions are part of the constructor declaration.
+]
+Unfortunately, when member initializers are specified, the constructor body must be defined together with its declaration and contract (see the __Forward_Declarations_and_Body_Definitions__ section).
+
+There is no object before the constructor body is executed, therefore this library will generate a compile-time error if either preconditions or postcondition old value expressions try to access the object `this`.
+For the same reason, only static class invariants are checked at entry of public constructors (non-static class invariants are checked at public constructor normal exit but not at entry).
+Finally, preconditions are checked before member initializers are executed (so the initializers can rely on preconditions for validating constructor arguments).
+See also the __Constructor_Calls__ section.
+
+[endsect]
+
+[section Destructors]
+
+Let's program the `ivector` class destructor using the [macroref CONTRACT_DESTRUCTOR] macro (see also [file example/contracts class_ivector.cpp]):
+
+[class_ivector_destructor]
+
+The destructor access level `public`, `protected`, or `private` must always be specified.
+The destructor name `(~ivector)` must be wrapped within parenthesis.
+The destructor empty parameter list must be specified using `void` (same as for constructors, member functions, and free functions with no parameters).
+
+Destructors have no parameter and there is no object after the destructor body is executed.
+Therefore, destructors cannot specify neither preconditions nor postconditions.
+[footnote
+Future revisions of this library might implement static postconditions for destructors (see the __Destructor_Calls__ section).
+]
+However, it is still necessary to ontract (at least public) destructors so they check static and non-static class invariants at entry, and non-static class invariants at exit.
+See also the __Destructor_Calls__ section.
+
+[important
+Only members declared using this library macros check the class invariants.
+Therefore, at least all public members of a class with non-empty class invariants should be declared using this library macros even when they have no preconditions and no postconditions so that they check the class invariants (that is the case for public destructors).
+]
+
+In general, there is no need to use this library macros to declare free functions, constructors, destructors, and member function only when:
+
+# A free function has no preconditions and no postconditions.
+# A private or protected constructor, destructor, or member function has no preconditions and no postconditions (regardless of class invariants because private and protected members never check class invariants).
+# A public constructor, destructor, or member function has no preconditions, no postconditions, and its class has no class invariants.
+
+[endsect]
+
+[section Member Functions]
+
+Let's program the member function `ivector::push_back` and its contract using the [macroref CONTRACT_FUNCTION] macro (see also [file example/contracts class_ivector.cpp]):
+
+[class_ivector_member]
+
+The member function access level `public`, `protected`, or `private` must always be specified.
+The member function name `(push_back)` must be wrapped within parenthesis.
+The member function result type `void` and parameter type `int const` can but do not have to be wrapped within parenthesis (because they are both fundamental types containing no symbol).
+
+Public non-static member functions check static and non-static class invariants at both entry and exit.
+Preconditions are checked at entry and postconditions are checked at normal exit.
+Both preconditions and postconditions can access the object and the member function parameters in constant-correct context.
+Postconditions can declare return and old value variables (again, in contract-correct context).
+See also the __Member_Function_Calls__ section.
+
+[note
+Contracts are most useful when the assertions only use public members that are accessible from the caller so the caller can properly verify and use the contract.
+In particular, preconditions of a member function or constructor that use non-public members are essentially incorrect because they cannot be verified by the caller before calling the function (in fact, __Eiffel__ generates a compile-time error in this case).
+
+This library leave it up to programmers to only use public members when programming contracts and especially when programming preconditions (see the __Specification_vs__Implementation__ section).
+]
+
+[endsect]
+
+[section Inheritance and Subcontracting]
+
+Consider the following class `unique_identifiers` which is a collection of unique integral identifiers (see also [file example/contracts subcontract_identifiers.cpp]):
+
+[import ../example/contracts/subcontract_identifiers.cpp]
+[subcontract_identifiers_unique]
+
+Reading the contracts we can understand the semantics of the class operation (even if we do not consult the class implementation):
+
+# The collection is constructed with zero size as specified by the constructor postconditions.
+Consistently, the class invariants assert that the class size must never be negative (but it can be zero).
+# The member function `unique_identifiers::add` allows to add an integral identifier to the collection.
+The preconditions assert that the specified identifier must not already be part of the collection making sure that duplicate identifiers are never added.
+# If the specified identifier was not already part of the collection (`old_found` is `false`) then the postconditions assert that the identifier is added and consequently that the size of the collection increased by one.
+Note that both postconditions are trivially `true` if instead the identifier was already part of the collection (`old_found` is `true`).
+We call these type of assertions that are "guarded" by an activation condition /select assertions/ (here we have used the C++ ternary operator `?:` to program select assertions, the __Advanced_Topics__ section will introduce an alternative construct for select assertions).
+
+Let's assume that we want to derive from `unique_identifiers` another type of collection `duplicate_identifiers` which instead allows to add duplicate identifiers (see also [file example/contracts subcontract_identifiers.cpp]):
+
+[subcontract_identifiers_duplicate]
+
+The derived class `duplicate_identifiers` publicly inherits from the base class `unique_identifiers` using the specifier [^extends( /base1/, /base2/, ... )] instead of the usual column symbol [^: /base1/, /base2/, ...]. (This use of `extends` resembles __Java__'s syntax.)
+As usual, the inheritance access level `public`, `protected`, or `private` is optional and it defaults to `public` for `struct` and to `private` for `class`.
+Virtual base classes can also be specified but `virtual` must always be specified after the inheritance access level `public`, `protected`, or `private` if present.
+Multiple base classes (`base1`, `base2`, etc) can be specified for multiple-inheritance (the configuration macro [macroref CONTRACT_CONFIG_INHERITANCE_MAX] indicates the maximum number of base classes that can be specified).
+
+[note
+This library automatically subcontracts the derived class when one or more base classes are specified (see the __Contract_Programming_Overview__ section).
+]
+
+Let's assume that a `duplicate_identifers` object is constructed with identifier `123` and that we try to add the identifier `123` again:
+
+[subcontract_identifiers_duplicate_add]
+
+Reading both the derived and base class contracts, we can understand the semantics of the derived class operation (even if we do not consult the base and derived class implementations):
+
+# The `duplicate_identifiers` constructor creates a collection with size one as specified by the constructor postconditions.
+Therefore, the `duplicate_identifiers` class invariants assert that size is always positive.
+Subcontracting automatically checks the `unique_identifiers` base class invariants in __logic_and__ with the `duplicate_identifiers` derived class invariants thus class invariants can only be strengthened by derived classes (this is necessary because the derived class can be used whenever the base class is used therefore the derived class must satisfy the base class invariants at all times, see also the __substitution_principle__ and the __Contract_Programming_Overview__ section).
+# Subcontracting automatically checks the `unique_identifiers::add` overridden preconditions in __logic_or__ with the `duplicate_identifiers::add` overriding preconditions thus preconditions can only be weakened by overriding member functions (this is necessary because the overriding member function can be called under the conditions for which the overridden function is called, see also the __substitution_principle__ and the __Member_Function_Calls__ section).
+Indeed, in this example the `unique_identifiers::add` preconditions fail (because `123` is already in the collection) but the `derived_identifiers::add` preconditions pass so the __logic_or__ of the two sets of preconditions passes and the call `ids.add(123)` is a valid call.
+# Subcontracting automatically checks the `unique_identifiers::add` overridden postconditions in __logic_and__ with the `duplicate_identifiers::add` overriding postconditions thus postconditions can only be strengthen by overriding member functions (this is necessary because the overriding function can be called in any context in which the overridden function is called, see also the __substitution_principle__ and the __Member_Function_Calls__ section).
+Indeed, in this example the `unique_identifiers::add` postconditions pass because the identifier `123` was already added (`old_found` is `true`) and `unique_identifiers::add` select assertions trivially return `true`.
+The `duplicate_identifiers::add` postconditions are then checked in __logic_and__ and they correctly assert that the collection size did not change given that `123` was already added.
+Therefore, the call `ids.add(123)` is valid but adds no identifier.
+
+Finally, note that within the body of overriding functions it is necessary to use the [macroref CONTRACT_MEMBER_BODY] macro to call the overridden function as in `unique_identifiers::CONTRACT_MEMBER_BODY(add)(id)`.
+
+[warning
+Unfortunately, invoking the overridden function from within the overriding function body without using [macroref CONTRACT_MEMBER_BODY] results in infinite recursion.
+[footnote
+*Rationale*.
+In this case, the library implementation will recursively check contracts of the overriding function forever (in all other cases, this library is able to avoid infinite recursions due to contract checking).
+]
+This limitation might be removed in future revisions of this library (see also [@https://sourceforge.net/apps/trac/contractpp/ticket/46 Ticket 46]).
+]
+
+[endsect]
+
+[section Class Templates]
+
+Let's program a class template `vector` similar to the class `ivector` we have seen before but that works on a generic value type `T` and not just on `int` (see also [file example/contracts class_template_vector.cpp] and [file example/contracts pushable.hpp]):
+
+[import ../example/contracts/class_template_vector.cpp]
+[class_template_vector]
+
+(The specifications of the code in this example are not fully programmed, in particular concepts, see the __Concepts__ section, and assertion requirements, see the __Advanced_Topics__ section, have been omitted for simplicity.)
+
+Note that templates are declared using the specifier `template( typename T, ... )` which uses round parenthesis instead of the usual angular parenthesis `template< typename T, ... >`.
+However, after a template is declared using round parenthesis, angular parenthesis are used as usual to instantiate the template (e.g., the base class `pushable<T>`).
+
+[important
+Within a type-dependent scope (e.g., within the class template of the above example) the special macros with the `_TPL` postfix must be used instead of the macros we have seen so far.
+[footnote
+*Rationale.*
+The library must know if the enclosing scope is a template so it knows when to prefix nested type expressions with `typename` (because __CXX03__ does not allow to use `typename` outside templates).
+This constraints could be relaxed on future revisions of this library for __CXX11__ compilers (because __CXX11__ allows to use `typename` more freely).
+Earlier versions of this library did not require to use the special `_TPL` macros within templates because the library internally implemented every contracted function using a template function, possibly with dummy template parameters, even if the original function was not a template so `typename` could always be used by the library.
+The dummy template parameters were hidden to the user so this approach did not change the user API and had the benefit of not requiring the `_TPL` macros.
+However, this approach increased compilation time because of the extra templates that it introduced so the current revision of the library uses the `_TPL` macros.
+]
+(The same applies to function templates, see below.)
+]
+
+In the example above, the enclosing class template `vector` is not declared using the [macroref CONTRACT_CLASS_TPL] macro because its enclosing scope is not type-dependent (it is the global namespace).
+Within such a class template however, all contract macros must use the `_TPL` postfix so [macroref CONTRACT_CLASS_INVARIANT_TPL], [macroref CONTRACT_CONSTRUCTOR_TPL], [macroref CONTRACT_DESTRUCTOR_TPL], and [macroref CONTRACT_FUNCTION_TPL] must be used to specify class invariants, declare constructors, declare the destructor, and declare member functions respectively.
+In general, the [macroref CONTRACT_CLASS_TPL] macro is used when declaring a class nested within a class template (see the __Advanced_Topics__ section).
+
+This libraries supports all the different kinds of template parameters that C++ supports: type template parameters, value template parameters, and template template parameters.
+
+* Type template parameters can be prefixed by either `typename` or `class` as usual, `typename A` or `class C`.
+* The type of value template parameters must be wrapped within parenthesis `(A) D` but the parenthesis are optional for fundamental types that contain no symbol `int B`.
+* Template template parameters use round parenthesis for their template specifier but then their inner template parameters are specified using the usual C++ syntax `template( typename X, template< ... > class Y, ... ) class E`.
+
+Default template parameters are specified using `, default `[^['default-value]] right after the template parameter declaration.
+For example (see also [file example/contracts template_params.cpp]):
+
+[import ../example/contracts/template_params.cpp]
+[template_params_class]
+
+Finally, the syntax `template( void )` is used instead of the usual `template< >` to specify a template with no template parameters (this is typically used for template specializations, see the __Advanced_Topics__ section).
+
+[endsect]
+
+[section Function Templates]
+
+Let's program a function template `postinc` similar to the function `postinc` that we have seen before but that works on a generic type `T` and not just on `int` (see also [file example/contracts function_template_postinc.cpp]):
+
+[import ../example/contracts/function_template_postinc.cpp]
+[function_template_postinc]
+
+(The specifications of the code in this example are not fully programmed, in particular concepts, see the __Concepts__ section, and assertion requirements, see the __Advanced_Topics__ section, have been omitted for simplicity.)
+
+Type, value, and template template parameters are specified for function templates using the same syntax used for class template parameters, for example (see also [file example/contracts template_params.cpp]):
+
+[template_params_function]
+
+Note that as usual, function templates cannot have default template parameters in __CXX03__.
+
+[endsect]
+
+[section Forward Declarations and Body Definitions]
+
+This library supports contracts for classes and functions that have forward declarations.
+Furthermore, the function body definition can be deferred and separated from the function declaration and its contracts.
+For example (see also [file example/contracts body_natural.hpp], [file example/contracts body_natural_impl.hpp], and [file example/contracts body_natural.cpp]):
+
+[import ../example/contracts/body_natural.hpp]
+[body_natural]
+
+In this example, the class `natural` and the function `less` are first forward declared and later declared.
+Note that the contracts can be specified only once and together with the class or function declaration (not with the forward declarations that can be many).
+
+[important
+This library forces to specify contracts with the function and class declarations and not with their definitions.
+This is correct because contracts are part of the program specifications (declarations) and not of the program implementation (definitions), see also the __Specification_vs__Implementation__ section.
+]
+
+Note that as usual in C++, not all functions need to be defined when they are first declared.
+In this example, `less` and `natural::get` are defined together with their declarations and contracts while the other function bodies are defined separately.
+
+The definitions of the free function `greater`, the constructor `natural::natural`, the destructor `natural::~natural`, and the member function `natural::equal` are deferred and separated from their declarations and contracts.
+In fact, a semicolon `;` is specified right after the contract declaration macros instead of programming the function bodies.
+As usual in C++, the semicolon `;` indicates that the function body definition is deferred and it will appear at some other point in the program (often in a =.cpp= file that can be compiled separately).
+In this example, the deferred functions are templates or template members therefore the definitions where programmed in a header file that must be made available when the template declarations are compiled (see also [file example/contracts body_natural_impl.hpp]):
+[footnote
+In principle, this library supports `export` templates that can be used to program template definitions separately from their declarations and in files that can be pre-compiled.
+However, `export` templates are not supported by most __CXX03__ compilers (in fact, [@http://www.comeaucomputing.com/4.0/docs/userman/export.html Comeau] might be the  only compiler that supports them), they were removed from __CXX11__, and they are an untested feature of this library.
+Instead of using `export` templates, it is common practise in C++ to program both template declarations and definitions together so they can be compiled correctly.
+In this example, the authors have used a separate header file `..._impl.hpp` to logically separate template declarations and definitions but the header is included at the bottom of the declaration header file so the definitions are always available together with their declarations.
+]
+
+[import ../example/contracts/body_natural_impl.hpp]
+[body_natural_impl]
+
+The usual C++ syntax is used to define the bodies (in fact this library only alters the syntax of class and function declarations but not the syntax of their definitions).
+However, free function, constructor, destructor, and member function names must be specified using the macros [macroref CONTRACT_FREE_BODY], [macroref CONTRACT_CONSTRUCTOR_BODY], [macroref CONTRACT_DESTRUCTOR_BODY], and [macroref CONTRACT_MEMBER_BODY] respectively.
+[footnote
+*Rationale.*
+Four different body macros are needed because contracts are disabled differently for the different type of functions.
+For example, disabling preconditions and postconditions turns off contracts for free functions but not for member functions, disabling class invariants turns off contracts for destructors but not for constructors, etc.
+]
+The free and member body macros take one parameter which is the function name.
+The constructor and destructor body macros take two parameters that are the fully qualified class type (including eventual template parameters as usual) and the class name which must be prefixed by the tilde symbol `~` for destructors as usual.
+[footnote
+Some compilers accept to repeat template parameter names in the constructor and destructor names.
+However, this is not __CXX03__ compliant (and, for example, it was fixed in more recent versions of GCC) therefore programmers are advised to specify the template parameter names only for the class type and not for the constructor and destructor names (this is also why the macros must take a second parameter with the class name instead of just the class type parameter).
+]
+The class type parameter must be wrapped within extra parenthesis like in this example but only if it contains multiple template parameters (because these use unwrapped commas which cannot be passed within macro parameters, see the beginning of the __Advanced_Topics__ section).
+
+In this example, it was possible to separate the constructor body definition because the constructor did not specify member initializers.
+
+[warning
+Unfortunately, when member initializers are specified, the macro [macroref CONTRACT_CONSTRUCTOR_BODY] cannot be used, the constructor body definition cannot be deferred, and the constructor body must be defined together with the constructor declaration and its contract inside the class definition.
+[footnote
+*Rationale.*
+This limitation comes from the fact that __CXX03__ does not support delegating constructors.
+If member initializers are specified within the contract, the deferred body will not compile when contract compilation is turned off by the configuration macros.
+If instead member initializers are specified with the deferred body definition, the deferred body will not compile when contract compilation is turned on by the configuration macros.
+There is no way to reconcile these two conditions without delegating constructors, so definitions cannot be deferred for constructors that specify member initializers.
+This limitation could be removed in future revisions of this library for __CXX11__ compilers that support delegating constructors (see also [@http://sourceforge.net/apps/trac/contractpp/ticket/51 Ticket 51].
+]
+]
+
+[endsect]
+
+[endsect]
+

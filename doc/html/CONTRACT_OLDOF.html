@@ -1,0 +1,58 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<title>Macro CONTRACT_OLDOF</title>
+<link rel="stylesheet" href="../../doc/src/boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.76.1">
+<link rel="home" href="index.html" title="Chapter&#160;1.&#160;Contract++ 0.4.1">
+<link rel="up" href="reference.html#header.contract.oldof_hpp" title="Header &lt;contract/oldof.hpp&gt;">
+<link rel="prev" href="contract/has_oldof.html" title="Struct template has_oldof">
+<link rel="next" href="CONTRACT_CONSTRUCTOR_ARG.html" title="Macro CONTRACT_CONSTRUCTOR_ARG">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><a href="http://sourceforge.net/projects/contractpp/"><img alt="Logo" width="277" height="86" src="../../logo.png"></a></td>
+<td align="center"><a href="http://sourceforge.net/projects/contractpp/files/latest/download">Download</a></td>
+<td align="center"><a href="http://sourceforge.net/apps/trac/contractpp/report/3">Bugs</a></td>
+<td align="center"><a href="http://sourceforge.net/projects/contractpp/reviews/">Reviews</a></td>
+<td align="center"><a href="mailto:lorcaminiti@gmail.com">Contact Us</a></td>
+<td align="center"><a href="http://sourceforge.net/projects/contractpp/forums/forum/920163">Help</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="contract/has_oldof.html"><img src="../..//doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="reference.html#header.contract.oldof_hpp"><img src="../..//doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="index.html"><img src="../..//doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="CONTRACT_CONSTRUCTOR_ARG.html"><img src="../..//doc/src/images/next.png" alt="Next"></a>
+</div>
+<div class="refentry">
+<a name="CONTRACT_OLDOF"></a><div class="titlepage"></div>
+<div class="refnamediv">
+<h2><span class="refentrytitle">Macro CONTRACT_OLDOF</span></h2>
+<p>CONTRACT_OLDOF &#8212; Macro used to refer to the old value of an expression. </p>
+</div>
+<h2 xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="refsynopsisdiv-title">Synopsis</h2>
+<div xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="refsynopsisdiv"><pre class="synopsis"><span class="comment">// In header: &lt;<a class="link" href="reference.html#header.contract.oldof_hpp" title="Header &lt;contract/oldof.hpp&gt;">contract/oldof.hpp</a>&gt;
+
+</span>CONTRACT_OLDOF</pre></div>
+<div class="refsect1">
+<a name="id1049976"></a><h2>Description</h2>
+<p>This macro refers the old value of the expression that follows the macro (i.e., the value the expression had after function entry but before body execution). This macro must be used to initialize old value declarations within postconditions (see also the  <a class="link" href="contract__/grammar.html" title="Grammar"> Grammar</a> section):</p>
+<pre class="programlisting"><span class="keyword">auto</span> <span class="identifier">old_variable</span> <span class="special">=</span> <span class="identifier">CONTRACT_OLDOF</span> <span class="identifier">odlof_expression</span>
+</pre>
+<p>The specified expression that follows the macro might or not be wrapped within parenthesis.</p>
+<p>The old-of expression type can be explicitly specified instead of <code class="computeroutput">auto</code> but it must be wrapped within parenthesis unless it is a fundamental type containing no symbol. If not explicitly specified, the library will automatically deduce the type using Boost.Typeof (as always, types must be properly registered with Boost.Typeof for type-of emulation mode on compilers that do not support native type-of).</p>
+<p><span class="bold"><strong>See also:</strong></span>  <a class="link" href="contract__/tutorial.html" title="Tutorial"> Tutorial</a> section,  <a class="link" href="contract__/advanced_topics.html" title="Advanced Topics"> Advanced Topics</a> section. </p>
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright &#169; 2008-2012 Lorenzo Caminiti<p>
+        Distributed under the Boost Software License, Version 1.0 (see accompanying
+        file LICENSE_1_0.txt or a copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="contract/has_oldof.html"><img src="../..//doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="reference.html#header.contract.oldof_hpp"><img src="../..//doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="index.html"><img src="../..//doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="CONTRACT_CONSTRUCTOR_ARG.html"><img src="../..//doc/src/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>

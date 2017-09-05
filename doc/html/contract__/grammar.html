@@ -1,0 +1,2004 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<title>Grammar</title>
+<link rel="stylesheet" href="../../../doc/src/boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.76.1">
+<link rel="home" href="../index.html" title="Chapter&#160;1.&#160;Contract++ 0.4.1">
+<link rel="up" href="../index.html" title="Chapter&#160;1.&#160;Contract++ 0.4.1">
+<link rel="prev" href="examples.html" title="Examples">
+<link rel="next" href="no_variadic_macros.html" title="No Variadic Macros">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><a href="http://sourceforge.net/projects/contractpp/"><img alt="Logo" width="277" height="86" src="../../../logo.png"></a></td>
+<td align="center"><a href="http://sourceforge.net/projects/contractpp/files/latest/download">Download</a></td>
+<td align="center"><a href="http://sourceforge.net/apps/trac/contractpp/report/3">Bugs</a></td>
+<td align="center"><a href="http://sourceforge.net/projects/contractpp/reviews/">Reviews</a></td>
+<td align="center"><a href="mailto:lorcaminiti@gmail.com">Contact Us</a></td>
+<td align="center"><a href="http://sourceforge.net/projects/contractpp/forums/forum/920163">Help</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="examples.html"><img src="../../..//doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../..//doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../..//doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="no_variadic_macros.html"><img src="../../..//doc/src/images/next.png" alt="Next"></a>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="contract__.grammar"></a><a class="link" href="grammar.html" title="Grammar">Grammar</a>
+</h2></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="grammar.html#contract__.grammar.preprocessor_dsel">Preprocessor DSEL</a></span></dt>
+<dt><span class="section"><a href="grammar.html#contract__.grammar.differences_with_c___syntax">Differences
+      with C++ Syntax</a></span></dt>
+<dt><span class="section"><a href="grammar.html#contract__.grammar.macro_interface">Macro Interface</a></span></dt>
+<dt><span class="section"><a href="grammar.html#contract__.grammar.lexical_conventions">Lexical Conventions</a></span></dt>
+<dt><span class="section"><a href="grammar.html#contract__.grammar.class_declarations">Class Declarations</a></span></dt>
+<dt><span class="section"><a href="grammar.html#contract__.grammar.base_classes">Base Classes</a></span></dt>
+<dt><span class="section"><a href="grammar.html#contract__.grammar.template_specializations">Template
+      Specializations</a></span></dt>
+<dt><span class="section"><a href="grammar.html#contract__.grammar.template_parameters">Template Parameters</a></span></dt>
+<dt><span class="section"><a href="grammar.html#contract__.grammar.concepts">Concepts</a></span></dt>
+<dt><span class="section"><a href="grammar.html#contract__.grammar.types">Types</a></span></dt>
+<dt><span class="section"><a href="grammar.html#contract__.grammar.function_declarations">Function Declarations</a></span></dt>
+<dt><span class="section"><a href="grammar.html#contract__.grammar.result_type">Result Type</a></span></dt>
+<dt><span class="section"><a href="grammar.html#contract__.grammar.function_and_operator_names">Function
+      and Operator Names</a></span></dt>
+<dt><span class="section"><a href="grammar.html#contract__.grammar.exception_specifications">Exception
+      Specifications</a></span></dt>
+<dt><span class="section"><a href="grammar.html#contract__.grammar.member_initializers">Member Initializers</a></span></dt>
+<dt><span class="section"><a href="grammar.html#contract__.grammar.function_parameters">Function Parameters</a></span></dt>
+<dt><span class="section"><a href="grammar.html#contract__.grammar.result_and_old_values">Result and
+      Old Values</a></span></dt>
+<dt><span class="section"><a href="grammar.html#contract__.grammar.class_invariants">Class Invariants</a></span></dt>
+<dt><span class="section"><a href="grammar.html#contract__.grammar.assertions">Assertions</a></span></dt>
+<dt><span class="section"><a href="grammar.html#contract__.grammar.loop_variants">Loop Variants</a></span></dt>
+<dt><span class="section"><a href="grammar.html#contract__.grammar.named_parameter_declarations">Named
+      Parameter Declarations</a></span></dt>
+<dt><span class="section"><a href="grammar.html#contract__.grammar.terminals">Terminals</a></span></dt>
+<dt><span class="section"><a href="grammar.html#contract__.grammar.alternative_assertion_syntax__not_implemented_">Alternative
+      Assertion Syntax (Not Implemented)</a></span></dt>
+</dl></div>
+<div class="blockquote"><blockquote class="blockquote"><p>
+        <span class="emphasis"><em><span class="quote">&#8220;<span class="quote">Almost every macro demonstrates a flaw in the programming
+        language, in the program, or in the programmer.</span>&#8221;</span></em></span>
+      </p></blockquote></div>
+<div class="blockquote"><blockquote class="blockquote"><p>
+        <span class="emphasis"><em>--Stroustrup (see <a class="link" href="bibliography.html#Stroustrup97_anchor">[Stroustrup97]</a>
+        page 160)</em></span>
+      </p></blockquote></div>
+<p>
+      This library uses macros to overcome a limitation of C++, namely the fact that
+      the core language does not support preconditions, postconditions, class invariants,
+      old values, and subcontracting. This section lists the complete grammar of
+      the syntax used by this library macros.
+    </p>
+<a name="syntax_error_warning_anchor"></a><div class="warning"><table border="0" summary="Warning">
+<tr>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Warning]" src="../../../doc/src/images/warning.png"></td>
+<th align="left">Warning</th>
+</tr>
+<tr><td align="left" valign="top">
+<p>
+        In general, an error in programming this library syntax will generate cryptic
+        compiler errors (often exposing internal code from this library and from
+        <a href="http://www.boost.org/doc/libs/release/libs/preprocessor" target="_top">Boost.Preprocessor</a>).
+        <sup>[<a name="contract__.grammar.f0" href="#ftn.contract__.grammar.f0" class="footnote">70</a>]</sup>
+      </p>
+<p>
+        There are intrinsic limitations on the amount of error checking that can
+        be implemented by this library because it uses the preprocessor to parse
+        its syntax (e.g., there is no way the preprocessor can gracefully detect
+        and report unbalanced round parenthesis <code class="computeroutput"><span class="special">(</span>
+        <span class="special">...</span> <span class="comment">/* missing closing
+        parenthesis here */</span></code> or an invalid concatenation symbol <code class="computeroutput"><span class="identifier">BOOST_PP_CAT</span><span class="special">(</span><span class="identifier">xyz</span><span class="special">,</span> <span class="special">::</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">)</span></code>). In addition, for a given macro all compiler
+        error messages report the same line number (because macros always expand
+        on a single line) so line numbers are not very useful in identifying syntactic
+        errors.
+      </p>
+<p>
+        While the preprocessor imposes limits on the error checking that can be implemented,
+        the current version of this library does not focus on providing the best
+        possible syntax error messages (this will be the focus of future releases,
+        see also <a href="https://sourceforge.net/apps/trac/contractpp/ticket/44" target="_top">Ticket
+        44</a>).
+      </p>
+</td></tr>
+</table></div>
+<p>
+      The best way to resolve syntactic errors is for programmers to inspect the
+      code <span class="quote">&#8220;<span class="quote">by eye</span>&#8221;</span> instead of trying to make sense of the compiler
+      errors. This section is very useful for programmers to make sure that they
+      are using the syntax correctly.
+    </p>
+<div class="section">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="contract__.grammar.preprocessor_dsel"></a><a class="link" href="grammar.html#contract__.grammar.preprocessor_dsel" title="Preprocessor DSEL">Preprocessor DSEL</a>
+</h3></div></div></div>
+<p>
+        The syntax used by this library macros effectively defies a new language
+        within C++. More precisely, this library macros define a <a href="http://en.wikipedia.org/wiki/Domain-specific_language" target="_top">Domain-Specific
+        Embedded Language (DSEL)</a> that replaces the usual C++ syntax for class
+        and function declarations. This is the <span class="emphasis"><em>Language of Contract++</em></span>
+        (or <span class="emphasis"><em>LC++</em></span> for short).
+      </p>
+<p>
+        In contrast with other DSEL hosted by C++ which are parsed using template
+        meta-programming (e.g., <a href="http://www.boost.org/doc/libs/release/libs/phoenix" target="_top">Boost.Phoenix</a>),
+        this library DSEL is parsed <span class="quote">&#8220;<span class="quote">one meta-programming level higher</span>&#8221;</span>
+        using preprocessor meta-programming. Using both processor meta-programming
+        and template meta-programming allows this library to implement rules like
+        this:
+      </p>
+<pre class="programlisting"><span class="emphasis"><em>if a member function is not public then it does not check the class invariants</em></span>
+</pre>
+<p>
+        This rule cannot be implemented using only template meta-programming because
+        it is not possible to check if a function is public using template meta-programming
+        introspection techniques. For example, it is not possible to implement a
+        boolean meta-function like the following: <sup>[<a name="contract__.grammar.preprocessor_dsel.f0" href="#ftn.contract__.grammar.preprocessor_dsel.f0" class="footnote">71</a>]</sup>
+      </p>
+<pre class="programlisting"><span class="keyword">template</span><span class="special">&lt;</span> <span class="special">...</span> <span class="special">&gt;</span>
+<span class="keyword">struct</span> <span class="identifier">is_public</span> <span class="special">{</span> <span class="special">...</span> <span class="special">};</span> <span class="comment">// Unfortunately, this cannot be implemented.</span>
+</pre>
+<p>
+        Instead a macro can be programmed to parse the following function declarations
+        and expand to <code class="computeroutput"><span class="number">1</span></code> if and only if
+        the function is public:
+      </p>
+<pre class="programlisting"><span class="preprocessor">#define</span> <span class="identifier">IS_PUBLIC</span><span class="special">(</span><span class="identifier">function_declaration</span><span class="special">)</span> <span class="special">...</span> <span class="comment">// This can be implemented.</span>
+
+<span class="identifier">IS_PUBLIC</span><span class="special">(</span> <span class="keyword">public</span>  <span class="keyword">void</span> <span class="special">(</span><span class="identifier">f</span><span class="special">)</span> <span class="special">(</span> <span class="keyword">int</span> <span class="identifier">x</span> <span class="special">)</span> <span class="special">)</span>     <span class="comment">// Expand to 1.</span>
+<span class="identifier">IS_PUBLIC</span><span class="special">(</span> <span class="keyword">private</span> <span class="keyword">void</span> <span class="special">(</span><span class="identifier">g</span><span class="special">)</span> <span class="special">(</span> <span class="keyword">int</span> <span class="identifier">y</span> <span class="special">)</span> <span class="special">)</span>     <span class="comment">// Expand to 0.</span>
+<span class="identifier">IS_PUBLIC</span><span class="special">(</span>         <span class="keyword">void</span> <span class="special">(</span><span class="identifier">h</span><span class="special">)</span> <span class="special">(</span> <span class="keyword">int</span> <span class="identifier">z</span> <span class="special">)</span> <span class="special">)</span>     <span class="comment">// Expand to 0.</span>
+</pre>
+<p>
+        There are more examples of class and function declaration traits (<code class="computeroutput"><span class="keyword">virtual</span></code>, etc) that need to be known to correctly
+        implement Contract Programming but that cannot be inspected using template
+        meta-programming. This library macros can instead parse the specified class
+        and function declarations extracting <span class="emphasis"><em>any</em></span> declaration
+        trait (if a constructor is <code class="computeroutput"><span class="keyword">explicit</span></code>,
+        if a member function is <code class="computeroutput"><span class="keyword">virtual</span></code>,
+        if a base class is <code class="computeroutput"><span class="keyword">protected</span></code>,
+        if a parameter has a default value, etc).
+      </p>
+<p>
+        It should be noted that while the syntax of the DSEL defined by this library
+        macros is rather extensive and complex, macros always define a DSEL that
+        is intrinsically different from the core C++ language. For example, consider
+        the following function-like macro:
+      </p>
+<pre class="programlisting"><span class="preprocessor">#define</span> <span class="identifier">F</span><span class="special">(</span><span class="identifier">x</span><span class="special">,</span> <span class="identifier">y</span><span class="special">)</span> <span class="special">(</span><span class="keyword">int</span><span class="special">(</span><span class="identifier">x</span><span class="special">)</span> <span class="special">-</span> <span class="keyword">int</span><span class="special">(</span><span class="identifier">y</span><span class="special">))</span>
+
+<span class="keyword">template</span><span class="special">&lt;</span> <span class="keyword">typename</span> <span class="identifier">X</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">Y</span> <span class="special">&gt;</span>
+<span class="keyword">int</span> <span class="identifier">f</span> <span class="special">(</span> <span class="identifier">X</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">x</span><span class="special">,</span> <span class="identifier">Y</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">y</span> <span class="special">)</span> <span class="special">{</span> <span class="keyword">return</span> <span class="special">(</span><span class="keyword">int</span><span class="special">(</span><span class="identifier">x</span><span class="special">)</span> <span class="special">-</span> <span class="keyword">int</span><span class="special">(</span><span class="identifier">y</span><span class="special">));</span> <span class="special">}</span>
+
+<span class="keyword">int</span> <span class="identifier">main</span> <span class="special">(</span> <span class="keyword">void</span> <span class="special">)</span>
+<span class="special">{</span>
+    <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">F</span><span class="special">(</span> <span class="special">,</span> <span class="number">2</span><span class="special">)</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span> <span class="comment">// OK, no syntax error, it prints `-2`.</span>
+    <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">f</span><span class="special">(</span> <span class="special">,</span> <span class="number">2</span><span class="special">)</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span> <span class="comment">// Compiler generates a syntax error.</span>
+    <span class="keyword">return</span> <span class="number">0</span><span class="special">;</span>
+<span class="special">}</span>
+</pre>
+<p>
+        Note how it is valid to invoke the macro with an empty parameter <code class="computeroutput"><span class="identifier">F</span><span class="special">(</span> <span class="special">,</span>
+        <span class="number">2</span><span class="special">)</span></code>
+        while it is syntactically invalid to invoke a function with an empty parameter
+        <code class="computeroutput"><span class="identifier">f</span><span class="special">(</span>
+        <span class="special">,</span> <span class="number">2</span><span class="special">)</span></code>. This very simple macro already shows fundamental
+        differences between the syntax of macros and the syntax of the core language.
+      </p>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="contract__.grammar.differences_with_c___syntax"></a><a class="link" href="grammar.html#contract__.grammar.differences_with_c___syntax" title="Differences with C++ Syntax">Differences
+      with C++ Syntax</a>
+</h3></div></div></div>
+<p>
+        The following is a summary of all the differences between the syntax of this
+        library macros and the usual C++ class and function declaration syntax.
+      </p>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                <p>
+                  Rule
+                </p>
+              </th>
+<th>
+                <p>
+                  Syntactic Element
+                </p>
+              </th>
+<th>
+                <p>
+                  Syntax Differences
+                </p>
+              </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+                <p>
+                  1
+                </p>
+              </td>
+<td>
+                <p>
+                  Template Declarations
+                </p>
+              </td>
+<td>
+                <p>
+                  Use round parenthesis <code class="computeroutput"><span class="keyword">template</span><span class="special">(</span> </code><code class="literal"><span class="emphasis"><em>template-parameters</em></span></code><code class="computeroutput">
+                  <span class="special">)</span></code> instead of angular parenthesis
+                  <code class="computeroutput"><span class="keyword">template</span><span class="special">&lt;</span>
+                  </code><code class="literal"><span class="emphasis"><em>template-parameters</em></span></code><code class="computeroutput">
+                  <span class="special">&gt;</span></code> to declare templates
+                  (note that template instantiations are not template declarations
+                  and they use angular parenthesis as usual).
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  2
+                </p>
+              </td>
+<td>
+                <p>
+                  Template Specializations
+                </p>
+              </td>
+<td>
+                <p>
+                  Use round parenthesis <code class="computeroutput"><span class="special">(</span>
+                  </code><code class="literal"><span class="emphasis"><em>template-specializations</em></span></code><code class="computeroutput">
+                  <span class="special">)</span></code> instead of angular parenthesis
+                  <code class="computeroutput"><span class="special">&lt;</span> </code><code class="literal"><span class="emphasis"><em>template-specializations</em></span></code><code class="computeroutput">
+                  <span class="special">&gt;</span></code> after a class template
+                  name to specify template specialization arguments.
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  3
+                </p>
+              </td>
+<td>
+                <p>
+                  Class, Function, and Operator Names
+                </p>
+              </td>
+<td>
+                <p>
+                  Wrap class and function declaration names within round parenthesis
+                  <code class="computeroutput"><span class="special">(</span></code><code class="literal"><span class="emphasis"><em>class-name</em></span></code><code class="computeroutput"><span class="special">)</span></code> and <code class="computeroutput"><span class="special">(</span></code><code class="literal"><span class="emphasis"><em>function-name</em></span></code><code class="computeroutput"><span class="special">)</span></code>. Use <code class="computeroutput"><span class="keyword">operator</span><span class="special">(</span></code><code class="literal"><span class="emphasis"><em>symbol</em></span></code><code class="computeroutput"><span class="special">)(</span></code><code class="literal"><span class="emphasis"><em>arbitrary-name</em></span></code><code class="computeroutput"><span class="special">)</span></code> for operators (allowed but not
+                  required for <code class="computeroutput"><span class="keyword">operator</span> <span class="keyword">new</span></code>, <code class="computeroutput"><span class="keyword">operator</span>
+                  <span class="keyword">delete</span></code>, and implicit type
+                  conversion operators for fundamental types with no symbol). Always
+                  use <code class="computeroutput"><span class="keyword">operator</span> <span class="identifier">comma</span></code>
+                  for comma operator. Memory member operators must always be explicitly
+                  declared <code class="computeroutput"><span class="keyword">static</span></code>.
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  4
+                </p>
+              </td>
+<td>
+                <p>
+                  Base Classes
+                </p>
+              </td>
+<td>
+                <p>
+                  Use <code class="computeroutput"><span class="identifier">extends</span><span class="special">(</span>
+                  </code><code class="literal"><span class="emphasis"><em>base-classes</em></span></code><code class="computeroutput">
+                  <span class="special">)</span></code> instead of the column
+                  symbol <code class="computeroutput"><span class="special">:</span> </code><code class="literal"><span class="emphasis"><em>base-classes</em></span></code>
+                  to inherit from base classes.
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  5
+                </p>
+              </td>
+<td>
+                <p>
+                  Default Parameters
+                </p>
+              </td>
+<td>
+                <p>
+                  Use <code class="computeroutput"><span class="keyword">default</span> </code><code class="literal"><span class="emphasis"><em>parameter-default</em></span></code>
+                  instead of the assignment symbol <code class="computeroutput"><span class="special">=</span>
+                  </code><code class="literal"><span class="emphasis"><em>parameter-default</em></span></code>
+                  to specify template and function parameter default values.
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  6
+                </p>
+              </td>
+<td>
+                <p>
+                  Member Access Levels
+                </p>
+              </td>
+<td>
+                <p>
+                  Always specify the access level <code class="computeroutput"><span class="keyword">public</span></code>,
+                  <code class="computeroutput"><span class="keyword">protected</span></code>, or <code class="computeroutput"><span class="keyword">private</span></code> (note no trailing comma
+                  <code class="computeroutput"><span class="special">:</span></code>) for every constructor,
+                  destructor, member function, and nested class declaration.
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  7
+                </p>
+              </td>
+<td>
+                <p>
+                  Result and Parameter Types
+                </p>
+              </td>
+<td>
+                <p>
+                  Wrap function result and parameter types within round parenthesis
+                  <code class="computeroutput"><span class="special">(</span></code><code class="literal"><span class="emphasis"><em>type</em></span></code><code class="computeroutput"><span class="special">)</span></code>. The wrapping parenthesis are
+                  allowed but not required for fundamental types containing only
+                  alphanumeric tokens (e.g., both <code class="computeroutput"><span class="special">(</span><span class="keyword">const</span> <span class="keyword">unsigned</span>
+                  <span class="keyword">int</span><span class="special">)</span></code>
+                  and <code class="computeroutput"><span class="keyword">const</span> <span class="keyword">unsigned</span>
+                  <span class="keyword">int</span></code> are allowed, only <code class="computeroutput"><span class="special">(</span><span class="keyword">int</span><span class="special">&amp;)</span></code> and not <code class="computeroutput"><span class="keyword">int</span><span class="special">&amp;</span></code> is allowed because of the
+                  non-alphanumeric symbol <code class="computeroutput"><span class="special">&amp;</span></code>,
+                  only <code class="computeroutput"><span class="special">(</span><span class="identifier">mytype</span><span class="special">)</span></code> is allowed because <code class="computeroutput"><span class="identifier">mytype</span></code> is not a fundamental type).
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  8
+                </p>
+              </td>
+<td>
+                <p>
+                  Member Initializers
+                </p>
+              </td>
+<td>
+                <p>
+                  Use <code class="computeroutput"><span class="identifier">initialize</span><span class="special">(</span> </code><code class="literal"><span class="emphasis"><em>member-initializers</em></span></code><code class="computeroutput">
+                  <span class="special">)</span></code> instead of the column
+                  symbol <code class="computeroutput"><span class="special">:</span> </code><code class="literal"><span class="emphasis"><em>member-initializers</em></span></code>
+                  to specify constructor member initializers.
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  9
+                </p>
+              </td>
+<td>
+                <p>
+                  Empty Lists
+                </p>
+              </td>
+<td>
+                <p>
+                  Specify empty lists (parameters, exception specifications, template
+                  specializations, etc) using <code class="computeroutput"><span class="special">(</span>
+                  <span class="keyword">void</span> <span class="special">)</span></code>
+                  instead of <code class="computeroutput"><span class="special">(</span> <span class="special">)</span></code>
+                  or <code class="computeroutput"><span class="special">&lt;</span> <span class="special">&gt;</span></code>.
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  10
+                </p>
+              </td>
+<td>
+                <p>
+                  Commas and Leading Symbols
+                </p>
+              </td>
+<td>
+                <p>
+                  Syntactic elements containing commas and leading non-alphanumeric
+                  symbols must be wrapped within extra round parenthesis <code class="computeroutput"><span class="special">(...)</span></code>. (Note that <code class="computeroutput"><span class="char">'a'</span></code>, <code class="computeroutput"><span class="string">"abc"</span></code>,
+                  <code class="computeroutput"><span class="number">1.23</span></code>, etc are not alphanumeric
+                  so they need to be wrapped as <code class="computeroutput"><span class="special">(</span><span class="char">'a'</span><span class="special">)</span></code>,
+                  <code class="computeroutput"><span class="special">(</span><span class="string">"abc"</span><span class="special">)</span></code>, <code class="computeroutput"><span class="special">(</span><span class="number">1.23</span><span class="special">)</span></code>,
+                  etc when specified as default parameters or similar.)
+                </p>
+              </td>
+</tr>
+</tbody>
+</table></div>
+<div class="important"><table border="0" summary="Important">
+<tr>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Important]" src="../../../doc/src/images/important.png"></td>
+<th align="left">Important</th>
+</tr>
+<tr><td align="left" valign="top"><p>
+          In general, every token which is not a known keyword (<code class="computeroutput"><span class="keyword">int</span></code>
+          is a known keyword but the function name is not) or that contains a non-alphanumeric
+          symbol (e.g., <code class="computeroutput"><span class="keyword">int</span><span class="special">&amp;</span></code>)
+          must be wrapped within round parenthesis <code class="computeroutput"><span class="special">(...)</span></code>
+          unless it is the very last token of a syntactic element (e.g., the function
+          parameter name).
+        </p></td></tr>
+</table></div>
+<p>
+        Sometimes the C++ syntax allows to equivalently specify elements in different
+        orders (e.g., <code class="computeroutput"><span class="keyword">const</span> <span class="keyword">volatile</span></code>
+        and <code class="computeroutput"><span class="keyword">volatile</span> <span class="keyword">const</span></code>
+        are both allowed for member functions and they have the same meaning). The
+        syntax of this library requires instead to specify the elements exactly in
+        the order listed by this grammar (e.g., only <code class="computeroutput"><span class="keyword">const</span>
+        <span class="keyword">volatile</span></code> is allowed for member functions).
+        <sup>[<a name="contract__.grammar.differences_with_c___syntax.f0" href="#ftn.contract__.grammar.differences_with_c___syntax.f0" class="footnote">72</a>]</sup>
+      </p>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="contract__.grammar.macro_interface"></a><a class="link" href="grammar.html#contract__.grammar.macro_interface" title="Macro Interface">Macro Interface</a>
+</h3></div></div></div>
+<p>
+        This library uses the following macros.
+      </p>
+<pre class="programlisting"><code class="computeroutput"><a class="link" href="../CONTRACT_CLASS.html" title="Macro CONTRACT_CLASS">CONTRACT_CLASS</a></code><span class="special">(</span><a class="link" href="grammar.html#class_declaration_anchor"><code class="literal"><span class="emphasis"><em>class-declaration</em></span></code></a><span class="special">)</span>
+<code class="computeroutput"><a class="link" href="../CONTRACT_CLASS_TPL.html" title="Macro CONTRACT_CLASS_TPL">CONTRACT_CLASS_TPL</a></code><span class="special">(</span><a class="link" href="grammar.html#class_declaration_anchor"><code class="literal"><span class="emphasis"><em>class-declaration</em></span></code></a><span class="special">)</span>
+
+<code class="computeroutput"><a class="link" href="../CONTRACT_CLASS_INVARIANT.html" title="Macro CONTRACT_CLASS_INVARIANT">CONTRACT_CLASS_INVARIANT</a></code><span class="special">(</span><a class="link" href="grammar.html#class_invariants_anchor"><code class="literal"><span class="emphasis"><em>class-invariants</em></span></code></a><span class="special">)</span>
+<code class="computeroutput"><a class="link" href="../CONTRACT_CLASS_INVARIANT_TPL.html" title="Macro CONTRACT_CLASS_INVARIANT_TPL">CONTRACT_CLASS_INVARIANT_TPL</a></code><span class="special">(</span><a class="link" href="grammar.html#class_invariants_anchor"><code class="literal"><span class="emphasis"><em>class-invariants</em></span></code></a><span class="special">)</span>
+
+<code class="computeroutput"><a class="link" href="../CONTRACT_FUNCTION.html" title="Macro CONTRACT_FUNCTION">CONTRACT_FUNCTION</a></code><span class="special">(</span><a class="link" href="grammar.html#function_declaration_anchor"><code class="literal"><span class="emphasis"><em>function-declaration</em></span></code></a><span class="special">)</span>
+<code class="computeroutput"><a class="link" href="../CONTRACT_FUNCTION_TPL.html" title="Macro CONTRACT_FUNCTION_TPL">CONTRACT_FUNCTION_TPL</a></code><span class="special">(</span><a class="link" href="grammar.html#function_declaration_anchor"><code class="literal"><span class="emphasis"><em>function-declaration</em></span></code></a><span class="special">)</span>
+<code class="computeroutput"><a class="link" href="../CONTRACT_CONSTRUCTOR.html" title="Macro CONTRACT_CONSTRUCTOR">CONTRACT_CONSTRUCTOR</a></code><span class="special">(</span><a class="link" href="grammar.html#function_declaration_anchor"><code class="literal"><span class="emphasis"><em>function-declaration</em></span></code></a><span class="special">)</span>
+<code class="computeroutput"><a class="link" href="../CONTRACT_CONSTRUCTOR_TPL.html" title="Macro CONTRACT_CONSTRUCTOR_TPL">CONTRACT_CONSTRUCTOR_TPL</a></code><span class="special">(</span><a class="link" href="grammar.html#function_declaration_anchor"><code class="literal"><span class="emphasis"><em>function-declaration</em></span></code></a><span class="special">)</span>
+<code class="computeroutput"><a class="link" href="../CONTRACT_DESTRUCTOR.html" title="Macro CONTRACT_DESTRUCTOR">CONTRACT_DESTRUCTOR</a></code><span class="special">(</span><a class="link" href="grammar.html#function_declaration_anchor"><code class="literal"><span class="emphasis"><em>function-declaration</em></span></code></a><span class="special">)</span>
+<code class="computeroutput"><a class="link" href="../CONTRACT_DESTRUCTOR_TPL.html" title="Macro CONTRACT_DESTRUCTOR_TPL">CONTRACT_DESTRUCTOR_TPL</a></code><span class="special">(</span><a class="link" href="grammar.html#function_declaration_anchor"><code class="literal"><span class="emphasis"><em>function-declaration</em></span></code></a><span class="special">)</span>
+
+<code class="computeroutput"><a class="link" href="../CONTRACT_FREE_BODY.html" title="Macro CONTRACT_FREE_BODY">CONTRACT_FREE_BODY</a></code><span class="special">(</span><a class="link" href="grammar.html#function_name_anchor"><code class="literal"><span class="emphasis"><em>function-name</em></span></code></a><span class="special">)</span>
+<code class="computeroutput"><a class="link" href="../CONTRACT_MEMBER_BODY.html" title="Macro CONTRACT_MEMBER_BODY">CONTRACT_MEMBER_BODY</a></code><span class="special">(</span><a class="link" href="grammar.html#function_name_anchor"><code class="literal"><span class="emphasis"><em>function-name</em></span></code></a><span class="special">)</span>
+<code class="computeroutput"><a class="link" href="../CONTRACT_CONSTRUCTOR_BODY.html" title="Macro CONTRACT_CONSTRUCTOR_BODY">CONTRACT_CONSTRUCTOR_BODY</a></code><span class="special">(</span><a class="link" href="grammar.html#class_type_anchor"><code class="literal"><span class="bold"><strong>class-type</strong></span></code></a><span class="special">,</span> <a class="link" href="grammar.html#class_name_anchor"><code class="literal"><span class="bold"><strong>class-name</strong></span></code></a><span class="special">)</span>
+<code class="computeroutput"><a class="link" href="../CONTRACT_DESTRUCTOR_BODY.html" title="Macro CONTRACT_DESTRUCTOR_BODY">CONTRACT_DESTRUCTOR_BODY</a></code><span class="special">(</span><a class="link" href="grammar.html#class_type_anchor"><code class="literal"><span class="bold"><strong>class-type</strong></span></code></a><span class="special">,</span> <span class="special">~</span><a class="link" href="grammar.html#class_name_anchor"><code class="literal"><span class="bold"><strong>class-name</strong></span></code></a><span class="special">)</span>
+
+<code class="computeroutput"><a class="link" href="../CONTRACT_BLOCK_INVARIANT.html" title="Macro CONTRACT_BLOCK_INVARIANT">CONTRACT_BLOCK_INVARIANT</a></code><span class="special">(</span><a class="link" href="grammar.html#assertions_anchor"><code class="literal"><span class="emphasis"><em>assertions</em></span></code></a><span class="special">)</span>
+<code class="computeroutput"><a class="link" href="../CONTRACT_BLOCK_INVARIANT_TPL.html" title="Macro CONTRACT_BLOCK_INVARIANT_TPL">CONTRACT_BLOCK_INVARIANT_TPL</a></code><span class="special">(</span><a class="link" href="grammar.html#assertions_anchor"><code class="literal"><span class="emphasis"><em>assertions</em></span></code></a><span class="special">)</span>
+
+<code class="computeroutput"><a class="link" href="../CONTRACT_LOOP.html" title="Macro CONTRACT_LOOP">CONTRACT_LOOP</a></code><span class="special">(</span><a class="link" href="grammar.html#loop_declaration_anchor"><code class="literal"><span class="bold"><strong>loop-declaration</strong></span></code></a><span class="special">)</span>
+<code class="computeroutput"><a class="link" href="../CONTRACT_LOOP_VARIANT.html" title="Macro CONTRACT_LOOP_VARIANT">CONTRACT_LOOP_VARIANT</a></code><span class="special">(</span><a class="link" href="grammar.html#loop_variant_anchor"><code class="literal"><span class="emphasis"><em>loop-variant</em></span></code></a><span class="special">)</span>
+<code class="computeroutput"><a class="link" href="../CONTRACT_LOOP_VARIANT_TPL.html" title="Macro CONTRACT_LOOP_VARIANT_TPL">CONTRACT_LOOP_VARIANT_TPL</a></code><span class="special">(</span><a class="link" href="grammar.html#loop_variant_anchor"><code class="literal"><span class="emphasis"><em>loop-variant</em></span></code></a><span class="special">)</span>
+
+<code class="computeroutput"><a class="link" href="../CONTRACT_CONSTRUCTOR_ARG.html" title="Macro CONTRACT_CONSTRUCTOR_ARG">CONTRACT_CONSTRUCTOR_ARG</a></code><span class="special">(</span><a class="link" href="grammar.html#parameter_name_anchor"><code class="literal"><span class="bold"><strong>parameter-name</strong></span></code></a><span class="special">)</span>
+<code class="computeroutput"><a class="link" href="../CONTRACT_PARAMETER_TYPEOF.html" title="Macro CONTRACT_PARAMETER_TYPEOF">CONTRACT_PARAMETER_TYPEOF</a></code><span class="special">(</span><a class="link" href="grammar.html#parameter_name_anchor"><code class="literal"><span class="bold"><strong>parameter-name</strong></span></code></a><span class="special">)</span>
+<code class="computeroutput"><a class="link" href="../CONTRACT_PARAMETER.html" title="Macro CONTRACT_PARAMETER">CONTRACT_PARAMETER</a></code><span class="special">(</span><a class="link" href="grammar.html#named_parameter_declaration_anchor"><code class="literal"><span class="emphasis"><em>named-parameter-declaration</em></span></code></a><span class="special">)</span>
+<code class="computeroutput"><a class="link" href="../CONTRACT_TEMPLATE_PARAMETER.html" title="Macro CONTRACT_TEMPLATE_PARAMETER">CONTRACT_TEMPLATE_PARAMETER</a></code><span class="special">(</span><a class="link" href="grammar.html#named_parameter_declaration_anchor"><code class="literal"><span class="emphasis"><em>named-parameter-declaration</em></span></code></a><span class="special">)</span>
+<code class="computeroutput"><a class="link" href="../CONTRACT_PARAMETER_BODY.html" title="Macro CONTRACT_PARAMETER_BODY">CONTRACT_PARAMETER_BODY</a></code><span class="special">(</span><a class="link" href="grammar.html#function_name_anchor"><code class="literal"><span class="emphasis"><em>function-name</em></span></code></a><span class="special">)</span>
+</pre>
+<p>
+        The macros with the trailing <code class="computeroutput"><span class="identifier">_TPL</span></code>
+        must be used when the enclosing scope is type-dependent (e.g., within templates).
+      </p>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="contract__.grammar.lexical_conventions"></a><a class="link" href="grammar.html#contract__.grammar.lexical_conventions" title="Lexical Conventions">Lexical Conventions</a>
+</h3></div></div></div>
+<p>
+        The following conventions are used to express this grammar.
+      </p>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                <p>
+                  Lexical Expression
+                </p>
+              </th>
+<th>
+                <p>
+                  Meaning
+                </p>
+              </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+                <p>
+                  <code class="literal"><span class="emphasis"><em>[</em></span>tokens<span class="emphasis"><em>]</em></span></code>
+                </p>
+              </td>
+<td>
+                <p>
+                  Either <code class="computeroutput"><span class="identifier">tokens</span></code> or
+                  nothing (optional tokens).
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <code class="literal"><span class="emphasis"><em>{</em></span>expression<span class="emphasis"><em>}</em></span></code>
+                </p>
+              </td>
+<td>
+                <p>
+                  The result of the enclosed expression <code class="computeroutput"><span class="identifier">expression</span></code>
+                  (evaluation order).
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <code class="literal">tokens1 <span class="emphasis"><em>|</em></span> tokens2</code>
+                </p>
+              </td>
+<td>
+                <p>
+                  Either <code class="computeroutput"><span class="identifier">tokens1</span></code>
+                  or <code class="computeroutput"><span class="identifier">tokens2</span></code> (<span class="quote">&#8220;<span class="quote">or</span>&#8221;</span>
+                  operation).
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <code class="literal">tokens<span class="emphasis"><em>*</em></span></code>
+                </p>
+              </td>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">tokens</span></code> repeated
+                  zero or more times (repetition starting from zero).
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <code class="literal">tokens<span class="emphasis"><em>+</em></span></code>
+                </p>
+              </td>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">tokens</span></code> repeated
+                  one or more times (repetition starting from one).
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <code class="literal">token, ...</code>
+                </p>
+              </td>
+<td>
+                <p>
+                  A comma separated list of tokens that could also have one single
+                  element (i.e., <code class="computeroutput"><span class="identifier">token</span></code>
+                  or <code class="computeroutput"><span class="identifier">token1</span><span class="special">,</span>
+                  <span class="identifier">token2</span></code> or <code class="computeroutput"><span class="identifier">token1</span><span class="special">,</span>
+                  <span class="identifier">token2</span><span class="special">,</span>
+                  <span class="identifier">token3</span></code>). See the <a class="link" href="no_variadic_macros.html" title="No Variadic Macros">No Variadic Macros</a>
+                  section for compilers that do not support variadic macros.
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <code class="literal"><span class="bold"><strong>tokens</strong></span></code>
+                </p>
+              </td>
+<td>
+                <p>
+                  Terminal symbols (in bold font).
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <code class="literal"><span class="emphasis"><em>tokens</em></span></code>
+                </p>
+              </td>
+<td>
+                <p>
+                  Non-terminal symbols (in italic font).
+                </p>
+              </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="contract__.grammar.class_declarations"></a><a class="link" href="grammar.html#contract__.grammar.class_declarations" title="Class Declarations">Class Declarations</a>
+</h3></div></div></div>
+<pre class="programlisting"><a class="link" href="grammar.html#class_declaration_anchor"><code class="literal"><span class="emphasis"><em>class-declaration</em></span></code></a>: <a name="class_declaration_anchor"></a>
+        <span class="emphasis"><em>[</em></span><span class="emphasis"><em>[</em></span><span class="keyword">export</span><span class="emphasis"><em>]</em></span> <span class="keyword">template</span><span class="special">(</span> <a class="link" href="grammar.html#template_parameters_anchor"><code class="literal"><span class="emphasis"><em>template-parameters</em></span></code></a> <span class="special">)</span> <span class="emphasis"><em>[</em></span><span class="identifier">requires</span><span class="special">(</span> <a class="link" href="grammar.html#concepts_anchor"><code class="literal"><span class="emphasis"><em>concepts</em></span></code></a> <span class="special">)</span><span class="emphasis"><em>]</em></span><span class="emphasis"><em>]</em></span>
+        <span class="emphasis"><em>[</em></span><span class="keyword">friend</span><span class="emphasis"><em>]</em></span> <span class="emphasis"><em>{</em></span><span class="keyword">class</span> <span class="emphasis"><em>|</em></span> <span class="keyword">struct</span><span class="emphasis"><em>}</em></span> <span class="special">(</span><a class="link" href="grammar.html#class_name_anchor"><code class="literal"><span class="bold"><strong>class-name</strong></span></code></a><span class="special">)</span><span class="emphasis"><em>[</em></span><span class="special">(</span> <a class="link" href="grammar.html#template_specializations_anchor"><code class="literal"><span class="emphasis"><em>template-specializations</em></span></code></a> <span class="special">)</span><span class="emphasis"><em>]</em></span> <span class="emphasis"><em>[</em></span><span class="identifier">final</span><span class="emphasis"><em>]</em></span>
+        <span class="emphasis"><em>[</em></span><span class="identifier">extends</span><span class="special">(</span> <a class="link" href="grammar.html#base_classes_anchor"><code class="literal"><span class="emphasis"><em>base-classes</em></span></code></a> <span class="special">)</span><span class="emphasis"><em>]</em></span>
+</pre>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="contract__.grammar.base_classes"></a><a class="link" href="grammar.html#contract__.grammar.base_classes" title="Base Classes">Base Classes</a>
+</h3></div></div></div>
+<pre class="programlisting"><a class="link" href="grammar.html#base_classes_anchor"><code class="literal"><span class="emphasis"><em>base-classes</em></span></code></a>: <a name="base_classes_anchor"></a>
+        <span class="emphasis"><em>[</em></span><span class="keyword">public</span> <span class="emphasis"><em>|</em></span> <span class="keyword">protected</span> <span class="emphasis"><em>|</em></span> <span class="keyword">private</span><span class="emphasis"><em>]</em></span> <span class="emphasis"><em>[</em></span><span class="keyword">virtual</span><span class="emphasis"><em>]</em></span> <a class="link" href="grammar.html#class_type_anchor"><code class="literal"><span class="bold"><strong>class-type</strong></span></code></a><span class="special">,</span> <span class="special">...</span>
+</pre>
+<p>
+        Note that when specified, <code class="computeroutput"><span class="keyword">virtual</span></code>
+        must appear after the inheritance access level for a base class.
+      </p>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="contract__.grammar.template_specializations"></a><a class="link" href="grammar.html#contract__.grammar.template_specializations" title="Template Specializations">Template
+      Specializations</a>
+</h3></div></div></div>
+<pre class="programlisting"><a class="link" href="grammar.html#template_specializations_anchor"><code class="literal"><span class="emphasis"><em>template-specializations</em></span></code></a>: <a name="template_specializations_anchor"></a>
+        <a class="link" href="grammar.html#template_specialization_anchor"><code class="literal"><span class="bold"><strong>template-specialization</strong></span></code></a><span class="special">,</span> <span class="special">...</span>
+</pre>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="contract__.grammar.template_parameters"></a><a class="link" href="grammar.html#contract__.grammar.template_parameters" title="Template Parameters">Template Parameters</a>
+</h3></div></div></div>
+<pre class="programlisting"><a class="link" href="grammar.html#template_parameters_anchor"><code class="literal"><span class="emphasis"><em>template-parameters</em></span></code></a>: <a name="template_parameters_anchor"></a>
+        <span class="keyword">void</span> <span class="emphasis"><em>|</em></span>
+        <a class="link" href="grammar.html#positional_template_parameters_anchor"><code class="literal"><span class="emphasis"><em>positional-template-parameters</em></span></code></a> <span class="emphasis"><em>|</em></span>
+        <a class="link" href="grammar.html#named_template_parameters_anchor"><code class="literal"><span class="emphasis"><em>named-template-parameters</em></span></code></a>
+
+<a class="link" href="grammar.html#positional_template_parameters_anchor"><code class="literal"><span class="emphasis"><em>positional-template-parameters</em></span></code></a>: <a name="positional_template_parameters_anchor"></a>
+        <a class="link" href="grammar.html#positional_template_parameter_anchor"><code class="literal"><span class="emphasis"><em>positional-template-parameter</em></span></code></a><span class="special">,</span> <span class="special">...</span>
+<a class="link" href="grammar.html#positional_template_parameter_anchor"><code class="literal"><span class="emphasis"><em>positional-template-parameter</em></span></code></a>: <a name="positional_template_parameter_anchor"></a>
+        <a class="link" href="grammar.html#positional_type_template_parameter_anchor"><code class="literal"><span class="emphasis"><em>positional-type-template-parameter</em></span></code></a> <span class="emphasis"><em>|</em></span>
+        <a class="link" href="grammar.html#positional_value_template_parameter_anchor"><code class="literal"><span class="emphasis"><em>positional-value-template-parameter</em></span></code></a> <span class="emphasis"><em>|</em></span>
+        <a class="link" href="grammar.html#positional_template_template_parameter_anchor"><code class="literal"><span class="emphasis"><em>positional-template-template-parameter</em></span></code></a>
+<a class="link" href="grammar.html#positional_type_template_parameter_anchor"><code class="literal"><span class="emphasis"><em>positional-type-template-parameter</em></span></code></a>: <a name="positional_type_template_parameter_anchor"></a>
+        <span class="emphasis"><em>{</em></span><span class="keyword">class</span> <span class="emphasis"><em>|</em></span> <span class="keyword">typename</span><span class="emphasis"><em>}</em></span> <a class="link" href="grammar.html#parameter_name_anchor"><code class="literal"><span class="bold"><strong>parameter-name</strong></span></code></a>
+        <span class="emphasis"><em>[</em></span><span class="special">,</span> <span class="keyword">default</span> <a class="link" href="grammar.html#parameter_default_anchor"><code class="literal"><span class="bold"><strong>parameter-default</strong></span></code></a><span class="emphasis"><em>]</em></span>
+<a class="link" href="grammar.html#positional_value_template_parameter_anchor"><code class="literal"><span class="emphasis"><em>positional-value-template-parameter</em></span></code></a>: <a name="positional_value_template_parameter_anchor"></a>
+        <a class="link" href="grammar.html#wrapped_type_anchor"><code class="literal"><span class="emphasis"><em>wrapped-type</em></span></code></a> <a class="link" href="grammar.html#parameter_name_anchor"><code class="literal"><span class="bold"><strong>parameter-name</strong></span></code></a>
+        <span class="emphasis"><em>[</em></span><span class="special">,</span> <span class="keyword">default</span> <a class="link" href="grammar.html#parameter_default_anchor"><code class="literal"><span class="bold"><strong>parameter-default</strong></span></code></a><span class="emphasis"><em>]</em></span>
+<a class="link" href="grammar.html#positional_template_template_parameter_anchor"><code class="literal"><span class="emphasis"><em>positional-template-template-parameter</em></span></code></a>: <a name="positional_template_template_parameter_anchor"></a>
+        <span class="keyword">template</span><span class="special">(</span> <a class="link" href="grammar.html#template_parameter_anchor"><code class="literal"><span class="bold"><strong>template-parameter</strong></span></code></a><span class="special">,</span> <span class="special">...</span> <span class="special">)</span> <span class="keyword">class</span> <a class="link" href="grammar.html#parameter_name_anchor"><code class="literal"><span class="bold"><strong>parameter-name</strong></span></code></a>
+        <span class="emphasis"><em>[</em></span><span class="special">,</span> <span class="keyword">default</span> <a class="link" href="grammar.html#parameter_default_anchor"><code class="literal"><span class="bold"><strong>parameter-default</strong></span></code></a><span class="emphasis"><em>]</em></span>
+
+<a class="link" href="grammar.html#named_template_parameters_anchor"><code class="literal"><span class="emphasis"><em>named-template-parameters</em></span></code></a>: <a name="named_template_parameters_anchor"></a>
+        <span class="emphasis"><em>[</em></span><span class="keyword">using</span> <span class="keyword">namespace</span> <a class="link" href="grammar.html#named_parameter_identifier_namespace_anchor"><code class="literal"><span class="bold"><strong>named-parameter-identifier-namespace</strong></span></code></a><span class="special">,</span><span class="emphasis"><em>]</em></span>
+        <a class="link" href="grammar.html#named_type_template_parameter_anchor"><code class="literal"><span class="emphasis"><em>named-type-template-parameter</em></span></code></a><span class="special">,</span> <span class="special">...</span>
+<a class="link" href="grammar.html#named_type_template_parameter_anchor"><code class="literal"><span class="emphasis"><em>named-type-template-parameter</em></span></code></a>: <a name="named_type_template_parameter_anchor"></a>
+        <span class="emphasis"><em>[</em></span><span class="identifier">deduce</span><span class="emphasis"><em>]</em></span> <span class="identifier">in</span> <span class="emphasis"><em>{</em></span><span class="keyword">class</span> <span class="emphasis"><em>|</em></span> <span class="keyword">typename</span><span class="emphasis"><em>}</em></span>
+        <span class="emphasis"><em>[</em></span><span class="identifier">requires</span><span class="special">(</span><a class="link" href="grammar.html#unary_boolean_metafunction_anchor"><code class="literal"><span class="bold"><strong>unary-boolean-metafunction</strong></span></code></a><span class="special">)</span><span class="emphasis"><em>]</em></span> <a class="link" href="grammar.html#parameter_name_anchor"><code class="literal"><span class="bold"><strong>parameter-name</strong></span></code></a>
+        <span class="emphasis"><em>[</em></span><span class="special">,</span> <span class="keyword">default</span> <a class="link" href="grammar.html#parameter_default_anchor"><code class="literal"><span class="bold"><strong>parameter-default</strong></span></code></a><span class="emphasis"><em>]</em></span>
+</pre>
+<p>
+        Note that if <code class="computeroutput"><span class="keyword">typename</span></code> appears
+        within <a class="link" href="grammar.html#wrapped_type_anchor"><code class="literal"><span class="emphasis"><em>wrapped-type</em></span></code></a>
+        for a value template parameter then it will be wrapped within parenthesis
+        <code class="computeroutput"><span class="special">(</span><span class="keyword">typename</span>
+        <span class="special">...)</span></code> so it is syntactically distinguishable
+        from the <code class="computeroutput"><span class="keyword">typename</span></code> leading a
+        type template parameter.
+      </p>
+<p>
+        Unfortunately, named template parameters only support type template parameters.
+        Named value template parameters and named template template parameters are
+        not supported because they are not supported by <a href="http://www.boost.org/doc/libs/release/libs/parameter" target="_top">Boost.Parameter</a>
+        but if they were ever supported, they could follow this syntax:
+      </p>
+<pre class="programlisting"><a class="link" href="grammar.html#named_template_parameters_anchor"><code class="literal"><span class="emphasis"><em>named-template-parameters</em></span></code></a>:
+        <a class="link" href="grammar.html#named_template_parameter_anchor"><code class="literal"><span class="emphasis"><em>named-template-parameter</em></span></code></a><span class="special">,</span> <span class="special">...</span>
+<a class="link" href="grammar.html#named_template_parameter_anchor"><code class="literal"><span class="emphasis"><em>named-template-parameter</em></span></code></a>: <a name="named_template_parameter_anchor"></a>
+        <a class="link" href="grammar.html#named_type_template_parameter_anchor"><code class="literal"><span class="emphasis"><em>named-type-template-parameter</em></span></code></a> <span class="emphasis"><em>|</em></span>
+        <a class="link" href="grammar.html#named_value_template_parameter_anchor"><code class="literal"><span class="emphasis"><em>named-value-template-parameter</em></span></code></a> <span class="emphasis"><em>|</em></span>
+        <a class="link" href="grammar.html#named_template_template_parameter_anchor"><code class="literal"><span class="emphasis"><em>named-template-template-parameter</em></span></code></a>
+<a class="link" href="grammar.html#named_value_template_parameter_anchor"><code class="literal"><span class="emphasis"><em>named-value-template-parameter</em></span></code></a>: <a name="named_value_template_parameter_anchor"></a><span class="comment">// Not supported.</span>
+        <span class="emphasis"><em>[</em></span><span class="identifier">deduce</span><span class="emphasis"><em>]</em></span> <span class="identifier">in</span>
+        <span class="emphasis"><em>{</em></span><a class="link" href="grammar.html#wrapped_type_anchor"><code class="literal"><span class="emphasis"><em>wrapped-type</em></span></code></a> <span class="emphasis"><em>|</em></span> <span class="keyword">auto</span> <span class="emphasis"><em>|</em></span> <span class="identifier">requires</span><span class="special">(</span><a class="link" href="grammar.html#unary_boolean_metafunction_anchor"><code class="literal"><span class="bold"><strong>unary-boolean-metafunction</strong></span></code></a><span class="special">)</span><span class="emphasis"><em>}</em></span> <a class="link" href="grammar.html#parameter_name_anchor"><code class="literal"><span class="bold"><strong>parameter-name</strong></span></code></a>
+        <span class="emphasis"><em>[</em></span><span class="special">,</span> <span class="keyword">default</span> <a class="link" href="grammar.html#parameter_default_anchor"><code class="literal"><span class="bold"><strong>parameter-default</strong></span></code></a><span class="emphasis"><em>]</em></span>
+<a class="link" href="grammar.html#named_template_template_parameter_anchor"><code class="literal"><span class="emphasis"><em>named-template-template-parameter</em></span></code></a>: <a name="named_template_template_parameter_anchor"></a><span class="comment">// Not supported.</span>
+        <span class="emphasis"><em>[</em></span><span class="identifier">deduce</span><span class="emphasis"><em>]</em></span> <span class="identifier">in</span> <span class="keyword">template</span><span class="special">(</span> <a class="link" href="grammar.html#positional_template_parameter_anchor"><code class="literal"><span class="emphasis"><em>positional-template-parameter</em></span></code></a><span class="special">,</span> <span class="special">...</span> <span class="special">)</span> <span class="keyword">class</span>
+        <span class="emphasis"><em>[</em></span><span class="identifier">requires</span><span class="special">(</span><a class="link" href="grammar.html#unary_boolean_metafunction_anchor"><code class="literal"><span class="bold"><strong>unary-boolean-metafunction</strong></span></code></a><span class="special">)</span><span class="emphasis"><em>]</em></span> <a class="link" href="grammar.html#parameter_name_anchor"><code class="literal"><span class="bold"><strong>parameter-name</strong></span></code></a>
+        <span class="emphasis"><em>[</em></span><span class="special">,</span> <span class="keyword">default</span> <a class="link" href="grammar.html#parameter_default_anchor"><code class="literal"><span class="bold"><strong>parameter-default</strong></span></code></a><span class="emphasis"><em>]</em></span>
+
+<span class="keyword">template</span><span class="special">(</span> <span class="comment">// For example...</span>
+    <span class="comment">// Named type template parameter (supported).</span>
+      <span class="identifier">in</span> <span class="keyword">typename</span> <span class="identifier">requires</span><span class="special">(</span><span class="identifier">is_const</span><span class="special">&lt;</span><span class="identifier">_</span><span class="special">&gt;)</span> <span class="identifier">T</span><span class="special">,</span> <span class="keyword">default</span> <span class="keyword">int</span>
+    <span class="comment">// Named value template parameter (not supported).</span>
+    <span class="special">,</span> <span class="identifier">in</span> <span class="identifier">requires</span><span class="special">(</span><span class="identifier">is_converible</span><span class="special">&lt;</span><span class="identifier">_</span><span class="special">,</span> <span class="identifier">T</span><span class="special">&gt;)</span> <span class="identifier">val</span><span class="special">,</span> <span class="keyword">default</span> <span class="number">0</span>
+    <span class="comment">// Named template template parameter (not supported).</span>
+    <span class="special">,</span> <span class="identifier">in</span> <span class="keyword">template</span><span class="special">(</span>
+          <span class="keyword">typename</span> <span class="identifier">A</span>
+        <span class="special">,</span> <span class="keyword">template</span><span class="special">(</span>
+              <span class="keyword">typename</span> <span class="identifier">X</span>
+            <span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">Y</span><span class="special">,</span> <span class="keyword">default</span> <span class="keyword">int</span>
+          <span class="special">)</span> <span class="keyword">class</span> <span class="identifier">B</span><span class="special">,</span> <span class="keyword">default</span> <span class="identifier">b</span>
+      <span class="special">)</span> <span class="keyword">class</span> <span class="identifier">requires</span><span class="special">(</span><span class="identifier">pred1</span><span class="special">&lt;</span> <span class="identifier">_</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span> <span class="special">&gt;)</span> <span class="identifier">Tpl</span><span class="special">,</span> <span class="keyword">default</span> <span class="identifier">tpl</span>
+<span class="special">)</span>
+</pre>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="contract__.grammar.concepts"></a><a class="link" href="grammar.html#contract__.grammar.concepts" title="Concepts">Concepts</a>
+</h3></div></div></div>
+<pre class="programlisting"><a class="link" href="grammar.html#concepts_anchor"><code class="literal"><span class="emphasis"><em>concepts</em></span></code></a>: <a name="concepts_anchor"></a>
+        <a class="link" href="grammar.html#boost_concept_anchor"><code class="literal"><span class="bold"><strong>boost-concept</strong></span></code></a><span class="special">,</span> <span class="special">...</span>
+</pre>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="contract__.grammar.types"></a><a class="link" href="grammar.html#contract__.grammar.types" title="Types">Types</a>
+</h3></div></div></div>
+<pre class="programlisting"><a class="link" href="grammar.html#wrapped_type_anchor"><code class="literal"><span class="emphasis"><em>wrapped-type</em></span></code></a>: <a name="wrapped_type_anchor"></a>
+        <a class="link" href="grammar.html#fundamental_type_anchor"><code class="literal"><span class="emphasis"><em>fundamental-type</em></span></code></a> <span class="emphasis"><em>|</em></span> <span class="special">(</span><a class="link" href="grammar.html#fundamental_type_anchor"><code class="literal"><span class="emphasis"><em>fundamental-type</em></span></code></a><span class="special">)</span> <span class="emphasis"><em>|</em></span> <span class="special">(</span><a class="link" href="grammar.html#type_anchor"><code class="literal"><span class="bold"><strong>type</strong></span></code></a><span class="special">)</span>
+
+<a class="link" href="grammar.html#fundamental_type_anchor"><code class="literal"><span class="emphasis"><em>fundamental-type</em></span></code></a>: <a name="fundamental_type_anchor"></a>
+        <a class="link" href="grammar.html#type_qualifier_anchor"><code class="literal"><span class="emphasis"><em>type-qualifier</em></span></code></a><span class="emphasis"><em>*</em></span> <a class="link" href="grammar.html#type_keyword_anchor"><code class="literal"><span class="emphasis"><em>type-keyword</em></span></code></a> <a class="link" href="grammar.html#type_qualifier_anchor"><code class="literal"><span class="emphasis"><em>type-qualifier</em></span></code></a><span class="emphasis"><em>*</em></span>
+<a class="link" href="grammar.html#type_qualifier_anchor"><code class="literal"><span class="emphasis"><em>type-qualifier</em></span></code></a>: <a name="type_qualifier_anchor"></a>
+        <span class="keyword">const</span> <span class="emphasis"><em>|</em></span> <span class="keyword">volatile</span> <span class="emphasis"><em>|</em></span> <span class="keyword">long</span> <span class="emphasis"><em>|</em></span> <span class="keyword">short</span> <span class="emphasis"><em>|</em></span> <span class="keyword">signed</span> <span class="emphasis"><em>|</em></span> <span class="keyword">unsigned</span>
+<a class="link" href="grammar.html#type_keyword_anchor"><code class="literal"><span class="emphasis"><em>type-keyword</em></span></code></a>: <a name="type_keyword_anchor"></a>
+        <span class="keyword">void</span> <span class="emphasis"><em>|</em></span> <span class="keyword">bool</span> <span class="emphasis"><em>|</em></span> <span class="keyword">char</span> <span class="emphasis"><em>|</em></span> <span class="keyword">double</span> <span class="emphasis"><em>|</em></span> <span class="keyword">float</span> <span class="emphasis"><em>|</em></span> <span class="keyword">int</span> <span class="emphasis"><em>|</em></span> <span class="keyword">wchar_t</span> <span class="emphasis"><em>|</em></span> <span class="identifier">size_t</span> <span class="emphasis"><em>|</em></span> <span class="identifier">ptrdiff_t</span>
+</pre>
+<p>
+        This is the syntax used to specify the function result type, the function
+        parameter types, the types of value template parameters, etc. As indicated
+        by the syntax, extra parenthesis around the specified type are always allowed
+        but they are required only for user-defined types <code class="computeroutput"><span class="special">(</span><span class="identifier">mytype</span><span class="special">)</span></code>
+        and types containing non-alphanumeric symbols <code class="computeroutput"><span class="special">(</span><span class="keyword">int</span><span class="special">&amp;)</span></code>
+        while the parenthesis are optional for fundamental types containing no symbol
+        <code class="computeroutput"><span class="keyword">unsigned</span> <span class="keyword">long</span>
+        <span class="keyword">int</span> <span class="keyword">const</span></code>
+        (or equivalently <code class="computeroutput"><span class="special">(</span><span class="keyword">unsigned</span>
+        <span class="keyword">long</span> <span class="keyword">int</span>
+        <span class="keyword">const</span><span class="special">)</span></code>).
+      </p>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="contract__.grammar.function_declarations"></a><a class="link" href="grammar.html#contract__.grammar.function_declarations" title="Function Declarations">Function Declarations</a>
+</h3></div></div></div>
+<pre class="programlisting"><a class="link" href="grammar.html#function_declaration_anchor"><code class="literal"><span class="emphasis"><em>function-declaration</em></span></code></a>: <a name="function_declaration_anchor"></a>
+        <span class="emphasis"><em>[</em></span><span class="keyword">public</span> <span class="emphasis"><em>|</em></span> <span class="keyword">protected</span> <span class="emphasis"><em>|</em></span> <span class="keyword">private</span><span class="emphasis"><em>]</em></span>
+        <span class="emphasis"><em>[</em></span><span class="emphasis"><em>[</em></span><span class="keyword">export</span><span class="emphasis"><em>]</em></span> <span class="emphasis"><em>[</em></span><span class="keyword">template</span><span class="special">(</span> <a class="link" href="grammar.html#template_parameters_anchor"><code class="literal"><span class="emphasis"><em>template-parameters</em></span></code></a> <span class="special">)</span> <span class="emphasis"><em>[</em></span><span class="identifier">requires</span><span class="special">(</span> <a class="link" href="grammar.html#concepts_anchor"><code class="literal"><span class="emphasis"><em>concepts</em></span></code></a> <span class="special">)</span><span class="emphasis"><em>]</em></span><span class="emphasis"><em>]</em></span>
+        <span class="emphasis"><em>[</em></span><span class="keyword">explicit</span><span class="emphasis"><em>]</em></span> <span class="emphasis"><em>[</em></span><span class="keyword">inline</span><span class="emphasis"><em>]</em></span> <span class="emphasis"><em>[</em></span><span class="keyword">extern</span><span class="emphasis"><em>]</em></span> <span class="emphasis"><em>[</em></span><span class="keyword">static</span><span class="emphasis"><em>]</em></span> <span class="emphasis"><em>[</em></span><span class="keyword">virtual</span><span class="emphasis"><em>]</em></span> <span class="emphasis"><em>[</em></span><span class="keyword">friend</span><span class="emphasis"><em>]</em></span>
+        <span class="emphasis"><em>[</em></span><a class="link" href="grammar.html#result_type_anchor"><code class="literal"><span class="emphasis"><em>result-type</em></span></code></a><span class="emphasis"><em>]</em></span> <a class="link" href="grammar.html#function_name_anchor"><code class="literal"><span class="emphasis"><em>function-name</em></span></code></a> <span class="special">(</span> <a class="link" href="grammar.html#function_parameters_anchor"><code class="literal"><span class="emphasis"><em>function-parameters</em></span></code></a> <span class="special">)</span>
+        <span class="emphasis"><em>[</em></span><span class="identifier">requires</span><span class="special">(</span> <a class="link" href="grammar.html#concepts_anchor"><code class="literal"><span class="emphasis"><em>concepts</em></span></code></a> <span class="special">)</span><span class="emphasis"><em>]</em></span>
+        <span class="emphasis"><em>[</em></span><span class="keyword">const</span><span class="emphasis"><em>]</em></span> <span class="emphasis"><em>[</em></span><span class="keyword">volatile</span><span class="emphasis"><em>]</em></span> <span class="emphasis"><em>[</em></span><span class="identifier">override</span> <span class="emphasis"><em>|</em></span> <span class="keyword">new</span><span class="emphasis"><em>]</em></span> <span class="emphasis"><em>[</em></span><span class="identifier">final</span><span class="emphasis"><em>]</em></span>
+        <span class="emphasis"><em>[</em></span><span class="keyword">throw</span><span class="special">(</span> <a class="link" href="grammar.html#exception_specifications_anchor"><code class="literal"><span class="emphasis"><em>exception-specifications</em></span></code></a> <span class="special">)</span><span class="emphasis"><em>]</em></span>
+        <span class="emphasis"><em>[</em></span><span class="identifier">precondition</span><span class="special">(</span> <a class="link" href="grammar.html#assertions_anchor"><code class="literal"><span class="emphasis"><em>assertions</em></span></code></a> <span class="special">)</span><span class="emphasis"><em>]</em></span>
+        <span class="emphasis"><em>[</em></span><span class="identifier">postcondition</span><span class="special">(</span> <a class="link" href="grammar.html#result_oldof_assertions_anchor"><code class="literal"><span class="emphasis"><em>result-oldof-assertions</em></span></code></a> <span class="special">)</span><span class="emphasis"><em>]</em></span>
+        <span class="emphasis"><em>[</em></span><a class="link" href="grammar.html#member_initializers_anchor"><code class="literal"><span class="emphasis"><em>member-initializers</em></span></code></a><span class="emphasis"><em>]</em></span>
+</pre>
+<p>
+        This is the syntax used to declare all functions: Free functions, member
+        functions, constructors, destructors, and operators. The usual constraints
+        of C++ function declarations apply: It is not possible to declare a static
+        virtual member function, only constructors can use the class name as the
+        function name, constructors and destructors have no result type, etc. The
+        <code class="computeroutput"><span class="keyword">static</span></code> specifier can only be
+        used for member functions (because it was deprecated for free functions from
+        C to <a href="http://en.wikipedia.org/wiki/C%2B%2B" target="_top">C++03</a>). The
+        <code class="computeroutput"><span class="keyword">volatile</span></code> specifier must always
+        appear after <code class="computeroutput"><span class="keyword">const</span></code> when they
+        are both specified.
+      </p>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="contract__.grammar.result_type"></a><a class="link" href="grammar.html#contract__.grammar.result_type" title="Result Type">Result Type</a>
+</h3></div></div></div>
+<pre class="programlisting"><a class="link" href="grammar.html#result_type_anchor"><code class="literal"><span class="emphasis"><em>result-type</em></span></code></a>: <a name="result_type_anchor"></a>
+        <a class="link" href="grammar.html#wrapped_type_anchor"><code class="literal"><span class="emphasis"><em>wrapped-type</em></span></code></a>
+</pre>
+<p>
+        Note that fundamental types containing no symbol can be specified without
+        extra parenthesis: <code class="computeroutput"><span class="keyword">void</span></code>, <code class="computeroutput"><span class="keyword">bool</span></code>, <code class="computeroutput"><span class="keyword">int</span></code>,
+        <code class="computeroutput"><span class="keyword">unsigned</span> <span class="keyword">long</span>
+        <span class="keyword">const</span></code>, etc.
+      </p>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="contract__.grammar.function_and_operator_names"></a><a class="link" href="grammar.html#contract__.grammar.function_and_operator_names" title="Function and Operator Names">Function
+      and Operator Names</a>
+</h3></div></div></div>
+<pre class="programlisting"><a class="link" href="grammar.html#function_name_anchor"><code class="literal"><span class="emphasis"><em>function-name</em></span></code></a>: <a name="function_name_anchor"></a>
+        <span class="special">(</span><a class="link" href="grammar.html#function_identifier_anchor"><code class="literal"><span class="bold"><strong>function-identifier</strong></span></code></a><span class="special">)</span> <span class="emphasis"><em>|</em></span> <span class="special">(</span><a class="link" href="grammar.html#class_name_anchor"><code class="literal"><span class="bold"><strong>class-name</strong></span></code></a><span class="special">)</span> <span class="emphasis"><em>|</em></span> <span class="special">(~</span><a class="link" href="grammar.html#class_name_anchor"><code class="literal"><span class="bold"><strong>class-name</strong></span></code></a><span class="special">)</span> <span class="emphasis"><em>|</em></span> <a class="link" href="grammar.html#operator_name_anchor"><code class="literal"><span class="emphasis"><em>operator-name</em></span></code></a>
+
+<a class="link" href="grammar.html#operator_name_anchor"><code class="literal"><span class="emphasis"><em>operator-name</em></span></code></a>: <a name="operator_name_anchor"></a>
+        <span class="keyword">operator</span><span class="special">(</span><a class="link" href="grammar.html#operator_symbol_anchor"><code class="literal"><span class="bold"><strong>operator-symbol</strong></span></code></a><span class="special">)(</span><a class="link" href="grammar.html#operator_identifier_anchor"><code class="literal"><span class="bold"><strong>operator-identifier</strong></span></code></a><span class="special">)</span> <span class="emphasis"><em>|</em></span> <span class="keyword">operator</span> <a class="link" href="grammar.html#fundamental_type_anchor"><code class="literal"><span class="emphasis"><em>fundamental-type</em></span></code></a> <span class="emphasis"><em>|</em></span>
+        <span class="keyword">operator</span> <span class="keyword">new</span> <span class="emphasis"><em>|</em></span> <span class="keyword">operator</span> <span class="keyword">delete</span> <span class="emphasis"><em>|</em></span> <span class="keyword">operator</span> <span class="identifier">comma</span>
+</pre>
+<p>
+        Names for free functions, member functions, constructors, and destructors
+        are specified as usual but wrapped within parenthesis.
+      </p>
+<p>
+        Operator names are specified wrapping within parenthesis the usual operator
+        symbol followed by an arbitrary but alphanumeric identifier:
+      </p>
+<pre class="programlisting"><span class="keyword">operator</span><span class="special">([])(</span><span class="identifier">at</span><span class="special">)</span>
+<span class="keyword">operator</span><span class="special">(+)(</span><span class="identifier">plus</span><span class="special">)</span>
+<span class="keyword">operator</span><span class="special">(())(</span><span class="identifier">call</span><span class="special">)</span>
+<span class="keyword">operator</span><span class="special">(</span><span class="keyword">new</span><span class="special">[])(</span><span class="identifier">new_array</span><span class="special">)</span>
+<span class="keyword">operator</span><span class="special">(</span><span class="keyword">delete</span><span class="special">[])(</span><span class="identifier">delete_array</span><span class="special">)</span>
+</pre>
+<p>
+        Implicit type conversion operators use the same syntax:
+      </p>
+<pre class="programlisting"><span class="keyword">operator</span><span class="special">(</span><span class="keyword">int</span><span class="special">*)(</span><span class="identifier">int_ptr</span><span class="special">)</span>
+<span class="keyword">operator</span><span class="special">(</span><span class="identifier">mytype</span> <span class="keyword">const</span><span class="special">&amp;)(</span><span class="identifier">mytype_const_ref</span><span class="special">)</span>
+<span class="keyword">operator</span><span class="special">(</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">map</span><span class="special">&lt;</span><span class="keyword">char</span><span class="special">,</span> <span class="keyword">int</span><span class="special">&gt;)(</span><span class="identifier">std_map</span><span class="special">)</span>
+</pre>
+<p>
+        However, if the type is a fundamental type containing no symbol, the identifier
+        is optional:
+      </p>
+<pre class="programlisting"><span class="keyword">operator</span><span class="special">(</span><span class="keyword">const</span> <span class="keyword">int</span><span class="special">)(</span><span class="identifier">const_int</span><span class="special">)</span>  <span class="comment">// Allowed but...</span>
+<span class="keyword">operator</span> <span class="keyword">const</span> <span class="keyword">int</span>              <span class="comment">// ... more readable.</span>
+</pre>
+<p>
+        Similarly, the parenthesis and identifier are optional for the <code class="computeroutput"><span class="keyword">new</span></code> and <code class="computeroutput"><span class="keyword">delete</span></code>
+        operators:
+      </p>
+<pre class="programlisting"><span class="keyword">operator</span><span class="special">(</span><span class="keyword">new</span><span class="special">)(</span><span class="identifier">new_ptr</span><span class="special">)</span>          <span class="comment">// Allowed but...</span>
+<span class="keyword">operator</span> <span class="keyword">new</span>                    <span class="comment">// ... more readable.</span>
+
+<span class="keyword">operator</span><span class="special">(</span><span class="keyword">delete</span><span class="special">)(</span><span class="identifier">delete_ptr</span><span class="special">)</span>    <span class="comment">// Allowed but...</span>
+<span class="keyword">operator</span> <span class="keyword">delete</span>                 <span class="comment">// ... more readable.</span>
+</pre>
+<p>
+        Finally, the comma symbol <code class="computeroutput"><span class="special">,</span></code>
+        cannot be used to specify the comma operator <sup>[<a name="contract__.grammar.function_and_operator_names.f0" href="#ftn.contract__.grammar.function_and_operator_names.f0" class="footnote">73</a>]</sup> so the specifier <code class="computeroutput"><span class="identifier">comma</span></code>
+        must always be used to name the comma operator:
+      </p>
+<pre class="programlisting"><span class="keyword">operator</span> <span class="identifier">comma</span>      <span class="comment">// OK.</span>
+<span class="keyword">operator</span><span class="special">(,)(</span><span class="identifier">comma</span><span class="special">)</span>  <span class="comment">// Error.</span>
+</pre>
+<p>
+        C++ automatically promotes the memory member operators <code class="computeroutput"><span class="keyword">operator</span>
+        <span class="keyword">new</span></code>, <code class="computeroutput"><span class="keyword">operator</span>
+        <span class="keyword">delete</span></code>, <code class="computeroutput"><span class="keyword">operator</span>
+        <span class="keyword">new</span><span class="special">[]</span></code>,
+        and <code class="computeroutput"><span class="keyword">operator</span> <span class="keyword">delete</span><span class="special">[]</span></code> to be static members so the <code class="computeroutput"><span class="keyword">static</span></code> specifier is allowed but optional for
+        these member operators. This library cannot automatically perform such a
+        promotion so the <code class="computeroutput"><span class="keyword">static</span></code> specifier
+        is always required by this library for the memory member operators.
+      </p>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="contract__.grammar.exception_specifications"></a><a class="link" href="grammar.html#contract__.grammar.exception_specifications" title="Exception Specifications">Exception
+      Specifications</a>
+</h3></div></div></div>
+<pre class="programlisting"><a class="link" href="grammar.html#exception_specifications_anchor"><code class="literal"><span class="emphasis"><em>exception-specifications</em></span></code></a>: <a name="exception_specifications_anchor"></a>
+        <span class="keyword">void</span> <span class="special">|</span> <a class="link" href="grammar.html#exception_type_anchor"><code class="literal"><span class="bold"><strong>exception-type</strong></span></code></a><span class="special">,</span> <span class="special">...</span>
+</pre>
+<p>
+        Note that the syntax <code class="computeroutput"><span class="keyword">throw</span><span class="special">(</span>
+        <span class="keyword">void</span> <span class="special">)</span></code>
+        is used instead of <code class="computeroutput"><span class="keyword">throw</span><span class="special">(</span>
+        <span class="special">)</span></code> for no-throw specifications.
+      </p>
+<p>
+        Exception specifications apply only to exceptions thrown by the function
+        body and not to exceptions thrown by the contracts themselves (if any) and
+        by the contract checking code generated by this library macros.
+      </p>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="contract__.grammar.member_initializers"></a><a class="link" href="grammar.html#contract__.grammar.member_initializers" title="Member Initializers">Member Initializers</a>
+</h3></div></div></div>
+<pre class="programlisting"><a class="link" href="grammar.html#member_initializers_anchor"><code class="literal"><span class="emphasis"><em>member-initializers</em></span></code></a>: <a name="member_initializers_anchor"></a>
+        <span class="emphasis"><em>[</em></span><span class="keyword">try</span><span class="emphasis"><em>]</em></span> <span class="identifier">initialize</span><span class="special">(</span> <a class="link" href="grammar.html#member_initializer_anchor"><code class="literal"><span class="bold"><strong>member-initializer</strong></span></code></a><span class="special">,</span> <span class="special">...</span> <span class="special">)</span>
+        <span class="emphasis"><em>{</em></span><span class="keyword">catch</span><span class="special">(</span><a class="link" href="grammar.html#catch_declaration_anchor"><code class="literal"><span class="bold"><strong>catch-declaration</strong></span></code></a><span class="special">)</span> <span class="special">(</span> <a class="link" href="grammar.html#catch_instructions_anchor"><code class="literal"><span class="bold"><strong>catch-instructions</strong></span></code></a> <span class="special">)</span><span class="emphasis"><em>}*</em></span>
+</pre>
+<p>
+        As indicated by this syntax, it is possible to specify function-try blocks
+        for constructor member initializers:
+      </p>
+<pre class="programlisting"><span class="keyword">struct</span> <span class="identifier">vector_error</span> <span class="special">{</span> <span class="special">...</span> <span class="special">};</span>
+
+<span class="identifier">CONTRACT_CONSTRUCTOR</span><span class="special">(</span> <span class="comment">// Constructor with member initializers.</span>
+<span class="keyword">explicit</span> <span class="special">(</span><span class="identifier">vector</span><span class="special">)</span> <span class="special">(</span> <span class="keyword">int</span> <span class="identifier">count</span> <span class="special">)</span>
+    <span class="identifier">precondition</span><span class="special">(</span> <span class="identifier">count</span> <span class="special">&gt;=</span> <span class="number">0</span> <span class="special">)</span>
+    <span class="identifier">postcondition</span><span class="special">(</span> <span class="identifier">size</span><span class="special">()</span> <span class="special">==</span> <span class="identifier">count</span> <span class="special">)</span>
+
+    <span class="keyword">try</span> <span class="identifier">initialize</span><span class="special">(</span> <span class="identifier">ptr_</span><span class="special">(</span><span class="keyword">new</span> <span class="identifier">T</span><span class="special">[</span><span class="identifier">count</span><span class="special">])</span> <span class="special">)</span>
+    <span class="keyword">catch</span><span class="special">(</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">bad_alloc</span><span class="special">&amp;</span> <span class="identifier">ex</span><span class="special">)</span> <span class="special">(</span>
+        <span class="identifier">std</span><span class="special">::</span><span class="identifier">cerr</span> <span class="special">&lt;&lt;</span> <span class="string">"not enough memory for "</span> <span class="special">&lt;&lt;</span> <span class="identifier">count</span> <span class="special">&lt;&lt;</span> <span class="string">" elements vector: "</span> <span class="special">&lt;&lt;</span> <span class="identifier">ex</span><span class="special">.</span><span class="identifier">what</span><span class="special">()</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
+        <span class="keyword">throw</span> <span class="identifier">vector_error</span><span class="special">(</span><span class="number">1</span><span class="special">);</span>
+    <span class="special">)</span> <span class="keyword">catch</span><span class="special">(</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">exception</span><span class="special">&amp;</span> <span class="identifier">ex</span><span class="special">)</span> <span class="special">(</span>
+        <span class="identifier">std</span><span class="special">::</span><span class="identifier">cerr</span> <span class="special">&lt;&lt;</span> <span class="string">"error for "</span> <span class="special">&lt;&lt;</span> <span class="identifier">count</span> <span class="special">&lt;&lt;</span> <span class="string">" elements vector: "</span> <span class="special">&lt;&lt;</span> <span class="identifier">ex</span><span class="special">.</span><span class="identifier">what</span><span class="special">()</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
+        <span class="keyword">throw</span> <span class="identifier">vector_error</span><span class="special">(</span><span class="number">2</span><span class="special">);</span>
+    <span class="special">)</span> <span class="keyword">catch</span><span class="special">(...)</span> <span class="special">(</span>
+        <span class="identifier">std</span><span class="special">::</span><span class="identifier">cerr</span> <span class="special">&lt;&lt;</span> <span class="string">"unknown error for "</span> <span class="special">&lt;&lt;</span> <span class="identifier">count</span> <span class="special">&lt;&lt;</span> <span class="string">" elements vector"</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
+        <span class="keyword">throw</span> <span class="identifier">vector_error</span><span class="special">(</span><span class="number">3</span><span class="special">);</span>
+    <span class="special">)</span>
+<span class="special">)</span> <span class="special">{</span> <span class="comment">// Above function-try block only applies to exceptions thrown by the body (and not by the contracts).</span>
+    <span class="special">...</span>
+<span class="special">}</span>
+</pre>
+<p>
+        For functions other than constructors and for constructors without member
+        initializers, function-try blocks are programmed outside the macros and around
+        the body definition as usual. As specified by <a class="link" href="bibliography.html#N1962_anchor">[N1962]</a>,
+        function-try blocks apply only to exceptions thrown by the function body
+        and not to exceptions thrown by the contracts themselves (if any) and by
+        the contract checking code generated by the library macros.
+      </p>
+<p>
+        Member initializers (and their function-try blocks) are part of the constructor
+        definition and not of the constructor declaration. However, <a href="http://en.wikipedia.org/wiki/C%2B%2B" target="_top">C++03</a>
+        lack of delegating constructors requires member initializers (and their function-try
+        blocks) to be specified within this library macros and constructors must
+        be defined together with their declarations when they use member initializers.
+      </p>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="contract__.grammar.function_parameters"></a><a class="link" href="grammar.html#contract__.grammar.function_parameters" title="Function Parameters">Function Parameters</a>
+</h3></div></div></div>
+<pre class="programlisting"><a class="link" href="grammar.html#function_parameters_anchor"><code class="literal"><span class="emphasis"><em>function-parameters</em></span></code></a>: <a name="function_parameters_anchor"></a>
+        <span class="keyword">void</span> <span class="emphasis"><em>|</em></span>
+        <a class="link" href="grammar.html#positional_function_parameters_anchor"><code class="literal"><span class="emphasis"><em>positional-function-parameters</em></span></code></a> <span class="emphasis"><em>|</em></span>
+        <a class="link" href="grammar.html#named_function_parameters_anchor"><code class="literal"><span class="emphasis"><em>named-function-parameters</em></span></code></a>
+
+<a class="link" href="grammar.html#positional_function_parameters_anchor"><code class="literal"><span class="emphasis"><em>positional-function-parameters</em></span></code></a>: <a name="positional_function_parameters_anchor"></a>
+        <a class="link" href="grammar.html#positional_function_parameter_anchor"><code class="literal"><span class="emphasis"><em>positional-function-parameter</em></span></code></a><span class="special">,</span> <span class="special">...</span>
+<a class="link" href="grammar.html#positional_function_parameter_anchor"><code class="literal"><span class="emphasis"><em>positional-function-parameter</em></span></code></a>: <a name="positional_function_parameter_anchor"></a>
+        <span class="emphasis"><em>[</em></span><span class="keyword">auto</span> <span class="emphasis"><em>|</em></span> <span class="keyword">register</span><span class="emphasis"><em>]</em></span> <a class="link" href="grammar.html#wrapped_type_anchor"><code class="literal"><span class="emphasis"><em>wrapped-type</em></span></code></a> <a class="link" href="grammar.html#parameter_name_anchor"><code class="literal"><span class="bold"><strong>parameter-name</strong></span></code></a>
+        <span class="emphasis"><em>[</em></span><span class="special">,</span> <span class="keyword">default</span> <a class="link" href="grammar.html#parameter_default_anchor"><code class="literal"><span class="bold"><strong>parameter-default</strong></span></code></a><span class="emphasis"><em>]</em></span>
+
+<a class="link" href="grammar.html#named_function_parameters_anchor"><code class="literal"><span class="emphasis"><em>named-function-parameters</em></span></code></a>: <a name="named_function_parameters_anchor"></a>
+        <span class="emphasis"><em>[</em></span><span class="keyword">using</span> <span class="keyword">namespace</span> <a class="link" href="grammar.html#named_parameter_identifier_namespace_anchor"><code class="literal"><span class="bold"><strong>named-parameter-identifier-namespace</strong></span></code></a><span class="special">,</span><span class="emphasis"><em>]</em></span>
+        <a class="link" href="grammar.html#named_function_parameter_anchor"><code class="literal"><span class="emphasis"><em>named-function-parameter</em></span></code></a><span class="special">,</span> <span class="special">...</span>
+<a class="link" href="grammar.html#named_function_parameter_anchor"><code class="literal"><span class="emphasis"><em>named-function-parameter</em></span></code></a>: <a name="named_function_parameter_anchor"></a>
+        <span class="emphasis"><em>[</em></span><span class="identifier">deduce</span><span class="emphasis"><em>]</em></span> <span class="emphasis"><em>{</em></span><span class="identifier">in</span> <span class="emphasis"><em>|</em></span> <span class="identifier">out</span> <span class="emphasis"><em>|</em></span> <span class="identifier">in</span> <span class="identifier">out</span><span class="emphasis"><em>}</em></span>
+        <span class="emphasis"><em>{</em></span><a class="link" href="grammar.html#wrapped_type_anchor"><code class="literal"><span class="emphasis"><em>wrapped-type</em></span></code></a> <span class="emphasis"><em>|</em></span> <span class="keyword">auto</span> <span class="emphasis"><em>|</em></span> <span class="identifier">requires</span><span class="special">(</span><a class="link" href="grammar.html#unary_boolean_metafunction_anchor"><code class="literal"><span class="bold"><strong>unary-boolean-metafunction</strong></span></code></a><span class="special">)</span><span class="emphasis"><em>}</em></span> <a class="link" href="grammar.html#parameter_name_anchor"><code class="literal"><span class="bold"><strong>parameter-name</strong></span></code></a>
+        <span class="emphasis"><em>[</em></span><span class="special">,</span> <span class="keyword">default</span> <a class="link" href="grammar.html#parameter_default_anchor"><code class="literal"><span class="bold"><strong>parameter-default</strong></span></code></a><span class="emphasis"><em>]</em></span>
+</pre>
+<p>
+        Note that the positional parameter storage classifier <code class="computeroutput"><span class="keyword">auto</span></code>
+        is supported by this library because it is part of <a href="http://en.wikipedia.org/wiki/C%2B%2B" target="_top">C++03</a>
+        (but the <code class="computeroutput"><span class="keyword">auto</span></code> keyword changed
+        meaning in <a href="http://en.wikipedia.org/wiki/C%2B%2B11" target="_top">C++11</a>
+        so use it with the usual care when writing code portable to <a href="http://en.wikipedia.org/wiki/C%2B%2B11" target="_top">C++11</a>).
+      </p>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="contract__.grammar.result_and_old_values"></a><a class="link" href="grammar.html#contract__.grammar.result_and_old_values" title="Result and Old Values">Result and
+      Old Values</a>
+</h3></div></div></div>
+<pre class="programlisting"><a class="link" href="grammar.html#result_oldof_assertions_anchor"><code class="literal"><span class="emphasis"><em>result-oldof-assertions</em></span></code></a>: <a name="result_oldof_assertions_anchor"></a>
+        <span class="emphasis"><em>[</em></span><span class="keyword">auto</span> <a class="link" href="grammar.html#variable_name_anchor"><code class="literal"><span class="bold"><strong>variable-name</strong></span></code></a> <span class="special">=</span> <span class="keyword">return</span><span class="special">,</span><span class="emphasis"><em>]</em></span>
+        <span class="emphasis"><em>[</em></span><a class="link" href="grammar.html#oldof_declaration_anchor"><code class="literal"><span class="emphasis"><em>oldof-declaration</em></span></code></a><span class="special">,</span> <span class="special">...</span><span class="emphasis"><em>]</em></span>
+        <a class="link" href="grammar.html#assertion_anchor"><code class="literal"><span class="emphasis"><em>assertion</em></span></code></a><span class="special">,</span> <span class="special">...</span>
+
+<a class="link" href="grammar.html#oldof_declaration_anchor"><code class="literal"><span class="emphasis"><em>oldof-declaration</em></span></code></a>: <a name="oldof_declaration_anchor"></a>
+        <span class="emphasis"><em>{</em></span><span class="keyword">auto</span> <span class="emphasis"><em>|</em></span> <a class="link" href="grammar.html#wrapped_type_anchor"><code class="literal"><span class="emphasis"><em>wrapped-type</em></span></code></a><span class="emphasis"><em>}</em></span> <a class="link" href="grammar.html#variable_name_anchor"><code class="literal"><span class="bold"><strong>variable-name</strong></span></code></a> <span class="special">=</span> <code class="computeroutput"><a class="link" href="../CONTRACT_OLDOF.html" title="Macro CONTRACT_OLDOF">CONTRACT_OLDOF</a></code> <a class="link" href="grammar.html#oldof_expression_anchor"><code class="literal"><span class="bold"><strong>oldof-expression</strong></span></code></a>
+</pre>
+<p>
+        If present, result and old-of declarations should appear at the very beginning
+        of the postconditions because they will always be visible to all assertions
+        plus these declarations cannot be nested (within select-assertions, etc).
+      </p>
+<p>
+        The result declaration type is always <code class="computeroutput"><span class="keyword">auto</span></code>
+        because the function result type is know and already specified by the function
+        declaration (so no result type deduction is ever needed). The old-of declaration
+        type is automatically deduced (using <a href="http://www.boost.org/doc/libs/release/libs/typeof" target="_top">Boost.Typeof</a>)
+        when its type is specified <code class="computeroutput"><span class="keyword">auto</span></code>
+        instead of <a class="link" href="grammar.html#wrapped_type_anchor"><code class="literal"><span class="emphasis"><em>wrapped-type</em></span></code></a>.
+        The macro <code class="computeroutput"><span class="identifier">CONTRACT_OLDOF</span></code>
+        does not require but allows parenthesis around the value expression <a class="link" href="grammar.html#oldof_expression_anchor"><code class="literal"><span class="bold"><strong>oldof-expression</strong></span></code></a>
+        (this is as specified for the <code class="computeroutput"><span class="identifier">oldof</span></code>
+        operator in <a class="link" href="bibliography.html#N1962_anchor">[N1962]</a> and similar to the
+        <code class="computeroutput"><span class="keyword">sizeof</span></code> operator which requires
+        parenthesis when applied to a type expression <code class="computeroutput"><span class="keyword">sizeof</span><span class="special">(</span><span class="identifier">size_type</span><span class="special">)</span></code> but not when applied to a value expression
+        <code class="computeroutput"><span class="keyword">sizeof</span> <span class="identifier">size</span><span class="special">()</span></code>). For example, all the followings are valid:
+      </p>
+<pre class="programlisting"><span class="keyword">auto</span> <span class="identifier">old_size</span> <span class="special">=</span> <span class="identifier">CONTRACT_OLDOF</span> <span class="identifier">size</span><span class="special">()</span>
+<span class="keyword">auto</span> <span class="identifier">old_size</span> <span class="special">=</span> <span class="identifier">CONTRACT_OLDOF</span><span class="special">(</span><span class="identifier">size</span><span class="special">())</span>          <span class="comment">// Extra parenthesis around expression (optional).</span>
+<span class="special">(</span><span class="identifier">size_type</span><span class="special">)</span> <span class="identifier">old_size</span> <span class="special">=</span> <span class="identifier">CONTRACT_OLDOF</span> <span class="identifier">size</span><span class="special">()</span>    <span class="comment">// Do not use Boost.Typeof.</span>
+<span class="special">(</span><span class="identifier">size_type</span><span class="special">)</span> <span class="identifier">old_size</span> <span class="special">=</span> <span class="identifier">CONTRACT_OLDOF</span><span class="special">(</span><span class="identifier">size</span><span class="special">())</span>   <span class="comment">// No Boost.Typeof and extra parenthesis.</span>
+</pre>
+<p>
+        If an old-of copy is performed on a type that is not <a class="link" href="advanced_topics.html#contract__.advanced_topics.old_and_result_value_copies" title="Old and Result Value Copies"><code class="literal">ConstantCopyConstructible</code></a>,
+        the old-of declaration itself will not fail compilation but it will produce
+        an old variable that will cause a compiler-error as soon as it is used in
+        an assertion (unless the assertion specifies a requirement using a properly
+        specialized <code class="computeroutput"><a class="link" href="../contract/has_oldof.html" title="Struct template has_oldof">contract::has_oldof</a></code>
+        trait).
+      </p>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="contract__.grammar.class_invariants"></a><a class="link" href="grammar.html#contract__.grammar.class_invariants" title="Class Invariants">Class Invariants</a>
+</h3></div></div></div>
+<pre class="programlisting"><a class="link" href="grammar.html#class_invariants_anchor"><code class="literal"><span class="emphasis"><em>class-invariants</em></span></code></a>: <a name="class_invariants_anchor"></a>
+        <span class="keyword">void</span> <span class="emphasis"><em>|</em></span> <a class="link" href="grammar.html#class_invariant_anchor"><code class="literal"><span class="emphasis"><em>class-invariant</em></span></code></a><span class="special">,</span> <span class="special">...</span>
+
+<a class="link" href="grammar.html#class_invariant_anchor"><code class="literal"><span class="emphasis"><em>class-invariant</em></span></code></a>: <a name="class_invariant_anchor"></a>
+        <a class="link" href="grammar.html#assertion_anchor"><code class="literal"><span class="emphasis"><em>assertion</em></span></code></a> <span class="emphasis"><em>|</em></span>
+        <span class="keyword">static</span> <span class="keyword">class</span><span class="special">(</span> <span class="keyword">void</span> <span class="emphasis"><em>|</em></span> <a class="link" href="grammar.html#assertion_anchor"><code class="literal"><span class="emphasis"><em>assertion</em></span></code></a><span class="special">,</span> <span class="special">...</span> <span class="special">)</span> <span class="emphasis"><em>|</em></span>
+        <span class="keyword">volatile</span> <span class="keyword">class</span><span class="special">(</span> <span class="keyword">void</span> <span class="emphasis"><em>|</em></span> <a class="link" href="grammar.html#assertion_anchor"><code class="literal"><span class="emphasis"><em>assertion</em></span></code></a><span class="special">,</span> <span class="special">...</span> <span class="special">)</span>
+</pre>
+<p>
+        Volatile class invariants are assumed to have the same assertions as non-volatile
+        class invariants unless they are explicitly specified. Static class invariants
+        are assumed to assert nothing unless they are explicitly specified.
+      </p>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="contract__.grammar.assertions"></a><a class="link" href="grammar.html#contract__.grammar.assertions" title="Assertions">Assertions</a>
+</h3></div></div></div>
+<pre class="programlisting"><a class="link" href="grammar.html#assertions_anchor"><code class="literal"><span class="emphasis"><em>assertions</em></span></code></a>: <a name="assertions_anchor"></a>
+        <a class="link" href="grammar.html#assertion_anchor"><code class="literal"><span class="emphasis"><em>assertion</em></span></code></a><span class="special">,</span> <span class="special">...</span>
+<a class="link" href="grammar.html#assertion_anchor"><code class="literal"><span class="emphasis"><em>assertion</em></span></code></a>: <a name="assertion_anchor"></a>
+        <span class="keyword">using</span> <a class="link" href="grammar.html#using_directive_anchor"><code class="literal"><span class="bold"><strong>using-directive</strong></span></code></a> <span class="emphasis"><em>|</em></span>
+        <span class="keyword">namespace</span> <a class="link" href="grammar.html#namespace_alias_anchor"><code class="literal"><span class="bold"><strong>namespace-alias</strong></span></code></a> <span class="emphasis"><em>|</em></span>
+        <span class="keyword">typedef</span> <a class="link" href="grammar.html#typedef_type_anchor"><code class="literal"><span class="bold"><strong>typedef-type</strong></span></code></a> <a class="link" href="grammar.html#new_type_name_anchor"><code class="literal"><span class="bold"><strong>new-type-name</strong></span></code></a> <span class="emphasis"><em>|</em></span>
+        <a class="link" href="grammar.html#assertion_condition_anchor"><code class="literal"><span class="emphasis"><em>assertion-condition</em></span></code></a>
+
+<a class="link" href="grammar.html#assertion_condition_anchor"><code class="literal"><span class="emphasis"><em>assertion-condition</em></span></code></a>: <a name="assertion_condition_anchor"></a>
+        <a class="link" href="grammar.html#assertion_expression_anchor"><code class="literal"><span class="emphasis"><em>assertion-expression</em></span></code></a> <span class="emphasis"><em>|</em></span>
+        <a class="link" href="grammar.html#select_assertion_anchor"><code class="literal"><span class="emphasis"><em>select-assertion</em></span></code></a>
+<a class="link" href="grammar.html#assertion_expression_anchor"><code class="literal"><span class="emphasis"><em>assertion-expression</em></span></code></a>: <a name="assertion_expression_anchor"></a>
+        <a class="link" href="grammar.html#boolean_condition_anchor"><code class="literal"><span class="emphasis"><em>boolean-condition</em></span></code></a> <span class="emphasis"><em>|</em></span>
+        <span class="identifier">static_assert</span><span class="special">(</span><a class="link" href="grammar.html#constant_boolean_expression_anchor"><code class="literal"><span class="bold"><strong>constant-boolean-expression</strong></span></code></a><span class="special">,</span> <a class="link" href="grammar.html#constant_string_literal_anchor"><code class="literal"><span class="bold"><strong>constant-string-literal</strong></span></code></a><span class="special">)</span>
+        <span class="emphasis"><em>[</em></span><span class="special">,</span> <span class="identifier">requires</span> <a class="link" href="grammar.html#constant_boolean_expression_anchor"><code class="literal"><span class="bold"><strong>constant-boolean-expression</strong></span></code></a><span class="emphasis"><em>]</em></span>
+<a class="link" href="grammar.html#select_assertion_anchor"><code class="literal"><span class="emphasis"><em>select-assertion</em></span></code></a>: <a name="select_assertion_anchor"></a>
+        <span class="keyword">if</span><span class="special">(</span><a class="link" href="grammar.html#boolean_condition_anchor"><code class="literal"><span class="emphasis"><em>boolean-condition</em></span></code></a><span class="special">)</span> <span class="special">(</span> <a class="link" href="grammar.html#assertion_condition_anchor"><code class="literal"><span class="emphasis"><em>assertion-condition</em></span></code></a><span class="special">,</span> <span class="special">...</span> <span class="special">)</span>
+        <span class="emphasis"><em>[</em></span><span class="keyword">else</span> <span class="special">(</span> <a class="link" href="grammar.html#assertion_condition_anchor"><code class="literal"><span class="emphasis"><em>assertion-condition</em></span></code></a><span class="special">,</span> <span class="special">...</span> <span class="special">)</span><span class="emphasis"><em>]</em></span>
+
+<a class="link" href="grammar.html#boolean_condition_anchor"><code class="literal"><span class="emphasis"><em>boolean-condition</em></span></code></a>: <a name="boolean_condition_anchor"></a>
+        <a class="link" href="grammar.html#boolean_expression_anchor"><code class="literal"><span class="bold"><strong>boolean-expression</strong></span></code></a> <span class="emphasis"><em>|</em></span>
+        <span class="keyword">const</span><span class="special">(</span> <a class="link" href="grammar.html#inscope_variables_anchor"><code class="literal"><span class="emphasis"><em>inscope-variables</em></span></code></a> <span class="special">)</span> <a class="link" href="grammar.html#boolean_expression_using_inscope_variables_anchor"><code class="literal"><span class="bold"><strong>boolean-expression-using-inscope-variables</strong></span></code></a>
+<a class="link" href="grammar.html#inscope_variables_anchor"><code class="literal"><span class="emphasis"><em>inscope-variables</em></span></code></a>: <a name="inscope_variables_anchor"></a>
+        <span class="emphasis"><em>[</em></span><a class="link" href="grammar.html#wrapped_type_anchor"><code class="literal"><span class="emphasis"><em>wrapped-type</em></span></code></a><span class="emphasis"><em>]</em></span> <a class="link" href="grammar.html#inscope_variable_anchor"><code class="literal"><span class="bold"><strong>inscope-variable</strong></span></code></a><span class="special">,</span> <span class="special">...</span>
+</pre>
+<p>
+        Some basic name manipulations are allowed at the local scope where the assertions
+        are being declared in case they are ever needed to simplify the assertion
+        expressions. Specifically, using-directives, namespace-aliases, and type-definitions
+        are allowed (these will always affect all assertions within the given preconditions,
+        postconditions, etc so it is recommended to always use these statement at
+        the very beginning before the actual assertion conditions). Note that these
+        name manipulations have no effect on the program run-time state and therefore
+        they do not compromise the contract constant-correctness requirement.
+      </p>
+<p>
+        As indicated by the grammar above, it is not possible to specify assertion
+        requirements (using <code class="computeroutput"><span class="identifier">requires</span></code>)
+        for the entire select assertion if-then-else expression. Eventual assertion
+        requirements must be specified for the single assertions within the select
+        assertion if-then-else statement and they will never disable compilation
+        and checking of the select assertion if-condition. Programmers can use the
+        ternary operator <code class="computeroutput"><span class="special">?:</span></code> instead
+        of a select assertion if they need to specify a guarded assertion with a
+        condition that is also disabled by the assertion requirements:
+      </p>
+<pre class="programlisting"><span class="emphasis"><em>boolean-guard</em></span> <span class="special">?</span> <a class="link" href="grammar.html#boolean_expression_anchor"><code class="literal"><span class="bold"><strong>boolean-expression</strong></span></code></a> <span class="special">:</span> <span class="keyword">true</span><span class="special">,</span> <span class="identifier">requires</span> <a class="link" href="grammar.html#constant_boolean_expression_anchor"><code class="literal"><span class="bold"><strong>constant-boolean-expression</strong></span></code></a>
+</pre>
+<p>
+        Constant expressions <code class="computeroutput"><span class="keyword">const</span><span class="special">(</span>
+        <span class="special">...</span> <span class="special">)</span> </code><code class="literal"><span class="emphasis"><em>expression</em></span></code>
+        can be used to assert conditions and to check the select assertion if-condition
+        so to fully enforce the assertion constant-correctness requirement. However,
+        function arguments, result value, old-of values, and the object <code class="computeroutput"><span class="keyword">this</span></code> are automatically made constant by this
+        library so constant expressions only need to be used to assert conditions
+        on global variables, static variables, etc. The type of the in-scope variable
+        <a class="link" href="grammar.html#inscope_variable_anchor"><code class="literal"><span class="bold"><strong>inscope-variable</strong></span></code></a>
+        is optional and it is automatically deduced using <a href="http://www.boost.org/doc/libs/release/libs/typeof" target="_top">Boost.Typeof</a>
+        when it is not specified.
+      </p>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="contract__.grammar.loop_variants"></a><a class="link" href="grammar.html#contract__.grammar.loop_variants" title="Loop Variants">Loop Variants</a>
+</h3></div></div></div>
+<pre class="programlisting"><a class="link" href="grammar.html#loop_variant_anchor"><code class="literal"><span class="emphasis"><em>loop-variant</em></span></code></a>: <a name="loop_variant_anchor"></a>
+        <a class="link" href="grammar.html#natural_expression_anchor"><code class="literal"><span class="bold"><strong>natural-expression</strong></span></code></a> <span class="emphasis"><em>|</em></span>
+        <span class="keyword">const</span><span class="special">(</span> <a class="link" href="grammar.html#inscope_variables_anchor"><code class="literal"><span class="emphasis"><em>inscope-variables</em></span></code></a> <span class="special">)</span> <a class="link" href="grammar.html#natural_expression_using_inscope_variables_anchor"><code class="literal"><span class="bold"><strong>natural-expression-using-inscope-variables</strong></span></code></a>
+</pre>
+<p>
+        A loop variant must specify a non-negative integral expression that monotonically
+        decreases at each subsequent loop iteration (the library will automatically
+        check these two conditions at each loop iteration and terminate the loop
+        if they are not met by calling the loop variant broken handler). The loop
+        variant can be specified using a constant-expression <code class="computeroutput"><span class="keyword">const</span><span class="special">(</span> <span class="special">...</span> <span class="special">)</span>
+        </code><code class="literal"><span class="emphasis"><em>expression</em></span></code> so to fully enforce
+        the contract constant-correctness requirement.
+      </p>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="contract__.grammar.named_parameter_declarations"></a><a class="link" href="grammar.html#contract__.grammar.named_parameter_declarations" title="Named Parameter Declarations">Named
+      Parameter Declarations</a>
+</h3></div></div></div>
+<pre class="programlisting"><a class="link" href="grammar.html#named_parameter_declaration_anchor"><code class="literal"><span class="emphasis"><em>named-parameter-declaration</em></span></code></a>: <a name="named_parameter_declaration_anchor"></a>
+        <span class="emphasis"><em>[</em></span><span class="keyword">namespace</span><span class="special">(</span><a class="link" href="grammar.html#named_parameter_identifier_namespace_anchor"><code class="literal"><span class="bold"><strong>named-parameter-identifier-namespace</strong></span></code></a><span class="special">)</span><span class="emphasis"><em>]</em></span>
+        <span class="emphasis"><em>[</em></span><span class="special">(</span><a class="link" href="grammar.html#named_argument_identifier_anchor"><code class="literal"><span class="bold"><strong>named-argument-identifier</strong></span></code></a><span class="special">)</span><span class="emphasis"><em>]</em></span> <a class="link" href="grammar.html#parameter_name_anchor"><code class="literal"><span class="bold"><strong>parameter-name</strong></span></code></a>
+</pre>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="contract__.grammar.terminals"></a><a class="link" href="grammar.html#contract__.grammar.terminals" title="Terminals">Terminals</a>
+</h3></div></div></div>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                <p>
+                  Terminal
+                </p>
+              </th>
+<th>
+                <p>
+                  Description
+                </p>
+              </th>
+<th>
+                <p>
+                  If terminal contains unwrapped commas or leading symbols
+                </p>
+              </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+                <p>
+                  <a class="link" href="grammar.html#boolean_expression_anchor"><code class="literal"><span class="bold"><strong>boolean-expression</strong></span></code></a><a name="boolean_expression_anchor"></a>
+                </p>
+              </td>
+<td>
+                <p>
+                  A boolean expression: <code class="computeroutput"><span class="identifier">x</span>
+                  <span class="special">==</span> <span class="number">1</span></code>.
+                </p>
+              </td>
+<td>
+                <p>
+                  Wrap value within parenthesis: <code class="computeroutput"><span class="special">(</span><span class="identifier">vey_sizeof</span><span class="special">&lt;</span><span class="identifier">Key</span><span class="special">,</span>
+                  <span class="identifier">T</span><span class="special">&gt;::</span><span class="identifier">value</span><span class="special">)</span></code>.
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <a class="link" href="grammar.html#boolean_expression_using_inscope_variables_anchor"><code class="literal"><span class="bold"><strong>boolean-expression-using-inscope-variables</strong></span></code></a><a name="boolean_expression_using_inscope_variables_anchor"></a>
+                </p>
+              </td>
+<td>
+                <p>
+                  A boolean expression that only uses in-scope variables captured
+                  as constants by a constant expression <code class="computeroutput"><span class="keyword">const</span><span class="special">(</span> <span class="special">...</span>
+                  <span class="special">)</span> </code><code class="literal"><span class="emphasis"><em>expression</em></span></code>.
+                </p>
+              </td>
+<td>
+                <p>
+                  Wrap value within parenthesis: <code class="computeroutput"><span class="special">(</span><span class="identifier">key_sizeof</span><span class="special">&lt;</span><span class="identifier">Key</span><span class="special">,</span>
+                  <span class="identifier">T</span><span class="special">&gt;::</span><span class="identifier">value</span> <span class="special">+</span>
+                  <span class="identifier">x</span><span class="special">)</span></code>.
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <a class="link" href="grammar.html#boost_concept_anchor"><code class="literal"><span class="bold"><strong>boost-concept</strong></span></code></a><a name="boost_concept_anchor"></a>
+                </p>
+              </td>
+<td>
+                <p>
+                  A concept class defined using <a href="http://www.boost.org/doc/libs/release/libs/concept_check" target="_top">Boost.ConceptCheck</a>:
+                  <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">CopyConstructible</span></code>.
+                </p>
+              </td>
+<td>
+                <p>
+                  Wrap type within parenthesis: <code class="computeroutput"><span class="special">(</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">Convertible</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">,</span>
+                  <span class="keyword">int</span><span class="special">&gt;)</span></code>.
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <a class="link" href="grammar.html#catch_declaration_anchor"><code class="literal"><span class="bold"><strong>catch-declaration</strong></span></code></a><a name="catch_declaration_anchor"></a>
+                </p>
+              </td>
+<td>
+                <p>
+                  The declaration of an exception for a <code class="computeroutput"><span class="keyword">catch</span></code>
+                  statement: <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">runtime_error</span><span class="special">&amp;</span> <span class="identifier">error</span></code>.
+                </p>
+              </td>
+<td>
+                <p>
+                  Wrap type using <a href="http://www.boost.org/doc/libs/release/libs/utility/identity_type" target="_top">Boost.Utility/IdentityType</a>:
+                  <code class="computeroutput"><span class="identifier">BOOST_IDENTITY_TYPE</span><span class="special">((</span><span class="identifier">map</span><span class="special">&lt;</span><span class="keyword">char</span><span class="special">,</span> <span class="keyword">int</span><span class="special">&gt;::</span><span class="identifier">exception</span><span class="special">&amp;))</span> <span class="identifier">error</span></code>.
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <a class="link" href="grammar.html#catch_instructions_anchor"><code class="literal"><span class="bold"><strong>catch-instructions</strong></span></code></a><a name="catch_instructions_anchor"></a>
+                </p>
+              </td>
+<td>
+                <p>
+                  The instructions of a <code class="computeroutput"><span class="keyword">catch</span></code>
+                  statement terminated by semicolons <code class="computeroutput"><span class="special">;</span></code>:
+                  <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span>
+                  <span class="string">"error"</span> <span class="special">&lt;&lt;</span>
+                  <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
+                  <span class="identifier">exit</span><span class="special">(</span><span class="number">255</span><span class="special">);</span></code>.
+                </p>
+              </td>
+<td>
+                <p>
+                  Wrap types using <a href="http://www.boost.org/doc/libs/release/libs/utility/identity_type" target="_top">Boost.Utility/IdentityType</a>
+                  and values within parenthesis: <code class="computeroutput"><span class="keyword">typedef</span>
+                  <span class="identifier">BOOST_UTILITY_TYPE</span><span class="special">(</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">map</span><span class="special">&lt;</span><span class="keyword">char</span><span class="special">,</span>
+                  <span class="keyword">int</span><span class="special">&gt;)</span>
+                  <span class="identifier">mtype</span><span class="special">;</span>
+                  <span class="special">(</span><span class="identifier">mtype</span>
+                  <span class="identifier">m</span><span class="special">,</span>
+                  <span class="identifier">m</span><span class="special">[</span><span class="char">'a'</span><span class="special">]</span> <span class="special">=</span> <span class="number">1</span><span class="special">);</span></code>.
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <a class="link" href="grammar.html#class_name_anchor"><code class="literal"><span class="bold"><strong>class-name</strong></span></code></a><a name="class_name_anchor"></a>
+                </p>
+              </td>
+<td>
+                <p>
+                  The class name: <code class="computeroutput"><span class="identifier">myclass</span></code>.
+                  For class templates this must not include the template instantiation
+                  parameters: <code class="computeroutput"><span class="identifier">vector</span></code>.
+                  (For non-template classes, the class type and name are the same.)
+                </p>
+              </td>
+<td>
+                <p>
+                  Never the case.
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <a class="link" href="grammar.html#class_type_anchor"><code class="literal"><span class="bold"><strong>class-type</strong></span></code></a><a name="class_type_anchor"></a>
+                </p>
+              </td>
+<td>
+                <p>
+                  The class type, for class templates this must include the template
+                  instantiation parameters: <code class="computeroutput"><span class="identifier">vector</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span></code>.
+                </p>
+              </td>
+<td>
+                <p>
+                  Wrap type within parenthesis: <code class="computeroutput"><span class="special">(</span><span class="identifier">map</span><span class="special">&lt;</span><span class="identifier">Key</span><span class="special">,</span>
+                  <span class="identifier">T</span><span class="special">&gt;)</span></code>.
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <a class="link" href="grammar.html#constant_boolean_expression_anchor"><code class="literal"><span class="bold"><strong>constant-boolean-expression</strong></span></code></a><a name="constant_boolean_expression_anchor"></a>
+                </p>
+              </td>
+<td>
+                <p>
+                  A compile-time constant boolean expression: <code class="computeroutput"><span class="keyword">sizeof</span><span class="special">(</span><span class="identifier">T</span><span class="special">)</span> <span class="special">&gt;=</span>
+                  <span class="keyword">sizeof</span><span class="special">(</span><span class="keyword">int</span><span class="special">)</span></code>.
+                </p>
+              </td>
+<td>
+                <p>
+                  Wrap value within parenthesis: <code class="computeroutput"><span class="special">(</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">is_convertible</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">,</span>
+                  <span class="keyword">int</span><span class="special">&gt;::</span><span class="identifier">value</span><span class="special">)</span></code>.
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <a class="link" href="grammar.html#constant_string_literal_anchor"><code class="literal"><span class="bold"><strong>constant-string-literal</strong></span></code></a><a name="constant_string_literal_anchor"></a>
+                </p>
+              </td>
+<td>
+                <p>
+                  A compile-time constant string literal: <code class="computeroutput"><span class="string">"abc"</span></code>.
+                </p>
+              </td>
+<td>
+                <p>
+                  Do nothing: <code class="computeroutput"><span class="string">"abc"</span></code>.
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <a class="link" href="grammar.html#exception_type_anchor"><code class="literal"><span class="bold"><strong>exception-type</strong></span></code></a><a name="exception_type_anchor"></a>
+                </p>
+              </td>
+<td>
+                <p>
+                  A type: <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">exception</span></code>, <code class="computeroutput"><span class="keyword">int</span></code>,
+                  <code class="computeroutput"><span class="identifier">mytype</span></code>.
+                </p>
+              </td>
+<td>
+                <p>
+                  Wrap type within parenthesis: <code class="computeroutput"><span class="special">(</span><span class="identifier">map</span><span class="special">&lt;</span><span class="keyword">char</span><span class="special">,</span>
+                  <span class="keyword">int</span><span class="special">&gt;::</span><span class="identifier">exception</span><span class="special">)</span></code>.
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <a class="link" href="grammar.html#function_identifier_anchor"><code class="literal"><span class="bold"><strong>function-identifier</strong></span></code></a><a name="function_identifier_anchor"></a>
+                </p>
+              </td>
+<td>
+                <p>
+                  A valid function name identifier (C++ requires it to be alphanumeric):
+                  <code class="computeroutput"><span class="identifier">f</span></code>, <code class="computeroutput"><span class="identifier">push_back</span></code>, <code class="computeroutput"><span class="identifier">myfunc</span></code>.
+                </p>
+              </td>
+<td>
+                <p>
+                  Never the case.
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <a class="link" href="grammar.html#inscope_variable_anchor"><code class="literal"><span class="bold"><strong>inscope-variable</strong></span></code></a><a name="inscope_variable_anchor"></a>
+                </p>
+              </td>
+<td>
+                <p>
+                  A variable in-scope.
+                </p>
+              </td>
+<td>
+                <p>
+                  Never the case.
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <a class="link" href="grammar.html#loop_declaration_anchor"><code class="literal"><span class="bold"><strong>loop-declaration</strong></span></code></a><a name="loop_declaration_anchor"></a>
+                </p>
+              </td>
+<td>
+                <p>
+                  A loop declaration: <code class="computeroutput"><span class="keyword">for</span><span class="special">(</span><span class="keyword">int</span> <span class="identifier">i</span> <span class="special">=</span>
+                  <span class="number">0</span><span class="special">;</span>
+                  <span class="identifier">i</span> <span class="special">&lt;</span>
+                  <span class="number">10</span><span class="special">;</span>
+                  <span class="special">++</span><span class="identifier">i</span><span class="special">)</span></code>, <code class="computeroutput"><span class="keyword">while</span><span class="special">(</span><span class="identifier">i</span>
+                  <span class="special">&lt;</span> <span class="number">10</span><span class="special">)</span></code>.
+                </p>
+              </td>
+<td>
+                <p>
+                  Never the case.
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <a class="link" href="grammar.html#member_initializer_anchor"><code class="literal"><span class="bold"><strong>member-initializer</strong></span></code></a><a name="member_initializer_anchor"></a>
+                </p>
+              </td>
+<td>
+                <p>
+                  A member initialization expression: <code class="computeroutput"><span class="identifier">vector_</span><span class="special">(</span><span class="identifier">count</span><span class="special">)</span></code>.
+                </p>
+              </td>
+<td>
+                <p>
+                  Wrap object initializations within parenthesis: <code class="computeroutput"><span class="special">(</span><span class="identifier">base_map</span><span class="special">&lt;</span><span class="keyword">char</span><span class="special">,</span>
+                  <span class="keyword">int</span><span class="special">&gt;())</span></code>.
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <a class="link" href="grammar.html#named_argument_identifier_anchor"><code class="literal"><span class="bold"><strong>named-argument-identifier</strong></span></code></a><a name="named_argument_identifier_anchor"></a>
+                </p>
+              </td>
+<td>
+                <p>
+                  The argument name to use at the calling site to pass named and
+                  deduced parameter values: <code class="computeroutput"><span class="identifier">value_arg</span></code>,
+                  <code class="computeroutput"><span class="identifier">NumberArg</span></code>.
+                </p>
+              </td>
+<td>
+                <p>
+                  Never the case.
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <a class="link" href="grammar.html#named_parameter_identifier_namespace_anchor"><code class="literal"><span class="bold"><strong>named-parameter-identifier-namespace</strong></span></code></a><a name="named_parameter_identifier_namespace_anchor"></a>
+                </p>
+              </td>
+<td>
+                <p>
+                  The internal namespace for named and deduced parameter identifiers:
+                  <code class="computeroutput"><span class="identifier">params</span></code>.
+                </p>
+              </td>
+<td>
+                <p>
+                  Never the case.
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <a class="link" href="grammar.html#namespace_alias_anchor"><code class="literal"><span class="bold"><strong>namespace-alias</strong></span></code></a><a name="namespace_alias_anchor"></a>
+                </p>
+              </td>
+<td>
+                <p>
+                  The argument to pass to namespace aliasing: <code class="computeroutput"><span class="identifier">mpl</span>
+                  <span class="special">=</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">mpl</span></code>.
+                </p>
+              </td>
+<td>
+                <p>
+                  Never the case.
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <a class="link" href="grammar.html#natural_expression_anchor"><code class="literal"><span class="bold"><strong>natural-expression</strong></span></code></a><a name="natural_expression_anchor"></a>
+                </p>
+              </td>
+<td>
+                <p>
+                  A natural (i.e., non-negative integral) expression: <code class="computeroutput"><span class="number">2</span> <span class="special">-</span> <span class="number">1</span></code>.
+                </p>
+              </td>
+<td>
+                <p>
+                  Wrap value within parenthesis: <code class="computeroutput"><span class="special">(</span><span class="identifier">key_sizeof</span><span class="special">&lt;</span><span class="identifier">Key</span><span class="special">,</span>
+                  <span class="identifier">T</span><span class="special">&gt;::</span><span class="identifier">value</span><span class="special">)</span></code>.
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <a class="link" href="grammar.html#natural_expression_using_inscope_variables_anchor"><code class="literal"><span class="bold"><strong>natural-expression-using-inscope-variables</strong></span></code></a><a name="natural_expression_using_inscope_variables_anchor"></a>
+                </p>
+              </td>
+<td>
+                <p>
+                  A natural (i.e., non-negative integral) expression that only uses
+                  in-scope variables captured as constant by a constant-expression:
+                  <code class="computeroutput"><span class="identifier">x</span> <span class="special">+</span>
+                  <span class="number">10</span></code>.
+                </p>
+              </td>
+<td>
+                <p>
+                  Wrap value within parenthesis: <code class="computeroutput"><span class="special">(</span><span class="identifier">key_sizeof</span><span class="special">&lt;</span><span class="identifier">Key</span><span class="special">,</span>
+                  <span class="identifier">T</span><span class="special">&gt;::</span><span class="identifier">value</span> <span class="special">+</span>
+                  <span class="identifier">x</span><span class="special">)</span></code>.
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <a class="link" href="grammar.html#new_type_name_anchor"><code class="literal"><span class="bold"><strong>new-type-name</strong></span></code></a><a name="new_type_name_anchor"></a>
+                </p>
+              </td>
+<td>
+                <p>
+                  A new type name for <code class="computeroutput"><span class="keyword">typedef</span></code>
+                  statement: <code class="computeroutput"><span class="identifier">myint</span></code>.
+                </p>
+              </td>
+<td>
+                <p>
+                  Never the case.
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <a class="link" href="grammar.html#oldof_expression_anchor"><code class="literal"><span class="bold"><strong>oldof-expression</strong></span></code></a><a name="oldof_expression_anchor"></a>
+                </p>
+              </td>
+<td>
+                <p>
+                  A expression of type <a class="link" href="advanced_topics.html#contract__.advanced_topics.old_and_result_value_copies" title="Old and Result Value Copies"><code class="literal">ConstantCopyConstructible</code></a>
+                  to pass to the <code class="computeroutput"><a class="link" href="../CONTRACT_OLDOF.html" title="Macro CONTRACT_OLDOF">CONTRACT_OLDOF</a></code>
+                  macro: <code class="computeroutput"><span class="identifier">value</span></code>,
+                  <code class="computeroutput"><span class="identifier">size</span><span class="special">()</span></code>.
+                </p>
+              </td>
+<td>
+                <p>
+                  Wrap value within parenthesis: <code class="computeroutput"><span class="special">(</span><span class="identifier">x</span><span class="special">,</span>
+                  <span class="identifier">y</span><span class="special">)</span></code>.
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <a class="link" href="grammar.html#operator_identifier_anchor"><code class="literal"><span class="bold"><strong>operator-identifier</strong></span></code></a><a name="operator_identifier_anchor"></a>
+                </p>
+              </td>
+<td>
+                <p>
+                  An arbitrary but alphanumeric identifier: <code class="computeroutput"><span class="identifier">equal</span></code>,
+                  <code class="computeroutput"><span class="identifier">less</span></code>, <code class="computeroutput"><span class="identifier">call</span></code>.
+                </p>
+              </td>
+<td>
+                <p>
+                  Never the case.
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <a class="link" href="grammar.html#operator_symbol_anchor"><code class="literal"><span class="bold"><strong>operator-symbol</strong></span></code></a><a name="operator_symbol_anchor"></a>
+                </p>
+              </td>
+<td>
+                <p>
+                  The usual operator symbols: <code class="computeroutput"><span class="special">==</span></code>,
+                  <code class="computeroutput"><span class="special">&lt;=</span></code>, <code class="computeroutput"><span class="special">()</span></code>.
+                </p>
+              </td>
+<td>
+                <p>
+                  Do nothing: <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">map</span><span class="special">&lt;</span><span class="keyword">char</span><span class="special">,</span> <span class="keyword">int</span><span class="special">&gt;</span></code>.
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <a class="link" href="grammar.html#parameter_default_anchor"><code class="literal"><span class="bold"><strong>parameter-default</strong></span></code></a><a name="parameter_default_anchor"></a>
+                </p>
+              </td>
+<td>
+                <p>
+                  A function or template parameter default value (either a value,
+                  a type, or a template depending on the kind of parameter): <code class="computeroutput"><span class="number">123</span></code>.
+                </p>
+              </td>
+<td>
+                <p>
+                  Wrap value within parenthesis: <code class="computeroutput"><span class="special">(</span><span class="string">"abc"</span><span class="special">)</span></code>,
+                  <code class="computeroutput"><span class="special">(</span><span class="char">'a'</span><span class="special">)</span></code>, <code class="computeroutput"><span class="special">(-</span><span class="number">123</span><span class="special">)</span></code>,
+                  <code class="computeroutput"><span class="special">(</span><span class="number">1.23</span><span class="special">)</span></code>.
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <a class="link" href="grammar.html#parameter_name_anchor"><code class="literal"><span class="bold"><strong>parameter-name</strong></span></code></a><a name="parameter_name_anchor"></a>
+                </p>
+              </td>
+<td>
+                <p>
+                  A function or template parameter name: <code class="computeroutput"><span class="identifier">value</span></code>,
+                  <code class="computeroutput"><span class="identifier">T</span></code>.
+                </p>
+              </td>
+<td>
+                <p>
+                  Never the case.
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <a class="link" href="grammar.html#template_parameter_anchor"><code class="literal"><span class="bold"><strong>template-parameter</strong></span></code></a><a name="template_parameter_anchor"></a>
+                </p>
+              </td>
+<td>
+                <p>
+                  A usual C++ type template parameter, value template parameter,
+                  or template template parameter): <code class="computeroutput"><span class="keyword">typename</span>
+                  <span class="identifier">T</span></code>, <code class="computeroutput"><span class="keyword">class</span>
+                  <span class="identifier">U</span></code>, <code class="computeroutput"><span class="keyword">int</span>
+                  <span class="identifier">Number</span></code>, <code class="computeroutput"><span class="identifier">T</span> <span class="identifier">Value</span></code>,
+                  <code class="computeroutput"><span class="keyword">template</span><span class="special">&lt;</span>
+                  <span class="keyword">typename</span> <span class="identifier">X</span><span class="special">,</span> <span class="keyword">class</span>
+                  <span class="identifier">Y</span> <span class="special">&gt;</span>
+                  <span class="keyword">class</span> <span class="identifier">Template</span></code>.
+                </p>
+              </td>
+<td>
+                <p>
+                  Do nothing: <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">map</span><span class="special">&lt;</span><span class="identifier">Key</span><span class="special">,</span> <span class="identifier">T</span><span class="special">&gt;</span> <span class="identifier">Default</span></code>,
+                  <code class="computeroutput"><span class="keyword">template</span><span class="special">&lt;</span>
+                  <span class="keyword">typename</span> <span class="identifier">X</span><span class="special">,</span> <span class="keyword">class</span>
+                  <span class="identifier">Y</span> <span class="special">&gt;</span>
+                  <span class="keyword">class</span> <span class="identifier">Template</span></code>.
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <a class="link" href="grammar.html#template_specialization_anchor"><code class="literal"><span class="bold"><strong>template-specialization</strong></span></code></a><a name="template_specialization_anchor"></a>
+                </p>
+              </td>
+<td>
+                <p>
+                  A template specialization argument (type, value, etc) that follow
+                  the class name in the declaration to specialize a template: <code class="computeroutput"><span class="keyword">void</span> <span class="special">(</span><span class="keyword">int</span><span class="special">,</span> <span class="identifier">T</span><span class="special">)</span></code>.
+                </p>
+              </td>
+<td>
+                <p>
+                  Wrap types within parenthesis: <code class="computeroutput"><span class="special">(</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">map</span><span class="special">&lt;</span><span class="keyword">char</span><span class="special">,</span>
+                  <span class="keyword">int</span><span class="special">&gt;)</span></code>.
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <a class="link" href="grammar.html#type_anchor"><code class="literal"><span class="bold"><strong>type</strong></span></code></a><a name="type_anchor"></a>
+                </p>
+              </td>
+<td>
+                <p>
+                  A type: <code class="computeroutput"><span class="keyword">int</span></code>, <code class="computeroutput"><span class="keyword">int</span> <span class="keyword">const</span><span class="special">&amp;</span></code>, <code class="computeroutput"><span class="identifier">mytype</span></code>.
+                </p>
+              </td>
+<td>
+                <p>
+                  Do nothing: <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">map</span><span class="special">&lt;</span><span class="keyword">char</span><span class="special">,</span> <span class="keyword">int</span><span class="special">&gt;</span></code>.
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <a class="link" href="grammar.html#typedef_type_anchor"><code class="literal"><span class="bold"><strong>typedef-type</strong></span></code></a><a name="typedef_type_anchor"></a>
+                </p>
+              </td>
+<td>
+                <p>
+                  A type: <code class="computeroutput"><span class="keyword">int</span></code>, <code class="computeroutput"><span class="identifier">mytype</span></code>.
+                </p>
+              </td>
+<td>
+                <p>
+                  Wrap type using <a href="http://www.boost.org/doc/libs/release/libs/utility/identity_type" target="_top">Boost.Utility/IdentityType</a>:
+                  <code class="computeroutput"><span class="identifier">BOOST_IDENTITY_TYPE</span><span class="special">((</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">map</span><span class="special">&lt;</span><span class="keyword">char</span><span class="special">,</span> <span class="keyword">int</span><span class="special">&gt;))</span></code>.
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <a class="link" href="grammar.html#unary_boolean_metafunction_anchor"><code class="literal"><span class="bold"><strong>unary-boolean-metafunction</strong></span></code></a><a name="unary_boolean_metafunction_anchor"></a>
+                </p>
+              </td>
+<td>
+                <p>
+                  A boolean meta-function that takes one parameter: <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">is_class</span><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">mpl</span><span class="special">::</span><span class="identifier">_</span><span class="special">&gt;</span></code>.
+                </p>
+              </td>
+<td>
+                <p>
+                  Do nothing: <code class="computeroutput"><span class="identifier">boost</span><span class="special">:</span><span class="identifier">is_convertible</span><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">mpl</span><span class="special">::</span><span class="identifier">_</span><span class="special">,</span> <span class="keyword">int</span><span class="special">&gt;</span></code>.
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <a class="link" href="grammar.html#using_directive_anchor"><code class="literal"><span class="bold"><strong>using-directive</strong></span></code></a><a name="using_directive_anchor"></a>
+                </p>
+              </td>
+<td>
+                <p>
+                  The argument to pass to a using directive: <code class="computeroutput"><span class="keyword">namespace</span>
+                  <span class="identifier">std</span></code>, <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span></code>.
+                </p>
+              </td>
+<td>
+                <p>
+                  Never the case.
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <a class="link" href="grammar.html#variable_name_anchor"><code class="literal"><span class="bold"><strong>variable-name</strong></span></code></a><a name="variable_name_anchor"></a>
+                </p>
+              </td>
+<td>
+                <p>
+                  A valid name to use to declare a variable: <code class="computeroutput"><span class="identifier">result</span></code>,
+                  <code class="computeroutput"><span class="identifier">old_size</span></code>.
+                </p>
+              </td>
+<td>
+                <p>
+                  Never the case.
+                </p>
+              </td>
+</tr>
+</tbody>
+</table></div>
+<p>
+        If terminals contain commas not already wrapped by round parenthesis or if
+        they start with a non-alphanumeric symbol (including tokens like <code class="computeroutput"><span class="char">'a'</span></code>, <code class="computeroutput"><span class="string">"abc"</span></code>,
+        <code class="computeroutput"><span class="special">-</span><span class="number">123</span></code>,
+        and <code class="computeroutput"><span class="number">1.23</span></code>), <sup>[<a name="contract__.grammar.terminals.f0" href="#ftn.contract__.grammar.terminals.f0" class="footnote">74</a>]</sup> they need to be wrapped by extra round parenthesis <code class="computeroutput"><span class="special">(...)</span></code> or by the <a href="http://www.boost.org/doc/libs/release/libs/utility/identity_type" target="_top">Boost.Utility/IdentityType</a>
+        <code class="computeroutput"><span class="identifier">BOOST_IDENTITY_TYPE</span><span class="special">((...))</span></code>
+        macro. Value expressions can always be wrapped within extra around parenthesis
+        in C++. Type expressions can always be wrapped using <a href="http://www.boost.org/doc/libs/release/libs/utility/identity_type" target="_top">Boost.Utility/IdentityType</a>
+        but that will make the syntax less readable (and it prevents C++ from automatically
+        deducing function template parameters) so this syntax allows to wrap type
+        expressions within extra round parenthesis <code class="computeroutput"><span class="special">(...)</span></code>
+        for most terminals, including types, as indicated by the table above.
+      </p>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="contract__.grammar.alternative_assertion_syntax__not_implemented_"></a><a class="link" href="grammar.html#contract__.grammar.alternative_assertion_syntax__not_implemented_" title="Alternative Assertion Syntax (Not Implemented)">Alternative
+      Assertion Syntax (Not Implemented)</a>
+</h3></div></div></div>
+<p>
+        The following alternative syntax could have been implemented to program the
+        contract assertions:
+      </p>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                <p>
+                  This Library Syntax
+                </p>
+              </th>
+<th>
+                <p>
+                  Alternative Syntax (not implemented)
+                </p>
+              </th>
+</tr></thead>
+<tbody><tr>
+<td>
+                <p>
+</p>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="identifier">CONTRACT_CLASS</span><span class="special">(</span>
+    <span class="keyword">template</span><span class="special">(</span> <span class="keyword">typename</span> <span class="identifier">T</span> <span class="special">)</span>
+    <span class="keyword">class</span> <span class="special">(</span><span class="identifier">vector</span><span class="special">)</span>
+<span class="special">)</span> <span class="special">{</span>
+    <span class="special">...</span>
+
+    <span class="identifier">CONTRACT_FUNCTION_TPL</span><span class="special">(</span>
+        <span class="keyword">public</span> <span class="special">(</span><span class="identifier">iterator</span><span class="special">)</span> <span class="special">(</span><span class="identifier">erase</span><span class="special">)</span> <span class="special">(</span> <span class="special">(</span><span class="identifier">iterator</span><span class="special">)</span> <span class="identifier">where</span> <span class="special">)</span>
+            <span class="identifier">precondition</span><span class="special">(</span>
+                <span class="keyword">not</span> <span class="identifier">empty</span><span class="special">(),</span>
+                <span class="identifier">where</span> <span class="special">!=</span> <span class="identifier">end</span><span class="special">(),</span>
+                <span class="identifier">static_assert</span><span class="special">(</span><span class="keyword">sizeof</span><span class="special">(</span><span class="identifier">T</span><span class="special">)</span> <span class="special">&gt;=</span> <span class="keyword">sizeof</span><span class="special">(</span><span class="keyword">int</span><span class="special">),</span> <span class="string">"large enough"</span><span class="special">)</span>
+            <span class="special">)</span>
+            <span class="identifier">postcondition</span><span class="special">(</span>
+                <span class="keyword">auto</span> <span class="identifier">result</span> <span class="special">=</span> <span class="keyword">return</span><span class="special">,</span>
+                <span class="keyword">auto</span> <span class="identifier">old_size</span> <span class="special">=</span> <span class="identifier">CONTRACT_OLDOF</span> <span class="identifier">size</span><span class="special">(),</span>
+                <span class="identifier">size</span><span class="special">()</span> <span class="special">==</span> <span class="identifier">old_size</span> <span class="special">-</span> <span class="number">1</span><span class="special">,</span>
+                <span class="keyword">if</span><span class="special">(</span><span class="keyword">const</span><span class="special">(</span> <span class="keyword">this</span> <span class="special">)</span> <span class="keyword">this</span><span class="special">-&gt;</span><span class="identifier">empty</span><span class="special">())</span> <span class="special">(</span>
+                    <span class="identifier">result</span> <span class="special">==</span> <span class="identifier">end</span><span class="special">()</span>
+                <span class="special">)</span>
+            <span class="special">)</span>
+    <span class="special">)</span> <span class="special">{</span>
+        <span class="keyword">return</span> <span class="identifier">vector_</span><span class="special">.</span><span class="identifier">erase</span><span class="special">(</span><span class="identifier">where</span><span class="special">);</span>
+    <span class="special">}</span>
+<span class="special">};</span>
+</pre>
+<p>
+                </p>
+              </td>
+<td>
+                <p>
+</p>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="identifier">CONTRACT_CLASS</span><span class="special">(</span>
+    <span class="keyword">template</span><span class="special">(</span> <span class="keyword">typename</span> <span class="identifier">T</span> <span class="special">)</span>
+    <span class="keyword">class</span> <span class="special">(</span><span class="identifier">vector</span><span class="special">)</span>
+<span class="special">)</span> <span class="special">{</span>
+    <span class="special">...</span>
+
+    <span class="identifier">CONTRACT_FUNCTION_TPL</span><span class="special">(</span>
+        <span class="keyword">public</span> <span class="special">(</span><span class="identifier">iterator</span><span class="special">)</span> <span class="special">(</span><span class="identifier">erase</span><span class="special">)</span> <span class="special">(</span> <span class="special">(</span><span class="identifier">iterator</span><span class="special">)</span> <span class="identifier">where</span> <span class="special">)</span>
+            <span class="identifier">precondition</span><span class="special">(</span>
+                <span class="identifier">assert</span><span class="special">(</span><span class="keyword">not</span> <span class="identifier">empty</span><span class="special">())</span>
+                <span class="identifier">assert</span><span class="special">(</span><span class="identifier">where</span> <span class="special">!=</span> <span class="identifier">end</span><span class="special">())</span>
+                <span class="identifier">static_assert</span><span class="special">(</span><span class="keyword">sizeof</span><span class="special">(</span><span class="identifier">T</span><span class="special">)</span> <span class="special">&gt;=</span> <span class="keyword">sizeof</span><span class="special">(</span><span class="keyword">int</span><span class="special">),</span> <span class="string">"large enough"</span><span class="special">)</span>
+            <span class="special">)</span>
+            <span class="identifier">postcondition</span><span class="special">(</span>
+                <span class="identifier">decl</span><span class="special">(</span><span class="keyword">auto</span> <span class="identifier">result</span> <span class="special">=</span> <span class="keyword">return</span><span class="special">)</span>
+                <span class="identifier">decl</span><span class="special">(</span><span class="keyword">auto</span> <span class="identifier">old_size</span> <span class="special">=</span> <span class="identifier">CONTRACT_OLDOF</span> <span class="identifier">size</span><span class="special">())</span>
+                <span class="identifier">assert</span><span class="special">(</span><span class="identifier">size</span><span class="special">()</span> <span class="special">==</span> <span class="identifier">old_size</span> <span class="special">-</span> <span class="number">1</span><span class="special">)</span>
+                <span class="keyword">if</span><span class="special">(</span><span class="keyword">const</span><span class="special">(</span><span class="keyword">this</span><span class="special">,</span> <span class="keyword">this</span><span class="special">-&gt;</span><span class="identifier">empty</span><span class="special">()))</span> <span class="special">(</span>
+                    <span class="identifier">assert</span><span class="special">(</span><span class="identifier">result</span> <span class="special">==</span> <span class="identifier">end</span><span class="special">())</span>
+                <span class="special">)</span>
+            <span class="special">)</span>
+    <span class="special">)</span> <span class="special">{</span>
+        <span class="keyword">return</span> <span class="identifier">vector_</span><span class="special">.</span><span class="identifier">erase</span><span class="special">(</span><span class="identifier">where</span><span class="special">);</span>
+    <span class="special">}</span>
+<span class="special">};</span>
+</pre>
+<p>
+                </p>
+              </td>
+</tr></tbody>
+</table></div>
+<p>
+        An advantage of this alternative syntax is that it does not require commas
+        at the end of each assertion. However, when compared with this library syntax,
+        the alternative syntax is overall more verbose, it uses more parenthesis,
+        it deviates more from <a class="link" href="bibliography.html#N1962_anchor">[N1962]</a> and <a href="http://en.wikipedia.org/wiki/Eiffel_(programming_language)" target="_top">Eiffel</a>
+        (even if it is more similar to <a href="http://dlang.org" target="_top">D</a>),
+        and it looks less readable at least because of <code class="computeroutput"><span class="identifier">decl</span><span class="special">(...)</span></code> (in many ways this alternative syntax
+        is equivalent to the already supported sequencing syntax from the <a class="link" href="no_variadic_macros.html" title="No Variadic Macros">No
+        Variadic Macros</a> section with the addition of <span class="quote">&#8220;<span class="quote">decoration identifiers</span>&#8221;</span>
+        like <code class="computeroutput"><span class="identifier">assert</span></code> which might make
+        the code more readable but are not needed syntactically). Therefore, the
+        authors opted for implementing the syntax on the left hand side.
+      </p>
+</div>
+<div class="footnotes">
+<br><hr width="100" align="left">
+<div class="footnote"><p><sup>[<a id="ftn.contract__.grammar.f0" href="#contract__.grammar.f0" class="para">70</a>] </sup>
+          Usually, the complexity of C++ definitions is greater than the complexity
+          of C++ declaration and the fact that this library macros only affect declarations
+          would help by preserving the usefulness of the compiler error messages
+          for the definition code. However, this library aims to make declarations
+          more complex by adding program specifications to them (preconditions, postconditions,
+          etc). Therefore, it can no longer be argued that declarations are significantly
+          simpler than definitions and it would be rather helpful to have sensible
+          compiler error messages at least for the declarations with contracts.
+        </p></div>
+<div class="footnote"><p><sup>[<a id="ftn.contract__.grammar.preprocessor_dsel.f0" href="#contract__.grammar.preprocessor_dsel.f0" class="para">71</a>] </sup>
+          Using <a href="http://en.wikipedia.org/wiki/C%2B%2B11" target="_top">C++11</a>,
+          it <span class="emphasis"><em>might</em></span> be possible to implement the <code class="computeroutput"><span class="identifier">is_public</span></code> template because <a href="http://en.wikipedia.org/wiki/Substitution_failure_is_not_an_error" target="_top">SFINAE</a>
+          was extended to support access level (but to the authors' knowledge such
+          a meta-function has not been implemented yet so the authors cannot be sure
+          that <code class="computeroutput"><span class="identifier">is_public</span></code> can be properly
+          implemented even using <a href="http://en.wikipedia.org/wiki/C%2B%2B11" target="_top">C++11</a>
+          <a href="http://en.wikipedia.org/wiki/Substitution_failure_is_not_an_error" target="_top">SFINAE</a>).
+          Even if that were possible in <a href="http://en.wikipedia.org/wiki/C%2B%2B11" target="_top">C++11</a>,
+          this library still needs declaration traits other than <code class="computeroutput"><span class="keyword">public</span></code>
+          in oder to properly implement Contract Programming (e.g., if a function
+          is <code class="computeroutput"><span class="keyword">virtual</span></code> or not in order
+          to implement subcontracting, and there are examples like that). Therefore,
+          the arguments made here for the need to use a preprocessor DSEL in oder
+          to properly implement Contract Programming in C++ hold even if <code class="computeroutput"><span class="identifier">is_public</span></code> could be implemented in <a href="http://en.wikipedia.org/wiki/C%2B%2B11" target="_top">C++11</a>.
+        </p></div>
+<div class="footnote"><p><sup>[<a id="ftn.contract__.grammar.differences_with_c___syntax.f0" href="#contract__.grammar.differences_with_c___syntax.f0" class="para">72</a>] </sup>
+          <span class="bold"><strong>Rationale.</strong></span> This library macros could be
+          implemented to allow to specify syntactic elements in different orders
+          but that would complicate the macro implementation and this grammar with
+          no additional feature for the user.
+        </p></div>
+<div class="footnote"><p><sup>[<a id="ftn.contract__.grammar.function_and_operator_names.f0" href="#contract__.grammar.function_and_operator_names.f0" class="para">73</a>] </sup>
+          <span class="bold"><strong>Rationale.</strong></span> Within macros a comma <code class="computeroutput"><span class="special">,</span></code> has the special meaning of separating
+          the macro parameters so it cannot be used to indicate the comma operator
+          otherwise <code class="computeroutput"><span class="keyword">operator</span><span class="special">(,)(</span><span class="identifier">mycomma</span><span class="special">)</span></code>
+          and <code class="computeroutput"><span class="keyword">operator</span><span class="special">(</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">map</span><span class="special">&lt;</span><span class="keyword">char</span><span class="special">,</span> <span class="keyword">int</span><span class="special">&gt;)(</span><span class="identifier">stdmap</span><span class="special">)</span></code> could not be distinguished from one another
+          by the preprocessor.
+        </p></div>
+<div class="footnote"><p><sup>[<a id="ftn.contract__.grammar.terminals.f0" href="#contract__.grammar.terminals.f0" class="para">74</a>] </sup>
+          The C++ preprocessor cannot concatenate <code class="computeroutput"><span class="number">1.23</span></code>
+          because it contains the <code class="computeroutput"><span class="special">.</span></code>
+          symbol (even if that symbol is technically not the leading symbol). The
+          precise preprocessor requirement is that the concatenated symbol must be
+          a valid macro identifier and concatenating <code class="computeroutput"><span class="number">1.23</span></code>
+          with any token will never give a valid macro identifier because of the
+          presence of the dot symbol <code class="computeroutput"><span class="special">.</span></code>
+          (e.g., <code class="computeroutput"><span class="identifier">BOOST_PP_CAT</span><span class="special">(</span><span class="identifier">XYZ</span><span class="special">,</span> <span class="number">1.23</span><span class="special">)</span></code> gives
+          <code class="computeroutput"><span class="identifier">XYZ1</span><span class="special">.</span><span class="number">23</span></code> which is not a valid macro identifier).
+        </p></div>
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright &#169; 2008-2012 Lorenzo Caminiti<p>
+        Distributed under the Boost Software License, Version 1.0 (see accompanying
+        file LICENSE_1_0.txt or a copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="examples.html"><img src="../../..//doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../..//doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../..//doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="no_variadic_macros.html"><img src="../../..//doc/src/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>

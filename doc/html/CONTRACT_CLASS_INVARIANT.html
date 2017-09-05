@@ -1,0 +1,69 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<title>Macro CONTRACT_CLASS_INVARIANT</title>
+<link rel="stylesheet" href="../../doc/src/boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.76.1">
+<link rel="home" href="index.html" title="Chapter&#160;1.&#160;Contract++ 0.4.1">
+<link rel="up" href="reference.html#header.contract.class_invariant_hpp" title="Header &lt;contract/class_invariant.hpp&gt;">
+<link rel="prev" href="CONTRACT_CLASS_TPL.html" title="Macro CONTRACT_CLASS_TPL">
+<link rel="next" href="CONTRACT_CLASS_INVARIANT_TPL.html" title="Macro CONTRACT_CLASS_INVARIANT_TPL">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><a href="http://sourceforge.net/projects/contractpp/"><img alt="Logo" width="277" height="86" src="../../logo.png"></a></td>
+<td align="center"><a href="http://sourceforge.net/projects/contractpp/files/latest/download">Download</a></td>
+<td align="center"><a href="http://sourceforge.net/apps/trac/contractpp/report/3">Bugs</a></td>
+<td align="center"><a href="http://sourceforge.net/projects/contractpp/reviews/">Reviews</a></td>
+<td align="center"><a href="mailto:lorcaminiti@gmail.com">Contact Us</a></td>
+<td align="center"><a href="http://sourceforge.net/projects/contractpp/forums/forum/920163">Help</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="CONTRACT_CLASS_TPL.html"><img src="../..//doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="reference.html#header.contract.class_invariant_hpp"><img src="../..//doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="index.html"><img src="../..//doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="CONTRACT_CLASS_INVARIANT_TPL.html"><img src="../..//doc/src/images/next.png" alt="Next"></a>
+</div>
+<div class="refentry">
+<a name="CONTRACT_CLASS_INVARIANT"></a><div class="titlepage"></div>
+<div class="refnamediv">
+<h2><span class="refentrytitle">Macro CONTRACT_CLASS_INVARIANT</span></h2>
+<p>CONTRACT_CLASS_INVARIANT &#8212; Macro used to specify class invariants. </p>
+</div>
+<h2 xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="refsynopsisdiv-title">Synopsis</h2>
+<div xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="refsynopsisdiv"><pre class="synopsis"><span class="comment">// In header: &lt;<a class="link" href="reference.html#header.contract.class_invariant_hpp" title="Header &lt;contract/class_invariant.hpp&gt;">contract/class_invariant.hpp</a>&gt;
+
+</span>CONTRACT_CLASS_INVARIANT(class_invariants)</pre></div>
+<div class="refsect1">
+<a name="id1045320"></a><h2>Description</h2>
+<p>This macro must be used to specify class invariant at the very beginning of the definition of a class with contracts declared using the  <code class="computeroutput"><a class="link" href="CONTRACT_CLASS.html" title="Macro CONTRACT_CLASS">CONTRACT_CLASS</a></code> macro (no other statement can appear before this macro in the class definition, not even a <code class="computeroutput">typedef</code> or a <code class="computeroutput">friend</code> declaration).</p>
+<p>Constructors, destructors, and member functions with contracts are declared using the  <code class="computeroutput"><a class="link" href="CONTRACT_CONSTRUCTOR.html" title="Macro CONTRACT_CONSTRUCTOR">CONTRACT_CONSTRUCTOR</a></code>,  <code class="computeroutput"><a class="link" href="CONTRACT_DESTRUCTOR.html" title="Macro CONTRACT_DESTRUCTOR">CONTRACT_DESTRUCTOR</a></code>, and  <code class="computeroutput"><a class="link" href="CONTRACT_FUNCTION.html" title="Macro CONTRACT_FUNCTION">CONTRACT_FUNCTION</a></code> macros respectively. The semantics of calls to constructors, destructors, and member functions of a class with contracts are explained in the  <a class="link" href="contract__/contract_programming_overview.html" title="Contract Programming Overview"> Contract Programming Overview</a> section.</p>
+<p><span class="bold"><strong>Parameters:</strong></span> </p>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<tbody><tr>
+<td><span class="bold"><strong><code class="computeroutput">class_invariants</code></strong></span></td>
+<td>The syntax for class invariants is explained in the  <a class="link" href="contract__/grammar.html" title="Grammar"> Grammar</a> section. Use <code class="computeroutput">void</code> to specify empty class invariant.  </td>
+</tr></tbody>
+</table></div>
+<p>
+</p>
+<p>Within a type-dependent scope (e.g., within templates), the  <code class="computeroutput"><a class="link" href="CONTRACT_CLASS_INVARIANT_TPL.html" title="Macro CONTRACT_CLASS_INVARIANT_TPL">CONTRACT_CLASS_INVARIANT_TPL</a></code> macro must be used instead of this macro.</p>
+<p><span class="bold"><strong>See also:</strong></span>  <a class="link" href="contract__/tutorial.html" title="Tutorial"> Tutorial</a> section. </p>
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright &#169; 2008-2012 Lorenzo Caminiti<p>
+        Distributed under the Boost Software License, Version 1.0 (see accompanying
+        file LICENSE_1_0.txt or a copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="CONTRACT_CLASS_TPL.html"><img src="../..//doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="reference.html#header.contract.class_invariant_hpp"><img src="../..//doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="index.html"><img src="../..//doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="CONTRACT_CLASS_INVARIANT_TPL.html"><img src="../..//doc/src/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>

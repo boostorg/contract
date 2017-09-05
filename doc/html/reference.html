@@ -1,0 +1,247 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<title>Reference</title>
+<link rel="stylesheet" href="../../doc/src/boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.76.1">
+<link rel="home" href="index.html" title="Chapter&#160;1.&#160;Contract++ 0.4.1">
+<link rel="up" href="index.html" title="Chapter&#160;1.&#160;Contract++ 0.4.1">
+<link rel="prev" href="contract__/no_variadic_macros.html" title="No Variadic Macros">
+<link rel="next" href="CONTRACT_BLOCK_INVARIANT.html" title="Macro CONTRACT_BLOCK_INVARIANT">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><a href="http://sourceforge.net/projects/contractpp/"><img alt="Logo" width="277" height="86" src="../../logo.png"></a></td>
+<td align="center"><a href="http://sourceforge.net/projects/contractpp/files/latest/download">Download</a></td>
+<td align="center"><a href="http://sourceforge.net/apps/trac/contractpp/report/3">Bugs</a></td>
+<td align="center"><a href="http://sourceforge.net/projects/contractpp/reviews/">Reviews</a></td>
+<td align="center"><a href="mailto:lorcaminiti@gmail.com">Contact Us</a></td>
+<td align="center"><a href="http://sourceforge.net/projects/contractpp/forums/forum/920163">Help</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="contract__/no_variadic_macros.html"><img src="../..//doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="index.html"><img src="../..//doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="index.html"><img src="../..//doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="CONTRACT_BLOCK_INVARIANT.html"><img src="../..//doc/src/images/next.png" alt="Next"></a>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="reference"></a>Reference</h2></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="reference.html#header.contract.block_invariant_hpp">Header &lt;contract/block_invariant.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="reference.html#header.contract.body_hpp">Header &lt;contract/body.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="reference.html#header.contract.broken_hpp">Header &lt;contract/broken.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="reference.html#header.contract.class_hpp">Header &lt;contract/class.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="reference.html#header.contract.class_invariant_hpp">Header &lt;contract/class_invariant.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="reference.html#header.contract.config_hpp">Header &lt;contract/config.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="reference.html#header.contract.constructor_hpp">Header &lt;contract/constructor.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="reference.html#header.contract.copy_hpp">Header &lt;contract/copy.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="reference.html#header.contract.destructor_hpp">Header &lt;contract/destructor.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="reference.html#header.contract.function_hpp">Header &lt;contract/function.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="reference.html#header.contract.limits_hpp">Header &lt;contract/limits.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="reference.html#header.contract.loop_variant_hpp">Header &lt;contract/loop_variant.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="reference.html#header.contract.oldof_hpp">Header &lt;contract/oldof.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="reference.html#header.contract.parameter_hpp">Header &lt;contract/parameter.hpp&gt;</a></span></dt>
+</dl></div>
+<div class="section">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="header.contract.block_invariant_hpp"></a>Header &lt;<a href="../..//contract/block_invariant.hpp" target="_top">contract/block_invariant.hpp</a>&gt;</h3></div></div></div>
+<p>Macros used to specify block invariants (this header is automatically included by <code class="computeroutput">contract.hpp</code>). </p>
+<pre class="synopsis">
+
+<a class="link" href="CONTRACT_BLOCK_INVARIANT.html" title="Macro CONTRACT_BLOCK_INVARIANT">CONTRACT_BLOCK_INVARIANT</a>(assertions)
+<a class="link" href="CONTRACT_BLOCK_INVARIANT_TPL.html" title="Macro CONTRACT_BLOCK_INVARIANT_TPL">CONTRACT_BLOCK_INVARIANT_TPL</a>(assertions)</pre>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="header.contract.body_hpp"></a>Header &lt;<a href="../..//contract/body.hpp" target="_top">contract/body.hpp</a>&gt;</h3></div></div></div>
+<p>Macros used to program body definitions separately from the contract declarations (this header is automatically include by <code class="computeroutput">contract.hpp</code>). </p>
+<pre class="synopsis">
+
+<a class="link" href="CONTRACT_FREE_BODY.html" title="Macro CONTRACT_FREE_BODY">CONTRACT_FREE_BODY</a>(function_name)
+<a class="link" href="CONTRACT_MEMBER_BODY.html" title="Macro CONTRACT_MEMBER_BODY">CONTRACT_MEMBER_BODY</a>(function_name)
+<a class="link" href="CONTRACT_CONSTRUCTOR_BODY.html" title="Macro CONTRACT_CONSTRUCTOR_BODY">CONTRACT_CONSTRUCTOR_BODY</a>(class_type, constructor_name)
+<a class="link" href="CONTRACT_DESTRUCTOR_BODY.html" title="Macro CONTRACT_DESTRUCTOR_BODY">CONTRACT_DESTRUCTOR_BODY</a>(class_type, destructor_name)</pre>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="header.contract.broken_hpp"></a>Header &lt;<a href="../..//contract/broken.hpp" target="_top">contract/broken.hpp</a>&gt;</h3></div></div></div>
+<p>Contract broken handlers (this header is automatically included by <code class="computeroutput">contract.hpp</code>). </p>
+<pre class="synopsis"><span class="keyword">namespace</span> <span class="identifier">contract</span> <span class="special">{</span>
+  <span class="keyword">class</span> <a class="link" href="contract/broken.html" title="Class broken">broken</a><span class="special">;</span>
+
+  <span class="keyword">enum</span> <a class="link" href="contract/from.html" title="Type from">from</a><span class="special">;</span>
+  <span class="keyword">typedef</span> <span class="identifier">handler_function_pointer</span> <a class="link" href="contract/broken_contract_handler.html" title="Type definition broken_contract_handler"><span class="identifier">broken_contract_handler</span></a><span class="special">;</span>
+
+  <span class="comment">// Set precondition broken handler to specified handler returning replaced handler. </span>
+  <span class="identifier">broken_contract_handler</span> 
+  <a name="contract.set_precondition_broken"></a><span class="identifier">set_precondition_broken</span><span class="special">(</span><span class="identifier">broken_contract_handler</span> handler<span class="special">)</span><span class="special">;</span>
+  <span class="keyword">void</span> <a class="link" href="contract/precondition_broken.html" title="Function precondition_broken"><span class="identifier">precondition_broken</span></a><span class="special">(</span><span class="identifier">from</span> <span class="keyword">const</span> <span class="special">&amp;</span><span class="special">)</span><span class="special">;</span>
+
+  <span class="comment">// Set postcondition broken handler to specified handler returning replaced handler. </span>
+  <span class="identifier">broken_contract_handler</span> 
+  <a name="contract.set_postcondition_broken"></a><span class="identifier">set_postcondition_broken</span><span class="special">(</span><span class="identifier">broken_contract_handler</span> handler<span class="special">)</span><span class="special">;</span>
+  <span class="keyword">void</span> <a class="link" href="contract/postcondition_broken.html" title="Function postcondition_broken"><span class="identifier">postcondition_broken</span></a><span class="special">(</span><span class="identifier">from</span> <span class="keyword">const</span> <span class="special">&amp;</span><span class="special">)</span><span class="special">;</span>
+
+  <span class="comment">// Set handler for class invariant broken on entry to specified handler returning replaced handler. </span>
+  <span class="identifier">broken_contract_handler</span> 
+  <a name="contract.set_class_invaria_id488551"></a><span class="identifier">set_class_invariant_broken_on_entry</span><span class="special">(</span><span class="identifier">broken_contract_handler</span> handler<span class="special">)</span><span class="special">;</span>
+  <span class="keyword">void</span> <a class="link" href="contract/class_invariant_b_id488563.html" title="Function class_invariant_broken_on_entry"><span class="identifier">class_invariant_broken_on_entry</span></a><span class="special">(</span><span class="identifier">from</span> <span class="keyword">const</span> <span class="special">&amp;</span><span class="special">)</span><span class="special">;</span>
+
+  <span class="comment">// Set handler for class invariant broken on exit to specified handler returning replaced handler. </span>
+  <span class="identifier">broken_contract_handler</span> 
+  <a name="contract.set_class_invaria_id488629"></a><span class="identifier">set_class_invariant_broken_on_exit</span><span class="special">(</span><span class="identifier">broken_contract_handler</span> handler<span class="special">)</span><span class="special">;</span>
+  <span class="keyword">void</span> <a class="link" href="contract/class_invariant_b_id488641.html" title="Function class_invariant_broken_on_exit"><span class="identifier">class_invariant_broken_on_exit</span></a><span class="special">(</span><span class="identifier">from</span> <span class="keyword">const</span> <span class="special">&amp;</span><span class="special">)</span><span class="special">;</span>
+
+  <span class="comment">// Set handler for class invariant broken on throw to specified handler returning replaced handler. </span>
+  <span class="identifier">broken_contract_handler</span> 
+  <a name="contract.set_class_invaria_id488707"></a><span class="identifier">set_class_invariant_broken_on_throw</span><span class="special">(</span><span class="identifier">broken_contract_handler</span> handler<span class="special">)</span><span class="special">;</span>
+  <span class="keyword">void</span> <a class="link" href="contract/class_invariant_b_id488719.html" title="Function class_invariant_broken_on_throw"><span class="identifier">class_invariant_broken_on_throw</span></a><span class="special">(</span><span class="identifier">from</span> <span class="keyword">const</span> <span class="special">&amp;</span><span class="special">)</span><span class="special">;</span>
+
+  <span class="comment">// For convenience, set all class invariant broken handlers (on entry, on exit, and on throw) to specified handler. </span>
+  <span class="keyword">void</span> <a name="contract.set_class_invariant_broken"></a><span class="identifier">set_class_invariant_broken</span><span class="special">(</span><span class="identifier">broken_contract_handler</span> handler<span class="special">)</span><span class="special">;</span>
+
+  <span class="comment">// Set block invariant broken handler to specified handler returning replaced handler. </span>
+  <span class="identifier">broken_contract_handler</span> 
+  <a name="contract.set_block_invariant_broken"></a><span class="identifier">set_block_invariant_broken</span><span class="special">(</span><span class="identifier">broken_contract_handler</span> handler<span class="special">)</span><span class="special">;</span>
+  <span class="keyword">void</span> <a class="link" href="contract/block_invariant_broken.html" title="Function block_invariant_broken"><span class="identifier">block_invariant_broken</span></a><span class="special">(</span><span class="identifier">from</span> <span class="keyword">const</span> <span class="special">&amp;</span><span class="special">)</span><span class="special">;</span>
+
+  <span class="comment">// Set the loop variant broken handler to specified handler returning replaced handler. </span>
+  <span class="identifier">broken_contract_handler</span> 
+  <a name="contract.set_loop_variant_broken"></a><span class="identifier">set_loop_variant_broken</span><span class="special">(</span><span class="identifier">broken_contract_handler</span> handler<span class="special">)</span><span class="special">;</span>
+  <span class="keyword">void</span> <a class="link" href="contract/loop_variant_broken.html" title="Function loop_variant_broken"><span class="identifier">loop_variant_broken</span></a><span class="special">(</span><span class="identifier">from</span> <span class="keyword">const</span> <span class="special">&amp;</span><span class="special">)</span><span class="special">;</span>
+<span class="special">}</span></pre>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="header.contract.class_hpp"></a>Header &lt;<a href="../..//contract/class.hpp" target="_top">contract/class.hpp</a>&gt;</h3></div></div></div>
+<p>Macros used to declare classes with contracts (this header is automatically included by <code class="computeroutput">contract.hpp</code>). </p>
+<pre class="synopsis">
+
+<a class="link" href="CONTRACT_CLASS.html" title="Macro CONTRACT_CLASS">CONTRACT_CLASS</a>(class_declaration)
+<a class="link" href="CONTRACT_CLASS_TPL.html" title="Macro CONTRACT_CLASS_TPL">CONTRACT_CLASS_TPL</a>(class_declaration)</pre>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="header.contract.class_invariant_hpp"></a>Header &lt;<a href="../..//contract/class_invariant.hpp" target="_top">contract/class_invariant.hpp</a>&gt;</h3></div></div></div>
+<p>Macros used to specify class invariants (this header is automatically included by <code class="computeroutput">contract.hpp</code>). </p>
+<pre class="synopsis">
+
+<a class="link" href="CONTRACT_CLASS_INVARIANT.html" title="Macro CONTRACT_CLASS_INVARIANT">CONTRACT_CLASS_INVARIANT</a>(class_invariants)
+<a class="link" href="CONTRACT_CLASS_INVARIANT_TPL.html" title="Macro CONTRACT_CLASS_INVARIANT_TPL">CONTRACT_CLASS_INVARIANT_TPL</a>(class_invariants)</pre>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="header.contract.config_hpp"></a>Header &lt;<a href="../..//contract/config.hpp" target="_top">contract/config.hpp</a>&gt;</h3></div></div></div>
+<p>Macros used to configure the library behaviour at compile-time (this header is automatically included by <code class="computeroutput">contract.hpp</code>). </p>
+<p>These configuration macros have appropriate default values if left undefined. Programmers can define these macros before including any of the library headers (using compiler options like <code class="computeroutput">-D</code> for GCC, <code class="computeroutput">/D</code> for MSVC, etc) in order to change the library behaviour.</p>
+<p>The macros  <code class="computeroutput"><a class="link" href="CONTRACT_CONFIG_NO_PRECONDITIONS.html" title="Macro CONTRACT_CONFIG_NO_PRECONDITIONS">CONTRACT_CONFIG_NO_PRECONDITIONS</a></code>,  <code class="computeroutput"><a class="link" href="CONTRACT_CONFIG_NO_POSTCONDITIONS.html" title="Macro CONTRACT_CONFIG_NO_POSTCONDITIONS">CONTRACT_CONFIG_NO_POSTCONDITIONS</a></code>, etc can be defined to selectively disable compilation and run-time checking of all preconditions, postconditions, etc. This is a common practice in Contract Programming to generate debug and release builds with less correctness checks but faster run-times. Note that all contracts are compiled and checked at run-time by default unless specified otherwise using these configuration macros.</p>
+<p><span class="bold"><strong>See also:</strong></span>  <a class="link" href="contract__/getting_started.html" title="Getting Started"> Getting Started</a> section,  <a class="link" href="contract__/contract_programming_overview.html" title="Contract Programming Overview"> Contract Programming Overview</a> section. </p>
+<pre class="synopsis">
+
+<a class="link" href="CONTRACT_CONFIG_NO_PRECONDITIONS.html" title="Macro CONTRACT_CONFIG_NO_PRECONDITIONS">CONTRACT_CONFIG_NO_PRECONDITIONS</a>
+<a class="link" href="CONTRACT_CONFIG_NO_POSTCONDITIONS.html" title="Macro CONTRACT_CONFIG_NO_POSTCONDITIONS">CONTRACT_CONFIG_NO_POSTCONDITIONS</a>
+<a class="link" href="CONTRACT_CONFIG_NO_CLASS_INVARIANTS.html" title="Macro CONTRACT_CONFIG_NO_CLASS_INVARIANTS">CONTRACT_CONFIG_NO_CLASS_INVARIANTS</a>
+<a class="link" href="CONTRACT_CONFIG_NO_BLOCK_INVARIANTS.html" title="Macro CONTRACT_CONFIG_NO_BLOCK_INVARIANTS">CONTRACT_CONFIG_NO_BLOCK_INVARIANTS</a>
+<a class="link" href="CONTRACT_CONFIG_NO_LOOP_VARIANTS.html" title="Macro CONTRACT_CONFIG_NO_LOOP_VARIANTS">CONTRACT_CONFIG_NO_LOOP_VARIANTS</a>
+<a class="link" href="CONTRACT_CONFIG_FUNCTION_ARITY_MAX.html" title="Macro CONTRACT_CONFIG_FUNCTION_ARITY_MAX">CONTRACT_CONFIG_FUNCTION_ARITY_MAX</a>
+<a class="link" href="CONTRACT_CONFIG_INHERITANCE_MAX.html" title="Macro CONTRACT_CONFIG_INHERITANCE_MAX">CONTRACT_CONFIG_INHERITANCE_MAX</a>
+<a class="link" href="CONTRACT_CONFIG_OLDOF_MAX.html" title="Macro CONTRACT_CONFIG_OLDOF_MAX">CONTRACT_CONFIG_OLDOF_MAX</a>
+<a class="link" href="CONTRACT_CONFIG_ARRAY_DIMENSION_MAX.html" title="Macro CONTRACT_CONFIG_ARRAY_DIMENSION_MAX">CONTRACT_CONFIG_ARRAY_DIMENSION_MAX</a>
+<a class="link" href="CONTRACT_CONFIG_DO_NOT_SUBCONTRACT_PRECONDITIONS.html" title="Macro CONTRACT_CONFIG_DO_NOT_SUBCONTRACT_PRECONDITIONS">CONTRACT_CONFIG_DO_NOT_SUBCONTRACT_PRECONDITIONS</a>
+<a class="link" href="CONTRACT_CONFIG_PRECONDITIONS_DISABLE_NO_ASSERTION.html" title="Macro CONTRACT_CONFIG_PRECONDITIONS_DISABLE_NO_ASSERTION">CONTRACT_CONFIG_PRECONDITIONS_DISABLE_NO_ASSERTION</a>
+<a class="link" href="CONTRACT_CONFIG_REPORT_BASE_PRECONDITION_FAILURE.html" title="Macro CONTRACT_CONFIG_REPORT_BASE_PRECONDITION_FAILURE">CONTRACT_CONFIG_REPORT_BASE_PRECONDITION_FAILURE</a>
+<a class="link" href="CONTRACT_CONFIG_THREAD_SAFE.html" title="Macro CONTRACT_CONFIG_THREAD_SAFE">CONTRACT_CONFIG_THREAD_SAFE</a></pre>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="header.contract.constructor_hpp"></a>Header &lt;<a href="../..//contract/constructor.hpp" target="_top">contract/constructor.hpp</a>&gt;</h3></div></div></div>
+<p>Macros used to declare constructors with contracts (this header is automatically included by <code class="computeroutput">contract.hpp</code>). </p>
+<pre class="synopsis">
+
+<a class="link" href="CONTRACT_CONSTRUCTOR.html" title="Macro CONTRACT_CONSTRUCTOR">CONTRACT_CONSTRUCTOR</a>(function_declaration)
+<a class="link" href="CONTRACT_CONSTRUCTOR_TPL.html" title="Macro CONTRACT_CONSTRUCTOR_TPL">CONTRACT_CONSTRUCTOR_TPL</a>(function_declaration)</pre>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="header.contract.copy_hpp"></a>Header &lt;<a href="../..//contract/copy.hpp" target="_top">contract/copy.hpp</a>&gt;</h3></div></div></div>
+<p>Copy result value and old values for postconditions (this header is automatically included by <code class="computeroutput">contract.hpp</code>). </p>
+<pre class="synopsis"><span class="keyword">namespace</span> <span class="identifier">contract</span> <span class="special">{</span>
+  <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> T<span class="special">&gt;</span> <span class="keyword">class</span> <a class="link" href="contract/copy.html" title="Class template copy">copy</a><span class="special">;</span>
+<span class="special">}</span></pre>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="header.contract.destructor_hpp"></a>Header &lt;<a href="../..//contract/destructor.hpp" target="_top">contract/destructor.hpp</a>&gt;</h3></div></div></div>
+<p>Macros used to declare destructors with contracts (this header is automatically included by <code class="computeroutput">contract.hpp</code>). </p>
+<pre class="synopsis">
+
+<a class="link" href="CONTRACT_DESTRUCTOR.html" title="Macro CONTRACT_DESTRUCTOR">CONTRACT_DESTRUCTOR</a>(function_declaration)
+<a class="link" href="CONTRACT_DESTRUCTOR_TPL.html" title="Macro CONTRACT_DESTRUCTOR_TPL">CONTRACT_DESTRUCTOR_TPL</a>(function_declaration)</pre>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="header.contract.function_hpp"></a>Header &lt;<a href="../..//contract/function.hpp" target="_top">contract/function.hpp</a>&gt;</h3></div></div></div>
+<p>Macros used to declare free functions, member functions, and operators with contracts (this header is automatically included by <code class="computeroutput">contract.hpp</code>). </p>
+<pre class="synopsis">
+
+<a class="link" href="CONTRACT_FUNCTION.html" title="Macro CONTRACT_FUNCTION">CONTRACT_FUNCTION</a>(function_declaration)
+<a class="link" href="CONTRACT_FUNCTION_TPL.html" title="Macro CONTRACT_FUNCTION_TPL">CONTRACT_FUNCTION_TPL</a>(function_declaration)</pre>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="header.contract.limits_hpp"></a>Header &lt;<a href="../..//contract/limits.hpp" target="_top">contract/limits.hpp</a>&gt;</h3></div></div></div>
+<p>Macros reporting bounds of some library constructs (this header is automatically included by <code class="computeroutput">contract.hpp</code>). </p>
+<p>These are <span class="emphasis"><em>not</em></span> configuration macros so programmers cannot change these values. These macros are used to inform programmers of bounds on some of this library constructs. </p>
+<pre class="synopsis">
+
+<a class="link" href="CONTRACT_LIMIT_OLDOFS.html" title="Macro CONTRACT_LIMIT_OLDOFS">CONTRACT_LIMIT_OLDOFS</a>
+<a class="link" href="CONTRACT_LIMIT_NESTED_SELECT_ASSERTIONS.html" title="Macro CONTRACT_LIMIT_NESTED_SELECT_ASSERTIONS">CONTRACT_LIMIT_NESTED_SELECT_ASSERTIONS</a>
+<a class="link" href="CONTRACT_LIMIT_CONSTRUCTOR_TRY_BLOCK_CATCHES.html" title="Macro CONTRACT_LIMIT_CONSTRUCTOR_TRY_BLOCK_CATCHES">CONTRACT_LIMIT_CONSTRUCTOR_TRY_BLOCK_CATCHES</a></pre>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="header.contract.loop_variant_hpp"></a>Header &lt;<a href="../..//contract/loop_variant.hpp" target="_top">contract/loop_variant.hpp</a>&gt;</h3></div></div></div>
+<p>Macros used to specify loop variants (this header is automatically included by <code class="computeroutput">contract.hpp</code>). </p>
+<pre class="synopsis">
+
+<a class="link" href="CONTRACT_LOOP.html" title="Macro CONTRACT_LOOP">CONTRACT_LOOP</a>(loop_declaration)
+<a class="link" href="CONTRACT_LOOP_VARIANT.html" title="Macro CONTRACT_LOOP_VARIANT">CONTRACT_LOOP_VARIANT</a>(loop_variant)
+<a class="link" href="CONTRACT_LOOP_VARIANT_TPL.html" title="Macro CONTRACT_LOOP_VARIANT_TPL">CONTRACT_LOOP_VARIANT_TPL</a>(loop_variant)</pre>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="header.contract.oldof_hpp"></a>Header &lt;<a href="../..//contract/oldof.hpp" target="_top">contract/oldof.hpp</a>&gt;</h3></div></div></div>
+<p>Constructs to declare postcondition old values (this header is automatically included by <code class="computeroutput">contract.hpp</code>). </p>
+<pre class="synopsis">
+
+<a class="link" href="CONTRACT_OLDOF.html" title="Macro CONTRACT_OLDOF">CONTRACT_OLDOF</a></pre>
+<pre class="synopsis"><span class="keyword">namespace</span> <span class="identifier">contract</span> <span class="special">{</span>
+  <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> OldofExpressionType<span class="special">&gt;</span> <span class="keyword">struct</span> <a class="link" href="contract/has_oldof.html" title="Struct template has_oldof">has_oldof</a><span class="special">;</span>
+<span class="special">}</span></pre>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="header.contract.parameter_hpp"></a>Header &lt;<a href="../..//contract/parameter.hpp" target="_top">contract/parameter.hpp</a>&gt;</h3></div></div></div>
+<p>Macros used to program named and deduced parameters (this header is automatically included by <code class="computeroutput">contract.hpp</code>). </p>
+<pre class="synopsis">
+
+<a class="link" href="CONTRACT_CONSTRUCTOR_ARG.html" title="Macro CONTRACT_CONSTRUCTOR_ARG">CONTRACT_CONSTRUCTOR_ARG</a>(parameter_name)
+<a class="link" href="CONTRACT_PARAMETER_TYPEOF.html" title="Macro CONTRACT_PARAMETER_TYPEOF">CONTRACT_PARAMETER_TYPEOF</a>(parameter_name)
+<a class="link" href="CONTRACT_PARAMETER.html" title="Macro CONTRACT_PARAMETER">CONTRACT_PARAMETER</a>(named_parameter_declaration)
+<a class="link" href="CONTRACT_TEMPLATE_PARAMETER.html" title="Macro CONTRACT_TEMPLATE_PARAMETER">CONTRACT_TEMPLATE_PARAMETER</a>(named_parameter_declaration)
+<a class="link" href="CONTRACT_PARAMETER_BODY.html" title="Macro CONTRACT_PARAMETER_BODY">CONTRACT_PARAMETER_BODY</a>(function_name)</pre>
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright &#169; 2008-2012 Lorenzo Caminiti<p>
+        Distributed under the Boost Software License, Version 1.0 (see accompanying
+        file LICENSE_1_0.txt or a copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="contract__/no_variadic_macros.html"><img src="../..//doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="index.html"><img src="../..//doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="index.html"><img src="../..//doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="CONTRACT_BLOCK_INVARIANT.html"><img src="../..//doc/src/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>
