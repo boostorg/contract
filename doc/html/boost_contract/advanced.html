@@ -4,8 +4,8 @@
 <title>Advanced</title>
 <link rel="stylesheet" href="../../../doc/src/boostbook.css" type="text/css">
 <meta name="generator" content="DocBook XSL Stylesheets V1.79.1">
-<link rel="home" href="../index.html" title="Chapter&#160;1.&#160;Boost.Contract 1.0">
-<link rel="up" href="../index.html" title="Chapter&#160;1.&#160;Boost.Contract 1.0">
+<link rel="home" href="../index.html" title="Chapter&#160;1.&#160;Boost.Contract 0.5.0">
+<link rel="up" href="../index.html" title="Chapter&#160;1.&#160;Boost.Contract 0.5.0">
 <link rel="prev" href="tutorial.html" title="Tutorial">
 <link rel="next" href="extras.html" title="Extras">
 </head>
@@ -62,7 +62,7 @@
         <span class="special">...</span> <span class="special">=</span> <span class="number">0</span><span class="special">;</span></code>.
       </p>
 <p>
-        Contracts for pure virtual public functions are programmed using the <code class="computeroutput"><a class="link" href="../boost/contract/public_function_id548174.html" title="Function template public_function">boost::contract::public_function</a></code>
+        Contracts for pure virtual public functions are programmed using the <code class="computeroutput"><a class="link" href="../boost/contract/public_function_id559821.html" title="Function template public_function">boost::contract::public_function</a></code>
         function like for (non-pure) virtual public functions (all consideration
         made in <a class="link" href="tutorial.html#boost_contract.tutorial.virtual_public_functions" title="Virtual Public Functions">Virtual
         Public Functions</a> apply). However, contracts have to be programmed
@@ -261,7 +261,7 @@
         Virtual Public Functions</a>, <a class="link" href="tutorial.html#boost_contract.tutorial.virtual_public_functions" title="Virtual Public Functions">Virtual
         Public Functions</a>, and <a class="link" href="tutorial.html#boost_contract.tutorial.public_function_overrides__subcontracting_" title="Public Function Overrides (Subcontracting)">Public
         Function Overrides</a>, in these cases the return value <code class="computeroutput"><span class="identifier">result</span></code> must be passed as a parameter to
-        <code class="computeroutput"><a class="link" href="../boost/contract/public_function_id548174.html" title="Function template public_function">boost::contract::public_function</a></code>
+        <code class="computeroutput"><a class="link" href="../boost/contract/public_function_id559821.html" title="Function template public_function">boost::contract::public_function</a></code>
         right after the parameter <code class="computeroutput"><span class="identifier">v</span></code>
         of type <code class="computeroutput"><a class="link" href="../boost/contract/virtual_.html" title="Class virtual_">boost::contract::virtual_</a></code><code class="computeroutput"><span class="special">*</span></code>. Then the functor passed to <code class="computeroutput"><span class="special">.</span><span class="identifier">postcondition</span><span class="special">(...)</span></code> takes one single parameter of type
         <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">optional</span><span class="special">&lt;</span></code><code class="literal"><span class="emphasis"><em>result-type</em></span></code><code class="computeroutput">
@@ -429,7 +429,7 @@
 <p>
         However, public functions in derived classes overriding private or protected
         virtual functions from base classes shall not specify the extra <code class="computeroutput"><span class="identifier">override_</span><span class="special">...</span></code>
-        template parameter to <code class="computeroutput"><a class="link" href="../boost/contract/public_function_id548174.html" title="Function template public_function">boost::contract::public_function</a></code>
+        template parameter to <code class="computeroutput"><a class="link" href="../boost/contract/public_function_id559821.html" title="Function template public_function">boost::contract::public_function</a></code>
         because the overridden functions are private or protected and, not being
         public, they do not participate to subcontracting (this library will generate
         a compile-time error if <code class="computeroutput"><span class="identifier">override_</span><span class="special">...</span></code> is specified because there will be no
@@ -485,7 +485,7 @@
         that are private or protected from one base but public from another base.
         In this case, public function overrides in derived classes will specify the
         extra <code class="computeroutput"><span class="identifier">override_</span><span class="special">...</span></code>
-        template parameter to <code class="computeroutput"><a class="link" href="../boost/contract/public_function_id548174.html" title="Function template public_function">boost::contract::public_function</a></code>
+        template parameter to <code class="computeroutput"><a class="link" href="../boost/contract/public_function_id559821.html" title="Function template public_function">boost::contract::public_function</a></code>
         (because the overridden functions are private or protected in one base and
         those do not participate to subcontracting, but public in another base and
         these participate to subcontracting instead). For example (see <a href="../../../example/features/private_protected_virtual_multi.cpp" target="_top"><code class="literal">private_protected_virtual_multi.cpp</code></a>):
@@ -626,7 +626,7 @@
         and it can be logically considered an extension of that object's public interface
         (essentially at the same level as the object's public functions). In these
         cases, programmers might chose to program the friend function contracts using
-        <code class="computeroutput"><a class="link" href="../boost/contract/public_function_id548174.html" title="Function template public_function">boost::contract::public_function</a></code>
+        <code class="computeroutput"><a class="link" href="../boost/contract/public_function_id559821.html" title="Function template public_function">boost::contract::public_function</a></code>
         (instead of <code class="computeroutput"><a class="link" href="../boost/contract/function.html" title="Function function">boost::contract::function</a></code>)
         so to also check the class invariants of the object passed as parameter (and
         not just the pre- and postconditions of the friend function). For example
@@ -704,7 +704,7 @@
         and exception guarantees at function entry and exit respectively (see <a class="link" href="tutorial.html#boost_contract.tutorial.non_member_functions" title="Non-Member Functions">Non-Member Functions</a>
         and <a class="link" href="tutorial.html#boost_contract.tutorial.public_functions" title="Public Functions">Public Functions</a>
         for information on how the RAII objects returned by <code class="computeroutput"><a class="link" href="../boost/contract/function.html" title="Function function">boost::contract::function</a></code>
-        and <code class="computeroutput"><a class="link" href="../boost/contract/public_function_id548174.html" title="Function template public_function">boost::contract::public_function</a></code>
+        and <code class="computeroutput"><a class="link" href="../boost/contract/public_function_id559821.html" title="Function template public_function">boost::contract::public_function</a></code>
         check contract conditions). The example above is programmed to check <code class="computeroutput"><span class="identifier">class1</span></code> invariants before <code class="computeroutput"><span class="identifier">class2</span></code> invariants (but the order could
         have been inverted if programmers so chose).
       </p>
@@ -717,10 +717,10 @@
           In the example above, preconditions are intentionally programmed to be
           checked before class invariants so the objects passed to the friend function
           can be validated by the preconditions before they are passed as pointers
-          to <code class="computeroutput"><a class="link" href="../boost/contract/public_function_id548174.html" title="Function template public_function">boost::contract::public_function</a></code>
+          to <code class="computeroutput"><a class="link" href="../boost/contract/public_function_id559821.html" title="Function template public_function">boost::contract::public_function</a></code>
           (e.g., check <code class="computeroutput"><span class="identifier">object2</span></code> is
           not null). (Within member functions instead, the object pointer <code class="computeroutput"><span class="keyword">this</span></code> is always well-formed, its validation
-          is never needed, and <code class="computeroutput"><a class="link" href="../boost/contract/public_function_id548174.html" title="Function template public_function">boost::contract::public_function</a></code>
+          is never needed, and <code class="computeroutput"><a class="link" href="../boost/contract/public_function_id559821.html" title="Function template public_function">boost::contract::public_function</a></code>
           checks class invariants before checking preconditions so programming preconditions
           can be simplified assuming the class invariants are satisfied already,
           see <a class="link" href="contract_programming_overview.html#boost_contract.contract_programming_overview.public_function_calls" title="Public Function Calls">Public
@@ -735,13 +735,13 @@
 </h3></div></div></div>
 <p>
         As seen in <a class="link" href="tutorial.html#boost_contract.tutorial.public_function_overrides__subcontracting_" title="Public Function Overrides (Subcontracting)">Public
-        Function Overrides</a>, <code class="computeroutput"><a class="link" href="../boost/contract/public_function_id548174.html" title="Function template public_function">boost::contract::public_function</a></code>
+        Function Overrides</a>, <code class="computeroutput"><a class="link" href="../boost/contract/public_function_id559821.html" title="Function template public_function">boost::contract::public_function</a></code>
         takes a pointer to the enclosing function as a parameter when used in public
         function overrides. When names of public function overrides are overloaded,
         the function pointer cannot be automatically deduced by the compiler so programmers
         have to use <code class="computeroutput"><span class="keyword">static_cast</span></code> to resolve
         ambiguities (as usual with pointers to overloaded functions in C++). <a href="#ftn.boost_contract.advanced.function_overloads.f0" class="footnote" name="boost_contract.advanced.function_overloads.f0"><sup class="footnote">[56]</sup></a> For example, note how <code class="computeroutput"><span class="keyword">static_cast</span></code>
-        is used in the following calls to <code class="computeroutput"><a class="link" href="../boost/contract/public_function_id548174.html" title="Function template public_function">boost::contract::public_function</a></code>
+        is used in the following calls to <code class="computeroutput"><a class="link" href="../boost/contract/public_function_id559821.html" title="Function template public_function">boost::contract::public_function</a></code>
         (see <a href="../../../example/features/overload.cpp" target="_top"><code class="literal">overload.cpp</code></a>):
       </p>
 <p>
@@ -860,7 +860,7 @@
       </p>
 <p>
         Overloaded functions have the same function name so the same <code class="literal">override_<span class="emphasis"><em>function-name</em></span></code>
-        type can be reused as template parameter for all <code class="computeroutput"><a class="link" href="../boost/contract/public_function_id548174.html" title="Function template public_function">boost::contract::public_function</a></code>
+        type can be reused as template parameter for all <code class="computeroutput"><a class="link" href="../boost/contract/public_function_id559821.html" title="Function template public_function">boost::contract::public_function</a></code>
         calls. Therefore, <code class="computeroutput"><a class="link" href="../BOOST_CONTRACT_OVERRIDE.html" title="Macro BOOST_CONTRACT_OVERRIDE">BOOST_CONTRACT_OVERRIDE</a></code>
         only needs to be invoked once for any given function name even when that
         function name is overloaded.
@@ -979,7 +979,7 @@
         functor that is directly assigned to <code class="computeroutput"><a class="link" href="../boost/contract/check.html" title="Class check">boost::contract::check</a></code>
         at the place within the code where the checks have to be executed (so without
         using <code class="computeroutput"><a class="link" href="../boost/contract/function.html" title="Function function">boost::contract::function</a></code>,
-        <code class="computeroutput"><a class="link" href="../boost/contract/public_function_id548174.html" title="Function template public_function">boost::contract::public_function</a></code>,
+        <code class="computeroutput"><a class="link" href="../boost/contract/public_function_id559821.html" title="Function template public_function">boost::contract::public_function</a></code>,
         etc.). For example (see <a href="../../../example/features/check.cpp" target="_top"><code class="literal">check.cpp</code></a>):
       </p>
 <p>
@@ -1171,7 +1171,7 @@
         double underscores <code class="computeroutput"><span class="identifier">override__</span><span class="special">...</span></code> (which are reserved by the C++ standard).
         There is a separate macro <code class="computeroutput"><a class="link" href="../BOOST_CONTRACT_NAMED_OVERRIDE.html" title="Macro BOOST_CONTRACT_NAMED_OVERRIDE">BOOST_CONTRACT_NAMED_OVERRIDE</a></code>
         that can be used to explicitly specify the name of the type that will be
-        passed to <code class="computeroutput"><a class="link" href="../boost/contract/public_function_id548174.html" title="Function template public_function">boost::contract::public_function</a></code>
+        passed to <code class="computeroutput"><a class="link" href="../boost/contract/public_function_id559821.html" title="Function template public_function">boost::contract::public_function</a></code>
         as a template argument: <a href="#ftn.boost_contract.advanced.named_overrides.f0" class="footnote" name="boost_contract.advanced.named_overrides.f0"><sup class="footnote">[60]</sup></a>
       </p>
 <pre class="programlisting"><span class="identifier">BOOST_CONTRACT_OVERRIDE</span><span class="special">(</span><code class="literal"><span class="emphasis"><em>function-name</em></span></code><span class="special">)</span>                  <span class="comment">// Generate `override_...`.</span>
@@ -1405,7 +1405,7 @@
             Exception guarantees: <code class="computeroutput"><a class="link" href="../boost/contract/set_except_failure.html" title="Function set_except_failure">boost::contract::set_except_failure</a></code>.
           </li>
 <li class="listitem">
-            Class invariants: <code class="computeroutput"><a class="link" href="../boost/contract/set_entry_invaria_id544430.html" title="Function set_entry_invariant_failure">boost::contract::set_entry_invariant_failure</a></code>
+            Class invariants: <code class="computeroutput"><a class="link" href="../boost/contract/set_entry_invaria_id558254.html" title="Function set_entry_invariant_failure">boost::contract::set_entry_invariant_failure</a></code>
             and <code class="computeroutput"><a class="link" href="../boost/contract/set_exit_invariant_failure.html" title="Function set_exit_invariant_failure">boost::contract::set_exit_invariant_failure</a></code>,
             or <code class="computeroutput"><a class="link" href="../boost/contract/set_invariant_failure.html" title="Function set_invariant_failure">boost::contract::set_invariant_failure</a></code>
             (to set both entry and exit invariant failure handlers at once for convenience).
@@ -1665,19 +1665,19 @@
           specify when they do and when they do not. However, this library adds the
           flexibility to let programmers manually specify when friend functions should
           also check class invariants of the objects they take as parameters (using
-          <code class="computeroutput"><a class="link" href="../boost/contract/public_function_id548174.html" title="Function template public_function">boost::contract::public_function</a></code>)
+          <code class="computeroutput"><a class="link" href="../boost/contract/public_function_id559821.html" title="Function template public_function">boost::contract::public_function</a></code>)
           and when they should not (using <code class="computeroutput"><a class="link" href="../boost/contract/function.html" title="Function function">boost::contract::function</a></code>
           instead).
         </p></div>
 <div id="ftn.boost_contract.advanced.function_overloads.f0" class="footnote"><p><a href="#boost_contract.advanced.function_overloads.f0" class="para"><sup class="para">[56] </sup></a>
           <span class="bold"><strong>Rationale:</strong></span> In order to avoid copies, this
-          library takes all function arguments and the return value passed to <code class="computeroutput"><a class="link" href="../boost/contract/public_function_id548174.html" title="Function template public_function">boost::contract::public_function</a></code>
+          library takes all function arguments and the return value passed to <code class="computeroutput"><a class="link" href="../boost/contract/public_function_id559821.html" title="Function template public_function">boost::contract::public_function</a></code>
           as references when used within public function overrides. Therefore, the
           library cannot differentiate when the actual function argument and return
           types are passed by reference and when they are not. As a result, the library
           cannot automatically reconstruct the type of the enclosing public function
           so this type must be deduced from the function pointer passed by programmers
-          to <code class="computeroutput"><a class="link" href="../boost/contract/public_function_id548174.html" title="Function template public_function">boost::contract::public_function</a></code>.
+          to <code class="computeroutput"><a class="link" href="../boost/contract/public_function_id559821.html" title="Function template public_function">boost::contract::public_function</a></code>.
           When this automatic deduction is not possible due to overloaded function
           names, programmers must explicitly use <code class="computeroutput"><span class="keyword">static_cast</span></code>
           to resolve ambiguities as usual in C++ with pointers to overloaded functions.
@@ -1707,9 +1707,9 @@
           <span class="bold"><strong>Rationale:</strong></span> Functors for preconditions,
           old value assignments, postconditions, and exception guarantees are all
           optional but when specified, they must be specified in that order. Such
-          order is enforced by the fact that <code class="computeroutput"><a class="link" href="../boost/contract/specify_precondit_id548561.html" title="Class template specify_precondition_old_postcondition_except">boost::contract::specify_precondition_old_postcondition_except</a></code>,
-          <code class="computeroutput"><a class="link" href="../boost/contract/specify_old_postc_id545028.html" title="Class template specify_old_postcondition_except">boost::contract::specify_old_postcondition_except</a></code>,
-          <code class="computeroutput"><a class="link" href="../boost/contract/specify_postcondi_id545255.html" title="Class template specify_postcondition_except">boost::contract::specify_postcondition_except</a></code>,
+          order is enforced by the fact that <code class="computeroutput"><a class="link" href="../boost/contract/specify_precondit_id560203.html" title="Class template specify_precondition_old_postcondition_except">boost::contract::specify_precondition_old_postcondition_except</a></code>,
+          <code class="computeroutput"><a class="link" href="../boost/contract/specify_old_postc_id558849.html" title="Class template specify_old_postcondition_except">boost::contract::specify_old_postcondition_except</a></code>,
+          <code class="computeroutput"><a class="link" href="../boost/contract/specify_postcondi_id559088.html" title="Class template specify_postcondition_except">boost::contract::specify_postcondition_except</a></code>,
           <code class="computeroutput"><a class="link" href="../boost/contract/specify_except.html" title="Class specify_except">boost::contract::specify_except</a></code>,
           and <code class="computeroutput"><a class="link" href="../boost/contract/specify_nothing.html" title="Class specify_nothing">boost::contract::specify_nothing</a></code>
           provide a progressively decreasing subset of the <code class="computeroutput"><span class="special">.</span><span class="identifier">precondition</span><span class="special">(...)</span></code>,
@@ -1726,7 +1726,7 @@
 <div id="ftn.boost_contract.advanced.old_copies_at_body.f1" class="footnote"><p><a href="#boost_contract.advanced.old_copies_at_body.f1" class="para"><sup class="para">[59] </sup></a>
             <span class="bold"><strong>Rationale:</strong></span> It would be possible to wrap
             all old value operations (<code class="computeroutput"><a class="link" href="../boost/contract/old_ptr.html" title="Class template old_ptr">boost::contract::old_ptr</a></code>
-            copy constructor, <code class="computeroutput"><a class="link" href="../boost/contract/make_old_id549911.html" title="Function make_old">boost::contract::make_old</a></code>,
+            copy constructor, <code class="computeroutput"><a class="link" href="../boost/contract/make_old_id561537.html" title="Function make_old">boost::contract::make_old</a></code>,
             etc.) in try-catch statements so this library will call <code class="computeroutput"><a class="link" href="../boost/contract/old_failure.html" title="Function old_failure">boost::contract::old_failure</a></code>
             also when old values are copied when they are constructed outside <code class="computeroutput"><span class="special">.</span><span class="identifier">old</span><span class="special">(...)</span></code>. However, that will prevent this
             library from knowing the <code class="computeroutput"><a class="link" href="../boost/contract/from.html" title="Type from">boost::contract::from</a></code>

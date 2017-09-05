@@ -4,7 +4,7 @@
 <title>Struct template is_old_value_copyable</title>
 <link rel="stylesheet" href="../../../../doc/src/boostbook.css" type="text/css">
 <meta name="generator" content="DocBook XSL Stylesheets V1.79.1">
-<link rel="home" href="../../index.html" title="Chapter&#160;1.&#160;Boost.Contract 1.0">
+<link rel="home" href="../../index.html" title="Chapter&#160;1.&#160;Boost.Contract 0.5.0">
 <link rel="up" href="../../reference.html#header.boost.contract.old_hpp" title="Header &lt;boost/contract/old.hpp&gt;">
 <link rel="prev" href="function.html" title="Function function">
 <link rel="next" href="old_pointer.html" title="Class old_pointer">
@@ -35,7 +35,7 @@
 <span class="keyword">struct</span> <a class="link" href="is_old_value_copyable.html" title="Struct template is_old_value_copyable">is_old_value_copyable</a> <span class="special">:</span> <span class="keyword">public</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">is_copy_constructible</span><span class="special">&lt;</span> <span class="identifier">T</span> <span class="special">&gt;</span> <span class="special">{</span>
 <span class="special">}</span><span class="special">;</span></pre></div>
 <div class="refsect1">
-<a name="id1171464"></a><h2>Description</h2>
+<a name="id1148633"></a><h2>Description</h2>
 <p>By default, this unary boolean meta-function is equivalent to <code class="computeroutput">boost::is_copy_constructible&lt;T&gt;</code> but programmers can chose to specialize it for user-defined types (in general some kind of specialization is needed on compilers that do not support C++11, see also <a href="http://www.boost.org/doc/libs/release/libs/type_traits/doc/html/boost_typetraits/reference/is_copy_constructible.html" target="_top"><code class="computeroutput">boost::is_copy_constructible</code></a>).</p>
 <p>A given old value type <code class="computeroutput">X</code> is copied only if <code class="computeroutput">boost::contract::is_old_value_copyable&lt;X&gt;::value</code> is <code class="computeroutput">true</code>. Copyable old value types are always copied using <code class="computeroutput">boost::contract::old_value_copy&lt;X&gt;</code>. Non-copyable old value types generate a compile-time error when <code class="computeroutput">boost::contract::old_ptr&lt;X&gt;</code> is dereferenced, but instead leave <code class="computeroutput">boost::contract::old_ptr_if_copyable&lt;X&gt;</code> always null (without generating compile-time errors).</p>
 <p><span class="bold"><strong>See Also:</strong></span></p>

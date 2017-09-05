@@ -4,7 +4,7 @@
 <title>Macro BOOST_CONTRACT_PERMISSIVE</title>
 <link rel="stylesheet" href="../../doc/src/boostbook.css" type="text/css">
 <meta name="generator" content="DocBook XSL Stylesheets V1.79.1">
-<link rel="home" href="index.html" title="Chapter&#160;1.&#160;Boost.Contract 1.0">
+<link rel="home" href="index.html" title="Chapter&#160;1.&#160;Boost.Contract 0.5.0">
 <link rel="up" href="reference.html#header.boost.contract.core.config_hpp" title="Header &lt;boost/contract/core/config.hpp&gt;">
 <link rel="prev" href="BOOST_CONTRACT_STATIC_INVARIANT_FUNC.html" title="Macro BOOST_CONTRACT_STATIC_INVARIANT_FUNC">
 <link rel="next" href="BOOST_CONTRACT_ON_MISSING_CHECK_DECL.html" title="Macro BOOST_CONTRACT_ON_MISSING_CHECK_DECL">
@@ -33,12 +33,12 @@
 
 </span>BOOST_CONTRACT_PERMISSIVE</pre></div>
 <div class="refsect1">
-<a name="id1154481"></a><h2>Description</h2>
+<a name="id1126838"></a><h2>Description</h2>
 <p>Defining this macro disables a number of static checks and related compile-time errors, for example:</p>
 <div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
 <li class="listitem"><p>The static invariant member <code class="computeroutput">BOOST_CONTRACT_STATIC_INVARIANT_FUNC</code> function must be declared <code class="computeroutput">static</code>. </p></li>
 <li class="listitem"><p>Non-static invariant member functions <code class="computeroutput">BOOST_CONTRACT_INVARIANT_FUNC</code> must be declared either <code class="computeroutput">const</code>, <code class="computeroutput">const volatile</code>, or <code class="computeroutput">volatile const</code>. </p></li>
-<li class="listitem"><p>Derived classes that program contracts for one or more public function overrides via <code class="computeroutput"><a class="link" href="boost/contract/public_function_id548174.html" title="Function template public_function">boost::contract::public_function</a></code> must also define the <code class="computeroutput"><a class="link" href="BOOST_CONTRACT_BASE_TYPES.html" title="Macro BOOST_CONTRACT_BASE_TYPES">BOOST_CONTRACT_BASE_TYPES</a></code> <code class="computeroutput">typedef</code>.</p></li>
+<li class="listitem"><p>Derived classes that program contracts for one or more public function overrides via <code class="computeroutput"><a class="link" href="boost/contract/public_function_id559821.html" title="Function template public_function">boost::contract::public_function</a></code> must also define the <code class="computeroutput"><a class="link" href="BOOST_CONTRACT_BASE_TYPES.html" title="Macro BOOST_CONTRACT_BASE_TYPES">BOOST_CONTRACT_BASE_TYPES</a></code> <code class="computeroutput">typedef</code>.</p></li>
 </ul></div>
 <p>
 In general, it is not recommended to define this macro because these compile-time checks can guard against missuses of this library.</p>

@@ -4,7 +4,7 @@
 <title>Macro BOOST_CONTRACT_CHECK_AUDIT</title>
 <link rel="stylesheet" href="../../doc/src/boostbook.css" type="text/css">
 <meta name="generator" content="DocBook XSL Stylesheets V1.79.1">
-<link rel="home" href="index.html" title="Chapter&#160;1.&#160;Boost.Contract 1.0">
+<link rel="home" href="index.html" title="Chapter&#160;1.&#160;Boost.Contract 0.5.0">
 <link rel="up" href="reference.html#header.boost.contract.core.check_macro_hpp" title="Header &lt;boost/contract/core/check_macro.hpp&gt;">
 <link rel="prev" href="BOOST_CONTRACT_CHECK.html" title="Macro BOOST_CONTRACT_CHECK">
 <link rel="next" href="BOOST_CONTRACT_CHECK_AXIOM.html" title="Macro BOOST_CONTRACT_CHECK_AXIOM">
@@ -33,7 +33,7 @@
 
 </span>BOOST_CONTRACT_CHECK_AUDIT(cond)</pre></div>
 <div class="refsect1">
-<a name="id1153334"></a><h2>Description</h2>
+<a name="id1125853"></a><h2>Description</h2>
 <p>The specified condition will always be compiled and validated syntactically, but it will not be evaluated at run-time unless  <code class="computeroutput"><a class="link" href="BOOST_CONTRACT_AUDITS.html" title="Macro BOOST_CONTRACT_AUDITS">BOOST_CONTRACT_AUDITS</a></code> is defined (undefined by default).</p>
 <p>This macro is defined by code equivalent to:</p>
 <pre class="programlisting"><span class="preprocessor">#ifdef</span> <span class="identifier">BOOST_CONTRACT_AUDITS</span>

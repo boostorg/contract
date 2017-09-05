@@ -4,7 +4,7 @@
 <title>Macro BOOST_CONTRACT_PRECONDITIONS_DISABLE_NO_ASSERTION</title>
 <link rel="stylesheet" href="../../doc/src/boostbook.css" type="text/css">
 <meta name="generator" content="DocBook XSL Stylesheets V1.79.1">
-<link rel="home" href="index.html" title="Chapter&#160;1.&#160;Boost.Contract 1.0">
+<link rel="home" href="index.html" title="Chapter&#160;1.&#160;Boost.Contract 0.5.0">
 <link rel="up" href="reference.html#header.boost.contract.core.config_hpp" title="Header &lt;boost/contract/core/config.hpp&gt;">
 <link rel="prev" href="BOOST_CONTRACT_ON_MISSING_CHECK_DECL.html" title="Macro BOOST_CONTRACT_ON_MISSING_CHECK_DECL">
 <link rel="next" href="BOOST_CONTRACT_ALL_DISABLE_NO_ASSERTION.html" title="Macro BOOST_CONTRACT_ALL_DISABLE_NO_ASSERTION">
@@ -33,7 +33,7 @@
 
 </span>BOOST_CONTRACT_PRECONDITIONS_DISABLE_NO_ASSERTION</pre></div>
 <div class="refsect1">
-<a name="id1154713"></a><h2>Description</h2>
+<a name="id1127055"></a><h2>Description</h2>
 <p>Not disabling other assertions while checking preconditions can lead to infinite recursion in user code so by default this macro is not defined.</p>
 <p>However, the <a class="link" href="boost_contract/bibliography.html" title="Bibliography"> [1962]</a> proposal does not disable any assertion while checking preconditions because arguments can reach the function body unchecked if assertions are disabled while checking preconditions (e.g., when these same functions bodies are called to check the preconditions in question). This macro can be defined to obtain the behaviour specified in  <a class="link" href="boost_contract/bibliography.html" title="Bibliography"> [1962]</a> (at the risk of infinite recursion).</p>
 <p><span class="bold"><strong>See Also:</strong></span></p>
