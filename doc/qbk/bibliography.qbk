@@ -1,0 +1,47 @@
+
+[section Bibliography]
+
+[Abrahams2005] D. Abrahams, L. Crowl, T. Ottosen, and J. Widman. /Proposal to add Contract Programming to C++ (revision 2)./ The C++ Standards Committee, [@http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2005/n1773.html n1773], 2005.
+
+[Bright2004] W. Bright. [@http://www.digitalmars.com/d/2.0/dbc.html /Contract Programming for the D Programming Language./] 2004.
+
+[Bright2004b] W. Bright. [@http://www.digitalmars.com/ctg/contract.html /Contract Programming for the Digital Mars C++ Compiler./] 2004.
+
+[C^2] Aechmea. [@http://www.programmersheaven.com/app/news/DisplayNews.aspx?NewsID=3843 /C^2 Contract Programming add-on for C++./] 2005.
+
+[Chrome2002] RemObjects. [@http://blogs.remobjects.com/blogs/mh/2008/05/01/p216 /Chromes: Contract Programming for Object Pascal in .NET./] 2002.
+
+[Crowl2005] L. Crowl and T. Ottosen. /Proposal to add Contract Programming to C++ (revision 3)./ The C++ Standards Committee, [@http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2005/n1866.html n1866], 2005.
+
+[Crowl2006] L. Crowl and T. Ottosen. /Proposal to add Contract Programming to C++ (revision 4)./ The C++ Standards Committee, [@http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2006/n1962.html n1962], 2006.
+
+[iContract] O. Enseling. [@http://www.javaworld.com/javaworld/jw-02-2001/jw-0216-cooltools.html /iContract: Contract Programming for Java./] 2001.
+
+[Jcontract] Parasoft. [@http://www.parasoft.com/jsp/products/article.jsp?label=product_info_Jcontract /Jcontract: Contract Programming for Java./]
+
+[Maley1999] D. Maley and I. Spence. [@http://www.computer.org/portal/web/csdl/doi/10.1109/TOOLS.1999.779000 /Emulating Design by Contract in C++./] Proceedings of TOOLS, IEEE Computer Society, 1999.
+
+[Meyer1997] B. Meyer. /Object Oriented Software Construction./ Prentice-Hall, 2nd edition, 1997.
+
+[Mitchell2002] R. Mitchell and J. McKim. /Design by Contract, by Example./ Addison-Wesley, 2002.
+
+[Nelson2004] C. Nelson. /Working draft changes for C99 preprocessor synchronization./ C++ Standards Committee [@http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2004/n1653.htm n1653], 2004.
+
+[Ottosen2004] T. Ottosen. /Proposal to add Design by Contract to C++./ The C++ Standards Committee, [@http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2004/n1613.pdf n1613], 2004.
+
+[Ottosen2004b] T. Ottosen. /Proposal to add Contract Programming to C++ (revision 1)./ The C++ Standards Committee, [@http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2004/n1669.html n1669], 2004.
+
+[SPARKAda] Praxis. [@http://www.praxis-his.com/sparkada/language.asp /SPARKAda (Ada-like Language with Contract Programming)./]
+
+[Spec#] Microsoft. [@http:://research.microsoft.com/en-us/projects/specsharp/ /Spec# (C# Extension)./]
+
+[Stroustrup1997] B. Stroustrup. /The C++ Programming Language./ Prentice-Hall, 2nd Edition, 1997
+
+[Sutter2005] H. Sutter and F. Glassborow. /Delegating Constructors, revision 2./ C++ Standards Committee, [@http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2005/n1895.pdf n1895], 2005.
+
+[Tandin2004] A. Tandin. [@http://www.codeproject.com/KB/macros/DbC_and_Doxygen.aspx /Design by Contract macros for C++ and link to Doxygen./] 2004.
+
+[Wilson2006] M. Wilson. /Contract Programming 101 -- The Nuclear Reactor and the Deep Space Probe./ [@http://www.artima.com/cppsource/deepspace.html The C++ Source], 2006.
+
+[endsect]
+
