@@ -1,0 +1,138 @@
+
+[/ Copyright (C) 2008-2012 Lorenzo Caminiti ]
+[/ Distributed under the Boost Software License, Version 1.0 ]
+[/ (see accompanying file LICENSE_1_0.txt or a copy at ]
+[/ http://www.boost.org/LICENSE_1_0.txt) ]
+[/ Home at http://sourceforge.net/projects/contractpp ]
+
+[section Virtual Specifiers]
+
+This section explains how to use this library to program virtual specifiers `final`, `override`, and `new`.
+Virtual specifiers are part of the program specifications because they enforce inheritance constraints at compile-time and therefore they are within the scope of this library.
+
+[important
+This library implements virtual specifiers for __CXX03__ and without using any __CXX11__ feature.
+[footnote
+This library declares special member functions to ["tag] virtual traits of a given member function in a base class (if it is `virtual`, `final`, etc).
+Then template meta-programming introspection is used by the derived class to inspect virtual trait in its base classes and generate compiler errors if the virtual specifiers are not satisfied.
+These techniques do not use any __CXX11__ feature however, future revisions of this library might use __CXX11__ native support for virtual specifiers so to eliminate the extra compilation time required by template meta-programming introspection and correct a number of bugs associated with the current implementation of virtual specifiers in this library (see also [@http://sourceforge.net/apps/trac/contractpp/ticket/53 Ticket 53], [@http://sourceforge.net/apps/trac/contractpp/ticket/53 Ticket 55], and [@http://sourceforge.net/apps/trac/contractpp/ticket/53 Ticket 56]).
+]
+Obviously, virtual specifiers are supported only if both the base and derived classes and member functions in question are declared using this library macros (otherwise this library has no control over usual C++ declarations).
+]
+
+The examples presented in this section are rather simple (and they do not define virtual destructors for brevity).
+These examples only aim to illustrate the syntax of this library virtual specifiers and not to make a case about the utility of these specifiers.
+Virtual specifiers were adopted by __CXX11__ and in some form are part of other languages like __Java__, programmers can refer to the web and to the __Examples__ section for more interesting examples.
+
+[section Final Classes]
+
+Final classes cannot be derived, otherwise the compiler will generated an error.
+This library allows to declare a class final by specifying `final` within the [macroref CONTRACT_CLASS] macro after the class name, after template specialization types but before base classes if present (see also the __Grammar__ section).
+
+For example (see also [file example/virtual_specifiers final_class.hpp] and [file example/virtual_specifiers final_class.cpp]):
+
+[import ../example/virtual_specifiers/final_class.hpp]
+[final_class]
+
+If a derived class declared using [macroref CONTRACT_CLASS] attempts to inherit from a final base class, the compiler will generate a compile-time error (this is true only if both the base and derived classes are declared using this library macro [macroref CONTRACT_CLASS]).
+For example, consider the following derived class (see also [file example/virtual_specifiers final_class_error.cpp]):
+
+[import ../example/virtual_specifiers/final_class_error.cpp]
+[final_class_error]
+
+This will generate a compile-time error similar to the following because `x` is final (note that the number of the base class that violates the `final` specifier is reported so it is clear which base class is causing the error also in case of multiple-inheritance):
+
+[pre
+final_class_error.cpp:8 ... ERROR_cannot_extend_final_base_class_number_1 ...
+]
+
+Final class checks are performed at compile-time even when contracts are disabled (using [macroref CONTRACT_CONFIG_NO_PRECONDITIONS], [macroref CONTRACT_CONFIG_NO_POSTCONDITIONS], [macroref CONTRACT_CONFIG_NO_CLASS_INVARIANTS], etc).
+
+[endsect]
+
+[section Final Member Functions]
+
+Final member functions cannot be overridden by derived classes, otherwise the compiler will generate an error.
+This library allows to declare a member function final by specifying `final` within the [macroref CONTRACT_FUNCTION] macro, after the cv-qualifier but before exception specifications if present (see also the __Grammar__ section).
+
+For example (see also [file example/virtual_specifiers final_member.hpp] and [file example/virtual_specifiers final_member.cpp]):
+
+[import ../example/virtual_specifiers/final_member.hpp]
+[final_member]
+
+If a member function of a derived class is declared using [macroref CONTRACT_FUNCTION] and attempts to override a final member function from one of the base classes, the compiler will generate a compile-time error (this is true only if both the overriding and overridden functions are declared using this library macro [macroref CONTRACT_FUNCTION]).
+For example, consider the following derived class (see also [file example/virtual_specifiers final_member_error.cpp]):
+
+[import ../example/virtual_specifiers/final_member_error.cpp]
+[final_member_error]
+
+This will generate a compile-time error similar to the following because `y::f` is final (note that the number of the base class that violates the `final` specifier is reported so it is clear which overridden member function is causing the error also in case of multiple-inheritance):
+
+[pre
+final_member_error.cpp:13 ... ERROR_cannot_override_final_function_from_base_class_number_1 ...
+]
+
+In order to correctly handle overloaded functions, the overriding function and the final function must have the same name, parameter types, and cv-qualifier to generate this error.
+
+Final member function checks are performed at compile-time but only when class invariants are enabled ([macroref CONTRACT_CONFIG_NO_CLASS_INVARIANTS] is left not defined).
+
+[endsect]
+
+[section Overriding Member Functions]
+
+Overriding member functions must override a virtual member function from one or more of the base classes, otherwise the compiler will generate an error.
+This library allows to declare an overriding member function by specifying `override` within the [macroref CONTRACT_FUNCTION] macro, after the cv-qualifier but before the `final` specifier if present (`override` and `final` can be used together, see also the __Grammar__ section).
+
+For example (see also [file example/virtual_specifiers override_member.hpp] and [file example/virtual_specifiers override_member.cpp]):
+
+[import ../example/virtual_specifiers/override_member.hpp]
+[override_member]
+
+If a member function of a derived class is declared using [macroref CONTRACT_FUNCTION] and attempts to override an non-virtual or non-existing member function from one of the base classes, the compiler will generate a compile-time error (this is true only if both the overriding and overridden functions are declared using this library macro [macroref CONTRACT_FUNCTION]).
+For example, consider the following derived class (see also [file example/virtual_specifiers override_member_error.cpp]):
+
+[import ../example/virtual_specifiers/override_member_error.cpp]
+[override_member_error]
+
+This will generate a compile-time error similar to the following because `x::g` is not virtual:
+
+[pre
+override_member_error.cpp:12 ... ERROR_no_base_class_declares_matching_virtual_function_to_override_at_line_12 ...
+]
+
+In order to correctly handle overloaded functions, the overriding function and the overridden virtual function must have the same name, parameter types, and cv-qualifier to /not/ generate this error.
+
+Overriding member function checks are performed at compile-time but only if at least one between preconditions, postconditions, and class invariants is enabled ([macroref CONTRACT_CONFIG_NO_PRECONDITIONS], [macroref CONTRACT_CONFIG_NO_POSTCONDITIONS] and [macroref CONTRACT_CONFIG_NO_CLASS_INVARIANTS] are not all defined at the same time).
+
+[endsect]
+
+[section New Member Functions]
+
+New member functions shall not override member functions from any of the base classes, otherwise the compiler will generate an error.
+This library allows to declare a new member function by specifying `new` within the [macroref CONTRACT_FUNCTION] macro, after the cv-qualifier but before the `final` specifier if present (`new` and `final` can be used together, see also the __Grammar__ section).
+
+For example (see also [file example/virtual_specifiers new_member.hpp] and [file example/virtual_specifiers new_member.cpp]):
+
+[import ../example/virtual_specifiers/new_member.hpp]
+[new_member]
+
+If a new member function of a derived class is declared using [macroref CONTRACT_FUNCTION] but it overrides an existing member function from one of the base classes, the compiler will generate a compile-time error (this is true only if both the overriding and overridden functions are declared using this library macro [macroref CONTRACT_FUNCTION]).
+For example, consider the following derived class (see also [file example/virtual_specifiers new_member_error.cpp]):
+
+[import ../example/virtual_specifiers/new_member_error.cpp]
+[new_member_error]
+
+This will generate a compile-time error similar to the following because `f` was already declared in `x` (note that the number of the base class that violates the `new` specifier is reported so it is clear which overridden member function is causing the error also in case of multiple-inheritance):
+
+[pre
+new_member_error.cpp:12 ... ERROR_matching_virtual_function_already_declared_by_base_class_number_1 ...
+]
+
+In order to correctly handle overloaded functions, the new function and the overridden function must have the same name, parameter types, and cv-qualifier to generate this error.
+
+New member function checks are performed at compile-time but only if at least one between preconditions, postconditions, and class invariants is enabled ([macroref CONTRACT_CONFIG_NO_PRECONDITIONS], [macroref CONTRACT_CONFIG_NO_POSTCONDITIONS] and [macroref CONTRACT_CONFIG_NO_CLASS_INVARIANTS] are not all defined at the same time).
+
+[endsect]
+
+[endsect]
+
