@@ -4,7 +4,7 @@
 <title>Function template call_if</title>
 <link rel="stylesheet" href="../../../../doc/src/boostbook.css" type="text/css">
 <meta name="generator" content="DocBook XSL Stylesheets V1.79.1">
-<link rel="home" href="../../index.html" title="Chapter&#160;1.&#160;Boost.Contract 1.0">
+<link rel="home" href="../../index.html" title="Chapter&#160;1.&#160;Boost.Contract 0.5.0">
 <link rel="up" href="../../reference.html#header.boost.contract.call_if_hpp" title="Header &lt;boost/contract/call_if.hpp&gt;">
 <link rel="prev" href="call_if_c.html" title="Function template call_if_c">
 <link rel="next" href="condition_if_c.html" title="Function template condition_if_c">
@@ -35,7 +35,7 @@
 <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> Pred<span class="special">,</span> <span class="keyword">typename</span> Then<span class="special">&gt;</span> 
   <a class="link" href="call_if_statement.html" title="Struct template call_if_statement">call_if_statement</a><span class="special">&lt;</span> <span class="identifier">Pred</span><span class="special">::</span><span class="identifier">value</span><span class="special">,</span> <span class="identifier">Then</span> <span class="special">&gt;</span> <span class="identifier">call_if</span><span class="special">(</span><span class="identifier">Then</span> f<span class="special">)</span><span class="special">;</span></pre></div>
 <div class="refsect1">
-<a name="id1147757"></a><h2>Description</h2>
+<a name="id1120607"></a><h2>Description</h2>
 <p>Create a call-if object with the specified then-branch functor template. This is equivalent to <code class="computeroutput">boost::contract::call_if_c&lt;Pred::value&gt;(f)</code>. Optional functor templates for else-if-branches and the else-branch can be specified as needed. For example:</p>
 <pre class="programlisting"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">contract</span><span class="special">::</span><span class="identifier">call_if</span><span class="special">&lt;</span><span class="identifier">MetaFunction1</span><span class="special">&gt;</span><span class="special">(</span>
     <span class="identifier">then_functor_template1</span>

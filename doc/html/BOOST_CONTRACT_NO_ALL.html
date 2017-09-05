@@ -4,7 +4,7 @@
 <title>Macro BOOST_CONTRACT_NO_ALL</title>
 <link rel="stylesheet" href="../../doc/src/boostbook.css" type="text/css">
 <meta name="generator" content="DocBook XSL Stylesheets V1.79.1">
-<link rel="home" href="index.html" title="Chapter&#160;1.&#160;Boost.Contract 1.0">
+<link rel="home" href="index.html" title="Chapter&#160;1.&#160;Boost.Contract 0.5.0">
 <link rel="up" href="reference.html#header.boost.contract.core.config_hpp" title="Header &lt;boost/contract/core/config.hpp&gt;">
 <link rel="prev" href="BOOST_CONTRACT_NO_CONDITIONS.html" title="Macro BOOST_CONTRACT_NO_CONDITIONS">
 <link rel="next" href="BOOST_CONTRACT_DYN_LINK.html" title="Macro BOOST_CONTRACT_DYN_LINK">
@@ -33,7 +33,7 @@
 
 </span>BOOST_CONTRACT_NO_ALL</pre></div>
 <div class="refsect1">
-<a name="id1153805"></a><h2>Description</h2>
+<a name="id1130964"></a><h2>Description</h2>
 <p>This library will define this macro when users define all  <code class="computeroutput"><a class="link" href="BOOST_CONTRACT_NO_INVARIANTS.html" title="Macro BOOST_CONTRACT_NO_INVARIANTS">BOOST_CONTRACT_NO_INVARIANTS</a></code>,  <code class="computeroutput"><a class="link" href="BOOST_CONTRACT_NO_PRECONDITIONS.html" title="Macro BOOST_CONTRACT_NO_PRECONDITIONS">BOOST_CONTRACT_NO_PRECONDITIONS</a></code>,  <code class="computeroutput"><a class="link" href="BOOST_CONTRACT_NO_POSTCONDITIONS.html" title="Macro BOOST_CONTRACT_NO_POSTCONDITIONS">BOOST_CONTRACT_NO_POSTCONDITIONS</a></code>,  <code class="computeroutput"><a class="link" href="BOOST_CONTRACT_NO_EXCEPTS.html" title="Macro BOOST_CONTRACT_NO_EXCEPTS">BOOST_CONTRACT_NO_EXCEPTS</a></code>, and  <code class="computeroutput"><a class="link" href="BOOST_CONTRACT_NO_CHECKS.html" title="Macro BOOST_CONTRACT_NO_CHECKS">BOOST_CONTRACT_NO_CHECKS</a></code> (this macro is not a configuration macro and this library will generate a compile-time error if users try to define it directly). For example, users can manually program <code class="computeroutput">#ifndef</code> statements in their code using this macro to avoid including the <code class="computeroutput">boost/contract.hpp</code> header all together:</p>
 <pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">contract</span><span class="special">/</span><span class="identifier">core</span><span class="special">/</span><span class="identifier">config</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
 <span class="preprocessor">#ifndef</span> <span class="identifier">BOOST_CONTRACT_NO_ALL</span>

@@ -4,7 +4,7 @@
 <title>Macro BOOST_CONTRACT_NO_CONSTRUCTORS</title>
 <link rel="stylesheet" href="../../doc/src/boostbook.css" type="text/css">
 <meta name="generator" content="DocBook XSL Stylesheets V1.79.1">
-<link rel="home" href="index.html" title="Chapter&#160;1.&#160;Boost.Contract 1.0">
+<link rel="home" href="index.html" title="Chapter&#160;1.&#160;Boost.Contract 0.5.0">
 <link rel="up" href="reference.html#header.boost.contract.core.config_hpp" title="Header &lt;boost/contract/core/config.hpp&gt;">
 <link rel="prev" href="BOOST_CONTRACT_NO_OLDS.html" title="Macro BOOST_CONTRACT_NO_OLDS">
 <link rel="next" href="BOOST_CONTRACT_NO_DESTRUCTORS.html" title="Macro BOOST_CONTRACT_NO_DESTRUCTORS">
@@ -33,7 +33,7 @@
 
 </span>BOOST_CONTRACT_NO_CONSTRUCTORS</pre></div>
 <div class="refsect1">
-<a name="id1155475"></a><h2>Description</h2>
+<a name="id1130510"></a><h2>Description</h2>
 <p>This library will define this macro when users define all  <code class="computeroutput"><a class="link" href="BOOST_CONTRACT_NO_INVARIANTS.html" title="Macro BOOST_CONTRACT_NO_INVARIANTS">BOOST_CONTRACT_NO_INVARIANTS</a></code>,  <code class="computeroutput"><a class="link" href="BOOST_CONTRACT_NO_POSTCONDITIONS.html" title="Macro BOOST_CONTRACT_NO_POSTCONDITIONS">BOOST_CONTRACT_NO_POSTCONDITIONS</a></code>, and  <code class="computeroutput"><a class="link" href="BOOST_CONTRACT_NO_EXCEPTS.html" title="Macro BOOST_CONTRACT_NO_EXCEPTS">BOOST_CONTRACT_NO_EXCEPTS</a></code> (this macro is not a configuration macro and this library will generate a compile-time error if users try to define it directly). Users can manually program <code class="computeroutput">#ifndef</code> statements in their code using this macro to completely disable compilation of contracts for constructors or use the macros defined in <code class="computeroutput">boost/contract_macro.hpp</code> (recommended only for applications where it is truly necessary to completely remove contract code compilation from production code).</p>
 <div class="note"><table border="0" summary="Note">
 <tr>

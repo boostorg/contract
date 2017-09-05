@@ -4,7 +4,7 @@
 <title>Type from</title>
 <link rel="stylesheet" href="../../../../doc/src/boostbook.css" type="text/css">
 <meta name="generator" content="DocBook XSL Stylesheets V1.79.1">
-<link rel="home" href="../../index.html" title="Chapter&#160;1.&#160;Boost.Contract 1.0">
+<link rel="home" href="../../index.html" title="Chapter&#160;1.&#160;Boost.Contract 0.5.0">
 <link rel="up" href="../../reference.html#header.boost.contract.core.exception_hpp" title="Header &lt;boost/contract/core/exception.hpp&gt;">
 <link rel="prev" href="exception.html" title="Class exception">
 <link rel="next" href="from_failure_handler.html" title="Type definition from_failure_handler">
@@ -35,7 +35,7 @@
 
 <span class="keyword">enum</span> <span class="identifier">from</span> <span class="special">{</span> <a class="link" href="from.html#boost.contract.from.from_constructor">from_constructor</a>, <a class="link" href="from.html#boost.contract.from.from_destructor">from_destructor</a>, <a class="link" href="from.html#boost.contract.from.from_function">from_function</a> <span class="special">}</span><span class="special">;</span></pre></div>
 <div class="refsect1">
-<a name="id1163413"></a><h2>Description</h2>
+<a name="id1132642"></a><h2>Description</h2>
 <p>This is passed as a parameter to the assertion failure handler functions. For example, it might be necessary to know in which operation an assertion failed to make sure exceptions are never thrown from destructors, not even when contract failure handlers are programmed by users to throw exceptions instead of terminating the program.</p>
 <p><span class="bold"><strong>See Also:</strong></span></p>
 <p> <a class="link" href="../../boost_contract/advanced.html#boost_contract.advanced.throw_on_failure__and__noexcept__" title="Throw on Failure (and noexcept)"> Throw on Failure</a> </p>

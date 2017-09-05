@@ -4,7 +4,7 @@
 <title>Macro BOOST_CONTRACT_ON_MISSING_CHECK_DECL</title>
 <link rel="stylesheet" href="../../doc/src/boostbook.css" type="text/css">
 <meta name="generator" content="DocBook XSL Stylesheets V1.79.1">
-<link rel="home" href="index.html" title="Chapter&#160;1.&#160;Boost.Contract 1.0">
+<link rel="home" href="index.html" title="Chapter&#160;1.&#160;Boost.Contract 0.5.0">
 <link rel="up" href="reference.html#header.boost.contract.core.config_hpp" title="Header &lt;boost/contract/core/config.hpp&gt;">
 <link rel="prev" href="BOOST_CONTRACT_PERMISSIVE.html" title="Macro BOOST_CONTRACT_PERMISSIVE">
 <link rel="next" href="BOOST_CONTRACT_PRECONDITIONS_DISABLE_NO_ASSERTION.html" title="Macro BOOST_CONTRACT_PRECONDITIONS_DISABLE_NO_ASSERTION">
@@ -33,7 +33,7 @@
 
 </span>BOOST_CONTRACT_ON_MISSING_CHECK_DECL</pre></div>
 <div class="refsect1">
-<a name="id1154612"></a><h2>Description</h2>
+<a name="id1126993"></a><h2>Description</h2>
 <p>In general, there is a logic error in the program when contracts are not assigned to a local variable of type <code class="computeroutput"><a class="link" href="boost/contract/check.html" title="Class check">boost::contract::check</a></code>. Therefore, by default (i.e., when this macro is not defined) this library calls <code class="computeroutput">assert(false)</code> in those cases. If this macro is defined, this library will execute the code expanded by the macro instead of calling <code class="computeroutput">assert(false)</code> (if programmers prefer to throw an exception, etc.).</p>
 <p>This macro can be defined to be any block of code (including <code class="computeroutput">{}</code> to generate no error), for example (on GCC): </p>
 <pre class="programlisting"><span class="special">-</span><span class="identifier">DBOOST_CONTRACT_ON_MISSING_CHECK_DECL</span><span class="special">=</span><span class="char">'{ throw std::logic_error("missing contract check declaration"); }'</span>

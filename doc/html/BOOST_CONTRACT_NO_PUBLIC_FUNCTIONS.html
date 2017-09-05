@@ -4,7 +4,7 @@
 <title>Macro BOOST_CONTRACT_NO_PUBLIC_FUNCTIONS</title>
 <link rel="stylesheet" href="../../doc/src/boostbook.css" type="text/css">
 <meta name="generator" content="DocBook XSL Stylesheets V1.79.1">
-<link rel="home" href="index.html" title="Chapter&#160;1.&#160;Boost.Contract 1.0">
+<link rel="home" href="index.html" title="Chapter&#160;1.&#160;Boost.Contract 0.5.0">
 <link rel="up" href="reference.html#header.boost.contract.core.config_hpp" title="Header &lt;boost/contract/core/config.hpp&gt;">
 <link rel="prev" href="BOOST_CONTRACT_NO_DESTRUCTORS.html" title="Macro BOOST_CONTRACT_NO_DESTRUCTORS">
 <link rel="next" href="BOOST_CONTRACT_NO_FUNCTIONS.html" title="Macro BOOST_CONTRACT_NO_FUNCTIONS">
@@ -33,7 +33,7 @@
 
 </span>BOOST_CONTRACT_NO_PUBLIC_FUNCTIONS</pre></div>
 <div class="refsect1">
-<a name="id1155657"></a><h2>Description</h2>
+<a name="id1130693"></a><h2>Description</h2>
 <p>This library will define this macro when users define all  <code class="computeroutput"><a class="link" href="BOOST_CONTRACT_NO_INVARIANTS.html" title="Macro BOOST_CONTRACT_NO_INVARIANTS">BOOST_CONTRACT_NO_INVARIANTS</a></code>,  <code class="computeroutput"><a class="link" href="BOOST_CONTRACT_NO_PRECONDITIONS.html" title="Macro BOOST_CONTRACT_NO_PRECONDITIONS">BOOST_CONTRACT_NO_PRECONDITIONS</a></code>,  <code class="computeroutput"><a class="link" href="BOOST_CONTRACT_NO_POSTCONDITIONS.html" title="Macro BOOST_CONTRACT_NO_POSTCONDITIONS">BOOST_CONTRACT_NO_POSTCONDITIONS</a></code>, and  <code class="computeroutput"><a class="link" href="BOOST_CONTRACT_NO_EXCEPTS.html" title="Macro BOOST_CONTRACT_NO_EXCEPTS">BOOST_CONTRACT_NO_EXCEPTS</a></code> (this macro is not a configuration macro and this library will generate a compile-time error if users try to define it directly). Users can manually program <code class="computeroutput">#ifndef</code> statements in their code using this macro to completely disable compilation of contracts for public functions or use the macros defined in <code class="computeroutput">boost/contract_macro.hpp</code> (recommended only for applications where it is truly necessary to completely remove contract code compilation from production code).</p>
 <p><span class="bold"><strong>See Also:</strong></span></p>
 <p> <a class="link" href="boost_contract/tutorial.html#boost_contract.tutorial.public_functions" title="Public Functions"> Public Functions</a>,  <a class="link" href="boost_contract/extras.html#boost_contract.extras.disable_contract_compilation__macro_interface_" title="Disable Contract Compilation (Macro Interface)">
