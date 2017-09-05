@@ -1,0 +1,213 @@
+
+[section TODO]
+
+This section lists open items under consideration for future development of this library.
+It is mainly intended as a memorandum for the library authors.
+
+[/ *** PUBLIC TODs ***]
+
+[section Improve contract macros `sequence` error detection and reporting]
+
+The current implementation for syntax error detection and reporting for the `sequence` parameter of the contract macros should be improved.
+For example, if I forget the sequence element for the result type `(result-type)`, the preprocessor given a ton of errors most of which are about Boost.Preprocessor internal macros and make no sense to the user.
+While there are some fundamental limitations to the amount of syntax checking I can implement with the preprocessor for `sequence`, I should be able to improve the current implementation.
+
+[endsect]
+[section Can constructor member initialization list limitation be removed?]
+
+Can the contract macros overcome the constructor member initialization list limitation when separating definition from declaration?
+However, this would have to work for all combinations of the followings: (1) with and without contracts, (2) definition together and separated from declaration, (3) with and without member initialization list.
+
+[endsect]
+[section Should preconditions be checked before constructor member initialization list?]
+
+The library checks constructor preconditions after executing the member initialization list: {Default AND Pre}Body{Post AND Inv} (Default is the member initialization list).
+
+This is what Eiffel does but is this what C++ should do or {Pre AND Default} is a better approach for C++?
+Why does Eiffel do {Default AND Pre}?
+Does any of the CP proposals for C++ mention this issue explicitly?
+
+If {Pre AND Default} is a better approach, {Default AND Pre} should be documented as a library limitation.
+If {Default and Pre} is a better approach, I should document why.
+
+[endsect]
+[section Can syntax of contract macros be unified with other Boost libraries?]
+
+Look if the contract macro `sequence` syntax can be unified with the one of other Boost libraries.
+
+Specifically, is this possible with Boost.ConceptCheck and how concept checking interacts with this Contract Programming library?
+Same questions respect to Boost.Parameter.
+Any other Boost library I should look in these regards?
+
+[endsect]
+[section Consider allowing optional contract checking based on assertion priority and/or class name]
+
+# I have a template library that is well tested so I want to disable postcondition checking.
+However, that is a template so it cannot be precompiled separately with postconditions off.
+I must compile it together with the rest of the code.
+Therefore, if the rest of the code needs to check postconditions, I must check postconditions for the well tested template library as well!
+# There might be contract conditions which are very inefficient to test so I might want to turn only the inefficient condition checking off.
+
+If I could disable contract checking (at least at run-time) based on class name or class+function name, I could address the template issue.
+And/or if I could disable contract checking (at least at run-time) based on some assertion priority (or level of inefficiency), I could address the second issue (one of the CP C++ proposal might suggest to attach a priority label to the assertions... I am not sure).
+
+[endsect]
+[/ *** PRIVATE TODOs *** ]
+
+[/ !!! FOR MY RECORD ONLY -- LEAVE THESE COMMENTED OUT !!!
+
+[section Rename SourceForge to contractpp]
+
+Rename SourceForge project and SVN repository from 'dbcpp' to 'contractpp' (for Contract++).
+Also indicate that the library is about "Correctness And Testing" (same as Boost category).
+
+[endsect]
+[section Update information and links on BoostLibraryUnderConstruction]
+
+Update information, description, links, etc for Boost.Contract to point to latest Contract++ release and documentation on SourceForge at https://svn.boost.org/trac/boost/wiki/LibrariesUnderConstruction#Boost.Contract.
+
+[endsect]
+[section Destructor should use CHECK_INVARIANT instead of CHECK_ANY]
+
+Destructor optional compilation should just use CHECK_INVARIANT and not CHECK_ANY because there is no need to add destructor contract overhead when only pre/post are checked if no inv is checked.
+
+Similarly, for non-member function only CHECK_PRE and CHECK_POST should be checked because they have no inv so there is no reason to add contract overhead when only inv is checked.
+
+(Note that is NOT the case for static-members which have pre and post bust also inv (static inv) so they must use CHECK_INV, CHECK_PRE, and CHECK_POST as usual.)
+
+[endsect]
+[section Read MPL book chapter on compiler performances]
+
+Read MPL book chapter on compiler performances in the attempt to understand compile-time optimization for this library...
+
+[endsect]
+[section Make library thread-safe if CONTRACT_THREADING is #defined]
+
+In this case: this library will also require Boost.Threading.
+sync_<> must have mutex.
+contract_global_checking_ must have a mutex.
+This will add quite a bit on sync at the class level but also at a global level via dbc_global_checking_...
+
+Consider impl waiting pre/post conditions.
+
+[endsect]
+[section Scoped contract macros]
+
+Add CONTRACT_FUNCTION_SCOPED(signature_sequence, scoped_code, preconditions_code_block, postconditions_code_block, body_code_block) and similar for CONTRACT_CONSTRUCTOR_SCOPED() and CONTRACT_DESTRUCTOR_SCOPED().
+The scoped_code is executed in the function definition before contract.call() is invoked.
+This code can be used to hold scoped resources during contract checking and body execution.
+
+If the scoped resource is a scoped mutex lock, then this can be used to executing inv+require+body+inv+ensure atomically (sync'd by a mutex) so that effectively only 1 operation at the time for class can be exec among the operations w/ contracts.
+
+To deal with concurrency, I could provide a "scoped" version of the macros and let the user put the locks.
+
+    int f(void)
+    CONTRACT_FUNCTION_SCOPED( (int) (f)( (void) ),
+        boost::recursive_mutex::scoped_lock lock(mutex_);
+    {
+    }, {
+    }, {
+        return -1;
+    })
+
+    Will exapnd to:
+
+    void f(void)
+    {
+        boost::recursive_mutex::scoped_lock lock(mutex_); // scoped_code
+        contarct().call(...);
+    }
+    ... // Usual stuff.
+
+    But even with contract compilation it must include to scoed_code so:
+    
+    void f(void)
+    {
+        boost::recursive_mutex::scoped_lock lock(mutex_); // scoped_code
+        { return -1; } // body_code_block
+    }
+
+Still, what about the global lock to check if asserting globally??
+
+[endsect]
+[section Consider value of adding contracts to all STL classes in `contract::std`]
+
+All std:: classes/functions can be wrapped by classes/function in contract::std declaring contracts for the STL entities.
+For example a contract::std::list<> class can wrap std::list<> and add contracts to it. 
+Post/Inv checking here is likely not interesting given that STL code is well tested to work.
+Pre checking might be interesting instead.
+
+Look for STL standard guarantees.
+If I cannot find them on-line, consider asking Crowl and/or Ottosen.
+In particular, I would like to write contract::std::map<> to exercise the library more also when there is code with commas not wrapped by ().
+
+[endsect]
+[section Document MSVC error "warning ... not enough actual parameters for macro BOOST_PP_SEQ']
+
+Document MSVC error "warning ... not enough actual parameters for macro 'BOOST_PP_SEQ...'" repeated many, many times when using "(f)( )" instead of "(f)( (void) )" to specify empty argument list.
+
+[endsect]
+[section Shall I try to compile on MSVC with /Wall??]
+
+This gives a LOT of warning also in Boost...
+For g++, it compiles with no warnings but the "already friend" one.
+
+[endsect]
+[section Can I remove limitation that BODY() must be used when calling overridden function]
+
+If an overriding function does not use BODY() to invoke the overridden function, contracts go into infinite recursion.
+Document this limitation (as a warning).
+
+It is not possible to work around this limitation.
+Using object state the library could detect infinite recursion between overriding and overridden function (I prototyped something like this but I am not even sure if this is 100% possible).
+However, to break the recursion the base contract will have to call the base body function via static binding (otherwise using dynamic binding, default C++ behaviour for the call, the overriding function will be called causing the recursion).
+The contract itself cannot perform the static binding call (e.g., using static_cast<> to the object) because the object state is changed only if pointers/references to the objects are used to call the body, but if pointers/objects are used then C++ uses dynamic binding for the call.
+So the contract function could call a special method of the contracted class which performs the static binding call `contract_static_binding_body_...`.
+The issue is that such a static binding call will raise a compiler error if the body function is pure virtual.
+The library does not know directly when a function is pure virtual or not so the library will have to define `contract_static_binding_body_...` also for pure virtual functions and in this case the static binding call `B::f()` will raise a compile time error.
+*** BUT, could I use templates so the contract_static_biding_body_ is templated and it is not compiled unless called? This way I only get the error if the use calls attempts the static binding for pure virtual?? ***
+
+    struct base {
+        virtual void call() {
+            std::cout << "base call\n";
+            // body(); // This causes infinite recursion as it calls deriv::body() via dynamic binding.
+            static_binding_body();
+        }
+        void static_binding_body() {
+            std::cout << "base static binding body\n";
+            b::body(); // Compiler error for pure virtual body()...
+        }
+        virtual void body() = 0;
+    //    {
+    //        std::cout << "base body\n";
+    //    }
+    };
+
+    struct deriv: base {
+        virtual void call() {
+            std::cout << "deriv call\n";
+            body();
+        }
+        virtual void body() {
+            std::cout << "deri body\n";
+            base::call(); // Causes infinite recursion...
+            // base::body(); // This is fine instead.
+        }
+    };
+    
+    Infinite recursion: deriv::base --> deriv::body --> base::call() --> deriv::body() causing infinite recursion because base::body() is NOT called...
+
+So, at the moment, I did not see a way around this.
+Programmers will have to pay attention and use BODY() for static binding call of the base class.
+
+[endsect]
+[section Email all referenced authors after 1st solid release]
+
+After the 1st solid release of Contract++, email all cited authors (Crowl, Ottosen, Meyer, Mitchell, Abrahams, etc) to ask for feedback on the library.
+
+[endsect]
+
+]
+
+[endsect]
+

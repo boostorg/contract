@@ -1,0 +1,180 @@
+
+[section Examples]
+
+This section provides source code of fully working examples that can all be compiled and executed using this library.
+The most interesting examples (from the authors' prospective) have highlighted keywords in their purpose descriptions.
+
+All examples presented in the Contract Programming proposal for the C++ standard __Crowl2006__ are programmed here using the library.
+Most of the other examples have been ported to C++ from Eiffel code using this library and they were originally presented in __Meyer1997__ and __Mitchell2002__.
+
+[table
+[   [ Source ]
+    [ Name ]
+    [ Purpose ]
+    [ Files ]]
+
+[   [ __Crowl2006__ ]
+    [ STL Vector ]
+    [ *Complete contracts* for STL vector. ]
+    [
+        [@example/Crowl2006/vector/main.cpp main.cpp]
+    ]]
+
+[   [ __Crowl2006__ ]
+    [ Block ]
+    [ Block invariants. ]
+    [
+        [@example/Crowl2006/block/main.cpp main.cpp]
+    ]]
+
+[   [ __Crowl2006__ ]
+    [ Circle ]
+    [ Subcontracting. ]
+    [
+        [@example/Crowl2006/circle/main.cpp main.cpp]
+    ]]
+
+[   [ __Crowl2006__ ]
+    [ Factorial ]
+    [ Contracts with recursion. ]
+    [
+        [@example/Crowl2006/factorial/main.cpp main.cpp]
+    ]]
+
+[   [ __Crowl2006__ ]
+    [ Operator Equal ]
+    [ Contracts for operators. ]
+    [
+        [@example/Crowl2006/operator_equal/main.cpp main.cpp]
+    ]]
+
+[   [ __Crowl2006__ ]
+    [ Square Root ]
+    [ Contracts for non-member functions. ]
+    [
+        [@example/Crowl2006/sqrt/main.cpp main.cpp]
+    ]]
+
+[   [ __Crowl2006__ ]
+    [ Sum ]
+    [ Contracts for non-member functions (with separated definition). ]
+    [
+        [@example/Crowl2006/sum/sum.hpp sum.hpp]
+        [@example/Crowl2006/sum/sum.cpp sum.cpp]
+        [@example/Crowl2006/sum/main.cpp main.cpp]
+    ]]
+
+[   [ __Mitchell2002__ ]
+    [ Name List ]
+    [ Relax base class preconditions using *subcontracting*. ]
+    [
+        [@example/Mitchell2002/name_list/names.hpp names.hpp]
+        [@example/Mitchell2002/name_list/names.hpp names.cpp]
+        [@example/Mitchell2002/name_list/main.cpp main.cpp]
+    ]]
+
+[   [ __Mitchell2002__ ]
+    [ Courier ]
+    [ Relax base class preconditions using subcontracting. ]
+    [
+        [@example/Mitchell2002/courier/couriers.hpp couriers.hpp]
+        [@example/Mitchell2002/courier/couriers.hpp couriers.cpp]
+        [@example/Mitchell2002/courier/main.cpp main.cpp]
+    ]]
+
+
+[   [ __Mitchell2002__ ]
+    [ Dictionary ]
+    [ Contracts for a dictionary (map-like) data-type. ]
+    [
+        [@example/Mitchell2002/dictionary/dictionary.hpp dictionary.hpp]
+        [@example/Mitchell2002/dictionary/main.cpp main.cpp]
+    ]]
+
+[   [ __Mitchell2002__ ]
+    [ Stack ]
+    [ Contracts for a stack. ]
+    [
+        [@example/Mitchell2002/stack/stack.hpp stack.hpp]
+        [@example/Mitchell2002/stack/main.cpp main.cpp]
+    ]]
+
+[   [ __Mitchell2002__ ]
+    [ Simple Queue ]
+    [ Contracts for a queue. ]
+    [
+        [@example/Mitchell2002/simple_queue/simple_queue.hpp simple_queue.hpp]
+        [@example/Mitchell2002/simple_queue/main.cpp main.cpp]
+    ]]
+
+[   [ __Mitchell2002__ ]
+    [ Customer Manager ]
+    [ Contracts for a class manging customers. ]
+    [
+        [@example/Mitchell2002/customer_manager/customer_manager.hpp customer_manager.hpp]
+        [@example/Mitchell2002/customer_manager/customer_manager.cpp customer_manager.cpp]
+        [@example/Mitchell2002/customer_manager/main.cpp main.cpp]
+    ]]
+
+[   [ __Mitchell2002__ ]
+    [ Observe ]
+    [ Contracts for the observer design pattern. ]
+    [
+        [@example/Mitchell2002/observe/observe.hpp observe.hpp]
+        [@example/Mitchell2002/observer/main.cpp main.cpp]
+    ]]
+
+[   [ __Mitchell2002__ ]
+    [ Counter ]
+    [ *Relaxe the accessible copy constructor requirement* for old `decrement_button` objects in postconditions. ]
+    [
+        [@example/Mitchell2002/counter/counter.hpp counter.hpp]
+        [@example/Mitchell2002/counter/view_of_counter.hpp view_of_counter.hpp]
+        [@example/Mitchell2002/counter/push_button.hpp push_button.hpp]
+        [@example/Mitchell2002/counter/decrement_button.hpp decrement_button.hpp]
+        [@example/Mitchell2002/counter/main.cpp main.cpp]
+    ]]
+
+[   [ __Meyer1997__ ]
+    [ Stack3]
+    [ Contracts for functions returning *error codes*. ]
+    [
+        [@example/Meyer1997/stack3/stack3.hpp stack3.hpp]
+        [@example/Meyer1997/stack3/main.cpp main.cpp]
+    ]]
+
+[   [ __Meyer1997__ ]
+    [ Stack4 ]
+    [ Contracts for stack. ]
+    [
+        [@example/Meyer1997/stack4/stack4.hpp stack4.hpp]
+        [@example/Meyer1997/stack4/main.cpp main.cpp]
+    ]]
+
+[   [ __Meyer1997__ ]
+    [ Greatest Common Divisor ]
+    [ *Block invariants and loop variants.* ]
+    [
+        [@example/Meyer1997/gcd/main.cpp main.cpp]
+    ]]
+
+[   [ __Meyer1997__ ]
+    [ Max Array ]
+    [ Block invariants and loop variants. ]
+    [
+        [@example/Meyer1997/maxarray/main.cpp main.cpp]
+    ]]
+
+[   [ __Stroustrup1997__ ]
+    [ String ]
+    [ Precondition and invariants (no postconditions). ]
+    [
+        [@example/Stroustrup1997/string/string.hpp string.hpp]
+        [@example/Stroustrup1997/string/string.cpp string.cpp]
+        [@example/Stroustrup1997/string/main.cpp main.cpp]
+    ]]
+
+]
+
+[endsect]
+

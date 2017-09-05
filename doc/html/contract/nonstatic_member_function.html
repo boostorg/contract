@@ -1,0 +1,284 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Class template nonstatic_member_function</title>
+<link rel="stylesheet" href="../doc/html/boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.73.2">
+<link rel="start" href="../index.html" title="Contract++ 0.3.469">
+<link rel="up" href="../reference.html#header..home.lcaminiti.sandbox.dbcpp_sourceforge.boost-quickbook.doc.qbk.src.contract.nonstatic_member_function_hpp" title="Header &lt;contract/nonstatic_member_function.hpp&gt;">
+<link rel="prev" href="nonmember_function.html" title="Class template nonmember_function">
+<link rel="next" href="copyable.html" title="Class template copyable">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<div class="spirit-nav">
+<a accesskey="p" href="nonmember_function.html"><img src=".././doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../reference.html#header..home.lcaminiti.sandbox.dbcpp_sourceforge.boost-quickbook.doc.qbk.src.contract.nonstatic_member_function_hpp"><img src=".././doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src=".././doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="copyable.html"><img src=".././doc/html/images/next.png" alt="Next"></a>
+</div>
+<hr>
+<div class="refentry" lang="en">
+<a name="contract.nonstatic_member_function"></a><div class="titlepage"></div>
+<div class="refnamediv">
+<h2><span class="refentrytitle">Class template nonstatic_member_function</span></h2>
+<p>contract::nonstatic_member_function</p>
+</div>
+<h2 xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="refsynopsisdiv-title">Synopsis</h2>
+<div xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="refsynopsisdiv"><pre class="synopsis"><span class="emphasis"><em>// In header: &lt;<a class="link" href="../reference.html#header..home.lcaminiti.sandbox.dbcpp_sourceforge.boost-quickbook.doc.qbk.src.contract.nonstatic_member_function_hpp" title="Header &lt;contract/nonstatic_member_function.hpp&gt;">contract/nonstatic_member_function.hpp</a>&gt;
+
+</em></span><span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> F, <span class="bold"><strong>typename</strong></span> BaseContractClass1 = <span class="bold"><strong>void</strong></span>, ... , 
+         <span class="bold"><strong>typename</strong></span> BaseContractClassM = <span class="bold"><strong>void</strong></span>&gt; 
+<span class="bold"><strong>class</strong></span> <a class="link" href="nonstatic_member_function.html" title="Class template nonstatic_member_function">nonstatic_member_function</a> {
+<span class="bold"><strong>public</strong></span>:
+  <span class="emphasis"><em>// <a class="link" href="nonstatic_member_function.html#contract.nonstatic_member_functionconstruct-copy-destruct">construct/copy/destruct</a></em></span>
+  <a class="link" href="nonstatic_member_function.html#id2347225-bb">nonstatic_member_function</a>(__BodyFunctionPointer__, 
+                            __PreconditionFunctionPointer__, 
+                            __PostconditionFunctionPointer__);
+  <a class="link" href="nonstatic_member_function.html#id2347490-bb">~nonstatic_member_function</a>();
+
+  <span class="emphasis"><em>// <a class="link" href="nonstatic_member_function.html#id2347038-bb">public member functions</a></em></span>
+  <span class="type">ResultType</span> <a class="link" href="nonstatic_member_function.html#id2347042-bb">call</a>(__MaybeConstClassPointer__, ArgumentType1, ..., 
+                  ArgumetnTypeN) ;
+};</pre></div>
+<div class="refsect1" lang="en">
+<a name="id2658437"></a><h2>Description</h2>
+<p>Class template used to write contracts for non-static member functions.</p>
+<p><span class="bold"><strong>Note:</strong></span> This class is used to write contracts for non-static member functions but it cannot be used for static-member functions (see <code class="computeroutput">contract::static_member</code>), constructors (see <code class="computeroutput">contract::constructor</code>), destructors (see <code class="computeroutput">contract::destructor</code>), and non-m ember functions (see <code class="computeroutput">contract::nonmember_function</code>) because they have different contract checking semantics.</p>
+<p>The <code class="computeroutput">CONTRACT_FUNCTION()</code> macro expands to code that uses this class template (see the Without the Macros section) -- whenever possible, use the macro instead of using this class template directly. Rarely, it might be needed to use this class template directly to implement workarounds for compilers that do not fully comply with the ISO C++ standard.</p>
+<p><span class="bold"><strong>Parameters:</strong></span> </p>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<tbody>
+<tr>
+<td><span class="bold"><strong><code class="computeroutput">F</code></strong></span></td>
+<td>The function type of the function being contracted. </td>
+</tr>
+<tr>
+<td><span class="bold"><strong><code class="computeroutput">BaseContractClass1, ..., BaseContractClassM</code></strong></span></td>
+<td>These are the contracts from which the member function is subcontracting. These are all optional, they are only specified when the member function is subcontracting: no base contract is specified if no subcontracting, only <code class="computeroutput">BaseContractClass1</code> is specified to subcontract from 1 base class only, and more base contract classes are specified to support subcontracting with multiple inheritance. <div class="itemizedlist"><ul type="disc">
+<li><p>Each of these types must inherit from <code class="computeroutput">contract::nonstatic_member_function</code> (so to be a contract class) and its class type must be a base class of the contracted class (otherwise the library will generate a compile-time error). </p></li>
+<li><p>When multiple base contract classes are specified, the overridden contracts are checked following the order of the specified template parameters. The derived class contract is checked last. </p></li>
+<li><p>The maximum number of supported base class contracts M is specified by the <code class="computeroutput">CONTRACT_CONFIG_MAX_MULTIPLE_INHERITANCE</code> configuration macro.  </p></li>
+</ul></div>
+</td>
+</tr>
+</tbody>
+</table></div>
+<p>
+</p>
+<p>The following metaprogramming constructs (e.g., <code class="computeroutput">__AMetaprogrammingConstruct__</code>) are used in this documentation to define the different types:</p>
+<div class="itemizedlist"><ul type="disc">
+<li><p>If <code class="computeroutput">S</code> is <code class="computeroutput">contract::copyable&lt;T&gt;</code> then <code class="computeroutput">__RemoveCopyable__&lt; S &gt;</code> is <code class="computeroutput">T</code>, otherwise it is <code class="computeroutput">S</code> (i.e., this removes the eventual <code class="computeroutput">contract::copyable</code> tag from the specified type).</p></li>
+<li><p>If <code class="computeroutput">F</code> is a member function pointer then <code class="computeroutput">__UncopyableClassType__</code> is <code class="computeroutput">__RemoveCopyable__&lt; ClassType &gt;::</code> (`::` included), otherwise it is nothing.</p></li>
+<li><p>If <code class="computeroutput">F</code> is a constant member then <code class="computeroutput">__ConstIfConstantMember__</code> is <code class="computeroutput">const</code>, otherwise it is nothing.</p></li>
+<li><p>If <code class="computeroutput">S</code> is tagged <code class="computeroutput">contract::copyable</code> then <code class="computeroutput"> __IfCopyable__&lt; S, T &gt;</code> is the <code class="computeroutput">T</code>, otherwise it is the <code class="computeroutput">contract::noold</code>.</p></li>
+<li><p>If <code class="computeroutput">F</code> has a non-void <code class="computeroutput">ResultType</code> then <code class="computeroutput">__IfNonVoid__&lt; C &gt;</code> is <code class="computeroutput">C</code>, otherwise it is nothing.</p></li>
+<li><p>If <code class="computeroutput">F</code> is a non-constant member functions then <code class="computeroutput">__MaybeConstClassPointer__</code> is <code class="computeroutput">boost::add_pointer&lt; __UncopyableClassType__ &gt;::type</code>, otherwise is is <code class="computeroutput">boost::add_pointer&lt;boost::add_const&lt; __UnopyableClassType__ &gt;::type&gt;:: type</code>.</p></li>
+</ul></div>
+<p>
+</p>
+<p>These metaporgramming constructs are <span class="bold"><strong>not</strong></span> templates. They are internally implemented by the library using both preprocessor and template metaprogramming (in a way that is intentionally not documented here because it is library implementation specific).</p>
+<p>The function type template parameter <code class="computeroutput">F</code> must be specified as follows: </p>
+<pre class="programlisting">    // For member functions.
+    ResultType (ClassType __ConstIfConstantMember__*, ArgumentType1, ..., ArgumentTypeN) 
+</pre>
+<p> Where: </p>
+<div class="itemizedlist"><ul type="disc">
+<li><p>The <code class="computeroutput">ResultType</code> is the function result type (use <code class="computeroutput">void</code> for functions that have no return value). </p></li>
+<li><p>The <code class="computeroutput">ClassType</code> is the type of the class the function is member of. </p></li>
+<li><p>For constant member functions <code class="computeroutput">const</code> qualifies the class type. </p></li>
+<li><p>The class type <code class="computeroutput">ClassType</code> (together with its eventual <code class="computeroutput">const</code> qualifier) can be tagged <code class="computeroutput">contract::copyable</code> as in <code class="computeroutput">contract::copyable&lt;ClassType __ConstIfContractMemeber__&gt;*</code> if the object old value <code class="computeroutput">CONTRACT_OLDOF(this)</code> is needed in the postconditions (in this case the class must have an accessible constant-correct copy constructor, see <code class="computeroutput">contract::copy</code>). Note that <code class="computeroutput">contract::copyable</code> does <span class="bold"><strong>not</strong></span> wrap the pointer operator (i.e., <code class="computeroutput">contract::copyable&lt;ClassType __ConstIfContractMemeber__*&gt;</code> is invalid). </p></li>
+<li>
+<p>The class type must declare a (private) mutable member variable of a friend type <code class="computeroutput">contract::state</code> with the predefined name <code class="computeroutput">contract_state_</code> otherwise the library will generate a compile-time error. This member variable is mainly used by the library to keep track of when contracts are being checked so to disable assertion checking in nested member function calls that could otherwise result in infinite recursion (see the Without the Macros section). </p>
+<pre class="programlisting">    class ClassType {
+    
+    // Optional contract compilation.
+    #if defined BOOST_CONTRACT_CHECK_CLASS_INVARIANT || \
+            defined BOOST_CONTRACT_CHECK_PRECONDITION || \
+            defined BOOST_CONTRACT_CHECK_POSTCONDITION
+        // Augmented state.
+        friend contract::state;
+        mutable contract::state contract_state_;
+    #endif
+        
+        ... // Rest of the class.
+    };
+</pre>
+<p> Whenever possible, use the <code class="computeroutput">CONTRACT_INVARIANT()</code> macro instead of declaring <code class="computeroutput">contract_state_</code> directly. </p>
+</li>
+<li><p>The function argument types <code class="computeroutput">ArgumentType1</code>, ..., <code class="computeroutput">ArgumentTypeN</code> are all optional (specify none for a function with no argument, only <code class="computeroutput">ArgumentType1</code> is specified for a function with one argument, etc). </p></li>
+<li><p>Any of the argument type can be tagged <code class="computeroutput">contract::copyable</code> if the old value <code class="computeroutput">CONTRACT_OLDOF(argument-name)</code> (before body execution) of the related argument is needed in postconditions. Types tagged <code class="computeroutput">contract::copyable</code> must have an accessible constant-correct copy constructor (otherwise the library will generate a compile-time error, see <code class="computeroutput">contract::copy</code>). The eventual <code class="computeroutput">contract::copyable</code> tag must wrap the <span class="bold"><strong>entire</strong></span> argument type (including the pointer operator if present, this is different from the class type). </p></li>
+<li><p>The maximum number of supported function arguments N is specified by the <code class="computeroutput">CONTRACT_CONFIG_MAX_FUNCTION_ARITY</code> configuration macro.</p></li>
+</ul></div>
+<p>
+<span class="bold"><strong>See:</strong></span> Without the Macros section </p>
+<div class="refsect2" lang="en">
+<a name="id2659063"></a><h3>
+<a name="contract.nonstatic_member_functionconstruct-copy-destruct"></a><code class="computeroutput">nonstatic_member_function</code> 
+        public
+       construct/copy/destruct</h3>
+<div class="orderedlist"><ol type="1">
+<li>
+<pre class="literallayout"><a name="id2347225-bb"></a>nonstatic_member_function(__BodyFunctionPointer__ body_function, 
+                          __PreconditionFunctionPointer__ precondition_function, 
+                          __PostconditionFunctionPointer__ postcondition_function);</pre>
+<p>Construct this contract object using the specified body, preconditions, and postconditions functions.</p>
+<p><span class="bold"><strong>Parameters:</strong></span> </p>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<tbody>
+<tr>
+<td><span class="bold"><strong><code class="computeroutput">body_function</code></strong></span></td>
+<td>A pointer to the function executing the body. </td>
+</tr>
+<tr>
+<td><span class="bold"><strong><code class="computeroutput">precondition_function</code></strong></span></td>
+<td>A pointer to the function asserting the preconditions. </td>
+</tr>
+<tr>
+<td><span class="bold"><strong><code class="computeroutput">postcondition_function</code></strong></span></td>
+<td>A pointer to the function asserting the postconditions. </td>
+</tr>
+</tbody>
+</table></div>
+<p>
+</p>
+<p>The body function pointer type is defined as follows: </p>
+<pre class="programlisting">        typedef ResultType (__UncopyableClassType__* __BodyFunctionPointer__)
+                (   __RemoveCopyable__&lt; ArgumentType1 &gt;,
+                    ..., 
+                    __RemoveCopyable__&lt; ArgumentTypeN &gt;
+                ) __ConstIfConstantMember__;
+</pre>
+<p> </p>
+<div class="itemizedlist"><ul type="disc">
+<li><p>The body function pointer type matches the signature of the contracted function. </p></li>
+<li><p>The <code class="computeroutput">contract::copyable</code> tag is removed from the class and argument types. </p></li>
+<li><p>The function type is the <code class="computeroutput">const</code> only if the contracted function is a constant member.</p></li>
+</ul></div>
+<p>
+The precondition function pointer type is defined as follows: </p>
+<pre class="programlisting">        typedef void (__UncopyableClassType__* __PreconditionFunctionPointer__)
+                (   boost::add_reference&lt;boost::add_const&lt;
+                            __RemoveCopyable__&lt; ArgumentType1 &gt; &gt;::type&gt;::type,
+                    ..., 
+                    boost::add_reference&lt;boost::add_const&lt;
+                            __RemoveCopyable__&lt; ArgumentTypeN &gt; &gt;::type&gt;::type
+                ) const;
+</pre>
+<p> </p>
+<div class="itemizedlist"><ul type="disc">
+<li><p>The precondition function pointer type always has a <code class="computeroutput">void</code> return type. </p></li>
+<li><p>The <code class="computeroutput">contract::copyable</code> tag is removed from the class and argument types. </p></li>
+<li><p>Each function argument is passed as a contract reference. </p></li>
+<li><p>The function type is always <code class="computeroutput">const</code> if the contracted function is a member.</p></li>
+</ul></div>
+<p>
+The postcondition function pointer type is defined as follows: </p>
+<pre class="programlisting">        typedef void (__UncopyableClassType__* __PreconditionFunctionPointer__)
+                (   __IfCopyable__&lt; ClassType,
+                            boost::add_pointer&lt;boost::add_const&lt;
+                            ClassType&gt;::type&gt;::type &gt;,
+                    boost::add_reference&lt;boost::add_const&lt;
+                            __RemoveCopyable__&lt; ArgumentType1 &gt; &gt;::type&gt;::type,
+                    __IfCopyable__&lt; ArgumentType1,
+                            boost::add_reference&lt;boost::add_const&lt;
+                            __RemoveCopyable__&lt; ArgumentType1 &gt; &gt;::type&gt;::type &gt;,
+                    ..., 
+                    boost::add_reference&lt;boost::add_const&lt;
+                            __RemoveCopyable__&lt; ArgumentTypeN &gt; &gt;::type&gt;::type,
+                    __I fCopyable__&lt; ArgumentTypeN,
+                            boost::add_reference&lt;boost::add_const&lt;
+                            __RemoveCopyable__&lt; ArgumentTypeN &gt; &gt;::type&gt;::type &gt;,
+                    __IfNonVoid__&lt; boost::add_reference&lt;boost::add_const&lt;
+                            ResultType&gt;::type&gt;::type &gt;
+                ) const;
+</pre>
+<p> </p>
+<div class="itemizedlist"><ul type="disc">
+<li><p>The postcondition function pointer type always has a <code class="computeroutput">void</code> return type. </p></li>
+<li><p>The <code class="computeroutput">contract::copyable</code> tag is removed from the class and argument types. </p></li>
+<li><p>The first argument is a constant pointer to the object old value if the class type was tagged <code class="computeroutput">contract::copyable</code>, otherwise it is of type <code class="computeroutput">contract::noold</code> (indicating that no object old value is available because the class type was not tagged <code class="computeroutput">contract::copyable</code>). </p></li>
+<li><p>Each function argument is passed as contract reference and it is followed by its old value. Each old value is a constant reference to the argument old value if the argument type was tagged <code class="computeroutput">contract::copayble</code>, otherwise it is of type <code class="computeroutput">contract::noold</code> (indicating that no object old value is available because the argument type was not tagged <code class="computeroutput">contract::copyable</code>). </p></li>
+<li><p>The function type is always <code class="computeroutput">const</code> if the contracted function is a member. </p></li>
+</ul></div>
+<p>
+</p>
+</li>
+<li>
+<pre class="literallayout"><a name="id2347490-bb"></a>~nonstatic_member_function();</pre>
+<p>Destroy this contract object. </p>
+</li>
+</ol></div>
+</div>
+<div class="refsect2" lang="en">
+<a name="id2659427"></a><h3>
+<a name="id2347038-bb"></a><code class="computeroutput">nonstatic_member_function</code> public member functions</h3>
+<div class="orderedlist"><ol type="1"><li>
+<pre class="literallayout"><span class="type">ResultType</span> <a name="id2347042-bb"></a>call(__MaybeConstClassPointer__ object, ArgumentType1 argument1, 
+                ..., ArgumetnTypeN argumentN) ;</pre>
+<p>Check the contract and execute the member function body.</p>
+<p>This function implements the correct contract checking semantics for the function call (see the Tutorial section). In summary: </p>
+<div class="itemizedlist"><ul type="disc">
+<li><p>It checks class invariants and preconditions (also of overridden contracts when subcontracting), it executes the member function body, then it checks class invariants and postconditions (also of overridden contracts when subcontracting). </p></li>
+<li><p>If the body throws an exception, only class invariants (and not postconditions) are checked on function exit. </p></li>
+<li><p>Non-member functions do not check class invariants and they do not subcontract.</p></li>
+</ul></div>
+<p>
+<span class="bold"><strong>Parameters:</strong></span> </p>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<tbody>
+<tr>
+<td><span class="bold"><strong><code class="computeroutput">object</code></strong></span></td>
+<td>A pointer to the object (present only if <code class="computeroutput">F</code> is a member function pointer type). The object pointer is <code class="computeroutput">const</code> only if <code class="computeroutput">F</code> is a constant member function pointer type (to handle constant member functions). </td>
+</tr>
+<tr>
+<td><span class="bold"><strong><code class="computeroutput">argument1, ..., argumentN</code></strong></span></td>
+<td>The function arguments. </td>
+</tr>
+</tbody>
+</table></div>
+<p>
+</p>
+<p><span class="bold"><strong>Returns:</strong></span> The function return value but only when <code class="computeroutput">F</code> is a non-void function pointer type.</p>
+<p><span class="bold"><strong>Note:</strong></span> When <code class="computeroutput">F</code> is a member function pointer type, the <code class="computeroutput">call()</code> function checks class invariants by calling a constant member function with the <code class="computeroutput">contract_invariant_</code> predefined name and it also checks static class invariants by calling a static member function with the <code class="computeroutput">contract_static_invariant_</code> predefined name (see the Without the Macros section for more information): </p>
+<pre class="programlisting">        class ClassType {
+
+        #if defined BOOST_CONTRACT_CHECK_INVARIANT
+            void contract_static_invariant_(void) {
+                ... // Assert static class invariants.
+            }
+            void contract_invariant_ (void) const {
+                ... // Assert class invariants.
+            }
+        #endif
+                    
+            ... // Rest of the class.
+        };
+</pre>
+<p> Note the #if guard to declare the function only when invariant compilation and checking is turned on. Such function must be defined and accessible otherwise the library will generate a compile-time error. Whenever possible, use the <code class="computeroutput">CONTRACT_INVARIANT()</code> macro instead of programming the <code class="computeroutput">contract_invariant_</code> and <code class="computeroutput">contract_static_invariant_</code> functions directly. </p>
+</li></ol></div>
+</div>
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright © 2009 -2010 Lorenzo Caminiti<p>
+        Distributed under the Contract++ Software License, Version 1.0 (see accompanying
+        file LICENSE_1_0.txt)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="nonmember_function.html"><img src=".././doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../reference.html#header..home.lcaminiti.sandbox.dbcpp_sourceforge.boost-quickbook.doc.qbk.src.contract.nonstatic_member_function_hpp"><img src=".././doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src=".././doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="copyable.html"><img src=".././doc/html/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>

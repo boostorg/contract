@@ -1,0 +1,166 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Class template nonmember_function</title>
+<link rel="stylesheet" href="../doc/html/boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.73.2">
+<link rel="start" href="../index.html" title="Contract++ 0.3.469">
+<link rel="up" href="../reference.html#header..home.lcaminiti.sandbox.dbcpp_sourceforge.boost-quickbook.doc.qbk.src.contract.nonmember_function_hpp" title="Header &lt;contract/nonmember_function.hpp&gt;">
+<link rel="prev" href="../CONTRACT_FUNCTION.html" title="Macro CONTRACT_FUNCTION">
+<link rel="next" href="nonstatic_member_function.html" title="Class template nonstatic_member_function">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<div class="spirit-nav">
+<a accesskey="p" href="../CONTRACT_FUNCTION.html"><img src=".././doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../reference.html#header..home.lcaminiti.sandbox.dbcpp_sourceforge.boost-quickbook.doc.qbk.src.contract.nonmember_function_hpp"><img src=".././doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src=".././doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="nonstatic_member_function.html"><img src=".././doc/html/images/next.png" alt="Next"></a>
+</div>
+<hr>
+<div class="refentry" lang="en">
+<a name="contract.nonmember_function"></a><div class="titlepage"></div>
+<div class="refnamediv">
+<h2><span class="refentrytitle">Class template nonmember_function</span></h2>
+<p>contract::nonmember_function</p>
+</div>
+<h2 xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="refsynopsisdiv-title">Synopsis</h2>
+<div xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="refsynopsisdiv"><pre class="synopsis"><span class="emphasis"><em>// In header: &lt;<a class="link" href="../reference.html#header..home.lcaminiti.sandbox.dbcpp_sourceforge.boost-quickbook.doc.qbk.src.contract.nonmember_function_hpp" title="Header &lt;contract/nonmember_function.hpp&gt;">contract/nonmember_function.hpp</a>&gt;
+
+</em></span><span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> F&gt; 
+<span class="bold"><strong>class</strong></span> <a class="link" href="nonmember_function.html" title="Class template nonmember_function">nonmember_function</a> {
+<span class="bold"><strong>public</strong></span>:
+  <span class="emphasis"><em>// <a class="link" href="nonmember_function.html#contract.nonmember_functionconstruct-copy-destruct">construct/copy/destruct</a></em></span>
+  <a class="link" href="nonmember_function.html#id2346356-bb">nonmember_function</a>(__BodyFunctionPointer__, __PreconditionFunctionPointer__, 
+                     __PostconditionFunctionPointer__);
+  <a class="link" href="nonmember_function.html#id2346511-bb">~nonmember_function</a>();
+
+  <span class="emphasis"><em>// <a class="link" href="nonmember_function.html#id2346308-bb">public member functions</a></em></span>
+  <span class="type">ResultType</span> <a class="link" href="nonmember_function.html#id2346312-bb">call</a>(ArgumentType1, ..., ArgumetnTypeN) ;
+};</pre></div>
+<div class="refsect1" lang="en">
+<a name="id2657823"></a><h2>Description</h2>
+<p>Class template used to write contracts for non-member functions.</p>
+<p><span class="bold"><strong>Note:</strong></span> Only the differences between this class and the <code class="computeroutput">contract::nonstatic_member_function</code> class are documented here. Read the <code class="computeroutput">contract::nonstatic_member_function</code> documentation first.</p>
+<p>The <code class="computeroutput">CONTRACT_FUNCTION()</code> macro expands to code that uses this class template (when no <code class="computeroutput">(class)</code> is specified in the function signature sequence, see the Without the Macros section) -- whenever possible, use the macro instead of using this class template directly. Rarely, it might be needed to use this template class directly to implement workarounds for compilers that do not fully comply with the ISO C++ standard.</p>
+<p><span class="bold"><strong>Parameters:</strong></span> </p>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<tbody><tr>
+<td><span class="bold"><strong><code class="computeroutput">F</code></strong></span></td>
+<td>The function type of the non-member function being contracted. </td>
+</tr></tbody>
+</table></div>
+<p>
+</p>
+<p>The function type <code class="computeroutput">F</code> must be specified as follows: </p>
+<pre class="programlisting">    ResultType (ArgumentType1, ..., ArgumentTypeN)
+</pre>
+<p><span class="bold"><strong>See:</strong></span> Without the Macros section, <code class="computeroutput">contract::nonstatic_member_function</code> </p>
+<div class="refsect2" lang="en">
+<a name="id2657927"></a><h3>
+<a name="contract.nonmember_functionconstruct-copy-destruct"></a><code class="computeroutput">nonmember_function</code> 
+        public
+       construct/copy/destruct</h3>
+<div class="orderedlist"><ol type="1">
+<li>
+<pre class="literallayout"><a name="id2346356-bb"></a>nonmember_function(__BodyFunctionPointer__ body_function, 
+                   __PreconditionFunctionPointer__ precondition_function, 
+                   __PostconditionFunctionPointer__ postcondition_function);</pre>
+<p>Construct this contract object using the specified body, preconditions, and postconditions functions.</p>
+<p><span class="bold"><strong>Parameters:</strong></span> </p>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<tbody>
+<tr>
+<td><span class="bold"><strong><code class="computeroutput">body_function</code></strong></span></td>
+<td>A pointer to the function executing the body. </td>
+</tr>
+<tr>
+<td><span class="bold"><strong><code class="computeroutput">precondition_function</code></strong></span></td>
+<td>A pointer to the function asserting the preconditions. </td>
+</tr>
+<tr>
+<td><span class="bold"><strong><code class="computeroutput">postcondition_function</code></strong></span></td>
+<td>A pointer to the function asserting the postconditions. </td>
+</tr>
+</tbody>
+</table></div>
+<p>
+</p>
+<p>Refer to the <code class="computeroutput">contract::nonstatic_member_function</code> documentation for the definition of metaprogramming constructs used below (<code class="computeroutput">__IfCopyable__</code>, etc).</p>
+<p>Note the followings for the function pointer types defined below: </p>
+<div class="itemizedlist"><ul type="disc">
+<li><p>They are non-member functions. </p></li>
+<li><p>There is no old object value in postconditions, not even <code class="computeroutput">contract::noold</code> (because non-member functions have no object).</p></li>
+</ul></div>
+<p>
+The body function pointer type is defined as follows: </p>
+<pre class="programlisting">        typedef ResultType (* __BodyFunctionPointer__)
+                (   __RemoveCopyable__&lt; ArgumentType1 &gt;,
+                    ..., 
+                    __RemoveCopyable__&lt; ArgumentTypeN &gt;
+                );
+</pre>
+<p>The precondition function pointer type is defined as follows: </p>
+<pre class="programlisting">        typedef ResultType (* __PreconditionFunctionPointer__)
+                (   boost::add_reference&lt;boost::add_const&lt;
+                            __RemoveCopyable__&lt; ArgumentType1 &gt; &gt;::type&gt;::type,
+                    ..., 
+                    boost::add_reference&lt;boost::add_const&lt;
+                            __RemoveCopyable__&lt; ArgumentTypeN &gt; &gt;::type&gt;::type
+                );
+</pre>
+<p>The postcondition function pointer type is defined as follows: </p>
+<pre class="programlisting">        typedef ResultType (* __PreconditionFunctionPointer__)
+                (   boost::add_reference&lt;boost::add_const&lt;
+                            __RemoveCopyable&lt; ArgumentType1 &gt; &gt;::type&gt;::type,
+                    __IfCopyable__&lt; ArgumentType1,
+                            boost::add_reference&lt;boost::add_const&lt;
+                            __RemoveCopyable__&lt; ArgumentType1 &gt; &gt;::type&gt;::type &gt;,
+                    ..., 
+                    boost::add_reference&lt;boost::add_const&lt;
+                            __RemoveCopyable__&lt; ArgumentTypeN &gt; &gt;::type&gt;::type,
+                    __IfCopyable__&lt; ArgumentTypeN,
+                            boost::add_reference&lt;boost::add_const&lt;
+                            __RemoveCopyable&lt; ArgumentTypeN &gt; &gt;::type&gt;::type &gt;,
+                    __IfNonVoid__&lt; boost::add_reference&lt;boost::add_const&lt;
+                            ResultType&gt;::type&gt;::type &gt;
+                ) const;
+</pre>
+<p> </p>
+</li>
+<li>
+<pre class="literallayout"><a name="id2346511-bb"></a>~nonmember_function();</pre>
+<p>Destroy this contract object. </p>
+</li>
+</ol></div>
+</div>
+<div class="refsect2" lang="en">
+<a name="id2658143"></a><h3>
+<a name="id2346308-bb"></a><code class="computeroutput">nonmember_function</code> public member functions</h3>
+<div class="orderedlist"><ol type="1"><li>
+<pre class="literallayout"><span class="type">ResultType</span> <a name="id2346312-bb"></a>call(ArgumentType1 argument1, ..., ArgumetnTypeN argumentN) ;</pre>
+<p>Check the contract and executes the member function body.</p>
+<p>Refer to the <code class="computeroutput">contract::nonstatic_member_function</code> documentation.</p>
+<p>The <code class="computeroutput">call()</code> function takes no object (because the contracted function is not a member). </p>
+</li></ol></div>
+</div>
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright © 2009 -2010 Lorenzo Caminiti<p>
+        Distributed under the Contract++ Software License, Version 1.0 (see accompanying
+        file LICENSE_1_0.txt)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="../CONTRACT_FUNCTION.html"><img src=".././doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../reference.html#header..home.lcaminiti.sandbox.dbcpp_sourceforge.boost-quickbook.doc.qbk.src.contract.nonmember_function_hpp"><img src=".././doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src=".././doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="nonstatic_member_function.html"><img src=".././doc/html/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>

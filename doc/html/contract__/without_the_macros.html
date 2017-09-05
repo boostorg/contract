@@ -1,0 +1,1407 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Without the Macros</title>
+<link rel="stylesheet" href="../doc/html/boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.73.2">
+<link rel="start" href="../index.html" title="Contract++ 0.3.469">
+<link rel="up" href="../index.html" title="Contract++ 0.3.469">
+<link rel="prev" href="tutorial.html" title="Tutorial">
+<link rel="next" href="throw_on_failure.html" title="Annex: Throw on Failure">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<div class="spirit-nav">
+<a accesskey="p" href="tutorial.html"><img src=".././doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src=".././doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src=".././doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="throw_on_failure.html"><img src=".././doc/html/images/next.png" alt="Next"></a>
+</div>
+<hr>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="contract__.without_the_macros"></a><a class="link" href="without_the_macros.html" title="Without the Macros">Without the Macros</a>
+</h2></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="without_the_macros.html#contract__.without_the_macros.an_example__without_the_macros_">An
+      Example (Without the Macros)</a></span></dt>
+<dt><span class="section"><a href="without_the_macros.html#contract__.without_the_macros.optional_contract_compilation">Optional
+      Contract Compilation</a></span></dt>
+<dt><span class="section"><a href="without_the_macros.html#contract__.without_the_macros.assertions">Assertions</a></span></dt>
+<dt><span class="section"><a href="without_the_macros.html#contract__.without_the_macros.augmented_state">Augmented
+      State</a></span></dt>
+<dt><span class="section"><a href="without_the_macros.html#contract__.without_the_macros.class_invariants">Class
+      Invariants</a></span></dt>
+<dt><span class="section"><a href="without_the_macros.html#contract__.without_the_macros.contracted_function">Contracted
+      Function</a></span></dt>
+<dt><span class="section"><a href="without_the_macros.html#contract__.without_the_macros.preconditions">Preconditions</a></span></dt>
+<dt><span class="section"><a href="without_the_macros.html#contract__.without_the_macros.postconditions">Postconditions</a></span></dt>
+<dt><span class="section"><a href="without_the_macros.html#contract__.without_the_macros.body">Body</a></span></dt>
+<dt><span class="section"><a href="without_the_macros.html#contract__.without_the_macros.contract_class">Contract
+      Class</a></span></dt>
+<dt><span class="section"><a href="without_the_macros.html#contract__.without_the_macros.static_member_functions">Static
+      Member Functions</a></span></dt>
+<dt><span class="section"><a href="without_the_macros.html#contract__.without_the_macros.constructors">Constructors</a></span></dt>
+<dt><span class="section"><a href="without_the_macros.html#contract__.without_the_macros.destructors">Destructors</a></span></dt>
+<dt><span class="section"><a href="without_the_macros.html#contract__.without_the_macros.non_member_functions">Non-Member
+      Functions</a></span></dt>
+<dt><span class="section"><a href="without_the_macros.html#contract__.without_the_macros.a_fully_working_example__without_the_macros_">A
+      Fully Working Example (Without the Macros)</a></span></dt>
+</dl></div>
+<p>
+      This section explains how to program contracts without using the library macros.
+      This is useful to better understand how the library actually implements Contract
+      Programming and to occasionally implement workarounds for compiler standard
+      compliance issues. However:
+    </p>
+<div class="important"><table border="0" summary="Important">
+<tr>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Important]" src=".././doc/html/images/important.png"></td>
+<th align="left">Important</th>
+</tr>
+<tr><td align="left" valign="top">
+<p>
+        <span class="bold"><strong>Recommended to Use Contract Macros</strong></span>
+      </p>
+<p>
+        In general, it is recommended to write contracts using the library macros
+        because they save programmers from writing a significant amount of setup
+        code.
+      </p>
+</td></tr>
+</table></div>
+<p>
+      All the macros described in the <a class="link" href="tutorial.html" title="Tutorial">Tutorial</a>
+      section expand to code equivalent to the one explained in this section (with
+      the exception of block invariants and loop variants which are not covered here).
+      See also the <a href="../reference.html" target="_top">Reference</a> section for more
+      details.
+    </p>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="contract__.without_the_macros.an_example__without_the_macros_"></a><a class="link" href="without_the_macros.html#contract__.without_the_macros.an_example__without_the_macros_" title="An Example (Without the Macros)">An
+      Example (Without the Macros)</a>
+</h3></div></div></div>
+<p>
+        The following example shows how to write a contract for the vector <code class="computeroutput"><span class="identifier">push_back</span><span class="special">()</span></code>
+        function without using the contract macros:
+      </p>
+<pre class="programlisting"><span class="preprocessor">#include</span> <span class="string">"pushable.hpp"</span> <span class="comment">// Base class for subcontracting.
+</span><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">contract</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span> <span class="comment">// This library.
+</span><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">vector</span><span class="special">&gt;</span> <span class="comment">// STL vector.
+</span>
+<span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span>
+<span class="keyword">class</span> <span class="identifier">myvector</span><span class="special">:</span> <span class="keyword">public</span> <span class="identifier">pushable</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span> <span class="special">{</span>
+
+<span class="preprocessor">#if</span> <span class="identifier">defined</span> <span class="identifier">CONTRACT_CHECK_CLASS_INVARIANT</span> <span class="special">||</span>   <span class="comment">/* Support for       */</span> <span class="special">\</span>
+        <span class="identifier">defined</span> <span class="identifier">CONTRACT_CHECK_PRECONDITION</span> <span class="special">||</span>  <span class="comment">/* optional contract */</span> <span class="special">\</span>
+        <span class="identifier">defined</span> <span class="identifier">CONTRACT_CHECK_POSTCONDITION</span>    <span class="comment">/* compilation.      */</span>
+    <span class="comment">// Augmented state.
+</span>    <span class="keyword">friend</span> <span class="keyword">class</span> <span class="identifier">contract</span><span class="special">::</span><span class="identifier">state</span><span class="special">;</span>
+    <span class="keyword">mutable</span> <span class="identifier">contract</span><span class="special">::</span><span class="identifier">state</span> <span class="identifier">contract_state_</span><span class="special">;</span>
+<span class="preprocessor">#endif</span> <span class="comment">// contracts
+</span>
+<span class="preprocessor">#if</span> <span class="identifier">defined</span> <span class="identifier">CONTRACT_CHECK_CLASS_INVARIANT</span>
+    <span class="comment">// Static class invariants
+</span>    <span class="keyword">static</span> <span class="keyword">void</span> <span class="identifier">contract_static_invariant_</span><span class="special">(</span><span class="keyword">void</span><span class="special">)</span> <span class="special">{</span>
+        <span class="comment">// Assert nothing in this case.
+</span>    <span class="special">}</span>
+    <span class="comment">// Class invariants.
+</span>    <span class="keyword">void</span> <span class="identifier">contract_invariant_</span><span class="special">(</span><span class="keyword">void</span><span class="special">)</span> <span class="keyword">const</span> <span class="special">{</span>
+        <span class="keyword">if</span> <span class="special">(!((</span><span class="identifier">size</span><span class="special">()</span> <span class="special">==</span> <span class="number">0</span><span class="special">)</span> <span class="special">==</span> <span class="identifier">empty</span><span class="special">()))</span>
+            <span class="keyword">throw</span> <span class="identifier">contract</span><span class="special">::</span><span class="identifier">failure</span><span class="special">(</span><span class="identifier">__FILE__</span><span class="special">,</span> <span class="identifier">__LINE__</span><span class="special">);</span>
+        <span class="comment">// More invariants here...
+</span>    <span class="special">}</span>
+<span class="preprocessor">#endif</span> <span class="comment">// invariants
+</span>
+<span class="keyword">public</span><span class="special">:</span>
+    <span class="keyword">void</span> <span class="identifier">push_back</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">T</span><span class="special">&amp;</span> <span class="identifier">element</span><span class="special">)</span>
+<span class="preprocessor">#if</span> <span class="identifier">defined</span> <span class="identifier">CONTRACT_CHECK_CLASS_INVARIANT</span> <span class="special">||</span> <span class="special">\</span>
+        <span class="identifier">defined</span> <span class="identifier">CONTRACT_CHECK_PRECONDITION</span> <span class="special">||</span> <span class="special">\</span>
+        <span class="identifier">defined</span> <span class="identifier">CONTRACT_CHECK_POSTCONDITION</span>
+    <span class="comment">// Contracted function.
+</span>    <span class="special">{</span> <span class="identifier">contract_push_back_element_</span><span class="special">&lt;</span><span class="number">0</span><span class="special">&gt;().</span><span class="identifier">call</span><span class="special">(</span><span class="keyword">this</span> <span class="special">,</span> <span class="identifier">element</span><span class="special">);</span> <span class="special">}</span>
+<span class="keyword">private</span><span class="special">:</span> <span class="comment">// Private so not to alter user call public API.
+</span><span class="preprocessor">#if</span> <span class="identifier">defined</span> <span class="identifier">CONTRACT_CHECK_PRECONDITION</span>
+    <span class="keyword">void</span> <span class="identifier">contract_precondition_push_back_element_</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">T</span><span class="special">&amp;</span> <span class="identifier">element</span><span class="special">)</span> <span class="keyword">const</span> <span class="special">{</span>
+        <span class="keyword">if</span> <span class="special">(!(</span><span class="identifier">size</span><span class="special">()</span> <span class="special">&lt;</span> <span class="identifier">max_size</span><span class="special">()))</span> 
+            <span class="keyword">throw</span> <span class="identifier">contract</span><span class="special">::</span><span class="identifier">failure</span><span class="special">(</span><span class="identifier">__FILE__</span><span class="special">,</span> <span class="identifier">__LINE__</span><span class="special">);</span>
+        <span class="comment">// More preconditions here...
+</span>    <span class="special">}</span>
+<span class="preprocessor">#endif</span> <span class="comment">// preconditions
+</span><span class="preprocessor">#if</span> <span class="identifier">defined</span> <span class="identifier">CONTRACT_CHECK_POSTCONDITION</span>
+    <span class="keyword">void</span> <span class="identifier">contract_postcondition_push_back_element_</span><span class="special">(</span>
+            <span class="keyword">const</span> <span class="identifier">myvector</span><span class="special">*</span> <span class="identifier">old_this</span><span class="special">,</span> <span class="comment">// Old value for object.
+</span>            <span class="keyword">const</span> <span class="identifier">T</span><span class="special">&amp;</span> <span class="identifier">element</span><span class="special">,</span> <span class="identifier">contract</span><span class="special">::</span><span class="identifier">noold</span> <span class="comment">// No old for `element` argument.
+</span>            <span class="special">)</span> <span class="keyword">const</span> <span class="special">{</span>
+        <span class="keyword">if</span> <span class="special">(!(</span><span class="identifier">size</span><span class="special">()</span> <span class="special">==</span> <span class="special">(</span><span class="identifier">old_this</span><span class="special">-&gt;</span><span class="identifier">size</span><span class="special">()</span> <span class="special">+</span> <span class="number">1</span><span class="special">)))</span>
+            <span class="keyword">throw</span> <span class="identifier">contract</span><span class="special">::</span><span class="identifier">failure</span><span class="special">(</span><span class="identifier">__FILE__</span><span class="special">,</span> <span class="identifier">__LINE__</span><span class="special">);</span>
+        <span class="comment">// More postconditions here...
+</span>    <span class="special">}</span>
+<span class="preprocessor">#endif</span> <span class="comment">// postconditions
+</span><span class="keyword">protected</span><span class="special">:</span> <span class="comment">// Must be protected (not private) to allow subcontracting.
+</span>    <span class="keyword">void</span> <span class="identifier">contract_body_push_back_</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">T</span><span class="special">&amp;</span> <span class="identifier">element</span><span class="special">)</span>
+<span class="preprocessor">#endif</span> <span class="comment">// contracts
+</span>    <span class="comment">// Original function definition (the body).
+</span>    <span class="special">{</span> <span class="identifier">vector_</span><span class="special">.</span><span class="identifier">push_back</span><span class="special">(</span><span class="identifier">element</span><span class="special">);</span> <span class="special">}</span> 
+<span class="preprocessor">#if</span> <span class="identifier">defined</span> <span class="identifier">CONTRACT_CHECK_CLASS_INVARIANT</span> <span class="special">||</span> <span class="special">\</span>
+        <span class="identifier">defined</span> <span class="identifier">CONTRACT_CHECK_PRECONDITION</span> <span class="special">||</span> <span class="special">\</span>
+        <span class="identifier">defined</span> <span class="identifier">CONTRACT_CHECK_POSTCONDITION</span>
+    <span class="comment">// Contract class.
+</span>    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">int</span> <span class="identifier">ZERO</span><span class="special">&gt;</span>
+    <span class="keyword">struct</span> <span class="identifier">contract_push_back_element_</span><span class="special">:</span> <span class="identifier">contract</span><span class="special">::</span><span class="identifier">nonstatic_member_function</span><span class="special">&lt;</span>
+            <span class="comment">// Function type for contracted function.
+</span>            <span class="comment">// Copyable class type for old object value in postconditions.
+</span>            <span class="comment">// For constant members use `myvector const` instead of `myvector`.
+</span>            <span class="keyword">void</span> <span class="special">(</span><span class="identifier">contract</span><span class="special">::</span><span class="identifier">copyable</span><span class="special">&lt;</span><span class="identifier">myvector</span><span class="special">&gt;*,</span> <span class="keyword">const</span> <span class="identifier">T</span><span class="special">&amp;),</span>
+            <span class="comment">// Base contract class for subcontracting.
+</span>            <span class="keyword">typename</span> <span class="identifier">pushable</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;::</span><span class="keyword">template</span> <span class="identifier">contract_push_back_element_</span><span class="special">&lt;</span><span class="number">0</span><span class="special">&gt;</span>
+            <span class="special">&gt;</span> <span class="special">{</span>
+        <span class="comment">// Constructor specifies body, preconditions, and postconditions.
+</span>        <span class="identifier">contract_push_back_element_</span><span class="special">():</span> <span class="identifier">contract</span><span class="special">::</span><span class="identifier">static_member_function</span><span class="special">&lt;</span>
+                <span class="keyword">void</span> <span class="special">(</span><span class="identifier">contract</span><span class="special">::</span><span class="identifier">copyable</span><span class="special">&lt;</span><span class="identifier">myvector</span><span class="special">&gt;*,</span> <span class="keyword">const</span> <span class="identifier">T</span><span class="special">&amp;),</span>
+                <span class="keyword">typename</span> <span class="identifier">pushable</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;::</span><span class="keyword">template</span> <span class="identifier">contract_push_back_element_</span><span class="special">&lt;</span><span class="number">0</span><span class="special">&gt;</span>
+                <span class="special">&gt;(</span>    <span class="special">&amp;</span><span class="identifier">myvector</span><span class="special">::</span><span class="identifier">contract_body_push_back_</span>
+<span class="preprocessor">#if</span> <span class="identifier">defined</span> <span class="identifier">CONTRACT_CHECK_PRECONDITION</span>
+                    <span class="special">,</span> <span class="special">&amp;</span><span class="identifier">myvector</span><span class="special">::</span><span class="identifier">contract_precondition_push_back_element_</span>
+<span class="preprocessor">#endif</span> <span class="comment">// preconditions
+</span><span class="preprocessor">#if</span> <span class="identifier">defined</span> <span class="identifier">CONTRACT_CHECK_POSTCONDITION</span>
+                    <span class="special">,</span> <span class="special">&amp;</span><span class="identifier">myvector</span><span class="special">::</span><span class="identifier">contract_postcondition_push_back_element_</span>
+<span class="preprocessor">#endif</span> <span class="comment">// postconditions
+</span>                <span class="special">)</span> <span class="special">{}</span> 
+    <span class="special">};</span>
+<span class="keyword">public</span><span class="special">:</span> <span class="comment">// Restore original access level.
+</span><span class="preprocessor">#endif</span> <span class="comment">// contracts
+</span>
+    <span class="special">...</span> <span class="comment">// Rest of the class.
+</span>
+<span class="keyword">private</span><span class="special">:</span>        
+    <span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span> <span class="identifier">vector_</span><span class="special">;</span>
+<span class="special">};</span>
+</pre>
+<p>
+        Let's take a close look at this code.
+      </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="contract__.without_the_macros.optional_contract_compilation"></a><a class="link" href="without_the_macros.html#contract__.without_the_macros.optional_contract_compilation" title="Optional Contract Compilation">Optional
+      Contract Compilation</a>
+</h3></div></div></div>
+<p>
+        First of all, note that when programmers completely disable contract compilation
+        by not #defining any of the <code class="computeroutput"><a href="../CONTRACT_CHECK_CLASS_INVARIANT.html" target="_top">CONTRACT_CHECK_CLASS_INVARIANT</a></code>,
+        <code class="computeroutput"><a href="../CONTRACT_CHECK_PRECONDITION.html" target="_top">CONTRACT_CHECK_PRECONDITION</a></code>,
+        and <code class="computeroutput"><a href="../CONTRACT_CHECK_POSTCONDITION.html" target="_top">CONTRACT_CHECK_POSTCONDITION</a></code>
+        macro symbols, the code above reduces to just the function declaration and
+        its definition without <span class="bold"><strong>any</strong></span> contract code
+        overhead:
+      </p>
+<pre class="programlisting"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span>
+<span class="keyword">class</span> <span class="identifier">myvector</span> <span class="special">{</span>
+
+    <span class="bold"><strong>// Augmented state and class invariants disappear!</strong></span>
+
+<span class="keyword">public</span><span class="special">:</span>
+    <span class="keyword">void</span> <span class="identifier">push_back</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">T</span><span class="special">&amp;</span> <span class="identifier">value</span><span class="special">)</span>
+    <span class="bold"><strong>// Preconditions, postconditions, and body functions disappear!</strong></span>
+    <span class="special">{</span>
+        <span class="identifier">vector_</span><span class="special">.</span><span class="identifier">push_back</span><span class="special">(</span><span class="identifier">value</span><span class="special">);</span> <span class="comment">// Original function implementation.
+</span>    <span class="special">}</span>
+    <span class="bold"><strong>// Contract class disappears!</strong></span>
+<span class="keyword">public</span><span class="special">:</span>
+
+    <span class="special">...</span>
+<span class="keyword">private</span><span class="special">:</span>
+    <span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span> <span class="identifier">vector_</span><span class="special">;</span>
+<span class="special">};</span>
+</pre>
+<p>
+        Note how the <code class="computeroutput"><a href="../CONTRACT_CHECK_CLASS_INVARIANT.html" target="_top">CONTRACT_CHECK_CLASS_INVARIANT</a></code>,
+        <code class="computeroutput"><a href="../CONTRACT_CHECK_PRECONDITION.html" target="_top">CONTRACT_CHECK_PRECONDITION</a></code>,
+        and <code class="computeroutput"><a href="../CONTRACT_CHECK_POSTCONDITION.html" target="_top">CONTRACT_CHECK_POSTCONDITION</a></code>
+        macros can be #defined independently to selectively turn on or off the compilation
+        of class invariants only, preconditions only, postconditions only, or any
+        combination of the above.
+      </p>
+<p>
+        The rest of this section illustrates what happens when contract compilation
+        is turned on. Therefore, from here on, we will assume that <code class="computeroutput"><a href="../CONTRACT_CHECK_CLASS_INVARIANT.html" target="_top">CONTRACT_CHECK_CLASS_INVARIANT</a></code>
+        , <code class="computeroutput"><a href="../CONTRACT_CHECK_PRECONDITION.html" target="_top">CONTRACT_CHECK_PRECONDITION</a></code>,
+        and <code class="computeroutput"><a href="../CONTRACT_CHECK_POSTCONDITION.html" target="_top">CONTRACT_CHECK_POSTCONDITION</a></code>
+        are all #defined.
+      </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="contract__.without_the_macros.assertions"></a><a class="link" href="without_the_macros.html#contract__.without_the_macros.assertions" title="Assertions">Assertions</a>
+</h3></div></div></div>
+<p>
+        Note how class invariants, preconditions, and postconditions are asserted
+        using an <code class="computeroutput"><span class="keyword">if</span></code>-statement that throws
+        a <code class="computeroutput"><span class="identifier">contract</span><span class="special">::</span><a href="../contract/failure.html" target="_top">failure</a></code> exception in case the
+        checked boolean condition is false (note the leading <code class="computeroutput"><span class="string">"!"</span></code>
+        within the <code class="computeroutput"><span class="keyword">if</span></code>-condition):
+      </p>
+<pre class="programlisting"><span class="comment">// Code from the non-static class invariants (but similar for
+</span><span class="comment">// static class invariants, preconditions, and postconditions).
+</span><span class="keyword">if</span> <span class="special">(</span><span class="bold"><strong>!</strong></span><span class="special">((</span><span class="identifier">size</span><span class="special">()</span> <span class="special">==</span> <span class="number">0</span><span class="special">)</span> <span class="special">==</span> <span class="identifier">empty</span><span class="special">()))</span>
+    <span class="keyword">throw</span> <span class="identifier">contract</span><span class="special">::</span><span class="identifier">failure</span><span class="special">(</span><span class="identifier">__FILE__</span><span class="special">,</span> <span class="identifier">__LINE__</span><span class="special">);</span>
+</pre>
+<p>
+        When an exception (<span class="emphasis"><em>any</em></span> exception) is thrown from within
+        class invariants, preconditions, or postconditions code blocks, the library
+        will handle the exception invoking the relative <code class="computeroutput"><span class="identifier">contract</span><span class="special">::</span><a href="../contract/class_invariant_failed.html" target="_top">class_invariant_failed</a><span class="special">()</span></code>, <code class="computeroutput"><span class="identifier">contract</span><span class="special">::</span><a href="../contract/precondition_failed.html" target="_top">precondition_failed</a><span class="special">()</span></code>, or <code class="computeroutput"><span class="identifier">contract</span><span class="special">::</span><a href="../contract/postcondition_failed.html" target="_top">postcondition_failed</a><span class="special">()</span></code> function (but only if that is necessary
+        according to subcontracting rules, see below). Therefore, the fact that the
+        contract condition check throws <code class="computeroutput"><span class="identifier">contract</span><span class="special">::</span><a href="../contract/failure.html" target="_top">failure</a></code>
+        does <span class="emphasis"><em>not</em></span> necessarily imply that the program itself will
+        throw but only that the correct contract failure handler function will be
+        invoked by the library. All contract failure handler functions terminate
+        by default but they can be customized (see <a class="link" href="throw_on_failure.html" title="Annex: Throw on Failure">Throw
+        on Failure</a> for an example).
+      </p>
+<p>
+        It is not possible to directly call <code class="computeroutput"><span class="identifier">contract</span><span class="special">::</span><a href="../contract/class_invariant_failed.html" target="_top">class_invariant_failed</a><span class="special">()</span></code>, <code class="computeroutput"><span class="identifier">contract</span><span class="special">::</span><a href="../contract/precondition_failed.html" target="_top">precondition_failed</a><span class="special">()</span></code>, or <code class="computeroutput"><span class="identifier">contract</span><span class="special">::</span><a href="../contract/postcondition_failed.html" target="_top">postcondition_failed</a><span class="special">()</span></code> instead of throwing the exception because
+        of subcontracting. For example, if a precondition of a derived contract fails
+        but the preconditions of an overridden contract hold true then the library
+        will <span class="emphasis"><em>not</em></span> call <code class="computeroutput"><span class="identifier">contract</span><span class="special">::</span><a href="../contract/precondition_failed.html" target="_top">precondition_failed</a><span class="special">()</span></code> even if the derived contract throws an
+        exception (as specified by subcontracting requirements in <a class="link" href="tutorial.html#contract__.tutorial.contract_programming_overview.member_function_call_semantics">Member
+        Function Call Semantics</a>).
+      </p>
+<p>
+        The first two arguments of the <code class="computeroutput"><span class="identifier">contract</span><span class="special">::</span><a href="../contract/failure.html" target="_top">failure</a></code>
+        constructor are mandatory and they specify file name and line number of the
+        assertion (used the C++ macros <code class="computeroutput"><span class="identifier">__FILE__</span></code>
+        and <code class="computeroutput"><span class="identifier">__LINE__</span></code>). The third
+        argument of the constructor is an optional human readable description of
+        the asserted condition. For example:
+      </p>
+<pre class="programlisting"><span class="comment">// More verbose error message with .
+</span><span class="keyword">if</span> <span class="special">(!((</span><span class="identifier">size</span><span class="special">()</span> <span class="special">==</span> <span class="number">0</span><span class="special">)</span> <span class="special">==</span> <span class="identifier">empty</span><span class="special">()))</span>
+    <span class="keyword">throw</span> <span class="identifier">contract</span><span class="special">::</span><span class="identifier">failure</span><span class="special">(</span><span class="identifier">__FILE__</span><span class="special">,</span> <span class="identifier">__LINE__</span><span class="special">,</span> <span class="string">"size zero iff empty"</span><span class="special">);</span>
+</pre>
+<p>
+        All this information is simply used to provide the user with a descriptive
+        error message in case of a contract failure, for example:
+      </p>
+<pre class="programlisting">class invariant: terminate called after throwing an instance of 'contract::failure'
+  what():  contract "size zero iff empty" failed at myvector_nomacros.cpp:37
+Aborted
+</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="contract__.without_the_macros.augmented_state"></a><a class="link" href="without_the_macros.html#contract__.without_the_macros.augmented_state" title="Augmented State">Augmented
+      State</a>
+</h3></div></div></div>
+<p>
+        This library needs to declare an additional member variable for the class.
+        This member variable is mainly used by the library to keep track of when
+        contracts are being checked so to disable assertion checking in nested member
+        function calls that could otherwise result in infinite recursion (this a
+        common requirement in Contract Programming).
+      </p>
+<pre class="programlisting"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span>
+<span class="keyword">class</span> <span class="identifier">myvector</span><span class="special">:</span> <span class="keyword">public</span> <span class="identifier">pushable</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span> <span class="special">{</span>
+
+    <span class="comment">// Augmented state.
+</span>    <span class="keyword">friend</span> <span class="keyword">class</span> <span class="identifier">contract</span><span class="special">::</span><span class="identifier">state</span><span class="special">;</span>
+    <span class="keyword">mutable</span> <span class="identifier">contract</span><span class="special">::</span><span class="identifier">state</span> <span class="identifier">contract_state_</span><span class="special">;</span>
+
+    <span class="special">...</span>
+<span class="special">};</span>
+</pre>
+<p>
+        The state member variable must be declared of <code class="computeroutput"><span class="keyword">mutable</span></code>
+        type <code class="computeroutput"><span class="identifier">contract</span><span class="special">::</span><a href="../contract/state.html" target="_top">state</a></code> (so the library can modify
+        it while still ensuring constant-correctness for the contracts), it should
+        be in a private section of the class (so not to alter the class public API),
+        and it must have the predefined name <code class="computeroutput"><a href="../contract/nonstatic_member_function.html" target="_top">contract_state_</a></code>
+        (so the library knows how to access it). Furthermore, the <code class="computeroutput"><span class="identifier">contract</span><span class="special">::</span><a href="../contract/state.html" target="_top">state</a></code>
+        class type must be declared a friend so the library can internally access
+        the entire user class including its private and protected members.
+      </p>
+<p>
+        The details of the <code class="computeroutput"><span class="identifier">contract</span><span class="special">::</span><a href="../contract/state.html" target="_top">state</a></code>
+        type are library implementation specific. The state variable name begins
+        with the <code class="computeroutput"><span class="identifier">contract</span></code> prefix
+        and ends with an underscore "<code class="computeroutput"><span class="identifier">_</span></code>"
+        so programmers should never directly use it in user code (see <a class="link" href="getting_started.html" title="Getting Started">Getting
+        Started</a>).
+      </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="contract__.without_the_macros.class_invariants"></a><a class="link" href="without_the_macros.html#contract__.without_the_macros.class_invariants" title="Class Invariants">Class
+      Invariants</a>
+</h3></div></div></div>
+<p>
+        This library checks static and non-static class invariants invoking a static
+        and a constant member function with the predefined names <code class="computeroutput"><a href="../contract/nonstatic_member_function.html" target="_top">contract_static_invariant_</a></code>
+        and <code class="computeroutput"><span class="identifier">__contract_invariant__</span></code>
+        respectively:
+      </p>
+<pre class="programlisting"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span>
+<span class="keyword">class</span> <span class="identifier">myvector</span><span class="special">:</span> <span class="keyword">public</span> <span class="identifier">pushable</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span> <span class="special">{</span>
+    <span class="special">...</span>
+    
+    <span class="comment">// Static class invariants
+</span>    <span class="keyword">static</span> <span class="keyword">void</span> <span class="identifier">contract_static_invariant_</span><span class="special">(</span><span class="keyword">void</span><span class="special">)</span> <span class="special">{</span>
+        <span class="comment">// Assert nothing in this case.
+</span>    <span class="special">}</span>
+    <span class="comment">// Class invariants.
+</span>    <span class="keyword">void</span> <span class="identifier">contract_invariant_</span><span class="special">(</span><span class="keyword">void</span><span class="special">)</span> <span class="keyword">const</span> <span class="special">{</span>
+        <span class="keyword">if</span> <span class="special">(!((</span><span class="identifier">size</span><span class="special">()</span> <span class="special">==</span> <span class="number">0</span><span class="special">)</span> <span class="special">==</span> <span class="identifier">empty</span><span class="special">()))</span>
+            <span class="keyword">throw</span> <span class="identifier">contract</span><span class="special">::</span><span class="identifier">failure</span><span class="special">(</span><span class="identifier">__FILE__</span><span class="special">,</span> <span class="identifier">__LINE__</span><span class="special">);</span>
+        <span class="comment">// More invariants here...
+</span>    <span class="special">}</span>
+    
+    <span class="special">...</span>
+<span class="special">};</span>
+</pre>
+<p>
+        The non-static class invariant function must a constant member so to enforce
+        contract checking constant-correctness. The static class invariants function
+        is static so it cannot change the object state because it cannot access the
+        object (static member functions cannot be constant).
+      </p>
+<p>
+        The class invariant function names begin with the <code class="computeroutput"><span class="identifier">contract</span></code>
+        prefix and end with an underscore "<code class="computeroutput"><span class="identifier">_</span></code>"
+        so programmers should never directly use it in user code (see <a class="link" href="getting_started.html" title="Getting Started">Getting
+        Started</a>).
+      </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="contract__.without_the_macros.contracted_function"></a><a class="link" href="without_the_macros.html#contract__.without_the_macros.contracted_function" title="Contracted Function">Contracted
+      Function</a>
+</h3></div></div></div>
+<p>
+        The <code class="computeroutput"><span class="identifier">push_back</span><span class="special">()</span></code>
+        function is programmed to construct the <code class="computeroutput"><span class="identifier">contract</span></code>
+        object and to invoke its <code class="computeroutput"><a href="../contract/nonstatic_member_function.html" target="_top">call</a><span class="special">()</span></code> member function:
+      </p>
+<pre class="programlisting"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span>
+<span class="keyword">class</span> <span class="identifier">myvector</span><span class="special">:</span> <span class="keyword">public</span> <span class="identifier">pushable</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span> <span class="special">{</span>
+    <span class="special">...</span>
+
+<span class="keyword">public</span><span class="special">:</span>
+    <span class="keyword">void</span> <span class="identifier">push_back</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">T</span><span class="special">&amp;</span> <span class="identifier">element</span><span class="special">)</span>
+    <span class="comment">// Contracted function.
+</span>    <span class="special">{</span>
+        <span class="identifier">contract_push_back_element_</span><span class="special">&lt;</span><span class="number">0</span><span class="special">&gt;().</span><span class="identifier">call</span><span class="special">(</span><span class="keyword">this</span> <span class="special">,</span> <span class="identifier">element</span><span class="special">);</span>
+    <span class="special">}</span>
+
+    <span class="special">...</span>
+<span class="special">};</span>
+</pre>
+<p>
+        The <code class="computeroutput"><a href="../contract/nonstatic_member_function.html" target="_top">call</a><span class="special">()</span></code> function takes in input a pointer to the
+        object (<code class="computeroutput"><span class="keyword">this</span></code>) and the function
+        arguments (just <code class="computeroutput"><span class="identifier">element</span></code> in
+        this example) in the order they appear in the function declaration.
+      </p>
+<p>
+        The <code class="computeroutput"><a href="../contract/nonstatic_member_function.html" target="_top">call</a><span class="special">()</span></code> function is the one implementing the correct
+        Contract Programming call semantics (see <a class="link" href="tutorial.html#contract__.tutorial.contract_programming_overview.member_function_call_semantics">Member
+        Function Call Semantics</a>). In this case, <code class="computeroutput"><a href="../contract/nonstatic_member_function.html" target="_top">call</a><span class="special">()</span></code> checks class invariants and preconditions
+        (calling <code class="computeroutput"><a href="../contract/nonstatic_member_function.html" target="_top">contract_static_invariant_</a><span class="special">()</span></code>, <code class="computeroutput"><a href="../contract/nonstatic_member_function.html" target="_top">contract_invariant_</a><span class="special">()</span></code>, and the <a href="../contract/nonstatic_member_function.html" target="_top">precondition</a>
+        function, see below), then it executes the body, and lastly it checks class
+        invariants and postconditions (calling <code class="computeroutput"><a href="../contract/nonstatic_member_function.html" target="_top">contract_static_invariant_</a><span class="special">()</span></code>, <code class="computeroutput"><a href="../contract/nonstatic_member_function.html" target="_top">contract_invariant_</a><span class="special">()</span></code>, and the <a href="../contract/nonstatic_member_function.html" target="_top">postcondition</a>
+        function, see below).
+      </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="contract__.without_the_macros.preconditions"></a><a class="link" href="without_the_macros.html#contract__.without_the_macros.preconditions" title="Preconditions">Preconditions</a>
+</h3></div></div></div>
+<p>
+        A member function is defined to check the preconditions:
+      </p>
+<pre class="programlisting"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span>
+<span class="keyword">class</span> <span class="identifier">myvector</span><span class="special">:</span> <span class="keyword">public</span> <span class="identifier">pushable</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span> <span class="special">{</span>
+    <span class="special">...</span>
+
+<span class="keyword">private</span><span class="special">:</span>
+    <span class="keyword">void</span> <span class="identifier">contract_precondition_push_back_element_</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">T</span><span class="special">&amp;</span> <span class="identifier">element</span><span class="special">)</span> <span class="keyword">const</span> <span class="special">{</span>
+        <span class="keyword">if</span> <span class="special">(!(</span><span class="identifier">size</span><span class="special">()</span> <span class="special">&lt;</span> <span class="identifier">max_size</span><span class="special">()))</span> 
+            <span class="keyword">throw</span> <span class="identifier">contract</span><span class="special">::</span><span class="identifier">failure</span><span class="special">(</span><span class="identifier">__FILE__</span><span class="special">,</span> <span class="identifier">__LINE__</span><span class="special">);</span>
+        <span class="comment">// More preconditions here...
+</span>    <span class="special">}</span>
+    
+    <span class="special">...</span>
+<span class="special">};</span>
+</pre>
+<p>
+        Note the followings:
+      </p>
+<div class="itemizedlist"><ul type="disc">
+<li>
+          The precondition function is private so not to alter the user class public
+          API.
+        </li>
+<li>
+          In order to support contracts for overloaded functions, the precondition
+          function name must contain the contracted function name, the name of all
+          arguments, and a trailing <code class="literal">const</code> if the contracted function
+          is a constant member.
+        </li>
+<li>
+          The precondition function must be a constant member plus all its arguments
+          must be constant so to enforce contract constant-correctness.
+        </li>
+<li>
+          The precondition function arguments are constant references to the contracted
+          function arguments.
+        </li>
+</ul></div>
+<p>
+        The precondition function name begins with the <code class="computeroutput"><span class="identifier">contract</span></code>
+        prefix and ends with an underscore "<code class="computeroutput"><span class="identifier">_</span></code>"
+        so programmers should never directly use it in user code (see <a class="link" href="getting_started.html" title="Getting Started">Getting
+        Started</a>).
+      </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="contract__.without_the_macros.postconditions"></a><a class="link" href="without_the_macros.html#contract__.without_the_macros.postconditions" title="Postconditions">Postconditions</a>
+</h3></div></div></div>
+<p>
+        A member function is defined to check the postconditions:
+      </p>
+<pre class="programlisting"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span>
+<span class="keyword">class</span> <span class="identifier">myvector</span><span class="special">:</span> <span class="keyword">public</span> <span class="identifier">pushable</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span> <span class="special">{</span>
+
+<span class="keyword">private</span><span class="special">:</span>
+    <span class="special">...</span> <span class="comment">// Preconditions.
+</span>    <span class="keyword">void</span> <span class="identifier">contract_postcondition_push_back_element_</span><span class="special">(</span>
+            <span class="keyword">const</span> <span class="identifier">myvector</span><span class="special">*</span> <span class="identifier">old_this</span><span class="special">,</span> <span class="comment">// Old value for object.
+</span>            <span class="keyword">const</span> <span class="identifier">T</span><span class="special">&amp;</span> <span class="identifier">element</span><span class="special">,</span> <span class="identifier">contract</span><span class="special">::</span><span class="identifier">noold</span> <span class="comment">// No old for `element` argument.
+</span>            <span class="special">)</span> <span class="keyword">const</span> <span class="special">{</span>
+        <span class="keyword">if</span> <span class="special">(!(</span><span class="identifier">size</span><span class="special">()</span> <span class="special">==</span> <span class="special">(</span><span class="identifier">old_this</span><span class="special">-&gt;</span><span class="identifier">size</span><span class="special">()</span> <span class="special">+</span> <span class="number">1</span><span class="special">)))</span>
+            <span class="keyword">throw</span> <span class="identifier">contract</span><span class="special">::</span><span class="identifier">failure</span><span class="special">(</span><span class="identifier">__FILE__</span><span class="special">,</span> <span class="identifier">__LINE__</span><span class="special">);</span>
+        <span class="comment">// More postconditions here...
+</span>    <span class="special">}</span>
+
+    <span class="special">...</span>
+<span class="special">};</span>
+</pre>
+<p>
+        Note the followings:
+      </p>
+<div class="itemizedlist"><ul type="disc">
+<li>
+          The postcondition function is private so not to alter the user class public
+          API.
+        </li>
+<li>
+          In order to support contracts for overloaded functions, the postcondition
+          function name must contain the contracted function name, the name of all
+          arguments, and a trailing <code class="literal">const</code> if the contracted function
+          is a constant member.
+        </li>
+<li>
+          The postcondition function must be a constant member plus all its arguments
+          must be constant so to enforce contract constant-correctness.
+        </li>
+<li>
+          The first postcondition function argument is a constant pointer to the
+          object old value when the class type is tagged <code class="computeroutput"><span class="identifier">contract</span><span class="special">::</span><a href="../contract/copyable.html" target="_top">copyable</a></code>
+          within the contract class (see below), otherwise it is of type <code class="computeroutput"><span class="identifier">contract</span><span class="special">::</span><span class="identifier">noold</span></code>.
+        </li>
+<li>
+          The remaining postcondition function arguments are constant references
+          to the contracted function argument current and old values. A function
+          argument old value is different from <code class="computeroutput"><span class="identifier">contract</span><span class="special">::</span><span class="identifier">nold</span></code>
+          only if the argument type is tagged <code class="computeroutput"><span class="identifier">contract</span><span class="special">::</span><a href="../contract/copyable.html" target="_top">copyable</a></code>
+          within the contract class (see below).
+        </li>
+<li>
+          Finally, for non-void contracted functions, there is an extra argument
+          at the very end of the postcondition function argument list which is a
+          constant reference to the function result value being returned.
+        </li>
+</ul></div>
+<p>
+        The <code class="computeroutput"><span class="identifier">contract</span><span class="special">::</span><span class="identifier">noold</span></code> type is used as a "placeholder"
+        for an argument when its old value is <span class="emphasis"><em>not</em></span> provided in
+        the postconditions. An <code class="computeroutput"><span class="identifier">contract</span><span class="special">::</span><span class="identifier">noold</span></code>
+        argument cannot be mistakenly accessed or manipulated by programmers because
+        <code class="computeroutput"><span class="identifier">contract</span><span class="special">::</span><span class="identifier">noold</span></code> is an empty class with no member
+        at all. Furthermore, copying <code class="computeroutput"><span class="identifier">contract</span><span class="special">::</span><span class="identifier">noold</span></code>
+        performs no operation so <code class="computeroutput"><span class="identifier">contract</span><span class="special">::</span><span class="identifier">noold</span></code>
+        arguments can be passed to the postcondition function by value but without
+        adding any run-time overhead. This ensures that programmers can only access
+        old values in postconditions for types that are tagged <code class="computeroutput"><span class="identifier">contract</span><span class="special">::</span><a href="../contract/copyable.html" target="_top">copyable</a></code>.
+      </p>
+<p>
+        This is an example where the old value is provided for both the object and
+        one of the function arguments:
+      </p>
+<pre class="programlisting"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span>
+<span class="keyword">class</span> <span class="identifier">myvector</span><span class="special">:</span> <span class="keyword">public</span> <span class="identifier">pushable</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span> <span class="special">{</span>
+    <span class="special">...</span>
+
+<span class="keyword">public</span><span class="special">:</span>
+    <span class="identifier">iterator</span> <span class="identifier">insert</span><span class="special">(</span><span class="identifier">iterator</span> <span class="identifier">where</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">T</span><span class="special">&amp;</span> <span class="identifier">element</span><span class="special">)</span>
+    <span class="special">...</span>
+    <span class="keyword">void</span> <span class="identifier">contract_postcondition_insert_insert_where_element_</span><span class="special">(</span>
+            <span class="keyword">const</span> <span class="identifier">myvector</span><span class="special">*</span> <span class="identifier">old_this</span><span class="special">,</span> <span class="comment">// Old value for object.
+</span>            <span class="keyword">const</span> <span class="identifier">iterator</span><span class="special">&amp;</span> <span class="identifier">where</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">iterator</span><span class="special">&amp;</span> <span class="identifier">old_where</span><span class="special">,</span> <span class="comment">// Old value for `where`.
+</span>            
+            <span class="keyword">const</span> <span class="identifier">T</span><span class="special">&amp;</span> <span class="identifier">element</span><span class="special">,</span> <span class="identifier">contract</span><span class="special">::</span><span class="identifier">noold</span><span class="special">,</span> <span class="comment">// No old for `element` argument.
+</span>            <span class="keyword">const</span> <span class="identifier">iterator</span><span class="special">&amp;</span> <span class="identifier">result</span> <span class="comment">// Result value.
+</span>            <span class="special">)</span> <span class="keyword">const</span> <span class="special">{</span>
+        <span class="special">...</span> <span class="comment">// Assert postconditions using `old_this` and `old_where`.
+</span>    <span class="special">}</span>
+    <span class="special">...</span> <span class="comment">// Both class type and `where` type are tagged `contract::copyable`.
+</span>        <span class="comment">// in the contract class (see below).
+</span>    
+    <span class="special">...</span>
+<span class="special">};</span>
+</pre>
+<p>
+        The postcondition function name begins with the <code class="computeroutput"><span class="identifier">contract</span></code>
+        prefix and ends with an underscore "<code class="computeroutput"><span class="identifier">_</span></code>"
+        so programmers should never directly use it in user code (see <a class="link" href="getting_started.html" title="Getting Started">Getting
+        Started</a>).
+      </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="contract__.without_the_macros.body"></a><a class="link" href="without_the_macros.html#contract__.without_the_macros.body" title="Body">Body</a>
+</h3></div></div></div>
+<p>
+        A member function is declared as the body function and it is defined to be
+        the original function implementation as specified by the user:
+      </p>
+<pre class="programlisting"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span>
+<span class="keyword">class</span> <span class="identifier">myvector</span><span class="special">:</span> <span class="keyword">public</span> <span class="identifier">pushable</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span> <span class="special">{</span>
+    <span class="special">...</span>
+
+<span class="keyword">protected</span><span class="special">:</span>
+    <span class="keyword">void</span> <span class="identifier">contract_body_push_back_</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">T</span><span class="special">&amp;</span> <span class="identifier">element</span><span class="special">)</span>
+    <span class="comment">// Original function definition (the body).
+</span>    <span class="special">{</span>
+        <span class="identifier">vector_</span><span class="special">.</span><span class="identifier">push_back</span><span class="special">(</span><span class="identifier">element</span><span class="special">);</span>
+    <span class="special">}</span> 
+    
+    <span class="special">...</span>
+<span class="special">};</span>
+</pre>
+<p>
+        Note the followings:
+      </p>
+<div class="itemizedlist"><ul type="disc">
+<li>
+          The body function is protected to avoid changing the user's class public
+          API but it cannot be private to allow for subcontracting of pure virtual
+          functions.
+        </li>
+<li>
+          The body function declaration and definition must be <span class="emphasis"><em>exactly</em></span>
+          the ones specified by the user for the original <code class="computeroutput"><span class="identifier">push_back</span><span class="special">()</span></code> function (only the function name is different).
+          For example, if the original function is declared <code class="computeroutput"><span class="keyword">virtual</span></code>,
+          the body function should be declared <code class="computeroutput"><span class="keyword">virtual</span></code>
+          as well. Also the body function signature (return type, argument type,
+          argument names, eventual constant qualifier, etc) must match exactly the
+          signature of the original <code class="computeroutput"><span class="identifier">push_back</span><span class="special">()</span></code> function.
+        </li>
+</ul></div>
+<p>
+        The body function name begins with the <code class="computeroutput"><span class="identifier">contract</span></code>
+        prefix and ends with an underscore "<code class="computeroutput"><span class="identifier">_</span></code>"
+        so programmers should never directly use it in user code (see <a class="link" href="getting_started.html" title="Getting Started">Getting
+        Started</a>).
+      </p>
+<a name="contract__.without_the_macros.body.separating_the_definition"></a><h6>
+<a name="id2635406"></a>
+        <a class="link" href="without_the_macros.html#contract__.without_the_macros.body.separating_the_definition">Separating
+        the Definition</a>
+      </h6>
+<p>
+        In this example, the body function definition <code class="computeroutput"><span class="special">{</span>
+        <span class="identifier">vector_</span><span class="special">.</span><span class="identifier">push_back</span><span class="special">(</span><span class="identifier">element</span><span class="special">);</span> <span class="special">}</span></code> is specified together with the body function
+        declaration. However, following C++ usual syntax, programmers can define
+        the body function to be "<code class="computeroutput"><span class="special">;</span></code>"
+        in order to separate the function definition from its declaration:
+      </p>
+<pre class="programlisting"><span class="comment">// Declarations (usually in header files).
+</span>
+<span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span>
+<span class="keyword">class</span> <span class="identifier">myvector</span><span class="special">:</span> <span class="keyword">public</span> <span class="identifier">pushable</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span> <span class="special">{</span>
+    <span class="special">...</span>
+
+<span class="keyword">protected</span><span class="special">:</span>
+    <span class="keyword">void</span> <span class="identifier">contract_body_push_back_</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">T</span><span class="special">&amp;</span> <span class="identifier">element</span><span class="special">)</span>
+    <span class="bold"><strong>;</strong></span> <span class="comment">// Separating body definition using `;`.
+</span>    
+    <span class="special">...</span>
+<span class="special">};</span>
+
+<span class="comment">// Separated definitions (eventually in a different file).
+</span>
+<span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span>
+<span class="keyword">void</span> <span class="identifier">myvector</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;::</span>
+<span class="preprocessor">#if</span> <span class="identifier">defined</span> <span class="identifier">CONTRACT_CHECK_CLASS_INVARIANT</span> <span class="special">||</span> <span class="special">\</span>
+        <span class="identifier">defined</span> <span class="identifier">CONTRACT_CHECK_PRECONDITION</span> <span class="special">||</span> <span class="special">\</span>
+        <span class="identifier">defined</span> <span class="identifier">CONTRACT_CHECK_POSTCONDITION</span>
+    <span class="bold"><strong>contract_body_push_back_</strong></span> <span class="comment">// Body function name.
+</span><span class="preprocessor">#else</span>
+    <span class="bold"><strong>push_back</strong></span> <span class="comment">// Actual function name if contract compilation is off.
+</span><span class="preprocessor">#endif</span>
+        <span class="special">(</span><span class="keyword">const</span> <span class="identifier">T</span><span class="special">&amp;</span> <span class="identifier">element</span><span class="special">)</span> <span class="special">{</span>
+    <span class="identifier">vector_</span><span class="special">.</span><span class="identifier">push_back</span><span class="special">(</span><span class="identifier">element</span><span class="special">);</span> <span class="comment">// Original function definition.
+</span><span class="special">}</span>
+</pre>
+<p>
+        In this case, it is recommended to used the <code class="computeroutput"><a href="../CONTRACT_BODY.html" target="_top">CONTRACT_BODY</a><span class="special">()</span></code> macro instead of the hard to read <code class="computeroutput"><span class="preprocessor">#if</span></code> around the function name. If contract
+        compilation is on, <code class="computeroutput"><a href="../CONTRACT_BODY.html" target="_top">CONTRACT_BODY</a><span class="special">(</span><span class="identifier">push_back</span><span class="special">)</span></code> expands to <code class="computeroutput"><span class="identifier">contract_body_push_back_</span></code>,
+        otherwise it expands to <code class="computeroutput"><span class="identifier">push_back</span></code>
+        (see <a href="../reference.html" target="_top">Reference</a> and <a class="link" href="tutorial.html" title="Tutorial">Tutorial</a>
+        sections). Using this macro, the above function definition is equivalently
+        written as:
+      </p>
+<pre class="programlisting"><span class="comment">// Separated definitions (eventually in a different file).
+</span>
+<span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span>
+<span class="keyword">void</span> <span class="identifier">myvector</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;::</span><span class="bold"><strong>CONTRACT_FUNCTION_BODY(push_back)</strong></span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">T</span><span class="special">&amp;</span> <span class="identifier">element</span><span class="special">)</span> <span class="special">{</span>
+    <span class="identifier">vector_</span><span class="special">.</span><span class="identifier">push_back</span><span class="special">(</span><span class="identifier">element</span><span class="special">);</span> <span class="comment">// Original function definition.
+</span><span class="special">}</span>
+</pre>
+<a name="contract__.without_the_macros.body.pure_virtual_functions"></a><h6>
+<a name="id2636118"></a>
+        <a class="link" href="without_the_macros.html#contract__.without_the_macros.body.pure_virtual_functions">Pure
+        Virtual Functions</a>
+      </h6>
+<p>
+        Programmers can also define the body function to be pure virtual so to defer
+        its definition to derived classes. In this case the usual C++ syntax "<code class="computeroutput">
+        <span class="special">=</span> <span class="number">0</span><span class="special">;</span></code>" is used:
+      </p>
+<pre class="programlisting"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span>
+<span class="keyword">class</span> <span class="identifier">pushable</span> <span class="special">{</span>
+    <span class="special">...</span>
+
+<span class="keyword">protected</span><span class="special">:</span>
+    <span class="keyword">void</span> <span class="identifier">contract_body_push_back_</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">T</span><span class="special">&amp;</span> <span class="identifier">element</span><span class="special">)</span>
+    <span class="bold"><strong>= 0;</strong></span> <span class="comment">// Contract for pure virtual functions.
+</span>    
+    <span class="special">...</span>
+<span class="special">};</span>
+</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="contract__.without_the_macros.contract_class"></a><a class="link" href="without_the_macros.html#contract__.without_the_macros.contract_class" title="Contract Class">Contract
+      Class</a>
+</h3></div></div></div>
+<p>
+        A member class is defined as the contract class:
+      </p>
+<pre class="programlisting"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span>
+<span class="keyword">class</span> <span class="identifier">myvector</span><span class="special">:</span> <span class="keyword">public</span> <span class="identifier">pushable</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span> <span class="special">{</span>
+    <span class="special">...</span>
+    
+<span class="keyword">protected</span><span class="special">:</span>
+    <span class="special">...</span>
+    <span class="comment">// Contract class.
+</span>    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">int</span> <span class="identifier">ZERO</span><span class="special">&gt;</span>
+    <span class="keyword">struct</span> <span class="identifier">contract_push_back_element_</span><span class="special">:</span> <span class="identifier">contract</span><span class="special">::</span><span class="identifier">nonstatic_member_function</span><span class="special">&lt;</span>
+            <span class="comment">// Function type for contracted function.
+</span>            <span class="comment">// Copyable class type for old object value in postconditions.
+</span>            <span class="comment">// For const members, use `myvector const` instead of `myvector`.
+</span>            <span class="keyword">void</span> <span class="special">(</span><span class="identifier">contract</span><span class="special">::</span><span class="identifier">copyable</span><span class="special">&lt;</span><span class="identifier">myvector</span><span class="special">&gt;*,</span> <span class="keyword">const</span> <span class="identifier">T</span><span class="special">&amp;),</span>
+            <span class="comment">// Base contract class for subcontracting.
+</span>            <span class="keyword">typename</span> <span class="identifier">pushable</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;::</span><span class="keyword">template</span> <span class="identifier">contract_push_back_element_</span><span class="special">&lt;</span><span class="number">0</span><span class="special">&gt;</span>
+            <span class="special">&gt;</span> <span class="special">{</span>
+        <span class="comment">// Constructor specifies body, preconditions, and postconditions.
+</span>        <span class="identifier">contract_push_back_element_</span><span class="special">():</span> <span class="identifier">contract</span><span class="special">::</span><span class="identifier">nonstatic_member_function</span><span class="special">&lt;</span>
+                <span class="keyword">void</span> <span class="special">(</span><span class="identifier">contract</span><span class="special">::</span><span class="identifier">copyable</span><span class="special">&lt;</span><span class="identifier">myvector</span><span class="special">&gt;*,</span> <span class="keyword">const</span> <span class="identifier">T</span><span class="special">&amp;),</span>
+                <span class="keyword">typename</span> <span class="identifier">pushable</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;::</span><span class="keyword">template</span> <span class="identifier">contract_push_back_element_</span><span class="special">&lt;</span><span class="number">0</span><span class="special">&gt;</span>
+                <span class="special">&gt;(</span>    <span class="special">&amp;</span><span class="identifier">myvector</span><span class="special">::</span><span class="identifier">contract_body_push_back_</span>
+                    <span class="special">,</span> <span class="special">&amp;</span><span class="identifier">myvector</span><span class="special">::</span><span class="identifier">contract_precondition_push_back_element_</span>
+                    <span class="special">,</span> <span class="special">&amp;</span><span class="identifier">myvector</span><span class="special">::</span><span class="identifier">contract_postcondition_push_back_element_</span>
+                <span class="special">)</span> <span class="special">{}</span> 
+    <span class="special">};</span>
+<span class="keyword">public</span><span class="special">:</span> <span class="comment">// Restore original access level.
+</span>
+    <span class="special">...</span>
+<span class="special">};</span>
+</pre>
+<p>
+        Note the followings:
+      </p>
+<div class="itemizedlist"><ul type="disc">
+<li>
+          The contract class is protected to avoid changing the user's class public
+          API but it cannot be private because derived classes might need to access
+          it for subcontracting.
+        </li>
+<li>
+          The contract class publicly inherits (it is a <code class="computeroutput"><span class="keyword">struct</span></code>)
+          from <code class="computeroutput"><span class="identifier">contract</span><span class="special">::</span><a href="../contract/nonstatic_member_function.html" target="_top">nonstatic_member_function</a></code>.
+          The <code class="computeroutput"><a href="../contract/nonstatic_member_function.html" target="_top">call</a><span class="special">()</span></code> function, which implements the contract
+          call semantics, is inherited from this base class.
+        </li>
+<li>
+          The <code class="computeroutput"><span class="identifier">contract</span><span class="special">::</span><a href="../contract/nonstatic_member_function.html" target="_top">nonstatic_member_function</a></code>
+          template takes as first parameter the a function type matching the signature
+          of the contracted <code class="computeroutput"><span class="identifier">push_back</span><span class="special">()</span></code> function.
+          <div class="itemizedlist"><ul type="circle">
+<li>
+              For member functions (including static members, constructors, and destructors,
+              see <code class="computeroutput"><span class="identifier">contract</span><span class="special">::</span><a href="../contract/static_member_function.html" target="_top">static_member_function</a></code>,
+              <code class="computeroutput"><span class="identifier">contract</span><span class="special">::</span><a href="../contract/constructor.html" target="_top">constructor</a></code>, and <code class="computeroutput"><span class="identifier">contract</span><span class="special">::</span><a href="../contract/destructor.html" target="_top">destructor</a></code> respectively),
+              the first argument of the function type if a pointer to the class type,
+              followed by the contracted function argument types. Instead, for non-member
+              functions (see <code class="computeroutput"><span class="identifier">contract</span><span class="special">::</span><a href="../contract/nonmember_function.html" target="_top">nonmember_function</a></code>),
+              there is no class pointer type and the first argument of the function
+              type matches the first argument type of the contract function. (This
+              is the same syntax used by <a href="http://www.boost.org/doc/libs/1_42_0/doc/html/function.html" target="_top">Boost.Function</a><sup>[<a name="id2637088" href="#ftn.id2637088" class="footnote">13</a>]</sup>
+              .)
+            </li>
+<li>
+              For constant member functions, the first argument is specified as a
+              constant pointer to the class type. If the function in this example
+              were to be a constant member function <code class="computeroutput"><span class="keyword">void</span>
+              <span class="identifier">push_back</span><span class="special">(...)</span>
+              <span class="keyword">const</span></code> then the function type
+              would have been <code class="computeroutput"><span class="keyword">void</span> <span class="special">(</span><span class="identifier">contract</span><span class="special">::</span><a href="../contract/copyable.html" target="_top">copyable</a><span class="special">&lt;</span><span class="identifier">myvector</span>
+              <span class="keyword">const</span><span class="special">&gt;*,</span>
+              <span class="keyword">const</span> <span class="identifier">T</span><span class="special">&amp;)</span></code>. Note that when both <code class="computeroutput"><span class="keyword">const</span></code> and <code class="computeroutput"><span class="identifier">contract</span><span class="special">::</span><a href="../contract/copyable.html" target="_top">copyable</a></code>
+              are used, <code class="computeroutput"><span class="keyword">const</span></code> must be
+              used within <code class="computeroutput"><span class="identifier">contract</span><span class="special">::</span><a href="../contract/copyable.html" target="_top">copyable</a></code><sup>[<a name="id2637388" href="#ftn.id2637388" class="footnote">14</a>]</sup>
+              .
+            </li>
+<li>
+              In the function type, the class type (which is specified only for member
+              functions) and the argument types can be tagged <code class="computeroutput"><span class="identifier">contract</span><span class="special">::</span><a href="../contract/copyable.html" target="_top">copyable</a></code>
+              if the relative old values are needed in postconditions. Any type tagged
+              <code class="computeroutput"><span class="identifier">contract</span><span class="special">::</span><a href="../contract/copyable.html" target="_top">copyable</a></code> (<code class="computeroutput"><span class="identifier">myvector</span></code> in this example) must have
+              an accessible constant-correct copy constructor otherwise the library
+              will generate a compile-time error (see <code class="computeroutput"><span class="identifier">contract</span><span class="special">::</span><a href="../contract/copy.html" target="_top">copy</a></code>).
+              Note that the object <code class="computeroutput"><span class="identifier">contract</span><span class="special">::</span><a href="../contract/copyable.html" target="_top">copyable</a></code>
+              only wraps the class type and not the pointer (i.e., <code class="computeroutput"><span class="identifier">contract</span><span class="special">::</span><a href="../contract/copyable.html" target="_top">copyable</a><span class="special">&lt;</span><span class="identifier">myvector</span><span class="special">*&gt;</span></code>
+              is invalid) but for all the contracted function argument types <code class="computeroutput"><span class="identifier">contract</span><span class="special">::</span><a href="../contract/copyable.html" target="_top">copyable</a></code> wraps the entire
+              type including eventual pointers -- this is because for member functions,
+              the first argument of the function type must always be a pointer to
+              the class type (even when the class type is tagged <code class="computeroutput"><span class="identifier">contract</span><span class="special">::</span><a href="../contract/copyable.html" target="_top">copyable</a></code>
+              and/or it is qualified <code class="computeroutput"><span class="keyword">const</span></code>).
+            </li>
+</ul></div>
+</li>
+<li>
+          When subcontracting, the base contract classes are specified as the optional
+          template parameters following the function type for <code class="computeroutput"><span class="identifier">contract</span><span class="special">::</span><a href="../contract/nonstatic_member_function.html" target="_top">nonstatic_member_function</a></code>
+          (one base contract is specified in this case <code class="computeroutput"><span class="identifier">pushable</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;::</span><span class="identifier">contract_push_back_element</span><span class="special">&lt;</span><span class="number">0</span><span class="special">&gt;</span></code>).
+          All these template parameters are optional and multiple base contract classes
+          can be specified to support subcontracting for multiple inheritance.
+        </li>
+<li>
+          The contract class must define a public default constructor (i.e., with
+          no arguments) which constructs the base class <code class="computeroutput"><span class="identifier">contract</span><span class="special">::</span><a href="../contract/nonstatic_member_function.html" target="_top">nonstatic_member_function</a></code>
+          passing function pointers to the body, precondition, and postcondition
+          (so the contract knows which function to invoke to execute the body, check
+          preconditions, and check postconditions).
+        </li>
+</ul></div>
+<div class="note"><table border="0" summary="Note">
+<tr>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src=".././doc/html/images/note.png"></td>
+<th align="left">Note</th>
+</tr>
+<tr><td align="left" valign="top">
+<p>
+          The contract class is declared as a template using the <span class="emphasis"><em>artificial</em></span>
+          template parameter <code class="computeroutput"><span class="keyword">int</span> <span class="identifier">ZERO</span></code>
+          to support an internal library workaround. This allows the library to internally
+          use the <code class="computeroutput"><span class="keyword">typename</span></code> and <code class="computeroutput"><span class="keyword">template</span></code> keywords freely to explicitly characterize
+          types even without knowing if the contracted class is a template or not.
+          The artificial template parameter <code class="computeroutput"><span class="keyword">int</span>
+          <span class="identifier">ZERO</span></code> is not needed if the contracted
+          function is already a template (in which case <code class="computeroutput"><span class="keyword">int</span>
+          <span class="identifier">ZERO</span></code> is replaced by the actual
+          function template parameters).
+        </p>
+<p>
+          The value of artificial template parameter <code class="computeroutput"><span class="keyword">int</span>
+          <span class="identifier">ZERO</span></code> is not used so any value
+          can be specified. However, it is recommended to always specify the value
+          <code class="computeroutput"><span class="number">0</span></code> for consistency (this is
+          practice followed by this documentation).
+        </p>
+</td></tr>
+</table></div>
+<a name="contract__.without_the_macros.contract_class.contract_class_name"></a><h6>
+<a name="id2637831"></a>
+        <a class="link" href="without_the_macros.html#contract__.without_the_macros.contract_class.contract_class_name">Contract
+        Class Name</a>
+      </h6>
+<p>
+        Note how, similarly to the precondition and postcondition function names,
+        the contract class name repeats the function name and the argument names.
+        Furthermore, for constant member functions, the contract class name should
+        end with <code class="literal">const</code>. This is necessary to support contracts
+        for overloaded functions (with the limitation that overloaded functions,
+        with the same number of arguments and same constant qualifier, must have
+        different argument names and not just different argument types otherwise
+        contract names will clash). In summary, the contract class name should be
+        as follow:
+      </p>
+<pre class="programlisting"><span class="identifier">contract_</span><span class="emphasis"><em>function-name</em></span><span class="identifier">_</span><span class="emphasis"><em>argument-name1</em></span><span class="identifier">_</span><span class="emphasis"><em>argument-name2</em></span><span class="identifier">_</span><span class="emphasis"><em>...argument-nameN</em></span><span class="identifier">_</span><span class="emphasis"><em>[</em></span><span class="identifier">const_</span><span class="emphasis"><em>]</em></span>
+</pre>
+<p>
+        In order to allow the contract macros to subcontract from hand-written contracts,
+        you must follow the above convention in naming the contract class at all
+        times (because this is the convention that the contract macros assume).
+      </p>
+<p>
+        The contract class name begins with the <code class="computeroutput"><span class="identifier">contract</span></code>
+        prefix and ends with an underscore "<code class="computeroutput"><span class="identifier">_</span></code>"
+        thus programmers should never directly use this class in user code (see
+        <a class="link" href="getting_started.html" title="Getting Started">Getting Started</a>).
+      </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="contract__.without_the_macros.static_member_functions"></a><a class="link" href="without_the_macros.html#contract__.without_the_macros.static_member_functions" title="Static Member Functions">Static
+      Member Functions</a>
+</h3></div></div></div>
+<p>
+        Contracts can also be programmed for static member functions (see the example
+        at the end of this section). However, compared with non-static member function
+        contracts the following differences apply:
+      </p>
+<div class="itemizedlist"><ul type="disc">
+<li>
+          The <code class="computeroutput"><span class="identifier">contract</span><span class="special">::</span><a href="../contract/static_member_function.html" target="_top">static_member_function</a></code>
+          class template is used instead of <code class="computeroutput"><span class="identifier">contract</span><span class="special">::</span><a href="../contract/nonstatic_member_function.html" target="_top">nonstatic_member_function</a></code>.
+        </li>
+<li>
+          The class type cannot be tagged <code class="computeroutput"><span class="identifier">contract</span><span class="special">::</span><a href="../contract/copyable.html" target="_top">copyable</a></code>
+          or qualified <code class="computeroutput"><span class="keyword">const</span></code> (because
+          there is no object to copy or to not modify).
+        </li>
+<li>
+          The precondition, postcondition, and body functions must be <code class="computeroutput"><span class="keyword">static</span></code> members (and therefore they cannot
+          be <code class="computeroutput"><span class="keyword">const</span></code>).
+        </li>
+<li>
+          No base contract class can be specified because <code class="computeroutput"><span class="keyword">static</span></code>
+          members cannot be <code class="computeroutput"><span class="keyword">virtual</span></code>
+          so they cannot subcontract.
+        </li>
+</ul></div>
+<p>
+        All these constraints are enforced by the library at compile-time.
+      </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="contract__.without_the_macros.constructors"></a><a class="link" href="without_the_macros.html#contract__.without_the_macros.constructors" title="Constructors">Constructors</a>
+</h3></div></div></div>
+<p>
+        Contracts can also be programmed for constructors (see the example at the
+        end of this section). However, compared with non-static member function contracts
+        the following differences apply:
+      </p>
+<div class="itemizedlist"><ul type="disc">
+<li>
+          The <code class="computeroutput"><span class="identifier">contract</span><span class="special">::</span><a href="../contract/constructor.html" target="_top">constructor</a></code> class template
+          is used instead of <code class="computeroutput"><span class="identifier">contract</span><span class="special">::</span><a href="../contract/nonstatic_member_function.html" target="_top">nonstatic_member_function</a></code>.
+        </li>
+<li>
+          The class type cannot be tagged <code class="computeroutput"><span class="identifier">contract</span><span class="special">::</span><a href="../contract/copyable.html" target="_top">copyable</a></code>
+          or qualified <code class="computeroutput"><span class="keyword">const</span></code> (because
+          there is no object before body execution to copy and the object is always
+          modified by the body as it is constructed).
+        </li>
+<li>
+          The <code class="computeroutput"><span class="identifier">contract</span><span class="special">::</span><a href="../contract/constructor.html" target="_top">constructor</a></code> function type
+          template parameter must always specify a <code class="computeroutput"><span class="keyword">void</span></code>
+          return type (because constructors return no value).
+        </li>
+<li>
+          The precondition function must be <code class="computeroutput"><span class="keyword">static</span></code>
+          because constructor preconditions cannot access the object (as there is
+          no object before constructor body execution).
+        </li>
+<li>
+          The postcondition function always specifies <code class="computeroutput"><span class="identifier">contract</span><span class="special">::</span><a href="../contract/oldof.html" target="_top">noold</a></code>
+          for the object old value because constructor postconditions can never access
+          the object old value (as there was no object before constructor body execution).
+          Furthermore, the function type passed to <code class="computeroutput"><span class="identifier">contract</span><span class="special">::</span><a href="../contract/constructor.html" target="_top">constructor</a></code>
+          cannot tag the class type <code class="computeroutput"><span class="identifier">contract</span><span class="special">::</span><a href="../contract/copyable.html" target="_top">copyable</a></code>.
+        </li>
+<li>
+          No base contract class can be specified because constructors do not directly
+          subcontract (the C++ object construction mechanism will automatically invoke
+          the base class constructor contracts if present).
+        </li>
+</ul></div>
+<p>
+        All these constraints are enforced by the library at compile-time.
+      </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="contract__.without_the_macros.destructors"></a><a class="link" href="without_the_macros.html#contract__.without_the_macros.destructors" title="Destructors">Destructors</a>
+</h3></div></div></div>
+<p>
+        Contracts can also be programmed for destructors (see the example at the
+        end of this section). However, compared with non-static member function contracts
+        the following differences apply:
+      </p>
+<div class="itemizedlist"><ul type="disc">
+<li>
+          The <code class="computeroutput"><span class="identifier">contract</span><span class="special">::</span><a href="../contract/destructor.html" target="_top">destructor</a></code> class template
+          is used instead of <code class="computeroutput"><span class="identifier">contract</span><span class="special">::</span><a href="../contract/nonstatic_member_function.html" target="_top">nonstatic_member_function</a></code>.
+        </li>
+<li>
+          The class type cannot be tagged <code class="computeroutput"><span class="identifier">contract</span><span class="special">::</span><a href="../contract/copyable.html" target="_top">copyable</a></code>
+          or qualified <code class="computeroutput"><span class="keyword">const</span></code> (because
+          there are no postconditions to accessed to copied object and the object
+          is always modified by the body as it is destructed).
+        </li>
+<li>
+          The <code class="computeroutput"><span class="identifier">contract</span><span class="special">::</span><a href="../contract/destructor.html" target="_top">destructor</a></code> function type
+          template parameter must always specify a <code class="computeroutput"><span class="keyword">void</span></code>
+          return type and have no argument (because destructors return no value and
+          have no argument). Furthermore, the function pointer cannot tag the class
+          type <code class="computeroutput"><span class="identifier">contract</span><span class="special">::</span><a href="../contract/copyable.html" target="_top">copyable</a></code>.
+        </li>
+<li>
+          The <code class="computeroutput"><span class="identifier">contract</span><span class="special">::</span><a href="../contract/destructor.html" target="_top">destructor</a></code> constructor only
+          takes the body function pointer and it does not take the precondition and
+          postcondition function pointers (because destructors have no preconditions
+          and no postconditions as they have no arguments and there is no object
+          after destructor body execution).
+        </li>
+<li>
+          No base contract class can be specified because destructors do not directly
+          subcontract (the C++ object destruction mechanism will automatically invoke
+          the base class destructor contracts if present).
+        </li>
+</ul></div>
+<p>
+        All these constraints are enforced by the library at compile-time.
+      </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="contract__.without_the_macros.non_member_functions"></a><a class="link" href="without_the_macros.html#contract__.without_the_macros.non_member_functions" title="Non-Member Functions">Non-Member
+      Functions</a>
+</h3></div></div></div>
+<p>
+        Contracts can also be programmed for non-member functions (see the example
+        at the end of this section). However, compared with non-static member function
+        contracts the following differences apply:
+      </p>
+<div class="itemizedlist"><ul type="disc">
+<li>
+          The <code class="computeroutput"><span class="identifier">contract</span><span class="special">::</span><a href="../contract/nonmember_function.html" target="_top">nonmember_function</a></code>
+          class template is used instead of <code class="computeroutput"><span class="identifier">contract</span><span class="special">::</span><a href="../contract/nonstatic_member_function.html" target="_top">nonstatic_member_function</a></code>.
+        </li>
+<li>
+          The function type passed as the first template parameter to <code class="computeroutput"><span class="identifier">contract</span><span class="special">::</span><a href="../contract/nonmember_function.html" target="_top">nonmember_function</a></code>
+          does <span class="emphasis"><em>not</em></span> specify the class type (i.e., <span class="emphasis"><em>result-type</em></span><code class="computeroutput">
+          <span class="special">(</span></code><span class="emphasis"><em>argument-type1</em></span><code class="computeroutput"><span class="special">,</span> <span class="special">...)</span></code> is
+          used instead of <span class="emphasis"><em>result-type</em></span><code class="computeroutput"> <span class="special">(</span></code><span class="emphasis"><em>class-type</em></span><code class="computeroutput"><span class="special">*,</span></code><span class="emphasis"><em>argument-type1</em></span><code class="computeroutput"><span class="special">,</span> <span class="special">...)</span></code>).
+        </li>
+<li>
+          The precondition, postcondition, body functions, and the contract class
+          are not members.
+        </li>
+<li>
+          The contracted function definition must be <code class="computeroutput"><span class="keyword">inline</span></code>
+          and it must appear at the very end of the contract after the precondition,
+          postcondition, body functions, and the contract class (to avoid duplicate
+          definitions and missing definitions compile-time errors).
+        </li>
+</ul></div>
+<p>
+        All these constraints are enforced by the library at compile-time.
+      </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="contract__.without_the_macros.a_fully_working_example__without_the_macros_"></a><a class="link" href="without_the_macros.html#contract__.without_the_macros.a_fully_working_example__without_the_macros_" title="A Fully Working Example (Without the Macros)">A
+      Fully Working Example (Without the Macros)</a>
+</h3></div></div></div>
+<p>
+        We conclude this section with a fully working example that can be compiled.
+        This example illustrates how to use the library to program contracts without
+        the macros.
+      </p>
+<p>
+        For simplicity, this example only exposes a limited subset of the <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span></code>
+        operations and it only programs simple contracts for them (see the STL Vector
+        <a class="link" href="examples.html" title="Examples">Example</a> for <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span></code>
+        complete contracts). Furthermore, the somewhat artificial base classes have
+        been deliberately introduced to illustrate subcontracting and they will probably
+        not be part of real code.
+      </p>
+<p>
+        Comparing this example with the one presented in the <a class="link" href="tutorial.html" title="Tutorial">Tutorial</a>
+        section, it is easy to note how much more setup code around the contract
+        assertions is required when the contract macros are not used. Therefore,
+        the use of the contract macros is always recommended.
+      </p>
+<p>
+        </p>
+<p>
+          
+</p>
+<pre class="programlisting"><span class="preprocessor">#include</span> <span class="string">"pushable.hpp"</span> <span class="comment">// Base class for subcontracting.
+</span><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">contract</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span> <span class="comment">// This library.
+</span><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">vector</span><span class="special">&gt;</span> <span class="comment">// STL vector.
+</span>
+<span class="comment">// Wrapper that adds simple (not complete) contracts to C++ STL
+</span><span class="comment">// without using the library contract macros.
+</span><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span>
+<span class="keyword">class</span> <span class="identifier">myvector</span><span class="special">:</span> <span class="keyword">public</span> <span class="identifier">pushable</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span> <span class="special">{</span>
+
+<span class="preprocessor">#if</span> <span class="identifier">defined</span> <span class="identifier">CONTRACT_CHECK_CLASS_INVARIANT</span> <span class="special">||</span>  <span class="comment">/* Allow for         */</span> <span class="special">\</span>
+        <span class="identifier">defined</span> <span class="identifier">CONTRACT_CHECK_PRECONDITION</span> <span class="special">||</span> <span class="comment">/* optional contract */</span> <span class="special">\</span>
+        <span class="identifier">defined</span> <span class="identifier">CONTRACT_CHECK_POSTCONDITION</span>   <span class="comment">/* compilation.      */</span>
+    <span class="comment">// Augmented state.
+</span>    <span class="keyword">friend</span> <span class="keyword">class</span> <span class="identifier">contract</span><span class="special">::</span><span class="identifier">state</span><span class="special">;</span>
+    <span class="keyword">mutable</span> <span class="identifier">contract</span><span class="special">::</span><span class="identifier">state</span> <span class="identifier">contract_state_</span><span class="special">;</span>
+<span class="preprocessor">#endif</span> <span class="comment">// contracts
+</span>
+<span class="preprocessor">#if</span> <span class="identifier">defined</span> <span class="identifier">CONTRACT_CHECK_CLASS_INVARIANT</span>
+    <span class="comment">// Static class invariants
+</span>    <span class="keyword">static</span> <span class="keyword">void</span> <span class="identifier">contract_static_invariant_</span><span class="special">(</span><span class="keyword">void</span><span class="special">)</span> <span class="special">{</span>
+        <span class="comment">// Assert nothing in this case.
+</span>    <span class="special">}</span>
+    <span class="comment">// Class invariants.
+</span>    <span class="keyword">void</span> <span class="identifier">contract_invariant_</span><span class="special">(</span><span class="keyword">void</span><span class="special">)</span> <span class="keyword">const</span> <span class="special">{</span>
+        <span class="keyword">if</span> <span class="special">(!((</span><span class="identifier">size</span><span class="special">()</span> <span class="special">==</span> <span class="number">0</span><span class="special">)</span> <span class="special">==</span> <span class="identifier">empty</span><span class="special">()))</span>
+            <span class="keyword">throw</span> <span class="identifier">contract</span><span class="special">::</span><span class="identifier">failure</span><span class="special">(</span><span class="identifier">__FILE__</span><span class="special">,</span> <span class="identifier">__LINE__</span><span class="special">);</span>
+        <span class="comment">// More invariants here...
+</span>    <span class="special">}</span>
+<span class="preprocessor">#endif</span> <span class="comment">// invariants
+</span>
+<span class="keyword">public</span><span class="special">:</span>
+    <span class="keyword">typedef</span> <span class="keyword">typename</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;::</span><span class="identifier">size_type</span> <span class="identifier">size_type</span><span class="special">;</span>
+    <span class="keyword">typedef</span> <span class="keyword">typename</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;::</span><span class="identifier">const_reference</span> <span class="identifier">const_reference</span><span class="special">;</span>
+    <span class="keyword">typedef</span> <span class="keyword">typename</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;::</span><span class="identifier">const_iterator</span> <span class="identifier">const_iterator</span><span class="special">;</span>
+    
+    <span class="comment">// Contract for constructor.
+</span>    <span class="keyword">explicit</span> <span class="identifier">myvector</span><span class="special">(</span><span class="identifier">size_type</span> <span class="identifier">count</span><span class="special">):</span> <span class="identifier">vector_</span><span class="special">(</span><span class="identifier">count</span><span class="special">)</span>
+<span class="preprocessor">#if</span> <span class="identifier">defined</span> <span class="identifier">CONTRACT_CHECK_CLASS_INVARIANT</span> <span class="special">||</span> <span class="special">\</span>
+        <span class="identifier">defined</span> <span class="identifier">CONTRACT_CHECK_PRECONDITION</span> <span class="special">||</span> <span class="special">\</span>
+        <span class="identifier">defined</span> <span class="identifier">CONTRACT_CHECK_POSTCONDITION</span>
+    <span class="special">{</span>
+        <span class="identifier">contract_contract_constructor_count_</span><span class="special">&lt;</span><span class="number">0</span><span class="special">&gt;().</span><span class="identifier">call</span><span class="special">(</span><span class="keyword">this</span><span class="special">,</span> <span class="identifier">count</span><span class="special">);</span>
+    <span class="special">}</span>
+<span class="keyword">private</span><span class="special">:</span>
+<span class="preprocessor">#if</span> <span class="identifier">defined</span> <span class="identifier">CONTRACT_CHECK_PRECONDITION</span>
+    <span class="comment">// Static preconditions (i.e., no object).
+</span>    <span class="keyword">static</span> <span class="keyword">void</span> <span class="identifier">contract_precondition_contract_constructor_count_</span><span class="special">(</span>
+            <span class="keyword">const</span> <span class="identifier">size_type</span><span class="special">&amp;</span> <span class="identifier">count</span><span class="special">)</span> <span class="comment">/* no `const` (it is `static`) */</span> <span class="special">{</span> 
+    <span class="special">}</span>
+<span class="preprocessor">#endif</span> <span class="comment">// preconditions
+</span><span class="preprocessor">#if</span> <span class="identifier">defined</span> <span class="identifier">CONTRACT_CHECK_POSTCONDITION</span>
+    <span class="keyword">void</span> <span class="identifier">contract_postcondition_contract_constructor_count_</span><span class="special">(</span>
+            <span class="identifier">contract</span><span class="special">::</span><span class="identifier">noold</span><span class="special">,</span> <span class="comment">// Always `noold` for old object.
+</span>            <span class="keyword">const</span> <span class="identifier">size_type</span><span class="special">&amp;</span> <span class="identifier">count</span><span class="special">,</span> <span class="identifier">contract</span><span class="special">::</span><span class="identifier">noold</span><span class="special">)</span> <span class="keyword">const</span> <span class="special">{</span>
+        <span class="keyword">if</span> <span class="special">(!(</span><span class="identifier">size</span><span class="special">()</span> <span class="special">==</span> <span class="identifier">count</span><span class="special">))</span>
+            <span class="keyword">throw</span> <span class="identifier">contract</span><span class="special">::</span><span class="identifier">failure</span><span class="special">(</span><span class="identifier">__FILE__</span><span class="special">,</span> <span class="identifier">__LINE__</span><span class="special">);</span>
+    <span class="special">}</span>
+<span class="preprocessor">#endif</span> <span class="comment">// postconditions
+</span><span class="keyword">protected</span><span class="special">:</span>
+    <span class="keyword">void</span> <span class="identifier">contract_body_contract_constructor_</span><span class="special">(</span><span class="identifier">size_type</span> <span class="identifier">count</span><span class="special">)</span>
+<span class="preprocessor">#endif</span> <span class="comment">// contracts
+</span>    <span class="special">{</span>
+        <span class="comment">// Do nothing in this case
+</span>    <span class="special">}</span>
+<span class="preprocessor">#if</span> <span class="identifier">defined</span> <span class="identifier">CONTRACT_CHECK_CLASS_INVARIANT</span> <span class="special">||</span> <span class="special">\</span>
+        <span class="identifier">defined</span> <span class="identifier">CONTRACT_CHECK_PRECONDITION</span> <span class="special">||</span> <span class="special">\</span>
+        <span class="identifier">defined</span> <span class="identifier">CONTRACT_CHECK_POSTCONDITION</span>
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">int</span> <span class="identifier">ZERO</span><span class="special">&gt;</span>
+    <span class="keyword">struct</span> <span class="identifier">contract_contract_constructor_count_</span><span class="special">:</span>
+            <span class="identifier">contract</span><span class="special">::</span><span class="identifier">constructor</span><span class="special">&lt;</span> <span class="comment">// Use `constructor` (not `function`).
+</span>            <span class="comment">// Class type can never be tagged `copyable`.
+</span>            <span class="keyword">void</span> <span class="special">(</span><span class="identifier">myvector</span><span class="special">*,</span> <span class="identifier">size_type</span><span class="special">)&gt;</span> <span class="special">{</span>
+        <span class="identifier">contract_contract_constructor_count_</span><span class="special">():</span> <span class="identifier">contract</span><span class="special">::</span><span class="identifier">constructor</span> <span class="special">&lt;</span>
+                <span class="keyword">void</span> <span class="special">(</span><span class="identifier">myvector</span><span class="special">*,</span> <span class="identifier">size_type</span><span class="special">)</span>
+                <span class="special">&gt;(</span>    <span class="special">&amp;</span><span class="identifier">myvector</span><span class="special">::</span><span class="identifier">contract_body_contract_constructor_</span>
+                    <span class="special">,</span> <span class="special">&amp;</span><span class="identifier">myvector</span><span class="special">::</span><span class="identifier">contract_precondition_contract_constructor_count_</span>
+                    <span class="special">,</span> <span class="special">&amp;</span><span class="identifier">myvector</span><span class="special">::</span><span class="identifier">contract_postcondition_contract_constructor_count_</span>
+                <span class="special">)</span> <span class="special">{}</span>
+    <span class="special">};</span>
+<span class="keyword">public</span><span class="special">:</span>
+<span class="preprocessor">#endif</span> <span class="comment">// contracts
+</span>    
+    <span class="comment">// Contract for destructor.
+</span>    <span class="keyword">virtual</span> <span class="special">~</span><span class="identifier">myvector</span><span class="special">(</span><span class="keyword">void</span><span class="special">)</span>
+    <span class="comment">// Destructors only check invariants.
+</span><span class="preprocessor">#if</span> <span class="identifier">defined</span> <span class="identifier">CONTRACT_CHECK_CLASS_INVARIANT</span>
+    <span class="special">{</span>
+        <span class="identifier">contract_contract_destructor_</span><span class="special">&lt;</span><span class="number">0</span><span class="special">&gt;().</span><span class="identifier">call</span><span class="special">(</span><span class="keyword">this</span><span class="special">);</span>
+    <span class="special">}</span>
+<span class="keyword">protected</span><span class="special">:</span>
+    <span class="comment">// No precondition and no postcondition functions.
+</span>    <span class="keyword">virtual</span> <span class="keyword">void</span> <span class="identifier">contract_body_contract_destructor_</span><span class="special">(</span><span class="keyword">void</span><span class="special">)</span>
+<span class="preprocessor">#endif</span> <span class="comment">// invariant
+</span>    <span class="special">{</span>
+        <span class="comment">// Do nothing in this case.
+</span>    <span class="special">}</span>
+<span class="preprocessor">#if</span> <span class="identifier">defined</span> <span class="identifier">CONTRACT_CHECK_CLASS_INVARIANT</span>
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">int</span> <span class="identifier">ZERO</span><span class="special">&gt;</span>
+    <span class="keyword">struct</span> <span class="identifier">contract_contract_destructor_</span><span class="special">:</span>
+            <span class="identifier">contract</span><span class="special">::</span><span class="identifier">destructor</span><span class="special">&lt;</span> <span class="comment">// Use `destructor` (not `function`).
+</span>            <span class="comment">// Class type can never be tagged `copyable`.
+</span>            <span class="keyword">void</span> <span class="special">(</span><span class="identifier">myvector</span><span class="special">*)&gt;</span> <span class="special">{</span>
+        <span class="identifier">contract_contract_destructor_</span><span class="special">():</span> <span class="identifier">contract</span><span class="special">::</span><span class="identifier">destructor</span><span class="special">&lt;</span>
+                <span class="keyword">void</span> <span class="special">(</span><span class="identifier">myvector</span><span class="special">*)</span>
+                <span class="special">&gt;(&amp;</span><span class="identifier">myvector</span><span class="special">::</span><span class="identifier">contract_body_contract_destructor_</span> <span class="special">)</span> <span class="special">{}</span>
+        <span class="special">};</span>
+<span class="keyword">public</span><span class="special">:</span> 
+<span class="preprocessor">#endif</span> <span class="comment">// invariant
+</span>
+    <span class="comment">// Contract for non-static member functions.
+</span>    <span class="keyword">void</span> <span class="identifier">push_back</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">T</span><span class="special">&amp;</span> <span class="identifier">element</span><span class="special">)</span>
+<span class="preprocessor">#if</span> <span class="identifier">defined</span> <span class="identifier">CONTRACT_CHECK_CLASS_INVARIANT</span> <span class="special">||</span> <span class="special">\</span>
+        <span class="identifier">defined</span> <span class="identifier">CONTRACT_CHECK_PRECONDITION</span> <span class="special">||</span> <span class="special">\</span>
+        <span class="identifier">defined</span> <span class="identifier">CONTRACT_CHECK_POSTCONDITION</span>
+    <span class="comment">// Contracted function.
+</span>    <span class="special">{</span>
+        <span class="identifier">contract_push_back_element_</span><span class="special">&lt;</span><span class="number">0</span><span class="special">&gt;().</span><span class="identifier">call</span><span class="special">(</span><span class="keyword">this</span> <span class="special">,</span> <span class="identifier">element</span><span class="special">);</span>
+    <span class="special">}</span>
+<span class="keyword">private</span><span class="special">:</span> <span class="comment">// Private so not to alter user call public API.
+</span><span class="preprocessor">#if</span> <span class="identifier">defined</span> <span class="identifier">CONTRACT_CHECK_PRECONDITION</span>
+    <span class="keyword">void</span> <span class="identifier">contract_precondition_push_back_element_</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">T</span><span class="special">&amp;</span> <span class="identifier">element</span><span class="special">)</span> <span class="keyword">const</span> <span class="special">{</span>
+        <span class="keyword">if</span> <span class="special">(!(</span><span class="identifier">size</span><span class="special">()</span> <span class="special">&lt;</span> <span class="identifier">max_size</span><span class="special">()))</span> 
+            <span class="keyword">throw</span> <span class="identifier">contract</span><span class="special">::</span><span class="identifier">failure</span><span class="special">(</span><span class="identifier">__FILE__</span><span class="special">,</span> <span class="identifier">__LINE__</span><span class="special">);</span>
+        <span class="comment">// More preconditions here...
+</span>    <span class="special">}</span>
+<span class="preprocessor">#endif</span> <span class="comment">// preconditions
+</span><span class="preprocessor">#if</span> <span class="identifier">defined</span> <span class="identifier">CONTRACT_CHECK_POSTCONDITION</span>
+    <span class="keyword">void</span> <span class="identifier">contract_postcondition_push_back_element_</span><span class="special">(</span>
+            <span class="keyword">const</span> <span class="identifier">myvector</span><span class="special">*</span> <span class="identifier">contract_old_this_</span><span class="special">,</span> <span class="comment">// Old value for object.
+</span>            <span class="keyword">const</span> <span class="identifier">T</span><span class="special">&amp;</span> <span class="identifier">element</span><span class="special">,</span> <span class="identifier">contract</span><span class="special">::</span><span class="identifier">noold</span>   <span class="comment">// No old for element argument.
+</span>            <span class="special">)</span> <span class="keyword">const</span> <span class="special">{</span>
+        <span class="keyword">if</span> <span class="special">(!(</span><span class="identifier">size</span><span class="special">()</span> <span class="special">==</span> <span class="special">(</span><span class="identifier">contract_old_this_</span><span class="special">-&gt;</span><span class="identifier">size</span><span class="special">()</span> <span class="special">+</span> <span class="number">1</span><span class="special">)))</span>
+            <span class="keyword">throw</span> <span class="identifier">contract</span><span class="special">::</span><span class="identifier">failure</span><span class="special">(</span><span class="identifier">__FILE__</span><span class="special">,</span> <span class="identifier">__LINE__</span><span class="special">);</span>
+        <span class="comment">// More postconditions here...
+</span>    <span class="special">}</span>
+<span class="preprocessor">#endif</span> <span class="comment">// postconditions
+</span><span class="keyword">protected</span><span class="special">:</span> <span class="comment">// Must be protected (not private) to allow subcontracting.
+</span>    <span class="keyword">void</span> <span class="identifier">contract_body_push_back_</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">T</span><span class="special">&amp;</span> <span class="identifier">element</span><span class="special">)</span>
+<span class="preprocessor">#endif</span> <span class="comment">// contracts
+</span>    <span class="comment">// Original function definition (the body).
+</span>    <span class="special">{</span>
+        <span class="identifier">vector_</span><span class="special">.</span><span class="identifier">push_back</span><span class="special">(</span><span class="identifier">element</span><span class="special">);</span>
+    <span class="special">}</span> 
+<span class="preprocessor">#if</span> <span class="identifier">defined</span> <span class="identifier">CONTRACT_CHECK_CLASS_INVARIANT</span> <span class="special">||</span> <span class="special">\</span>
+        <span class="identifier">defined</span> <span class="identifier">CONTRACT_CHECK_PRECONDITION</span> <span class="special">||</span> <span class="special">\</span>
+        <span class="identifier">defined</span> <span class="identifier">CONTRACT_CHECK_POSTCONDITION</span>
+    <span class="comment">// Contract class.
+</span>    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">int</span> <span class="identifier">ZERO</span><span class="special">&gt;</span>
+    <span class="keyword">struct</span> <span class="identifier">contract_push_back_element_</span><span class="special">:</span> <span class="identifier">contract</span><span class="special">::</span><span class="identifier">nonstatic_member_function</span><span class="special">&lt;</span>
+            <span class="comment">// Function type for contracted function.
+</span>            <span class="comment">// Copyable class type for old object value in postconditions.
+</span>            <span class="comment">// For constant members, change `myvector` to `myvector const`.
+</span>            <span class="keyword">void</span> <span class="special">(</span><span class="identifier">contract</span><span class="special">::</span><span class="identifier">copyable</span><span class="special">&lt;</span><span class="identifier">myvector</span><span class="special">&gt;*,</span> <span class="keyword">const</span> <span class="identifier">T</span><span class="special">&amp;),</span>
+            <span class="comment">// Base contract class for subcontracting.
+</span>            <span class="keyword">typename</span> <span class="identifier">pushable</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;::</span><span class="keyword">template</span> <span class="identifier">contract_push_back_element_</span><span class="special">&lt;</span><span class="number">0</span><span class="special">&gt;</span>
+            <span class="special">&gt;</span> <span class="special">{</span>
+        <span class="comment">// Constructor specifies body, preconditions, and postconditions.
+</span>        <span class="identifier">contract_push_back_element_</span><span class="special">():</span> <span class="identifier">contract</span><span class="special">::</span><span class="identifier">nonstatic_member_function</span><span class="special">&lt;</span>
+                <span class="keyword">void</span> <span class="special">(</span><span class="identifier">contract</span><span class="special">::</span><span class="identifier">copyable</span><span class="special">&lt;</span><span class="identifier">myvector</span><span class="special">&gt;*,</span> <span class="keyword">const</span> <span class="identifier">T</span><span class="special">&amp;),</span>
+                <span class="keyword">typename</span> <span class="identifier">pushable</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;::</span><span class="keyword">template</span> <span class="identifier">contract_push_back_element_</span><span class="special">&lt;</span><span class="number">0</span><span class="special">&gt;</span>
+                <span class="special">&gt;(</span>    <span class="special">&amp;</span><span class="identifier">myvector</span><span class="special">::</span><span class="identifier">contract_body_push_back_</span>
+<span class="preprocessor">#if</span> <span class="identifier">defined</span> <span class="identifier">CONTRACT_CHECK_PRECONDITION</span>
+                    <span class="special">,</span> <span class="special">&amp;</span><span class="identifier">myvector</span><span class="special">::</span><span class="identifier">contract_precondition_push_back_element_</span>
+<span class="preprocessor">#endif</span> <span class="comment">// preconditions
+</span><span class="preprocessor">#if</span> <span class="identifier">defined</span> <span class="identifier">CONTRACT_CHECK_POSTCONDITION</span>
+                    <span class="special">,</span> <span class="special">&amp;</span><span class="identifier">myvector</span><span class="special">::</span><span class="identifier">contract_postcondition_push_back_element_</span>
+<span class="preprocessor">#endif</span> <span class="comment">// postconditions
+</span>                <span class="special">)</span> <span class="special">{}</span> 
+    <span class="special">};</span>
+<span class="keyword">public</span><span class="special">:</span> <span class="comment">// Restore original access level.
+</span><span class="preprocessor">#endif</span> <span class="comment">// contracts
+</span>
+    <span class="comment">// Contract for template plus static member function.
+</span>    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">Iter</span><span class="special">&gt;</span>
+    <span class="keyword">static</span> <span class="keyword">bool</span> <span class="identifier">all_equals</span><span class="special">(</span><span class="identifier">Iter</span> <span class="identifier">first</span><span class="special">,</span> <span class="identifier">Iter</span> <span class="identifier">last</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">T</span><span class="special">&amp;</span> <span class="identifier">element</span><span class="special">)</span>
+    <span class="comment">// Static members also check (static) class invariants.
+</span><span class="preprocessor">#if</span> <span class="identifier">defined</span> <span class="identifier">CONTRACT_CHECK_CLASS_INVARIANT</span> <span class="special">||</span> <span class="special">\</span>
+        <span class="identifier">defined</span> <span class="identifier">CONTRACT_CHECK_PRECONDITION</span> <span class="special">||</span> <span class="special">\</span>
+        <span class="identifier">defined</span> <span class="identifier">CONTRACT_CHECK_POSTCONDITION</span>
+    <span class="special">{</span>
+        <span class="keyword">return</span> <span class="identifier">contract_all_equals_first_last_element_</span><span class="special">&lt;</span><span class="identifier">Iter</span><span class="special">&gt;().</span><span class="identifier">call</span><span class="special">(</span>
+                <span class="identifier">first</span><span class="special">,</span> <span class="identifier">last</span><span class="special">,</span> <span class="identifier">element</span><span class="special">);</span>
+    <span class="special">}</span>
+<span class="keyword">private</span><span class="special">:</span>
+    <span class="comment">// Static template precondition and postcondition functions.
+</span><span class="preprocessor">#if</span> <span class="identifier">defined</span> <span class="identifier">CONTRACT_CHECK_PRECONDITION</span>
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">Iter</span><span class="special">&gt;</span>
+    <span class="keyword">static</span> <span class="keyword">void</span> <span class="identifier">contract_precondition_all_equals_first_last_element_</span><span class="special">(</span>
+            <span class="keyword">const</span> <span class="identifier">Iter</span><span class="special">&amp;</span> <span class="identifier">first</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">Iter</span><span class="special">&amp;</span> <span class="identifier">last</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">T</span><span class="special">&amp;</span> <span class="identifier">element</span><span class="special">)</span>
+            <span class="comment">/* no `const` */</span> <span class="special">{</span>
+        <span class="keyword">if</span> <span class="special">(!(</span><span class="identifier">first</span> <span class="special">&lt;</span> <span class="identifier">last</span><span class="special">))</span>
+            <span class="keyword">throw</span> <span class="identifier">contract</span><span class="special">::</span><span class="identifier">failure</span><span class="special">(</span><span class="identifier">__FILE__</span><span class="special">,</span> <span class="identifier">__LINE__</span><span class="special">);</span>
+    <span class="special">}</span>
+<span class="preprocessor">#endif</span> <span class="comment">// preconditions
+</span><span class="preprocessor">#if</span> <span class="identifier">defined</span> <span class="identifier">CONTRACT_CHECK_POSTCONDITION</span>
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">Iter</span><span class="special">&gt;</span>
+    <span class="keyword">static</span> <span class="keyword">void</span> <span class="identifier">contract_postcondition_all_equals_first_last_element_</span><span class="special">(</span>
+            <span class="keyword">const</span> <span class="identifier">Iter</span><span class="special">&amp;</span> <span class="identifier">first</span><span class="special">,</span> <span class="identifier">contract</span><span class="special">::</span><span class="identifier">noold</span><span class="special">,</span>
+            <span class="keyword">const</span> <span class="identifier">Iter</span><span class="special">&amp;</span> <span class="identifier">last</span><span class="special">,</span> <span class="identifier">contract</span><span class="special">::</span><span class="identifier">noold</span><span class="special">,</span>
+            <span class="keyword">const</span> <span class="identifier">T</span><span class="special">&amp;</span> <span class="identifier">element</span><span class="special">,</span> <span class="identifier">contract</span><span class="special">::</span><span class="identifier">noold</span><span class="special">,</span>
+            <span class="keyword">const</span> <span class="keyword">bool</span><span class="special">&amp;</span> <span class="identifier">result</span> <span class="special">)</span> <span class="comment">// Result value.
+</span>            <span class="comment">/* no `const` */</span> <span class="special">{</span>
+    <span class="special">}</span>
+<span class="preprocessor">#endif</span> <span class="comment">// postconditions
+</span><span class="keyword">protected</span><span class="special">:</span>
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">Iter</span><span class="special">&gt;</span>
+    <span class="keyword">static</span> <span class="keyword">bool</span> <span class="identifier">contract_body_all_equals_</span><span class="special">(</span>
+            <span class="identifier">Iter</span> <span class="identifier">first</span><span class="special">,</span> <span class="identifier">Iter</span> <span class="identifier">last</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">T</span><span class="special">&amp;</span> <span class="identifier">element</span><span class="special">)</span>
+<span class="preprocessor">#endif</span> <span class="comment">// contracts
+</span>    <span class="special">{</span>
+        <span class="keyword">for</span> <span class="special">(</span><span class="identifier">Iter</span> <span class="identifier">i</span> <span class="special">=</span> <span class="identifier">first</span><span class="special">;</span> <span class="identifier">i</span> <span class="special">&lt;</span> <span class="identifier">last</span><span class="special">;</span> <span class="special">++</span><span class="identifier">i</span><span class="special">)</span> <span class="special">{</span>
+            <span class="keyword">if</span> <span class="special">(*</span><span class="identifier">i</span> <span class="special">!=</span> <span class="identifier">element</span><span class="special">)</span> <span class="keyword">return</span> <span class="keyword">false</span><span class="special">;</span>
+        <span class="special">}</span> 
+        <span class="keyword">return</span> <span class="keyword">true</span><span class="special">;</span>
+    <span class="special">}</span>
+<span class="preprocessor">#if</span> <span class="identifier">defined</span> <span class="identifier">CONTRACT_CHECK_CLASS_INVARIANT</span> <span class="special">||</span> <span class="special">\</span>
+        <span class="identifier">defined</span> <span class="identifier">CONTRACT_CHECK_PRECONDITION</span> <span class="special">||</span> <span class="special">\</span>
+        <span class="identifier">defined</span> <span class="identifier">CONTRACT_CHECK_POSTCONDITION</span>
+    <span class="comment">// Function template parameter `class Iter` already present so
+</span>    <span class="comment">// no artificial `int ZERO` parameter.
+</span>    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">Iter</span><span class="special">&gt;</span>
+    <span class="keyword">struct</span> <span class="identifier">contract_all_equals_first_last_element_</span><span class="special">:</span> <span class="identifier">contract</span><span class="special">::</span><span class="identifier">static_member_function</span><span class="special">&lt;</span>
+            <span class="keyword">bool</span> <span class="special">(</span><span class="identifier">myvector</span><span class="special">*,</span> <span class="identifier">Iter</span><span class="special">,</span> <span class="identifier">Iter</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">T</span><span class="special">&amp;)</span>
+            <span class="special">&gt;</span> <span class="special">{</span>
+        <span class="identifier">contract_all_equals_first_last_element_</span><span class="special">():</span> <span class="identifier">contract</span><span class="special">::</span> <span class="identifier">static_member_function</span><span class="special">&lt;</span>
+                <span class="keyword">bool</span> <span class="special">(</span><span class="identifier">myvector</span><span class="special">*,</span> <span class="identifier">Iter</span><span class="special">,</span> <span class="identifier">Iter</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">T</span><span class="special">&amp;)</span>
+                <span class="special">&gt;(</span>    <span class="special">&amp;</span><span class="identifier">myvector</span><span class="special">::</span><span class="keyword">template</span> <span class="identifier">contract_body_all_equals_</span><span class="special">&lt;</span><span class="identifier">Iter</span><span class="special">&gt;</span>
+<span class="preprocessor">#if</span> <span class="identifier">defined</span> <span class="identifier">CONTRACT_CHECK_PRECONDITION</span>
+                    <span class="special">,</span> <span class="special">&amp;</span><span class="identifier">myvector</span><span class="special">::</span><span class="keyword">template</span> <span class="identifier">contract_precondition_all_equals_first_last_element_</span><span class="special">&lt;</span><span class="identifier">Iter</span><span class="special">&gt;</span>
+<span class="preprocessor">#endif</span> <span class="comment">// preconditions
+</span><span class="preprocessor">#if</span> <span class="identifier">defined</span> <span class="identifier">CONTRACT_CHECK_POSTCONDITION</span>
+                    <span class="special">,</span> <span class="special">&amp;</span><span class="identifier">myvector</span><span class="special">::</span><span class="keyword">template</span> <span class="identifier">contract_postcondition_all_equals_first_last_element_</span><span class="special">&lt;</span><span class="identifier">Iter</span><span class="special">&gt;</span>
+<span class="preprocessor">#endif</span> <span class="comment">// postconditions
+</span>                <span class="special">)</span> <span class="special">{}</span>
+    <span class="special">};</span>
+<span class="keyword">public</span><span class="special">:</span>
+<span class="preprocessor">#endif</span> <span class="comment">// contracts
+</span>
+    <span class="comment">// Similarly, complete contracts sketched here and add contracts
+</span>    <span class="comment">// for all other functions (see [Crowl2006] vector example).
+</span>    <span class="identifier">size_type</span> <span class="identifier">size</span><span class="special">(</span><span class="keyword">void</span><span class="special">)</span> <span class="keyword">const</span> <span class="special">{</span> <span class="keyword">return</span> <span class="identifier">vector_</span><span class="special">.</span><span class="identifier">size</span><span class="special">();</span> <span class="special">}</span>
+    <span class="identifier">size_type</span> <span class="identifier">max_size</span><span class="special">(</span><span class="keyword">void</span><span class="special">)</span> <span class="keyword">const</span> <span class="special">{</span> <span class="keyword">return</span> <span class="identifier">vector_</span><span class="special">.</span><span class="identifier">max_size</span><span class="special">();</span> <span class="special">}</span>
+    <span class="keyword">bool</span> <span class="identifier">empty</span><span class="special">(</span><span class="keyword">void</span><span class="special">)</span> <span class="keyword">const</span> <span class="special">{</span> <span class="keyword">return</span> <span class="identifier">vector_</span><span class="special">.</span><span class="identifier">empty</span><span class="special">();</span> <span class="special">}</span>
+    <span class="identifier">const_reference</span> <span class="identifier">back</span><span class="special">(</span><span class="keyword">void</span><span class="special">)</span> <span class="keyword">const</span> <span class="special">{</span> <span class="keyword">return</span> <span class="identifier">vector_</span><span class="special">.</span><span class="identifier">back</span><span class="special">();</span> <span class="special">}</span>
+    <span class="identifier">const_iterator</span> <span class="identifier">begin</span><span class="special">(</span><span class="keyword">void</span><span class="special">)</span> <span class="keyword">const</span> <span class="special">{</span> <span class="keyword">return</span> <span class="identifier">vector_</span><span class="special">.</span><span class="identifier">begin</span><span class="special">();</span> <span class="special">}</span>
+    <span class="identifier">const_iterator</span> <span class="identifier">end</span><span class="special">(</span><span class="keyword">void</span><span class="special">)</span> <span class="keyword">const</span> <span class="special">{</span> <span class="keyword">return</span> <span class="identifier">vector_</span><span class="special">.</span><span class="identifier">end</span><span class="special">();</span> <span class="special">}</span>
+    <span class="identifier">const_reference</span> <span class="keyword">operator</span><span class="special">[](</span><span class="identifier">size_type</span> <span class="identifier">index</span><span class="special">)</span> <span class="keyword">const</span>
+        <span class="special">{</span> <span class="keyword">return</span> <span class="identifier">vector_</span><span class="special">[</span><span class="identifier">index</span><span class="special">];</span> <span class="special">}</span>
+    
+<span class="keyword">private</span><span class="special">:</span>
+    <span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span> <span class="identifier">vector_</span><span class="special">;</span>
+<span class="special">};</span>
+
+<span class="comment">// Contract for non-member function.
+</span><span class="keyword">double</span> <span class="identifier">abs_total</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">myvector</span><span class="special">&lt;</span><span class="keyword">double</span><span class="special">&gt;&amp;</span> <span class="identifier">vector</span><span class="special">)</span>
+<span class="comment">// Non-member members do not check invariants.
+</span><span class="preprocessor">#if</span> <span class="identifier">defined</span> <span class="identifier">CONTRACT_CHECK_PRECONDITION</span> <span class="special">||</span> <span class="special">\</span>
+        <span class="identifier">defined</span> <span class="identifier">CONTRACT_CHECK_POSTCONDITION</span>
+<span class="special">;</span>
+<span class="keyword">void</span> <span class="identifier">contract_precondition_abs_total_vector_</span><span class="special">(</span>
+        <span class="keyword">const</span> <span class="identifier">myvector</span><span class="special">&lt;</span><span class="keyword">double</span><span class="special">&gt;&amp;</span> <span class="identifier">vector</span> <span class="special">)</span> <span class="special">{</span>
+<span class="special">}</span>
+<span class="keyword">void</span> <span class="identifier">contract_postcondition_abs_total_vector_</span><span class="special">(</span>
+        <span class="keyword">const</span> <span class="identifier">myvector</span><span class="special">&lt;</span><span class="keyword">double</span><span class="special">&gt;&amp;</span> <span class="identifier">vector</span><span class="special">,</span> <span class="identifier">contract</span><span class="special">::</span><span class="identifier">noold</span><span class="special">,</span>
+        <span class="keyword">const</span> <span class="keyword">double</span><span class="special">&amp;</span> <span class="identifier">total</span><span class="special">)</span> <span class="special">{</span>
+    <span class="keyword">if</span> <span class="special">(!(</span><span class="identifier">total</span> <span class="special">&gt;=</span> <span class="number">0.0</span><span class="special">))</span>
+        <span class="keyword">throw</span> <span class="identifier">contract</span><span class="special">::</span><span class="identifier">failure</span><span class="special">(</span><span class="identifier">__FILE__</span><span class="special">,</span> <span class="identifier">__LINE__</span><span class="special">);</span>
+<span class="special">}</span>
+<span class="keyword">double</span> <span class="identifier">contract_body_abs_total_</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">myvector</span><span class="special">&lt;</span><span class="keyword">double</span><span class="special">&gt;&amp;</span> <span class="identifier">vector</span><span class="special">)</span>
+<span class="preprocessor">#endif</span> <span class="comment">// preconditions or postconditions
+</span><span class="special">{</span>
+    <span class="keyword">double</span> <span class="identifier">total</span> <span class="special">=</span> <span class="number">0.0</span><span class="special">;</span>
+    <span class="identifier">CONTRACT_ASSERT_BLOCK_INVARIANT</span><span class="special">(</span> <span class="identifier">total</span> <span class="special">==</span> <span class="number">0.0</span> <span class="special">);</span>
+    <span class="special">{</span>
+        <span class="identifier">CONTRACT_INIT_LOOP_VARIANT</span><span class="special">;</span>
+        <span class="keyword">for</span> <span class="special">(</span><span class="identifier">size_t</span> <span class="identifier">i</span> <span class="special">=</span> <span class="number">0</span><span class="special">;</span> <span class="identifier">i</span> <span class="special">&lt;</span> <span class="identifier">vector</span><span class="special">.</span><span class="identifier">size</span><span class="special">();</span> <span class="special">++</span><span class="identifier">i</span><span class="special">)</span> <span class="special">{</span>
+            <span class="identifier">CONTRACT_ASSERT_BLOCK_INVARIANT</span><span class="special">(</span> <span class="identifier">i</span> <span class="special">&lt;</span> <span class="identifier">vector</span><span class="special">.</span><span class="identifier">size</span><span class="special">()</span> <span class="special">);</span>
+            <span class="identifier">CONTRACT_ASSERT_LOOP_VARIANT</span><span class="special">(</span> <span class="identifier">vector</span><span class="special">.</span><span class="identifier">size</span><span class="special">()</span> <span class="special">-</span> <span class="identifier">i</span> <span class="special">);</span>
+
+            <span class="identifier">total</span> <span class="special">+=</span> <span class="identifier">vector</span><span class="special">[</span><span class="identifier">i</span><span class="special">];</span>
+        <span class="special">}</span> 
+    <span class="special">}</span>
+    <span class="keyword">return</span> <span class="identifier">total</span> <span class="special">&lt;</span> <span class="number">0.0</span> <span class="special">?</span> <span class="special">-</span><span class="identifier">total</span> <span class="special">:</span> <span class="identifier">total</span><span class="special">;</span>
+<span class="special">}</span>
+<span class="preprocessor">#if</span> <span class="identifier">defined</span> <span class="identifier">CONTRACT_CHECK_PRECONDITION</span> <span class="special">||</span> <span class="special">\</span>
+        <span class="identifier">defined</span> <span class="identifier">CONTRACT_CHECK_POSTCONDITION</span>
+<span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">int</span> <span class="identifier">ZERO</span><span class="special">&gt;</span>
+<span class="keyword">struct</span> <span class="identifier">contract_abs_total_vector_</span><span class="special">:</span> <span class="identifier">contract</span><span class="special">::</span><span class="identifier">nonmember_function</span><span class="special">&lt;</span>
+        <span class="comment">// Still use `function` but no class type, just use `(*)`.
+</span>        <span class="keyword">double</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">myvector</span><span class="special">&lt;</span><span class="keyword">double</span><span class="special">&gt;&amp;)</span>
+        <span class="special">&gt;</span> <span class="special">{</span>
+    <span class="identifier">contract_abs_total_vector_</span><span class="special">():</span> <span class="identifier">contract</span><span class="special">::</span><span class="identifier">nonmember_function</span><span class="special">&lt;</span>
+            <span class="keyword">double</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">myvector</span><span class="special">&lt;</span><span class="keyword">double</span><span class="special">&gt;&amp;)&gt;</span>
+            <span class="special">(</span>     <span class="special">&amp;</span><span class="identifier">contract_body_abs_total_</span>
+                <span class="special">,</span> <span class="special">&amp;</span><span class="identifier">contract_precondition_abs_total_vector_</span>
+                <span class="special">,</span> <span class="special">&amp;</span><span class="identifier">contract_postcondition_abs_total_vector_</span>
+            <span class="special">)</span> <span class="special">{}</span>
+<span class="special">};</span>
+<span class="comment">// Contracted function defined last and `inline`.
+</span><span class="keyword">inline</span> <span class="keyword">double</span> <span class="identifier">abs_total</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">myvector</span><span class="special">&lt;</span><span class="keyword">double</span><span class="special">&gt;&amp;</span> <span class="identifier">vector</span><span class="special">)</span> <span class="special">{</span>
+    <span class="keyword">return</span> <span class="identifier">contract_abs_total_vector_</span><span class="special">&lt;</span><span class="number">0</span><span class="special">&gt;().</span><span class="identifier">call</span><span class="special">(</span><span class="identifier">vector</span><span class="special">);</span>
+<span class="special">}</span>
+<span class="preprocessor">#endif</span> <span class="comment">// preconditions or postconditions
+</span>
+</pre>
+<p>
+        </p>
+<p>
+      </p>
+</div>
+<div class="footnotes">
+<br><hr width="100" align="left">
+<div class="footnote"><p><sup>[<a name="ftn.id2637088" href="#id2637088" class="para">13</a>] </sup>
+                  A more natural syntax would have been to use C++ function pointer
+                  types because they already provide a syntax for non-member functions
+                  <span class="emphasis"><em>result-type</em></span><code class="computeroutput"> <span class="special">(*)(</span></code><span class="emphasis"><em>argument-type1</em></span><code class="computeroutput"><span class="special">,</span> <span class="special">...)</span></code>
+                  and a different syntax for member function <span class="emphasis"><em>result-type</em></span><code class="computeroutput">
+                  <span class="special">(</span></code><span class="emphasis"><em>class-type</em></span><code class="computeroutput"><span class="special">::*)(</span></code><span class="emphasis"><em>argument-type1</em></span>,<code class="computeroutput">
+                  <span class="special">...)</span></code>. However, the use of
+                  function pointer types to resolve partial template specializations
+                  (as needed by this library) it not fully supported by all compilers
+                  (notably MVSC 8.0 has issues in resolving template specializations
+                  between void constant and non-void constant member functions using
+                  function pointer types). Therefore, the <a href="http://www.boost.org/doc/libs/1_42_0/doc/html/function.html" target="_top">Boost.Function</a>
+                  preferred syntax was adopted for this library (also this harmonizes
+                  this library more with the <a href="http://www.boost.org/" target="_top">Boost</a>
+                  libraries). The <a href="http://www.boost.org/doc/libs/1_42_0/doc/html/function.html" target="_top">Boost.Function</a>
+                  portable syntax was not used because it is maintained by <a href="http://www.boost.org/doc/libs/1_42_0/doc/html/function.html" target="_top">Boost.Function</a>
+                  for backward compatibility only and it is not recommended (even
+                  if that would have been the most portable syntax across the different
+                  compilers, see <a href="http://www.boost.org/doc/libs/1_42_0/doc/html/function.html" target="_top">Boost.Function</a>
+                  for more information).
+                </p></div>
+<div class="footnote"><p><sup>[<a name="ftn.id2637388" href="#id2637388" class="para">14</a>] </sup>
+                  However, if the member function is constant it cannot modify the
+                  object so there is in principle no need to copy the object value
+                  before body execution because the body cannot modify the object
+                  in the first place
+                </p></div>
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright © 2009 -2010 Lorenzo Caminiti<p>
+        Distributed under the Contract++ Software License, Version 1.0 (see accompanying
+        file LICENSE_1_0.txt)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="tutorial.html"><img src=".././doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src=".././doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src=".././doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="throw_on_failure.html"><img src=".././doc/html/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>
