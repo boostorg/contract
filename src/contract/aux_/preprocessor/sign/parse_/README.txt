@@ -1,1 +1,0 @@
-Preprocessor signature parsing.
