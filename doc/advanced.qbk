@@ -137,7 +137,7 @@ For example (see [@../../example/features/private_protected_virtual_multi.cpp =p
 [warning
 Unfortunately, the code above does not compile on MSVC (at least up to Visual Studio 2015) because MSVC incorrectly gives a compile-time error when SFINAE fails due to private or protected access levels.
 Instead, GCC and Clang correctly implement SFINAE failures due to private and protected functions so the code above correctly complies on GCC and Clang.
-Therefore, currently it is not possible to override a function that is public in one base but private or protected in other base using this library on MSVC, but that can be done on GCC or CLang instead.
+Therefore, currently it is not possible to override a function that is public in one base but private or protected in other base using this library on MSVC, but that can correctly be done on GCC or CLang instead.
 ]
 
 [endsect]

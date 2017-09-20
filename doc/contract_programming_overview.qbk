@@ -309,7 +309,7 @@ Whenever possible (e.g., class invariants and postcondition old values), this li
 However, this library cannot automatically enforce this constraint in all cases (for preconditions and postconditions of mutable member functions, for global variables, etc.).
 See __No_Lambda_Functions__ for ways of using this library that always and automatically enforce the constant-correctness constraint at compile-time (but these methods require a significant amount of boiler-plate code to be programmed manually so they are not recommended in general).
 
-[important
+[note
 In general, it is the responsibility of the programmers to code assertions that only check, and do not change, program variables.
 [footnote
 Note that also when using C-style `assert` it is the responsibility of the programmers to code assertions that only check and do not change program variables.

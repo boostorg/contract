@@ -23,7 +23,7 @@ It is possible to specify preconditions, postconditions, and exception guarantee
 
 The [funcref boost::contract::function] function returns an RAII object that must always be assigned to a local variable of type [classref boost::contract::check] (otherwise this library will generate a run-time error, see [macroref BOOST_CONTRACT_ON_MISSING_CHECK_DECL]).
 [footnote
-The name of this local variable is arbitrary, but `c` is often used in this documentation.
+The name of this local variable is arbitrary, but `c` is often used in this documentation (for ["c]heck, or ["c]aminiti [^;-)]).
 ]
 Furthermore, C++11 `auto` declarations cannot be used here and the [classref boost::contract::check] type must be explicitly specified (otherwise this library will generate a compile-time error).
 The function body is programmed right after the declaration of the RAII object.
@@ -255,7 +255,7 @@ It is also recommended to use [macroref BOOST_CONTRACT_ASSERT] to program except
 This library will automatically call the failure handler [funcref boost::contract::except_failure] if any of the [macroref BOOST_CONTRACT_ASSERT] conditions are `false` and, more in general, if calling the functor specified via `.except(...)` throws any exception.
 By default, this failure handler prints an error message to `std::cerr` and terminates the program calling `std::terminate` (see __Throw_on_Failure__ to change the failure handler to exit the program with an error code or to take some other custom action).
 
-[important
+[note
 While it is technically possible for programmers to specify an exception guarantee handler that throws an exception in case of an exception guarantee failure, this will force C++ to terminate the program anyway.
 That is because the handler will throw an exception while there is already an active exception on the stack (the exception thrown by the function body that caused the exception guarantees to be checked in the first place).
 Therefore, programmers should not change the exception guarantee failure handler to throw exceptions.
@@ -626,9 +626,10 @@ This library does not require programmers to specify the function type when usin
 Therefore, this library does not know if the enclosing function has a non-void return type so it cannot check if the return value reference is passed as required for non-overriding virtual public functions.
 Instead the function type is passed to this library for virtual public function overrides and that also allows this library to give a compile-time error if the return value reference is missing in those cases.
 ]
-Remember:
-[:Always pass the function parameter `v` as the first argument to [macroref BOOST_CONTRACT_OLDOF] and to [funcref boost::contract::public_function].]
-[:Always pass the function return value to [funcref boost::contract::public_function] right after `v` (for non-void virtual public functions).]
+
+Mnemonic:
+[:When `v` is present, always pass it as the first argument to [funcref boost::contract::public_function] and [macroref BOOST_CONTRACT_OLDOF].]
+[:Always pass `result` to [funcref boost::contract::public_function] right after `v` (for non-void functions).]
 ]
 
 For the rest, considerations made in __Public_Functions__ apply to virtual public functions as well.
@@ -730,9 +731,11 @@ The `boost::bad_any_cast` exception could not used here because it does not prin
 [important
 It is the responsibility of the programmers to pass the extra virtual parameter `v` to all [macroref BOOST_CONTRACT_OLDOF] and [funcref boost::contract::public_function] calls within public function overrides, and also to pass the return value reference after `v` to [funcref boost::contract::public_function] for non-void public function overrides.
 This library cannot always generate compile-time errors if programmers fail to do so (but in general this will prevent the library from correctly checking contracts at run-time).
-Remember:
-[:Always pass the function parameter `v` as the first argument to [macroref BOOST_CONTRACT_OLDOF] and [funcref boost::contract::public_function].]
-[:Always pass the function return value to [funcref boost::contract::public_function] right after `v` (for non-void public function overrides).]
+
+Mnemonic:
+[:When `override_...` is present, always pass it as template parameter to [funcref boost::contract::public_functioon].]
+[:When `v` is present, always pass it as the first argument to [funcref boost::contract::public_function] and [macroref BOOST_CONTRACT_OLDOF].]
+[:Always pass `result` to [funcref boost::contract::public_function] right after `v` (for non-void functions).]
 ]
 
 At construction, the [classref boost::contract::check] RAII object for public function overrides does the following (enclosing public function override entry):
@@ -784,8 +787,9 @@ Therefore, [macroref BOOST_CONTRACT_BASE_TYPES] inspects each inheritance access
 ]
 This library will generate a compile-time error if the first base is missing its inheritance access level, but this library will not be able to always generate an error if the access level is missing for bases after the first one.
 It is the responsibility of the programmers to make sure that all bases passed to [macroref BOOST_CONTRACT_BASE_TYPES] explicitly specify their inheritance access level (inheritance access levels are instead optional in C++ because `private` is implicitly assumed for `class` types and `public` for `struct` types).
-Remember:
-[:Always explicitly specify the inheritance access level `public`, `protected`, or `private` for base classes of derived classes with contracts.]
+
+Mnemonic:
+[:Always explicitly specify the inheritance access level `public`, `protected`, or `private` for base classes passed to [macroref BOOST_CONTRACT_BASE_TYPES].]
 ]
 
 See __Access_Specifiers__ to avoid making the `base_types` member type `public`.
