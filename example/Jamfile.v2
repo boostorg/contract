@@ -4,82 +4,82 @@
 # file LICENSE_1_0.txt or a copy at http://www.boost.org/LICENSE_1_0.txt).
 # See: http://www.boost.org/doc/libs/release/libs/contract/doc/html/index.html
 
-make help : : help_exit ;
-explicit help ;
+import ../build/boost_contract_build ;
 
 test-suite features :
-    [ subdir-run features : introduction_comments ]
-    [ subdir-run features : introduction ]
-    [ subdir-run features : introduction_public ]
+    [ boost_contract_build.subdir-run features : introduction_comments ]
+    [ boost_contract_build.subdir-run features : introduction ]
+    [ boost_contract_build.subdir-run features : introduction_public ]
 
-    [ subdir-run features : non_member ]
-    [ subdir-run features : lambda ]
-    [ subdir-run features : loop ]
-    [ subdir-run features : code_block ]
-    [ subdir-run features : public ]
-    [ subdir-run features : base_types ]
-    [ subdir-run features : static_public ]
-    [ subdir-run features : private_protected ]
-    [ subdir-run features : private_protected_virtual ]
-    [ subdir-run features : private_protected_virtual_multi ]
-    [ subdir-run features : check ]
+    [ boost_contract_build.subdir-run features : non_member ]
+    [ boost_contract_build.subdir-run features : lambda ]
+    [ boost_contract_build.subdir-run features : loop ]
+    [ boost_contract_build.subdir-run features : code_block ]
+    [ boost_contract_build.subdir-run features : public ]
+    [ boost_contract_build.subdir-run features : base_types ]
+    [ boost_contract_build.subdir-run features : static_public ]
+    [ boost_contract_build.subdir-run features : private_protected ]
+    [ boost_contract_build.subdir-run features : private_protected_virtual ]
+    [ boost_contract_build.subdir-run features :
+            private_protected_virtual_multi ]
+    [ boost_contract_build.subdir-run features : check ]
     
-    [ subdir-run features : friend ]
-    [ subdir-run features : friend_invariant ]
-    [ subdir-run features : old ]
-    [ subdir-run features : optional_result ]
-    [ subdir-run features : optional_result_virtual ]
-    [ subdir-run features : pure_virtual_public ]
-    [ subdir-run features : overload ]
-    [ subdir-run features : named_override ]
-    [ subdir-run features : move ]
-    [ subdir-run features : union ]
-    [ subdir-run features : volatile ]
-    [ subdir-run features : old_if_copyable ]
-    [ subdir-run features : condition_if ]
-    [ subdir-run features : call_if_cxx14 : # Requires C++14.
-            <toolset>clang:<cxxflags>-std=c++1y ]
-    [ subdir-run features : access ]
-    [ subdir-run features : separate_body ]
-    [ subdir-run features : throw_on_failure ]
-    [ subdir-run features : ifdef ]
-    [ subdir-run features : assertion_level ]
-    [ subdir-run features : ifdef_macro ]
-    [ subdir-run features : base_types_no_macro ]
-    [ subdir-run features : old_no_macro ]
-    [ subdir-run features : no_lambdas ]
-    [ subdir-run features : no_lambdas_local_func ]
+    [ boost_contract_build.subdir-run features : friend ]
+    [ boost_contract_build.subdir-run features : friend_invariant ]
+    [ boost_contract_build.subdir-run features : old ]
+    [ boost_contract_build.subdir-run features : optional_result ]
+    [ boost_contract_build.subdir-run features : optional_result_virtual ]
+    [ boost_contract_build.subdir-run features : pure_virtual_public ]
+    [ boost_contract_build.subdir-run features : overload ]
+    [ boost_contract_build.subdir-run features : named_override ]
+    [ boost_contract_build.subdir-run features : move ]
+    [ boost_contract_build.subdir-run features : union ]
+    [ boost_contract_build.subdir-run features : volatile ]
+    [ boost_contract_build.subdir-run features : old_if_copyable ]
+    [ boost_contract_build.subdir-run features : condition_if ]
+    [ boost_contract_build.subdir-run features : call_if_cxx14 :
+            <toolset>clang:<cxxflags>-std=c++1y ] # Requires C++14 gen lambdas.
+    [ boost_contract_build.subdir-run features : access ]
+    [ boost_contract_build.subdir-run features : separate_body ]
+    [ boost_contract_build.subdir-run features : throw_on_failure ]
+    [ boost_contract_build.subdir-run features : ifdef ]
+    [ boost_contract_build.subdir-run features : assertion_level ]
+    [ boost_contract_build.subdir-run features : ifdef_macro ]
+    [ boost_contract_build.subdir-run features : base_types_no_macro ]
+    [ boost_contract_build.subdir-run features : old_no_macro ]
+    [ boost_contract_build.subdir-run features : no_lambdas ]
+    [ boost_contract_build.subdir-run features : no_lambdas_local_func ]
 ;
 
 test-suite n1962 :
-    [ subdir-run n1962 : vector ]
-    [ subdir-run n1962 : sqrt ]
-    [ subdir-run n1962 : circle ]
-    [ subdir-run n1962 : equal ]
-    [ subdir-run n1962 : factorial ]
-    [ subdir-run n1962 : sum ]
+    [ boost_contract_build.subdir-run n1962 : vector ]
+    [ boost_contract_build.subdir-run n1962 : sqrt ]
+    [ boost_contract_build.subdir-run n1962 : circle ]
+    [ boost_contract_build.subdir-run n1962 : equal ]
+    [ boost_contract_build.subdir-run n1962 : factorial ]
+    [ boost_contract_build.subdir-run n1962 : sum ]
 ;
 
 test-suite meyer97 :
-    [ subdir-run meyer97 : stack4_main ]
-    [ subdir-run meyer97 : stack3 ]
+    [ boost_contract_build.subdir-run meyer97 : stack4_main ]
+    [ boost_contract_build.subdir-run meyer97 : stack3 ]
 ;
 
 test-suite mitchell02 :
-    [ subdir-run mitchell02 : stack ]
-    [ subdir-run mitchell02 : simple_queue ]
-    [ subdir-run mitchell02 : dictionary ]
-    [ subdir-run mitchell02 : customer_manager ]
-    [ subdir-run mitchell02 : name_list ]
-    [ subdir-run mitchell02 : courier ]
-    [ subdir-run mitchell02 : observer_main ]
-    [ subdir-run mitchell02 : counter_main ]
+    [ boost_contract_build.subdir-run mitchell02 : stack ]
+    [ boost_contract_build.subdir-run mitchell02 : simple_queue ]
+    [ boost_contract_build.subdir-run mitchell02 : dictionary ]
+    [ boost_contract_build.subdir-run mitchell02 : customer_manager ]
+    [ boost_contract_build.subdir-run mitchell02 : name_list ]
+    [ boost_contract_build.subdir-run mitchell02 : courier ]
+    [ boost_contract_build.subdir-run mitchell02 : observer_main ]
+    [ boost_contract_build.subdir-run mitchell02 : counter_main ]
 ;
 
 test-suite cline90 :
-    [ subdir-run cline90 : stack ]
-    [ subdir-run cline90 : vector_main ]
-    [ subdir-run cline90 : vstack ]
-    [ subdir-run cline90 : calendar ]
+    [ boost_contract_build.subdir-run cline90 : stack ]
+    [ boost_contract_build.subdir-run cline90 : vector_main ]
+    [ boost_contract_build.subdir-run cline90 : vstack ]
+    [ boost_contract_build.subdir-run cline90 : calendar ]
 ;
 

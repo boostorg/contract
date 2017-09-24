@@ -1,0 +1,3 @@
+
+*   Shall I replace boost_contract_link with Boost's linkage build option? I think yes, do what chrono and thread do (but are those built ad dll by default?)
+

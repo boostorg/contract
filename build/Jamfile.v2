@@ -4,7 +4,14 @@
 # file LICENSE_1_0.txt or a copy at http://www.boost.org/LICENSE_1_0.txt).
 # See: http://www.boost.org/doc/libs/release/libs/contract/doc/html/index.html
 
-lib boost_contract : ../src/contract.cpp : <boost_contract_link>shared ;
+import boost_contract_build ;
+
+lib boost_contract : ../src/contract.cpp :
+    <boost_contract_link>shared
+    <library>/boost/system//boost_system
+;
+
 lib boost_contract : ../src/contract.cpp : <boost_contract_link>static ;
-# Build nothing for boost_contract_link=header (ignore errors Bjam gives).
+
+# Build nothing for boost_contract_link=header (ignore Bjam warnings).
 

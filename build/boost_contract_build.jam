@@ -1,0 +1,64 @@
+
+# Copyright (C) 2008-2017 Lorenzo Caminiti
+# Distributed under the Boost Software License, Version 1.0 (see accompanying
+# file LICENSE_1_0.txt or a copy at http://www.boost.org/LICENSE_1_0.txt).
+# See: http://www.boost.org/doc/libs/release/libs/contract/doc/html/index.html
+
+import boost_contract_no ;
+import testing ;
+import feature ;
+
+module boost_contract_build {
+
+rule subdir-compile-fail ( subdir : cpp_fname : requirements * ) {
+    compile-fail $(subdir)/$(cpp_fname).cpp :
+        <link>shared:<library>../build//boost_contract
+        <link>static:<library>../build//boost_contract
+        <include>$(subdir)
+        $(requirements)
+    :
+        $(subdir)-$(cpp_fname)
+    ;
+}
+
+rule subdir-run ( subdir : cpp_fname : requirements * ) {
+    run $(subdir)/$(cpp_fname).cpp : : :
+        <link>shared:<library>../build//boost_contract
+        <link>static:<library>../build//boost_contract
+        <library>/boost/system//boost_system
+        <include>$(subdir)
+        $(requirements)
+    :
+        $(subdir)-$(cpp_fname)
+    ;
+}
+
+rule subdir-lib ( subdir : cpp_fname : requirements * ) {
+    lib $(subdir)-$(cpp_fname) : $(subdir)/$(cpp_fname).cpp :
+        <link>shared:<library>../build//boost_contract
+        <link>static:<library>../build//boost_contract
+        <include>$(subdir)
+        $(requirements)
+    ;
+}
+
+} # module
+
+feature.feature boost_contract_link : shared static header :
+        composite propagated link-incompatible ;
+feature.compose <boost_contract_link>shared : <link>shared ;
+feature.compose <boost_contract_link>static :
+    <link>static
+    <define>BOOST_CONTRACT_STATIC_LINK
+;
+feature.compose <boost_contract_link>header :
+    <define>BOOST_CONTRACT_HEADER_ONLY
+;
+
+feature.feature boost_contract_no : all_yes [ boost_contract_no.conds ] :
+        composite propagated link-incompatible ;
+for local cond in [ boost_contract_no.conds ] {
+    feature.compose <boost_contract_no>$(cond) :
+            [ boost_contract_no.defs_$(cond) ] ;
+}
+
