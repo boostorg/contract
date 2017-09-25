@@ -37,7 +37,7 @@ bin/
 # Boost.Wave outputs
 wave.ii
 
-# QuickBook outputs
+# Boost.QuickBook outputs
 reference.xml
 html/
 
