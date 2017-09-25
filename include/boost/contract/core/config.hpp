@@ -18,14 +18,49 @@ Configure this library compile-time and run-time behaviours.
 
 #ifdef BOOST_CONTRACT_DETAIL_DOXYGEN
     /**
-    Define this macro to compile this library as a static (instead of shared)
-    library (undefined by default).
+    Define this macro to compile this library as a shared library (recommended).
+    
+    If this macro is defined, this library is compiled so it can be linked
+    dynamically to user code.
+    This library will automatically define this macro if the Boost libraries
+    are being built as dynamic libraries.
+    
+    This library will define this macro unless users define
+    @RefMacro{BOOST_CONTRACT_STATIC_LINK} or
+    @RefMacro{BOOST_CONTRACT_HEADER_ONLY} (this macro is not a configuration
+    macro and this library will generate a compile-time error if users try to
+    define it directly).
+    Programmers should rarely, if ever, need to use this macro directly.
+
+    @warning    In general this library will correctly check contracts at
+                run-time only when compiled as a shared library, unless  user
+                code checks contracts in a single program unit (e.g., a single
+                program with only statically linked libraries that check
+                contracts).
+                Therefore, it is recommended to build and use this library as
+                a dynamic library by defining this macro (or by building all
+                Boost libraries as dynamic libraries).
+                
+    @see @RefSect{getting_started.install_and_compile, Install and Compile}
+    */
+    #define BOOST_CONTRACT_DYN_LINK
+#elif defined(BOOST_CONTRACT_DYN_LINK) && defined(BOOST_CONTRACT_STATIC_LINK)
+    #error "DYN_LINK defined with STATIC_LINK"
+#endif
+
+#ifdef BOOST_CONTRACT_DETAIL_DOXYGEN
+    /**
+    Define this macro to compile this library as a static library (not
+    recommended).
 
     If this macro is defined, this library is compiled so it can be linked
-    statically to user code (and not as a shared library as by default).
+    statically to user code.
+    This library will automatically define this macro if the Boost libraries
+    are being built as static libraries.
 
     @warning    This library is not guaranteed to always work correctly at
-                run-time when this macro is defined.
+                run-time when this macro is defined (define
+                @RefMacro{BOOST_CONTRACT_DYN_LINK instead).
                 However, this macro can be defined and this library can be
                 safely used as a static library for user code that checks
                 contracts in a single program unit (e.g., a single program with
@@ -34,40 +69,8 @@ Configure this library compile-time and run-time behaviours.
     @see @RefSect{getting_started.install_and_compile, Install and Compile}
     */
     #define BOOST_CONTRACT_STATIC_LINK
-#elif   defined(BOOST_CONTRACT_STATIC_LINK) && \
-        ( \
-            defined(BOOST_CONTRACT_HEADER_ONLY) || \
-            defined(BOOST_ALL_DYN_LINK) \
-        )
-    #error "STATIC_LINK defined with HEADER_ONLY and/or ALL_DYN_LINK"
-#endif
-
-#ifdef BOOST_CONTRACT_DETAIL_DOXYGEN
-    /**
-    Define this macro to use this library as a header-only library (undefined by
-    default).
-
-    If this macro is defined, this library does not have to be compiled
-    separately from user code.
-    This library headers are simply included and compiled as part of the user
-    program.
-    
-    @warning    This library is not guaranteed to always work correctly at
-                run-time when this macro is defined.
-                However, this macro can be defined and this library can be
-                safely used as a header-only library for user code that checks
-                contracts in a single program unit (e.g., a single program with
-                only statically linked libraries that check contracts).
-                
-    @see @RefSect{getting_started.install_and_compile, Install and Compile}
-    */
-    #define BOOST_CONTRACT_HEADER_ONLY
-#elif   defined(BOOST_CONTRACT_HEADER_ONLY) && \
-        ( \
-            defined(BOOST_CONTRACT_STATIC_LINK) || \
-            defined(BOOST_ALL_DYN_LINK) \
-        )
-    #error "HEADER_ONLY defined with STATIC_LINK and/or ALL_DYN_LINK"
+#elif defined(BOOST_CONTRACT_STATIC_LINK) && defined(BOOST_CONTRACT_DYN_LINK)
+    #error "STATIC_LINK defined with DYN_LINK"
 #endif
 
 #ifdef BOOST_CONTRACT_DETAIL_DOXYGEN
@@ -194,15 +197,15 @@ Configure this library compile-time and run-time behaviours.
     /**
     Code block to execute if contracts are not assigned to a
     @RefClass{boost::contract::check} variable (undefined by default and
-    executes @c assert(false)).
+    executes @c BOOST_ASSERT(false)).
 
     In general, there is a logic error in the program when contracts are not
     assigned to a local variable of type @RefClass{boost::contract::check}.
     Therefore, by default (i.e., when this macro is not defined) this library
-    calls <c>assert(false)</c> in those cases.
+    calls <c>BOOST_ASSERT(false)</c> in those cases.
     If this macro is defined, this library will execute the code expanded by the
-    macro instead of calling @c assert(false) (if programmers prefer to throw an
-    exception, etc.).
+    macro instead of calling @c BOOST_ASSERT(false) (if programmers prefer to
+    throw an exception, etc.).
 
     This macro can be defined to be any block of code (including @c {} to
     generate no error), for example (on GCC):
@@ -679,35 +682,33 @@ Configure this library compile-time and run-time behaviours.
     #define BOOST_CONTRACT_NO_ALL
 #endif
 
-#ifdef BOOST_CONTRACT_DYN_LINK
-    #error "define STATIC_LINK or HEADER_ONLY instead"
-#elif   defined(BOOST_CONTRACT_DETAIL_DOXYGEN) || \
-        defined(BOOST_ALL_DYN_LINK) || \
-        ( \
-            !defined(BOOST_CONTRACT_STATIC_LINK) && \
-            !defined(BOOST_CONTRACT_HEADER_ONLY) \
-        )
+#ifdef BOOST_CONTRACT_HEADER_ONLY
+    #error "leave DYN_LINK and STATIC_LINK undefined instead"
+#elif   !defined(BOOST_CONTRACT_DYN_LINK) && \
+        !defined(BOOST_CONTRACT_STATIC_LINK)
     /**
-    Automatically defined when this library is being compiled as a shared
-    library (defined by default).
-    
-    This library will define this macro unless users define
-    @RefMacro{BOOST_CONTRACT_STATIC_LINK} or
-    @RefMacro{BOOST_CONTRACT_HEADER_ONLY} (this macro is not a configuration
-    macro and this library will generate a compile-time error if users try to
-    define it directly).
-    Programmers should rarely, if ever, need to use this macro directly.
+    Automatically defined by this library when it is being used as a header-only
+    library (not recommended).
 
-    @warning    In general this library will correctly check contracts at
-                run-time only when compiled as a shared library (i.e., this
-                macro will be automatically defined by default), unless  user
-                code checks contracts in a single program unit (e.g., a single
-                program with only statically linked libraries that check
-                contracts).
+    This library will define this macro when users do not define
+    @RefMacro{BOOST_CONTRACT_DYN_LINK} and
+    @RefMacro{BOOST_CONTRACT_STATIC_LINK}.
+    If this macro is defined, this library does not have to be compiled
+    separately from user code.
+    This library headers are simply included and compiled as part of the user
+    program.
+    
+    @warning    This library is not guaranteed to always work correctly at
+                run-time when this macro is defined (define
+                @RefMacro{BOOST_CONTRACT_DYN_LINK instead).
+                However, this macro can be defined and this library can be
+                safely used as a header-only library for user code that checks
+                contracts in a single program unit (e.g., a single program with
+                only statically linked libraries that check contracts).
                 
     @see @RefSect{getting_started.install_and_compile, Install and Compile}
     */
-    #define BOOST_CONTRACT_DYN_LINK
+    #define BOOST_CONTRACT_HEADER_ONLY
 #endif
 
 #endif // #include guard

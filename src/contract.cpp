@@ -4,6 +4,7 @@
 // file LICENSE_1_0.txt or a copy at http://www.boost.org/LICENSE_1_0.txt).
 // See: http://www.boost.org/doc/libs/release/libs/contract/doc/html/index.html
 
+#include <boost/contract/core/config.hpp>
 #ifndef BOOST_CONTRACT_HEADER_ONLY // This is not an #include guard.
     // For shared (default) and static lib only.
     #define BOOST_CONTRACT_DETAIL_SOURCE

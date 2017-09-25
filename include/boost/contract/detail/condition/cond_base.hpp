@@ -24,10 +24,10 @@
     #include <boost/function.hpp>
 #endif
 #include <boost/noncopyable.hpp>
-#include <boost/config.hpp>
 #ifndef BOOST_CONTRACT_ON_MISSING_CHECK_DECL
-    #include <cassert>
+    #include <boost/assert.hpp>
 #endif
+#include <boost/config.hpp>
 
 namespace boost { namespace contract { namespace detail {
 
@@ -80,7 +80,7 @@ protected:
         #else
             // Cannot use a macro instead of this ERROR_... directly here
             // because assert will not expand it in the error message.
-            assert(BOOST_CONTRACT_ERROR_missing_check_object_declaration);
+            BOOST_ASSERT(BOOST_CONTRACT_ERROR_missing_check_object_declaration);
         #endif
     }
     

@@ -51,13 +51,13 @@ doxygen reference
 
 xml contract : main.qbk : <dependency>reference ;
 
-boostbook doc : contract
+boostbook boostdoc : contract
 :
     <location>html
     <xsl:param>boost.defaults=Boost
-    <xsl:param>boost.root=../../
-    <xsl:param>admon.graphics.path=../../doc/src/images/
-    <xsl:param>html.stylesheet=../../doc/src/boostbook.css
+    <xsl:param>boost.root=../../../..
+    #<xsl:param>admon.graphics.path=../../doc/src/images/
+    #<xsl:param>html.stylesheet=../../doc/src/boostbook.css
     <xsl:param>toc.max.depth=1
 ;
 

@@ -68,7 +68,7 @@ private:
 
 } } } // namespace
 
-#if BOOST_CONTRACT_HEADER_ONLY
+#ifdef BOOST_CONTRACT_HEADER_ONLY
     #include <boost/contract/detail/inlined/detail/checking.hpp>
 #endif
 

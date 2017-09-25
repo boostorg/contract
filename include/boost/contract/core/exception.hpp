@@ -12,6 +12,7 @@ Handle contract assertion failures.
 */
 
 // IMPORTANT: Included by contract_macro.hpp so trivial headers only.
+#include <boost/contract/core/config.hpp>
 #include <boost/contract/detail/declspec.hpp> // No compile-time overhead.
 #include <boost/function.hpp>
 #include <boost/config.hpp>
@@ -421,7 +422,7 @@ namespace exception_ {
 } } // namespace
 
 /** @cond */
-#if BOOST_CONTRACT_HEADER_ONLY
+#ifdef BOOST_CONTRACT_HEADER_ONLY
     // NOTE: This header must be included in the middle of this file (because
     // its impl depends on both from and assert_failure types). This is not
     // ideal, but it is better than splitting this file into multiple

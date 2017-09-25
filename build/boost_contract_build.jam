@@ -4,16 +4,52 @@
 # file LICENSE_1_0.txt or a copy at http://www.boost.org/LICENSE_1_0.txt).
 # See: http://www.boost.org/doc/libs/release/libs/contract/doc/html/index.html
 
+# Usage: bjam [OPTION]... DIR[-CPP_FILE_NAME]
+# Build and run Boost.Contract tests and examples.
+# 
+# Options:
+#   boost_contract_header_only=no,yes   if yes, do not build Boost.Contract
+#                                       library, use it as header-only instead
+#                                       (by default, no)
+#   link=shared,static  build Boost.Contract library as shared or static, has no
+#                       effect if boost_contract_header_only=yes (by default,
+#                       shared)
+#   boost_contract_no=          turn contract checking off (by default, all_yes)
+#                     all_yes,entryinv,pre,exitinv,post,except,check,entryinv_pre,entryinv_exitinv,entryinv_post,entryinv_except,entryinv_check,pre_exitinv,pre_post,pre_except,pre_check,exitinv_post,exitinv_except,exitinv_check,post_except,post_check,except_check,entryinv_pre_exitinv,entryinv_pre_post,entryinv_pre_except,entryinv_pre_check,entryinv_exitinv_post,entryinv_exitinv_except,entryinv_exitinv_check,entryinv_post_except,entryinv_post_check,entryinv_except_check,pre_exitinv_post,pre_exitinv_except,pre_exitinv_check,pre_post_except,pre_post_check,pre_except_check,exitinv_post_except,exitinv_post_check,exitinv_except_check,post_except_check,entryinv_pre_exitinv_post,entryinv_pre_exitinv_except,entryinv_pre_exitinv_check,entryinv_pre_post_except,entryinv_pre_post_check,entryinv_pre_except_check,entryinv_exitinv_post_except,entryinv_exitinv_post_check,entryinv_exitinv_except_check,entryinv_post_except_check,pre_exitinv_post_except,pre_exitinv_post_check,pre_exitinv_except_check,pre_post_except_check,exitinv_post_except_check,entryinv_pre_exitinv_post_except,entryinv_pre_exitinv_post_check,entryinv_pre_exitinv_except_check,entryinv_pre_post_except_check,entryinv_exitinv_post_except_check,pre_exitinv_post_except_check,entryinv_pre_exitinv_post_except_check
+# 
+# Examples (on Linux-based bash):
+#   Build just "test/public_function/smoke.cpp" and "example/introduction.cpp":
+#     [test]$ bjam public_function-smoke
+#  [example]$ bjam features-introduction
+#   Build all tests with all linkages (incl header-only) on multiple compilers:
+#     [test]$ bjam -q toolset=msvc,gcc,clang link=static,header
+#     [test]$ bjam -q toolset=msvc,gcc,clang boost_contract_header_only=yes
+#   Build all tests with no postconditions and exception guarantees first, and
+#   then again with no class invariants at exit:
+#     [test]$ time bjam -q boost_contract_no=post_except,exitinv
+
 import boost_contract_no ;
-import testing ;
 import feature ;
+import testing ;
+
+# Iff "no", link to boost_contract (else, no lib build so don't link to it).
+feature.feature boost_contract_header_only : no yes :
+        composite propagated link-incompatible ;
+
+# This is boost_contract_no=all_yes,pre,pre_post,...
+feature.feature boost_contract_no : all_yes [ boost_contract_no.conds ] :
+        composite propagated link-incompatible ;
+for local cond in [ boost_contract_no.conds ] {
+    feature.compose <boost_contract_no>$(cond) :
+            [ boost_contract_no.defs_$(cond) ] ;
+}
 
 module boost_contract_build {
 
 rule subdir-compile-fail ( subdir : cpp_fname : requirements * ) {
     compile-fail $(subdir)/$(cpp_fname).cpp :
-        <link>shared:<library>../build//boost_contract
-        <link>static:<library>../build//boost_contract
+        <boost_contract_header_only>no:<library>../build//boost_contract
+        <boost_contract_header_only>yes:<library>/boost/system//boost_system
         <include>$(subdir)
         $(requirements)
     :
@@ -23,9 +59,8 @@ rule subdir-compile-fail ( subdir : cpp_fname : requirements * ) {
 
 rule subdir-run ( subdir : cpp_fname : requirements * ) {
     run $(subdir)/$(cpp_fname).cpp : : :
-        <link>shared:<library>../build//boost_contract
-        <link>static:<library>../build//boost_contract
-        <library>/boost/system//boost_system
+        <boost_contract_header_only>no:<library>../build//boost_contract
+        <boost_contract_header_only>yes:<library>/boost/system//boost_system
         <include>$(subdir)
         $(requirements)
     :
@@ -35,30 +70,12 @@ rule subdir-run ( subdir : cpp_fname : requirements * ) {
 
 rule subdir-lib ( subdir : cpp_fname : requirements * ) {
     lib $(subdir)-$(cpp_fname) : $(subdir)/$(cpp_fname).cpp :
-        <link>shared:<library>../build//boost_contract
-        <link>static:<library>../build//boost_contract
+        <boost_contract_header_only>no:<library>../build//boost_contract
+        <boost_contract_header_only>yes:<library>/boost/system//boost_system
         <include>$(subdir)
         $(requirements)
     ;
 }
 
 } # module
-
-feature.feature boost_contract_link : shared static header :
-        composite propagated link-incompatible ;
-feature.compose <boost_contract_link>shared : <link>shared ;
-feature.compose <boost_contract_link>static :
-    <link>static
-    <define>BOOST_CONTRACT_STATIC_LINK
-;
-feature.compose <boost_contract_link>header :
-    <define>BOOST_CONTRACT_HEADER_ONLY
-;
-
-feature.feature boost_contract_no : all_yes [ boost_contract_no.conds ] :
-        composite propagated link-incompatible ;
-for local cond in [ boost_contract_no.conds ] {
-    feature.compose <boost_contract_no>$(cond) :
-            [ boost_contract_no.defs_$(cond) ] ;
-}
 

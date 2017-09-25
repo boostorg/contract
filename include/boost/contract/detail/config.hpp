@@ -12,7 +12,7 @@
 // Export symbols when compiling as shared lib (for internal use only).
 // BOOST_CONTRACT_DETAIL_SOURCE
 
-// Turn off assert(...) in lib's implementation.
+// Turn off BOOST_ASSERT(...) in lib's implementation (always on by default).
 // BOOST_CONTRACT_DETAIL_NDEBUG
 
 #ifndef BOOST_CONTRACT_DETAIL_NAME_INFIX

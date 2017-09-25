@@ -1,3 +1,17 @@
 
-*   Shall I replace boost_contract_link with Boost's linkage build option? I think yes, do what chrono and thread do (but are those built ad dll by default?)
+*   How do I make Boost build script automatically copy //libs/contract/include/boost/contract_macro.hpp to //boost/contract_macro.hpp (this is automatically done for //boost/contract/ and //boost/contract.hpp, but not for //boost/contract_macro.hpp)? Maybe ask Boost...
+
+    $ bjam
+    ...
+    mklink-or-dir ..\..\..\boost\contract
+    Junction created for ..\..\..\boost\contract <<===>> ..\include\boost\contract
+    ...patience...
+    link.hardlink ..\..\..\boost\contract.hpp
+    Hardlink created for ..\..\..\boost\contract.hpp <<===>> ..\include\boost\contract.hpp
+    ...
+
+*   Make sure build/, example/, and test/ all compile even if include/ is removed after symlink are created to //boost/...
+*   Recompile all examples/tests with all compilers, boost_contract_no, link, boost_contract_header_only, etc. (after fully integrated w/ Boost build system)
+*   Update the docs (especially, the Getting Started section) to fit within Boost (how about .pdf doc generation? what do I need to do for that?)
+*   Inspect chrono/build/Jamfile.v2 and chrono/doc/Jamfile.v2 closely to see if some of that configuration should be adopted fro Boost.Contract build and docs.
 

@@ -11,9 +11,9 @@
 #ifdef BOOST_CONTRACT_DETAIL_NDEBUG
     #define BOOST_CONTRACT_DETAIL_DEBUG(cond) /* nothing */
 #else
-    #include <cassert>
-    // Extra parenthesis around assert because that is also a macro.
-    #define BOOST_CONTRACT_DETAIL_DEBUG(cond) (assert(cond))
+    #include <boost/assert.hpp>
+    // Extra parenthesis around BOOST_ASSERT to be safe because its is a macro.
+    #define BOOST_CONTRACT_DETAIL_DEBUG(cond) (BOOST_ASSERT(cond))
 #endif
 
 #endif // #include guard

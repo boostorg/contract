@@ -4,14 +4,22 @@
 # file LICENSE_1_0.txt or a copy at http://www.boost.org/LICENSE_1_0.txt).
 # See: http://www.boost.org/doc/libs/release/libs/contract/doc/html/index.html
 
-import boost_contract_build ;
-
-lib boost_contract : ../src/contract.cpp :
-    <boost_contract_link>shared
-    <library>/boost/system//boost_system
+project boost/contract
+    : source-location ../src
+    : requirements
+        <link>shared:<define>BOOST_CONTRACT_DYN_LINK
+        <link>static:<define>BOOST_CONTRACT_STATIC_LINK
+        <threading>single:<define>BOOST_CONTRACT_DISABLE_THREADS
+    : usage-requirements # Independent from requirements above (need to repeat).
+        <link>shared:<define>BOOST_CONTRACT_DYN_LINK
+        <link>static:<define>BOOST_CONTRACT_STATIC_LINK
+        <threading>single:<define>BOOST_CONTRACT_DISABLE_THREADS
+        <library>/boost/system//boost_system
 ;
 
-lib boost_contract : ../src/contract.cpp : <boost_contract_link>static ;
-
-# Build nothing for boost_contract_link=header (ignore Bjam warnings).
+lib boost_contract : contract.cpp :
+    <link>shared
+    <library>/boost/system//boost_system
+;
+lib boost_contract : contract.cpp : <link>static ;
 

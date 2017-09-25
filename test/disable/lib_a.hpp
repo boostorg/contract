@@ -8,6 +8,7 @@
 // See: http://www.boost.org/doc/libs/release/libs/contract/doc/html/index.html
 
 #include "../detail/counter.hpp"
+#include <boost/contract/core/config.hpp>
 #include <boost/config.hpp>
 #include <string>
 
