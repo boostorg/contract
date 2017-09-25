@@ -51,7 +51,7 @@ doxygen reference
 
 xml contract : main.qbk : <dependency>reference ;
 
-boostbook boostdoc : contract
+boostbook boostrelease : contract
 :
     <location>html
     <xsl:param>boost.defaults=Boost
