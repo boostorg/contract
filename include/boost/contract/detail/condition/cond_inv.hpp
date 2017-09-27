@@ -36,57 +36,57 @@ class cond_inv : public cond_post<VR> { // Non-copyable base.
     #if     !defined(BOOST_CONTRACT_NO_INVARIANTS) && \
             !defined(BOOST_CONTRACT_PERMISSIVE)
         BOOST_STATIC_ASSERT_MSG(
-            !boost::contract::access::has_static_invariant_f<
+            (!boost::contract::access::has_static_invariant_f<
                 C, void, boost::mpl:: vector<>
-            >::value,
+            >::value),
             "static invariant member function cannot be mutable "
             "(it must be static instead)"
         );
         BOOST_STATIC_ASSERT_MSG(
-            !boost::contract::access::has_static_invariant_f<
+            (!boost::contract::access::has_static_invariant_f<
                 C, void, boost::mpl::vector<>,
                         boost::function_types::const_non_volatile
-            >::value,
+            >::value),
             "static invariant member function cannot be const qualified "
             "(it must be static instead)"
         );
         BOOST_STATIC_ASSERT_MSG(
-            !boost::contract::access::has_static_invariant_f<
+            (!boost::contract::access::has_static_invariant_f<
                 C, void, boost::mpl::vector<>,
                         boost::function_types::volatile_non_const
-            >::value,
+            >::value),
             "static invariant member function cannot be volatile qualified "
             "(it must be static instead)"
         );
         BOOST_STATIC_ASSERT_MSG(
-            !boost::contract::access::has_static_invariant_f<
+            (!boost::contract::access::has_static_invariant_f<
                 C, void, boost::mpl::vector<>,
                         boost::function_types::cv_qualified
-            >::value,
+            >::value),
             "static invariant member function cannot be const volatile "
             "qualified (it must be static instead)"
         );
 
         BOOST_STATIC_ASSERT_MSG(
-            !boost::contract::access::has_invariant_s<
+            (!boost::contract::access::has_invariant_s<
                 C, void, boost::mpl::vector<>
-            >::value,
+            >::value),
             "non-static invariant member function cannot be static "
             "(it must be either const or const volatile qualified instead)"
         );
         BOOST_STATIC_ASSERT_MSG(
-            !boost::contract::access::has_invariant_f<
+            (!boost::contract::access::has_invariant_f<
                 C, void, boost::mpl::vector<>,
                         boost::function_types::non_cv
-            >::value,
+            >::value),
             "non-static invariant member function cannot be mutable "
             "(it must be either const or const volatile qualified instead)"
         );
         BOOST_STATIC_ASSERT_MSG(
-            !boost::contract::access::has_invariant_f<
+            (!boost::contract::access::has_invariant_f<
                 C, void, boost::mpl::vector<>,
                         boost::function_types::volatile_non_const
-            >::value,
+            >::value),
             "non-static invariant member function cannot be volatile qualified "
             "(it must be const or const volatile qualified instead)"
         );

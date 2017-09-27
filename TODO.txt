@@ -19,4 +19,6 @@
 *   Proof read cods one last time wrt now being part of Boost.
 *   Update release notes and bump to revision 1.0.0 (create a release tag on github for it just in case...).
 *   Change the README.md title to Boost.Contract (instead of just "Contract").
+*   Add thanks acknowledge section of docs to Daniel for setting up git repo for Boost.Contract
+*   Review all TODOs in all files.
 

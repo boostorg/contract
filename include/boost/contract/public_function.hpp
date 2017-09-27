@@ -351,8 +351,8 @@ specify_precondition_old_postcondition_except<> public_function(Class* obj) {
             /* anyways, but helps limiting cryptic compiler's errors */ \
             BOOST_STATIC_ASSERT_MSG( \
                 /* -2 for both `this` and `virtual_*` extra parameters */ \
-                boost::function_types::function_arity<F>::value - 2 == \
-                        BOOST_CONTRACT_DETAIL_TVARIADIC_SIZEOF(arity, Args), \
+                (boost::function_types::function_arity<F>::value - 2 == \
+                        BOOST_CONTRACT_DETAIL_TVARIADIC_SIZEOF(arity, Args)), \
                 "missing one or more arguments for specified function" \
             ); \
             /* assert consistency of F's result type and VirtualResult */ \

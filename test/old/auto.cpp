@@ -19,8 +19,8 @@ int main() {
         int x = -123;
         auto old_x = BOOST_CONTRACT_OLDOF(x);
         x = 123;
-        BOOST_STATIC_ASSERT(boost::is_same<decltype(old_x),
-                boost::contract::old_ptr<int> >::value);
+        BOOST_STATIC_ASSERT((boost::is_same<decltype(old_x),
+                boost::contract::old_ptr<int> >::value));
         #ifndef BOOST_CONTRACT_NO_OLDS
             BOOST_TEST_EQ(*old_x, -123);
         #endif
@@ -30,8 +30,8 @@ int main() {
         char y = 'j';
         auto old_y = BOOST_CONTRACT_OLDOF(v, y);
         y = 'k';
-        BOOST_STATIC_ASSERT(boost::is_same<decltype(old_y),
-                boost::contract::old_ptr<char> >::value);
+        BOOST_STATIC_ASSERT((boost::is_same<decltype(old_y),
+                boost::contract::old_ptr<char> >::value));
         #ifndef BOOST_CONTRACT_NO_OLDS
             BOOST_TEST_EQ(*old_y, 'j');
         #endif

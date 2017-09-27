@@ -126,10 +126,10 @@ BOOST_CONTRACT_DETAIL_DECL_DETAIL_COND_SUBCONTRACTING_Z(1,
 
         #ifndef BOOST_CONTRACT_PERMISSIVE
             BOOST_STATIC_ASSERT_MSG(
-                boost::mpl::or_<
+                (boost::mpl::or_<
                     boost::is_same<O, none>,
                     boost::mpl::not_<boost::mpl::empty<overridden_bases> >
-                >::value,
+                >::value),
                 "subcontracting function specified as 'override' but does not "
                 "override any contracted member function"
             );
