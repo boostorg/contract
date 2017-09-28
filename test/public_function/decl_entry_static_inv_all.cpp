@@ -46,6 +46,8 @@ std::string ok_end() {
     return ok.str();
 }
 
+struct err {};
+
 int main() {
     std::ostringstream ok;
 
@@ -77,7 +79,6 @@ int main() {
     ;
     BOOST_TEST(out.eq(ok.str()));
     
-    struct err {};
     boost::contract::set_entry_invariant_failure(
             [] (boost::contract::from) { throw err(); });
 

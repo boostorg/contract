@@ -18,7 +18,7 @@ specified in that order.
 
 #include <boost/contract/core/config.hpp>
 #include <boost/contract/detail/decl.hpp>
-#if !defined(BOOST_CONTRACT_NO_CONDITIONS) || \
+#if     !defined(BOOST_CONTRACT_NO_CONDITIONS) || \
         defined(BOOST_CONTRACT_STATIC_LINK)
     #include <boost/contract/detail/condition/cond_base.hpp>
     #include <boost/contract/detail/condition/cond_post.hpp>
