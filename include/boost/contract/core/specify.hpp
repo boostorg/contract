@@ -38,43 +38,30 @@ specified in that order.
 
 /* @cond */
 
-// TODO: Check if this fixes the C++1z failures of auto_..._error tests on Boost regression (otherwise remove it)
-#ifdef BOOST_NO_CXX11_RVALUE_REFERENCES
-    #define BOOST_CONTRACT_SPECIFY_CLASS_DELETE_MOVE_(class_type) /* nothing */
-#else
-    #define BOOST_CONTRACT_SPECIFY_CLASS_DELETE_MOVE_(class_type) \
-        /* move operations (private to force `auto c = ...` error) */ \
-        private: \
-            class_type(class_type&& other); \
-            class_type& operator=(class_type&& other);
-#endif
-
+// NOTE: Private copy ops below will force compile-time error is `auto c = ...`
+// is used instead of `check c = ...` but only up to C++17. C++17 strong copy
+// elision on function return values prevents this lib from generating a
+// compile-time error in those cases, but the lib will still generate a run-time
+// error according with ON_MISSING_CHECK_DECL.
 #if     !defined(BOOST_CONTRACT_NO_CONDITIONS) || \
         defined(BOOST_CONTRACT_STATIC_LINK)
     #define BOOST_CONTRACT_SPECIFY_CLASS_IMPL_(class_type, cond_type) \
         private: \
-            /* data member */ \
             boost::contract::detail::auto_ptr<cond_type> cond_; \
-            /* constructor */ \
             explicit class_type(cond_type* cond) : cond_(cond) {} \
-            /* copy ops (private to force `auto c = ...` error) */ \
             class_type(class_type const& other) : cond_(other.cond_) {} \
             class_type& operator=(class_type const& other) { \
                 cond_ = other.cond_; \
                 return *this; \
-            } \
-        BOOST_CONTRACT_SPECIFY_CLASS_DELETE_MOVE_(class_type)
+            }
     
     #define BOOST_CONTRACT_SPECIFY_COND_RELEASE_ cond_.release()
 #else
     #define BOOST_CONTRACT_SPECIFY_CLASS_IMPL_(class_type, cond_type) \
         private: \
-            /* (default) constructor */ \
             class_type() {} \
-            /* copy ops (decl. private to force `auto c = ...` error) */ \
             class_type(class_type const&) {} \
-            class_type& operator=(class_type const&) {} \
-        BOOST_CONTRACT_SPECIFY_CLASS_DELETE_MOVE_(class_type)
+            class_type& operator=(class_type const&) {}
 
     #define BOOST_CONTRACT_SPECIFY_COND_RELEASE_ /* nothing */
 #endif
