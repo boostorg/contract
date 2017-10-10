@@ -17,12 +17,12 @@
 
 boost::contract::test::detail::oteststream out;
 
+struct c_err {}; // Global decl so visible in MSVC10 lambdas.
+
 struct c {
     static void static_invariant() { out << "c::static_inv" << std::endl; }
     void invariant() const { out << "c::inv" << std::endl; }
     
-    struct err {};
-
     virtual void f(boost::contract::virtual_* v = 0) {
         boost::contract::check c = boost::contract::public_function(v, this)
             .precondition([] {
@@ -31,7 +31,7 @@ struct c {
             })
             .old([] {
                 out << "c::f::old" << std::endl;
-                throw c::err(); // Test this throws.
+                throw c_err(); // Test this throws.
             })
             .postcondition([] { out << "c::f::post" << std::endl; })
             .except([] { out << "c::f::except" << std::endl; })
@@ -39,6 +39,8 @@ struct c {
         out << "c::f::body" << std::endl;
     }
 };
+
+struct b_err {}; // Global decl so visible in MSVC10 lambdas.
 
 struct b
     #define BASES public c
@@ -50,8 +52,6 @@ struct b
     static void static_invariant() { out << "b::static_inv" << std::endl; }
     void invariant() const { out << "b::inv" << std::endl; }
 
-    struct err {};
-
     virtual void f(boost::contract::virtual_* v = 0) /* override */ {
         boost::contract::check c = boost::contract::public_function<override_f>(
                 v, &b::f, this)
@@ -61,7 +61,7 @@ struct b
             })
             .old([] {
                 out << "b::f::old" << std::endl;
-                throw b::err(); // Test this throws.
+                throw b_err(); // Test this throws.
             })
             .postcondition([] { out << "b::f::post" << std::endl; })
             .except([] { out << "b::f::except" << std::endl; })
@@ -70,6 +70,8 @@ struct b
     }
     BOOST_CONTRACT_OVERRIDE(f)
 };
+
+struct a_err {}; // Global decl so visible in MSVC10 lambdas.
 
 struct a
     #define BASES public b
@@ -81,15 +83,13 @@ struct a
     static void static_invariant() { out << "a::static_inv" << std::endl; }
     void invariant() const { out << "a::inv" << std::endl; }
 
-    struct err {};
-
     void f(boost::contract::virtual_* v = 0) /* override */ {
         boost::contract::check c = boost::contract::public_function<override_f>(
                 v, &a::f, this)
             .precondition([] { out << "a::f::pre" << std::endl; })
             .old([] {
                 out << "a::f::old" << std::endl;
-                throw a::err(); // Test this throws.
+                throw a_err(); // Test this throws.
             })
             .postcondition([] { out << "a::f::post" << std::endl; })
             .except([] { out << "a::f::except" << std::endl; })
@@ -111,7 +111,7 @@ int main() {
         ba.f();
         #ifndef BOOST_CONTRACT_NO_OLDS
                 BOOST_TEST(false);
-            } catch(c::err const&) {
+            } catch(c_err const&) {
         #endif
         ok.str(""); ok
             #ifndef BOOST_CONTRACT_NO_ENTRY_INVARIANTS

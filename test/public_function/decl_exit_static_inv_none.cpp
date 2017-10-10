@@ -15,6 +15,8 @@
 #include <boost/detail/lightweight_test.hpp>
 #include <sstream>
 
+struct err {}; // Global decl so visible in MSVC10 lambdas.
+
 int main() {
     std::ostringstream ok; ok // Test nothing fails.
         #ifndef BOOST_CONTRACT_NO_ENTRY_INVARIANTS
@@ -46,7 +48,6 @@ int main() {
         #endif
     ;
     
-    struct err {};
     boost::contract::set_exit_invariant_failure(
             [] (boost::contract::from) { throw err(); });
 

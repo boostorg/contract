@@ -34,6 +34,8 @@ void f(bool check1, bool check2) {
     out << "f::body" << std::endl;
 }
 
+struct err {}; // Global decl so visible in MSVC10 lambdas.
+
 int main() {
     std::ostringstream ok;
 
@@ -48,7 +50,6 @@ int main() {
     ;
     BOOST_TEST(out.eq(ok.str()));
 
-    struct err {};
     boost::contract::set_check_failure([] { throw err(); });
 
     out.str("");

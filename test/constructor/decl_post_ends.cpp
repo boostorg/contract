@@ -74,6 +74,8 @@ std::string ok_ba() {
     return ok.str();
 }
 
+struct err {}; // Global decl so visible in MSVC10 lambdas.
+
 int main() {
     std::ostringstream ok;
     
@@ -90,7 +92,6 @@ int main() {
         BOOST_TEST(out.eq(ok.str()));
     }
     
-    struct err {};
     boost::contract::set_postcondition_failure(
             [] (boost::contract::from) { throw err(); });
 

@@ -9,9 +9,10 @@
 #include <boost/contract/check.hpp>
 #include <boost/contract/core/exception.hpp>
 #include <boost/detail/lightweight_test.hpp>
+    
+struct err {}; // Global decl so visible in MSVC10 lambdas.
 
 int main() {
-    struct err {};
     boost::contract::set_check_failure([] { throw err(); });
 
     bool threw = false;

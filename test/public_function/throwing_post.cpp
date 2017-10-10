@@ -17,12 +17,12 @@
 
 boost::contract::test::detail::oteststream out;
 
+struct c_err {}; // Global decl so visible in MSVC10 lambdas.
+
 struct c {
     static void static_invariant() { out << "c::static_inv" << std::endl; }
     void invariant() const { out << "c::inv" << std::endl; }
     
-    struct err {};
-
     virtual void f(boost::contract::virtual_* v = 0) {
         boost::contract::check c = boost::contract::public_function(v, this)
             .precondition([] {
@@ -40,6 +40,8 @@ struct c {
     }
 };
 
+struct b_err {}; // Global decl so visible in MSVC10 lambdas.
+
 struct b
     #define BASES public c
     : BASES
@@ -49,8 +51,6 @@ struct b
 
     static void static_invariant() { out << "b::static_inv" << std::endl; }
     void invariant() const { out << "b::inv" << std::endl; }
-
-    struct err {};
 
     virtual void f(boost::contract::virtual_* v = 0) /* override */ {
         boost::contract::check c = boost::contract::public_function<override_f>(
@@ -62,7 +62,7 @@ struct b
             .old([] { out << "b::f::old" << std::endl; })
             .postcondition([] {
                 out << "b::f::post" << std::endl;
-                throw b::err(); // Test this (both derived and base) throws.
+                throw b_err(); // Test this (both derived and base) throws.
             })
             .except([] { out << "b::f::except" << std::endl; })
         ;
@@ -70,6 +70,8 @@ struct b
     }
     BOOST_CONTRACT_OVERRIDE(f)
 };
+
+struct a_err {}; // Global decl so visible in MSVC10 lambdas.
 
 struct a
     #define BASES public b
@@ -81,8 +83,6 @@ struct a
     static void static_invariant() { out << "a::static_inv" << std::endl; }
     void invariant() const { out << "a::inv" << std::endl; }
 
-    struct err {};
-
     void f(boost::contract::virtual_* v = 0) /* override */ {
         boost::contract::check c = boost::contract::public_function<override_f>(
                 v, &a::f, this)
@@ -90,7 +90,7 @@ struct a
             .old([] { out << "a::f::old" << std::endl; })
             .postcondition([] {
                 out << "a::f::post" << std::endl;
-                throw a::err(); // Test base already threw.
+                throw a_err(); // Test base already threw.
             })
             .except([] { out << "a::f::except" << std::endl; })
         ;
@@ -112,7 +112,7 @@ int main() {
         ba.f();
         #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
                 BOOST_TEST(false);
-            } catch(b::err const&) {
+            } catch(b_err const&) {
         #endif
         ok.str(""); ok
             #ifndef BOOST_CONTRACT_NO_ENTRY_INVARIANTS

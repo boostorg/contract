@@ -14,17 +14,17 @@
 
 boost::contract::test::detail::oteststream out;
 
+struct a_err {}; // Global decl so visible in MSVC10 lambdas.
+
 struct a {
     static void static_invariant() { out << "a::static_inv" << std::endl; }
     void invariant() const { out << "a::inv" << std::endl; }
-
-    struct err {};
 
     static void f() {
         boost::contract::check c = boost::contract::public_function<a>()
             .precondition([] {
                 out << "a::f::pre" << std::endl;
-                throw a::err(); // Test this throws.
+                throw a_err(); // Test this throws.
             })
             .old([] { out << "a::f::old" << std::endl; })
             .postcondition([] { out << "a::f::post" << std::endl; })
@@ -45,7 +45,7 @@ int main() {
         a::f();
         #ifndef BOOST_CONTRACT_NO_PRECONDITIONS
                 BOOST_TEST(false);
-            } catch(a::err const&) {
+            } catch(a_err const&) {
         #endif
         ok.str(""); ok
             #ifndef BOOST_CONTRACT_NO_ENTRY_INVARIANTS

@@ -14,7 +14,7 @@
 
 boost::contract::test::detail::oteststream out;
 
-struct err {};
+struct err {}; // Global decl so visible in MSVC10 lambdas.
 
 void f() {
     boost::contract::check c = boost::contract::function()

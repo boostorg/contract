@@ -17,12 +17,12 @@
 
 boost::contract::test::detail::oteststream out;
 
+struct c_err {}; // Global decl so visible in MSVC10 lambdas.
+
 struct c {
     static void static_invariant() { out << "c::static_inv" << std::endl; }
     void invariant() const { out << "c::inv" << std::endl; }
     
-    struct err {};
-
     virtual void f(boost::contract::virtual_* v = 0) {
         boost::contract::check c = boost::contract::public_function(v, this)
             .precondition([] {
@@ -37,6 +37,8 @@ struct c {
     }
 };
 
+struct b_err {}; // Global decl so visible in MSVC10 lambdas.
+
 struct b
     #define BASES public c
     : BASES
@@ -46,8 +48,6 @@ struct b
 
     static void static_invariant() { out << "b::static_inv" << std::endl; }
     void invariant() const { out << "b::inv" << std::endl; }
-
-    struct err {};
 
     virtual void f(boost::contract::virtual_* v = 0) /* override */ {
         boost::contract::check c = boost::contract::public_function<override_f>(
@@ -65,6 +65,8 @@ struct b
     BOOST_CONTRACT_OVERRIDE(f)
 };
 
+struct a_err {}; // Global decl so visible in MSVC10 lambdas.
+
 struct a
     #define BASES public b
     : BASES
@@ -75,14 +77,12 @@ struct a
     static void static_invariant() { out << "a::static_inv" << std::endl; }
     void invariant() const { out << "a::inv" << std::endl; }
 
-    struct err {};
-
     void f(boost::contract::virtual_* v = 0) /* override */ {
         boost::contract::check c = boost::contract::public_function<override_f>(
                 v, &a::f, this)
             .precondition([] {
                 out << "a::f::pre" << std::endl;
-                throw a::err(); // Test this throws.
+                throw a_err(); // Test this throws.
             })
             .old([] { out << "a::f::old" << std::endl; })
             .postcondition([] { out << "a::f::post" << std::endl; })
@@ -106,7 +106,7 @@ int main() {
         ba.f();
         #ifndef BOOST_CONTRACT_NO_PRECONDITIONS
                 BOOST_TEST(false);
-            } catch(a::err const&) {
+            } catch(a_err const&) {
         #endif
         ok.str(""); ok
             #ifndef BOOST_CONTRACT_NO_ENTRY_INVARIANTS

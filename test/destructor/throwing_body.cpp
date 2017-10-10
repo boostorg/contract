@@ -31,6 +31,8 @@ struct c {
     }
 };
 
+struct b_err {}; // Global decl so visible in MSVC10 lambdas.
+
 struct b
     #define BASES public c
     : BASES
@@ -41,8 +43,6 @@ struct b
     static void static_invariant() { out << "b::static_inv" << std::endl; }
     void invariant() const { out << "b::inv" << std::endl; }
 
-    struct err {};
-
     ~b() BOOST_NOEXCEPT_IF(false) {
         boost::contract::check c = boost::contract::destructor(this)
             .old([] { out << "b::dtor::old" << std::endl; })
@@ -50,7 +50,7 @@ struct b
             .except([] { out << "b::dtor::except" << std::endl; })
         ;
         out << "b::dtor::body" << std::endl;
-        throw b::err(); // Test body throw (from inheritance mid branch).
+        throw b_err(); // Test body throw (from inheritance mid branch).
     }
 };
 
@@ -84,7 +84,7 @@ int main() {
             out.str("");
         }
         BOOST_TEST(false);
-    } catch(b::err const&) {
+    } catch(b_err const&) {
         ok.str(""); ok
             #ifndef BOOST_CONTRACT_NO_ENTRY_INVARIANTS
                 << "a::static_inv" << std::endl

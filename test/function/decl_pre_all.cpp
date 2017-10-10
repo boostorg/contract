@@ -31,6 +31,8 @@ std::string ok_f(bool failed = false) {
     return ok.str();
 }
 
+struct err {}; // Global decl so visible in MSVC10 lambdas.
+
 int main() {
     std::ostringstream ok;
 
@@ -48,7 +50,6 @@ int main() {
         #define BOOST_CONTRACT_TEST_pre 1
     #endif
 
-    struct err {};
     boost::contract::set_precondition_failure(
             [] (boost::contract::from) { throw err(); });
 

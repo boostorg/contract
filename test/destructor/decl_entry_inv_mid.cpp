@@ -76,6 +76,8 @@ std::string ok_c(bool threw = false) {
     return ok.str();
 }
 
+struct err {}; // Global decl so visible in MSVC10 lambdas.
+
 int main() {
     std::ostringstream ok;
     
@@ -93,7 +95,6 @@ int main() {
     ;
     BOOST_TEST(out.eq(ok.str()));
     
-    struct err {};
     boost::contract::set_entry_invariant_failure([&ok] (boost::contract::from) {
         BOOST_TEST(out.eq(ok.str())); // Must check before dtor throws...
         throw err(); // for testing (as dtors should never throw anyways).

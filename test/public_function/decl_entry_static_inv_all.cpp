@@ -46,7 +46,7 @@ std::string ok_end() {
     return ok.str();
 }
 
-struct err {};
+struct err {}; // Global decl so visible in MSVC10 lambdas.
 
 int main() {
     std::ostringstream ok;

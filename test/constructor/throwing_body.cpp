@@ -40,6 +40,8 @@ struct c
     }
 };
 
+struct b_err {}; // Global decl so visible in MSVC10 lambdas.
+
 struct b
     #define BASES private boost::contract::constructor_precondition<b>, public c
     : BASES
@@ -49,8 +51,6 @@ struct b
 
     static void static_invariant() { out << "b::static_inv" << std::endl; }
     void invariant() const { out << "b::inv" << std::endl; }
-
-    struct err {};
 
     b() :
         boost::contract::constructor_precondition<b>([] {
@@ -63,7 +63,7 @@ struct b
             .except([] { out << "b::ctor::except" << std::endl; })
         ;
         out << "b::ctor::body" << std::endl;
-        throw b::err(); // Test body throws (from inheritance mid branch).
+        throw b_err(); // Test body throws (from inheritance mid branch).
     }
 };
 
@@ -99,7 +99,7 @@ int main() {
         out.str("");
         a aa;
         BOOST_TEST(false);
-    } catch(b::err const&) { 
+    } catch(b_err const&) { 
         ok.str(""); ok
             #ifndef BOOST_CONTRACT_NO_PRECONDITIONS
                 << "a::ctor::pre" << std::endl

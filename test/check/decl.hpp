@@ -14,6 +14,8 @@
 
 boost::contract::test::detail::oteststream out;
 
+struct err {}; // Global decl so visible in MSVC10 lambdas.
+
 void f(bool check) {
     #ifdef BOOST_CONTRACT_TEST_CHECK_MACRO
         BOOST_CONTRACT_CHECK([&] () -> bool {
@@ -42,7 +44,6 @@ int main() {
     ;
     BOOST_TEST(out.eq(ok.str()));
 
-    struct err {};
     boost::contract::set_check_failure([] { throw err(); });
 
     out.str("");
