@@ -1,6 +1,5 @@
 
 *   How do I make Boost build script automatically copy //libs/contract/include/boost/contract_macro.hpp to //boost/contract_macro.hpp (this is automatically done for //boost/contract/ and //boost/contract.hpp, but not for //boost/contract_macro.hpp)? Maybe ask Boost...
-
     $ bjam
     ...
     mklink-or-dir ..\..\..\boost\contract
@@ -9,16 +8,13 @@
     link.hardlink ..\..\..\boost\contract.hpp
     Hardlink created for ..\..\..\boost\contract.hpp <<===>> ..\include\boost\contract.hpp
     ...
-
 *   Make sure build/, example/, and test/ all compile even if include/ is removed after symlink are created to //boost/...
 *   Recompile all examples/tests with all compilers, boost_contract_no, link, boost_contract_header_only, etc. (after fully integrated w/ Boost build system)
 *   Update the docs (especially, the Getting Started section) to fit within Boost (how about .pdf doc generation? what do I need to do for that?)
 *   Inspect chrono/build/Jamfile.v2 and chrono/doc/Jamfile.v2 closely to see if some of that configuration should be adopted fro Boost.Contract build and docs.
 *   Remove note in docs that says "on one of its previous revisions this library was accepted into Boost...".
 *   Remove note in cods that says "this library source is hosted on ...".
-*   Proof read cods one last time wrt now being part of Boost.
 *   Update release notes and bump to revision 1.0.0 (create a release tag on github for it just in case...).
-*   Change the README.md title to Boost.Contract (instead of just "Contract").
-*   Add thanks acknowledge section of docs to Daniel for setting up git repo for Boost.Contract
+*   Add thanks to Daniel James to acknowledge section of docs (for setting help Boost.Contract repo, help with regression test tools, git, etc.).
 *   Review all TODOs in all files.
 
