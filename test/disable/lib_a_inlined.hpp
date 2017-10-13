@@ -29,8 +29,9 @@ int a::f(x_type& x) {
     boost::contract::old_ptr<x_type> old_x =
             BOOST_CONTRACT_OLDOF(x_type::eval(x));
     boost::contract::check c = boost::contract::public_function(this)
-        .precondition([] { out("a::f::pre\n"); })
-        .old([] { out("a::f::old\n"); })
+        // Capturing [&] so out() visible in MSVC10 lambdas.
+        .precondition([&] { out("a::f::pre\n"); })
+        .old([&] { out("a::f::old\n"); })
         .postcondition([&] {
             out("a::f::post\n");
             BOOST_CONTRACT_ASSERT(x.value == -old_x->value);

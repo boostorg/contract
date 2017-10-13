@@ -26,7 +26,8 @@ void push_back(std::vector<T>& vect, T const& value) {
                 boost::contract::call_if<boost::has_equal_to<T> >(
                     boost::bind(std::equal_to<T>(), boost::cref(vect.back()),
                             boost::cref(value))
-                ).else_([] { ++equal_skips; return true; })
+                // Explicit bool return and [&] needed for MSVC10 lambdas.
+                ).else_([&] () -> bool { ++equal_skips; return true; })
             );
         })
     ;

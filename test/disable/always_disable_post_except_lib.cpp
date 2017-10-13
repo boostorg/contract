@@ -17,9 +17,10 @@
 void f() {
     using boost::contract::test::detail::out;
     boost::contract::check c = boost::contract::function()
-        .precondition([] { out("f::pre\n"); })
-        .old([] { out("f::old\n"); })
-        .postcondition([] { out("f::post\n"); })
+        // Capturing [&] so out() visible in MSVC10 lambdas.
+        .precondition([&] { out("f::pre\n"); })
+        .old([&] { out("f::old\n"); })
+        .postcondition([&] { out("f::post\n"); })
     ;
     out("f::body\n");
 }

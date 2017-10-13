@@ -29,9 +29,10 @@ namespace lib_y_ { // Internal namepsace.
 inline void y() {
     using boost::contract::test::detail::out;
     boost::contract::check c = boost::contract::function()
-        .precondition([] { out("y::pre\n"); })
-        .old([] { out("y::old\n"); })
-        .postcondition([] { out("y::post\n"); })
+        // Capturing [&] so out() visible in MSVC10 lambdas.
+        .precondition([&] { out("y::pre\n"); })
+        .old([&] { out("y::old\n"); })
+        .postcondition([&] { out("y::post\n"); })
     ;
     lib_y_::y_body();
 }

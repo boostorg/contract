@@ -116,6 +116,9 @@ struct b {
     virtual ~b() {} // No contract.
 };
 
+struct a_n_tag; // Global decl so visible in MSVC10 lambdas.
+typedef boost::contract::test::detail::counter<a_n_tag, int> a_n_type;
+
 // Test destructor with both non-contracted and contracted bases.
 struct a
     #define BASES public b, public c
@@ -133,19 +136,17 @@ struct a
         out << "a::inv" << std::endl;
         BOOST_CONTRACT_ASSERT(i_ < 0);
     }
-    
-    struct n_tag;
-    typedef boost::contract::test::detail::counter<n_tag, int> n_type;
-    static n_type n;
+
+    static a_n_type n;
 
     explicit a() : i_(-1) { ++n.value; }
 
     virtual ~a() {
-        boost::contract::old_ptr<n_type> old_n;
+        boost::contract::old_ptr<a_n_type> old_n;
         boost::contract::check c = boost::contract::destructor(this)
             .old([&] {
                 out << "a::dtor::old" << std::endl;
-                old_n = BOOST_CONTRACT_OLDOF(n_type::eval(n));
+                old_n = BOOST_CONTRACT_OLDOF(a_n_type::eval(n));
             })
             .postcondition([&old_n] {
                 out << "a::dtor::post" << std::endl;
@@ -159,7 +160,7 @@ struct a
 private:
     int i_;
 };
-a::n_type a::n;
+a_n_type a::n;
 
 int main() {
     std::ostringstream ok;
@@ -272,9 +273,9 @@ int main() {
 
     // Followings destroy only copies (actual objects are static data members).
 
-    BOOST_TEST_EQ(a::n_type::copies(), BOOST_CONTRACT_TEST_old);
-    BOOST_TEST_EQ(a::n_type::evals(), BOOST_CONTRACT_TEST_old);
-    BOOST_TEST_EQ(a::n_type::copies(), a::n_type::dtors()); // No leak.
+    BOOST_TEST_EQ(a_n_type::copies(), BOOST_CONTRACT_TEST_old);
+    BOOST_TEST_EQ(a_n_type::evals(), BOOST_CONTRACT_TEST_old);
+    BOOST_TEST_EQ(a_n_type::copies(), a_n_type::dtors()); // No leak.
     
     BOOST_TEST_EQ(c::m_type::copies(), BOOST_CONTRACT_TEST_old);
     BOOST_TEST_EQ(c::m_type::evals(), BOOST_CONTRACT_TEST_old);
