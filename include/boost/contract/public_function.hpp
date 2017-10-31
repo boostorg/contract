@@ -347,33 +347,44 @@ specify_precondition_old_postcondition_except<> public_function(Class* obj) {
         v, r, f, obj, args \
     ) { \
         BOOST_PP_IIF(BOOST_CONTRACT_PUBLIC_FUNCTIONS_IMPL_, \
-            /* this assert not strictly necessary as compilation will fail */ \
-            /* anyways, but helps limiting cryptic compiler's errors */ \
-            BOOST_STATIC_ASSERT_MSG( \
-                /* -2 for both `this` and `virtual_*` extra parameters */ \
-                (boost::function_types::function_arity<F>::value - 2 == \
-                        BOOST_CONTRACT_DETAIL_TVARIADIC_SIZEOF(arity, Args)), \
-                "missing one or more arguments for specified function" \
-            ); \
-            /* assert consistency of F's result type and VirtualResult */ \
-            BOOST_PP_IIF(has_virtual_result, \
-                BOOST_STATIC_ASSERT_MSG \
-            , \
-                BOOST_PP_TUPLE_EAT(2) \
-            )( \
-                (boost::is_same< \
-                    typename boost::remove_reference<typename boost:: \
-                            function_types::result_type<F>::type>::type, \
-                    typename boost::contract::detail:: \
-                        remove_value_reference_if_optional<VirtualResult>::type\
-                >::value), \
-                "mismatching result type for specified function" \
-            ); \
-            /* assert this so lib can check and enforce override */ \
-            BOOST_STATIC_ASSERT_MSG( \
-                boost::contract::access::has_base_types<Class>::value, \
-                "enclosing class missing 'base-types' typedef" \
-            ); \
+            { /* extra scope paren to expand STATIC_STATIC emu on same line */ \
+                /* assert not strictly necessary as compilation will fail */ \
+                /* anyways, but helps limiting cryptic compiler's errors */ \
+                BOOST_STATIC_ASSERT_MSG( \
+                    /* -2 for both `this` and `virtual_*` extra parameters */ \
+                    ( \
+                        boost::function_types::function_arity<F>::value - 2 \
+                    == \
+                        BOOST_CONTRACT_DETAIL_TVARIADIC_SIZEOF(arity, Args) \
+                    ), \
+                    "missing one or more arguments for specified function" \
+                ); \
+            } \
+            { /* extra scope paren to expand STATIC_STATIC emu on same line */ \
+                /* assert consistency of F's result type and VirtualResult */ \
+                BOOST_PP_IIF(has_virtual_result, \
+                    BOOST_STATIC_ASSERT_MSG \
+                , \
+                    BOOST_PP_TUPLE_EAT(2) \
+                )( \
+                    (boost::is_same< \
+                        typename boost::remove_reference<typename boost:: \
+                                function_types::result_type<F>::type>::type, \
+                        typename boost::contract::detail:: \
+                                remove_value_reference_if_optional< \
+                            VirtualResult \
+                        >::type \
+                    >::value), \
+                    "mismatching result type for specified function" \
+                ); \
+            } \
+            { /* extra scope paren to expand STATIC_STATIC emu on same line */ \
+                /* assert this so lib can check and enforce override */ \
+                BOOST_STATIC_ASSERT_MSG( \
+                    boost::contract::access::has_base_types<Class>::value, \
+                    "enclosing class missing 'base-types' typedef" \
+                ); \
+            } \
             return (specify_precondition_old_postcondition_except< \
                     BOOST_PP_EXPR_IIF(has_virtual_result, VirtualResult)>( \
                 new boost::contract::detail::public_function< \

@@ -14,7 +14,9 @@
 
 template<typename T>
 void f(T& x) {
-    boost::contract::old_ptr_if_copyable<T> old_x = BOOST_CONTRACT_OLDOF(x);
+    // No OLDOF here so C++11 not required for this test.
+    boost::contract::old_ptr_if_copyable<T> old_x = boost::contract::make_old(
+            boost::contract::copy_old() ? x : boost::contract::null_old());
 }
 
 // Test copyable type but...

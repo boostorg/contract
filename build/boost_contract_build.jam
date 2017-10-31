@@ -27,10 +27,14 @@
 #   Build all tests with no postconditions and exception guarantees first, and
 #   then again with no class invariants at exit:
 #     [test]$ time bjam -q boost_contract_no=post_except,exitinv
+#
+# Most tests and example use C++11 configurations (lambda, variadic macros,
+# etc.). Delete "bin.v2/project-cache.jam" to clear prev configuration checks.
 
 import boost_contract_no ;
 import feature ;
 import testing ;
+import config : requires ;
 
 # Iff "no", link to boost_contract (else, no lib build so don't link to it).
 feature.feature boost_contract_header_only : no yes :
@@ -45,36 +49,49 @@ for local cond in [ boost_contract_no.conds ] {
 }
 
 module boost_contract_build {
-
-rule subdir-compile-fail ( subdir : cpp_fname : requirements * ) {
-    compile-fail $(subdir)/$(cpp_fname).cpp :
+        
+rule project_requirements ( subdir ) {
+    return
         <boost_contract_header_only>no:<library>../build//boost_contract
         <boost_contract_header_only>yes:<library>/boost/system//boost_system
         <include>$(subdir)
-        $(requirements)
-    :
-        $(subdir)-$(cpp_fname)
     ;
 }
 
+# Most tests and examples require lambdas (even if lib technically does not).
+# Also C++11 variadic macros are usually required (for OLDOF, BASES, etc.) but
+# Boost.Config check for variadic macros is less stringent than Boost.PP's
+# chec (so Boost.PP check done also in code directly when strictly needed).
+cxx11_requirements = [ requires cxx11_lambdas cxx11_variadic_macros ] ;
+
+rule subdir-compile-fail ( subdir : cpp_fname : requirements * ) {
+    compile-fail $(subdir)/$(cpp_fname).cpp : [ project_requirements $(subdir) ]
+            $(requirements) : $(subdir)-$(cpp_fname) ;
+}
+
 rule subdir-run ( subdir : cpp_fname : requirements * ) {
-    run $(subdir)/$(cpp_fname).cpp : : :
-        <boost_contract_header_only>no:<library>../build//boost_contract
-        <boost_contract_header_only>yes:<library>/boost/system//boost_system
-        <include>$(subdir)
-        $(requirements)
-    :
-        $(subdir)-$(cpp_fname)
-    ;
+    run $(subdir)/$(cpp_fname).cpp : : : [ project_requirements $(subdir) ]
+            $(requirements) : $(subdir)-$(cpp_fname) ;
 }
 
 rule subdir-lib ( subdir : cpp_fname : requirements * ) {
     lib $(subdir)-$(cpp_fname) : $(subdir)/$(cpp_fname).cpp :
-        <boost_contract_header_only>no:<library>../build//boost_contract
-        <boost_contract_header_only>yes:<library>/boost/system//boost_system
-        <include>$(subdir)
-        $(requirements)
-    ;
+            [ project_requirements $(subdir) ] $(requirements) ;
+}
+
+rule subdir-compile-fail-cxx11 ( subdir : cpp_fname : requirements * ) {
+    subdir-compile-fail $(subdir) : $(cpp_fname) : $(cxx11_requirements)
+            $(requirements) ;
+}
+
+rule subdir-run-cxx11 ( subdir : cpp_fname : requirements * ) {
+    subdir-run $(subdir) : $(cpp_fname) : $(cxx11_requirements)
+            $(requirements) ;
+}
+
+rule subdir-lib-cxx11 ( subdir : cpp_fname : requirements * ) {
+    subdir-lib $(subdir) : $(cpp_fname) : $(cxx11_requirements)
+            $(requirements) ;
 }
 
 } # module

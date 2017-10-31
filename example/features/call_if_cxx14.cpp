@@ -4,13 +4,6 @@
 // file LICENSE_1_0.txt or a copy at http://www.boost.org/LICENSE_1_0.txt).
 // See: http://www.boost.org/doc/libs/release/libs/contract/doc/html/index.html
 
-#include <boost/config.hpp>
-#ifdef BOOST_NO_CXX14_GENERIC_LAMBDAS
-
-int main() { return 0; } // Trivial program. 
-
-#else // This program requires C++14 generic lambdas.
-
 #include <boost/contract/call_if.hpp>
 #include <type_traits>
 #include <iterator>
@@ -96,6 +89,4 @@ int main() {
 
     return 0;
 }
-
-#endif // BOOST_NO_CXX14_GENERIC_LAMBDAS
 

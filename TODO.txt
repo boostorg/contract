@@ -17,4 +17,5 @@
 *   Update release notes and bump to revision 1.0.0 (create a release tag on github for it just in case...).
 *   Add thanks to Daniel James to acknowledge section of docs (for setting help Boost.Contract repo, help with regression test tools, git, etc.).
 *   Review all TODOs in all files.
+*   Add requires cxx11_lambdas and cxx11_variadics for all tests and examples that require them (built with strict C++98, get error, and add these requirements).
 
