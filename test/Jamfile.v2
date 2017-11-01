@@ -230,8 +230,8 @@ test-suite invariant :
     [ boost_contract_build.subdir-run-cxx11 invariant : decl_const ]
     [ boost_contract_build.subdir-run-cxx11 invariant : decl_nothing ]
     
-    [ boost_contract_build.subdir-run-cxx11 invariant : ifdef ]
-    [ boost_contract_build.subdir-run-cxx11 invariant : ifdef_macro ]
+    [ boost_contract_build.subdir-run invariant : ifdef ]
+    [ boost_contract_build.subdir-run invariant : ifdef_macro ]
 
     [ boost_contract_build.subdir-compile-fail invariant :
             static_mutable_error ]
@@ -283,8 +283,8 @@ test-suite check :
     [ boost_contract_build.subdir-run-cxx11 check : audit_disabled ]
     [ boost_contract_build.subdir-compile-fail-cxx11 check :
             audit_disabled_error ]
-    [ boost_contract_build.subdir-run-cxx11 check : axiom ]
-    [ boost_contract_build.subdir-compile-fail-cxx11 check : axiom_error ]
+    [ boost_contract_build.subdir-run check : axiom ]
+    [ boost_contract_build.subdir-compile-fail check : axiom_error ]
 ;
 
 test-suite result :
