@@ -19,3 +19,5 @@
 *   Review all TODOs in all files.
 *   Add requires cxx11_lambdas and cxx11_variadics for all tests and examples that require them (built with strict C++98, get error, and add these requirements).
 
+*   Rename null_old to nullold (rationale: to be consistent with nullptr, nullopt, etc.). See if I can make it a static const... (but can't use constexpr because that's c++11), will I get linker errors? Compile lib tests, with all linkages, etc. (again so it will be nullold instead of nullold() to be consistent with nullptr, nullopt, etc.).
+
