@@ -14,7 +14,6 @@
 #include <boost/contract/check.hpp>
 #include <boost/detail/lightweight_test.hpp>
 #include <sstream>
-#include <exception>
 
 boost::contract::test::detail::oteststream out;
 
@@ -103,11 +102,8 @@ struct a
 int main() {
     std::ostringstream ok;
 
-    boost::contract::set_postcondition_failure([] (boost::contract::from) {
-        // Use this instead of `throw;` to workaround libcxxrt bug on FreeBSD
-        // (see https://github.com/pathscale/libcxxrt/issues/49).
-        std::rethrow_exception(std::current_exception());
-    });
+    boost::contract::set_postcondition_failure(
+            [] (boost::contract::from) { throw; });
     
     a aa;
     b& ba = aa; // Test as virtual call via polymorphism.
