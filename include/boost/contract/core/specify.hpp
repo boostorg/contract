@@ -47,7 +47,7 @@ specified in that order.
         defined(BOOST_CONTRACT_STATIC_LINK)
     #define BOOST_CONTRACT_SPECIFY_CLASS_IMPL_(class_type, cond_type) \
         private: \
-            boost::contract::detail::auto_ptr<cond_type> cond_; \
+            boost::contract::detail::auto_ptr<cond_type > cond_; \
             explicit class_type(cond_type* cond) : cond_(cond) {} \
             class_type(class_type const& other) : cond_(other.cond_) {} \
             class_type& operator=(class_type const& other) { \
