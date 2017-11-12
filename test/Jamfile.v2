@@ -231,7 +231,7 @@ test-suite invariant :
     [ boost_contract_build.subdir-run-cxx11 invariant : decl_nothing ]
     
     [ boost_contract_build.subdir-run invariant : ifdef ]
-    [ boost_contract_build.subdir-run invariant : ifdef_macro ]
+    [ boost_contract_build.subdir-run-cxx11 invariant : ifdef_macro ]
 
     [ boost_contract_build.subdir-compile-fail invariant :
             static_mutable_error ]
