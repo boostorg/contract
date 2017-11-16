@@ -6,7 +6,7 @@
 
 [section Introduction]
 
-Contract Programming allows to specify preconditions, postconditions, and class invariants that are automatically checked when functions are executed at run-time.
+Contract programming allows to specify preconditions, postconditions, and class invariants that are automatically checked when functions are executed at run-time.
 These conditions assert program specifications within the source code itself allowing to find bugs more quickly during testing, making the code self-documenting, and increasing overall software quality (see __Contract_Programming_Overview__).
 
 For example, consider the following function `inc` that increments its argument `x` by `1` and let's write its contract using code comments (see [@../../example/features/introduction_comments.cpp =introduction_comments.cpp=]):

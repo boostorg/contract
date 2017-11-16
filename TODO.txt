@@ -1,21 +1,5 @@
 
-*   How do I make Boost build script automatically copy //libs/contract/include/boost/contract_macro.hpp to //boost/contract_macro.hpp (this is automatically done for //boost/contract/ and //boost/contract.hpp, but not for //boost/contract_macro.hpp)? Maybe ask Boost...
-    $ bjam
-    ...
-    mklink-or-dir ..\..\..\boost\contract
-    Junction created for ..\..\..\boost\contract <<===>> ..\include\boost\contract
-    ...patience...
-    link.hardlink ..\..\..\boost\contract.hpp
-    Hardlink created for ..\..\..\boost\contract.hpp <<===>> ..\include\boost\contract.hpp
-    ...
+*   Proof read docs
 *   Make sure build/, example/, and test/ all compile even if include/ is removed after symlink are created to //boost/...
 *   Recompile all examples/tests with all compilers, boost_contract_no, link, boost_contract_header_only, etc. (after fully integrated w/ Boost build system)
-*   Update the docs (especially, the Getting Started section) to fit within Boost (how about .pdf doc generation? what do I need to do for that?)
-*   Inspect chrono/build/Jamfile.v2 and chrono/doc/Jamfile.v2 closely to see if some of that configuration should be adopted fro Boost.Contract build and docs.
-*   Remove note in docs that says "on one of its previous revisions this library was accepted into Boost...".
-*   Remove note in cods that says "this library source is hosted on ...".
-*   Update release notes and bump to revision 1.0.0 (create a release tag on github for it just in case...).
-*   Add thanks to Daniel James to acknowledge section of docs (for setting help Boost.Contract repo, help with regression test tools, git, etc.).
-*   Review all TODOs in all files.
-*   Rename null_old to nullold (rationale: to be consistent with nullptr, nullopt, etc.). See if I can make it a static const... (but can't use constexpr because that's c++11), will I get linker errors? Compile lib tests, with all linkages, etc. (again so it will be nullold instead of nullold() to be consistent with nullptr, nullopt, etc.).
 

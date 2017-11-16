@@ -18,11 +18,13 @@ Thanks to Steven Watanabe for providing valuable insights on C++, SFINAE, and in
 
 Thanks to Dave Abrahams for moderating the Boost review of this library.
 
-Thanks to David Maley for sharing source code form his inspiring work on emulating Contract Programming and subcontracting in C++ in __Maley99__.
+Thanks to Daniel James for his help with incorporating this library files into the Boost Git repository.
+
+Thanks to David Maley for sharing source code form his inspiring work on emulating contract programming and subcontracting in C++ in __Maley99__.
 
 Many thanks to Thorsten Ottosen for his work on the __N1962__ proposal (and its previous revisions) and for clarifying the proposal requirements directly with the library authors when needed.
 
-Many thanks to Bertrand Meyer for his pioneering and thorough work on Contract Programming in __Meyer97__.
+Many thanks to Bertrand Meyer for his pioneering and thorough work on contract programming in __Meyer97__.
 
 Finally, many thanks to the entire Boost community and [@http://lists.boost.org mailing list] for providing valuable comments on this library and great insights on the C++ programming language.
 

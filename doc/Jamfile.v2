@@ -7,6 +7,9 @@
 import quickbook ;
 using boostbook ;
 
+path-constant images_location : html ;
+path-constant here : . ;
+
 doxygen reference
 :
     ../include/boost/contract.hpp
@@ -56,8 +59,15 @@ boostbook boostrelease : contract
     <location>html
     <xsl:param>boost.defaults=Boost
     <xsl:param>boost.root=../../../..
-    #<xsl:param>admon.graphics.path=../../doc/src/images/
-    #<xsl:param>html.stylesheet=../../doc/src/boostbook.css
     <xsl:param>toc.max.depth=1
+    <format>pdf:<xsl:param>boost.url.prefix=http://www.boost.org/doc/libs/release/libs/contract/doc/html
+    <format>pdf:<xsl:param>admon.graphics.extension=".svg"
+    <format>pdf:<xsl:param>img.src.path=$(images_location)/
+    <format>pdf:<xsl:param>draft.mode="no"
+    
 ;
+
+install pdfinstall : doc/<format>pdf :
+        <location>. <install-type>PDF <name>local_function.pdf ;
+explicit pdfinstall ;
 

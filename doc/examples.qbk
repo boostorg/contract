@@ -6,7 +6,7 @@
 
 [section Examples]
 
-This section lists some examples taken from different sources discussing Contract Programming and implemented here using this library.
+This section lists some examples taken from different sources discussing contract programming and implemented here using this library.
 
 [note
 Some of these examples might be from old code, containing obsolete coding practices, not optimized for execution speed, not complete, and they might be more relevant in the context of programming languages different from C++.
@@ -15,10 +15,10 @@ Nevertheless, programmers are encouraged to review these examples to see a few d
 
 Sources of the listed examples:
 
-* __N1962__: Examples from the proposal to add Contract Programming to C++11 (unfortunately, this proposal was never accepted into the standard).
+* __N1962__: Examples from the proposal to add contract programming to C++11 (unfortunately, this proposal was never accepted into the standard).
 * __Meyer97__: Examples using the Eiffel programming language and reprogrammed using this library for C++.
 * __Mitchell02__: Additional examples using the Eiffel programming language and reprogrammed using this library for C++.
-* __Cline90__: Examples from a very early proposal called Annotated C++ (A++) to add Contract Programming to C++ (A++ was never implemented or proposed for addition to the standard).
+* __Cline90__: Examples from a very early proposal called Annotated C++ (A++) to add contract programming to C++ (A++ was never implemented or proposed for addition to the standard).
 
 A few notable examples:
 
