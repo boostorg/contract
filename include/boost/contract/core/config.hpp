@@ -16,7 +16,7 @@ Configure this library compile-time and run-time behaviours.
 // headers after that depending on the contract 0/1 macros below ensuring no
 // compilation overhead.
 
-#if (!defined(BOOST_CONTRACT_DYN_LINK) && (defined(BOOST_ALL_DYN_LINK)) || \
+#if (!defined(BOOST_CONTRACT_DYN_LINK) && defined(BOOST_ALL_DYN_LINK)) || \
         defined(BOOST_CONTRACT_DETAIL_DOXYGEN)
     /**
     Define this macro to compile this library as a shared library (recommended).
