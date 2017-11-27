@@ -27,13 +27,11 @@ int gcd(int const a, int const b) {
     return result = x;
 }
 
-//[check
+//[check_macro
 int main() {
-    // Implementation checks (via nullary functor).
-    boost::contract::check c = [&] {
-        BOOST_CONTRACT_ASSERT(gcd(12, 28) == 4);
-        BOOST_CONTRACT_ASSERT(gcd(4, 14) == 2);
-    };
+    // Implementation checks (via macro, disable run-/compile-time overhead).
+    BOOST_CONTRACT_CHECK(gcd(12, 28) == 4);
+    BOOST_CONTRACT_CHECK(gcd(4, 14) == 2);
 
     return 0;
 }

@@ -9,10 +9,10 @@
 #include <cassert>
 
 //[friend_byte
-class bytes;
+class buffer;
 
 class byte {
-    friend bool operator==(bytes const& left, byte const& right);
+    friend bool operator==(buffer const& left, byte const& right);
     
 private:
     char value_;
@@ -26,10 +26,10 @@ public:
     bool empty() const { return value_ == '\0'; }
 };
 
-//[friend_bytes
-class bytes {
+//[friend_buffer
+class buffer {
     // Friend functions are not member functions...
-    friend bool operator==(bytes const& left, byte const& right) {
+    friend bool operator==(buffer const& left, byte const& right) {
         // ...so check contracts via `function` (which won't check invariants).
         boost::contract::check c = boost::contract::function()
             .precondition([&] {
@@ -52,16 +52,18 @@ private:
 
 public:
     // Could program invariants and contracts for following too.
-    explicit bytes(std::string const& values) : values_(values) {}
+    explicit buffer(std::string const& values) : values_(values) {}
     bool empty() const { return values_ == ""; }
 };
 
 int main() {
-    bytes p("aaa");
+    buffer p("aaa");
     byte a('a');
     assert(p == a);
-    bytes q("aba");
+
+    buffer q("aba");
     assert(!(q == a)); // No operator!=.
+    
     return 0;
 }
 

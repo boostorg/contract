@@ -1,4 +1,7 @@
 
+*   Do not align any of the comments in the docs examples
+*   Do not use complex ``formatted-text`` in the docs examples
+
 *   Proof read docs
 *   Make sure build/, example/, and test/ all compile even if include/ is removed after symlink are created to //boost/...
 *   Recompile all examples/tests with all compilers, boost_contract_no, link, boost_contract_header_only, etc. (after fully integrated w/ Boost build system)

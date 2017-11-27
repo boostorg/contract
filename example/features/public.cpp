@@ -10,8 +10,8 @@
 #include <cassert>
 
 //[public_class_begin
-class unique_identifiers
-    : private boost::contract::constructor_precondition<unique_identifiers>
+class unique_identifiers :
+    private boost::contract::constructor_precondition<unique_identifiers>
 {
 public:
     void invariant() const {

@@ -17,8 +17,8 @@ int main() {
 
     //[loop
     int total = 0;
+    // Contract for a for-loop (same for while- and all other loops).
     for(std::vector<int>::const_iterator i = v.begin(); i != v.end(); ++i) {
-        // Contract for a for-loop (same for while- and all other loops).
         boost::contract::old_ptr<int> old_total = BOOST_CONTRACT_OLDOF(total);
         boost::contract::check c = boost::contract::function()
             .precondition([&] {

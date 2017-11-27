@@ -6,10 +6,12 @@
 
 [library Boost.Contract
     [quickbook 1.5]
-    [version 0.5.0]
+    [version 1.0.0]
+    [purpose Contract programming for C++.]
     [authors [Caminiti <email>lorcaminiti@gmail.com</email>, Lorenzo]]
     [copyright 2008-2017 Lorenzo Caminiti]
     [license Distributed under the Boost Software License, Version 1.0 (see accompanying file LICENSE_1_0.txt or a copy at [@http://www.boost.org/LICENSE_1_0.txt])]
+    [source-mode c++]
 ]
 
 [def __Introduction__ [link boost_contract.introduction Introduction]]
@@ -28,15 +30,15 @@
 [def __Constructor_Calls__ [link boost_contract.contract_programming_overview.constructor_calls Constructor Calls]]
 [def __Destructor_Calls__ [link boost_contract.contract_programming_overview.destructor_calls Destructor Calls]]
 [def __Constant_Correctness__ [link boost_contract.contract_programming_overview.constant_correctness Constant-Correctness]]
-[def __Specification_vs_Implementation__ [link boost_contract.contract_programming_overview.specification_vs__implementation Specification vs. Implementation]]
-[def __On_Contract_Failure__ [link boost_contract.contract_programming_overview.on_contract_failure On Contract Failure]]
+[def __Specifications_vs_Implementation__ [link boost_contract.contract_programming_overview.specifications_vs__implementation Specifications vs. Implementation]]
+[def __On_Contract_Failures__ [link boost_contract.contract_programming_overview.on_contract_failures On Contract Failures]]
 [def __Feature_Summary__ [link boost_contract.contract_programming_overview.feature_summary Feature Summary]]
 
 [def __Tutorial__ [link boost_contract.tutorial Tutorial]]
 [def __Non_Member_Functions__ [link boost_contract.tutorial.non_member_functions Non-Member Functions]]
 [def __Preconditions__ [link boost_contract.tutorial.preconditions Preconditions]]
 [def __Postconditions__ [link boost_contract.tutorial.postconditions Postconditions]]
-[def __Return_Value__ [link boost_contract.tutorial.return_value Return Value]]
+[def __Return_Values__ [link boost_contract.tutorial.return_values Return Values]]
 [def __Old_Values__ [link boost_contract.tutorial.old_values Old Values]]
 [def __Exception_Guarantees__ [link boost_contract.tutorial.exception_guarantees Exception Guarantees]]
 [def __Class_Invariants__ [link boost_contract.tutorial.class_invariants Class Invariants]]
@@ -52,7 +54,7 @@
 
 [def __Advanced__ [link boost_contract.advanced Advanced]]
 [def __Pure_Virtual_Public_Functions__ [link boost_contract.advanced.pure_virtual_public_functions Pure Virtual Public Functions]]
-[def __Optional_Return_Value__ [link boost_contract.advanced.optional_return_value Optional Return Value]]
+[def __Optional_Return_Values__ [link boost_contract.advanced.optional_return_values Optional Return Values]]
 [def __Private_and_Protected_Functions__ [link boost_contract.advanced.private_and_protected_functions Private and Protected Functions]]
 [def __Friend_Functions__ [link boost_contract.advanced.friend_functions Friend Functions]]
 [def __Function_Overloads__ [link boost_contract.advanced.function_overloads Function Overloads]]
@@ -62,8 +64,8 @@
 [def __Old_Copies_at_Body__ [link boost_contract.advanced.old_copies_at_body Old Copies at Body]]
 [def __Named_Overrides__ [link boost_contract.advanced.named_overrides Named Overrides]]
 [def __Access_Specifiers__ [link boost_contract.advanced.access_specifiers Access Specifiers]]
-[def __Throw_on_Failure__ [link boost_contract.advanced.throw_on_failure__and__noexcept__ Throw on Failure]]
-[def __Throw_on_Failure_and_noexcept__ [link boost_contract.advanced.throw_on_failure__and__noexcept__ Throw on Failure (and `noexcept`)]]
+[def __Throw_on_Failures__ [link boost_contract.advanced.throw_on_failures__and__noexcept__ Throw on Failures]]
+[def __Throw_on_Failures_and_noexcept__ [link boost_contract.advanced.throw_on_failures__and__noexcept__ Throw on Failures (and `noexcept`)]]
 
 [def __Extras__ [link boost_contract.extras Extras]]
 [def __Old_Value_Requirements__ [link boost_contract.extras.old_value_requirements__templates_ Old Value Requirements]]
@@ -130,7 +132,7 @@ This library implements
 Design by Contract (DbC) is a registered trademark of the Eiffel Software company and it was first introduced by the Eiffel programming language (see __Meyer97__).
 ]
 for the C++ programming language.
-All contract programming features are supported by this library: subcontracting, class invariants (also for static and volatile member functions), postconditions (with old and return values), preconditions, customizable actions on assertion failure (e.g., terminate the program or throw exceptions), optional compilation of assertions, disable assertions while already checking other assertions (to avoid infinite recursion), and more (see __Feature_Summary__).
+All contract programming features are supported by this library: Subcontracting, class invariants (also for static and volatile member functions), postconditions (with old and return values), preconditions, customizable actions on assertion failure (e.g., terminate the program or throw exceptions), optional compilation of assertions, disable assertions while already checking other assertions (to avoid infinite recursion), and more (see __Feature_Summary__).
 
 [include introduction.qbk]
 [include full_table_of_contents.qbk]

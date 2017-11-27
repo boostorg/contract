@@ -18,6 +18,7 @@ int main() {
     
     //[code_block
     /* ... */
+
     // Contract for a code block.
     { // Code block entry (check preconditions).
         boost::contract::old_ptr<int> old_total = BOOST_CONTRACT_OLDOF(total);
@@ -32,6 +33,7 @@ int main() {
 
         total += v[0] + v[1] + v[2]; // Code block body.
     } // Code block exit (check postconditions and exceptions guarantees).
+
     /* ... */
     //]
 

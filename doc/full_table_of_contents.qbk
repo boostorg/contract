@@ -21,14 +21,14 @@ __Contract_Programming_Overview__
     __Constructor_Calls__
     __Destructor_Calls__
     __Constant_Correctness__
-    __Specification_vs_Implementation__
-    __On_Contract_Failure__
+    __Specifications_vs_Implementation__
+    __On_Contract_Failures__
     __Feature_Summary__
 __Tutorial__
     __Non_Member_Functions__
     __Preconditions__
     __Postconditions__
-    __Return_Value__
+    __Return_Values__
     __Old_Values__
     __Exception_Guarantees__
     __Class_Invariants__
@@ -41,7 +41,7 @@ __Tutorial__
     __Static_Public_Functions__
 __Advanced__
     __Pure_Virtual_Public_Functions__
-    __Optional_Return_Value__
+    __Optional_Return_Values__
     __Private_and_Protected_Functions__
     __Friend_Functions__
     __Function_Overloads__
@@ -50,7 +50,7 @@ __Advanced__
     __Old_Copies_at_Body__
     __Named_Overrides__
     __Access_Specifiers__
-    __Throw_on_Failure_and_noexcept__
+    __Throw_on_Failures_and_noexcept__
 __Extras__
     __Old_Value_Requirements_Templates__
     __Assertion_Requirements_Templates__

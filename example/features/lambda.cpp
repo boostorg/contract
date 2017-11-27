@@ -18,8 +18,8 @@ int main() {
     //[lambda
     int total = 0;
     std::for_each(v.cbegin(), v.cend(),
+        // Contract for a lambda function.
         [&total] (int const x) {
-            // Contract for a lambda function.
             boost::contract::old_ptr<int> old_total =
                     BOOST_CONTRACT_OLDOF(total);
             boost::contract::check c = boost::contract::function()

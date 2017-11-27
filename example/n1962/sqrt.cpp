@@ -9,23 +9,23 @@
 #include <cmath>
 #include <cassert>
 
-double mysqrt(double x, double precision = 1e-6) {
-    double result;
+long lsqrt(long x) {
+    long result;
     boost::contract::check c = boost::contract::function()
         .precondition([&] {
-            BOOST_CONTRACT_ASSERT(x >= 0.0);
+            BOOST_CONTRACT_ASSERT(x >= 0);
         })
         .postcondition([&] {
-            BOOST_CONTRACT_ASSERT(fabs(result * result - x) <= precision);
+            BOOST_CONTRACT_ASSERT(result * result <= x);
+            BOOST_CONTRACT_ASSERT((result + 1) * (result + 1) > x);
         })
     ;
 
-    return result = sqrt(x);
+    return result = long(std::sqrt(double(x)));
 }
 
 int main() {
-    double const precision = 1e-6;
-    assert(fabs(mysqrt(4.0, precision) - 2.0) <= precision);
+    assert(lsqrt(4) == 2);
     return 0;
 }
 //]

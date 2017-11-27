@@ -115,7 +115,7 @@ On compilers that support C++17 `if constexpr`, the following example using this
 [mitchell02_simple_queue]
 [endsect]
 
-[section \[Mitchell02\] Customer Manager: Contracts instead of Defensive Programming]
+[section \[Mitchell02\] Customer Manager: Contracts instead of defensive programming]
 [import ../example/mitchell02/customer_manager.cpp]
 [mitchell02_customer_manager]
 [endsect]
