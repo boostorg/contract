@@ -11,6 +11,7 @@
 #include <boost/algorithm/cxx11/all_of.hpp>
 #include <boost/type_traits/has_equal_to.hpp>
 #include <boost/utility.hpp>
+#include <boost/next_prior.hpp>
 #include <vector>
 #include <functional>
 #include <iterator>
