@@ -16,20 +16,20 @@ Nevertheless, programmers are encouraged to review these examples to see a few d
 Sources of the listed examples:
 
 * __N1962__: Examples from the proposal to add contract programming to C++11 (unfortunately, this proposal was never accepted into the standard).
-* __Meyer97__: Examples using the Eiffel programming language and reprogrammed using this library for C++.
-* __Mitchell02__: Additional examples using the Eiffel programming language and reprogrammed using this library for C++.
+* __Meyer97__: Examples from the Eiffel programming language and reprogrammed using this library for C++.
+* __Mitchell02__: Additional examples from the Eiffel programming language and reprogrammed using this library for C++.
 * __Cline90__: Examples from a very early proposal called Annotated C++ (A++) to add contract programming to C++ (A++ was never implemented or proposed for addition to the standard).
 
 A few notable examples:
 
-* [link N1962_vector_anchor \[N1962\] Vector]: Complete contracts for `std::vector` and a comparison with __N1962__ syntax.
+* [link N1962_vector_anchor \[N1962\] Vector]: Complete set of contracts for `std::vector`, plus a comparison with __N1962__ syntax.
 * [link N1962_square_root_anchor \[N1962\] Square Root]: Comparison with D syntax.
 * [link Mitchell02_counter_anchor \[Mitchell02\] Counter]: Subcontracting.
 * [link Meyer97_stack4_anchor \[Meyer97\] Stack4]: Comparison with Eiffel syntax.
 * [link Cline90_vector_anchor \[Cline90\] Vector]: Comparison with A++ syntax.
 
 [#N1962_vector_anchor]
-[section \[N1962\] Vector: Contracts for STL vector and comparison with C++11 proposal syntax]
+[section \[N1962\] Vector: Contracts for STL vector and comparison with __N1962__ proposed syntax]
 
 On compilers that support C++17 `if constexpr`, the following example using this library can be simplified removing [funcref boost::contract::condition_if] and related functor templates such as `all_of_equal_to`, etc. (making it more similar to the pseudo-code on the right-hand side).
 

@@ -72,14 +72,18 @@ private:
 };
 //]
 
-void bad_throwing_handler() { // For docs only (not actually called here).
+void bad_throwing_handler() { // For docs only (not actually used here).
     //[throw_on_failure_bad_handler
+    /* ... */
+
     // Warning... might cause destructors to throw (unless declared noexcept).
     boost::contract::set_invariant_failure(
         [] (boost::contract::from) {
             throw; // Throw no matter if from destructor, etc.
         }
     );
+
+    /* ... */
     //]
 }
 
@@ -91,20 +95,20 @@ int main() {
     boost::contract::set_old_failure(
         [] (boost::contract::from where) {
             if(where == boost::contract::from_destructor) {
-                // Cannot throw from destructors in C++.
+                // Shall not throw from C++ destructors.
                 std::clog << "ignored destructor contract failure" << std::endl;
             } else throw; // Re-throw (assertion_failure, user-defined, etc.).
         }
     ))));
     boost::contract::set_except_failure(
         [] (boost::contract::from where) {
-            // Already an active exception so can't throw another in C++.
+            // Already an active exception so shall not throw another...
             std::clog << "ignored exception guarantee failure" << std::endl;
         }
     );
     boost::contract::set_check_failure(
         [] {
-            // But now CHECK cannot be used within destructor implementations.
+            // But now CHECK shall not be used in destructor implementations.
             throw; // Re-throw (assertion_failure, user-defined, etc.).
         }
     );

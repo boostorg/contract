@@ -9,7 +9,7 @@
 #include <cassert>
 
 //[ifdef_macro_function
-// Use macro interface to completely disable contract overhead.
+// Use macro interface to completely disable contract code compilation.
 #include <boost/contract_macro.hpp>
 
 int inc(int& x) {

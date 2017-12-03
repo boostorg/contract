@@ -8,7 +8,7 @@
 #include <cassert>
 
 //[separate_body_cpp
-void iarray::constructor_body(unsigned count) {
+void iarray::constructor_body(unsigned max, unsigned count) {
     for(unsigned i = 0; i < count; ++i) values_[i] = int();
     size_ = count;
 }
@@ -20,8 +20,8 @@ void iarray::push_back_body(int value) { values_[size_++] = value; }
 /* ... */
 //]
 
-unsigned iarray::size_body() const { return size_; }
 unsigned iarray::capacity_body() const { return capacity_; }
+unsigned iarray::size_body() const { return size_; }
 
 int main() {
     iarray a(3, 2);

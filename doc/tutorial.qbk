@@ -98,7 +98,7 @@ It is also recommended to use [macroref BOOST_CONTRACT_ASSERT] to program precon
     // Or, if `bool_cond` contains commas `,` not already within parenthesis `()`...
     BOOST_CONTRACT_ASSERT((bool_cond)) // ...use extra parenthesis (not a variadic macro).
 
-This library will automatically call the failure handler [funcref boost::contract::precondition_failure] if any of the [macroref BOOST_CONTRACT_ASSERT] conditions are `false` and, more in general, if calling the functor specified via `.precondition(...)` throws any exception.
+This library will automatically call the failure handler [funcref boost::contract::precondition_failure] if any of the [macroref BOOST_CONTRACT_ASSERT] conditions are false and, more in general, if calling the functor specified via `.precondition(...)` throws any exception.
 By default, this failure handler prints an error message to `std::cerr` and terminates the program calling `std::terminate` (see __Throw_on_Failures__ to change the failure handler to throw exceptions, exit the program with an error code, etc.).
 
 [note
@@ -143,7 +143,7 @@ It is also recommended to use [macroref BOOST_CONTRACT_ASSERT] to program postco
     // Or, if `bool_cond` has commas `,` not already within parenthesis `()`...
     BOOST_CONTRACT_ASSERT((bool_cond)) // ...use extra parenthesis (not a variadic macro).
 
-This library will automatically call the failure handler [funcref boost::contract::postcondition_failure] if any of the [macroref BOOST_CONTRACT_ASSERT] conditions are `false` and, more in general, if calling the functor specified via `.postcondition(...)` throws any exception.
+This library will automatically call the failure handler [funcref boost::contract::postcondition_failure] if any of the [macroref BOOST_CONTRACT_ASSERT] conditions are false and, more in general, if calling the functor specified via `.postcondition(...)` throws any exception.
 By default, this failure handler prints an error message to `std::cerr` and terminates the program calling `std::terminate` (see __Throw_on_Failures__ to change the failure handler to throw exceptions, exit the program with an error code, etc.).
 
 For non-void virtual public functions and public function overrides, the functor [^['s]] passed to `.postcondition(`[^['s]]`)` is not a nullary functor, instead it is a unary functor taking a variable holding the return value as its one parameter [^['s]]`(`[^['result]]`)` (this is to properly support subcontracting, see __Virtual_Public_Functions__ and __Public_Function_Overrides__).
@@ -280,7 +280,7 @@ It is also recommended to use [macroref BOOST_CONTRACT_ASSERT] to program except
     // Or, if `bool_cond` has commas `,` not already within parenthesis `()`...
     BOOST_CONTRACT_ASSERT((bool_cond)) // ...use extra parenthesis (not a variadic macro).
 
-This library will automatically call the failure handler [funcref boost::contract::except_failure] if any of the [macroref BOOST_CONTRACT_ASSERT] conditions are `false` and, more in general, if calling the functor specified via `.except(...)` throws any exception.
+This library will automatically call the failure handler [funcref boost::contract::except_failure] if any of the [macroref BOOST_CONTRACT_ASSERT] conditions are false and, more in general, if calling the functor specified via `.except(...)` throws any exception.
 By default, this failure handler prints an error message to `std::cerr` and terminates the program calling `std::terminate` (see __Throw_on_Failures__ to change the failure handler to exit the program with an error code or to take some other custom action).
 
 [note
@@ -321,7 +321,7 @@ It is also recommended to use [macroref BOOST_CONTRACT_ASSERT] to program class 
     // Or, if `bool_cond` has commas `,` not already within parenthesis `()`...
     BOOST_CONTRACT_ASSERT((bool_cond)) // ...use extra parenthesis (not a variadic macro).
 
-This library will automatically call failure handlers [funcref boost::contract::entry_invariant_failure] or [funcref boost::contract::exit_invariant_failure] if any of the [macroref BOOST_CONTRACT_ASSERT] conditions are `false` and, more in general, if the `invariant` function throws an exception when invariants are checked at function entry or exit respectively.
+This library will automatically call failure handlers [funcref boost::contract::entry_invariant_failure] or [funcref boost::contract::exit_invariant_failure] if any of the [macroref BOOST_CONTRACT_ASSERT] conditions are false and, more in general, if the `invariant` function throws an exception when invariants are checked at function entry or exit respectively.
 By default, these handlers print an error message to `std::cerr` and terminate the program calling `std::terminate` (see __Throw_on_Failures__ to change these failure handlers to throw exceptions, exit the program with an error code, etc.).
 
 See __Access_Specifiers__ to avoid making the `invariant` member function `public`.
@@ -368,7 +368,7 @@ It is also recommended to use [macroref BOOST_CONTRACT_ASSERT] to program the as
     // Or, if condition has commas `,` not already within parenthesis `()`...
     BOOST_CONTRACT_ASSERT((bool_cond)) // ...use extra parenthesis (not a variadic macro).
 
-This library will automatically call failure handlers [funcref boost::contract::entry_invariant_failure] or [funcref boost::contract::exit_invariant_failure] if any of the [macroref BOOST_CONTRACT_ASSERT] conditions are `false` and, more in general, if the `static_invariant` function throws an exception when invariants are checked at function entry or exit respectively.
+This library will automatically call failure handlers [funcref boost::contract::entry_invariant_failure] or [funcref boost::contract::exit_invariant_failure] if any of the [macroref BOOST_CONTRACT_ASSERT] conditions are false and, more in general, if the `static_invariant` function throws an exception when invariants are checked at function entry or exit respectively.
 By default, these handlers print an error message to `std::cerr` and terminate the program calling `std::terminate` (see __Throw_on_Failures__ to change these failure handlers to throw exceptions, exit the program with an error code, etc.).
 
 See __Access_Specifiers__ to avoid making `static_invariant` member function `public`.
@@ -844,7 +844,7 @@ For example (see [@../../example/features/base_types.cpp =base_types.cpp=]):
 [import ../example/features/base_types.cpp]
 [base_types]
 
-For convenience, a local macro named `BASES` can be used to avoid repeating the base list twice (first in the derived class declaration `class `[^['class-name]]` : `[^['base-list]] and then again when invoking [macroref BOOST_CONTRACT_BASE_TYPES]`(`[^['base-list]]`)`).
+For convenience, a local macro named `BASES` can be used to avoid repeating the base list twice (first in the derived class declaration `class `[^['class-name]]` : `[^['base-list]] and then again when invoking `BOOST_CONTRACT_BASE_TYPES(`[^['base-list]]`)`).
 Being a local macro, `BASES` must be undefined using `#undef BASES` after it has been used to declare `base_types` (to avoid name clashes and macro redefinition errors).
 [footnote
 The name of this local macro is arbitrary, but `BASES` is often used in this documentation.
@@ -860,7 +860,7 @@ This library will generate a compile-time error if the first base is missing its
 *Rationale:*
 This library explicitly requires the inheritance access level because derived classes must subcontract only from public bases, but not from protected or private bases (see __Public_Function_Calls__).
 [macroref BOOST_CONTRACT_BASE_TYPES] inspects each inheritance access level using preprocessor meta-programming and removes non-public bases from the list of bases inspected for subcontracting.
-However, this library cannot always detect when programmers forget to specify the inheritance access level because, when commas are used to separate template parameters passed to base classes, the preprocessor will not be able to correctly use commas to identify the next base class token in the inheritance list (the preprocessor cannot distinguish between commas that are not wrapped within round parenthesis, like the ones used in templates).
+However, this library cannot always detect when programmers forget to specify the inheritance access level because, when commas are used to separate template parameters passed to base classes, the preprocessor will not be able to correctly use commas to identify the next base class token in the inheritance list (the preprocessor cannot distinguish between commas that are not protected by round parenthesis, like the ones used in templates).
 Therefore, this library relies on inheritance access levels to program the preprocessor to correctly identify the next base class token in the inheritance list (thus inheritance access levels must always be explicit specified by programmers).
 ]
 It is the responsibility of the programmers to make sure that all bases passed to [macroref BOOST_CONTRACT_BASE_TYPES] explicitly specify their inheritance access level (inheritance access levels are instead optional in C++ because `private` is implicitly assumed for `class` types and `public` for `struct` types).

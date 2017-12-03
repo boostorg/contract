@@ -10,7 +10,6 @@
 
 template<typename T>
 class pushable {
-private:
     friend class boost::contract::access;
 
     void invariant() const {
@@ -47,17 +46,16 @@ class vector
     #define BASES public pushable<T>
     : BASES
 {
-private:
     friend class boost::contract::access; // Friend `access` class so...
 
     typedef BOOST_CONTRACT_BASE_TYPES(BASES) base_types; // ...private bases.
     #undef BASES
     
-    BOOST_CONTRACT_OVERRIDE(push_back) // ...private overrides.
-
     void invariant() const { // ...private invariants.
         BOOST_CONTRACT_ASSERT(size() <= capacity());
     }
+    
+    BOOST_CONTRACT_OVERRIDE(push_back) // ...private overrides.
     
 public:
     void push_back(T const& value, boost::contract::virtual_* v = 0)

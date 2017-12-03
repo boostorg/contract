@@ -31,7 +31,7 @@ public:
                 BOOST_CONTRACT_ASSERT(size() == count);
             })
         ;
-        constructor_body(count); // Separate constructor body implementation.
+        constructor_body(max, count); // Separate constructor body impl.
     }
 
     virtual ~iarray() {
@@ -63,16 +63,16 @@ private:
 //]
     
 public:
-    unsigned size() const {
-        // Check invariants.
-        boost::contract::check c = boost::contract::public_function(this);
-        return size_body();
-    }
-    
     unsigned capacity() const {
         // Check invariants.
         boost::contract::check c = boost::contract::public_function(this);
         return capacity_body();
+    }
+    
+    unsigned size() const {
+        // Check invariants.
+        boost::contract::check c = boost::contract::public_function(this);
+        return size_body();
     }
     
 private:

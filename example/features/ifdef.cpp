@@ -9,7 +9,7 @@
 #include <cassert>
 
 //[ifdef_function
-// Use #ifdef to selectively disable contract compilation.
+// Use #ifdef to completely disable contract code compilation.
 #include <boost/contract/core/config.hpp>
 #ifndef BOOST_CONTRACT_NO_ALL
     #include <boost/contract.hpp>

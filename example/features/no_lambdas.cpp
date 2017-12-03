@@ -9,31 +9,35 @@
 #include <cassert>
 
 //[no_lambdas_cpp
-template<typename T, unsigned MaxSize>
-array<T, MaxSize>::array(unsigned count) :
-    boost::contract::constructor_precondition<array>(boost::bind(
-            &array::constructor_precondition, count)),
-    values_(new T[MaxSize]) // Member initializations can be here.
+iarray::iarray(unsigned max, unsigned count) :
+    boost::contract::constructor_precondition<iarray>(boost::bind(
+            &iarray::constructor_precondition, max, count)),
+    values_(new int[max]), // Member initializations can be here.
+    capacity_(max)
 {
     boost::contract::old_ptr<int> old_instances;
     boost::contract::check c = boost::contract::constructor(this)
-        .old(boost::bind(&array::constructor_old, boost::ref(old_instances)))
-        .postcondition(boost::bind(&array::constructor_postcondition, this,
-                boost::cref(count), boost::cref(old_instances)))
+        .old(boost::bind(&iarray::constructor_old, boost::ref(old_instances)))
+        .postcondition(boost::bind(
+            &iarray::constructor_postcondition,
+            this,
+            boost::cref(max),
+            boost::cref(count),
+            boost::cref(old_instances)
+        ))
     ;
 
-    for(unsigned i = 0; i < count; ++i) values_[i] = T();
+    for(unsigned i = 0; i < count; ++i) values_[i] = int();
     size_ = count;
     ++instances_;
 }
 
-template<typename T, unsigned MaxSize>
-array<T, MaxSize>::~array() {
+iarray::~iarray() {
     boost::contract::old_ptr<int> old_instances;
     boost::contract::check c = boost::contract::destructor(this)
-        .old(boost::bind(&array::destructor_old, this,
+        .old(boost::bind(&iarray::destructor_old, this,
                 boost::ref(old_instances)))
-        .postcondition(boost::bind(&array::destructor_postcondition,
+        .postcondition(boost::bind(&iarray::destructor_postcondition,
                 boost::cref(old_instances)))
     ;
     
@@ -41,44 +45,48 @@ array<T, MaxSize>::~array() {
     --instances_;
 }
 
-template<typename T, unsigned MaxSize>
-void array<T, MaxSize>::push_back(T const& value,
-        boost::contract::virtual_* v) {
+void iarray::push_back(int value, boost::contract::virtual_* v) {
     boost::contract::old_ptr<unsigned> old_size;
     boost::contract::check c = boost::contract::public_function(v, this)
-        .precondition(boost::bind(&array::push_back_precondition, this))
-        .old(boost::bind(&array::push_back_old, this, boost::cref(v),
+        .precondition(boost::bind(&iarray::push_back_precondition, this))
+        .old(boost::bind(&iarray::push_back_old, this, boost::cref(v),
                 boost::ref(old_size)))
-        .postcondition(boost::bind(&array::push_back_postcondition, this,
+        .postcondition(boost::bind(&iarray::push_back_postcondition, this,
                 boost::cref(old_size)))
     ;
 
     values_[size_++] = value;
 }
 
-template<typename T, unsigned MaxSize>
-unsigned array<T, MaxSize>::size() const {
+unsigned iarray::capacity() const {
+    // Check invariants.
+    boost::contract::check c = boost::contract::public_function(this);
+    return capacity_;
+}
+
+unsigned iarray::size() const {
     // Check invariants.
     boost::contract::check c = boost::contract::public_function(this);
     return size_;
 }
 
-template<typename T, unsigned MaxSize>
-int array<T, MaxSize>::instances() {
+int iarray::instances() {
     // Check static invariants.
-    boost::contract::check c = boost::contract::public_function<array>();
+    boost::contract::check c = boost::contract::public_function<iarray>();
     return instances_;
 }
 
-template<typename T, unsigned MaxSize>
-int array<T, MaxSize>::instances_ = 0;
+int iarray::instances_ = 0;
 //]
 
 int main() {
-    array<char, 3> a(2);
+    iarray a(3, 2);
+    assert(a.capacity() == 3);
     assert(a.size() == 2);
-    a.push_back('x');
+    
+    a.push_back(-123);
     assert(a.size() == 3);
+
     return 0;
 }
 
