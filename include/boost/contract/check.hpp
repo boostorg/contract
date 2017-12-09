@@ -53,21 +53,23 @@ In general, when this object is constructed it checks class invariants at entry,
 preconditions, and makes old value copies at body.
 When it is destructed, it checks class invariants at exist, postconditions, and
 exception guarantees.
-This object enforces the following (see also
+This object enforces the following (see
 @RefSect{contract_programming_overview, Contract Programming Overview}):
 
 @li Postconditions are checked only if the body does not throw an exception.
 @li Exceptions guarantees are checked only if the body throws an exception.
 @li Constructor entry never checks class invariants.
 @li Destructor exit checks class invariants only if the body throws an
-exception.
+exception (even if destructors should usually not be programmed to throw
+exceptions in C++).
 @li Static invariants are always checked at entry and exit (and regardless of
 the body throwing exceptions or not).
 
-This object is usually constructed initializing it to the return value of one
-of the contract functions @RefFunc{boost::contract::function},
-@RefFunc{boost::contract::constructor}, @RefFunc{boost::contract::destructor},
-or @RefFunc{boost::contract::public_function}.
+When used this way, this object is usually constructed and initialized to the
+return value of one of the contract functions
+@RefFunc{boost::contract::function}, @RefFunc{boost::contract::constructor},
+@RefFunc{boost::contract::destructor}, or
+@RefFunc{boost::contract::public_function}.
 In addition, this object can be constructed from a nullary functor that is used
 to program implementation checks.
 
@@ -82,17 +84,19 @@ public:
 
     This can be used to program checks within implementation code (body, etc.).
     This constructor is not declared @c explicit so initializations can use
-    operator @c = syntax.
+    assignment syntax @c =.
     
-    @b Throws:  This can throw (it is declared @c noexcept(false)) in case
-                programmers specify contract failure handlers that throw
-                exceptions instead of terminating the program (see
-                @RefSect{advanced.throw_on_failure__and__noexcept__,
+    @b Throws:  This can throw in case programmers specify contract failure
+                handlers that throw exceptions instead of terminating the
+                program (see
+                @RefSect{advanced.throw_on_failures__and__noexcept__,
                 Throw on Failure}).
 
     @param f    Nullary functor that asserts implementation checks. @c f() will
                 be called as soon as this object is constructed at the point it
-                is declared within the implementation code.
+                is declared within the implementation code (see
+                @RefSect{advanced.implementation_checks,
+                Implementation Checks}).
     */
     template<typename F> // Cannot check `if(f) ...` as f can be a lambda.
     /* implicit */ check(F const& f) { BOOST_CONTRACT_DETAIL_CHECK({ f(); }) }
@@ -116,18 +120,20 @@ public:
     /**
     Construct this object to check the specified contract.
 
-    This checks class invariants at entry (if they apply to the specified
+    This checks class invariants at entry (if those apply to the specified
     contract).
     This constructor is not declared @c explicit so initializations can use
-    operator @c = syntax.
+    assignment syntax @c =.
     
-    @b Throws:  This can throw (it is declared @c noexcept(false)) in case
-                programmers specify contract failure handlers that throw
-                exceptions instead of terminating the program (see
-                @RefSect{advanced.throw_on_failure__and__noexcept__,
+    @b Throws:  This can throw in case programmers specify contract failure
+                handlers that throw exceptions instead of terminating the
+                program (see
+                @RefSect{advanced.throw_on_failures__and__noexcept__,
                 Throw on Failure}).
 
-    @param contract Contract to be checked.
+    @param contract Contract to be checked (usually the return value of
+                    @RefFunc{boost::contract::function} or
+                    @RefFunc{boost::contract::public_function}).
 
     @tparam VirtualResult   Return type of the enclosing function declaring the
                             contract if that is either a virtual or an
@@ -147,18 +153,22 @@ public:
     /**
     Construct this object to check the specified contract.
 
-    This checks class invariants at entry (if they apply to the specified
-    contract) and preconditions.
+    This checks class invariants at entry and preconditions (if any of those
+    apply to the specified contract).
     This constructor is not declared @c explicit so initializations can use
-    operator @c = syntax.
+    assignment syntax @c =.
     
-    @b Throws:  This can throw (it is declared @c noexcept(false)) in case
-                programmers specify contract failure handlers that throw
-                exceptions instead of terminating the program (see
-                @RefSect{advanced.throw_on_failure__and__noexcept__,
+    @b Throws:  This can throw in case programmers specify contract failure
+                handlers that throw exceptions instead of terminating the
+                program (see
+                @RefSect{advanced.throw_on_failures__and__noexcept__,
                 Throw on Failure}).
 
-    @param contract Contract to be checked.
+    @param contract Contract to be checked (usually the return value of
+                    @RefFunc{boost::contract::function},
+                    @RefFunc{boost::contract::constructor},
+                    @RefFunc{boost::contract::destructor}, or
+                    @RefFunc{boost::contract::public_function}).
 
     @tparam VirtualResult   Return type of the enclosing function declaring the
                             contract if that is either a virtual or an
@@ -178,18 +188,22 @@ public:
     /**
     Construct this object to check the specified contract.
 
-    This checks class invariants at entry (if they apply to the specified
-    contract) and preconditions, then it makes old value copies at body.
+    This checks class invariants at entry and preconditions then it makes old
+    value copies at body (if any of those apply to the specified contract).
     This constructor is not declared @c explicit so initializations can use
-    operator @c = syntax.
+    assignment syntax @c =.
     
-    @b Throws:  This can throw (it is declared @c noexcept(false)) in case
-                programmers specify contract failure handlers that throw
-                exceptions instead of terminating the program (see
-                @RefSect{advanced.throw_on_failure__and__noexcept__,
+    @b Throws:  This can throw in case programmers specify contract failure
+                handlers that throw exceptions instead of terminating te
+                program (see
+                @RefSect{advanced.throw_on_failures__and__noexcept__,
                 Throw on Failure}).
 
-    @param contract Contract to be checked.
+    @param contract Contract to be checked (usually the return value of
+                    @RefFunc{boost::contract::function},
+                    @RefFunc{boost::contract::constructor},
+                    @RefFunc{boost::contract::destructor}, or
+                    @RefFunc{boost::contract::public_function}).
 
     @tparam VirtualResult   Return type of the enclosing function declaring the
                             contract if that is either a virtual or an
@@ -209,19 +223,24 @@ public:
     /**
     Construct this object to check the specified contract.
 
-    This checks class invariants at entry (if they apply to the specified
-    contract) and preconditions, then it makes old value copies at body.
-    (plus the destructor of this object will check postconditions in this case).
+    This checks class invariants at entry and preconditions then it makes old
+    value copies at body, plus the destructor of this object will check
+    postconditions in this case (if any of those apply to the specified
+    contract).
     This constructor is not declared @c explicit so initializations can use
-    operator @c = syntax.
+    assignment syntax @c =.
     
-    @b Throws:  This can throw (it is declared @c noexcept(false)) in case
-                programmers specify contract failure handlers that throw
-                exceptions instead of terminating the program (see
-                @RefSect{advanced.throw_on_failure__and__noexcept__,
+    @b Throws:  This can throw in case programmers specify contract failure
+                handlers that throw exceptions instead of terminating the
+                program (see
+                @RefSect{advanced.throw_on_failures__and__noexcept__,
                 Throw on Failure}).
 
-    @param contract Contract to be checked.
+    @param contract Contract to be checked (usually the return value of
+                    @RefFunc{boost::contract::function},
+                    @RefFunc{boost::contract::constructor},
+                    @RefFunc{boost::contract::destructor}, or
+                    @RefFunc{boost::contract::public_function}).
 
     @tparam VirtualResult   Return type of the enclosing function declaring the
                             contract if that is either a virtual or an
@@ -238,20 +257,24 @@ public:
     /**
     Construct this object to check the specified contract.
 
-    This checks class invariants at entry (if they apply to the specified
-    contract) and preconditions, then it makes old value copies at body.
-    (plus the destructor of this object will check postconditions and
-    exception guarantees in this case).
+    This checks class invariants at entry and preconditions then it makes old
+    value copies at body, plus the destructor of this object will check
+    postconditions and exception guarantees in this case (if any of those apply
+    to the specified contract).
     This constructor is not declared @c explicit so initializations can use
-    operator @c = syntax.
+    assignment syntax @c =.
     
-    @b Throws:  This can throw (it is declared @c noexcept(false)) in case
-                programmers specify contract failure handlers that throw
-                exceptions instead of terminating the program (see
-                @RefSect{advanced.throw_on_failure__and__noexcept__,
+    @b Throws:  This can throw in case programmers specify contract failure
+                handlers that throw exceptions instead of terminating the
+                program (see
+                @RefSect{advanced.throw_on_failures__and__noexcept__,
                 Throw on Failure}).
 
-    @param contract Contract to be checked.
+    @param contract Contract to be checked (usually the return value of
+                    @RefFunc{boost::contract::function},
+                    @RefFunc{boost::contract::constructor},
+                    @RefFunc{boost::contract::destructor}, or
+                    @RefFunc{boost::contract::public_function}).
 
     @tparam VirtualResult   Return type of the enclosing function declaring the
                             contract if that is either a virtual or an
@@ -271,14 +294,15 @@ public:
     This checks class invariants at exit and either postconditions when the
     enclosing function body did not throw an exception, or exception guarantees
     when the function body threw an exception (that is if class invariants,
-    postconditions, and exception guarantees respectively apply to the object
-    specified when constructing this object).
+    postconditions, and exception guarantees respectively apply to the contract
+    parameter specified when constructing this object).
 
-    @b Throws:  This can throw (it is declared @c noexcept(false)) in case
-                programmers specify contract failure handlers that throw
-                exceptions instead of terminating the program (see
-                @RefSect{advanced.throw_on_failure__and__noexcept__,
+    @b Throws:  This can throw in case programmers specify contract failure
+                handlers that throw exceptions instead of terminating the
+                program (see
+                @RefSect{advanced.throw_on_failures__and__noexcept__,
                 Throw on Failure}).
+                (This is declared @c noexcept(false) since C++11.)
     */
     ~check() BOOST_NOEXCEPT_IF(false) {} // Allow auto_ptr dtor to throw.
 

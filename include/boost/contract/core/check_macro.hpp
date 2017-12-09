@@ -28,11 +28,19 @@ Macro for implementation checks.
     It is preferred to use this macro instead of programming implementation
     checks in a nullary functor passed to @RefClass{boost::contract::check}
     constructor because this macro will completely remove implementation checks
-    from the code when @RefMacro{BOOST_CONTRACT_NO_CHECKS} is defined.
+    from the code when @RefMacro{BOOST_CONTRACT_NO_CHECKS} is defined:
+
+    @code
+    void f() {
+        ...
+        BOOST_CONTRACT_CHECK(...);
+        ...
+    }
+    @endcode
     
     @RefMacro{BOOST_CONTRACT_CHECK}, @RefMacro{BOOST_CONTRACT_CHECK_AUDIT}, and
     @RefMacro{BOOST_CONTRACT_CHECK_AXIOM} are the three assertion levels
-    predefined by this library.
+    predefined by this library for implementation checks.
 
     @see @RefSect{advanced.implementation_checks, Implementation Checks}
 
@@ -54,7 +62,6 @@ Macro for implementation checks.
     The specified condition will always be compiled and validated
     syntactically, but it will not be evaluated at run-time unless
     @RefMacro{BOOST_CONTRACT_AUDITS} is defined (undefined by default).
-
     This macro is defined by code equivalent to:
 
     @code
@@ -69,7 +76,7 @@ Macro for implementation checks.
 
     @RefMacro{BOOST_CONTRACT_CHECK}, @RefMacro{BOOST_CONTRACT_CHECK_AUDIT}, and
     @RefMacro{BOOST_CONTRACT_CHECK_AXIOM} are the three assertion levels
-    predefined by this library.
+    predefined by this library for implementation checks.
     If there is a need, programmers are free to implement their own assertion
     levels defining macros similar to the one above.
 
@@ -79,7 +86,7 @@ Macro for implementation checks.
                 body, etc.).
                 (This is not a variadic macro parameter so any comma it might
                 contain must be protected by round parenthesis,
-                @c BOOST_CONTRACT_CHECK((cond)) will always work.)
+                @c BOOST_CONTRACT_CHECK_AUDIT((cond)) will always work.)
     */
     #define BOOST_CONTRACT_CHECK_AUDIT(cond) \
         BOOST_CONTRACT_CHECK(cond)
@@ -94,7 +101,6 @@ prohibitive, at least compared to the cost of executing the function body.
 
 The specified condition will always be compiled and validated
 syntactically, but it will never be evaluated at run-time.
-
 This macro is defined by code equivalent to:
 
 @code
@@ -104,7 +110,7 @@ This macro is defined by code equivalent to:
 
 @RefMacro{BOOST_CONTRACT_CHECK}, @RefMacro{BOOST_CONTRACT_CHECK_AUDIT}, and
 @RefMacro{BOOST_CONTRACT_CHECK_AXIOM} are the three assertion levels predefined
-by this library.
+by this library for implementation checks.
 If there is a need, programmers are free to implement their own assertion levels
 defining macros similar to the one above.
 
@@ -114,7 +120,7 @@ defining macros similar to the one above.
             body, etc.).
             (This is not a variadic macro parameter so any comma it might
             contain must be protected by round parenthesis,
-            @c BOOST_CONTRACT_CHECK((cond)) will always work.)
+            @c BOOST_CONTRACT_CHECK_AXIOM((cond)) will always work.)
 */
 #define BOOST_CONTRACT_CHECK_AXIOM(cond) \
     BOOST_CONTRACT_DETAIL_NOEVAL(cond)

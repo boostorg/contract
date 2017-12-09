@@ -47,10 +47,27 @@ Friend this class to declare invariants and base types as private members.
 
 Declare this class a friend of the user-defined class specifying the contracts
 in order to declare the invariant functions and the base types @c typedef as
-non-public members.
+non-public members:
+
+@code
+class u :
+    #define BASES public b, private w
+    BASES
+{
+    friend class boost::contract::access;
+
+    void invariant() const { ... } // Private.
+
+    typedef BOOST_CONTRACT_BASES(BASES) base_types; // Private.
+    #undef BASES
+
+public:
+    ...
+};
+@endcode
+
 In real code, programmers will likely chose to declare this class as friend so
 to fully control public interfaces of their user-defined classes.
-
 This class is not intended to be directly used by programmers a part from
 declaring it @c friend (and that is why this class does not have any public
 member and it is not copyable).

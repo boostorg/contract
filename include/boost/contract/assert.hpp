@@ -35,8 +35,8 @@ Assert contract conditions.
     <c>__LINE__</c>), and asserted condition code so to produce informative
     error messages.
     
-    @RefMacro{BOOST_CONTRACT_ASSERT}, @RefMacro{BOOST_CONTRACT_ASSERT_AUDIT} and
-    @RefMacro{BOOST_CONTRACT_ASSERT_AXIOM} are the three assertion levels
+    @RefMacro{BOOST_CONTRACT_ASSERT}, @RefMacro{BOOST_CONTRACT_ASSERT_AUDIT},
+    and @RefMacro{BOOST_CONTRACT_ASSERT_AXIOM} are the three assertion levels
     predefined by this library.
 
     @see    @RefSect{tutorial.preconditions, Preconditions},
@@ -62,9 +62,8 @@ Assert contract conditions.
     expensive, at least compared to the cost of executing the function body.
 
     The asserted condition will always be compiled and validated syntactically,
-    but it will not be evaluated at run-time unless
+    but it will not be checked at run-time unless
     @RefMacro{BOOST_CONTRACT_AUDITS} is defined (undefined by default).
-    
     This macro is defined by code equivalent to:
 
     @code
@@ -77,13 +76,13 @@ Assert contract conditions.
         #endif
     @endcode
 
-    @RefMacro{BOOST_CONTRACT_ASSERT}, @RefMacro{BOOST_CONTRACT_ASSERT_AUDIT} and
-    @RefMacro{BOOST_CONTRACT_ASSERT_AXIOM} are the three assertion levels
+    @RefMacro{BOOST_CONTRACT_ASSERT}, @RefMacro{BOOST_CONTRACT_ASSERT_AUDIT},
+    and @RefMacro{BOOST_CONTRACT_ASSERT_AXIOM} are the three assertion levels
     predefined by this library.
     If there is a need, programmers are free to implement their own assertion
     levels defining macros similar to the one above.
     
-    @see @RefSect{extras.assertion_levels, Assertions Levels}
+    @see @RefSect{extras.assertion_levels, Assertion Levels}
     
     @param cond Boolean contract condition to check.
                 (This is not a variadic macro parameter so any comma it might
@@ -102,8 +101,7 @@ Preferred way to assert contract conditions that are computationally
 prohibitive, at least compared to the cost of executing the function body.
 
 The asserted condition will always be compiled and validated syntactically, but
-it will never be evaluated at run-time.
-
+it will never be checked at run-time.
 This macro is defined by code equivalent to:
 
 @code
@@ -111,7 +109,7 @@ This macro is defined by code equivalent to:
         BOOST_CONTRACT_ASSERT(true || cond)
 @endcode
 
-@RefMacro{BOOST_CONTRACT_ASSERT}, @RefMacro{BOOST_CONTRACT_ASSERT_AUDIT} and
+@RefMacro{BOOST_CONTRACT_ASSERT}, @RefMacro{BOOST_CONTRACT_ASSERT_AUDIT}, and
 @RefMacro{BOOST_CONTRACT_ASSERT_AXIOM} are the three assertion levels predefined
 by this library.
 If there is a need, programmers are free to implement their own assertion levels

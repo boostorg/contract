@@ -25,8 +25,8 @@ Handle public function overrides (for subcontracting).
 
     /* PRIVATE */
 
-    #define BOOST_CONTRACT_OVERRIDE_CALL_BASE_(z, \
-            arity, arity_compl, function_name) \
+    #define BOOST_CONTRACT_OVERRIDE_CALL_BASE_(z, arity, arity_compl, \
+            func_name) \
         template< \
             class BOOST_CONTRACT_DETAIL_NAME1(B), \
             class BOOST_CONTRACT_DETAIL_NAME1(C) \
@@ -48,7 +48,7 @@ Handle public function overrides (for subcontracting).
                     boost::contract::detail::none&) \
         ) { \
             BOOST_CONTRACT_DETAIL_NAME1(obj)-> \
-            BOOST_CONTRACT_DETAIL_NAME1(B)::function_name( \
+            BOOST_CONTRACT_DETAIL_NAME1(B)::func_name( \
                 BOOST_CONTRACT_DETAIL_TVARIADIC_ARGS_Z(z, arity, \
                         BOOST_CONTRACT_DETAIL_NAME1(args)) \
                 BOOST_CONTRACT_DETAIL_TVARIADIC_COMMA(arity) \
@@ -57,32 +57,31 @@ Handle public function overrides (for subcontracting).
         }
 
     #if BOOST_CONTRACT_DETAIL_TVARIADIC
-        #define BOOST_CONTRACT_OVERRIDE_CALL_BASE_DECL_(function_name) \
-            BOOST_CONTRACT_OVERRIDE_CALL_BASE_(1, ~, ~, function_name)
+        #define BOOST_CONTRACT_OVERRIDE_CALL_BASE_DECL_(func_name) \
+            BOOST_CONTRACT_OVERRIDE_CALL_BASE_(1, ~, ~, func_name)
     #else
         #include <boost/preprocessor/repetition/repeat.hpp>
         #include <boost/preprocessor/arithmetic/inc.hpp>
         #include <boost/preprocessor/arithmetic/sub.hpp>
 
-        #define BOOST_CONTRACT_OVERRIDE_CALL_BASE_DECL_(function_name) \
+        #define BOOST_CONTRACT_OVERRIDE_CALL_BASE_DECL_(func_name) \
             BOOST_PP_REPEAT(BOOST_PP_INC(BOOST_CONTRACT_MAX_ARGS), \
-                    BOOST_CONTRACT_OVERRIDE_CALL_BASE_ARITY_, function_name) \
+                    BOOST_CONTRACT_OVERRIDE_CALL_BASE_ARITY_, func_name) \
         
-        #define BOOST_CONTRACT_OVERRIDE_CALL_BASE_ARITY_(z, arity, \
-                function_name) \
+        #define BOOST_CONTRACT_OVERRIDE_CALL_BASE_ARITY_(z, arity, func_name) \
             BOOST_CONTRACT_OVERRIDE_CALL_BASE_(z, arity, \
-                    BOOST_PP_SUB(BOOST_CONTRACT_MAX_ARGS, arity), function_name)
+                    BOOST_PP_SUB(BOOST_CONTRACT_MAX_ARGS, arity), func_name)
     #endif
 
     /* PUBLIC */
 
-    #define BOOST_CONTRACT_NAMED_OVERRIDE(override_name, function_name) \
-        struct override_name { \
+    #define BOOST_CONTRACT_NAMED_OVERRIDE(type_name, func_name) \
+        struct type_name { \
             BOOST_CONTRACT_DETAIL_MIRROR_HAS_MEMBER_FUNCTION( \
                 BOOST_CONTRACT_DETAIL_NAME1(has_member_function), \
-                function_name \
+                func_name \
             ) \
-            BOOST_CONTRACT_OVERRIDE_CALL_BASE_DECL_(function_name) \
+            BOOST_CONTRACT_OVERRIDE_CALL_BASE_DECL_(func_name) \
         };
 #else
     /**
@@ -93,28 +92,26 @@ Handle public function overrides (for subcontracting).
     
     @see @RefSect{advanced.named_overrides, Named Overrides}
 
-    @param override_name    Name of the override type this macro will declare.
-                            (This is not a variadic macro parameter but it
-                            should never contain commas because it is an
-                            identifier.)
-    @param function_name    Function name of the public function override.
-                            This macro is called just once even if the function
-                            name is overloaded (the same override type is used
-                            for all overloaded functions with the same name, see
-                            @RefSect{advanced.function_overloads,
-                            Function Overloads}).
-                            (This is not a variadic macro parameter but it
-                            should never contain commas because it is an
-                            identifier.)
+    @param type_name    Name of the override type this macro will declare.
+                        (This is not a variadic macro parameter but it should
+                        never contain commas because it is an identifier.)
+    @param func_name    Function name of the public function override.
+                        This macro is called just once even if the function name
+                        is overloaded (the same override type is used for all
+                        overloaded functions with the same name, see
+                        @RefSect{advanced.function_overloads,
+                        Function Overloads}).
+                        (This is not a variadic macro parameter but it should
+                        never contain commas because it is an identifier.)
     */
-    #define BOOST_CONTRACT_NAMED_OVERRIDE(override_name, function_name) \
-            struct override_name {}; /* empty (not used), just to compile */
+    #define BOOST_CONTRACT_NAMED_OVERRIDE(type_name, func_name) \
+            struct type_name {}; /* empty (not used), just to compile */
 #endif
     
 /* PUBLIC */
 
 /**
-Declare an override type named <c>override_<i>function_name</i></c>.
+Declare an override type named <c>override_<i>func_name</i></c>.
 
 Declare the override type to pass as an explicit template parameter to
 @RefFunc{boost::contract::public_function} for public function overrides.
@@ -122,18 +119,16 @@ Declare the override type to pass as an explicit template parameter to
 @see    @RefSect{tutorial.public_function_overrides__subcontracting_,
         Public Function Overrides}
 
-@param function_name    Function name of the public function override.
-                        This macro is called just once even if the function
-                        name is overloaded (the same override type is used for
-                        all overloaded functions with the same name, see
-                        @RefSect{advanced.function_overloads,
-                        Function Overloads}).
-                        (This is not a variadic macro parameter but it should
-                        never contain any comma because it is an identifier.)
+@param func_name    Function name of the public function override.
+                    This macro is called just once even if the function name is
+                    overloaded (the same override type is used for all
+                    overloaded functions with the same name, see
+                    @RefSect{advanced.function_overloads, Function Overloads}).
+                    (This is not a variadic macro parameter but it should never
+                    contain any comma because it is an identifier.)
 */
-#define BOOST_CONTRACT_OVERRIDE(function_name) \
-    BOOST_CONTRACT_NAMED_OVERRIDE(BOOST_PP_CAT(override_, function_name), \
-            function_name)
+#define BOOST_CONTRACT_OVERRIDE(func_name) \
+    BOOST_CONTRACT_NAMED_OVERRIDE(BOOST_PP_CAT(override_, func_name), func_name)
     
 #if BOOST_PP_VARIADICS
     #include <boost/preprocessor/seq/for_each.hpp>
@@ -142,8 +137,8 @@ Declare the override type to pass as an explicit template parameter to
     /* PRIVATE */
 
     /** @cond */
-    #define BOOST_CONTRACT_OVERRIDES_SEQ_(r, unused, function_name) \
-        BOOST_CONTRACT_OVERRIDE(function_name)
+    #define BOOST_CONTRACT_OVERRIDES_SEQ_(r, unused, func_name) \
+        BOOST_CONTRACT_OVERRIDE(func_name)
     /** @endcond */
 
     /* PUBLIC */
@@ -153,14 +148,14 @@ Declare the override type to pass as an explicit template parameter to
     convenience).
 
     This variadic macro is provided for convenience only,
-    <c>BOOST_CONTRACT_OVERRIDES(f1, f2, ..., fn)</c> expands to code equivalent
-    to:
+    <c>BOOST_CONTRACT_OVERRIDES(f_1, f_2, ..., f_n)</c> expands to code
+    equivalent to:
 
     @code
-    BOOST_CONTRACT_OVERRIDE(f1)
-    BOOST_CONTRACT_OVERRIDE(f2)
+    BOOST_CONTRACT_OVERRIDE(f_1)
+    BOOST_CONTRACT_OVERRIDE(f_2)
     ...
-    BOOST_CONTRACT_OVERRIDE(fn)
+    BOOST_CONTRACT_OVERRIDE(f_n)
     @endcode
 
     On compilers that do not support variadic macros,

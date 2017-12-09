@@ -27,10 +27,36 @@ Program contracts for non-member, private and protected functions.
 This is used to specify preconditions, postconditions, exception guarantees, and
 old copies at body for non-member, private and protected functions (these
 functions never check class invariants, see
-@RefSect{contract_programming_overview, Contract Programming Overview}).
-It can be used also to program contracts in implementation code for lambda
-functions, loops, and arbitrary blocks of code.
+@RefSect{contract_programming_overview.function_calls, Function Calls}):
 
+@code
+void f(...) {
+    boost::contract::old_ptr<old_type> old_var;
+    boost::contract::check c = boost::contract::function()
+        .precondition([&] { // Optional.
+            BOOST_CONTRACT_ASSERT(...);
+            ...
+        })
+        .old([&] { // Optional.
+            old_var = BOOST_CONTRACT_OLDOF(old_expr);  
+            ...
+        })
+        .postcondition([&] { // Optional.
+            BOOST_CONTRACT_ASSERT(...);
+            ...
+        })
+        .except([&] { // Optional.
+            BOOST_CONTRACT_ASSERT(...);
+            ...
+        })
+    ;
+
+    ... // Function body.
+}
+@endcode
+
+This can be used also to program contracts in implementation code for lambda
+functions, loops, and arbitrary blocks of code.
 For optimization, this can be omitted for code that does not have preconditions,
 postconditions, and exception guarantees.
 

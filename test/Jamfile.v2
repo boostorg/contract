@@ -253,6 +253,11 @@ test-suite invariant :
 ;
 
 test-suite function :
+    [ run function/odr1.cpp function/odr2.cpp : :
+        : [ boost_contract_build.project_requirements function ]
+        : function-odr
+    ]
+    
     [ boost_contract_build.subdir-run-cxx11 function : smoke ]
 
     [ boost_contract_build.subdir-run-cxx11 function : decl_pre_all ]

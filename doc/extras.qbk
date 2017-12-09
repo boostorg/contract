@@ -562,16 +562,18 @@ Some of this library macros are variadic macros, others are not (see below).
 Variadic macros were officially added to the language in C++11 but most compilers have been supporting them as an extension for a long time, plus all compilers that support C++11 lambda functions should also support C++11 variadic macros (and this library might rarely be used without the convenience of C++11 lambda functions, see __No_Lambda_Functions__).
 [footnote
 Compilation times of this library were measured to be comparable between compilers that support variadic macros and compilers that do not.
-(See also [macroref BOOST_CONTRACT_MAX_ARGS] on compilers that do not support variadic macros.
-*Rationale:* [macroref BOOST_CONTRACT_MAX_ARGS] is named after `BOOST_FUNCTION_MAX_ARGS`.)
 ]
 Therefore, the rest of this section can be considered mainly a curiosity because programmers should seldom, if ever, need to use this library without using its macros.
 ]
 
 [heading Overrides]
 
-As shown in __Public_Function_Overrides__ and __Named_Overrides__, this library provides the [macroref BOOST_CONTRACT_OVERRIDE] and [macroref BOOST_CONTRACT_NAMED_OVERRIDE] macros to program contracts for overriding public functions.
-These macros cannot be programmed manually but they are not variadic macros (so programmers should be able to use them on any C++ compiler with a sound support for SFINAE).
+As shown in __Public_Function_Overrides__ and __Named_Overrides__, this library provides the [macroref BOOST_CONTRACT_OVERRIDE] and [macroref BOOST_CONTRACT_NAMED_OVERRIDE] macros to program contracts for overriding public functions (see [macroref BOOST_CONTRACT_MAX_ARGS] for compilers that do not support variadic templates).
+[footnote
+*Rationale:*
+The [macroref BOOST_CONTRACT_MAX_ARGS] macro is named after `BOOST_FUNCTION_MAX_ARGS`.
+]
+These macro cannot be programmed manually but they are not variadic macros (so programmers should be able to use them on any C++ compiler with a sound support for SFINAE).
 [footnote
 *Rationale:*
 These macros expand SFINAE-based introspection templates that are too complex to be programmed manually by users (that remains the case even if C++14 generic lambdas were to be used here).

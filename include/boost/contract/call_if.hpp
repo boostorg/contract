@@ -45,7 +45,7 @@ namespace boost { namespace contract {
 Select compilation and execution of functor template calls using a static
 boolean predicate.
 
-This class template has no member because it is never used directly, it is only
+This class template has no members because it is never used directly, it is only
 used via its specializations.
 Usually this class template is instantiated only via the return value of
 @RefFunc{boost::contract::call_if} and @RefFunc{boost::contract::call_if_c}.
@@ -55,8 +55,8 @@ Usually this class template is instantiated only via the return value of
 
 @tparam Pred    Static boolean predicate that selects which functor template
                 call to compile and execute.
-@tparam Then Type of the functor template to call if the static predicate is
-        @c true.
+@tparam Then Type of the functor template to call if the static predicate
+        @c Pred is @c true.
 @tparam ThenResult Return type of then-branch functor template call (this is
         usually automatically deduced by this library so it is never explicitly
         specified by the user, and that is why it is often marked as
@@ -72,8 +72,8 @@ template<bool Pred, typename Then, typename ThenResult =
 struct call_if_statement {}; // Empty so cannot be used (but copyable).
 
 /**
-Dispatch between then-branch functor template calls that return void and the
-ones that return non-void.
+Template specialization to dispatch between then-branch functor template calls
+that return void and the ones that return non-void.
 
 The base class is a call-if statement so the else and else-if statements can be
 specified if needed.
@@ -84,7 +84,7 @@ Usually this class template is instantiated only via the return value of
         when the static predicate is already checked to be @c true (because
         @c Then() is required to compile only in that case).
         Thus, this template specialization introduces an extra level of
-        indirection necessary for the proper lazy evaluation of this result-of
+        indirection necessary for proper lazy evaluation of this result-of
         expression.
 
 @see    @RefSect{extras.assertion_requirements__templates_,
@@ -113,9 +113,9 @@ struct call_if_statement<true, Then,
     Construct this object with the then-branch functor template.
 
     @param f    Then-branch nullary functor template.
-                The functor template call @c f() is compiled and called in this
-                case (because the if-statement static predicate is @c true for
-                this template specialization).
+                The functor template call @c f() is compiled and called for this
+                template specialization (because the if-statement static
+                predicate is @c true).
                 The return type of @c f() must be the same as (or implicitly
                 convertible to) the return type of all other functor template
                 calls specified for this call-if object.
@@ -125,8 +125,8 @@ struct call_if_statement<true, Then,
 };
 
 /**
-Handle static predicates that are @c true for then-branch functor template calls
-that do not return void.
+Template specialization to handle static predicates that are @c true for
+then-branch functor template calls that do not return void.
 
 Usually this class template is instantiated only via the return value of
 @RefFunc{boost::contract::call_if} and @RefFunc{boost::contract::call_if_c}.
@@ -146,8 +146,8 @@ struct call_if_statement<true, Then, ThenResult> { // Copyable (as *).
 
     @param f    Then-branch nullary functor template.
                 The functor template call @c f() is actually compiled and
-                executed in this case (because the if-statement static
-                predicate is @c true for this template specialization).
+                executed for this template specialization (because the
+                if-statement static predicate is @c true).
                 The return type of @c f() must be the same as (or implicitly
                 convertible to) the @p ThenResult type.
     */
@@ -165,14 +165,14 @@ struct call_if_statement<true, Then, ThenResult> { // Copyable (as *).
 
     @param f    Else-branch nullary functor template.
                 The functor template call @c f() is never compiled and executed
-                in this case (because the if-statement static predicate is
-                @c true for this template specialization).
+                for this template specialization (because the if-statement
+                static predicate is @c true).
                 The return type of @c f() must be the same as (or implicitly
                 convertible to) the @p ThenResult type.
     
     @return A copy of the value returned by the call to the then-branch functor
             template (because the else-branch functor template call is not
-            executed in this case).
+            executed).
     */
     template<typename Else>
     ThenResult else_(Else const& f) const { return *r_; }
@@ -183,8 +183,8 @@ struct call_if_statement<true, Then, ThenResult> { // Copyable (as *).
 
     @param f    Else-if-branch nullary functor template.
                 The functor template call @c f() is never compiled and executed
-                in this case (because the if-statement static predicate is
-                @c true for this template specialization).
+                for this template specialization (because the if-statement
+                static predicate is @c true).
                 The return type of @c f() must be the same as (or implicitly
                 convertible to) the @p ThenResult type.
     
@@ -194,8 +194,8 @@ struct call_if_statement<true, Then, ThenResult> { // Copyable (as *).
     @return A call-if statement so the else statement and additional else-if
             statements can be specified if needed.
             Eventually, it will be the return value of the then-branch functor
-            template call in this case (because the if-statement static
-            predicate is @c true for this template specialization).
+            template call for this template specialization (because the
+            if-statement static predicate is @c true).
     */
     template<bool ElseIfPred, typename ElseIfThen>
     call_if_statement<true, Then, ThenResult> else_if_c(ElseIfThen const& f)
@@ -207,8 +207,8 @@ struct call_if_statement<true, Then, ThenResult> { // Copyable (as *).
 
     @param f    Else-if-branch nullary functor template.
                 The functor template call @c f() is never compiled and executed
-                in this case (because the if-statement static predicate is
-                @c true for this template specialization).
+                for this template specialization (because the if-statement
+                static predicate is @c true).
                 The return type of @c f() must be the same as (or implicitly
                 convertible to) the @p ThenResult type.
     
@@ -218,8 +218,8 @@ struct call_if_statement<true, Then, ThenResult> { // Copyable (as *).
     @return A call-if statement so the else statement and additional else-if
             statements can be specified if needed.
             Eventually, it will be the return value of the then-branch functor
-            template call in this case (because the if-statement static
-            predicate is @c true for this template specialization).
+            template call for this template specialization (because the
+            if-statement static predicate is @c true).
     */
     template<class ElseIfPred, typename ElseIfThen>
     call_if_statement<true, Then, ThenResult> else_if(ElseIfThen const& f)
@@ -230,8 +230,8 @@ private:
 };
 
 /**
-Handle static predicates that are @c true for then-branch functor template calls
-that return void.
+Template specialization to handle static predicates that are @c true for
+then-branch functor template calls that return void.
 
 Usually this class template is instantiated only via the return value of
 @RefFunc{boost::contract::call_if} and @RefFunc{boost::contract::call_if_c}.
@@ -249,11 +249,11 @@ struct call_if_statement<true, Then, void> { // Copyable (no data).
 
     @param f    Then-branch nullary functor template.
                 The functor template call @c f() is actually compiled and
-                executed in this case (because the if-statement static predicate
-                is @c true for this template specialization).
-                The return type of @c f() must be @c void in this case (because
-                the then-branch functor template calls return void for this
-                template specialization).
+                executed for this template specialization (because the
+                if-statement static predicate is @c true).
+                The return type of @c f() must be @c void for this template
+                specialization (because the then-branch functor template calls
+                return void).
     */
     explicit call_if_statement(Then f) { f(); }
     
@@ -264,11 +264,11 @@ struct call_if_statement<true, Then, void> { // Copyable (no data).
 
     @param f    Else-branch nullary functor template.
                 The functor template call @c f() is never compiled and executed
-                in this case (because the if-statement static predicate is
-                @c true for this template specialization).
-                The return type of @c f() must be @c void in this case (because
-                the then-branch functor template calls return void for this
-                template specialization).
+                for this template specialization (because the if-statement
+                static predicate is @c true).
+                The return type of @c f() must be @c void for this template
+                specialization (because the then-branch functor template calls
+                return void).
     */
     template<typename Else>
     void else_(Else const& f) const {}
@@ -279,20 +279,19 @@ struct call_if_statement<true, Then, void> { // Copyable (no data).
 
     @param f    Else-if-branch nullary functor template.
                 The functor template call @c f() is never compiled and executed
-                in this case (because the if-statement static predicate is
-                @c true for this template specialization).
-                The return type of @c f() must be @c void in this case (because
-                the then-branch functor template calls return void for this
-                template specialization).
+                for this template specialization (because the if-statement
+                static predicate is @c true).
+                The return type of @c f() must be @c void for this template
+                specialization (because the then-branch functor template calls
+                return void).
     
     @tparam ElseIfPred  Static boolean predicate selecting which functor
                         template call to compile and execute.
     
     @return A call-if statement so the else statement and additional else-if
             statements can be specified if needed.
-            Eventually, it will return void in this case (because the
-            then-branch functor template calls return void for this template
-            specialization).
+            Eventually, it will return void for this template specialization
+            (because the then-branch functor template calls return void).
     */
     template<bool ElseIfPred, typename ElseIfThen>
     call_if_statement<true, Then, void> else_if_c(ElseIfThen const& f) const {
@@ -305,20 +304,19 @@ struct call_if_statement<true, Then, void> { // Copyable (no data).
 
     @param f    Else-if-branch nullary functor template.
                 The functor template call @c f() is never compiled and executed
-                in this case (because the if-statement static predicate is
-                @c true for this template specialization).
-                The return type of @c f() must be @c void in this case (because
-                the then-branch functor template calls return void for this
-                template specialization).
+                for this template specialization (because the if-statement
+                static predicate is @c true).
+                The return type of @c f() must be @c void for this template
+                specialization (because the then-branch functor template calls
+                return void).
 
     @tparam ElseIfPred  Nullary boolean meta-function selecting which functor
                         template call to compile and execute.
 
     @return A call-if statement so the else statement and additional else-if
             statements can be specified if needed.
-            Eventually, it will return void in this case (because the
-            then-branch functor template calls return void for this template
-            specialization).
+            Eventually, it will return void for this template specialization
+            (because the then-branch functor template calls return void).
     */
     template<class ElseIfPred, typename ElseIfThen>
     call_if_statement<true, Then, void> else_if(ElseIfThen const& f) const {
@@ -327,9 +325,9 @@ struct call_if_statement<true, Then, void> { // Copyable (no data).
 };
 
 /**
-Handle static predicates that are @c false.
+Template specialization to handle static predicates that are @c false.
 
-This single specialization handles all else-branch functor template calls
+This template specialization handles all else-branch functor template calls
 (whether they return void or not).
 Usually this class template is instantiated only via the return value of
 @RefFunc{boost::contract::call_if} and @RefFunc{boost::contract::call_if_c}.
@@ -353,8 +351,8 @@ struct call_if_statement<false, Then,
 
     @param f    Then-branch nullary functor template.
                 The functor template call @c f() is never compiled and executed
-                in this case (because the if-statement static predicate is
-                @c false for this template specialization).
+                for this template specialization (because the if-statement
+                static predicate is @c false).
                 The return type of @c f() must be the same as (or implicitly
                 convertible to) the return type of all other functor template
                 calls specified for this call-if object.
@@ -374,8 +372,8 @@ struct call_if_statement<false, Then,
     
     @param f    Else-branch nullary functor template.
                 The functor template call @c f() is actually compiled and
-                executed in this case (because the if-statement static predicate
-                is @c false for this template specialization).
+                executed for this template specialization (because the
+                if-statement static predicate is @c false).
                 The return type of @c f() must be the same as (or implicitly
                 convertible to) the return type of all other functor template
                 calls specified for this call-if object.
@@ -449,22 +447,23 @@ struct call_if_statement<false, Then,
 Select compilation and execution of functor template calls using a static
 boolean predicate.
 
-Create a call-if object with the specified then-branch functor template.
-Optional functor templates for else-if-branches and the else-branch can be
-specified as needed.
-For example:
+Create a call-if object with the specified then-branch functor template:
 
 @code
-boost::contract::call_if<Predicate1>(
+boost::contract::call_if_c<Pred1>(
     then_functor_template1
-).template else_if<Predicate2>(         // Optional.
+).template else_if_c<Pred2>(            // Optional.
     then_functor_template2
-)
-...                                     // Optionally, other `else_if`.
+)                                       // Optionally, other `else_if_c` or
+...                                     // `else_if`.
 .else_(                                 // Optional for `void` functors,
     else_functor_template               // but required for non `void`.
 )
 @endcode
+
+Optional functor templates for else-if-branches and the else-branch can be
+specified as needed (the else-branch function template is required if @c f
+returns non-void).
 
 @see    @RefSect{extras.assertion_requirements__templates_,
         Assertion Requirements}
@@ -473,8 +472,8 @@ boost::contract::call_if<Predicate1>(
             The functor template call @c f() is compiled and executed if and
             only if @c Pred is @c true.
             The return type of other functor template calls specified for this
-            call-if statement (else-branches, else-if-branches, etc.) must be
-            the same as (or implicitly convertible to) the return type of
+            call-if statement (else-branch, else-if-branches, etc.) must be the
+            same as (or implicitly convertible to) the return type of
             then-branch functor call @c f().
 
 @tparam Pred    Static boolean predicate selecting which functor template call
@@ -494,24 +493,24 @@ call_if_statement<Pred, Then> call_if_c(Then f) {
 Select compilation and execution of functor template calls using a nullary
 boolean meta-function.
 
-Create a call-if object with the specified then-branch functor template.
 This is equivalent to <c>boost::contract::call_if_c<Pred::value>(f)</c>.
-Optional functor templates for else-if-branches and the else-branch can be
-specified as needed.
-For example:
+Create a call-if object with the specified then-branch functor template:
 
 @code
-boost::contract::call_if<MetaFunction1>(
+boost::contract::call_if<Pred1>(
     then_functor_template1
-).template else_if<MetaFunction2>(      // Optional.
+).template else_if<Pred2>(              // Optional.
     then_functor_template2
-)
-...                                     // Optionally, other `else_if`.
+)                                       // Optionally, other `else_if` or
+...                                     // `else_if_c`.
 .else_(                                 // Optional for `void` functors,
     else_functor_template               // but required for non `void`.
 )
 @endcode
 
+Optional functor templates for else-if-branches and the else-branch can be
+specified as needed (the else-branch functor template is required if @c f
+returns non-void).
 
 @see    @RefSect{extras.assertion_requirements__templates_,
         Assertion Requirements}
@@ -520,8 +519,8 @@ boost::contract::call_if<MetaFunction1>(
             The functor template call @c f() is compiled and executed if and
             only if @c Pred::value is @c true.
             The return type of other functor template calls specified for this
-            call-if statement (else-branches, else-if-branches, etc.) must be
-            the same as (or implicitly convertible to) the return type of
+            call-if statement (else-branch, else-if-branches, etc.) must be the
+            same as (or implicitly convertible to) the return type of
             then-branch functor template call @c f().
 
 @tparam Pred    Nullary boolean meta-function selecting which functor template
@@ -544,9 +543,12 @@ static boolean predicate.
 Compile and execute the nullary boolean functor template call @c f() if and only
 if the specified static boolean predicate @p Pred is @c true, otherwise
 trivially return @p else_ (@c true by default) at run-time.
-A call to <c>boost::contract::condition_if_c<Pred>(f, b)</c> is logically
-equivalent to <c>boost::contract::call_if_c<Pred>(f, [b] { return b; })</c> (but
-its implementation is optimized with respsect to the @c call_if_c equivalent).
+
+A call to <c>boost::contract::condition_if_c<Pred>(f, else_)</c> is logically
+equivalent to
+<c>boost::contract::call_if_c<Pred>(f, [else_] { return else_; })</c> (but
+its internal implementation is optimized and it does not actually uses
+@c call_if_c).
 
 @see    @RefSect{extras.assertion_requirements__templates_,
         Assertion Requirements}
@@ -583,11 +585,11 @@ its implementation is optimized with respsect to the @c call_if_c equivalent).
 Select compilation and execution of a boolean functor template condition using a
 nullary boolean meta-function.
 
+This is equivalent to
+<c>boost::contract::condition_if_c<Pred::value>(f, else_)</c>.
 Compile and execute the nullary boolean functor template call @c f() if and only
 if the specified nullary boolean meta-function @p Pred is @c true, otherwise
 trivially return @p else_ (@c true by default) at run-time.
-This is equivalent to
-<c>boost::contract::condition_if_c<Pred::value>(f, else_)</c>.
 
 @see    @RefSect{extras.assertion_requirements__templates_,
         Assertion Requirements}

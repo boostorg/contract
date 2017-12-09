@@ -138,6 +138,9 @@ Used to prevent setting other contract conditions after exception guarantees.
 
 This class has no member function so it is used to prevent specifying additional
 functors to check any other contract.
+This object is internally constructed by this library when users specify
+contracts calling @RefFunc{boost::contract::function} and similar functions
+(that is why this class does not have a public constructor).
 
 @see @RefSect{tutorial, Tutorial}
 */
@@ -146,11 +149,11 @@ public:
     /**
     Destruct this object.
 
-    @b Throws:  This can throw (i.e., @c noexcept(false)) in case programmers
-                specify failure handlers that throw exceptions instead of
-                terminating the program (see
-                @RefSect{advanced.throw_on_failure__and__noexcept__,
+    @b Throws:  This can throw in case programmers specify failure handlers that
+                throw exceptions instead of terminating the program (see
+                @RefSect{advanced.throw_on_failures__and__noexcept__,
                 Throw on Failure}).
+                (This is declared @c noexcept(false) since C++11.)
     */
     ~specify_nothing() BOOST_NOEXCEPT_IF(false) {}
     
@@ -183,6 +186,9 @@ Allow to specify exception guarantees.
 
 Allow to specify the functor this library will call to check exception
 guarantees.
+This object is internally constructed by this library when users specify
+contracts calling @RefFunc{boost::contract::function} and similar functions
+(that is why this class does not have a public constructor).
 
 @see @RefSect{tutorial.exception_guarantees, Exception Guarantees}
 */
@@ -191,11 +197,11 @@ public:
     /**
     Destruct this object.
 
-    @b Throws:  This can throw (i.e., @c noexcept(false)) in case programmers
-                specify failure handlers that throw exceptions instead of
-                terminating the program (see
-                @RefSect{advanced.throw_on_failure__and__noexcept__,
+    @b Throws:  This can throw in case programmers specify failure handlers that
+                throw exceptions instead of terminating the program (see
+                @RefSect{advanced.throw_on_failures__and__noexcept__,
                 Throw on Failure}).
+                (This is declared @c noexcept(false) since C++11.)
     */
     ~specify_except() BOOST_NOEXCEPT_IF(false) {}
 
@@ -212,8 +218,8 @@ public:
                 This functor should capture variables by (constant) references
                 (to access the values they will have at function exit).
 
-    @return After exception guarantees have been specified, this return object
-            does not allow to specify any additional contract.
+    @return After exception guarantees have been specified, the object returned
+            by this function does not allow to specify any additional contract.
     */
     template<typename F>
     specify_nothing except(F const& f) {
@@ -245,6 +251,9 @@ Allow to specify postconditions or exception guarantees.
 
 Allow to specify functors this library will call to check postconditions or
 exception guarantees.
+This object is internally constructed by this library when users specify
+contracts calling @RefFunc{boost::contract::function} and similar functions
+(that is why this class does not have a public constructor).
 
 @see    @RefSect{tutorial.postconditions, Postconditions},
         @RefSect{tutorial.exception_guarantees, Exception Guarantees}
@@ -260,11 +269,11 @@ public:
     /**
     Destruct this object.
 
-    @b Throws:  This can throw (i.e., @c noexcept(false)) in case programmers
-                specify failure handlers that throw exceptions instead of
-                terminating the program (see
-                @RefSect{advanced.throw_on_failure__and__noexcept__,
+    @b Throws:  This can throw in case programmers specify failure handlers that
+                throw exceptions instead of terminating the program (see
+                @RefSect{advanced.throw_on_failures__and__noexcept__,
                 Throw on Failure}).
+                (This is declared @c noexcept(false) since C++11.)
     */
     ~specify_postcondition_except() BOOST_NOEXCEPT_IF(false) {}
 
@@ -287,8 +296,8 @@ public:
                 @c VirtualResult or <c>VirtualResult const</c> if extra copies
                 of the return value are irrelevant).
 
-    @return After postconditions have been specified, this return object allows
-            to optionally specify exception guarantees.
+    @return After postconditions have been specified, the object returned by
+            this function allows to optionally specify exception guarantees.
     */
     template<typename F>
     specify_except postcondition(F const& f) {
@@ -308,8 +317,8 @@ public:
                 This functor should capture variables by (constant) references
                 (to access the values they will have at function exit).
 
-    @return After exception guarantees have been specified, this return object
-            does not allow to specify any additional contract.
+    @return After exception guarantees have been specified, the object returned
+            by this function does not allow to specify any additional contract.
     */
     template<typename F>
     specify_nothing except(F const& f) {
@@ -333,10 +342,13 @@ private:
 };
 
 /**
-Allow to specify old copies at body, postconditions, or exception guarantees.
+Allow to specify old copies at body, postconditions, and exception guarantees.
 
 Allow to specify functors this library will call to copy old value at body, 
-check postconditions, or check exception guarantees.
+check postconditions, and check exception guarantees.
+This object is internally constructed by this library when users specify
+contracts calling @RefFunc{boost::contract::function} and similar functions
+(that is why this class does not have a public constructor).
 
 @see    @RefSect{advanced.old_copies_at_body, Old Copies at Body},
         @RefSect{tutorial.postconditions, Postconditions},
@@ -353,11 +365,11 @@ public:
     /**
     Destruct this object.
 
-    @b Throws:  This can throw (i.e., @c noexcept(false)) in case programmers
-                specify failure handlers that throw exceptions instead of
-                terminating the program (see
-                @RefSect{advanced.throw_on_failure__and__noexcept__,
+    @b Throws:  This can throw in case programmers specify failure handlers that
+                throw exceptions instead of terminating the program (see
+                @RefSect{advanced.throw_on_failures__and__noexcept__,
                 Throw on Failure}).
+                (This is declared @c noexcept(false) since C++11.)
     */
     ~specify_old_postcondition_except() BOOST_NOEXCEPT_IF(false) {}
     
@@ -382,9 +394,9 @@ public:
                 value expressions can be captured by (constant) value, or better
                 by (constant) reference to avoid extra copies).
 
-    @return After old value copies at body have been specified, this return
-            object allows to optionally specify postconditions and exception
-            guarantees.
+    @return After old value copies at body have been specified, the object
+            returned by this function allows to optionally specify
+            postconditions and exception guarantees.
     */
     template<typename F>
     specify_postcondition_except<VirtualResult> old(F const& f) {
@@ -410,8 +422,8 @@ public:
                 @c VirtualResult or <c>VirtualResult const</c> if extra copies
                 of the return value are irrelevant).
 
-    @return After postconditions have been specified, this return object allows
-            to optionally specify exception guarantees.
+    @return After postconditions have been specified, the object returned by
+            this function allows to optionally specify exception guarantees.
     */
     template<typename F>
     specify_except postcondition(F const& f) {
@@ -431,8 +443,8 @@ public:
                 This functor should capture variables by (constant) references
                 (to access the values they will have at function exit).
 
-    @return After exception guarantees have been specified, this return object
-            does not allow to specify any additional contract.
+    @return After exception guarantees have been specified, the object returned
+            by this function does not allow to specify any additional contract.
     */
     template<typename F>
     specify_nothing except(F const& f) {
@@ -466,6 +478,9 @@ exception guarantees.
 
 Allow to specify functors this library will call to check preconditions, copy
 old values at body, check postconditions, and check exception guarantees.
+This object is internally constructed by this library when users specify
+contracts calling @RefFunc{boost::contract::function} and similar functions
+(that is why this class does not have a public constructor).
 
 @see    @RefSect{tutorial.preconditions, Preconditions},
         @RefSect{advanced.old_copies_at_body, Old Copies at Body},
@@ -488,11 +503,11 @@ public:
     /**
     Destruct this object.
 
-    @b Throws:  This can throw (i.e., @c noexcept(false)) in case programmers
-                specify failure handlers that throw exceptions instead of
-                terminating the program (see
-                @RefSect{advanced.throw_on_failure__and__noexcept__,
+    @b Throws:  This can throw in case programmers specify failure handlers that
+                throw exceptions instead of terminating the program (see
+                @RefSect{advanced.throw_on_failures__and__noexcept__,
                 Throw on Failure}).
+                (This is declared @c noexcept(false) since C++11.)
     */
     ~specify_precondition_old_postcondition_except() BOOST_NOEXCEPT_IF(false) {}
     
@@ -509,9 +524,9 @@ public:
                 This functor should capture variables by (constant) value, or
                 better by (constant) reference (to avoid extra copies).
 
-    @return After preconditions have been specified, this return object allows
-            to optionally specify old value copies at body, postconditions, and
-            exception guarantees.
+    @return After preconditions have been specified, the object returned by this
+            function allows to optionally specify old value copies at body,
+            postconditions, and exception guarantees.
     */
     template<typename F>
     specify_old_postcondition_except<VirtualResult> precondition(F const& f) {
@@ -539,9 +554,9 @@ public:
                 value expressions can be captured by (constant) value, or better
                 by (constant) reference to avoid extra copies).
 
-    @return After old value copies at body have been specified, this return
-            object allows to optionally specify postconditions and exception
-            guarantees.
+    @return After old value copies at body have been specified, the object
+            returned by this functions allows to optionally specify
+            postconditions and exception guarantees.
     */
     template<typename F>
     specify_postcondition_except<VirtualResult> old(F const& f) {
@@ -567,8 +582,8 @@ public:
                 @c VirtualResult or <c>VirtualResult const</c> if extra copies
                 of the return value are irrelevant).
 
-    @return After postconditions have been specified, this return object allows
-            to optionally specify exception guarantees.
+    @return After postconditions have been specified, the object returned by
+            this function allows to optionally specify exception guarantees.
     */
     template<typename F>
     specify_except postcondition(F const& f) {
@@ -588,8 +603,8 @@ public:
                 This functor should capture variables by (constant) references
                 (to access the values they will have at function exit).
 
-    @return After exception guarantees have been specified, this return object
-            does not allow to specify any additional contract.
+    @return After exception guarantees have been specified, the object returned
+            by this function does not allow to specify any additional contract.
     */
     template<typename F>
     specify_nothing except(F const& f) {

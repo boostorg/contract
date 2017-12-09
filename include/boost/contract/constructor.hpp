@@ -29,7 +29,42 @@ Program contracts for constructors.
 This is used to specify postconditions, exception guarantees, old value copies
 at body, and check class invariants for constructors (see
 @RefClass{boost::contract::constructor_precondition} to specify preconditions
-for constructors instead).
+for constructors instead):
+
+@code
+class u {
+    friend class boost::contract:access;
+
+    void invariant() const { // Optional (as for static and volatile).
+        BOOST_CONTRACT_ASSERT(...);
+        ...
+    }
+
+public:
+    u(...) {
+        boost::contract::old_ptr<old_type> old_var;
+        boost::contract::check c = boost::contract::constructor(this)
+            // No `.precondition` (use `constructor_precondition` if needed).
+            .old([&] { // Optional.
+                old_var = BOOST_CONTRACT_OLDOF(old_expr);
+                ...
+            })
+            .postcondition([&] { // Optional.
+                BOOST_CONTRACT_ASSERT(...);
+                ...
+            })
+            .except([&] { // Optional.
+                BOOST_CONTRACT_ASSERT(...);
+                ...
+            })
+        ;
+
+        ... // Constructor body.
+    }
+
+    ...
+};
+@endcode
 
 For optimization, this can be omitted for constructors that do not have
 postconditions and exception guarantees, within classes that have no invariants.
@@ -39,7 +74,7 @@ postconditions and exception guarantees, within classes that have no invariants.
 @param obj  The object @c this from the scope of the enclosing constructor
             declaring the contract.
             (Constructors check all class invariants, including static and
-            volatile invariants, see also @RefSect{tutorial.class_invariants,
+            volatile invariants, see @RefSect{tutorial.class_invariants,
             Class Invariants} and
             @RefSect{extras.volatile_public_functions,
             Volatile Public Functions}).

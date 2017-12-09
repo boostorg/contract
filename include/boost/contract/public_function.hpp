@@ -70,7 +70,45 @@ Program contracts for static public functions.
 
 This is used to specify preconditions, postconditions, exception guarantees, old
 value copies at body, and check static class invariants for static public
-functions.
+functions:
+
+@code
+class u {
+    friend class boost::contract::access;
+
+    static void static_invariant() { // Optional (as for non-static).
+        BOOST_CONTRACT_ASSERT(...);
+        ...
+    }
+
+public:
+    static void f(...) {
+        boost::contract::old_ptr<old_type> old_var;
+        boost::contract::check c = boost::contract::public_function<u>()
+            .precondition([&] { // Optional.
+                BOOST_CONTRACT_ASSERT(...);
+                ...
+            })
+            .old([&] { // Optional.
+                old_var = BOOST_CONTRACT_OLDOF(old_expr);
+                ...
+            })
+            .postcondition([&] { // Optional.
+                BOOST_CONTRACT_ASSERT(...);
+                ...
+            })
+            .except([&] { // Optional.
+                BOOST_CONTRACT_ASSERT(...);
+                ...
+            })
+        ;
+
+        ... // Function body.
+    }
+    
+    ...
+};
+@endcode
 
 For optimization, this can be omitted for static public functions that do not
 have preconditions, postconditions and exception guarantees, within classes that
@@ -83,7 +121,7 @@ have no static invariants.
                 This template parameter must be explicitly specified for static
                 public functions (because they have no object @c this so there
                 is no function argument from which this type template parameter
-                can be automatically deduced by C++).
+                can be deduced by this library).
 
 @return The result of this function must be explicitly assigned to a variable of
         type @RefClass{boost::contract::check} declared locally just before the
@@ -106,7 +144,45 @@ not not override.
 
 This is used to specify preconditions, postconditions, exception guarantees, old
 value copies at body, and check class invariants for public functions that are
-not static, not virtual, and do not override.
+not static, not virtual, and do not override:
+
+@code
+class u {
+    friend class boost::contract::access;
+
+    void invariant() const { // Optional (as for static and volatile).
+        BOOST_CONTRACT_ASSERT(...);
+        ...
+    }
+
+public:
+    void f(...) {
+        boost::contract::old_ptr<old_type> old_var;
+        boost::contract::check c = boost::contract::public_function(this)
+            .precondition([&] { // Optional.
+                BOOST_CONTRACT_ASSERT(...);
+                ...
+            })
+            .old([&] { // Optional.
+                old_var = BOOST_CONTRACT_OLDOF(old_expr);
+                ...
+            })
+            .postcondition([&] { // Optional.
+                BOOST_CONTRACT_ASSERT(...);
+                ...
+            })
+            .except([&] { // Optional.
+                BOOST_CONTRACT_ASSERT(...);
+                ...
+            })
+        ;
+
+        ... // Function body.
+    }
+    
+    ...
+};
+@endcode
 
 For optimization, this can be omitted for public functions that do not have
 preconditions, postconditions and exception guarantees, within classes that have
@@ -118,8 +194,8 @@ no invariants.
             declaring the contract.
             This object might be mutable, @c const, @c volatile, or
             <c>const volatile</c> depending on the cv-qualifier of the enclosing
-            function (volatile virtual public functions will check volatile
-            class invariants, see
+            function (volatile public functions will check volatile class
+            invariants, see
             @RefSect{extras.volatile_public_functions,
             Volatile Public Functions}).
 
@@ -232,7 +308,45 @@ specify_precondition_old_postcondition_except<> public_function(Class* obj) {
 
     This is used to specify preconditions, postconditions, exception guarantees,
     old value copies at body, and check class invariants for public functions
-    that are virtual, do not override, and return @c void.
+    that are virtual, do not override, and return @c void:
+
+    @code
+    class u {
+        friend class boost::contract::access;
+
+        void invariant() const { // Optional (as for static and volatile).
+            BOOST_CONTRACT_ASSERT(...);
+            ...
+        }
+
+    public:
+        void f(..., boost::contract::virtual_* v = 0) {
+            boost::contract::old_ptr<old_type> old_var;
+            boost::contract::check c = boost::contract::public_function(v, this)
+                .precondition([&] { // Optional.
+                    BOOST_CONTRACT_ASSERT(...);
+                    ...
+                })
+                .old([&] { // Optional.
+                    old_var = BOOST_CONTRACT_OLDOF(v, old_expr);
+                    ...
+                })
+                .postcondition([&] { // Optional.
+                    BOOST_CONTRACT_ASSERT(...);
+                    ...
+                })
+                .except([&] { // Optional.
+                    BOOST_CONTRACT_ASSERT(...);
+                    ...
+                })
+            ;
+
+            ... // Function body.
+        }
+        
+        ...
+    };
+    @endcode
 
     A virtual public function should always call
     @RefFunc{boost::contract::public_function} otherwise this library will not
@@ -274,7 +388,47 @@ specify_precondition_old_postcondition_except<> public_function(Class* obj) {
 
     This is used to specify preconditions, postconditions, exception guarantees,
     old value copies at body, and check class invariants for public functions
-    that are virtual, do not override, and do not return @c void.
+    that are virtual, do not override, and do not return @c void:
+    
+    @code
+    class u {
+        friend class boost::contract::access;
+
+        void invariant() const { // Optional (as for static and volatile).
+            BOOST_CONTRACT_ASSERT(...);
+            ...
+        }
+
+    public:
+        t f(..., boost::contract::virtual_* v = 0) {
+            t result;
+            boost::contract::old_ptr<old_type> old_var;
+            boost::contract::check c = boost::contract::public_function(
+                    v, result, this)
+                .precondition([&] { // Optional.
+                    BOOST_CONTRACT_ASSERT(...);
+                    ...
+                })
+                .old([&] { // Optional.
+                    old_var = BOOST_CONTRACT_OLDOF(v, old_expr);
+                    ...
+                })
+                .postcondition([&] (t const& result) { // Optional.
+                    BOOST_CONTRACT_ASSERT(...);
+                    ...
+                })
+                .except([&] { // Optional.
+                    BOOST_CONTRACT_ASSERT(...);
+                    ...
+                })
+            ;
+
+            ... // Function body (use `return result = return_expr`).
+        }
+        
+        ...
+    };
+    @endcode
 
     A virtual public function should always call
     @RefFunc{boost::contract::public_function} otherwise this library will not
@@ -309,8 +463,8 @@ specify_precondition_old_postcondition_except<> public_function(Class* obj) {
                             Alternatively,
                             <c>boost::optional<<i>return-type</i>></c> can also
                             be used (see
-                            @RefSect{advanced.optional_return_value,
-                            Optional Return Value}).
+                            @RefSect{advanced.optional_return_values,
+                            Optional Return Values}).
                             (Usually this template parameter is automatically
                             deduced by C++ and it does not need to be explicitly
                             specified by programmers.)
@@ -430,7 +584,56 @@ specify_precondition_old_postcondition_except<> public_function(Class* obj) {
 
     This is used to specify preconditions, postconditions, exception guarantees,
     old value copies at body, and check class invariants for public function
-    overrides (virtual or not) that return @c void.
+    overrides (virtual or not) that return @c void:
+    
+    @code
+    class u
+        #define BASES private boost::contract::constructor_precondition<u>, \
+                public b, private w
+        : BASES
+    {
+        friend class boost::contract::access;
+
+        typedef BOOST_CONTRACT_BASE_TYPES(BASES) base_types;
+        #undef BASES
+
+        void invariant() const { // Optional (as for static and volatile).
+            BOOST_CONTRACT_ASSERT(...);
+            ...
+        }
+
+        BOOST_CONTRACT_OVERRIDES(f)
+
+    public:
+        // Override from `b::f`.
+        void f(t_1 a_1, ..., t_n a_n, boost::contract::virtual_* v = 0) {
+            boost::contract::old_ptr<old_type> old_var;
+            boost::contract::check c = boost::contract::public_function<
+                    override_f>(v, &u::f, this, a_1, ..., a_n)
+                .precondition([&] { // Optional.
+                    BOOST_CONTRACT_ASSERT(...);
+                    ...
+                })
+                .old([&] { // Optional.
+                    old_var = BOOST_CONTRACT_OLDOF(v, old_expr);
+                    ...
+                })
+                .postcondition([&] { // Optional.
+                    BOOST_CONTRACT_ASSERT(...);
+                    ...
+                })
+                .except([&] { // Optional.
+                    BOOST_CONTRACT_ASSERT(...);
+                    ...
+                })
+            ;
+
+            ... // Function body.
+        }
+        
+        ...
+    };
+    @endcode
 
     A public function override should always call
     @RefFunc{boost::contract::public_function} otherwise this library will not
@@ -501,7 +704,57 @@ specify_precondition_old_postcondition_except<> public_function(Class* obj) {
 
     This is used to specify preconditions, postconditions, exception guarantees,
     old value copies at body, and check class invariants for public function
-    overrides (virtual or not) that do not return @c void.
+    overrides (virtual or not) that do not return @c void:
+    
+    @code
+    class u
+        #define BASES private boost::contract::constructor_precondition<u>, \
+                public b, private w
+        : BASES
+    {
+        friend class boost::contract::access;
+
+        typedef BOOST_CONTRACT_BASE_TYPES(BASES) base_types;
+        #undef BASES
+
+        void invariant() const { // Optional (as for static and volatile).
+            BOOST_CONTRACT_ASSERT(...);
+            ...
+        }
+
+        BOOST_CONTRACT_OVERRIDES(f)
+
+    public:
+        // Override from `b::f`.
+        t f(t_1 a_1, ..., t_n a_n, boost::contract::virtual_* v = 0) {
+            t result;
+            boost::contract::old_ptr<old_type> old_var;
+            boost::contract::check c = boost::contract::public_function<
+                    override_f>(v, result, &u::f, this, a_1, ..., a_n)
+                .precondition([&] { // Optional.
+                    BOOST_CONTRACT_ASSERT(...);
+                    ...
+                })
+                .old([&] { // Optional.
+                    old_var = BOOST_CONTRACT_OLDOF(v, old_expr);
+                    ...
+                })
+                .postcondition([&] (t const& result) { // Optional.
+                    BOOST_CONTRACT_ASSERT(...);
+                    ...
+                })
+                .except([&] { // Optional.
+                    BOOST_CONTRACT_ASSERT(...);
+                    ...
+                })
+            ;
+
+            ... // Function body (use `return result = return_expr`).
+        }
+        
+        ...
+    };
+    @endcode
 
     A public function override should always call
     @RefFunc{boost::contract::public_function} otherwise this library will not
@@ -549,8 +802,8 @@ specify_precondition_old_postcondition_except<> public_function(Class* obj) {
                             Alternatively,
                             <c>boost::optional<<i>return-type</i>></c> can also
                             be used (see
-                            @RefSect{advanced.optional_return_value,
-                            Optional Return Value}).
+                            @RefSect{advanced.optional_return_values,
+                            Optional Return Values}).
                             (Usually this template parameter is automatically
                             deduced by C++ and it does not need to be explicitly
                             specified by programmers.)

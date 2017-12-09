@@ -39,8 +39,8 @@ namespace boost { namespace contract {
 Public base class for all exceptions directly thrown by this library.
 
 This class does not inherit from @c std::exception because exceptions deriving
-from this class will (inheriting from @c std::exception, @c std::bad_cast,
-etc.).
+from this class will do that (inheriting from @c std::exception,
+@c std::bad_cast, etc.).
 
 @see    @RefClass{boost::contract::assertion_failure},
         @RefClass{boost::contract::bad_virtual_result_cast},
@@ -50,7 +50,8 @@ class BOOST_CONTRACT_DETAIL_DECLSPEC exception {
 public:
     /**
     Destruct this object.
-    @b Throws: @c noexcept (or @c throw() if no C++11).
+
+    @b Throws: This is declared @c noexcept (or @c throw() before C++11).
     */
     virtual ~exception() /** @cond */ BOOST_NOEXCEPT_OR_NOTHROW /** @endcond */;
 };
@@ -79,6 +80,7 @@ class BOOST_CONTRACT_DETAIL_DECLSPEC bad_virtual_result_cast : // Copy (as str).
 public:
     /**
     Construct this object with the name of the from- and to- result types.
+
     @param from_type_name Name of the from-type (source of the cast).
     @param to_type_name Name of the to-type (destination of the cast).
     */
@@ -87,14 +89,16 @@ public:
 
     /**
     Destruct this object.
-    @b Throws: @c noexcept (or @c throw() if no C++11).
+
+    @b Throws: This is declared @c noexcept (or @c throw() before C++11).
     */
     virtual ~bad_virtual_result_cast()
             /** @cond */ BOOST_NOEXCEPT_OR_NOTHROW /** @endcond */;
 
     /**
     Description for this error (containing both from- and to- type names).
-    @b Throws: @c noexcept (or @c throw() if no C++11).
+
+    @b Throws: This is declared @c noexcept (or @c throw() before C++11).
     */
     virtual char const* what() const
             /** @cond */ BOOST_NOEXCEPT_OR_NOTHROW /** @endcond */;
@@ -123,7 +127,7 @@ exception is thrown while checking contracts (by default, these failure handler
 functions print an error message to @c std::cerr and terminate the program, but
 they can be customized to take any other action).
 
-@see    @RefSect{advanced.throw_on_failure__and__noexcept__, Throw on Failure},
+@see    @RefSect{advanced.throw_on_failures__and__noexcept__, Throw on Failure},
         @RefSect{extras.no_macros__and_no_variadic_macros_, No Macros}
 */
 class BOOST_CONTRACT_DETAIL_DECLSPEC assertion_failure : // Copy (as str, etc.).
@@ -155,14 +159,17 @@ public:
     
     /**
     Destruct this object.
-    @b Throws: @c noexcept (or @c throw() if no C++11).
+
+    @b Throws: This is declared @c noexcept (or @c throw() before C++11).
     */
     virtual ~assertion_failure()
             /** @cond */ BOOST_NOEXCEPT_OR_NOTHROW /** @endcond */;
 
     /**
     String describing the failed assertion.
-    @b Throws: @c noexcept (or @c throw() if no C++11).
+    
+    @b Throws: This is declared @c noexcept (or @c throw() before C++11).
+    
     @return A string formatted similarly to the following:
       <c>assertion "`code()`" failed: file "`file()`", line \`line()\`</c>.
             File, line, and code will be omitted from this string if they were
@@ -173,6 +180,7 @@ public:
 
     /**
     Name of the file containing the assertion.
+
     @return File name as specified at construction (or @c "" if no file was
             specified).
     */
@@ -180,6 +188,7 @@ public:
     
     /**
     Number of the line containing the assertion.
+
     @return Line number as specified at construction (or @c 0 if no line number
             was specified).
     */
@@ -187,6 +196,7 @@ public:
     
     /**
     Text listing the source code of the assertion condition.
+
     @return Assertion condition source code as specified at construction (or
             @c "" if no source code text was specified).
     */
@@ -216,7 +226,7 @@ failed to make sure exceptions are never thrown from destructors, not even
 when contract failure handlers are programmed by users to throw exceptions
 instead of terminating the program.
 
-@see @RefSect{advanced.throw_on_failure__and__noexcept__, Throw on Failure}
+@see @RefSect{advanced.throw_on_failures__and__noexcept__, Throw on Failure}
 */
 enum from {
     /** Assertion failed when checking contracts for constructors. */
@@ -237,8 +247,10 @@ Type of assertion failure handler functions (with @c from parameter).
 Assertion failure handler functions specified by this type must be functors
 returning @c void and taking a single parameter of type
 @RefEnum{boost::contract::from}.
+For example, this is used to specify contract failure handlers for class
+invariants, preconditions, postconditions, and exception guarantees.
 
-@see @RefSect{advanced.throw_on_failure__and__noexcept__, Throw on Failure}
+@see @RefSect{advanced.throw_on_failures__and__noexcept__, Throw on Failure}
 */
 typedef boost::function<void (from)> from_failure_handler;
 
@@ -247,8 +259,10 @@ Type of assertion failure handler functions (without @c from parameter).
 
 Assertion failure handler functions specified by this type must be nullary
 functors returning @c void.
+For example, this is used to specify contract failure handlers for
+implementation checks.
 
-@see @RefSect{advanced.throw_on_failure__and__noexcept__, Throw on Failure}
+@see @RefSect{advanced.throw_on_failures__and__noexcept__, Throw on Failure}
 */
 typedef boost::function<void ()> failure_handler;
 
@@ -441,14 +455,14 @@ Set failure handler for implementation checks.
 
 Set a new failure handler and returns it.
 
-@b Throws: @c noexcept (or @c throw() if no C++11).
+@b Throws: This is declared @c noexcept (or @c throw() before C++11).
 
 @param f New failure handler functor to set.
 
 @return Same failure handler functor @p f passed as parameter (e.g., for
         concatenating function calls).
 
-@see    @RefSect{advanced.throw_on_failure__and__noexcept__, Throw on Failure},
+@see    @RefSect{advanced.throw_on_failures__and__noexcept__, Throw on Failure},
         @RefSect{advanced.implementation_checks, Implementation Checks}
 */
 inline failure_handler const& set_check_failure(failure_handler const& f)
@@ -465,11 +479,11 @@ Return failure handler currently set for implementation checks.
 
 This is often called only internally by this library.
 
-@b Throws: @c noexcept (or @c throw() if no C++11).
+@b Throws: This is declared @c noexcept (or @c throw() before C++11).
 
 @return A copy of the failure handler currently set.
 
-@see    @RefSect{advanced.throw_on_failure__and__noexcept__, Throw on Failure},
+@see    @RefSect{advanced.throw_on_failures__and__noexcept__, Throw on Failure},
         @RefSect{advanced.implementation_checks, Implementation Checks}
 */
 inline failure_handler get_check_failure()
@@ -487,9 +501,10 @@ Call failure handler for implementation checks.
 This is often called only internally by this library.
 
 @b Throws:  This can throw in case programmers specify a failure handler that
-            throws exceptions on contract assertion failures (not the default).
+            throws exceptions on implementation check failures (not the
+            default).
 
-@see    @RefSect{advanced.throw_on_failure__and__noexcept__, Throw on Failure},
+@see    @RefSect{advanced.throw_on_failures__and__noexcept__, Throw on Failure},
         @RefSect{advanced.implementation_checks, Implementation Checks}
 */
 inline void check_failure() /* can throw */ {
@@ -505,14 +520,14 @@ Set failure handler for preconditions.
 
 Set a new failure handler and returns it.
 
-@b Throws: @c noexcept (or @c throw() if no C++11).
+@b Throws: This is declared @c noexcept (or @c throw() before C++11).
 
 @param f New failure handler functor to set.
 
 @return Same failure handler functor @p f passed as parameter (e.g., for
-    concatenating function calls).
+        concatenating function calls).
 
-@see    @RefSect{advanced.throw_on_failure__and__noexcept__, Throw on Failure},
+@see    @RefSect{advanced.throw_on_failures__and__noexcept__, Throw on Failure},
         @RefSect{tutorial.preconditions, Preconditions}
 */
 inline from_failure_handler const& set_precondition_failure(from_failure_handler
@@ -529,11 +544,11 @@ Return failure handler currently set for preconditions.
 
 This is often called only internally by this library.
 
-@b Throws: @c noexcept (or @c throw() if no C++11).
+@b Throws: This is declared @c noexcept (or @c throw() before C++11).
 
 @return A copy of the failure handler currently set.
 
-@see    @RefSect{advanced.throw_on_failure__and__noexcept__, Throw on Failure},
+@see    @RefSect{advanced.throw_on_failures__and__noexcept__, Throw on Failure},
         @RefSect{tutorial.preconditions, Preconditions}
 */
 inline from_failure_handler get_precondition_failure()
@@ -553,11 +568,12 @@ This is often called only internally by this library.
 @b Throws:  This can throw in case programmers specify a failure handler that
             throws exceptions on contract assertion failures (not the default).
 
-@param where    Operation that failed the contract assertion (when called by
-                this library, this parameter will never be @c from_destructor
-                because destructors never have preconditions).
+@param where    Operation that failed the contract assertion (when this function
+                is called by this library, this parameter will never be
+                @c from_destructor because destructors do not have
+                preconditions).
 
-@see    @RefSect{advanced.throw_on_failure__and__noexcept__, Throw on Failure},
+@see    @RefSect{advanced.throw_on_failures__and__noexcept__, Throw on Failure},
         @RefSect{tutorial.preconditions, Preconditions}
 */
 inline void precondition_failure(from where) /* can throw */ {
@@ -573,14 +589,14 @@ Set failure handler for postconditions.
 
 Set a new failure handler and returns it.
 
-@b Throws: @c noexcept (or @c throw() if no C++11).
+@b Throws: This is declared @c noexcept (or @c throw() before C++11).
 
 @param f New failure handler functor to set.
 
 @return Same failure handler functor @p f passed as parameter (e.g., fr
         concatenating function calls).
 
-@see    @RefSect{advanced.throw_on_failure__and__noexcept__, Throw on Failure},
+@see    @RefSect{advanced.throw_on_failures__and__noexcept__, Throw on Failure},
         @RefSect{tutorial.postconditions, Postconditions}
 */
 inline from_failure_handler const& set_postcondition_failure(
@@ -598,11 +614,11 @@ Return failure handler currently set for postconditions.
 
 This is often called only internally by this library.
 
-@b Throws: @c noexcept (or @c throw() if no C++11).
+@b Throws: This is declared @c noexcept (or @c throw() before C++11).
 
 @return A copy of the failure handler currently set.
 
-@see    @RefSect{advanced.throw_on_failure__and__noexcept__, Throw on Failure},
+@see    @RefSect{advanced.throw_on_failures__and__noexcept__, Throw on Failure},
         @RefSect{tutorial.postconditions, Postconditions}
 */
 inline from_failure_handler get_postcondition_failure()
@@ -627,7 +643,7 @@ This is often called only internally by this library.
                 from destructors, not even when they are programmed by users to
                 throw exceptions instead of terminating the program).
 
-@see    @RefSect{advanced.throw_on_failure__and__noexcept__, Throw on Failure},
+@see    @RefSect{advanced.throw_on_failures__and__noexcept__, Throw on Failure},
         @RefSect{tutorial.postconditions, Postconditions}
 */
 inline void postcondition_failure(from where) /* can throw */ {
@@ -643,14 +659,14 @@ Set failure handler for exception guarantees.
 
 Set a new failure handler and returns it.
 
-@b Throws: @c noexcept (or @c throw() if no C++11).
+@b Throws: This is declared @c noexcept (or @c throw() before C++11).
 
 @param f New failure handler functor to set.
 
 @return Same failure handler functor @p f passed as parameter (e.g., for
         concatenating function calls).
 
-@see    @RefSect{advanced.throw_on_failure__and__noexcept__, Throw on Failure},
+@see    @RefSect{advanced.throw_on_failures__and__noexcept__, Throw on Failure},
         @RefSect{tutorial.exception_guarantees, Exception Guarantees}
 */
 inline from_failure_handler const& set_except_failure(from_failure_handler
@@ -667,11 +683,11 @@ Return failure handler currently set for exception guarantees.
 
 This is often called only internally by this library.
 
-@b Throws: @c noexcept (or @c throw() if no C++11).
+@b Throws: This is declared @c noexcept (or @c throw() before C++11).
 
 @return A copy of the failure handler currently set.
 
-@see    @RefSect{advanced.throw_on_failure__and__noexcept__, Throw on Failure},
+@see    @RefSect{advanced.throw_on_failures__and__noexcept__, Throw on Failure},
         @RefSect{tutorial.exception_guarantees, Exception Guarantees}
 */
 inline from_failure_handler get_except_failure()
@@ -696,11 +712,11 @@ This is often called only internally by this library.
             exception (the one that caused the exception guarantees to be
             checked in the first place).
             Therefore, programming this failure handler to throw yet another
-            exception will force C++ to always terminate the program.
+            exception will force C++ to automatically terminate the program.
 
 @param where Operation that failed the contract assertion.
 
-@see    @RefSect{advanced.throw_on_failure__and__noexcept__, Throw on Failure},
+@see    @RefSect{advanced.throw_on_failures__and__noexcept__, Throw on Failure},
         @RefSect{tutorial.exception_guarantees, Exception Guarantees}
 */
 inline void except_failure(from where) /* can throw */ {
@@ -716,14 +732,14 @@ Set failure handler for old value copies at body.
 
 Set a new failure handler and returns it.
 
-@b Throws: @c noexcept (or @c throw() if no C++11).
+@b Throws: This is declared @c noexcept (or @c throw() before C++11).
 
 @param f New failure handler functor to set.
 
 @return Same failure handler functor @p f passed as parameter (e.g., for
         concatenating function calls).
 
-@see    @RefSect{advanced.throw_on_failure__and__noexcept__, Throw on Failure},
+@see    @RefSect{advanced.throw_on_failures__and__noexcept__, Throw on Failure},
         @RefSect{advanced.old_copies_at_body, Old Values at Body}
 */
 inline from_failure_handler const& set_old_failure(from_failure_handler const&
@@ -740,11 +756,11 @@ Return failure handler currently set for old value copies at body.
 
 This is often called only internally by this library.
 
-@b Throws: @c noexcept (or @c throw() if no C++11).
+@b Throws: This is declared @c noexcept (or @c throw() before C++11).
 
 @return A copy of the failure handler currently set.
 
-@see    @RefSect{advanced.throw_on_failure__and__noexcept__, Throw on Failure},
+@see    @RefSect{advanced.throw_on_failures__and__noexcept__, Throw on Failure},
         @RefSect{advanced.old_copies_at_body, Old Values at Body}
 */
 inline from_failure_handler get_old_failure()
@@ -769,7 +785,7 @@ This is often called only internally by this library.
                 from destructors, not even when they are programmed by users to
                 throw exceptions instead of terminating the program).
 
-@see    @RefSect{advanced.throw_on_failure__and__noexcept__, Throw on Failure},
+@see    @RefSect{advanced.throw_on_failures__and__noexcept__, Throw on Failure},
         @RefSect{advanced.old_copies_at_body, Old Values at Body}
 */
 inline void old_failure(from where) /* can throw */ {
@@ -785,14 +801,14 @@ Set failure handler for class invariants at entry.
 
 Set a new failure handler and returns it.
 
-@b Throws: @c noexcept (or @c throw() if no C++11).
+@b Throws: This is declared @c noexcept (or @c throw() before C++11).
 
 @param f New failure handler functor to set.
 
 @return Same failure handler functor @p f passed as parameter (e.g., for
         concatenating function calls).
 
-@see    @RefSect{advanced.throw_on_failure__and__noexcept__, Throw on Failure},
+@see    @RefSect{advanced.throw_on_failures__and__noexcept__, Throw on Failure},
         @RefSect{tutorial.class_invariants, Class Invariants},
         @RefSect{extras.volatile_public_functions,
         Volatile Public Functions}
@@ -812,11 +828,11 @@ Return failure handler currently set for class invariants at entry.
 
 This is often called only internally by this library.
 
-@b Throws: @c noexcept (or @c throw() if no C++11).
+@b Throws: This is declared @c noexcept (or @c throw() before C++11).
 
 @return A copy of the failure handler currently set.
 
-@see    @RefSect{advanced.throw_on_failure__and__noexcept__, Throw on Failure},
+@see    @RefSect{advanced.throw_on_failures__and__noexcept__, Throw on Failure},
         @RefSect{tutorial.class_invariants, Class Invariants},
         @RefSect{extras.volatile_public_functions,
         Volatile Public Functions}
@@ -843,7 +859,7 @@ This is often called only internally by this library.
                 from destructors, not even when they are programmed by users to
                 throw exceptions instead of terminating the program).
 
-@see    @RefSect{advanced.throw_on_failure__and__noexcept__, Throw on Failure},
+@see    @RefSect{advanced.throw_on_failures__and__noexcept__, Throw on Failure},
         @RefSect{tutorial.class_invariants, Class Invariants},
         @RefSect{extras.volatile_public_functions,
         Volatile Public Functions}
@@ -861,14 +877,14 @@ Set failure handler for class invariants at exit.
 
 Set a new failure handler and returns it.
 
-@b Throws: @c noexcept (or @c throw() if no C++11).
+@b Throws: This is declared @c noexcept (or @c throw() before C++11).
 
 @param f New failure handler functor to set.
 
 @return Same failure handler functor @p f passed as parameter (e.g., for
         concatenating function calls).
 
-@see    @RefSect{advanced.throw_on_failure__and__noexcept__, Throw on Failure},
+@see    @RefSect{advanced.throw_on_failures__and__noexcept__, Throw on Failure},
         @RefSect{tutorial.class_invariants, Class Invariants},
         @RefSect{extras.volatile_public_functions,
         Volatile Public Functions}
@@ -888,11 +904,11 @@ Return failure handler currently set for class invariants at exit.
 
 This is often called only internally by this library.
 
-@b Throws: @c noexcept (or @c throw() if no C++11).
+@b Throws: This is declared @c noexcept (or @c throw() before C++11).
 
 @return A copy of the failure handler currently set.
 
-@see    @RefSect{advanced.throw_on_failure__and__noexcept__, Throw on Failure},
+@see    @RefSect{advanced.throw_on_failures__and__noexcept__, Throw on Failure},
         @RefSect{tutorial.class_invariants, Class Invariants},
         @RefSect{extras.volatile_public_functions,
         Volatile Public Functions}
@@ -919,7 +935,7 @@ This is often called only internally by this library.
                 from destructors, not even when they are programmed by users to
                 throw exceptions instead of terminating the program).
 
-@see    @RefSect{advanced.throw_on_failure__and__noexcept__, Throw on Failure},
+@see    @RefSect{advanced.throw_on_failures__and__noexcept__, Throw on Failure},
         @RefSect{tutorial.class_invariants, Class Invariants},
         @RefSect{extras.volatile_public_functions,
         Volatile Public Functions}
@@ -941,14 +957,14 @@ This is provided for convenience and it is equivalent to call both
 @RefFunc{boost::contract::set_exit_invariant_failure} with the same functor
 parameter @p f.
 
-@b Throws: @c noexcept (or @c throw() if no C++11).
+@b Throws: This is declared @c noexcept (or @c throw() before C++11).
 
 @param f New failure handler functor to set for both entry and exit invariants.
 
 @return Same failure handler functor @p f passed as parameter (e.g., for
         concatenating function calls).
 
-@see    @RefSect{advanced.throw_on_failure__and__noexcept__, Throw on Failure},
+@see    @RefSect{advanced.throw_on_failures__and__noexcept__, Throw on Failure},
         @RefSect{tutorial.class_invariants, Class Invariants},
         @RefSect{extras.volatile_public_functions,
         Volatile Public Functions}

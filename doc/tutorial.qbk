@@ -659,12 +659,12 @@ The extra function result parameter taken by the functor passed to `.postconditi
     class u {
     public:
         // A void virtual public function (that does not override).
-        virtual r f(t_1 a_1, ..., t_n a_n, boost::contract::virtual_* v = 0) {
-            r result;
+        virtual t f(t_1 a_1, ..., t_n a_n, boost::contract::virtual_* v = 0) {
+            t result;
             boost::contract::check c = boost::contract::public_function(
                     v, result, this)                            // Result parameter...
                 .precondition([&] { ... })
-                .postcondition([&] (r const& result) { ... })   // ...so unary functor.
+                .postcondition([&] (t const& result) { ... })   // ...so unary functor.
                 .except([&] { ... })
             ;
 
@@ -780,12 +780,12 @@ In this case, the library will pass this return value reference to the postcondi
     class u {
     public:
         // A non-void public function override.
-        r f(t_1 a_1, ..., t_n a_n, boost::contract::virtual_* v = 0) /* override */ {
-            r result;
+        t f(t_1 a_1, ..., t_n a_n, boost::contract::virtual_* v = 0) /* override */ {
+            t result;
             boost::contract::check c = boost::contract::public_function<override_f>(
                     v, result, &u::f, this, a_1, ..., a_n)      // Result parameter...
                 .precondition([&] { ... })
-                .postcondition([&] (r const& result) { ... })   // ...so unary functor.
+                .postcondition([&] (t const& result) { ... })   // ...so unary functor.
                 .except([&] { ... })
             ;
 

@@ -28,7 +28,32 @@ Program preconditions for constructors.
 This class must be the very first base of the class declaring the
 constructor for which preconditions are programmed (that way constructor
 arguments can be checked by preconditions even before they are used to
-initialize other base classes).
+initialize other base classes):
+
+@code
+    class u
+        #define BASES private boost::contract::constructor_precondition<u>, \
+                public b
+        : BASES
+    {
+        ...
+        #undef BASES
+
+    public:
+        explicit u(unsigned x) :
+            boost::contract::constructor_precondition<u>([&] {
+                BOOST_CONTRACT_ASSERT(x != 0);
+                ...
+            }),
+            b(1.0 / float(x))
+        {
+            ...
+        }
+
+        ...
+    };
+@endcode
+
 User-defined classes should inherit privately from this class (to not alter the
 public interface of user-defined classes).
 In addition, this class should never be declared as a virtual base (because

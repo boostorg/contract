@@ -28,7 +28,42 @@ Program contracts for destructors.
 This is used to specify postconditions, exception guarantees, old value copies
 at body, and check class invariants for destructors (destructors cannot not have
 preconditions, see
-@RefSect{contract_programming_overview, Contract Programming Overview}).
+@RefSect{contract_programming_overview.destructor_calls, Destructor Calls}):
+
+@code
+class u {
+    friend class boost::contract::access;
+
+    void invariant() const { // Optional (as for static and volatile).
+        BOOST_CONTRACT_ASSERT(...);
+        ...
+    }
+
+public:
+    ~u() {
+        boost::contract::old_ptr<old_type> old_var;
+        boost::contract::check c = boost::contract::destructor(this)
+            // No `.precondition` (destructors have no preconditions).
+            .old([&] { // Optional.
+                old_var = BOOST_CONTRACT_OLDOF(old_expr);
+                ...
+            })
+            .postcondition([&] { // Optional.
+                BOOST_CONTRACT_ASSERT(...);
+                ...
+            })
+            .except([&] { // Optional.
+                BOOST_CONTRACT_ASSERT(...);
+                ...
+            })
+        ;
+
+        ... // Destructor body.
+    }
+    
+    ...
+};
+@endcode
 
 For optimization, this can be omitted for destructors that do not have
 postconditions and exception guarantees, within classes that have no invariants.
@@ -38,7 +73,7 @@ postconditions and exception guarantees, within classes that have no invariants.
 @param obj  The object @c this from the scope of the enclosing destructor
             declaring the contract.
             (Destructors check all class invariants, including static and
-            volatile invariants, see also @RefSect{tutorial.class_invariants,
+            volatile invariants, see @RefSect{tutorial.class_invariants,
             Class Invariants} and
             @RefSect{extras.volatile_public_functions,
             Volatile Public Functions}).

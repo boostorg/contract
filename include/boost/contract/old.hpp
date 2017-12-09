@@ -82,13 +82,13 @@ different ways.
 1\. From within virtual public functions and public functions overrides:
 
 @code
-BOOST_CONTRACT_OLDOF(v, expr)
+BOOST_CONTRACT_OLDOF(v, old_expr)
 @endcode
 
 2\. From all other operations:
 
 @code
-BOOST_CONTRACT_OLDOF(expr)
+BOOST_CONTRACT_OLDOF(old_expr)
 @endcode
 
 Where:
@@ -97,14 +97,11 @@ Where:
         @RefClass{boost::contract::virtual_}<c>*</c> and default value @c 0
         from the enclosing virtual public function or public function
         overrides declaring the contract.
+@arg    <c><b>old_expr</b></c> is the expression to be evaluated and copied to
+        the old value pointer.
         (This is not a variadic macro parameter so any comma it might contain
         must be protected by round parenthesis,
-        <c>BOOST_CONTRACT_OLDOF((v), expr)</c> will always work.)
-@arg    <c><b>expr</b></c> is the expression to be evaluated and copied to the
-        old value pointer.
-        (This is not a variadic macro parameter so any comma it might contain
-        must be protected by round parenthesis,
-        <c>BOOST_CONTRACT_OLDOF(v, (expr))</c> will always work.)
+        <c>BOOST_CONTRACT_OLDOF(v, (old_expr))</c> will always work.)
 
 On compilers that do not support variadic macros, programmers can manually copy
 old value expressions without using this macro (see
@@ -133,17 +130,26 @@ Trait to check if an old value type can be copied or not.
 By default, this unary boolean meta-function is equivalent to
 @c boost::is_copy_constructible<T> but programmers can chose to specialize it
 for user-defined types (in general some kind of specialization is needed on
-compilers that do not support C++11, see also
+compilers that do not support C++11, see
 <a href="http://www.boost.org/doc/libs/release/libs/type_traits/doc/html/boost_typetraits/reference/is_copy_constructible.html">
-<c>boost::is_copy_constructible</c></a>).
+<c>boost::is_copy_constructible</c></a>):
 
-A given old value type @c X is copied only if
-@c boost::contract::is_old_value_copyable<X>::value is @c true.
+@code
+class u; // Some user-defined type.
+
+namespace boost { namespace contract {
+    template<> // Specialization.
+    struct is_old_value_copyable<u> : boost::false_type {};
+} } // namespace
+@endcode
+
+In summary, a given old value type @c T is copied only if
+@c boost::contract::is_old_value_copyable<T>::value is @c true.
 Copyable old value types are always copied using
-@c boost::contract::old_value_copy<X>.
+@c boost::contract::old_value_copy<T>.
 Non-copyable old value types generate a compile-time error when
-@c boost::contract::old_ptr<X> is dereferenced, but instead leave
-@c boost::contract::old_ptr_if_copyable<X> always null (without generating
+@c boost::contract::old_ptr<T> is dereferenced, but instead leave
+@c boost::contract::old_ptr_if_copyable<T> always null (without generating
 compile-time errors).
 
 @see    @RefSect{extras.old_value_requirements__templates_,
@@ -197,6 +203,8 @@ struct old_value_copy {
 
     This is the only operation within this library that actually copies old
     values.
+    This ensures this library makes one and only one copy of old values (if they
+    actually need to be copied).
 
     @param old The old value to copy.
     */
@@ -207,7 +215,7 @@ struct old_value_copy {
     Return a (constant) reference to the old value that was copied.
     
     Contract assertions should not change the state of the program so the old
-    value copy is returned as @c const (see also
+    value copy is returned as @c const (see
     @RefSect{contract_programming_overview.constant_correctness,
     Constant Correctness}).
     */
@@ -221,11 +229,24 @@ template<typename T>
 class old_ptr_if_copyable;
 
 /**
-Old value pointer (that requires the pointed old value type to be copyable).
+Old value pointer that requires the pointed old value type to be copyable.
 
 This is set to point to an actual old value copy using either
 @RefMacro{BOOST_CONTRACT_OLDOF} or @RefFunc{boost::contract::make_old} (that is
-why this class does not have public non-default constructors).
+why this class does not have public non-default constructors):
+
+@code
+class u {
+public:
+    virtual void f(..., boost::contract::virtual_* v = 0) {
+        boost::contract::old_ptr<old_type> old_var =
+                BOOST_CONTRACT_OLDOF(v, old_expr);
+        ...
+    }
+
+    ...
+};
+@endcode
 
 @see @RefSect{tutorial.old_values, Old Values}
 
@@ -254,7 +275,7 @@ public:
     @return The pointed old value.
             Contract assertions should not change the state of the program so
             this member function is @c const and it returns the old value as a
-            reference to a constant object (see also
+            reference to a constant object (see
             @RefSect{contract_programming_overview.constant_correctness,
             Constant Correctness}).
     */
@@ -278,7 +299,7 @@ public:
     @return A pointer to the old value (null if this old value pointer is null).
             Contract assertions should not change the state of the program so
             this member function is @c const and it returns the old value as a
-            constant pointer to a constant object (see also
+            constant pointer to a constant object (see
             @RefSect{contract_programming_overview.constant_correctness,
             Constant Correctness}).
     */
@@ -322,11 +343,27 @@ private:
 };
 
 /**
-Old value pointer (that does not require the pointed old value type to be
-copyable).
+Old value pointer that does not require the pointed old value type to be
+copyable.
 
 This is set to point to an actual old value copy using either
-@RefMacro{BOOST_CONTRACT_OLDOF} or @RefFunc{boost::contract::make_old}.
+@RefMacro{BOOST_CONTRACT_OLDOF} or @RefFunc{boost::contract::make_old}:
+
+@code
+template<typename T> // Type `T` might or not be copyable.
+class u {
+public:
+    virtual void f(..., boost::contract::virtual_* v = 0) {
+        boost::contract::old_ptr_if_copyable<T> old_var =
+                BOOST_CONTRACT_OLDOF(v, old_expr);
+        ...
+            if(old_var) ... // Always null for non-copyable types.
+        ...
+    }
+
+    ...
+};
+@endcode
 
 @see    @RefSect{extras.old_value_requirements__templates_,
         Old Value Requirements}
@@ -370,7 +407,7 @@ public:
     @return The pointed old value.
             Contract assertions should not change the state of the program so
             this member function is @c const and it returns the old value as a
-            reference to a constant object (see also
+            reference to a constant object (see
             @RefSect{contract_programming_overview.constant_correctness,
             Constant Correctness}).
     */
@@ -389,7 +426,7 @@ public:
     @return A pointer to the old value (null if this old value pointer is null).
             Contract assertions should not change the state of the program so
             this member function is @c const and it returns the old value as a
-            constant pointer to a constant object (see also
+            constant pointer to a constant object (see
             @RefSect{contract_programming_overview.constant_correctness,
             Constant Correctness}).
     */
@@ -511,8 +548,8 @@ constructors, etc.).
 class old_pointer { // Copyable (as *).
 public:
     /**
-    Convert this object to an actual old value pointer (the old value type might
-    or not be copyable).
+    Convert this object to an actual old value pointer for which the old value
+    type @c T might or not be copyable.
 
     For example, this is implicitly called when assigning or initializing old
     value pointers.
@@ -529,8 +566,8 @@ public:
     }
     
     /**
-    Convert this object to an actual old value pointer (the old value type must
-    be copyable).
+    Convert this object to an actual old value pointer for which the old value
+    type @c T must be copyable.
 
     For example, this is implicitly called when assigning or initializing old
     value pointers.
@@ -633,7 +670,7 @@ This function is often only used by the code expanded by
 
 @return Null old value.
 */
-old_value null_old() { return old_value(); }
+inline /* TODO: odr */ old_value null_old() { return old_value(); }
 
 /**
 Make an old value pointer (but not for virtual public functions and public
@@ -641,19 +678,26 @@ functions overrides).
 
 The related old value pointer will not be null if the specified old value was
 actually copied.
-This function is often only used by the code expanded by
-@RefMacro{BOOST_CONTRACT_OLDOF} which is equivalent to:
+This function is often only used by code expanded by
+@c BOOST_CONTRACT_OLDOF(old_expr):
+
+@code
+boost::contract::make_old(boost::contract::copy_old() ? old_expr :
+        boost::contract::null_old())
+@endcode
 
 @see @RefSect{extras.no_macros__and_no_variadic_macros_, No Macros}
 
-@param old  Old value (usually implicitly constructed from the user old value
-            expression to be copied).
+@param old  Old value which is usually implicitly constructed from the user old
+            value expression to be copied (use the ternary operator <c>?:</c>
+            to avoid evaluating the old value expression all together when
+            @c boost::contract::copy_old() is @c false).
 
 @return Old value pointer (usually implicitly converted to either
         @RefClass{boost::contract::old_ptr} or
         @RefClass{boost::contract::old_ptr_if_copyable} in user code).
 */
-old_pointer make_old(old_value const& old) {
+inline /* TODO: odr */ old_pointer make_old(old_value const& old) {
     return old_pointer(0, old);
 }
 
@@ -663,8 +707,13 @@ overrides).
 
 The related old value pointer will not be null if the specified old value was
 actually copied.
-This function is often only used by the code expanded by
-@RefMacro{BOOST_CONTRACT_OLDOF}.
+This function is often only used by code expanded by
+@c BOOST_CONTRACT_OLDOF(v, old_expr):
+
+@code
+boost::contract::make_old(v, boost::contract::copy_old(v) ? old_expr :
+        boost::contract::null_old())
+@endcode
 
 @see @RefSect{extras.no_macros__and_no_variadic_macros_, No Macros}
 
@@ -672,14 +721,16 @@ This function is often only used by the code expanded by
             @RefClass{boost::contract::virtual_}<c>*</c> and default value @c 0
             from the enclosing virtual or overriding public function declaring
             the contract.
-@param old  Old value (usually implicitly constructed from the user old value
-            expression to be copied).
+@param old  Old value which is usually implicitly constructed from the user old
+            value expression to be copied (use the ternary operator <c>?:</c>
+            to avoid evaluating the old value expression all together when
+            @c boost::contract::copy_old(v) is @c false).
 
 @return Old value pointer (usually implicitly converted to either
         @RefClass{boost::contract::old_ptr} or
         @RefClass{boost::contract::old_ptr_if_copyable} in user code).
 */
-old_pointer make_old(virtual_* v, old_value const& old) {
+inline /* TODO: odr */ old_pointer make_old(virtual_* v, old_value const& old) {
     return old_pointer(v, old);
 }
 
@@ -688,16 +739,16 @@ Check if old values need to be copied (but not for virtual public functions and
 public function overrides).
 
 For example, this function always returns false when both postconditions and
-exception guarantees are not being checked (see also
+exception guarantees are not being checked (see
 @RefMacro{BOOST_CONTRACT_NO_OLDS}).
 This function is often only used by the code expanded by
-@c BOOST_CONTRACT_OLDOF.
+@RefMacro{BOOST_CONTRACT_OLDOF}.
 
 @see @RefSect{extras.no_macros__and_no_variadic_macros_, No Macros}
 
 @return True if old values need to be copied, false otherwise.
 */
-bool copy_old() {
+inline /* TODO: odr */ bool copy_old() {
     #ifndef BOOST_CONTRACT_NO_OLDS
         #ifndef BOOST_CONTRACT_ALL_DISABLE_NO_ASSERTION
             return !boost::contract::detail::checking::already();
@@ -714,12 +765,12 @@ Check if old values need to be copied (for virtual public functions and public
 function overrides).
 
 For example, this function always returns false when both postconditions and
-exception guarantees are not being checked (see also
+exception guarantees are not being checked (see
 @RefMacro{BOOST_CONTRACT_NO_OLDS}).
 In addition, this function returns false when overridden functions are being
 called subsequent times by this library to support subcontracting.
 This function is often only used by the code expanded by
-@c BOOST_CONTRACT_OLDOF.
+@RefMacro{BOOST_CONTRACT_OLDOF}.
 
 @see @RefSect{extras.no_macros__and_no_variadic_macros_, No Macros}
 
@@ -730,7 +781,7 @@ This function is often only used by the code expanded by
 
 @return True if old values need to be copied, false otherwise.
 */
-bool copy_old(virtual_* v) {
+inline /* TODO: odr */ bool copy_old(virtual_* v) {
     #ifndef BOOST_CONTRACT_NO_OLDS
         if(!v) {
             #ifndef BOOST_CONTRACT_ALL_DISABLE_NO_ASSERTION
