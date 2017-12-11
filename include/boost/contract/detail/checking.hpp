@@ -8,6 +8,7 @@
 // See: http://www.boost.org/doc/libs/release/libs/contract/doc/html/index.html
 
 #include <boost/contract/core/config.hpp>
+#include <boost/contract/detail/static_local_var.hpp>
 #include <boost/contract/detail/declspec.hpp>
 #include <boost/thread/mutex.hpp>
 #include <boost/noncopyable.hpp>
@@ -58,8 +59,11 @@ private:
     static bool already_unlocked();
     static bool already_locked();
 
-    static boost::mutex mutex_;
-    static bool checking_;
+    struct mutex_tag;
+    typedef static_local_var<mutex_tag, boost::mutex> mutex;
+
+    struct checking_tag;
+    typedef static_local_var<checking_tag, bool, bool, false> flag;
 };
 
 #ifdef BOOST_MSVC

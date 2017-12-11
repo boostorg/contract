@@ -8,21 +8,27 @@
 // See: http://www.boost.org/doc/libs/release/libs/contract/doc/html/index.html
 
 #include "lib_a.hpp"
-#include <boost/contract/public_function.hpp>
-#include <boost/contract/old.hpp>
-#include <boost/contract/check.hpp>
-#include <boost/contract/assert.hpp>
+#include <boost/contract.hpp> // All headers so test ODR for entire lib.
 
+#ifdef BOOST_CONTRACT_HEADER_ONLY
+    #define BOOST_CONTRACT_TEST_LIB_A_DECLINLINE inline
+#else
+    #define BOOST_CONTRACT_TEST_LIB_A_DECLINLINE /* nothing */
+#endif
+
+BOOST_CONTRACT_TEST_LIB_A_DECLINLINE
 void a::static_invariant() {
     using boost::contract::test::detail::out;
     out("a::static_inv\n");
 }
 
+BOOST_CONTRACT_TEST_LIB_A_DECLINLINE
 void a::invariant() const {
     using boost::contract::test::detail::out;
     out("a::inv\n");
 }
 
+BOOST_CONTRACT_TEST_LIB_A_DECLINLINE
 int a::f(x_type& x) {
     using boost::contract::test::detail::out;
     int result;
@@ -44,36 +50,42 @@ int a::f(x_type& x) {
     return result;
 }
 
+BOOST_CONTRACT_TEST_LIB_A_DECLINLINE
 void a::disable_pre_failure() {
     using boost::contract::test::detail::out;
     boost::contract::set_precondition_failure([] (boost::contract::from)
             { out("a::pre_failure\n"); });
 }
 
+BOOST_CONTRACT_TEST_LIB_A_DECLINLINE
 void a::disable_post_failure() {
     using boost::contract::test::detail::out;
     boost::contract::set_postcondition_failure([] (boost::contract::from)
             { out("a::post_failure\n"); });
 }
 
+BOOST_CONTRACT_TEST_LIB_A_DECLINLINE
 void a::disable_entry_inv_failure() {
     using boost::contract::test::detail::out;
     boost::contract::set_entry_invariant_failure([] (boost::contract::from)
             { out("a::entry_inv_failure\n"); });
 }
 
+BOOST_CONTRACT_TEST_LIB_A_DECLINLINE
 void a::disable_exit_inv_failure() {
     using boost::contract::test::detail::out;
     boost::contract::set_exit_invariant_failure([] (boost::contract::from)
             { out("a::exit_inv_failure\n"); });
 }
 
+BOOST_CONTRACT_TEST_LIB_A_DECLINLINE
 void a::disable_inv_failure() {
     using boost::contract::test::detail::out;
     boost::contract::set_invariant_failure([] (boost::contract::from)
             { out("a::inv_failure\n"); });
 }
 
+BOOST_CONTRACT_TEST_LIB_A_DECLINLINE
 void a::disable_failure() {
     using boost::contract::test::detail::out;
     boost::contract::set_precondition_failure(

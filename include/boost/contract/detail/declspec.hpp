@@ -19,6 +19,7 @@
 // safely compiled and used as a static or header-only library only when it is
 // being used by a single program unit (e.g., a single program with only
 // statically linked libraries that check contracts).
+
 #ifdef BOOST_CONTRACT_DYN_LINK
     #ifdef BOOST_CONTRACT_DETAIL_SOURCE
         #define BOOST_CONTRACT_DETAIL_DECLSPEC BOOST_SYMBOL_EXPORT
@@ -27,6 +28,12 @@
     #endif
 #else
     #define BOOST_CONTRACT_DETAIL_DECLSPEC /* nothing */
+#endif
+
+#ifdef BOOST_CONTRACT_HEADER_ONLY
+    #define BOOST_CONTRACT_DETAIL_DECLINLINE inline
+#else
+    #define BOOST_CONTRACT_DETAIL_DECLINLINE /* nothing */
 #endif
 
 #endif // #include guard

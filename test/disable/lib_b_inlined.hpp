@@ -10,9 +10,7 @@
 #include "lib_b.hpp"
 #include "lib_a.hpp"
 #include "../detail/oteststream.hpp"
-#include <boost/contract/public_function.hpp>
-#include <boost/contract/check.hpp>
-#include <boost/contract/assert.hpp>
+#include <boost/contract.hpp> // All headers to test ODR for entire lib.
 
 bool call_f() {
     a aa;

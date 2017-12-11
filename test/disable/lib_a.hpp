@@ -8,7 +8,7 @@
 // See: http://www.boost.org/doc/libs/release/libs/contract/doc/html/index.html
 
 #include "../detail/counter.hpp"
-#include <boost/contract/core/config.hpp>
+#include <boost/contract.hpp> // All headers so test ODR for entire lib.
 #include <boost/config.hpp>
 #include <string>
 

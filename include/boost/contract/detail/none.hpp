@@ -10,10 +10,12 @@
 namespace boost { namespace contract { namespace detail {
 
 // Tag for "no type".
-class none {
-public:
+struct none {
     // Some lib code use this to avoid unused local var warnings on #if, etc.
-    static none& value() { static none none_value; return none_value; }
+    static none& value() {
+        static none none_value;
+        return none_value;
+    }
 };
 
 // Transform `void` to `none` type (for convenience, instead of using MPL).

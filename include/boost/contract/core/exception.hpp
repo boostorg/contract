@@ -271,165 +271,140 @@ namespace exception_ {
     // Check failure.
 
     BOOST_CONTRACT_DETAIL_DECLSPEC
-        failure_handler const& 
-        set_check_failure_unlocked(failure_handler const& f)
-        BOOST_NOEXCEPT_OR_NOTHROW
-    ;
+    failure_handler const& set_check_failure_unlocked(failure_handler const& f)
+            BOOST_NOEXCEPT_OR_NOTHROW;
     BOOST_CONTRACT_DETAIL_DECLSPEC
-        failure_handler const& 
-        set_check_failure_locked(failure_handler const& f)
-        BOOST_NOEXCEPT_OR_NOTHROW
-    ;
-
-    BOOST_CONTRACT_DETAIL_DECLSPEC failure_handler get_check_failure_unlocked()
-            BOOST_NOEXCEPT_OR_NOTHROW;
-    BOOST_CONTRACT_DETAIL_DECLSPEC failure_handler get_check_failure_locked()
+    failure_handler const& set_check_failure_locked(failure_handler const& f)
             BOOST_NOEXCEPT_OR_NOTHROW;
 
-    BOOST_CONTRACT_DETAIL_DECLSPEC void check_failure_unlocked()
-            /* can throw */;
-    BOOST_CONTRACT_DETAIL_DECLSPEC void check_failure_locked()
-            /* can throw */;
+    BOOST_CONTRACT_DETAIL_DECLSPEC
+    failure_handler get_check_failure_unlocked() BOOST_NOEXCEPT_OR_NOTHROW;
+    BOOST_CONTRACT_DETAIL_DECLSPEC
+    failure_handler get_check_failure_locked() BOOST_NOEXCEPT_OR_NOTHROW;
+
+    BOOST_CONTRACT_DETAIL_DECLSPEC
+    void check_failure_unlocked() /* can throw */;
+    BOOST_CONTRACT_DETAIL_DECLSPEC
+    void check_failure_locked() /* can throw */;
     
     // Precondition failure.
 
     BOOST_CONTRACT_DETAIL_DECLSPEC
-        from_failure_handler const&
-        set_pre_failure_unlocked(from_failure_handler const& f)
-        BOOST_NOEXCEPT_OR_NOTHROW
-    ;
+    from_failure_handler const& set_pre_failure_unlocked(
+            from_failure_handler const& f) BOOST_NOEXCEPT_OR_NOTHROW;
     BOOST_CONTRACT_DETAIL_DECLSPEC
-        from_failure_handler const&
-        set_pre_failure_locked(from_failure_handler const& f)
-        BOOST_NOEXCEPT_OR_NOTHROW
-    ;
+    from_failure_handler const& set_pre_failure_locked(
+            from_failure_handler const& f) BOOST_NOEXCEPT_OR_NOTHROW;
 
-    BOOST_CONTRACT_DETAIL_DECLSPEC from_failure_handler
-            get_pre_failure_unlocked() BOOST_NOEXCEPT_OR_NOTHROW;
-    BOOST_CONTRACT_DETAIL_DECLSPEC from_failure_handler
-            get_pre_failure_locked() BOOST_NOEXCEPT_OR_NOTHROW;
+    BOOST_CONTRACT_DETAIL_DECLSPEC
+    from_failure_handler get_pre_failure_unlocked() BOOST_NOEXCEPT_OR_NOTHROW;
+    BOOST_CONTRACT_DETAIL_DECLSPEC
+    from_failure_handler get_pre_failure_locked() BOOST_NOEXCEPT_OR_NOTHROW;
 
-    BOOST_CONTRACT_DETAIL_DECLSPEC void pre_failure_unlocked(from where)
-            /* can throw */;
-    BOOST_CONTRACT_DETAIL_DECLSPEC void pre_failure_locked(from where)
-            /* can throw */;
+    BOOST_CONTRACT_DETAIL_DECLSPEC
+    void pre_failure_unlocked(from where) /* can throw */;
+    BOOST_CONTRACT_DETAIL_DECLSPEC
+    void pre_failure_locked(from where) /* can throw */;
     
     // Postcondition failure.
 
     BOOST_CONTRACT_DETAIL_DECLSPEC
-        from_failure_handler const&
-        set_post_failure_unlocked(from_failure_handler const& f)
-        BOOST_NOEXCEPT_OR_NOTHROW
-    ;
+    from_failure_handler const& set_post_failure_unlocked(
+            from_failure_handler const& f) BOOST_NOEXCEPT_OR_NOTHROW;
     BOOST_CONTRACT_DETAIL_DECLSPEC
-        from_failure_handler const&
-        set_post_failure_locked(from_failure_handler const& f)
-        BOOST_NOEXCEPT_OR_NOTHROW
-    ;
+    from_failure_handler const& set_post_failure_locked(
+            from_failure_handler const& f) BOOST_NOEXCEPT_OR_NOTHROW;
 
-    BOOST_CONTRACT_DETAIL_DECLSPEC from_failure_handler
-            get_post_failure_unlocked() BOOST_NOEXCEPT_OR_NOTHROW;
-    BOOST_CONTRACT_DETAIL_DECLSPEC from_failure_handler
-            get_post_failure_locked() BOOST_NOEXCEPT_OR_NOTHROW;
+    BOOST_CONTRACT_DETAIL_DECLSPEC
+    from_failure_handler get_post_failure_unlocked() BOOST_NOEXCEPT_OR_NOTHROW;
+    BOOST_CONTRACT_DETAIL_DECLSPEC
+    from_failure_handler get_post_failure_locked() BOOST_NOEXCEPT_OR_NOTHROW;
 
-    BOOST_CONTRACT_DETAIL_DECLSPEC void
-    post_failure_unlocked(from where)
-            /* can throw */;
-    void BOOST_CONTRACT_DETAIL_DECLSPEC post_failure_locked(from where)
-            /* can throw */;
+    BOOST_CONTRACT_DETAIL_DECLSPEC
+    void post_failure_unlocked(from where) /* can throw */;
+    BOOST_CONTRACT_DETAIL_DECLSPEC
+    void post_failure_locked(from where) /* can throw */;
     
     // Except failure.
 
     BOOST_CONTRACT_DETAIL_DECLSPEC
-        from_failure_handler const&
-        set_except_failure_unlocked(from_failure_handler const& f)
-        BOOST_NOEXCEPT_OR_NOTHROW
-    ;
+    from_failure_handler const& set_except_failure_unlocked(
+            from_failure_handler const& f) BOOST_NOEXCEPT_OR_NOTHROW;
     BOOST_CONTRACT_DETAIL_DECLSPEC
-        from_failure_handler const&
-        set_except_failure_locked(from_failure_handler const& f)
-        BOOST_NOEXCEPT_OR_NOTHROW
-    ;
+    from_failure_handler const& set_except_failure_locked(
+            from_failure_handler const& f) BOOST_NOEXCEPT_OR_NOTHROW;
 
-    BOOST_CONTRACT_DETAIL_DECLSPEC from_failure_handler
-            get_except_failure_unlocked() BOOST_NOEXCEPT_OR_NOTHROW;
-    BOOST_CONTRACT_DETAIL_DECLSPEC from_failure_handler
-            get_except_failure_locked() BOOST_NOEXCEPT_OR_NOTHROW;
+    BOOST_CONTRACT_DETAIL_DECLSPEC
+    from_failure_handler get_except_failure_unlocked()
+            BOOST_NOEXCEPT_OR_NOTHROW;
+    BOOST_CONTRACT_DETAIL_DECLSPEC
+    from_failure_handler get_except_failure_locked() BOOST_NOEXCEPT_OR_NOTHROW;
 
-    BOOST_CONTRACT_DETAIL_DECLSPEC void except_failure_unlocked(from where)
-            /* can throw */;
-    BOOST_CONTRACT_DETAIL_DECLSPEC void except_failure_locked(from where)
-            /* can throw */;
+    BOOST_CONTRACT_DETAIL_DECLSPEC
+    void except_failure_unlocked(from where) /* can throw */;
+    BOOST_CONTRACT_DETAIL_DECLSPEC
+    void except_failure_locked(from where) /* can throw */;
     
     // Old-copy failure.
 
     BOOST_CONTRACT_DETAIL_DECLSPEC
-        from_failure_handler const&
-        set_old_failure_unlocked(from_failure_handler const& f)
-        BOOST_NOEXCEPT_OR_NOTHROW
-    ;
+    from_failure_handler const& set_old_failure_unlocked(
+            from_failure_handler const& f) BOOST_NOEXCEPT_OR_NOTHROW;
     BOOST_CONTRACT_DETAIL_DECLSPEC
-        from_failure_handler const&
-        set_old_failure_locked(from_failure_handler const& f)
-        BOOST_NOEXCEPT_OR_NOTHROW
-    ;
+    from_failure_handler const& set_old_failure_locked(
+            from_failure_handler const& f) BOOST_NOEXCEPT_OR_NOTHROW;
 
-    BOOST_CONTRACT_DETAIL_DECLSPEC from_failure_handler
-            get_old_failure_unlocked() BOOST_NOEXCEPT_OR_NOTHROW;
-    BOOST_CONTRACT_DETAIL_DECLSPEC from_failure_handler
-            get_old_failure_locked() BOOST_NOEXCEPT_OR_NOTHROW;
+    BOOST_CONTRACT_DETAIL_DECLSPEC
+    from_failure_handler get_old_failure_unlocked() BOOST_NOEXCEPT_OR_NOTHROW;
+    BOOST_CONTRACT_DETAIL_DECLSPEC
+    from_failure_handler get_old_failure_locked() BOOST_NOEXCEPT_OR_NOTHROW;
 
-    BOOST_CONTRACT_DETAIL_DECLSPEC void old_failure_unlocked(from where)
-            /* can throw */;
-    BOOST_CONTRACT_DETAIL_DECLSPEC void old_failure_locked(from where)
-            /* can throw */;
+    BOOST_CONTRACT_DETAIL_DECLSPEC
+    void old_failure_unlocked(from where) /* can throw */;
+    BOOST_CONTRACT_DETAIL_DECLSPEC
+    void old_failure_locked(from where) /* can throw */;
     
     // Entry invariant failure.
 
     BOOST_CONTRACT_DETAIL_DECLSPEC
-        from_failure_handler const&
-        set_entry_inv_failure_unlocked(from_failure_handler const& f)
-        BOOST_NOEXCEPT_OR_NOTHROW
-    ;
+    from_failure_handler const& set_entry_inv_failure_unlocked(
+            from_failure_handler const& f) BOOST_NOEXCEPT_OR_NOTHROW;
     BOOST_CONTRACT_DETAIL_DECLSPEC
-        from_failure_handler const&
-        set_entry_inv_failure_locked(from_failure_handler const& f)
-        BOOST_NOEXCEPT_OR_NOTHROW
-    ;
+    from_failure_handler const& set_entry_inv_failure_locked(
+            from_failure_handler const& f) BOOST_NOEXCEPT_OR_NOTHROW;
 
-    BOOST_CONTRACT_DETAIL_DECLSPEC from_failure_handler
-            get_entry_inv_failure_unlocked() BOOST_NOEXCEPT_OR_NOTHROW;
-    BOOST_CONTRACT_DETAIL_DECLSPEC from_failure_handler
-            get_entry_inv_failure_locked() BOOST_NOEXCEPT_OR_NOTHROW;
+    BOOST_CONTRACT_DETAIL_DECLSPEC
+    from_failure_handler get_entry_inv_failure_unlocked()
+            BOOST_NOEXCEPT_OR_NOTHROW;
+    BOOST_CONTRACT_DETAIL_DECLSPEC
+    from_failure_handler get_entry_inv_failure_locked()
+            BOOST_NOEXCEPT_OR_NOTHROW;
 
-    BOOST_CONTRACT_DETAIL_DECLSPEC void entry_inv_failure_unlocked(from where)
-            /* can throw */;
-    BOOST_CONTRACT_DETAIL_DECLSPEC void entry_inv_failure_locked(from where)
-            /* can throw */;
+    BOOST_CONTRACT_DETAIL_DECLSPEC
+    void entry_inv_failure_unlocked(from where) /* can throw */;
+    BOOST_CONTRACT_DETAIL_DECLSPEC
+    void entry_inv_failure_locked(from where) /* can throw */;
     
     // Exit invariant failure.
 
     BOOST_CONTRACT_DETAIL_DECLSPEC
-        from_failure_handler const&
-        set_exit_inv_failure_unlocked(from_failure_handler const& f)
-        BOOST_NOEXCEPT_OR_NOTHROW
-    ;
+    from_failure_handler const& set_exit_inv_failure_unlocked(
+            from_failure_handler const& f) BOOST_NOEXCEPT_OR_NOTHROW;
     BOOST_CONTRACT_DETAIL_DECLSPEC
-        from_failure_handler const&
-        set_exit_inv_failure_locked(from_failure_handler const& f)
-        BOOST_NOEXCEPT_OR_NOTHROW
-    ;
+    from_failure_handler const&set_exit_inv_failure_locked(
+            from_failure_handler const& f) BOOST_NOEXCEPT_OR_NOTHROW;
 
-    BOOST_CONTRACT_DETAIL_DECLSPEC from_failure_handler
-            get_exit_inv_failure_unlocked() BOOST_NOEXCEPT_OR_NOTHROW;
-    BOOST_CONTRACT_DETAIL_DECLSPEC from_failure_handler
-            get_exit_inv_failure_locked() BOOST_NOEXCEPT_OR_NOTHROW;
+    BOOST_CONTRACT_DETAIL_DECLSPEC
+    from_failure_handler get_exit_inv_failure_unlocked()
+            BOOST_NOEXCEPT_OR_NOTHROW;
+    BOOST_CONTRACT_DETAIL_DECLSPEC
+    from_failure_handler get_exit_inv_failure_locked()
+            BOOST_NOEXCEPT_OR_NOTHROW;
 
-    BOOST_CONTRACT_DETAIL_DECLSPEC void exit_inv_failure_unlocked(from where)
-            /* can throw */;
-    BOOST_CONTRACT_DETAIL_DECLSPEC void exit_inv_failure_locked(from where)
-            /* can throw */;
-    
+    BOOST_CONTRACT_DETAIL_DECLSPEC
+    void exit_inv_failure_unlocked(from where) /* can throw */;
+    BOOST_CONTRACT_DETAIL_DECLSPEC
+    void exit_inv_failure_locked(from where) /* can throw */;
 }
 /** @endcond */
 
@@ -948,7 +923,6 @@ inline void exit_invariant_failure(from where) /* can throw */ {
     #endif
 }
 
-
 /**
 Set failure handler for class invariants (at both entry and exit).
 
@@ -969,13 +943,9 @@ parameter @p f.
         @RefSect{extras.volatile_public_functions,
         Volatile Public Functions}
 */
-inline from_failure_handler const& set_invariant_failure(from_failure_handler
-        const& f) /** @cond */ BOOST_NOEXCEPT_OR_NOTHROW /** @endcond */ {
-    // This must be impl here for header-only linkage (HEADER_ONLY defined).
-    set_entry_invariant_failure(f);
-    set_exit_invariant_failure(f);
-    return f;
-}
+BOOST_CONTRACT_DETAIL_DECLSPEC
+from_failure_handler const& set_invariant_failure(from_failure_handler const& f)
+        /** @cond */ BOOST_NOEXCEPT_OR_NOTHROW /** @endcond */;
 
 } } // namespace
 

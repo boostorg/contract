@@ -8,8 +8,7 @@
 // See: http://www.boost.org/doc/libs/release/libs/contract/doc/html/index.html
 
 #include "lib_x.hpp"
-#include <boost/contract/function.hpp>
-#include <boost/contract/check.hpp>
+#include <boost/contract.hpp> // All headers so test ODR for entire lib.
 #include <boost/config.hpp>
 
 #ifdef BOOST_CONTRACT_TEST_LIB_Y_DYN_LINK

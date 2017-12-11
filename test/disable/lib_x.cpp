@@ -14,8 +14,7 @@
 
 #define BOOST_CONTRACT_TEST_LIB_X_SOURCE
 #include "lib_x.hpp"
-#include <boost/contract/function.hpp>
-#include <boost/contract/check.hpp>
+#include <boost/contract.hpp> // All headers so test ODR for entire lib.
 #include "../detail/out_inlined.hpp"
 
 void x() {

@@ -3,7 +3,7 @@
 *   Do not use complex ``formatted-text`` in the docs examples
 *   Update copyright year to 2018.
 
-*   Remove all "TODO: odr" comments (by defining functions in old.hpp into detail/inline/old.hpp instead)
+*   Remove all TODO comments
 *   Make sure build/, example/, and test/ all compile even if include/ is removed after symlink are created to //boost/...
 *   Recompile all examples/tests with all compilers, boost_contract_no, link, boost_contract_header_only, etc. (after fully integrated w/ Boost build system)
 

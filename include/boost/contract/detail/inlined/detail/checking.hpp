@@ -11,34 +11,37 @@
 // .cpp does not need recompiling if config changes (recompile only user code).
 
 #include <boost/contract/detail/checking.hpp>
+#include <boost/contract/detail/declspec.hpp>
 #include <boost/thread/lock_guard.hpp>
 
 namespace boost { namespace contract { namespace detail {
 
-void checking::init_unlocked() { checking_ = true; }
+BOOST_CONTRACT_DETAIL_DECLINLINE
+void checking::init_unlocked() { flag::ref() = true; }
 
+BOOST_CONTRACT_DETAIL_DECLINLINE
 void checking::init_locked() {
-    boost::lock_guard<boost::mutex> lock(mutex_);
+    boost::lock_guard<boost::mutex> lock(mutex::ref());
     init_unlocked();
 }
 
-void checking::done_unlocked() { checking_ = false; }
+BOOST_CONTRACT_DETAIL_DECLINLINE
+void checking::done_unlocked() { flag::ref() = false; }
 
+BOOST_CONTRACT_DETAIL_DECLINLINE
 void checking::done_locked() {
-    boost::lock_guard<boost::mutex> lock(mutex_);
+    boost::lock_guard<boost::mutex> lock(mutex::ref());
     done_unlocked();
 }
 
-bool checking::already_unlocked() { return checking_; }
+BOOST_CONTRACT_DETAIL_DECLINLINE
+bool checking::already_unlocked() { return flag::ref(); }
     
+BOOST_CONTRACT_DETAIL_DECLINLINE
 bool checking::already_locked() {
-    boost::lock_guard<boost::mutex> lock(mutex_);
+    boost::lock_guard<boost::mutex> lock(mutex::ref());
     return already_unlocked();
 }
-
-// Shared state (so should be compiled as shared lib).
-boost::mutex checking::mutex_;
-bool checking::checking_ = false;
 
 } } } // namespace
 
