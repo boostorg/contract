@@ -20,6 +20,7 @@ class vector {
 
 
 
+
 legal: // Class invariants (legal).
     size() >= 0;
 

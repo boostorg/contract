@@ -20,8 +20,10 @@ class decrement_button
     : BASES
 {
     friend class boost::contract::access;
+
     typedef BOOST_CONTRACT_BASE_TYPES(BASES) base_types;
     #undef BASES
+    
     BOOST_CONTRACT_OVERRIDES(on_bn_clicked, up_to_date_with_subject, update);
 
 public:

@@ -578,7 +578,8 @@ Configure this library compile-time and run-time behaviours.
     compilation from production code).
 
     @see    @RefSect{tutorial.old_values, Old Values},
-            @RefSect{advanced.old_copies_at_body, Old Values at Body},
+            @RefSect{advanced.old_value_copies_at_body,
+            Old Value Copies at Body},
             @RefSect{extras.disable_contract_compilation__macro_interface_,
             Disable Contract Compilation}
     */

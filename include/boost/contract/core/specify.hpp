@@ -342,7 +342,8 @@ private:
 };
 
 /**
-Allow to specify old copies at body, postconditions, and exception guarantees.
+Allow to specify old value copies at body, postconditions, and exception
+guarantees.
 
 Allow to specify functors this library will call to copy old value at body, 
 check postconditions, and check exception guarantees.
@@ -350,7 +351,7 @@ This object is internally constructed by this library when users specify
 contracts calling @RefFunc{boost::contract::function} and similar functions
 (that is why this class does not have a public constructor).
 
-@see    @RefSect{advanced.old_copies_at_body, Old Copies at Body},
+@see    @RefSect{advanced.old_value_copies_at_body, Old Value Copies at Body},
         @RefSect{tutorial.postconditions, Postconditions},
         @RefSect{tutorial.exception_guarantees, Exception Guarantees}
 
@@ -374,11 +375,11 @@ public:
     ~specify_old_postcondition_except() BOOST_NOEXCEPT_IF(false) {}
     
     /**
-    Allow to specify old copies at body.
+    Allow to specify old value copies at body.
 
     It should often be sufficient to initialize old value pointers as soon as
     they are declared, without using this function (see
-    @RefSect{advanced.old_copies_at_body, Old Copies at Body}).
+    @RefSect{advanced.old_value_copies_at_body, Old Value Copies at Body}).
 
     @param f    Nullary functor called by this library @c f() to assign old
                 value copies just before the body is executed but after entry
@@ -473,7 +474,7 @@ private:
 };
 
 /**
-Allow to specify preconditions, old copies at body, postconditions, and
+Allow to specify preconditions, old value copies at body, postconditions, and
 exception guarantees.
 
 Allow to specify functors this library will call to check preconditions, copy
@@ -483,7 +484,7 @@ contracts calling @RefFunc{boost::contract::function} and similar functions
 (that is why this class does not have a public constructor).
 
 @see    @RefSect{tutorial.preconditions, Preconditions},
-        @RefSect{advanced.old_copies_at_body, Old Copies at Body},
+        @RefSect{advanced.old_value_copies_at_body, Old Value Copies at Body},
         @RefSect{tutorial.postconditions, Postconditions},
         @RefSect{tutorial.exception_guarantees, Exception Guarantees}
 
@@ -534,11 +535,11 @@ public:
     }
 
     /**
-    Allow to specify old copies at body.
+    Allow to specify old value copies at body.
 
     It should often be sufficient to initialize old value pointers as soon as
     they are declared, without using this function (see
-    @RefSect{advanced.old_copies_at_body, Old Copies at Body}).
+    @RefSect{advanced.old_value_copies_at_body, Old Value Copies at Body}).
 
     @param f    Nullary functor called by this library @c f() to assign old
                 value copies just before the body is executed but after entry

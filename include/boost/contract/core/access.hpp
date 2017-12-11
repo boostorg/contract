@@ -56,10 +56,10 @@ class u :
 {
     friend class boost::contract::access;
 
-    void invariant() const { ... } // Private.
-
     typedef BOOST_CONTRACT_BASES(BASES) base_types; // Private.
     #undef BASES
+
+    void invariant() const { ... } // Private.
 
 public:
     ...

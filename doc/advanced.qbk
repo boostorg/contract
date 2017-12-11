@@ -333,7 +333,7 @@ Using [macroref BOOST_CONTRACT_CHECK] is essentially equivalent to using the C-s
 
 [endsect]
 
-[section Old Copies at Body]
+[section Old Value Copies at Body]
 
 In the examples seen so far, old value variables of type [classref boost::contract::old_ptr] are initialized to a copy of the expression passed to [macroref BOOST_CONTRACT_OLDOF] as soon as they are declared.
 This is correctly happens before the function body is executed but also before the contract is declared, therefore even before class invariants (for public functions) and preconditions are checked at function entry.
@@ -448,7 +448,7 @@ If a condition checked using [macroref BOOST_CONTRACT_ASSERT] is evaluated to be
 * Postconditions: False [macroref BOOST_CONTRACT_ASSERT] assertions and exceptions thrown from within `.postcondition(...)` call [funcref boost::contract::postcondition_failure].
 * Exceptions guarantees: False [macroref BOOST_CONTRACT_ASSERT] assertions and exceptions thrown from within `.except(...)` call [funcref boost::contract::except_failure].
 * Class invariants: False [macroref BOOST_CONTRACT_ASSERT] assertions and exceptions thrown from `invariant()` and `static_invariant()` call [funcref boost::contract::entry_invariant_failure] when checked at function entry and [funcref boost::contract::exit_invariant_failure] when checked at function exit.
-* Old copies at body: Exceptions thrown from old value copies at body within `.old(...)` call [funcref boost::contract::old_failure].
+* Old value copies at body: Exceptions thrown from old value copies at body within `.old(...)` call [funcref boost::contract::old_failure].
 * Implementation checks: False [macroref BOOST_CONTRACT_ASSERT] assertions and exceptions thrown from implementation checks `boost::contract::check c = `[^['nullary-functor]] and `BOOST_CONTRACT_CHECK(...)` call [funcref boost::contract::check_failure].
 
 By default, these contract failure handlers print a message to the standard error `std::cerr` and then terminate the program calling `std::terminate`.
@@ -464,7 +464,7 @@ However, programmers can override the default contract failure handlers to perfo
 * Postconditions: [funcref boost::contract::set_postcondition_failure].
 * Exception guarantees: [funcref boost::contract::set_except_failure].
 * Class invariants: [funcref boost::contract::set_entry_invariant_failure] and [funcref boost::contract::set_exit_invariant_failure], or [funcref boost::contract::set_invariant_failure] (to set both entry and exit invariant failure handlers at once for convenience).
-* Old copies at body: [funcref boost::contract::set_old_failure].
+* Old value copies at body: [funcref boost::contract::set_old_failure].
 * Implementation checks: [funcref boost::contract::set_check_failure].
 
 These `set_..._failure(`[^['f]]`)` function calls return the contract failure handler functor [^['f]] that they take as input parameter.

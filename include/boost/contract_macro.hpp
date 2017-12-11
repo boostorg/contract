@@ -189,7 +189,8 @@ Disable Contract Compilation}).
     #include <boost/preprocessor/tuple/eat.hpp>
    
     /**
-    Program old copies at body that can be completely disabled at compile-time.
+    Program old value copies at body that can be completely disabled at
+    compile-time.
 
     @c BOOST_CONTRACT_OLD(f) expands to code equivalent to the following (note
     that no code is generated when @RefMacro{BOOST_CONTRACT_NO_OLDS} is
@@ -222,7 +223,8 @@ Disable Contract Compilation}).
 
     @see    @RefSect{extras.disable_contract_compilation__macro_interface_,
             Disable Contract Compilation},
-            @RefSect{advanced.old_copies_at_body, Old Copies at Body}
+            @RefSect{advanced.old_value_copies_at_body,
+            Old Value Copies at Body}
     */
     #define BOOST_CONTRACT_OLD(...) /* nothing */
 
@@ -238,21 +240,31 @@ Disable Contract Compilation}).
         void f(...) {
             BOOST_CONTRACT_OLD_PTR(old_type_a)(old_var_a);
             BOOST_CONTRACT_OLD_PTR(old_type_b)(old_var_b, old_expr_b);
-            ...
+            BOOST_CONTRACT_PUBLIC_FUNCTION(this)
+                ...
                 BOOST_CONTRACT_OLD([&] {
                     old_var_a = BOOST_CONTRACT_OLDOF(old_expr_a);
+                    ...
                 })
-            ...
+                ...
+            ;
+
+            ... // Function body.
         }
 
         virtual void g(..., boost::contract::virtual_* v = 0) {
             BOOST_CONTRACT_OLD_PTR(old_type_a)(old_var_a);
             BOOST_CONTRACT_OLD_PTR(old_type_b)(v, old_var_b, old_expr_b);
-            ...
+            BOOST_CONTRACT_PUBLIC_FUNCTION(v, this)
+                ...
                 BOOST_CONTRACT_OLD([&] {
                     old_var_a = BOOST_CONTRACT_OLDOF(v, old_expr_a);
+                    ...
                 })
-            ...
+                ...
+            ;
+
+            ... // Function body.
         }
 
         ...
@@ -343,28 +355,38 @@ Disable Contract Compilation}).
             BOOST_CONTRACT_OLD_PTR_IF_COPYABLE(old_type_a)(old_var_a);
             BOOST_CONTRACT_OLD_PTR_IF_COPYABLE(old_type_b)(old_var_b,
                     old_expr_b);
-            ...
+            BOOST_CONTRACT_PUBLIC_FUNCTION(this)
+                ...
                 BOOST_CONTRACT_OLD([&] {
                     old_var_a = BOOST_CONTRACT_OLDOF(old_expr_a);
+                    ...
                 })
-            ...
-                if(old_var_a) ... // Always null for non-copyable types.
-                if(old_var_b) ... // Always null for non-copyable types.
-            ...
+                ... // In postconditions or exception guarantees:
+                    if(old_var_a) ... // Always null for non-copyable types.
+                    if(old_var_b) ... // Always null for non-copyable types.
+                ...
+            ;
+
+            ... // Function body.
         }
 
         virtual void g(..., boost::contract::virtual_* v = 0) {
             BOOST_CONTRACT_OLD_PTR_IF_COPYABLE(old_type_a)(old_var_a);
             BOOST_CONTRACT_OLD_PTR_IF_COPYABLE(old_type_b)(v, old_var_b,
                     old_expr_b);
-            ...
+            BOOST_CONTRACT_PUBLIC_FUNCTION(v, this)
+                ...
                 BOOST_CONTRACT_OLD([&] {
                     old_var_a = BOOST_CONTRACT_OLDOF(v, old_expr_a);
+                    ...
                 })
-            ...
-                if(old_var_a) ... // Always null for non-copyable types.
-                if(old_var_b) ... // Always null for non-copyable types.
-            ...
+                ... // In postconditions or exception guarantees:
+                    if(old_var_a) ... // Always null for non-copyable types.
+                    if(old_var_b) ... // Always null for non-copyable types.
+                ...
+            ;
+
+            ... // Function body.
         }
 
         ...

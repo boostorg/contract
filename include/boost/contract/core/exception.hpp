@@ -715,7 +715,7 @@ Set a new failure handler and returns it.
         concatenating function calls).
 
 @see    @RefSect{advanced.throw_on_failures__and__noexcept__, Throw on Failure},
-        @RefSect{advanced.old_copies_at_body, Old Values at Body}
+        @RefSect{advanced.old_value_copies_at_body, Old Value Copies at Body}
 */
 inline from_failure_handler const& set_old_failure(from_failure_handler const&
         f) /** @cond */ BOOST_NOEXCEPT_OR_NOTHROW /** @endcond */ {
@@ -736,7 +736,7 @@ This is often called only internally by this library.
 @return A copy of the failure handler currently set.
 
 @see    @RefSect{advanced.throw_on_failures__and__noexcept__, Throw on Failure},
-        @RefSect{advanced.old_copies_at_body, Old Values at Body}
+        @RefSect{advanced.old_value_copies_at_body, Old Value Copies at Body}
 */
 inline from_failure_handler get_old_failure()
         /** @cond */ BOOST_NOEXCEPT_OR_NOTHROW /** @endcond */ {
@@ -761,7 +761,7 @@ This is often called only internally by this library.
                 throw exceptions instead of terminating the program).
 
 @see    @RefSect{advanced.throw_on_failures__and__noexcept__, Throw on Failure},
-        @RefSect{advanced.old_copies_at_body, Old Values at Body}
+        @RefSect{advanced.old_value_copies_at_body, Old Value Copies at Body}
 */
 inline void old_failure(from where) /* can throw */ {
     #ifndef BOOST_CONTRACT_DISABLE_THREADS
@@ -943,7 +943,7 @@ parameter @p f.
         @RefSect{extras.volatile_public_functions,
         Volatile Public Functions}
 */
-BOOST_CONTRACT_DETAIL_DECLSPEC
+/** @cond */ BOOST_CONTRACT_DETAIL_DECLSPEC /** @endcond */
 from_failure_handler const& set_invariant_failure(from_failure_handler const& f)
         /** @cond */ BOOST_NOEXCEPT_OR_NOTHROW /** @endcond */;
 

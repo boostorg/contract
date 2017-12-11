@@ -674,7 +674,8 @@ This function is often only used by the code expanded by
 
 @return Null old value.
 */
-BOOST_CONTRACT_DETAIL_DECLSPEC old_value null_old();
+/** @cond */ BOOST_CONTRACT_DETAIL_DECLSPEC /** @endcond */
+old_value null_old();
 
 /**
 Make an old value pointer (but not for virtual public functions and public
@@ -701,7 +702,8 @@ boost::contract::make_old(boost::contract::copy_old() ? old_expr :
         @RefClass{boost::contract::old_ptr} or
         @RefClass{boost::contract::old_ptr_if_copyable} in user code).
 */
-BOOST_CONTRACT_DETAIL_DECLSPEC old_pointer make_old(old_value const& old);
+/** @cond */ BOOST_CONTRACT_DETAIL_DECLSPEC /** @endcond */
+old_pointer make_old(old_value const& old);
 
 /**
 Make an old value pointer (for virtual public functions and public functions
@@ -732,7 +734,7 @@ boost::contract::make_old(v, boost::contract::copy_old(v) ? old_expr :
         @RefClass{boost::contract::old_ptr} or
         @RefClass{boost::contract::old_ptr_if_copyable} in user code).
 */
-BOOST_CONTRACT_DETAIL_DECLSPEC
+/** @cond */ BOOST_CONTRACT_DETAIL_DECLSPEC /** @endcond */
 old_pointer make_old(virtual_* v, old_value const& old);
 
 /**

@@ -93,8 +93,10 @@ class relaxed_name_list
     : BASES
 {
     friend class boost::contract::access;
+
     typedef BOOST_CONTRACT_BASE_TYPES(BASES) base_types; // Subcontracting.
     #undef BASES
+    
     BOOST_CONTRACT_OVERRIDE(put);
 
 public:

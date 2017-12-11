@@ -34,6 +34,7 @@ class courier
     : BASES
 {
     friend class boost::contract::access;
+
     typedef BOOST_CONTRACT_BASE_TYPES(BASES) base_types;
     #undef BASES
 
@@ -119,9 +120,9 @@ class different_courier
     : BASES
 {
     friend class boost::contract::access;
+
     typedef BOOST_CONTRACT_BASE_TYPES(BASES) base_types; // Subcontracting.
     #undef BASES
-    BOOST_CONTRACT_OVERRIDE(deliver)
 
     static void static_invariant() {
         BOOST_CONTRACT_ASSERT( // Better insurance amount.
@@ -132,6 +133,8 @@ class different_courier
         // Above different insurance value.
         BOOST_CONTRACT_ASSERT(insurance_cover_usd() >= different_insurance_usd);
     }
+    
+    BOOST_CONTRACT_OVERRIDE(deliver)
 
 public:
     static double different_insurance_usd;

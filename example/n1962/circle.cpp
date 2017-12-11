@@ -31,8 +31,10 @@ class circle
     : BASES
 {
     friend class boost::contract::access;
+
     typedef BOOST_CONTRACT_BASE_TYPES(BASES) base_types;
     #undef BASES
+
     BOOST_CONTRACT_OVERRIDE(compute_area);
 
 public:

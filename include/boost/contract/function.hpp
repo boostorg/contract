@@ -25,7 +25,7 @@ namespace boost { namespace contract {
 Program contracts for non-member, private and protected functions.
 
 This is used to specify preconditions, postconditions, exception guarantees, and
-old copies at body for non-member, private and protected functions (these
+old value copies at body for non-member, private and protected functions (these
 functions never check class invariants, see
 @RefSect{contract_programming_overview.function_calls, Function Calls}):
 

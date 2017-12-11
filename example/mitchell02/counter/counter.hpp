@@ -16,6 +16,7 @@ class counter
     : BASES
 {
     friend class boost::contract::access;
+
     typedef BOOST_CONTRACT_BASE_TYPES(BASES) base_types;
     #undef BASES
 

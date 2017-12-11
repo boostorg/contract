@@ -144,14 +144,16 @@ class vstack
     : BASES
 {
     friend class boost::contract::access;
+
     typedef BOOST_CONTRACT_BASE_TYPES(BASES) base_types;
     #undef BASES
-    BOOST_CONTRACT_OVERRIDES(length, capacity, item, push, pop, clear)
 
     void invariant() const {
         BOOST_CONTRACT_ASSERT(length() >= 0);
         BOOST_CONTRACT_ASSERT(length() < capacity());
     }
+    
+    BOOST_CONTRACT_OVERRIDES(length, capacity, item, push, pop, clear)
 
 public:
     explicit vstack(int count = 10) :

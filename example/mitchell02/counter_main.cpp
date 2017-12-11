@@ -17,8 +17,10 @@ class view_of_counter
     : BASES
 {
     friend class boost::contract::access;
+
     typedef BOOST_CONTRACT_BASE_TYPES(BASES) base_types;
     #undef BASES
+    
     BOOST_CONTRACT_OVERRIDES(up_to_date_with_subject, update)
 
 public:
