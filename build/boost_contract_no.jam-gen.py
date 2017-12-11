@@ -2,7 +2,7 @@
 print '''
 # Generated file `python boost_contract_no.jam-gen.py > boost_contract_no.jam`.
 
-# Copyright (C) 2008-2017 Lorenzo Caminiti
+# Copyright (C) 2008-2018 Lorenzo Caminiti
 # Distributed under the Boost Software License, Version 1.0 (see accompanying
 # file LICENSE_1_0.txt or a copy at http://www.boost.org/LICENSE_1_0.txt).
 # See: https://lcaminiti.github.io/boost-contract
