@@ -62,33 +62,36 @@ rule project_requirements ( subdir ) {
 # chec (so Boost.PP check done also in code directly when strictly needed).
 cxx11_requirements = [ requires cxx11_lambdas cxx11_variadic_macros ] ;
 
-rule subdir-compile-fail ( subdir : cpp_fname : requirements * ) {
-    compile-fail $(subdir)/$(cpp_fname).cpp : [ project_requirements $(subdir) ]
-            $(requirements) : $(subdir)-$(cpp_fname) ;
+rule subdir-compile-fail ( subdir : cpp_fname cpp_files * : requirements * ) {
+    compile-fail $(subdir)/$(cpp_fname).cpp $(cpp_files)
+        : [ project_requirements $(subdir) ] $(requirements)
+        : $(subdir)-$(cpp_fname)
+    ;
 }
 
-rule subdir-run ( subdir : cpp_fname : requirements * ) {
-    run $(subdir)/$(cpp_fname).cpp : : : [ project_requirements $(subdir) ]
-            $(requirements) : $(subdir)-$(cpp_fname) ;
+rule subdir-run ( subdir : cpp_fname cpp_files * : requirements * ) {
+    run $(subdir)/$(cpp_fname).cpp $(cpp_files) : : : [ project_requirements
+            $(subdir) ] $(requirements) : $(subdir)-$(cpp_fname) ;
 }
 
-rule subdir-lib ( subdir : cpp_fname : requirements * ) {
-    lib $(subdir)-$(cpp_fname) : $(subdir)/$(cpp_fname).cpp :
+rule subdir-lib ( subdir : cpp_fname cpp_files * : requirements * ) {
+    lib $(subdir)-$(cpp_fname) : $(subdir)/$(cpp_fname).cpp $(cpp_files) :
             [ project_requirements $(subdir) ] $(requirements) ;
 }
 
-rule subdir-compile-fail-cxx11 ( subdir : cpp_fname : requirements * ) {
-    subdir-compile-fail $(subdir) : $(cpp_fname) : $(cxx11_requirements)
+rule subdir-compile-fail-cxx11 ( subdir : cpp_fname cpp_files * :
+        requirements * ) {
+    subdir-compile-fail $(subdir) : $(cpp_fname) $(cpp_files) :
+            $(cxx11_requirements) $(requirements) ;
+}
+
+rule subdir-run-cxx11 ( subdir : cpp_fname cpp_files * : requirements * ) {
+    subdir-run $(subdir) : $(cpp_fname) $(cpp_files) : $(cxx11_requirements)
             $(requirements) ;
 }
 
-rule subdir-run-cxx11 ( subdir : cpp_fname : requirements * ) {
-    subdir-run $(subdir) : $(cpp_fname) : $(cxx11_requirements)
-            $(requirements) ;
-}
-
-rule subdir-lib-cxx11 ( subdir : cpp_fname : requirements * ) {
-    subdir-lib $(subdir) : $(cpp_fname) : $(cxx11_requirements)
+rule subdir-lib-cxx11 ( subdir : cpp_fname cpp_files * : requirements * ) {
+    subdir-lib $(subdir) : $(cpp_fname) $(cpp_files) : $(cxx11_requirements)
             $(requirements) ;
 }
 
