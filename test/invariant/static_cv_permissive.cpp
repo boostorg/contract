@@ -6,6 +6,8 @@
 
 // Test no error if permissive even when static inv declared cv.
 
-#define BOOST_CONTRACT_PERMISSIVE
+#ifndef BOOST_CONTRACT_PERMISSIVE
+    #error "build must define PERMISSIVE"
+#endif
 #include "static_cv.hpp"
 

@@ -6,6 +6,8 @@
 
 // Test with max argument number set to 1.
 
-#define BOOST_CONTRACT_MAX_ARGS 1
+#if !defined(BOOST_CONTRACT_MAX_ARGS) || BOOST_CONTRACT_MAX_ARGS != 1
+    #error "build must define MAX_ARGS=1"
+#endif
 #include "max_args.hpp"
 

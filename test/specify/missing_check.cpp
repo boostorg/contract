@@ -7,7 +7,9 @@
 // Test missing contract check declaration gives run-time error.
 
 struct err {};
-#define BOOST_CONTRACT_ON_MISSING_CHECK_DECL { throw err(); }
+#ifndef BOOST_CONTRACT_ON_MISSING_CHECK_DECL
+    #error "build must define ON_MISSING_CHECK_DECL='{ throw err(); }'"
+#endif
 
 #include <boost/contract/function.hpp>
 #include <boost/contract/check.hpp>

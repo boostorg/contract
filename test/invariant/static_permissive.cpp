@@ -6,6 +6,8 @@
 
 // Test no compiler error if permissive even when invariant() declared static.
 
-#define BOOST_CONTRACT_PERMISSIVE
+#ifndef BOOST_CONTRACT_PERMISSIVE
+    #error "build must define PERMISSIVE"
+#endif
 #include "static.hpp"
 

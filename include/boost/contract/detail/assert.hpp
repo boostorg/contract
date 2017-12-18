@@ -15,13 +15,13 @@
 // Use ternary operator `?:` and no trailing `;` here to allow `if(...) ASSERT(
 // ...); else ...` (won't compile if expands using an if statement instead even
 // if wrapped by {}, and else won't compile if expands trailing `;`).
-#define BOOST_CONTRACT_DETAIL_ASSERT(condition) \
+#define BOOST_CONTRACT_DETAIL_ASSERT(cond) \
     /* no if-statement here */ \
-    ((condition) ? \
+    ((cond) ? \
         BOOST_CONTRACT_DETAIL_NOOP \
     : \
         throw boost::contract::assertion_failure( \
-                __FILE__, __LINE__, BOOST_PP_STRINGIZE(condition)) \
+                __FILE__, __LINE__, BOOST_PP_STRINGIZE(cond)) \
     ) /* no ; here */
 
 #endif // #include guard

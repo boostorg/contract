@@ -1,3 +1,5 @@
 
 *   Recompile all examples/tests with all compilers, boost_contract_no, link, boost_contract_header_only, etc. (after fully integrated w/ Boost build system)
 
+*   Check all warnings (MSVC, GCC, Clang) but only from this lib (grep away all warning from boost::shared_ptr, etc.), maybe just from examples and not necessarly with all bc_no combinations, link=shared,static and bc_hdr=only
+

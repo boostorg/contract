@@ -6,7 +6,11 @@
 
 // Test with max argument number set to 0 and no variadic templates.
 
-#define BOOST_NO_CXX11_VARIADIC_TEMPLATES
-#define BOOST_CONTRACT_MAX_ARGS 0
+#ifndef BOOST_NO_CXX11_VARIADIC_TEMPLATES
+    #error "build must define BOOST_NO_CXX11_VARIADIC_TEMPLATES"
+#endif
+#if !defined(BOOST_CONTRACT_MAX_ARGS) || BOOST_CONTRACT_MAX_ARGS != 0
+    #error "build must define MAX_ARGS=0"
+#endif
 #include "max_args.hpp"
 

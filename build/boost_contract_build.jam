@@ -8,14 +8,12 @@
 # Build and run Boost.Contract tests and examples.
 # 
 # Options:
-#   boost_contract_header_only=no,yes   if yes, do not build Boost.Contract
-#                                       library, use it as header-only instead
-#                                       (by default, no)
 #   link=shared,static  build Boost.Contract library as shared or static, has no
-#                       effect if boost_contract_header_only=yes (by default,
-#                       shared)
-#   boost_contract_no=          turn contract checking off (by default, all_yes)
-#                     all_yes,entryinv,pre,exitinv,post,except,check,entryinv_pre,entryinv_exitinv,entryinv_post,entryinv_except,entryinv_check,pre_exitinv,pre_post,pre_except,pre_check,exitinv_post,exitinv_except,exitinv_check,post_except,post_check,except_check,entryinv_pre_exitinv,entryinv_pre_post,entryinv_pre_except,entryinv_pre_check,entryinv_exitinv_post,entryinv_exitinv_except,entryinv_exitinv_check,entryinv_post_except,entryinv_post_check,entryinv_except_check,pre_exitinv_post,pre_exitinv_except,pre_exitinv_check,pre_post_except,pre_post_check,pre_except_check,exitinv_post_except,exitinv_post_check,exitinv_except_check,post_except_check,entryinv_pre_exitinv_post,entryinv_pre_exitinv_except,entryinv_pre_exitinv_check,entryinv_pre_post_except,entryinv_pre_post_check,entryinv_pre_except_check,entryinv_exitinv_post_except,entryinv_exitinv_post_check,entryinv_exitinv_except_check,entryinv_post_except_check,pre_exitinv_post_except,pre_exitinv_post_check,pre_exitinv_except_check,pre_post_except_check,exitinv_post_except_check,entryinv_pre_exitinv_post_except,entryinv_pre_exitinv_post_check,entryinv_pre_exitinv_except_check,entryinv_pre_post_except_check,entryinv_exitinv_post_except_check,pre_exitinv_post_except_check,entryinv_pre_exitinv_post_except_check
+#                         effect if bc_hdr=only (by default, shared)
+#   bc_hdr=lib,only     if yes, do not build Boost.Contract library, use
+#                         it as header-only instead (by default, lib)
+#   bc_no=              turn contract checking off (by default, all_yes)
+#         all_yes,yi,pe,xi,po,ex,ck,yi_pe,yi_xi,yi_po,yi_ex,yi_ck,pe_xi,pe_po,pe_ex,pe_ck,xi_po,xi_ex,xi_ck,po_ex,po_ck,ex_ck,yi_pe_xi,yi_pe_po,yi_pe_ex,yi_pe_ck,yi_xi_po,yi_xi_ex,yi_xi_ck,yi_po_ex,yi_po_ck,yi_ex_ck,pe_xi_po,pe_xi_ex,pe_xi_ck,pe_po_ex,pe_po_ck,pe_ex_ck,xi_po_ex,xi_po_ck,xi_ex_ck,po_ex_ck,yi_pe_xi_po,yi_pe_xi_ex,yi_pe_xi_ck,yi_pe_po_ex,yi_pe_po_ck,yi_pe_ex_ck,yi_xi_po_ex,yi_xi_po_ck,yi_xi_ex_ck,yi_po_ex_ck,pe_xi_po_ex,pe_xi_po_ck,pe_xi_ex_ck,pe_po_ex_ck,xi_po_ex_ck,yi_pe_xi_po_ex,yi_pe_xi_po_ck,yi_pe_xi_ex_ck,yi_pe_po_ex_ck,yi_xi_po_ex_ck,pe_xi_po_ex_ck,yi_pe_xi_po_ex_ck
 # 
 # Examples (on Linux-based bash):
 #   Build just "test/public_function/smoke.cpp" and "example/introduction.cpp":
@@ -23,7 +21,7 @@
 #  [example]$ bjam features-introduction
 #   Build all tests with all linkages (incl header-only) on multiple compilers:
 #     [test]$ bjam -q toolset=msvc,gcc,clang link=static,header
-#     [test]$ bjam -q toolset=msvc,gcc,clang boost_contract_header_only=yes
+#     [test]$ bjam -q toolset=msvc,gcc,clang boost_contract_hdr=yes
 #   Build all tests with no postconditions and exception guarantees first, and
 #   then again with no class invariants at exit:
 #     [test]$ time bjam -q boost_contract_no=post_except,exitinv
@@ -37,23 +35,23 @@ import testing ;
 import config : requires ;
 
 # Iff "no", link to boost_contract (else, no lib build so don't link to it).
-feature.feature boost_contract_header_only : no yes :
+feature.feature bc_hdr : lib only :
         composite propagated link-incompatible ;
 
 # This is boost_contract_no=all_yes,pre,pre_post,...
-feature.feature boost_contract_no : all_yes [ boost_contract_no.conds ] :
+feature.feature bc_no : all_yes [ boost_contract_no.combinations ] :
         composite propagated link-incompatible ;
-for local cond in [ boost_contract_no.conds ] {
-    feature.compose <boost_contract_no>$(cond) :
-            [ boost_contract_no.defs_$(cond) ] ;
+for local comb in [ boost_contract_no.combinations ] {
+    feature.compose <bc_no>$(comb) :
+            [ boost_contract_no.defs_$(comb) ] ;
 }
 
 module boost_contract_build {
         
 rule project_requirements ( subdir ) {
     return
-        <boost_contract_header_only>no:<library>../build//boost_contract
-        <boost_contract_header_only>yes:<library>/boost/system//boost_system
+        <bc_hdr>lib:<library>../build//boost_contract
+        <bc_hdr>only:<library>/boost/system//boost_system
         <include>$(subdir)
     ;
 }

@@ -61,7 +61,7 @@ specified in that order.
         private: \
             class_type() {} \
             class_type(class_type const&) {} \
-            class_type& operator=(class_type const&) {}
+            class_type& operator=(class_type const&) { return *this; }
 
     #define BOOST_CONTRACT_SPECIFY_COND_RELEASE_ /* nothing */
 #endif

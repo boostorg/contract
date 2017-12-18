@@ -185,25 +185,39 @@ test-suite public_function :
     [ boost_contract_build.subdir-run-cxx11 public_function : throwing_post ]
     # No throwing_except test (as throwing twice calls terminate).
     
-    [ boost_contract_build.subdir-run-cxx11 public_function : max_args0 ]
-    [ boost_contract_build.subdir-run-cxx11 public_function : max_args0_no_tva ]
-    [ boost_contract_build.subdir-run-cxx11 public_function : max_args1 ]
-    [ boost_contract_build.subdir-run-cxx11 public_function : max_args1_no_tva ]
-    [ boost_contract_build.subdir-run-cxx11 public_function : max_args2 ]
-    [ boost_contract_build.subdir-run-cxx11 public_function : max_args2_no_tva ]
+    [ boost_contract_build.subdir-run-cxx11 public_function : max_args0 :
+            <define>BOOST_CONTRACT_MAX_ARGS=0 ]
+    [ boost_contract_build.subdir-run-cxx11 public_function : max_args0_no_tva :
+        <define>BOOST_CONTRACT_MAX_ARGS=0
+        <define>BOOST_NO_CXX11_VARIADIC_TEMPLATES
+    ]
+    [ boost_contract_build.subdir-run-cxx11 public_function : max_args1 :
+            <define>BOOST_CONTRACT_MAX_ARGS=1 ]
+    [ boost_contract_build.subdir-run-cxx11 public_function : max_args1_no_tva :
+        <define>BOOST_CONTRACT_MAX_ARGS=1
+        <define>BOOST_NO_CXX11_VARIADIC_TEMPLATES
+    ]
+    [ boost_contract_build.subdir-run-cxx11 public_function : max_args2 :
+        <define>BOOST_CONTRACT_MAX_ARGS=2 ]
+    [ boost_contract_build.subdir-run-cxx11 public_function : max_args2_no_tva :
+        <define>BOOST_CONTRACT_MAX_ARGS=2
+        <define>BOOST_NO_CXX11_VARIADIC_TEMPLATES
+    ]
     [ boost_contract_build.subdir-run-cxx11 public_function : max_args ]
-    [ boost_contract_build.subdir-run-cxx11 public_function : max_args_no_tva ]
+    [ boost_contract_build.subdir-run-cxx11 public_function : max_args_no_tva :
+            <define>BOOST_NO_CXX11_VARIADIC_TEMPLATES ]
     
     [ boost_contract_build.subdir-run-cxx11 public_function :
             max_bases ] # C++11 for BASES(...) variadic macros.
     
     [ boost_contract_build.subdir-run-cxx11 public_function : overload ]
-    [ boost_contract_build.subdir-run-cxx11 public_function : overload_no_tva ]
+    [ boost_contract_build.subdir-run-cxx11 public_function : overload_no_tva :
+            <define>BOOST_NO_CXX11_VARIADIC_TEMPLATES ]
 
     [ boost_contract_build.subdir-compile-fail-cxx11 public_function :
             override_error ] # C++11 for BASES(...) variadic macros.
-    [ boost_contract_build.subdir-run-cxx11 public_function :
-            override_permissive ] # C++11 for BASES(...) variadic macros.
+    [ boost_contract_build.subdir-run-cxx11 public_function : # C++11 for BASES.
+            override_permissive : <define>BOOST_CONTRACT_PERMISSIVE ]
     
     [ boost_contract_build.subdir-run-cxx11 public_function : static ]
     [ boost_contract_build.subdir-run-cxx11 public_function : static_ifdef ]
@@ -235,21 +249,28 @@ test-suite invariant :
 
     [ boost_contract_build.subdir-compile-fail invariant :
             static_mutable_error ]
-    [ boost_contract_build.subdir-run invariant : static_mutable_permissive ]
+    [ boost_contract_build.subdir-run invariant : static_mutable_permissive :
+            <define>BOOST_CONTRACT_PERMISSIVE ]
     [ boost_contract_build.subdir-compile-fail invariant : static_const_error ]
-    [ boost_contract_build.subdir-run invariant : static_const_permissive ]
+    [ boost_contract_build.subdir-run invariant : static_const_permissive :
+            <define>BOOST_CONTRACT_PERMISSIVE ]
     [ boost_contract_build.subdir-compile-fail invariant :
             static_volatile_error ]
-    [ boost_contract_build.subdir-run invariant : static_volatile_permissive ]
+    [ boost_contract_build.subdir-run invariant : static_volatile_permissive :
+            <define>BOOST_CONTRACT_PERMISSIVE ]
     [ boost_contract_build.subdir-compile-fail invariant : static_cv_error ]
-    [ boost_contract_build.subdir-run invariant : static_cv_permissive ]
+    [ boost_contract_build.subdir-run invariant : static_cv_permissive :
+            <define>BOOST_CONTRACT_PERMISSIVE ]
     
     [ boost_contract_build.subdir-compile-fail invariant : static_error ]
-    [ boost_contract_build.subdir-run invariant : static_permissive ]
+    [ boost_contract_build.subdir-run invariant : static_permissive :
+            <define>BOOST_CONTRACT_PERMISSIVE ]
     [ boost_contract_build.subdir-compile-fail invariant : mutable_error ]
-    [ boost_contract_build.subdir-run invariant : mutable_permissive ]
+    [ boost_contract_build.subdir-run invariant : mutable_permissive :
+            <define>BOOST_CONTRACT_PERMISSIVE ]
     [ boost_contract_build.subdir-compile-fail invariant : volatile_error ]
-    [ boost_contract_build.subdir-run invariant : volatile_permissive ]
+    [ boost_contract_build.subdir-run invariant : volatile_permissive :
+            <define>BOOST_CONTRACT_PERMISSIVE ]
 ;
 
 test-suite function :
@@ -278,7 +299,8 @@ test-suite check :
     [ boost_contract_build.subdir-run-cxx11 check : ifdef ]
     [ boost_contract_build.subdir-run-cxx11 check : ifdef_macro ]
     
-    [ boost_contract_build.subdir-run-cxx11 check : audit ]
+    [ boost_contract_build.subdir-run-cxx11 check : audit :
+            <define>BOOST_CONTRACT_AUDITS ]
     [ boost_contract_build.subdir-compile-fail-cxx11 check : audit_error ]
     [ boost_contract_build.subdir-run-cxx11 check : audit_disabled ]
     [ boost_contract_build.subdir-compile-fail-cxx11 check :
@@ -314,10 +336,9 @@ test-suite old :
 ;
 
 test-suite disable :
-    [ boost_contract_build.subdir-run-cxx11 disable :
-            pre_disable_no_assertion_prog ]
-    [ boost_contract_build.subdir-run-cxx11 disable :
-            assertions_disable_assertions_prog ]
+    [ boost_contract_build.subdir-run-cxx11 disable : nothing_for_pre_prog :
+            <define>BOOST_CONTRACT_PRECONDITIONS_DISABLE_NO_ASSERTION ]
+    [ boost_contract_build.subdir-run-cxx11 disable : other_assertions_prog ]
 
     [ boost_contract_build.subdir-lib-cxx11 disable : lib_a :
             <link>shared:<define>BOOST_CONTRACT_TEST_LIB_A_DYN_LINK ]
@@ -325,41 +346,47 @@ test-suite disable :
         <library>disable-lib_a
         <link>shared:<define>BOOST_CONTRACT_TEST_LIB_B_DYN_LINK
     ]
-    [ boost_contract_build.subdir-run-cxx11 disable
-        : assertions_disable_assertions_lib
-        : <library>disable-lib_a <library>disable-lib_b
-    ]
+    [ boost_contract_build.subdir-run-cxx11 disable : other_assertions_lib :
+            <library>disable-lib_a <library>disable-lib_b ]
     
     [ run
-        disable/assertions_disable_assertions_unit.cpp
+        disable/other_assertions_unit.cpp
         disable/lib_a.cpp
         disable/lib_b.cpp
-        : :
-        : [ boost_contract_build.project_requirements disable ]
-        : disable-assertions_disable_assertions_unit
+        : : :
+            [ boost_contract_build.project_requirements disable ]
+            $(boost_contract_build.cxx11_requirements)
+        : disable-other_assertions_unit
     ]
     
     [ boost_contract_build.subdir-lib-cxx11 disable : lib_x :
-            <link>shared:<define>BOOST_CONTRACT_TEST_LIB_X_DYN_LINK ]
+        <define>BOOST_CONTRACT_NO_POSTCONDITIONS
+        <define>BOOST_CONTRACT_NO_EXCEPTS
+        <link>shared:<define>BOOST_CONTRACT_TEST_LIB_X_DYN_LINK
+    ]
     [ boost_contract_build.subdir-lib-cxx11 disable : lib_y :
         <library>disable-lib_x
+        <define>BOOST_CONTRACT_NO_POSTCONDITIONS
+        <define>BOOST_CONTRACT_NO_EXCEPTS
         <link>shared:<define>BOOST_CONTRACT_TEST_LIB_Y_DYN_LINK
     ]
-    [ boost_contract_build.subdir-run-cxx11 disable
-        : always_disable_post_except_lib
-        : <library>disable-lib_x <library>disable-lib_y
-    ]
+    [ boost_contract_build.subdir-run-cxx11 disable : no_post_except_lib :
+            <library>disable-lib_x <library>disable-lib_y ]
     
     [ run
-        disable/always_disable_post_except_unit.cpp
+        disable/no_post_except_unit.cpp
         disable/lib_x.cpp
         disable/lib_y.cpp
-        : :
-        : [ boost_contract_build.project_requirements disable ]
-        : disable-always_disable_post_except_unit
+        : : :
+            [ boost_contract_build.project_requirements disable ]
+            $(boost_contract_build.cxx11_requirements)
+            <define>BOOST_CONTRACT_NO_POSTCONDITIONS
+            <define>BOOST_CONTRACT_NO_EXCEPTS
+        : disable-no_post_except_unit
     ]
     
-    [ boost_contract_build.subdir-run disable : audit ]
+    [ boost_contract_build.subdir-run disable : audit :
+            <define>BOOST_CONTRACT_AUDITS ]
     [ boost_contract_build.subdir-compile-fail disable : audit_error ]
     [ boost_contract_build.subdir-run disable : audit_disabled ]
     [ boost_contract_build.subdir-compile-fail disable : audit_disabled_error ]
@@ -399,7 +426,9 @@ test-suite specify :
     [ boost_contract_build.subdir-compile-fail-cxx11 specify : post_pre_error ]
     [ boost_contract_build.subdir-compile-fail-cxx11 specify : old_pre_error ]
     
-    [ boost_contract_build.subdir-run-cxx11 specify : missing_check ]
+    [ boost_contract_build.subdir-run-cxx11 specify : missing_check :
+        <define>BOOST_CONTRACT_ON_MISSING_CHECK_DECL=\"{\ throw\ err();\ }\"
+    ]
 
     [ boost_contract_build.subdir-compile-fail specify : auto_error :
             [ requires cxx11_auto_declarations ] ]

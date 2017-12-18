@@ -6,6 +6,8 @@
 
 // Test public function overloads (always without variadic templates).
 
-#define BOOST_NO_CXX11_VARIADIC_TEMPLATES
+#ifndef BOOST_NO_CXX11_VARIADIC_TEMPLATES
+    #error "build must define BOOST_NO_CXX11_VARIADIC_TEMPLATES"
+#endif
 #include "overload.hpp"
 

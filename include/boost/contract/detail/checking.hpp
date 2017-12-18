@@ -63,7 +63,7 @@ private:
     typedef static_local_var<mutex_tag, boost::mutex> mutex;
 
     struct checking_tag;
-    typedef static_local_var<checking_tag, bool, bool, false> flag;
+    typedef static_local_var_init<checking_tag, bool, bool, false> flag;
 };
 
 #ifdef BOOST_MSVC

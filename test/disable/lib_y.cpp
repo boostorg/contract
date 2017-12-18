@@ -6,10 +6,10 @@
 
 // Force .cpp never check post/except.
 #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
-    #define BOOST_CONTRACT_NO_POSTCONDITIONS
+    #error "build must define NO_POSTCONDITIONS"
 #endif
 #ifndef BOOST_CONTRACT_NO_EXCEPTS
-    #define BOOST_CONTRACT_NO_EXCEPTS
+    #error "build must define NO_EXCEPTS"
 #endif
 
 #define BOOST_CONTRACT_TEST_LIB_Y_SOURCE

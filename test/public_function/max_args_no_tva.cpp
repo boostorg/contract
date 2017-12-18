@@ -6,6 +6,8 @@
 
 // Test with default max arg number (leave MAX_ARGS #undef) and no variadic tpl.
 
-#define BOOST_NO_CXX11_VARIADIC_TEMPLATES
+#ifndef BOOST_NO_CXX11_VARIADIC_TEMPLATES
+    #error "build must define BOOST_NO_CXX11_VARIADIC_TEMPLATES"
+#endif
 #include "max_args.hpp"
 

@@ -133,7 +133,7 @@ namespace exception_ {
             boost::mutex> check_failure_mutex;
 
     struct check_failure_handler_tag;
-    typedef boost::contract::detail::static_local_var<
+    typedef boost::contract::detail::static_local_var_init<
         check_failure_handler_tag,
         failure_handler, 
         void (*)(),
@@ -183,7 +183,7 @@ namespace exception_ {
             boost::mutex> pre_failure_mutex;
 
     struct pre_failure_handler_tag;
-    typedef boost::contract::detail::static_local_var<
+    typedef boost::contract::detail::static_local_var_init<
         pre_failure_handler_tag,
         from_failure_handler,
         void (*)(from),
@@ -233,7 +233,7 @@ namespace exception_ {
             boost::mutex> post_failure_mutex;
 
     struct post_failure_handler_tag;
-    typedef boost::contract::detail::static_local_var<
+    typedef boost::contract::detail::static_local_var_init<
         post_failure_handler_tag,
         from_failure_handler,
         void (*)(from),
@@ -283,7 +283,7 @@ namespace exception_ {
             boost::mutex> except_failure_mutex;
 
     struct except_failure_handler_tag;
-    typedef boost::contract::detail::static_local_var<
+    typedef boost::contract::detail::static_local_var_init<
         except_failure_handler_tag,
         from_failure_handler,
         void (*)(from),
@@ -334,7 +334,7 @@ namespace exception_ {
             boost::mutex> old_failure_mutex;
 
     struct old_failure_handler_tag;
-    typedef boost::contract::detail::static_local_var<
+    typedef boost::contract::detail::static_local_var_init<
         old_failure_handler_tag,
         from_failure_handler,
         void (*)(from),
@@ -384,7 +384,7 @@ namespace exception_ {
             entry_inv_failure_mutex_tag, boost::mutex> entry_inv_failure_mutex;
 
     struct entry_inv_failure_handler_tag;
-    typedef boost::contract::detail::static_local_var<
+    typedef boost::contract::detail::static_local_var_init<
         entry_inv_failure_handler_tag,
         from_failure_handler,
         void (*)(from),
@@ -436,7 +436,7 @@ namespace exception_ {
             exit_inv_failure_mutex_tag, boost::mutex> exit_inv_failure_mutex;
 
     struct exit_inv_failure_handler_tag;
-    typedef boost::contract::detail::static_local_var<
+    typedef boost::contract::detail::static_local_var_init<
         exit_inv_failure_handler_tag,
         from_failure_handler,
         void (*)(from),
