@@ -53,7 +53,7 @@ public:
     }
 
     virtual void push_back(T const& value,
-            boost::contract::virtual_* v = 0) /* override */ { // Tag virtuals.
+            boost::contract::virtual_* v = 0) /* override */ { // For virtuals.
         boost::contract::old_ptr<unsigned> old_size =
                 BOOST_CONTRACT_OLDOF(v, size()); // Old values for virtuals.
         boost::contract::check c = boost::contract::public_function< // For overrides.

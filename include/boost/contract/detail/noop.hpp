@@ -9,7 +9,7 @@
 
 // Following must be expressions, not statements (as used with if.., etc.).
 
-#define BOOST_CONTRACT_DETAIL_NOOP ((void*)0)
+#define BOOST_CONTRACT_DETAIL_NOOP ((void)0)
 
 // Following always compiles but never evaluates cond (so check correct syntax).
 #define BOOST_CONTRACT_DETAIL_NOEVAL(cond) \
