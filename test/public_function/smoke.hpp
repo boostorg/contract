@@ -201,6 +201,8 @@ struct a
     a() { x.value = "a"; }
 
     // Must use virtual_ even if no longer decl virtual for correct overloading.
+    // NOTE: This intentionally hides but does not override `b::f` (it overrides
+    // `c::f` instead). This generates warnings on some compilers (Clang, etc.).
     result_type& f(s_type& s, boost::contract::virtual_* v = 0)
             /* override */ {
         static result_type result("none-a");

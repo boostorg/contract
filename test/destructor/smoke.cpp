@@ -139,7 +139,10 @@ struct a
 
     static a_n_type n;
 
-    explicit a() : i_(-1) { ++n.value; }
+    explicit a() : i_(-1) {
+        ++i_; --i_; // To avoid a warning when all contracts off.
+        ++n.value;
+    }
 
     virtual ~a() {
         boost::contract::old_ptr<a_n_type> old_n;

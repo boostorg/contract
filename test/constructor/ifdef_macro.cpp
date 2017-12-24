@@ -20,21 +20,21 @@ struct b :
     private boost::contract::constructor_precondition<b> // OK, always in code.
 {
     BOOST_CONTRACT_STATIC_INVARIANT({
-        typedef boost::contract::test::detail::unprotected_commas<void, void,
-                void> t;
+        boost::contract::test::detail::unprotected_commas<void, void, void>::
+                call();
         out << "b::static_inv" << std::endl;
     })
 
     BOOST_CONTRACT_INVARIANT({
-        typedef boost::contract::test::detail::unprotected_commas<void, void,
-                void> t;
+        boost::contract::test::detail::unprotected_commas<void, void, void>::
+                call();
         out << "b::inv" << std::endl;
     })
 
     explicit b(int x) :
         BOOST_CONTRACT_CONSTRUCTOR_PRECONDITION(b)([] {
-            typedef boost::contract::test::detail::unprotected_commas<
-                    void, void, void> t;
+            boost::contract::test::detail::unprotected_commas<void, void, void>
+                    ::call();
             out << "b::ctor::pre" << std::endl;
         })
     {
@@ -48,13 +48,13 @@ struct b :
         );
         BOOST_CONTRACT_CONSTRUCTOR(this)
             BOOST_CONTRACT_OLD([] {
-                typedef boost::contract::test::detail::unprotected_commas<
-                        void, void, void> t;
+                boost::contract::test::detail::unprotected_commas<
+                        void, void, void>::call();
                 out << "b::f::old" << std::endl;
             })
             BOOST_CONTRACT_POSTCONDITION([] {
-                typedef boost::contract::test::detail::unprotected_commas<
-                        void, void, void> t;
+                boost::contract::test::detail::unprotected_commas<
+                        void, void, void>::call();
                 out << "b::ctor::post" << std::endl;
             })
         ;
@@ -67,21 +67,21 @@ struct a:
     public b
 {
     BOOST_CONTRACT_STATIC_INVARIANT({
-        typedef boost::contract::test::detail::unprotected_commas<void, void,
-                void> t;
+        boost::contract::test::detail::unprotected_commas<void, void, void>::
+                call();
         out << "a::static_inv" << std::endl;
     })
     
     BOOST_CONTRACT_INVARIANT({
-        typedef boost::contract::test::detail::unprotected_commas<void, void,
-                void> t;
+        boost::contract::test::detail::unprotected_commas<void, void, void>::
+                call();
         out << "a::inv" << std::endl;
     })
 
     explicit a(int x) :
         BOOST_CONTRACT_CONSTRUCTOR_PRECONDITION(a)([] {
-            typedef boost::contract::test::detail::unprotected_commas<void,
-                    void, void> t;
+            boost::contract::test::detail::unprotected_commas<void, void, void>
+                    ::call();
             out << "a::ctor::pre" << std::endl; }
         ),
         b(x)
@@ -97,13 +97,13 @@ struct a:
         BOOST_CONTRACT_CONSTRUCTOR(boost::contract::test::detail::
                 unprotected_commas<void, void, void>::same(this))
             BOOST_CONTRACT_OLD([] {
-                typedef boost::contract::test::detail::unprotected_commas<void,
-                        void, void> t;
+                boost::contract::test::detail::unprotected_commas<
+                        void, void, void>::call();
                 out << "a::f::old" << std::endl;
             })
             BOOST_CONTRACT_POSTCONDITION([] {
-                typedef boost::contract::test::detail::unprotected_commas<void,
-                        void, void> t;
+                boost::contract::test::detail::unprotected_commas<
+                        void, void, void>::call();
                 out << "a::ctor::post" << std::endl;
             })
         ;

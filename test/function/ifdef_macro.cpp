@@ -27,23 +27,23 @@ void f(int x) {
     );
     BOOST_CONTRACT_FUNCTION()
         BOOST_CONTRACT_PRECONDITION([] {
-            typedef boost::contract::test::detail::unprotected_commas<
-                    void, void, void> t;
+            boost::contract::test::detail::unprotected_commas<void, void, void>
+                    ::call();
             out << "f::pre" << std::endl;
         })
         BOOST_CONTRACT_OLD([] {
-            typedef boost::contract::test::detail::unprotected_commas<
-                    void, void, void> t;
+            boost::contract::test::detail::unprotected_commas<void, void, void>
+                    ::call();
             out << "f::old" << std::endl;
         })
         BOOST_CONTRACT_POSTCONDITION([] {
-            typedef boost::contract::test::detail::unprotected_commas<
-                    void, void, void> t;
+            boost::contract::test::detail::unprotected_commas<void, void, void>
+                    ::call();
             out << "f::post" << std::endl;
         })
         BOOST_CONTRACT_EXCEPT([] { // Test EXCEPT macro (at least 1 time here).
-            typedef boost::contract::test::detail::unprotected_commas<
-                    void, void, void> t;
+            boost::contract::test::detail::unprotected_commas<void, void, void>
+                    ::call();
             out << "f::except" << std::endl;
         })
     ;

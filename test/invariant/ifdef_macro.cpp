@@ -17,20 +17,20 @@ boost::contract::test::detail::oteststream out;
 class a {
 public:
     BOOST_CONTRACT_STATIC_INVARIANT({
-        typedef boost::contract::test::detail::unprotected_commas<void, void,
-                void>::type1 t;
+        boost::contract::test::detail::unprotected_commas<void, void, void>::
+                call();
         out << "a::static_inv" << std::endl;
     })
     
     BOOST_CONTRACT_INVARIANT_VOLATILE({
-        typedef boost::contract::test::detail::unprotected_commas<void, void,
-                void>::type1 t;
+        boost::contract::test::detail::unprotected_commas<void, void, void>::
+                call();
         out << "a::cv_inv" << std::endl;
     })
 
     BOOST_CONTRACT_INVARIANT({
-        typedef boost::contract::test::detail::unprotected_commas<void, void,
-                void>::type1 t;
+        boost::contract::test::detail::unprotected_commas<void, void, void>::
+                call();
         out << "a::const_inv" << std::endl;
     })
 

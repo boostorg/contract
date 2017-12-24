@@ -12,7 +12,9 @@ namespace boost { namespace contract { namespace test { namespace detail {
 // Used to test passing unprotected commas into macro parameters.
 template<typename T1, typename Unused2, typename Unused3>
 struct unprotected_commas {
-    typedef T1 type1; // For type and code block macro parameters.
+    typedef T1 type1; // For type macro parameters.
+
+    static void call() {} // For code block macro parameters.
 
     // For value macro parameters.
     template<typename U> static U& same(U& x) { return x; }

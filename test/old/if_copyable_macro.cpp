@@ -34,8 +34,8 @@ struct b {
                     void>::same(this)
         )
             BOOST_CONTRACT_POSTCONDITION([&] {
-                typedef boost::contract::test::detail::unprotected_commas<void,
-                        void, void> t;
+                boost::contract::test::detail::unprotected_commas<
+                        void, void, void>::call();
                 if(old_x) {
                     BOOST_CONTRACT_ASSERT(x == *old_x + T(1));
                     ++old_checks;
@@ -79,8 +79,8 @@ struct a
                     void>::same(x)
         )
             BOOST_CONTRACT_POSTCONDITION([&] {
-                typedef boost::contract::test::detail::unprotected_commas<void,
-                        void, void> t;
+                boost::contract::test::detail::unprotected_commas<
+                        void, void, void>::call();
                 if(old_x) {
                     BOOST_CONTRACT_ASSERT(x == *old_x + T(1));
                     ++old_checks;
@@ -104,8 +104,8 @@ void next(T& x) {
     );
     BOOST_CONTRACT_FUNCTION()
         BOOST_CONTRACT_POSTCONDITION([&] {
-            typedef boost::contract::test::detail::unprotected_commas<void,
-                    void, void> t;
+            boost::contract::test::detail::unprotected_commas<void, void, void>
+                    ::call();
             if(old_x) {
                 BOOST_CONTRACT_ASSERT(x == *old_x + T(1));
                 ++old_checks;

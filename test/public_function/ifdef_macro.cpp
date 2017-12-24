@@ -18,14 +18,14 @@ boost::contract::test::detail::oteststream out;
 
 struct b {
     BOOST_CONTRACT_STATIC_INVARIANT({
-        typedef boost::contract::test::detail::unprotected_commas<void, void,
-                void> t;
+        boost::contract::test::detail::unprotected_commas<void, void, void>::
+                call();
         out << "b::static_inv" << std::endl;
     })
     
     BOOST_CONTRACT_INVARIANT({
-        typedef boost::contract::test::detail::unprotected_commas<void, void,
-                void> t;
+        boost::contract::test::detail::unprotected_commas<void, void, void>::
+                call();
         out << "b::inv" << std::endl;
     })
 
@@ -50,18 +50,18 @@ void b::f(int x, boost::contract::virtual_* v) {
                 same(this)
     )
         BOOST_CONTRACT_PRECONDITION([] {
-            typedef boost::contract::test::detail::unprotected_commas<void,
-                    void, void> t;
+            boost::contract::test::detail::unprotected_commas<
+                    void, void, void>::call();
             out << "b::f::pre" << std::endl;
         })
         BOOST_CONTRACT_OLD([] {
-            typedef boost::contract::test::detail::unprotected_commas<void,
-                    void, void> t;
+            boost::contract::test::detail::unprotected_commas<
+                    void, void, void>::call();
             out << "b::f::old" << std::endl;
         })
         BOOST_CONTRACT_POSTCONDITION([] {
-            typedef boost::contract::test::detail::unprotected_commas<void,
-                    void, void> t;
+            boost::contract::test::detail::unprotected_commas<
+                    void, void, void>::call();
             out << "b::f::post" << std::endl;
         })
     ;
@@ -77,14 +77,14 @@ struct a
     BOOST_CONTRACT_OVERRIDE(f)
 
     BOOST_CONTRACT_STATIC_INVARIANT({
-        typedef boost::contract::test::detail::unprotected_commas<void, void,
-                void> t;
+        boost::contract::test::detail::unprotected_commas<void, void, void>::
+                call();
         out << "a::static_inv" << std::endl;
     })
     
     BOOST_CONTRACT_INVARIANT({
-        typedef boost::contract::test::detail::unprotected_commas<void, void,
-                void> t;
+        boost::contract::test::detail::unprotected_commas<void, void, void>::
+                call();
         out << "a::inv" << std::endl;
     })
 
@@ -112,18 +112,18 @@ struct a
                     ::same(x)
         )
             BOOST_CONTRACT_PRECONDITION([] {
-                typedef boost::contract::test::detail::unprotected_commas<void,
-                        void, void> t;
+                boost::contract::test::detail::unprotected_commas<
+                        void, void, void>::call();
                 out << "a::f::pre" << std::endl;
             })
             BOOST_CONTRACT_OLD([] {
-                typedef boost::contract::test::detail::unprotected_commas<void,
-                        void, void> t;
+                boost::contract::test::detail::unprotected_commas<
+                        void, void, void>::call();
                 out << "a::f::old" << std::endl;
             })
             BOOST_CONTRACT_POSTCONDITION([] {
-                typedef boost::contract::test::detail::unprotected_commas<void,
-                        void, void> t;
+                boost::contract::test::detail::unprotected_commas<
+                        void, void, void>::call();
                 out << "a::f::post" << std::endl;
             })
         ;

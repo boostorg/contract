@@ -17,8 +17,8 @@ boost::contract::test::detail::oteststream out;
 void f(bool check) {
     BOOST_CONTRACT_CHECK((
         [&] () -> bool {
-            typedef boost::contract::test::detail::unprotected_commas<void,
-                    void, void> t;
+            boost::contract::test::detail::unprotected_commas<void, void, void>
+                    ::call();
             out << "f::check" << std::endl;
             return check;
         }()
