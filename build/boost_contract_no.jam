@@ -8,135 +8,135 @@
 
 module boost_contract_no {
 
-rule defs_yi { return  <define>BOOST_CONTRACT_NO_ENTRY_INVARIANTS ; }
+rule defs_y { return <define>BOOST_CONTRACT_NO_ENTRY_INVARIANTS ; }
 
-rule defs_pe { return  <define>BOOST_CONTRACT_NO_PRECONDITIONS ; }
+rule defs_r { return <define>BOOST_CONTRACT_NO_PRECONDITIONS ; }
 
-rule defs_xi { return  <define>BOOST_CONTRACT_NO_EXIT_INVARIANTS ; }
+rule defs_x { return <define>BOOST_CONTRACT_NO_EXIT_INVARIANTS ; }
 
-rule defs_po { return  <define>BOOST_CONTRACT_NO_POSTCONDITIONS ; }
+rule defs_s { return <define>BOOST_CONTRACT_NO_POSTCONDITIONS ; }
 
-rule defs_ex { return  <define>BOOST_CONTRACT_NO_EXCEPTS ; }
+rule defs_e { return <define>BOOST_CONTRACT_NO_EXCEPTS ; }
 
-rule defs_ck { return  <define>BOOST_CONTRACT_NO_CHECKS ; }
+rule defs_k { return <define>BOOST_CONTRACT_NO_CHECKS ; }
 
-rule defs_yi_pe { return  <define>BOOST_CONTRACT_NO_ENTRY_INVARIANTS <define>BOOST_CONTRACT_NO_PRECONDITIONS ; }
+rule defs_yr { return <define>BOOST_CONTRACT_NO_ENTRY_INVARIANTS <define>BOOST_CONTRACT_NO_PRECONDITIONS ; }
 
-rule defs_yi_xi { return  <define>BOOST_CONTRACT_NO_ENTRY_INVARIANTS <define>BOOST_CONTRACT_NO_EXIT_INVARIANTS ; }
+rule defs_yx { return <define>BOOST_CONTRACT_NO_ENTRY_INVARIANTS <define>BOOST_CONTRACT_NO_EXIT_INVARIANTS ; }
 
-rule defs_yi_po { return  <define>BOOST_CONTRACT_NO_ENTRY_INVARIANTS <define>BOOST_CONTRACT_NO_POSTCONDITIONS ; }
+rule defs_ys { return <define>BOOST_CONTRACT_NO_ENTRY_INVARIANTS <define>BOOST_CONTRACT_NO_POSTCONDITIONS ; }
 
-rule defs_yi_ex { return  <define>BOOST_CONTRACT_NO_ENTRY_INVARIANTS <define>BOOST_CONTRACT_NO_EXCEPTS ; }
+rule defs_ye { return <define>BOOST_CONTRACT_NO_ENTRY_INVARIANTS <define>BOOST_CONTRACT_NO_EXCEPTS ; }
 
-rule defs_yi_ck { return  <define>BOOST_CONTRACT_NO_ENTRY_INVARIANTS <define>BOOST_CONTRACT_NO_CHECKS ; }
+rule defs_yk { return <define>BOOST_CONTRACT_NO_ENTRY_INVARIANTS <define>BOOST_CONTRACT_NO_CHECKS ; }
 
-rule defs_pe_xi { return  <define>BOOST_CONTRACT_NO_PRECONDITIONS <define>BOOST_CONTRACT_NO_EXIT_INVARIANTS ; }
+rule defs_rx { return <define>BOOST_CONTRACT_NO_PRECONDITIONS <define>BOOST_CONTRACT_NO_EXIT_INVARIANTS ; }
 
-rule defs_pe_po { return  <define>BOOST_CONTRACT_NO_PRECONDITIONS <define>BOOST_CONTRACT_NO_POSTCONDITIONS ; }
+rule defs_rs { return <define>BOOST_CONTRACT_NO_PRECONDITIONS <define>BOOST_CONTRACT_NO_POSTCONDITIONS ; }
 
-rule defs_pe_ex { return  <define>BOOST_CONTRACT_NO_PRECONDITIONS <define>BOOST_CONTRACT_NO_EXCEPTS ; }
+rule defs_re { return <define>BOOST_CONTRACT_NO_PRECONDITIONS <define>BOOST_CONTRACT_NO_EXCEPTS ; }
 
-rule defs_pe_ck { return  <define>BOOST_CONTRACT_NO_PRECONDITIONS <define>BOOST_CONTRACT_NO_CHECKS ; }
+rule defs_rk { return <define>BOOST_CONTRACT_NO_PRECONDITIONS <define>BOOST_CONTRACT_NO_CHECKS ; }
 
-rule defs_xi_po { return  <define>BOOST_CONTRACT_NO_EXIT_INVARIANTS <define>BOOST_CONTRACT_NO_POSTCONDITIONS ; }
+rule defs_xs { return <define>BOOST_CONTRACT_NO_EXIT_INVARIANTS <define>BOOST_CONTRACT_NO_POSTCONDITIONS ; }
 
-rule defs_xi_ex { return  <define>BOOST_CONTRACT_NO_EXIT_INVARIANTS <define>BOOST_CONTRACT_NO_EXCEPTS ; }
+rule defs_xe { return <define>BOOST_CONTRACT_NO_EXIT_INVARIANTS <define>BOOST_CONTRACT_NO_EXCEPTS ; }
 
-rule defs_xi_ck { return  <define>BOOST_CONTRACT_NO_EXIT_INVARIANTS <define>BOOST_CONTRACT_NO_CHECKS ; }
+rule defs_xk { return <define>BOOST_CONTRACT_NO_EXIT_INVARIANTS <define>BOOST_CONTRACT_NO_CHECKS ; }
 
-rule defs_po_ex { return  <define>BOOST_CONTRACT_NO_POSTCONDITIONS <define>BOOST_CONTRACT_NO_EXCEPTS ; }
+rule defs_se { return <define>BOOST_CONTRACT_NO_POSTCONDITIONS <define>BOOST_CONTRACT_NO_EXCEPTS ; }
 
-rule defs_po_ck { return  <define>BOOST_CONTRACT_NO_POSTCONDITIONS <define>BOOST_CONTRACT_NO_CHECKS ; }
+rule defs_sk { return <define>BOOST_CONTRACT_NO_POSTCONDITIONS <define>BOOST_CONTRACT_NO_CHECKS ; }
 
-rule defs_ex_ck { return  <define>BOOST_CONTRACT_NO_EXCEPTS <define>BOOST_CONTRACT_NO_CHECKS ; }
+rule defs_ek { return <define>BOOST_CONTRACT_NO_EXCEPTS <define>BOOST_CONTRACT_NO_CHECKS ; }
 
-rule defs_yi_pe_xi { return  <define>BOOST_CONTRACT_NO_ENTRY_INVARIANTS <define>BOOST_CONTRACT_NO_PRECONDITIONS <define>BOOST_CONTRACT_NO_EXIT_INVARIANTS ; }
+rule defs_yrx { return <define>BOOST_CONTRACT_NO_ENTRY_INVARIANTS <define>BOOST_CONTRACT_NO_PRECONDITIONS <define>BOOST_CONTRACT_NO_EXIT_INVARIANTS ; }
 
-rule defs_yi_pe_po { return  <define>BOOST_CONTRACT_NO_ENTRY_INVARIANTS <define>BOOST_CONTRACT_NO_PRECONDITIONS <define>BOOST_CONTRACT_NO_POSTCONDITIONS ; }
+rule defs_yrs { return <define>BOOST_CONTRACT_NO_ENTRY_INVARIANTS <define>BOOST_CONTRACT_NO_PRECONDITIONS <define>BOOST_CONTRACT_NO_POSTCONDITIONS ; }
 
-rule defs_yi_pe_ex { return  <define>BOOST_CONTRACT_NO_ENTRY_INVARIANTS <define>BOOST_CONTRACT_NO_PRECONDITIONS <define>BOOST_CONTRACT_NO_EXCEPTS ; }
+rule defs_yre { return <define>BOOST_CONTRACT_NO_ENTRY_INVARIANTS <define>BOOST_CONTRACT_NO_PRECONDITIONS <define>BOOST_CONTRACT_NO_EXCEPTS ; }
 
-rule defs_yi_pe_ck { return  <define>BOOST_CONTRACT_NO_ENTRY_INVARIANTS <define>BOOST_CONTRACT_NO_PRECONDITIONS <define>BOOST_CONTRACT_NO_CHECKS ; }
+rule defs_yrk { return <define>BOOST_CONTRACT_NO_ENTRY_INVARIANTS <define>BOOST_CONTRACT_NO_PRECONDITIONS <define>BOOST_CONTRACT_NO_CHECKS ; }
 
-rule defs_yi_xi_po { return  <define>BOOST_CONTRACT_NO_ENTRY_INVARIANTS <define>BOOST_CONTRACT_NO_EXIT_INVARIANTS <define>BOOST_CONTRACT_NO_POSTCONDITIONS ; }
+rule defs_yxs { return <define>BOOST_CONTRACT_NO_ENTRY_INVARIANTS <define>BOOST_CONTRACT_NO_EXIT_INVARIANTS <define>BOOST_CONTRACT_NO_POSTCONDITIONS ; }
 
-rule defs_yi_xi_ex { return  <define>BOOST_CONTRACT_NO_ENTRY_INVARIANTS <define>BOOST_CONTRACT_NO_EXIT_INVARIANTS <define>BOOST_CONTRACT_NO_EXCEPTS ; }
+rule defs_yxe { return <define>BOOST_CONTRACT_NO_ENTRY_INVARIANTS <define>BOOST_CONTRACT_NO_EXIT_INVARIANTS <define>BOOST_CONTRACT_NO_EXCEPTS ; }
 
-rule defs_yi_xi_ck { return  <define>BOOST_CONTRACT_NO_ENTRY_INVARIANTS <define>BOOST_CONTRACT_NO_EXIT_INVARIANTS <define>BOOST_CONTRACT_NO_CHECKS ; }
+rule defs_yxk { return <define>BOOST_CONTRACT_NO_ENTRY_INVARIANTS <define>BOOST_CONTRACT_NO_EXIT_INVARIANTS <define>BOOST_CONTRACT_NO_CHECKS ; }
 
-rule defs_yi_po_ex { return  <define>BOOST_CONTRACT_NO_ENTRY_INVARIANTS <define>BOOST_CONTRACT_NO_POSTCONDITIONS <define>BOOST_CONTRACT_NO_EXCEPTS ; }
+rule defs_yse { return <define>BOOST_CONTRACT_NO_ENTRY_INVARIANTS <define>BOOST_CONTRACT_NO_POSTCONDITIONS <define>BOOST_CONTRACT_NO_EXCEPTS ; }
 
-rule defs_yi_po_ck { return  <define>BOOST_CONTRACT_NO_ENTRY_INVARIANTS <define>BOOST_CONTRACT_NO_POSTCONDITIONS <define>BOOST_CONTRACT_NO_CHECKS ; }
+rule defs_ysk { return <define>BOOST_CONTRACT_NO_ENTRY_INVARIANTS <define>BOOST_CONTRACT_NO_POSTCONDITIONS <define>BOOST_CONTRACT_NO_CHECKS ; }
 
-rule defs_yi_ex_ck { return  <define>BOOST_CONTRACT_NO_ENTRY_INVARIANTS <define>BOOST_CONTRACT_NO_EXCEPTS <define>BOOST_CONTRACT_NO_CHECKS ; }
+rule defs_yek { return <define>BOOST_CONTRACT_NO_ENTRY_INVARIANTS <define>BOOST_CONTRACT_NO_EXCEPTS <define>BOOST_CONTRACT_NO_CHECKS ; }
 
-rule defs_pe_xi_po { return  <define>BOOST_CONTRACT_NO_PRECONDITIONS <define>BOOST_CONTRACT_NO_EXIT_INVARIANTS <define>BOOST_CONTRACT_NO_POSTCONDITIONS ; }
+rule defs_rxs { return <define>BOOST_CONTRACT_NO_PRECONDITIONS <define>BOOST_CONTRACT_NO_EXIT_INVARIANTS <define>BOOST_CONTRACT_NO_POSTCONDITIONS ; }
 
-rule defs_pe_xi_ex { return  <define>BOOST_CONTRACT_NO_PRECONDITIONS <define>BOOST_CONTRACT_NO_EXIT_INVARIANTS <define>BOOST_CONTRACT_NO_EXCEPTS ; }
+rule defs_rxe { return <define>BOOST_CONTRACT_NO_PRECONDITIONS <define>BOOST_CONTRACT_NO_EXIT_INVARIANTS <define>BOOST_CONTRACT_NO_EXCEPTS ; }
 
-rule defs_pe_xi_ck { return  <define>BOOST_CONTRACT_NO_PRECONDITIONS <define>BOOST_CONTRACT_NO_EXIT_INVARIANTS <define>BOOST_CONTRACT_NO_CHECKS ; }
+rule defs_rxk { return <define>BOOST_CONTRACT_NO_PRECONDITIONS <define>BOOST_CONTRACT_NO_EXIT_INVARIANTS <define>BOOST_CONTRACT_NO_CHECKS ; }
 
-rule defs_pe_po_ex { return  <define>BOOST_CONTRACT_NO_PRECONDITIONS <define>BOOST_CONTRACT_NO_POSTCONDITIONS <define>BOOST_CONTRACT_NO_EXCEPTS ; }
+rule defs_rse { return <define>BOOST_CONTRACT_NO_PRECONDITIONS <define>BOOST_CONTRACT_NO_POSTCONDITIONS <define>BOOST_CONTRACT_NO_EXCEPTS ; }
 
-rule defs_pe_po_ck { return  <define>BOOST_CONTRACT_NO_PRECONDITIONS <define>BOOST_CONTRACT_NO_POSTCONDITIONS <define>BOOST_CONTRACT_NO_CHECKS ; }
+rule defs_rsk { return <define>BOOST_CONTRACT_NO_PRECONDITIONS <define>BOOST_CONTRACT_NO_POSTCONDITIONS <define>BOOST_CONTRACT_NO_CHECKS ; }
 
-rule defs_pe_ex_ck { return  <define>BOOST_CONTRACT_NO_PRECONDITIONS <define>BOOST_CONTRACT_NO_EXCEPTS <define>BOOST_CONTRACT_NO_CHECKS ; }
+rule defs_rek { return <define>BOOST_CONTRACT_NO_PRECONDITIONS <define>BOOST_CONTRACT_NO_EXCEPTS <define>BOOST_CONTRACT_NO_CHECKS ; }
 
-rule defs_xi_po_ex { return  <define>BOOST_CONTRACT_NO_EXIT_INVARIANTS <define>BOOST_CONTRACT_NO_POSTCONDITIONS <define>BOOST_CONTRACT_NO_EXCEPTS ; }
+rule defs_xse { return <define>BOOST_CONTRACT_NO_EXIT_INVARIANTS <define>BOOST_CONTRACT_NO_POSTCONDITIONS <define>BOOST_CONTRACT_NO_EXCEPTS ; }
 
-rule defs_xi_po_ck { return  <define>BOOST_CONTRACT_NO_EXIT_INVARIANTS <define>BOOST_CONTRACT_NO_POSTCONDITIONS <define>BOOST_CONTRACT_NO_CHECKS ; }
+rule defs_xsk { return <define>BOOST_CONTRACT_NO_EXIT_INVARIANTS <define>BOOST_CONTRACT_NO_POSTCONDITIONS <define>BOOST_CONTRACT_NO_CHECKS ; }
 
-rule defs_xi_ex_ck { return  <define>BOOST_CONTRACT_NO_EXIT_INVARIANTS <define>BOOST_CONTRACT_NO_EXCEPTS <define>BOOST_CONTRACT_NO_CHECKS ; }
+rule defs_xek { return <define>BOOST_CONTRACT_NO_EXIT_INVARIANTS <define>BOOST_CONTRACT_NO_EXCEPTS <define>BOOST_CONTRACT_NO_CHECKS ; }
 
-rule defs_po_ex_ck { return  <define>BOOST_CONTRACT_NO_POSTCONDITIONS <define>BOOST_CONTRACT_NO_EXCEPTS <define>BOOST_CONTRACT_NO_CHECKS ; }
+rule defs_sek { return <define>BOOST_CONTRACT_NO_POSTCONDITIONS <define>BOOST_CONTRACT_NO_EXCEPTS <define>BOOST_CONTRACT_NO_CHECKS ; }
 
-rule defs_yi_pe_xi_po { return  <define>BOOST_CONTRACT_NO_ENTRY_INVARIANTS <define>BOOST_CONTRACT_NO_PRECONDITIONS <define>BOOST_CONTRACT_NO_EXIT_INVARIANTS <define>BOOST_CONTRACT_NO_POSTCONDITIONS ; }
+rule defs_yrxs { return <define>BOOST_CONTRACT_NO_ENTRY_INVARIANTS <define>BOOST_CONTRACT_NO_PRECONDITIONS <define>BOOST_CONTRACT_NO_EXIT_INVARIANTS <define>BOOST_CONTRACT_NO_POSTCONDITIONS ; }
 
-rule defs_yi_pe_xi_ex { return  <define>BOOST_CONTRACT_NO_ENTRY_INVARIANTS <define>BOOST_CONTRACT_NO_PRECONDITIONS <define>BOOST_CONTRACT_NO_EXIT_INVARIANTS <define>BOOST_CONTRACT_NO_EXCEPTS ; }
+rule defs_yrxe { return <define>BOOST_CONTRACT_NO_ENTRY_INVARIANTS <define>BOOST_CONTRACT_NO_PRECONDITIONS <define>BOOST_CONTRACT_NO_EXIT_INVARIANTS <define>BOOST_CONTRACT_NO_EXCEPTS ; }
 
-rule defs_yi_pe_xi_ck { return  <define>BOOST_CONTRACT_NO_ENTRY_INVARIANTS <define>BOOST_CONTRACT_NO_PRECONDITIONS <define>BOOST_CONTRACT_NO_EXIT_INVARIANTS <define>BOOST_CONTRACT_NO_CHECKS ; }
+rule defs_yrxk { return <define>BOOST_CONTRACT_NO_ENTRY_INVARIANTS <define>BOOST_CONTRACT_NO_PRECONDITIONS <define>BOOST_CONTRACT_NO_EXIT_INVARIANTS <define>BOOST_CONTRACT_NO_CHECKS ; }
 
-rule defs_yi_pe_po_ex { return  <define>BOOST_CONTRACT_NO_ENTRY_INVARIANTS <define>BOOST_CONTRACT_NO_PRECONDITIONS <define>BOOST_CONTRACT_NO_POSTCONDITIONS <define>BOOST_CONTRACT_NO_EXCEPTS ; }
+rule defs_yrse { return <define>BOOST_CONTRACT_NO_ENTRY_INVARIANTS <define>BOOST_CONTRACT_NO_PRECONDITIONS <define>BOOST_CONTRACT_NO_POSTCONDITIONS <define>BOOST_CONTRACT_NO_EXCEPTS ; }
 
-rule defs_yi_pe_po_ck { return  <define>BOOST_CONTRACT_NO_ENTRY_INVARIANTS <define>BOOST_CONTRACT_NO_PRECONDITIONS <define>BOOST_CONTRACT_NO_POSTCONDITIONS <define>BOOST_CONTRACT_NO_CHECKS ; }
+rule defs_yrsk { return <define>BOOST_CONTRACT_NO_ENTRY_INVARIANTS <define>BOOST_CONTRACT_NO_PRECONDITIONS <define>BOOST_CONTRACT_NO_POSTCONDITIONS <define>BOOST_CONTRACT_NO_CHECKS ; }
 
-rule defs_yi_pe_ex_ck { return  <define>BOOST_CONTRACT_NO_ENTRY_INVARIANTS <define>BOOST_CONTRACT_NO_PRECONDITIONS <define>BOOST_CONTRACT_NO_EXCEPTS <define>BOOST_CONTRACT_NO_CHECKS ; }
+rule defs_yrek { return <define>BOOST_CONTRACT_NO_ENTRY_INVARIANTS <define>BOOST_CONTRACT_NO_PRECONDITIONS <define>BOOST_CONTRACT_NO_EXCEPTS <define>BOOST_CONTRACT_NO_CHECKS ; }
 
-rule defs_yi_xi_po_ex { return  <define>BOOST_CONTRACT_NO_ENTRY_INVARIANTS <define>BOOST_CONTRACT_NO_EXIT_INVARIANTS <define>BOOST_CONTRACT_NO_POSTCONDITIONS <define>BOOST_CONTRACT_NO_EXCEPTS ; }
+rule defs_yxse { return <define>BOOST_CONTRACT_NO_ENTRY_INVARIANTS <define>BOOST_CONTRACT_NO_EXIT_INVARIANTS <define>BOOST_CONTRACT_NO_POSTCONDITIONS <define>BOOST_CONTRACT_NO_EXCEPTS ; }
 
-rule defs_yi_xi_po_ck { return  <define>BOOST_CONTRACT_NO_ENTRY_INVARIANTS <define>BOOST_CONTRACT_NO_EXIT_INVARIANTS <define>BOOST_CONTRACT_NO_POSTCONDITIONS <define>BOOST_CONTRACT_NO_CHECKS ; }
+rule defs_yxsk { return <define>BOOST_CONTRACT_NO_ENTRY_INVARIANTS <define>BOOST_CONTRACT_NO_EXIT_INVARIANTS <define>BOOST_CONTRACT_NO_POSTCONDITIONS <define>BOOST_CONTRACT_NO_CHECKS ; }
 
-rule defs_yi_xi_ex_ck { return  <define>BOOST_CONTRACT_NO_ENTRY_INVARIANTS <define>BOOST_CONTRACT_NO_EXIT_INVARIANTS <define>BOOST_CONTRACT_NO_EXCEPTS <define>BOOST_CONTRACT_NO_CHECKS ; }
+rule defs_yxek { return <define>BOOST_CONTRACT_NO_ENTRY_INVARIANTS <define>BOOST_CONTRACT_NO_EXIT_INVARIANTS <define>BOOST_CONTRACT_NO_EXCEPTS <define>BOOST_CONTRACT_NO_CHECKS ; }
 
-rule defs_yi_po_ex_ck { return  <define>BOOST_CONTRACT_NO_ENTRY_INVARIANTS <define>BOOST_CONTRACT_NO_POSTCONDITIONS <define>BOOST_CONTRACT_NO_EXCEPTS <define>BOOST_CONTRACT_NO_CHECKS ; }
+rule defs_ysek { return <define>BOOST_CONTRACT_NO_ENTRY_INVARIANTS <define>BOOST_CONTRACT_NO_POSTCONDITIONS <define>BOOST_CONTRACT_NO_EXCEPTS <define>BOOST_CONTRACT_NO_CHECKS ; }
 
-rule defs_pe_xi_po_ex { return  <define>BOOST_CONTRACT_NO_PRECONDITIONS <define>BOOST_CONTRACT_NO_EXIT_INVARIANTS <define>BOOST_CONTRACT_NO_POSTCONDITIONS <define>BOOST_CONTRACT_NO_EXCEPTS ; }
+rule defs_rxse { return <define>BOOST_CONTRACT_NO_PRECONDITIONS <define>BOOST_CONTRACT_NO_EXIT_INVARIANTS <define>BOOST_CONTRACT_NO_POSTCONDITIONS <define>BOOST_CONTRACT_NO_EXCEPTS ; }
 
-rule defs_pe_xi_po_ck { return  <define>BOOST_CONTRACT_NO_PRECONDITIONS <define>BOOST_CONTRACT_NO_EXIT_INVARIANTS <define>BOOST_CONTRACT_NO_POSTCONDITIONS <define>BOOST_CONTRACT_NO_CHECKS ; }
+rule defs_rxsk { return <define>BOOST_CONTRACT_NO_PRECONDITIONS <define>BOOST_CONTRACT_NO_EXIT_INVARIANTS <define>BOOST_CONTRACT_NO_POSTCONDITIONS <define>BOOST_CONTRACT_NO_CHECKS ; }
 
-rule defs_pe_xi_ex_ck { return  <define>BOOST_CONTRACT_NO_PRECONDITIONS <define>BOOST_CONTRACT_NO_EXIT_INVARIANTS <define>BOOST_CONTRACT_NO_EXCEPTS <define>BOOST_CONTRACT_NO_CHECKS ; }
+rule defs_rxek { return <define>BOOST_CONTRACT_NO_PRECONDITIONS <define>BOOST_CONTRACT_NO_EXIT_INVARIANTS <define>BOOST_CONTRACT_NO_EXCEPTS <define>BOOST_CONTRACT_NO_CHECKS ; }
 
-rule defs_pe_po_ex_ck { return  <define>BOOST_CONTRACT_NO_PRECONDITIONS <define>BOOST_CONTRACT_NO_POSTCONDITIONS <define>BOOST_CONTRACT_NO_EXCEPTS <define>BOOST_CONTRACT_NO_CHECKS ; }
+rule defs_rsek { return <define>BOOST_CONTRACT_NO_PRECONDITIONS <define>BOOST_CONTRACT_NO_POSTCONDITIONS <define>BOOST_CONTRACT_NO_EXCEPTS <define>BOOST_CONTRACT_NO_CHECKS ; }
 
-rule defs_xi_po_ex_ck { return  <define>BOOST_CONTRACT_NO_EXIT_INVARIANTS <define>BOOST_CONTRACT_NO_POSTCONDITIONS <define>BOOST_CONTRACT_NO_EXCEPTS <define>BOOST_CONTRACT_NO_CHECKS ; }
+rule defs_xsek { return <define>BOOST_CONTRACT_NO_EXIT_INVARIANTS <define>BOOST_CONTRACT_NO_POSTCONDITIONS <define>BOOST_CONTRACT_NO_EXCEPTS <define>BOOST_CONTRACT_NO_CHECKS ; }
 
-rule defs_yi_pe_xi_po_ex { return  <define>BOOST_CONTRACT_NO_ENTRY_INVARIANTS <define>BOOST_CONTRACT_NO_PRECONDITIONS <define>BOOST_CONTRACT_NO_EXIT_INVARIANTS <define>BOOST_CONTRACT_NO_POSTCONDITIONS <define>BOOST_CONTRACT_NO_EXCEPTS ; }
+rule defs_yrxse { return <define>BOOST_CONTRACT_NO_ENTRY_INVARIANTS <define>BOOST_CONTRACT_NO_PRECONDITIONS <define>BOOST_CONTRACT_NO_EXIT_INVARIANTS <define>BOOST_CONTRACT_NO_POSTCONDITIONS <define>BOOST_CONTRACT_NO_EXCEPTS ; }
 
-rule defs_yi_pe_xi_po_ck { return  <define>BOOST_CONTRACT_NO_ENTRY_INVARIANTS <define>BOOST_CONTRACT_NO_PRECONDITIONS <define>BOOST_CONTRACT_NO_EXIT_INVARIANTS <define>BOOST_CONTRACT_NO_POSTCONDITIONS <define>BOOST_CONTRACT_NO_CHECKS ; }
+rule defs_yrxsk { return <define>BOOST_CONTRACT_NO_ENTRY_INVARIANTS <define>BOOST_CONTRACT_NO_PRECONDITIONS <define>BOOST_CONTRACT_NO_EXIT_INVARIANTS <define>BOOST_CONTRACT_NO_POSTCONDITIONS <define>BOOST_CONTRACT_NO_CHECKS ; }
 
-rule defs_yi_pe_xi_ex_ck { return  <define>BOOST_CONTRACT_NO_ENTRY_INVARIANTS <define>BOOST_CONTRACT_NO_PRECONDITIONS <define>BOOST_CONTRACT_NO_EXIT_INVARIANTS <define>BOOST_CONTRACT_NO_EXCEPTS <define>BOOST_CONTRACT_NO_CHECKS ; }
+rule defs_yrxek { return <define>BOOST_CONTRACT_NO_ENTRY_INVARIANTS <define>BOOST_CONTRACT_NO_PRECONDITIONS <define>BOOST_CONTRACT_NO_EXIT_INVARIANTS <define>BOOST_CONTRACT_NO_EXCEPTS <define>BOOST_CONTRACT_NO_CHECKS ; }
 
-rule defs_yi_pe_po_ex_ck { return  <define>BOOST_CONTRACT_NO_ENTRY_INVARIANTS <define>BOOST_CONTRACT_NO_PRECONDITIONS <define>BOOST_CONTRACT_NO_POSTCONDITIONS <define>BOOST_CONTRACT_NO_EXCEPTS <define>BOOST_CONTRACT_NO_CHECKS ; }
+rule defs_yrsek { return <define>BOOST_CONTRACT_NO_ENTRY_INVARIANTS <define>BOOST_CONTRACT_NO_PRECONDITIONS <define>BOOST_CONTRACT_NO_POSTCONDITIONS <define>BOOST_CONTRACT_NO_EXCEPTS <define>BOOST_CONTRACT_NO_CHECKS ; }
 
-rule defs_yi_xi_po_ex_ck { return  <define>BOOST_CONTRACT_NO_ENTRY_INVARIANTS <define>BOOST_CONTRACT_NO_EXIT_INVARIANTS <define>BOOST_CONTRACT_NO_POSTCONDITIONS <define>BOOST_CONTRACT_NO_EXCEPTS <define>BOOST_CONTRACT_NO_CHECKS ; }
+rule defs_yxsek { return <define>BOOST_CONTRACT_NO_ENTRY_INVARIANTS <define>BOOST_CONTRACT_NO_EXIT_INVARIANTS <define>BOOST_CONTRACT_NO_POSTCONDITIONS <define>BOOST_CONTRACT_NO_EXCEPTS <define>BOOST_CONTRACT_NO_CHECKS ; }
 
-rule defs_pe_xi_po_ex_ck { return  <define>BOOST_CONTRACT_NO_PRECONDITIONS <define>BOOST_CONTRACT_NO_EXIT_INVARIANTS <define>BOOST_CONTRACT_NO_POSTCONDITIONS <define>BOOST_CONTRACT_NO_EXCEPTS <define>BOOST_CONTRACT_NO_CHECKS ; }
+rule defs_rxsek { return <define>BOOST_CONTRACT_NO_PRECONDITIONS <define>BOOST_CONTRACT_NO_EXIT_INVARIANTS <define>BOOST_CONTRACT_NO_POSTCONDITIONS <define>BOOST_CONTRACT_NO_EXCEPTS <define>BOOST_CONTRACT_NO_CHECKS ; }
 
-rule defs_yi_pe_xi_po_ex_ck { return  <define>BOOST_CONTRACT_NO_ENTRY_INVARIANTS <define>BOOST_CONTRACT_NO_PRECONDITIONS <define>BOOST_CONTRACT_NO_EXIT_INVARIANTS <define>BOOST_CONTRACT_NO_POSTCONDITIONS <define>BOOST_CONTRACT_NO_EXCEPTS <define>BOOST_CONTRACT_NO_CHECKS ; }
+rule defs_yrxsek { return <define>BOOST_CONTRACT_NO_ENTRY_INVARIANTS <define>BOOST_CONTRACT_NO_PRECONDITIONS <define>BOOST_CONTRACT_NO_EXIT_INVARIANTS <define>BOOST_CONTRACT_NO_POSTCONDITIONS <define>BOOST_CONTRACT_NO_EXCEPTS <define>BOOST_CONTRACT_NO_CHECKS ; }
 
-rule combinations { return  yi pe xi po ex ck yi_pe yi_xi yi_po yi_ex yi_ck pe_xi pe_po pe_ex pe_ck xi_po xi_ex xi_ck po_ex po_ck ex_ck yi_pe_xi yi_pe_po yi_pe_ex yi_pe_ck yi_xi_po yi_xi_ex yi_xi_ck yi_po_ex yi_po_ck yi_ex_ck pe_xi_po pe_xi_ex pe_xi_ck pe_po_ex pe_po_ck pe_ex_ck xi_po_ex xi_po_ck xi_ex_ck po_ex_ck yi_pe_xi_po yi_pe_xi_ex yi_pe_xi_ck yi_pe_po_ex yi_pe_po_ck yi_pe_ex_ck yi_xi_po_ex yi_xi_po_ck yi_xi_ex_ck yi_po_ex_ck pe_xi_po_ex pe_xi_po_ck pe_xi_ex_ck pe_po_ex_ck xi_po_ex_ck yi_pe_xi_po_ex yi_pe_xi_po_ck yi_pe_xi_ex_ck yi_pe_po_ex_ck yi_xi_po_ex_ck pe_xi_po_ex_ck yi_pe_xi_po_ex_ck ; }
+rule combinations { return y r x s e k yr yx ys ye yk rx rs re rk xs xe xk se sk ek yrx yrs yre yrk yxs yxe yxk yse ysk yek rxs rxe rxk rse rsk rek xse xsk xek sek yrxs yrxe yrxk yrse yrsk yrek yxse yxsk yxek ysek rxse rxsk rxek rsek xsek yrxse yrxsk yrxek yrsek yxsek rxsek yrxsek ; }
 
 } # module
 
-# All combinations: ,yi,pe,xi,po,ex,ck,yi_pe,yi_xi,yi_po,yi_ex,yi_ck,pe_xi,pe_po,pe_ex,pe_ck,xi_po,xi_ex,xi_ck,po_ex,po_ck,ex_ck,yi_pe_xi,yi_pe_po,yi_pe_ex,yi_pe_ck,yi_xi_po,yi_xi_ex,yi_xi_ck,yi_po_ex,yi_po_ck,yi_ex_ck,pe_xi_po,pe_xi_ex,pe_xi_ck,pe_po_ex,pe_po_ck,pe_ex_ck,xi_po_ex,xi_po_ck,xi_ex_ck,po_ex_ck,yi_pe_xi_po,yi_pe_xi_ex,yi_pe_xi_ck,yi_pe_po_ex,yi_pe_po_ck,yi_pe_ex_ck,yi_xi_po_ex,yi_xi_po_ck,yi_xi_ex_ck,yi_po_ex_ck,pe_xi_po_ex,pe_xi_po_ck,pe_xi_ex_ck,pe_po_ex_ck,xi_po_ex_ck,yi_pe_xi_po_ex,yi_pe_xi_po_ck,yi_pe_xi_ex_ck,yi_pe_po_ex_ck,yi_xi_po_ex_ck,pe_xi_po_ex_ck,yi_pe_xi_po_ex_ck
+# All combinations: y,r,x,s,e,k,yr,yx,ys,ye,yk,rx,rs,re,rk,xs,xe,xk,se,sk,ek,yrx,yrs,yre,yrk,yxs,yxe,yxk,yse,ysk,yek,rxs,rxe,rxk,rse,rsk,rek,xse,xsk,xek,sek,yrxs,yrxe,yrxk,yrse,yrsk,yrek,yxse,yxsk,yxek,ysek,rxse,rxsk,rxek,rsek,xsek,yrxse,yrxsk,yrxek,yrsek,yxsek,rxsek,yrxsek
 

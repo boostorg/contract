@@ -12,15 +12,16 @@ import collections
 import itertools
 
 defs = collections.OrderedDict([
-    # Keys must be short (~2 chars) to avoid MSVC link error on long file names.
-    ('yi', 'BOOST_CONTRACT_NO_ENTRY_INVARIANTS'),
-    ('pe', 'BOOST_CONTRACT_NO_PRECONDITIONS'),
-    ('xi', 'BOOST_CONTRACT_NO_EXIT_INVARIANTS'),
-    ('po', 'BOOST_CONTRACT_NO_POSTCONDITIONS'),
-    ('ex', 'BOOST_CONTRACT_NO_EXCEPTS'),
-    ('ck', 'BOOST_CONTRACT_NO_CHECKS')
+    # Short keys (1-2 chars) as MSVC gives linker errors on long file names.
+    ('y', 'BOOST_CONTRACT_NO_ENTRY_INVARIANTS'),
+    ('r', 'BOOST_CONTRACT_NO_PRECONDITIONS'),
+    ('x', 'BOOST_CONTRACT_NO_EXIT_INVARIANTS'),
+    ('s', 'BOOST_CONTRACT_NO_POSTCONDITIONS'),
+    ('e', 'BOOST_CONTRACT_NO_EXCEPTS'),
+    ('k', 'BOOST_CONTRACT_NO_CHECKS')
     # Add more macros here.
 ])
+separator = '' # Might want to set to '_' if keys longer than 1 char.
 
 print 'module boost_contract_no {\n'
 s = ''
@@ -32,14 +33,15 @@ for r in range(len(defs.keys())):
         sep = ''
         for cond in comb:
             c += sep + cond
-            sep = '_'
+            sep = separator
             d += " <define>" + defs[cond]
         s += ' ' + c
-        print 'rule defs_{0} {{ return {1} ; }}\n'.format(c, d)
+        print 'rule defs_{0} {{ return {1} ; }}\n'.format(c, d[1:])
+
 print '''rule combinations {{ return {0} ; }}
 
 }} # module
 
 # All combinations: {1}
-'''.format(s, s.replace(" ", ","))
+'''.format(s[1:], s.replace(" ", ",")[1:])
 
