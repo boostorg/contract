@@ -73,7 +73,7 @@ private:
             })
         ;
 
-        return 31; // For simplicity, assume all months have 31 days.
+        return result = 31; // For simplicity, assume all months have 31 days.
     }
 
     int month_, date_;

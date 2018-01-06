@@ -335,7 +335,7 @@ public:
             })
         ;
 
-        return vect_.empty();
+        return result = vect_.empty();
     }
 
     Allocator get_allocator() const {

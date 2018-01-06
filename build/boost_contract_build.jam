@@ -8,15 +8,15 @@
 # Build and run Boost.Contract tests and examples.
 # 
 # Options:
-#   link=shared,static  build Boost.Contract library as shared or static, has no
-#                       effect if bc_hdr=only (by default, shared)
-#   bc_hdr=lib,only     if yes, do not build Boost.Contract library, use
-#                       it as header-only instead (by default, lib)
+#   link=shared,static  build Boost.Contract as shared (default) or static
+#                       library, this has no effect if `bc_hdr=only`
+#   bc_hdr=lib,only     if `only` then do not build Boost.Contract as library
+#                       and use it as header-only instead (`lib` by default)
 #   bc_no=all_yes,
 #         y,r,x,s,e,k,yr,yx,ys,ye,yk,rx,rs,re,rk,xs,xe,xk,se,sk,ek,yrx,yrs,yre,yrk,yxs,yxe,yxk,yse,ysk,yek,rxs,rxe,rxk,rse,rsk,rek,xse,xsk,xek,sek,yrxs,yrxe,yrxk,yrse,yrsk,yrek,yxse,yxsk,yxek,ysek,rxse,rxsk,rxek,rsek,xsek,yrxse,yrxsk,yrxek,yrsek,yxsek,rxsek,yrxsek
-#                       all_yes (default) turns off no contract, following turn
-#                       off specific contracts and can be combined wit each
-#                       other (but only in the listed order) to disable multiple
+#                       `all_yes` (default) turns off no contract, following
+#                       turn off specific contracts and can be combined wit each
+#                       other (only in the listed order) to disable multiple
 #                       contracts at once:
 #                         y  entry invariant
 #                         r  preconditions
