@@ -25,7 +25,7 @@ Statically disable compilation and execution of functor calls.
 /** @cond */
 
 // Boost.ResultOf not always able to deduce lambda result type (on MSVC).
-#ifndef BOOST_NO_CXX11_DECL_TYPE
+#ifndef BOOST_NO_CXX11_DECLTYPE
     #include <boost/utility/declval.hpp>
     #define BOOST_CONTRACT_CALL_IF_RESULT_OF_(F) \
         decltype(boost::declval<F>()())

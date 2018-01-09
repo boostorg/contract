@@ -50,8 +50,9 @@ test-suite features :
     [ boost_contract_build.subdir-run-cxx11 features : ifdef_macro ]
     [ boost_contract_build.subdir-run-cxx11 features : base_types_no_macro ]
     [ boost_contract_build.subdir-run-cxx11 features : old_no_macro ]
-    [ boost_contract_build.subdir-run features : no_lambdas ]
-    [ boost_contract_build.subdir-run features : no_lambdas_local_func ]
+    # Still needs C++11 for OLDOF variadic macros.
+    [ boost_contract_build.subdir-run-cxx11 features : no_lambdas ]
+    [ boost_contract_build.subdir-run-cxx11 features : no_lambdas_local_func ]
 ;
 
 test-suite n1962 :
