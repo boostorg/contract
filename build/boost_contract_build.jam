@@ -44,7 +44,7 @@
 #     [test]$ time bjam cxxstd=11 -q bc_no=se,x
 #   Build most all test combinations (for shared and static lib, use bc_hdr=only
 #   instead of link=... for header-only combinations) but takes forever...:
-#     [test]$ rm -f ../../../bin.v2/project-cache.jam ; bjam -q toolset=msvc,gcc,clang cxxstd=13 link=shared,static bc_no=all_yes,y,r,x,s,e,k,yr,yx,ys,ye,yk,rx,rs,re,rk,xs,xe,xk,se,sk,ek,yrx,yrs,yre,yrk,yxs,yxe,yxk,yse,ysk,yek,rxs,rxe,rxk,rse,rsk,rek,xse,xsk,xek,sek,yrxs,yrxe,yrxk,yrse,yrsk,yrek,yxse,yxsk,yxek,ysek,rxse,rxsk,rxek,rsek,xsek,yrxse,yrxsk,yrxek,yrsek,yxsek,rxsek,yrxsek > 00.out ; echo $?
+#     [test]$ rm -f ../../../bin.v2/project-cache.jam ; bjam cxxstd=11 -q toolset=msvc,gcc,clang link=shared,static bc_no=all_yes,y,r,x,s,e,k,yr,yx,ys,ye,yk,rx,rs,re,rk,xs,xe,xk,se,sk,ek,yrx,yrs,yre,yrk,yxs,yxe,yxk,yse,ysk,yek,rxs,rxe,rxk,rse,rsk,rek,xse,xsk,xek,sek,yrxs,yrxe,yrxk,yrse,yrsk,yrek,yxse,yxsk,yxek,ysek,rxse,rxsk,rxek,rsek,xsek,yrxse,yrxsk,yrxek,yrsek,yxsek,rxsek,yrxsek > 00.out ; echo $?
 
 import boost_contract_no ;
 import feature ;

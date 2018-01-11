@@ -26,9 +26,9 @@
 
 #define BOOST_CONTRACT_DETAIL_MIRROR_END_(tparam) \
         template<typename> \
-        static boost::contract::detail::mirror::no& check(...); \
+        static boost::contract::detail::mirror::no& apply(...); \
     public: \
-        static bool const value = sizeof(check<tparam>(0)) == \
+        static bool const value = sizeof(apply<tparam>(0)) == \
                 sizeof(boost::contract::detail::mirror::yes); \
         typedef boost::mpl::bool_<value> type;
 
@@ -42,7 +42,7 @@
     > \
     class trait { \
         template<class BOOST_CONTRACT_DETAIL_NAME1(C)> \
-        static boost::contract::detail::mirror::yes& check( \
+        static boost::contract::detail::mirror::yes& apply( \
             boost::contract::detail::mirror::check_function< \
                 typename \
                     BOOST_PP_IIF(is_static, \
@@ -80,7 +80,7 @@
     template<typename BOOST_CONTRACT_DETAIL_NAME1(T)> \
     class trait { \
         template<class BOOST_CONTRACT_DETAIL_NAME1(C)> \
-        static boost::contract::detail::mirror::yes& check( \
+        static boost::contract::detail::mirror::yes& apply( \
                 typename BOOST_CONTRACT_DETAIL_NAME1(C)::type_name*); \
         BOOST_CONTRACT_DETAIL_MIRROR_END_( \
                 BOOST_CONTRACT_DETAIL_NAME1(T)) \

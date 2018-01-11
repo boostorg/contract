@@ -98,7 +98,7 @@ This section lists all references consulted while designing and developing this 
 
 [#SPARKAda_anchor] [SPARKAda] Praxis. [@http://www.praxis-his.com/sparkada/language.asp /SPARKAda (Ada-like Language with Contract Programming)/].
 
-[#SpecSharp_anchor] [SpecSharp] Microsoft. [@http:://research.microsoft.com/en-us/projects/specsharp/ /Spec# (C# Extension)/].
+[#SpecSharp_anchor] [SpecSharp] Microsoft. [@http://research.microsoft.com/en-us/projects/specsharp/ /Spec# (C# Extension)/].
 
 [#Stroustrup94_anchor] [Stroustrup94] B. Stroustrup. /The Design and Evolution of C++/. Addison Wesley, 1994.
 

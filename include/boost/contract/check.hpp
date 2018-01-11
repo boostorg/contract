@@ -78,7 +78,12 @@ to program implementation checks.
 */
 class check { // Copy ctor only (as move via ptr release).
 public:
-    // f must be a valid callable object (not null func ptr, empty ftor, etc.
+    // NOTE: Unfortunately, Apple compilers define a `check(...)` macro that
+    // clashes with the name of this class. In the following code,
+    // BOOST_PREVENT_MACRO_SUBSTITUTION is used to workaround these name
+    // clashes. In user code, `check c = ...` syntax is typically used also
+    // avoiding clashes.
+
     /**
     Construct this object for implementation checks.
 
@@ -99,7 +104,12 @@ public:
                 Implementation Checks}).
     */
     template<typename F> // Cannot check `if(f) ...` as f can be a lambda.
-    /* implicit */ check(F const& f) { BOOST_CONTRACT_DETAIL_CHECK({ f(); }) }
+    // f must be a valid callable object (not null func ptr, empty ftor, etc.
+    /* implicit */ check
+    /** @cond **/ BOOST_PREVENT_MACRO_SUBSTITUTION /** @endcond */ (
+            F const& f) {
+        BOOST_CONTRACT_DETAIL_CHECK({ f(); })
+    }
 
     /**
     Construct this object copying it from the specified one.
@@ -110,9 +120,11 @@ public:
 
     @param other    Copied-from object.
     */
-    check(check const& other) // Copy ctor moves cond_ pointer to dest.
+    check /** @cond **/ BOOST_PREVENT_MACRO_SUBSTITUTION /** @endcond */ (
+            check const& other)
         #if !defined(BOOST_CONTRACT_NO_CONDITIONS) || \
                 defined(BOOST_CONTRACT_STATIC_LINK)
+            // Copy ctor moves cond_ pointer to dest.
             : cond_(const_cast<check&>(other).cond_.release())
         #endif
     {}
@@ -141,8 +153,11 @@ public:
                             Otherwise, this is always @c void.
     */
     template<typename VirtualResult>
-    /* implicit */ check(specify_precondition_old_postcondition_except<
-            VirtualResult> const& contract)
+    /* implicit */ check
+    /** @cond */ BOOST_PREVENT_MACRO_SUBSTITUTION /** @endcond */ (
+        specify_precondition_old_postcondition_except<VirtualResult> const&
+                contract
+    )
     #ifndef BOOST_CONTRACT_DETAIL_DOXYGEN
         BOOST_CONTRACT_CHECK_CTOR_DEF_(
                 specify_precondition_old_postcondition_except<VirtualResult>)
@@ -176,8 +191,9 @@ public:
                             Otherwise, this is always @c void.
     */
     template<typename VirtualResult>
-    /* implicit */ check(specify_old_postcondition_except<VirtualResult> const&
-            contract)
+    /* implicit */ check
+    /** @cond */ BOOST_PREVENT_MACRO_SUBSTITUTION /** @endcond */ (
+            specify_old_postcondition_except<VirtualResult> const& contract)
     #ifndef BOOST_CONTRACT_DETAIL_DOXYGEN
         BOOST_CONTRACT_CHECK_CTOR_DEF_(
                 specify_old_postcondition_except<VirtualResult>)
@@ -211,8 +227,9 @@ public:
                             Otherwise, this is always @c void.
     */
     template<typename VirtualResult>
-    /* implicit */ check(specify_postcondition_except<VirtualResult> const&
-            contract)
+    /* implicit */ check
+    /** @cond */ BOOST_PREVENT_MACRO_SUBSTITUTION /** @endcond */ (
+            specify_postcondition_except<VirtualResult> const& contract)
     #ifndef BOOST_CONTRACT_DETAIL_DOXYGEN
         BOOST_CONTRACT_CHECK_CTOR_DEF_(
                 specify_postcondition_except<VirtualResult>)
@@ -247,7 +264,9 @@ public:
                             overriding public function.
                             Otherwise, this is always @c void.
     */
-    /* implicit */ check(specify_except const& contract)
+    /* implicit */ check
+    /** @cond */ BOOST_PREVENT_MACRO_SUBSTITUTION /** @endcond */ (
+            specify_except const& contract)
     #ifndef BOOST_CONTRACT_DETAIL_DOXYGEN
         BOOST_CONTRACT_CHECK_CTOR_DEF_(specify_except)
     #else
@@ -281,7 +300,9 @@ public:
                             overriding public function.
                             Otherwise, this is always @c void.
     */
-    /* implicit */ check(specify_nothing const& contract)
+    /* implicit */ check
+    /** @cond */ BOOST_PREVENT_MACRO_SUBSTITUTION /** @endcond */ (
+            specify_nothing const& contract)
     #ifndef BOOST_CONTRACT_DETAIL_DOXYGEN
         BOOST_CONTRACT_CHECK_CTOR_DEF_(specify_nothing)
     #else
@@ -304,7 +325,9 @@ public:
                 Throw on Failure}).
                 (This is declared @c noexcept(false) since C++11.)
     */
-    ~check() BOOST_NOEXCEPT_IF(false) {} // Allow auto_ptr dtor to throw.
+    ~check /** @cond */ BOOST_PREVENT_MACRO_SUBSTITUTION /** @endcond */ ()
+        BOOST_NOEXCEPT_IF(false) /* allow auto_ptr dtor to throw */
+    {}
 
 /** @cond */
 private:
