@@ -12,6 +12,7 @@
 #include <string>
 #include <sstream>
 #include <iostream>
+#include <algorithm>
 
 namespace boost { namespace contract { namespace test { namespace detail {
 
@@ -56,14 +57,16 @@ struct oteststream :
             std::cout
                 << r.substr(0, i)
                 << "(((" << r[i] << ")))"
-                << r.substr(std::min(i + 1, r.size()), r.size())
+                // Extra () to avoid clashes with MSVC min macro.
+                << r.substr((std::min)(i + 1, r.size()), r.size())
                 << std::endl
             ;
             std::cout << std::endl;
             std::cout
                 << s.substr(0, i)
                 << "(((" << s[i] << ")))"
-                << s.substr(std::min(i + 1, s.size()), s.size())
+                // Extra () to avoid clashes with MSVC min macro.
+                << s.substr((std::min)(i + 1, s.size()), s.size())
                 << std::endl
             ;
             std::cout << std::endl;

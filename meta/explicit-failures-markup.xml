@@ -1,4 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
+
+<!--
+Copyright (C) 2008-2018 Lorenzo Caminiti
+Distributed under the Boost Software License, Version 1.0 (see accompanying
+file LICENSE_1_0.txt or a copy at http://www.boost.org/LICENSE_1_0.txt).
+See: http://www.boost.org/doc/libs/release/libs/contract/doc/html/index.html
+-->
+
+<!--
+PLEASE VALIDATE THE XML BEFORE COMMITTING YOUR CHANGES!
+
+For example, cut-n-paste <library> tag below into main file
+"boost/status/explicit-failures-markup.xml" and validate as indicated in that
+main file.
+-->
+
 <explicit-failures-markup>
     <!-- contract -->
     <library name="contract">
