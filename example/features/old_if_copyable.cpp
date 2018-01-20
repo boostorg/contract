@@ -46,7 +46,7 @@ private:
 namespace boost { namespace contract {
     template<>
     struct is_old_value_copyable<w> : boost::false_type {};
-} } // namespace
+} }
 //]
 
 //[old_if_copyable_p_decl
@@ -83,7 +83,7 @@ namespace boost { namespace contract {
     
     template<>
     struct is_old_value_copyable<p> : boost::true_type {};
-} } // namespace
+} }
 //]
 
 //[old_if_copyable_n_decl
@@ -108,7 +108,7 @@ public:
 namespace boost { namespace contract {
     template<>
     struct is_old_value_copyable<n> : boost::false_type {};
-} } // namespace
+} }
 //]
 
 int main() {

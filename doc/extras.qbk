@@ -180,7 +180,7 @@ On compilers that support C++17 `if constexpr` there should be no need to use [f
 
 [heading If-Constexpr Emulation (C++14)]
 
-On C++14 compilers, [funcref boost::contract::call_if] can be used together with C++14 generic lambdas to emulate C++17 `if constexpr`.
+A part from its use within contracts, on C++14 compilers [funcref boost::contract::call_if] can be used together with C++14 generic lambdas to emulate C++17 `if constexpr`.
 [footnote
 Boost.Hana (`boost::hana::if_`) and probably other approaches can also be used together with generic lambdas to emulate C++17 `if constexpr` on C++14 compilers.
 ]
