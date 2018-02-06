@@ -162,6 +162,8 @@ Disable Contract Compilation}).
     #include <boost/preprocessor/cat.hpp>
 
     /* PRIVATE */
+
+    /** @cond */
     
     #define BOOST_CONTRACT_OLD_VAR_1(ptr) \
         ptr
@@ -173,6 +175,8 @@ Disable Contract Compilation}).
     #define BOOST_CONTRACT_OLD_VAR_(...) \
         BOOST_PP_CAT(BOOST_PP_OVERLOAD(BOOST_CONTRACT_OLD_VAR_, __VA_ARGS__) \
                 (__VA_ARGS__), BOOST_PP_EMPTY())
+
+    /** @endcond */
 
     /* PUBLIC */
     

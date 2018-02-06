@@ -25,6 +25,8 @@ Handle public function overrides (for subcontracting).
 
     /* PRIVATE */
 
+    /** @cond */
+
     #define BOOST_CONTRACT_OVERRIDE_CALL_BASE_(z, arity, arity_compl, \
             func_name) \
         template< \
@@ -72,6 +74,8 @@ Handle public function overrides (for subcontracting).
             BOOST_CONTRACT_OVERRIDE_CALL_BASE_(z, arity, \
                     BOOST_PP_SUB(BOOST_CONTRACT_MAX_ARGS, arity), func_name)
     #endif
+
+    /** @endcond */
 
     /* PUBLIC */
 
@@ -137,8 +141,10 @@ Declare the override type to pass as an explicit template parameter to
     /* PRIVATE */
 
     /** @cond */
+
     #define BOOST_CONTRACT_OVERRIDES_SEQ_(r, unused, func_name) \
         BOOST_CONTRACT_OVERRIDE(func_name)
+    
     /** @endcond */
 
     /* PUBLIC */

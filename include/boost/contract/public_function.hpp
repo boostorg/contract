@@ -842,11 +842,13 @@ specify_precondition_old_postcondition_except<> public_function(Class* obj) {
     specify_precondition_old_postcondition_except<VirtualResult>
     public_function(virtual_* v, VirtualResult& r, F f, Class* obj,
             Args&... args);
+
 #elif BOOST_CONTRACT_DETAIL_TVARIADIC
     BOOST_CONTRACT_PUBLIC_FUNCTION_VIRTUAL_OVERRIDE_Z_(1, /* arity = */ ~,
             /* arity_compl = */ ~, /* has_virtual_result = */ 0)
     BOOST_CONTRACT_PUBLIC_FUNCTION_VIRTUAL_OVERRIDE_Z_(1, /* arity = */ ~,
             /* arity_compl = */ ~, /* has_virtual_result = */ 1)
+
 #else
     /* PRIVATE */
 

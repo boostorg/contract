@@ -41,6 +41,8 @@ BOOST_CONTRACT_ERROR_macro_BASE_TYPES_requires_variadic_macros_otherwise_manuall
 
 /* PRIVATE */
 
+/** @cond */
+
 #define BOOST_CONTRACT_BASE_TYPES_REMOVE_VIRTUAL_(base) \
     BOOST_PP_EXPAND( \
         BOOST_PP_IIF(BOOST_CONTRACT_DETAIL_PP_KEYWORD_IS_VIRTUAL(base), \
@@ -141,6 +143,8 @@ BOOST_CONTRACT_ERROR_macro_BASE_TYPES_requires_variadic_macros_otherwise_manuall
     , \
         BOOST_CONTRACT_BASE_TYPES_ERR_ \
     )(bases_tuple, bases_seq)
+
+/** @endcond */
 
 /* PUBLIC */
 
