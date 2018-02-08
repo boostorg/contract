@@ -16,7 +16,29 @@ Handle public function overrides (for subcontracting).
 #include <boost/preprocessor/cat.hpp>
 #include <boost/preprocessor/config/config.hpp>
 
-#ifndef BOOST_CONTRACT_NO_PUBLIC_FUNCTIONS
+#ifdef BOOST_CONTRACT_DETAIL_DOXYGEN
+    /**
+    Declare an override type with an arbitrary name.
+
+    Declare the override type to pass as an explicit template parameter to
+    @RefFunc{boost::contract::public_function} for public function overrides.
+    
+    @see @RefSect{advanced.named_overrides, Named Overrides}
+
+    @param type_name    Name of the override type this macro will declare.
+                        (This is not a variadic macro parameter but it should
+                        never contain commas because it is an identifier.)
+    @param func_name    Function name of the public function override.
+                        This macro is called just once even if the function name
+                        is overloaded (the same override type is used for all
+                        overloaded functions with the same name, see
+                        @RefSect{advanced.function_overloads,
+                        Function Overloads}).
+                        (This is not a variadic macro parameter but it should
+                        never contain commas because it is an identifier.)
+    */
+    #define BOOST_CONTRACT_NAMED_OVERRIDE(type_name, func_name)
+#elif !defined(BOOST_CONTRACT_NO_PUBLIC_FUNCTIONS)
     #include <boost/contract/core/virtual.hpp>
     #include <boost/contract/detail/type_traits/mirror.hpp>
     #include <boost/contract/detail/tvariadic.hpp>
@@ -24,8 +46,6 @@ Handle public function overrides (for subcontracting).
     #include <boost/contract/detail/name.hpp>
 
     /* PRIVATE */
-
-    /** @cond */
 
     #define BOOST_CONTRACT_OVERRIDE_CALL_BASE_(z, arity, arity_compl, \
             func_name) \
@@ -75,8 +95,6 @@ Handle public function overrides (for subcontracting).
                     BOOST_PP_SUB(BOOST_CONTRACT_MAX_ARGS, arity), func_name)
     #endif
 
-    /** @endcond */
-
     /* PUBLIC */
 
     #define BOOST_CONTRACT_NAMED_OVERRIDE(type_name, func_name) \
@@ -88,26 +106,6 @@ Handle public function overrides (for subcontracting).
             BOOST_CONTRACT_OVERRIDE_CALL_BASE_DECL_(func_name) \
         };
 #else
-    /**
-    Declare an override type with an arbitrary name.
-
-    Declare the override type to pass as an explicit template parameter to
-    @RefFunc{boost::contract::public_function} for public function overrides.
-    
-    @see @RefSect{advanced.named_overrides, Named Overrides}
-
-    @param type_name    Name of the override type this macro will declare.
-                        (This is not a variadic macro parameter but it should
-                        never contain commas because it is an identifier.)
-    @param func_name    Function name of the public function override.
-                        This macro is called just once even if the function name
-                        is overloaded (the same override type is used for all
-                        overloaded functions with the same name, see
-                        @RefSect{advanced.function_overloads,
-                        Function Overloads}).
-                        (This is not a variadic macro parameter but it should
-                        never contain commas because it is an identifier.)
-    */
     #define BOOST_CONTRACT_NAMED_OVERRIDE(type_name, func_name) \
             struct type_name {}; /* empty (not used), just to compile */
 #endif
@@ -134,21 +132,7 @@ Declare the override type to pass as an explicit template parameter to
 #define BOOST_CONTRACT_OVERRIDE(func_name) \
     BOOST_CONTRACT_NAMED_OVERRIDE(BOOST_PP_CAT(override_, func_name), func_name)
     
-#if BOOST_PP_VARIADICS
-    #include <boost/preprocessor/seq/for_each.hpp>
-    #include <boost/preprocessor/variadic/to_seq.hpp>
-    
-    /* PRIVATE */
-
-    /** @cond */
-
-    #define BOOST_CONTRACT_OVERRIDES_SEQ_(r, unused, func_name) \
-        BOOST_CONTRACT_OVERRIDE(func_name)
-    
-    /** @endcond */
-
-    /* PUBLIC */
-
+#ifdef BOOST_CONTRACT_DETAIL_DOXYGEN
     /**
     Declare multiple override types at once naming them <c>override_...</c> (for
     convenience).
@@ -176,6 +160,18 @@ Declare the override type to pass as an explicit template parameter to
                 (Each function name should never contain commas because it is an
                 identifier.)
     */
+    #define BOOST_CONTRACT_OVERRIDES(...)
+#elif BOOST_PP_VARIADICS
+    #include <boost/preprocessor/seq/for_each.hpp>
+    #include <boost/preprocessor/variadic/to_seq.hpp>
+    
+    /* PRIVATE */
+
+    #define BOOST_CONTRACT_OVERRIDES_SEQ_(r, unused, func_name) \
+        BOOST_CONTRACT_OVERRIDE(func_name)
+    
+    /* PUBLIC */
+
     #define BOOST_CONTRACT_OVERRIDES(...) \
         BOOST_PP_SEQ_FOR_EACH(BOOST_CONTRACT_OVERRIDES_SEQ_, ~, \
                 BOOST_PP_VARIADIC_TO_SEQ(__VA_ARGS__))

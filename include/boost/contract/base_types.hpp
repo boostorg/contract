@@ -14,7 +14,34 @@ Specify inheritance form base classes (for subcontracting).
 // IMPORTANT: Included by contract_macro.hpp so must #if-guard all its includes.
 #include <boost/contract/core/config.hpp>
 #include <boost/preprocessor/config/config.hpp>
-#if !BOOST_PP_VARIADICS
+
+#ifdef BOOST_CONTRACT_DETAIL_DOXYGEN
+
+/**
+Used to program a @c typedef listing the bases of a derived class.
+
+In order to support subcontracting, a derived class that specifies contracts for
+one or more overriding public function must declare a @c typedef named
+@RefMacro{BOOST_CONTRACT_BASES_TYPEDEF} using this macro.
+This @c typedef must be @c public unless @RefClass{boost::contract::access} is
+used.
+
+@see @RefSect{tutorial.base_classes__subcontracting_, Base Classes}
+
+@param ...  Comma separated list of base classes.
+            Each base must explicitly specify its access specifier @c public,
+            @c protected, or @c private, and also @c virtual when present
+            (this not always required in C++ instead).
+            There is a limit of about 20 maximum bases that can be listed
+            (because of similar limits in Boost.MPL internally used by this
+            library).
+            This is a variadic macro parameter, on compilers that do not support
+            variadic macros, the @c typedef for base classes can be programmed
+            manually without using this macro.
+*/
+#define BOOST_CONTRACT_BASE_TYPES(...)
+
+#elif !BOOST_PP_VARIADICS
     
 #define BOOST_CONTRACT_BASE_TYPES \
 BOOST_CONTRACT_ERROR_macro_BASE_TYPES_requires_variadic_macros_otherwise_manually_program_base_types
@@ -40,8 +67,6 @@ BOOST_CONTRACT_ERROR_macro_BASE_TYPES_requires_variadic_macros_otherwise_manuall
 #include <boost/preprocessor/facilities/expand.hpp>
 
 /* PRIVATE */
-
-/** @cond */
 
 #define BOOST_CONTRACT_BASE_TYPES_REMOVE_VIRTUAL_(base) \
     BOOST_PP_EXPAND( \
@@ -144,8 +169,6 @@ BOOST_CONTRACT_ERROR_macro_BASE_TYPES_requires_variadic_macros_otherwise_manuall
         BOOST_CONTRACT_BASE_TYPES_ERR_ \
     )(bases_tuple, bases_seq)
 
-/** @endcond */
-
 /* PUBLIC */
 
 #define BOOST_CONTRACT_BASE_TYPES(...) \
@@ -154,28 +177,6 @@ BOOST_CONTRACT_ERROR_macro_BASE_TYPES_requires_variadic_macros_otherwise_manuall
 
 #else
 
-/**
-Used to program a @c typedef listing the bases of a derived class.
-
-In order to support subcontracting, a derived class that specifies contracts for
-one or more overriding public function must declare a @c typedef named
-@RefMacro{BOOST_CONTRACT_BASES_TYPEDEF} using this macro.
-This @c typedef must be @c public unless @RefClass{boost::contract::access} is
-used.
-
-@see @RefSect{tutorial.base_classes__subcontracting_, Base Classes}
-
-@param ...  Comma separated list of base classes.
-            Each base must explicitly specify its access specifier @c public,
-            @c protected, or @c private, and also @c virtual when present
-            (this not always required in C++ instead).
-            There is a limit of about 20 maximum bases that can be listed
-            (because of similar limits in Boost.MPL internally used by this
-            library).
-            This is a variadic macro parameter, on compilers that do not support
-            variadic macros, the @c typedef for base classes can be programmed
-            manually without using this macro.
-*/
 #define BOOST_CONTRACT_BASE_TYPES(...) void /* dummy type for typedef */
 
 #endif

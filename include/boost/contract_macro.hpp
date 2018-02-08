@@ -40,9 +40,7 @@ Disable Contract Compilation}).
     #include <boost/contract/assert.hpp>
 #endif
 
-#ifndef BOOST_CONTRACT_NO_PRECONDITIONS
-    #define BOOST_CONTRACT_PRECONDITION(...) .precondition(__VA_ARGS__)
-#else
+#ifdef BOOST_CONTRACT_DETAIL_DOXYGEN
     /**
     Program preconditions that can be completely disabled at compile-time.
 
@@ -74,12 +72,14 @@ Disable Contract Compilation}).
             Disable Contract Compilation},
             @RefSect{tutorial.preconditions, Preconditions}
     */
+    #define BOOST_CONTRACT_PRECONDITION(...)
+#elif !defined(BOOST_CONTRACT_NO_PRECONDITIONS)
+    #define BOOST_CONTRACT_PRECONDITION(...) .precondition(__VA_ARGS__)
+#else
     #define BOOST_CONTRACT_PRECONDITION(...) /* nothing */
 #endif
 
-#ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
-    #define BOOST_CONTRACT_POSTCONDITION(...) .postcondition(__VA_ARGS__)
-#else
+#ifdef BOOST_CONTRACT_DETAIL_DOXYGEN
     /**
     Program postconditions that can be completely disabled at compile-time.
 
@@ -114,12 +114,14 @@ Disable Contract Compilation}).
             Disable Contract Compilation},
             @RefSect{tutorial.postconditions, Postconditions}
     */
+    #define BOOST_CONTRACT_POSTCONDITION(...)
+#elif !defined(BOOST_CONTRACT_NO_POSTCONDITIONS)
+    #define BOOST_CONTRACT_POSTCONDITION(...) .postcondition(__VA_ARGS__)
+#else
     #define BOOST_CONTRACT_POSTCONDITION(...) /* nothing */
 #endif
 
-#ifndef BOOST_CONTRACT_NO_EXCEPTS
-    #define BOOST_CONTRACT_EXCEPT(...) .except(__VA_ARGS__)
-#else
+#ifdef BOOST_CONTRACT_DETAIL_DOXYGEN
     /**
     Program exception guarantees that can be completely disabled at
     compile-time.
@@ -152,46 +154,14 @@ Disable Contract Compilation}).
             Disable Contract Compilation},
             @RefSect{tutorial.exception_guarantees, Exception Guarantees}
     */
+    #define BOOST_CONTRACT_EXCEPT(...)
+#elif !defined(BOOST_CONTRACT_NO_EXCEPTS)
+    #define BOOST_CONTRACT_EXCEPT(...) .except(__VA_ARGS__)
+#else
     #define BOOST_CONTRACT_EXCEPT(...) /* nothing */
 #endif
 
-#ifndef BOOST_CONTRACT_NO_OLDS
-    #include <boost/contract/old.hpp>
-    #include <boost/preprocessor/facilities/overload.hpp>
-    #include <boost/preprocessor/facilities/empty.hpp>
-    #include <boost/preprocessor/cat.hpp>
-
-    /* PRIVATE */
-
-    /** @cond */
-    
-    #define BOOST_CONTRACT_OLD_VAR_1(ptr) \
-        ptr
-    #define BOOST_CONTRACT_OLD_VAR_2(ptr, expr) \
-        ptr = BOOST_CONTRACT_OLDOF(expr)
-    #define BOOST_CONTRACT_OLD_VAR_3(v, ptr, expr) \
-        ptr = BOOST_CONTRACT_OLDOF(v, expr)
-
-    #define BOOST_CONTRACT_OLD_VAR_(...) \
-        BOOST_PP_CAT(BOOST_PP_OVERLOAD(BOOST_CONTRACT_OLD_VAR_, __VA_ARGS__) \
-                (__VA_ARGS__), BOOST_PP_EMPTY())
-
-    /** @endcond */
-
-    /* PUBLIC */
-    
-    #define BOOST_CONTRACT_OLD(...) .old(__VA_ARGS__)
-
-    #define BOOST_CONTRACT_OLD_PTR(...) \
-        boost::contract::old_ptr< __VA_ARGS__ > \
-        BOOST_CONTRACT_OLD_VAR_
-
-    #define BOOST_CONTRACT_OLD_PTR_IF_COPYABLE(...) \
-        boost::contract::old_ptr_if_copyable< __VA_ARGS__ > \
-        BOOST_CONTRACT_OLD_VAR_
-#else
-    #include <boost/preprocessor/tuple/eat.hpp>
-   
+#ifdef BOOST_CONTRACT_DETAIL_DOXYGEN
     /**
     Program old value copies at body that can be completely disabled at
     compile-time.
@@ -230,7 +200,7 @@ Disable Contract Compilation}).
             @RefSect{advanced.old_value_copies_at_body,
             Old Value Copies at Body}
     */
-    #define BOOST_CONTRACT_OLD(...) /* nothing */
+    #define BOOST_CONTRACT_OLD(...)
 
     /**
     Program old values that can be completely disabled at compile-time and
@@ -342,7 +312,7 @@ Disable Contract Compilation}).
             Disable Contract Compilation},
             @RefSect{tutorial.old_values, Old Values}
     */
-    #define BOOST_CONTRACT_OLD_PTR(...) BOOST_PP_TUPLE_EAT(0)
+    #define BOOST_CONTRACT_OLD_PTR(...)
 
     /**
     Program old values that can be completely disabled at compile-time and do
@@ -466,21 +436,48 @@ Disable Contract Compilation}).
             @RefSect{extras.old_value_requirements__templates_,
             Old Value Requirements}
     */
+    #define BOOST_CONTRACT_OLD_PTR_IF_COPYABLE(...)
+#elif !defined(BOOST_CONTRACT_NO_OLDS)
+    #include <boost/contract/old.hpp>
+    #include <boost/preprocessor/facilities/overload.hpp>
+    #include <boost/preprocessor/facilities/empty.hpp>
+    #include <boost/preprocessor/cat.hpp>
+
+    /* PRIVATE */
+
+    #define BOOST_CONTRACT_OLD_VAR_1(ptr) \
+        ptr
+    #define BOOST_CONTRACT_OLD_VAR_2(ptr, expr) \
+        ptr = BOOST_CONTRACT_OLDOF(expr)
+    #define BOOST_CONTRACT_OLD_VAR_3(v, ptr, expr) \
+        ptr = BOOST_CONTRACT_OLDOF(v, expr)
+
+    #define BOOST_CONTRACT_OLD_VAR_(...) \
+        BOOST_PP_CAT(BOOST_PP_OVERLOAD(BOOST_CONTRACT_OLD_VAR_, __VA_ARGS__) \
+                (__VA_ARGS__), BOOST_PP_EMPTY())
+
+    /* PUBLIC */
+    
+    #define BOOST_CONTRACT_OLD(...) .old(__VA_ARGS__)
+
+    #define BOOST_CONTRACT_OLD_PTR(...) \
+        boost::contract::old_ptr< __VA_ARGS__ > \
+        BOOST_CONTRACT_OLD_VAR_
+
+    #define BOOST_CONTRACT_OLD_PTR_IF_COPYABLE(...) \
+        boost::contract::old_ptr_if_copyable< __VA_ARGS__ > \
+        BOOST_CONTRACT_OLD_VAR_
+#else
+    #include <boost/preprocessor/tuple/eat.hpp>
+   
+    #define BOOST_CONTRACT_OLD(...) /* nothing */
+
+    #define BOOST_CONTRACT_OLD_PTR(...) BOOST_PP_TUPLE_EAT(0)
+    
     #define BOOST_CONTRACT_OLD_PTR_IF_COPYABLE(...) BOOST_PP_TUPLE_EAT(0)
 #endif
 
-#ifndef BOOST_CONTRACT_NO_INVARIANTS
-    #include <boost/contract/core/config.hpp>
-
-    #define BOOST_CONTRACT_INVARIANT(...) \
-        void BOOST_CONTRACT_INVARIANT_FUNC() const __VA_ARGS__
-
-    #define BOOST_CONTRACT_INVARIANT_VOLATILE(...) \
-        void BOOST_CONTRACT_INVARIANT_FUNC() const volatile __VA_ARGS__
-    
-    #define BOOST_CONTRACT_STATIC_INVARIANT(...) \
-        static void BOOST_CONTRACT_STATIC_INVARIANT_FUNC() __VA_ARGS__
-#else
+#ifdef BOOST_CONTRACT_DETAIL_DOXYGEN
     /**
     Program (constant) class invariants that can be completely disabled at
     compile-time.
@@ -517,7 +514,7 @@ Disable Contract Compilation}).
             Disable Contract Compilation},
             @RefSect{tutorial.class_invariants, Class Invariants}
     */
-    #define BOOST_CONTRACT_INVARIANT(...) /* nothing */
+    #define BOOST_CONTRACT_INVARIANT(...)
 
     /**
     Program volatile class invariants that can be completely disabled at
@@ -556,7 +553,7 @@ Disable Contract Compilation}).
             @RefSect{extras.volatile_public_functions,
             Volatile Public Functions}
     */
-    #define BOOST_CONTRACT_INVARIANT_VOLATILE(...) /* nothing */
+    #define BOOST_CONTRACT_INVARIANT_VOLATILE(...)
     
     /**
     Program static class invariants that can be completely disabled at
@@ -594,18 +591,27 @@ Disable Contract Compilation}).
             Disable Contract Compilation},
             @RefSect{tutorial.class_invariants, Class Invariants}
     */
+    #define BOOST_CONTRACT_STATIC_INVARIANT(...)
+#elif !defined(BOOST_CONTRACT_NO_INVARIANTS)
+    #include <boost/contract/core/config.hpp>
+
+    #define BOOST_CONTRACT_INVARIANT(...) \
+        void BOOST_CONTRACT_INVARIANT_FUNC() const __VA_ARGS__
+
+    #define BOOST_CONTRACT_INVARIANT_VOLATILE(...) \
+        void BOOST_CONTRACT_INVARIANT_FUNC() const volatile __VA_ARGS__
+    
+    #define BOOST_CONTRACT_STATIC_INVARIANT(...) \
+        static void BOOST_CONTRACT_STATIC_INVARIANT_FUNC() __VA_ARGS__
+#else
+    #define BOOST_CONTRACT_INVARIANT(...) /* nothing */
+
+    #define BOOST_CONTRACT_INVARIANT_VOLATILE(...) /* nothing */
+    
     #define BOOST_CONTRACT_STATIC_INVARIANT(...) /* nothing */
 #endif
 
-#ifndef BOOST_CONTRACT_NO_CONSTRUCTORS
-    #include <boost/contract/constructor.hpp>
-    #include <boost/contract/check.hpp>
-    #include <boost/contract/detail/name.hpp>
-
-    #define BOOST_CONTRACT_CONSTRUCTOR(...) \
-        boost::contract::check BOOST_CONTRACT_DETAIL_NAME2(c, __LINE__) = \
-                boost::contract::constructor(__VA_ARGS__)
-#else
+#ifdef BOOST_CONTRACT_DETAIL_DOXYGEN
     /**
     Program contracts that can be completely disabled at compile-time for
     constructors.
@@ -686,17 +692,20 @@ Disable Contract Compilation}).
             Disable Contract Compilation},
             @RefSect{tutorial.constructors, Constructors}
     */
+    #define BOOST_CONTRACT_CONSTRUCTOR(...)
+#elif !defined(BOOST_CONTRACT_NO_CONSTRUCTORS)
+    #include <boost/contract/constructor.hpp>
+    #include <boost/contract/check.hpp>
+    #include <boost/contract/detail/name.hpp>
+
+    #define BOOST_CONTRACT_CONSTRUCTOR(...) \
+        boost::contract::check BOOST_CONTRACT_DETAIL_NAME2(c, __LINE__) = \
+                boost::contract::constructor(__VA_ARGS__)
+#else
     #define BOOST_CONTRACT_CONSTRUCTOR(...) /* nothing */
 #endif
-#ifndef BOOST_CONTRACT_NO_PRECONDITIONS // Do not check NO_CONSTRUCTORS here.
-    // constructor_precondition.hpp already #included at top.
 
-    #define BOOST_CONTRACT_CONSTRUCTOR_PRECONDITION(...) \
-        boost::contract::constructor_precondition< __VA_ARGS__ >
-#else
-    #include <boost/preprocessor/tuple/eat.hpp>
-    // constructor_precondition.hpp always #included at top of this file.
-
+#ifdef BOOST_CONTRACT_DETAIL_DOXYGEN
     /**
     Program preconditions that can be disabled at compile-time for constructors.
             
@@ -771,21 +780,23 @@ Disable Contract Compilation}).
             Disable Contract Compilation},
             @RefSect{tutorial.constructors, Constructors}
     */
+    #define BOOST_CONTRACT_CONSTRUCTOR_PRECONDITION(...)
+#elif !defined(BOOST_CONTRACT_NO_PRECONDITIONS) // Not NO_CONSTRUCTORS here.
+    // constructor_precondition.hpp already #included at top.
+
+    #define BOOST_CONTRACT_CONSTRUCTOR_PRECONDITION(...) \
+        boost::contract::constructor_precondition< __VA_ARGS__ >
+#else
+    #include <boost/preprocessor/tuple/eat.hpp>
+    // constructor_precondition.hpp always #included at top of this file.
+
     #define BOOST_CONTRACT_CONSTRUCTOR_PRECONDITION(...) \
         /* always use default ctor (i.e., do nothing) */ \
         boost::contract::constructor_precondition< __VA_ARGS__ >() \
         BOOST_PP_TUPLE_EAT(0)
 #endif
 
-#ifndef BOOST_CONTRACT_NO_DESTRUCTORS
-    #include <boost/contract/destructor.hpp>
-    #include <boost/contract/check.hpp>
-    #include <boost/contract/detail/name.hpp>
-
-    #define BOOST_CONTRACT_DESTRUCTOR(...) \
-        boost::contract::check BOOST_CONTRACT_DETAIL_NAME2(c, __LINE__) = \
-                boost::contract::destructor(__VA_ARGS__)
-#else
+#ifdef BOOST_CONTRACT_DETAIL_DOXYGEN
     /**
     Program contracts that can be completely disabled at compile-time for
     destructors.
@@ -867,20 +878,20 @@ Disable Contract Compilation}).
             Disable Contract Compilation},
             @RefSect{tutorial.destructors, Destructors}
     */
-    #define BOOST_CONTRACT_DESTRUCTOR(...) /* nothing */
-#endif
-
-#ifndef BOOST_CONTRACT_NO_FUNCTIONS
-    #include <boost/contract/function.hpp>
+    #define BOOST_CONTRACT_DESTRUCTOR(...)
+#elif !defined(BOOST_CONTRACT_NO_DESTRUCTORS)
+    #include <boost/contract/destructor.hpp>
     #include <boost/contract/check.hpp>
     #include <boost/contract/detail/name.hpp>
 
-    #define BOOST_CONTRACT_FUNCTION() \
+    #define BOOST_CONTRACT_DESTRUCTOR(...) \
         boost::contract::check BOOST_CONTRACT_DETAIL_NAME2(c, __LINE__) = \
-                boost::contract::function()
+                boost::contract::destructor(__VA_ARGS__)
 #else
-    #include <boost/preprocessor/facilities/empty.hpp>
+    #define BOOST_CONTRACT_DESTRUCTOR(...) /* nothing */
+#endif
 
+#ifdef BOOST_CONTRACT_DETAIL_DOXYGEN
     /**
     Program contracts that can be completely disabled at compile-time for
     (non-public) functions.
@@ -949,28 +960,22 @@ Disable Contract Compilation}).
             @RefSect{advanced.lambdas__loops__code_blocks__and__constexpr__,
             Lambdas\, Loops\, Code Blocks}
     */
+    #define BOOST_CONTRACT_FUNCTION()
+#elif !defined(BOOST_CONTRACT_NO_FUNCTIONS)
+    #include <boost/contract/function.hpp>
+    #include <boost/contract/check.hpp>
+    #include <boost/contract/detail/name.hpp>
+
+    #define BOOST_CONTRACT_FUNCTION() \
+        boost::contract::check BOOST_CONTRACT_DETAIL_NAME2(c, __LINE__) = \
+                boost::contract::function()
+#else
+    #include <boost/preprocessor/facilities/empty.hpp>
+
     #define BOOST_CONTRACT_FUNCTION() /* nothing */
 #endif
 
-#ifndef BOOST_CONTRACT_NO_PUBLIC_FUNCTIONS
-    #include <boost/contract/public_function.hpp>
-    #include <boost/contract/check.hpp>
-    #include <boost/contract/detail/name.hpp>
-    
-    #define BOOST_CONTRACT_STATIC_PUBLIC_FUNCTION(...) \
-        boost::contract::check BOOST_CONTRACT_DETAIL_NAME2(c, __LINE__) = \
-                boost::contract::public_function< __VA_ARGS__ >()
-
-    #define BOOST_CONTRACT_PUBLIC_FUNCTION(...) \
-        boost::contract::check BOOST_CONTRACT_DETAIL_NAME2(c, __LINE__) = \
-                boost::contract::public_function(__VA_ARGS__)
-
-    #define BOOST_CONTRACT_PUBLIC_FUNCTION_OVERRIDE(...) \
-        boost::contract::check BOOST_CONTRACT_DETAIL_NAME2(c, __LINE__) = \
-                boost::contract::public_function<__VA_ARGS__>
-#else
-    #include <boost/preprocessor/tuple/eat.hpp>
-   
+#ifdef BOOST_CONTRACT_DETAIL_DOXYGEN
     /**
     Program contracts that can be completely disabled at compile-time for static
     public functions.
@@ -1049,7 +1054,7 @@ Disable Contract Compilation}).
             Disable Contract Compilation},
             @RefSect{tutorial.static_public_functions, Static Public Functions}
     */
-    #define BOOST_CONTRACT_STATIC_PUBLIC_FUNCTION(...) /* nothing */
+    #define BOOST_CONTRACT_STATIC_PUBLIC_FUNCTION(...)
 
     /**
     Program contracts that can be completely disabled at compile-time for
@@ -1211,7 +1216,7 @@ Disable Contract Compilation}).
             @RefSect{tutorial.virtual_public_functions,
             Virtual Public Functions}
     */
-    #define BOOST_CONTRACT_PUBLIC_FUNCTION(...) /* nothing */
+    #define BOOST_CONTRACT_PUBLIC_FUNCTION(...)
     
     /**
     Program contracts that can be completely disabled at compile-time for
@@ -1361,8 +1366,31 @@ Disable Contract Compilation}).
             @RefSect{tutorial.public_function_overrides__subcontracting_,
             Public Function Overrides}
     */
+    #define BOOST_CONTRACT_PUBLIC_FUNCTION_OVERRIDE(...)
+#elif !defined(BOOST_CONTRACT_NO_PUBLIC_FUNCTIONS)
+    #include <boost/contract/public_function.hpp>
+    #include <boost/contract/check.hpp>
+    #include <boost/contract/detail/name.hpp>
+    
+    #define BOOST_CONTRACT_STATIC_PUBLIC_FUNCTION(...) \
+        boost::contract::check BOOST_CONTRACT_DETAIL_NAME2(c, __LINE__) = \
+                boost::contract::public_function< __VA_ARGS__ >()
+
+    #define BOOST_CONTRACT_PUBLIC_FUNCTION(...) \
+        boost::contract::check BOOST_CONTRACT_DETAIL_NAME2(c, __LINE__) = \
+                boost::contract::public_function(__VA_ARGS__)
+
     #define BOOST_CONTRACT_PUBLIC_FUNCTION_OVERRIDE(...) \
-        BOOST_PP_TUPLE_EAT(0)
+        boost::contract::check BOOST_CONTRACT_DETAIL_NAME2(c, __LINE__) = \
+                boost::contract::public_function<__VA_ARGS__>
+#else
+    #include <boost/preprocessor/tuple/eat.hpp>
+   
+    #define BOOST_CONTRACT_STATIC_PUBLIC_FUNCTION(...) /* nothing */
+
+    #define BOOST_CONTRACT_PUBLIC_FUNCTION(...) /* nothing */
+    
+    #define BOOST_CONTRACT_PUBLIC_FUNCTION_OVERRIDE(...) BOOST_PP_TUPLE_EAT(0)
 #endif
 
 #endif // #include guard

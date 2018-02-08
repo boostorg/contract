@@ -14,11 +14,7 @@ Assert contract conditions.
 #include <boost/contract/core/config.hpp>
 #include <boost/contract/detail/noop.hpp>
 
-#ifndef BOOST_CONTRACT_NO_ALL
-    #include <boost/contract/detail/assert.hpp>
-    #define BOOST_CONTRACT_ASSERT(cond) \
-        BOOST_CONTRACT_DETAIL_ASSERT(cond) /* no `;`  here */
-#else
+#ifdef BOOST_CONTRACT_DETAIL_DOXYGEN
     /**
     Preferred way to assert contract conditions.
 
@@ -52,11 +48,20 @@ Assert contract conditions.
     // This must be an expression (a trivial one so the compiler can optimize it
     // away). It cannot an empty code block `{}`, etc. otherwise code like
     // `if(...) ASSERT(...); else ASSERT(...);` won't work when NO_ALL.
+    #define BOOST_CONTRACT_ASSERT(cond)
+#elif !defined(BOOST_CONTRACT_NO_ALL)
+    #include <boost/contract/detail/assert.hpp>
+    #define BOOST_CONTRACT_ASSERT(cond) \
+        BOOST_CONTRACT_DETAIL_ASSERT(cond) /* no `;`  here */
+#else
+    // This must be an expression (a trivial one so the compiler can optimize it
+    // away). It cannot an empty code block `{}`, etc. otherwise code like
+    // `if(...) ASSERT(...); else ASSERT(...);` won't work when NO_ALL.
     #define BOOST_CONTRACT_ASSERT(cond) \
         BOOST_CONTRACT_DETAIL_NOOP
 #endif
 
-#ifdef BOOST_CONTRACT_AUDITS
+#ifdef BOOST_CONTRACT_DETAIL_DOXYGEN
     /**
     Preferred way to assert contract conditions that are computationally
     expensive, at least compared to the cost of executing the function body.
@@ -89,6 +94,8 @@ Assert contract conditions.
                 contain must be protected by round parenthesis,
                 @c BOOST_CONTRACT_ASSERT_AUDIT((cond)) will always work.)
     */
+    #define BOOST_CONTRACT_ASSERT_AUDIT(cond)
+#elif defined(BOOST_CONTRACT_AUDITS)
     #define BOOST_CONTRACT_ASSERT_AUDIT(cond) \
         BOOST_CONTRACT_ASSERT(cond)
 #else

@@ -15,13 +15,7 @@ Macro for implementation checks.
 #include <boost/contract/core/config.hpp> 
 #include <boost/contract/detail/noop.hpp>
 
-#ifndef BOOST_CONTRACT_NO_CHECKS
-    #include <boost/contract/detail/check.hpp>
-    #include <boost/contract/detail/assert.hpp>
-
-    #define BOOST_CONTRACT_CHECK(cond) \
-        BOOST_CONTRACT_DETAIL_CHECK(BOOST_CONTRACT_DETAIL_ASSERT(cond))
-#else
+#ifdef BOOST_CONTRACT_DETAIL_DOXYGEN
     /**
     Preferred way to assert implementation check conditions.
     
@@ -50,10 +44,18 @@ Macro for implementation checks.
                 contain must be protected by round parenthesis,
                 @c BOOST_CONTRACT_CHECK((cond)) will always work.)
     */
+    #define BOOST_CONTRACT_CHECK(cond)
+#elif !defined(BOOST_CONTRACT_NO_CHECKS)
+    #include <boost/contract/detail/check.hpp>
+    #include <boost/contract/detail/assert.hpp>
+
+    #define BOOST_CONTRACT_CHECK(cond) \
+        BOOST_CONTRACT_DETAIL_CHECK(BOOST_CONTRACT_DETAIL_ASSERT(cond))
+#else
     #define BOOST_CONTRACT_CHECK(cond) /* nothing */
 #endif
 
-#ifdef BOOST_CONTRACT_AUDITS
+#ifdef BOOST_CONTRACT_DETAIL_DOXYGEN
     /**
     Preferred way to assert implementation check conditions that are
     computationally expensive, at least compared to the cost of executing the
@@ -88,6 +90,8 @@ Macro for implementation checks.
                 contain must be protected by round parenthesis,
                 @c BOOST_CONTRACT_CHECK_AUDIT((cond)) will always work.)
     */
+    #define BOOST_CONTRACT_CHECK_AUDIT(cond)
+#elif defined(BOOST_CONTRACT_AUDITS)
     #define BOOST_CONTRACT_CHECK_AUDIT(cond) \
         BOOST_CONTRACT_CHECK(cond)
 #else
