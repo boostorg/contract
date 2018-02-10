@@ -22,8 +22,23 @@ Used to program a @c typedef listing the bases of a derived class.
 
 In order to support subcontracting, a derived class that specifies contracts for
 one or more overriding public function must declare a @c typedef named
-@RefMacro{BOOST_CONTRACT_BASES_TYPEDEF} using this macro.
-This @c typedef must be @c public unless @RefClass{boost::contract::access} is
+@c base_types (or @RefMacro{BOOST_CONTRACT_BASES_TYPEDEF}) using this macro.
+
+    @code
+        class u :
+            #define BASES public b, protected virtual w1, private w2
+            BASES
+        {
+            friend class boost::contract:access;
+
+            typedef BOOST_CONTRACT_BASES(BASES) base_types;
+            #undef BASES
+
+            ...
+        };
+    @endcode
+
+This @c typedef must be @c public if @RefClass{boost::contract::access} is not
 used.
 
 @see @RefSect{tutorial.base_classes__subcontracting_, Base Classes}

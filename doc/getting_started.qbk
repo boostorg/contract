@@ -29,7 +29,7 @@ These explain some of the decisions made during the design and implementation of
 
 [section Compilers and Platforms]
 
-In general, this library requires a C++ compiler with a sound support for SFINAE and other template meta-programming techniques as part of the C++03 standard.
+In general, this library requires C++ compilers with a sound implementation of SFINAE and other template meta-programming techniques supported by the C++03 standard.
 It is possible to use this library without C++11 lambda functions but a large amount of boiler-plate code is required to manually program separate functor to specify preconditions, postconditions, etc. (so using this library without C++11 lambda functions is possible but not recommended, see __No_Lambda_Functions__).
 It is also possible to use this library without variadic macros by manually programming a small amount of boiler-plate code (but most if not all modern C++ compilers support variadic macros even before C++99 and C++11 so this should never be needed in practice, see __No_Macros__).
 

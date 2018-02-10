@@ -318,8 +318,8 @@ Configure this library compile-time and run-time behaviours.
     Not disabling other assertions while checking preconditions can lead to
     infinite recursion in user code so by default this macro is not defined.
 
-    However, the @RefSect{bibliography, [1962]} proposal does not disable any
-    assertion while checking preconditions because arguments can reach the
+    However, the @RefSect{bibliography, [1962]} proposal does not disable
+    assertions while checking preconditions because arguments can reach the
     function body unchecked if assertions are disabled while checking
     preconditions (e.g., when these same functions bodies are called to check
     the preconditions in question).
@@ -773,7 +773,7 @@ Configure this library compile-time and run-time behaviours.
     @endcode
     
     Or, use the @c boost/contract_macro.hpp header and related macros instead
-    (because the @c boost/contract/_macro.hpp header is already optimized to not
+    (because the @c boost/contract_macro.hpp header is already optimized to not
     include other headers from this library when contracts are not checked, but
     recommended only for applications where it is truly necessary to completely
     remove contract code compilation from production code).

@@ -547,7 +547,7 @@ trivially return @p else_ (@c true by default) at run-time.
 A call to <c>boost::contract::condition_if_c<Pred>(f, else_)</c> is logically
 equivalent to
 <c>boost::contract::call_if_c<Pred>(f, [else_] { return else_; })</c> (but
-its internal implementation is optimized and it does not actually uses
+its internal implementation is optimized and it does not actually use
 @c call_if_c).
 
 @see    @RefSect{extras.assertion_requirements__templates_,

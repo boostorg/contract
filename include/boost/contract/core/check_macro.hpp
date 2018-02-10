@@ -8,7 +8,7 @@
 // See: http://www.boost.org/doc/libs/release/libs/contract/doc/html/index.html
 
 /** @file
-Macro for implementation checks.
+Macros for implementation checks.
 */
 
 // IMPORTANT: Included by contract_macro.hpp so must #if-guard all its includes.
