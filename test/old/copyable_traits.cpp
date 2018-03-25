@@ -7,7 +7,7 @@
 // Test specializations of old value copy type traits.
 
 #include <boost/contract/old.hpp>
-#include <boost/type_traits.hpp>
+#include <boost/type_traits/integral_constant.hpp>
 #include <boost/noncopyable.hpp>
 #include <boost/detail/lightweight_test.hpp>
 #include <cassert>

@@ -8,7 +8,7 @@
 
 #include <boost/config.hpp>
 #include <boost/contract/old.hpp>
-#include <boost/type_traits.hpp>
+#include <boost/type_traits/is_same.hpp>
 #include <boost/static_assert.hpp>
 #include <boost/detail/lightweight_test.hpp>
 

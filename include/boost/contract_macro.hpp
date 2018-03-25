@@ -998,7 +998,7 @@ Disable Contract Compilation}).
     public:
         static void f(...) {
             BOOST_CONTRACT_OLD_PTR(old_type)(old_var);
-            BOOST_CONTRACT_PUBLIC_FUNCTION(u)
+            BOOST_CONTRACT_STATIC_PUBLIC_FUNCTION(u)
                 BOOST_CONTRACT_PRECONDITION([&] { // Optional.
                     BOOST_CONTRACT_ASSERT(...);
                     ...
