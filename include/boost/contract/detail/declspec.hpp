@@ -21,7 +21,7 @@
 // statically linked libraries that check contracts).
 
 #ifdef BOOST_CONTRACT_DYN_LINK
-    #ifdef BOOST_CONTRACT_DETAIL_SOURCE
+    #ifdef BOOST_CONTRACT_SOURCE
         #define BOOST_CONTRACT_DETAIL_DECLSPEC BOOST_SYMBOL_EXPORT
     #else
         #define BOOST_CONTRACT_DETAIL_DECLSPEC BOOST_SYMBOL_IMPORT
@@ -34,6 +34,17 @@
     #define BOOST_CONTRACT_DETAIL_DECLINLINE inline
 #else
     #define BOOST_CONTRACT_DETAIL_DECLINLINE /* nothing */
+
+    // Automatically link this lib to correct build variant (for MSVC, etc.).
+    #if     !defined(BOOST_ALL_NO_LIB) && \
+            !defined(BOOST_CONTRACT_NO_LIB) && \
+            !defined(BOOST_CONTRACT_SOURCE)
+        #define BOOST_LIB_NAME boost_contract // This lib (static or shared).
+        #if defined(BOOST_ALL_DYN_LINK) || defined(BOOST_CONTRACT_DYN_LINK)
+            #define BOOST_DYN_LINK // This lib as shared.
+        #endif
+        #include <boost/config/auto_link.hpp> // Also #undef BOOST_LIB_NAME.
+    #endif
 #endif
 
 #endif // #include guard

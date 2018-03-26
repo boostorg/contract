@@ -16,6 +16,15 @@ Configure this library compile-time and run-time behaviours.
 // headers after that depending on the contract 0/1 macros below ensuring no
 // compilation overhead.
 
+// Export symbols when compiling as shared lib (for internal use only). (Named
+// after similar macros in all Boost libs.)
+// BOOST_CONTRACT_SOURCE
+
+// Disable automatic library selection for linking. (Named after similar macros
+// in all Boost libs.)
+// BOOST_CONTRACT_NO_LIB
+// BOOST_ALL_NO_LIB
+
 #if (!defined(BOOST_CONTRACT_DYN_LINK) && defined(BOOST_ALL_DYN_LINK)) || \
         defined(BOOST_CONTRACT_DETAIL_DOXYGEN)
     /**
