@@ -21,3 +21,4 @@ project boost/contract
 lib boost_contract : contract.cpp : <link>shared <library>/boost//system ;
 lib boost_contract : contract.cpp : <link>static <library>/boost//system ;
 
+boost-install boost_contract ;
