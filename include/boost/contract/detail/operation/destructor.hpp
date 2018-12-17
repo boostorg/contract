@@ -21,7 +21,7 @@
         !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
         !defined(BOOST_CONTRACT_NO_EXCEPTS)
     #include <boost/config.hpp>
-    #include <exception>
+    #include <boost/core/uncaught_exceptions.hpp>
 #endif
 
 namespace boost { namespace contract { namespace detail {
@@ -77,7 +77,7 @@ public:
             // language allows for that (even if in C++11 dtors declarations are
             // implicitly noexcept(true) unless specified otherwise) so this
             // library must handle such a case.
-            if(std::uncaught_exception()) {
+            if(boost::core::uncaught_exceptions() > 0) {
                 #ifndef BOOST_CONTRACT_NO_EXIT_INVARIANTS
                     this->check_exit_all_inv();
                 #endif

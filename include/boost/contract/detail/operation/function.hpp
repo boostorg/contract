@@ -19,7 +19,7 @@
 #if     !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
         !defined(BOOST_CONTRACT_NO_EXCEPTS)
     #include <boost/config.hpp>
-    #include <exception>
+    #include <boost/core/uncaught_exceptions.hpp>
 #endif
 
 namespace boost { namespace contract { namespace detail {
@@ -63,7 +63,7 @@ public:
                 checking k;
             #endif
             
-            if(std::uncaught_exception()) {
+            if(boost::core::uncaught_exceptions() > 0) {
                 #ifndef BOOST_CONTRACT_NO_EXCEPTS
                     this->check_except();
                 #endif

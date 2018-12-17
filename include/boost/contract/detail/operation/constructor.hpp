@@ -21,7 +21,7 @@
         !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
         !defined(BOOST_CONTRACT_NO_EXCEPTS)
     #include <boost/config.hpp>
-    #include <exception>
+    #include <boost/core/uncaught_exceptions.hpp>
 #endif
 
 namespace boost { namespace contract { namespace detail {
@@ -70,7 +70,7 @@ public:
 
             // If ctor body threw, no obj so check only static inv. Otherwise,
             // obj constructed so check static inv, non-static inv, and post.
-            if(std::uncaught_exception()) {
+            if(boost::core::uncaught_exceptions() > 0) {
                 #ifndef BOOST_CONTRACT_NO_EXIT_INVARIANTS
                     this->check_exit_static_inv();
                 #endif

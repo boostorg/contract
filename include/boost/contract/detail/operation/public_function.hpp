@@ -24,10 +24,7 @@
         !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
         !defined(BOOST_CONTRACT_NO_EXCEPTS)
     #include <boost/config.hpp>
-#endif
-#if     !defined(BOOST_CONTRACT_NO_POSTCONDITIONS) || \
-        !defined(BOOST_CONTRACT_NO_EXCEPTS)
-    #include <exception>
+    #include <boost/core/uncaught_exceptions.hpp>
 #endif
 
 namespace boost { namespace contract { namespace detail {
@@ -113,7 +110,7 @@ private:
                 #ifndef BOOST_CONTRACT_NO_EXIT_INVARIANTS
                     this->check_subcontracted_exit_inv();
                 #endif
-                if(std::uncaught_exception()) {
+                if(boost::core::uncaught_exceptions() > 0) {
                     #ifndef BOOST_CONTRACT_NO_EXCEPTS
                         this->check_subcontracted_except();
                     #endif
@@ -141,7 +138,7 @@ public:
                 #ifndef BOOST_CONTRACT_NO_EXIT_INVARIANTS
                     this->check_subcontracted_exit_inv();
                 #endif
-                if(std::uncaught_exception()) {
+                if(boost::core::uncaught_exceptions() > 0) {
                     #ifndef BOOST_CONTRACT_NO_EXCEPTS
                         this->check_subcontracted_except();
                     #endif
