@@ -6,6 +6,10 @@
 
 // Test auto error after old (for free func, but same for all contracts).
 
+#if defined(__cplusplus) && __cplusplus >= 201703L // On C++17 or later.
+    #error "C++17 guaranteed copy elision invalidates this test so forcing test's expected complier error"
+#else
+
 #include <boost/contract/function.hpp>
 
 int main() {
@@ -15,4 +19,6 @@ int main() {
     ;
     return 0;
 }
+
+#endif
 
