@@ -15,13 +15,13 @@
 //[union
 union positive {
 public:
-    static void static_invariant() { // Static class invariants.
+    static void static_invariant() { // Static class invariants (as usual).
         BOOST_CONTRACT_ASSERT(instances() >= 0);
     }
     
-    void invariant() const { // Class invariants.
-        if(integer()) BOOST_CONTRACT_ASSERT(i_ > 0);
-        else BOOST_CONTRACT_ASSERT(d_ > 0);
+    void invariant() const { // Class invariants (as usual).
+        if(integer()) { int y; get(y); BOOST_CONTRACT_ASSERT(y > 0); }
+        else { double y; get(y); BOOST_CONTRACT_ASSERT(y > 0); }
     }
 
     // Contracts for constructor, as usual but...
@@ -35,7 +35,7 @@ public:
         boost::contract::check c = boost::contract::constructor(this)
             .postcondition([&] {
                 BOOST_CONTRACT_ASSERT(integer());
-                int i; get(i); BOOST_CONTRACT_ASSERT(i == x);
+                { int y; get(y); BOOST_CONTRACT_ASSERT(y == x); }
                 BOOST_CONTRACT_ASSERT(instances() == *old_instances + 1);
             })
         ;
@@ -56,16 +56,18 @@ public:
 
         --instances_;
     }
+    
+    bool integer() const {
+        boost::contract::check c = boost::contract::public_function(this);
+        return integer_;
+    }
 
     // Contracts for public function (as usual, but no virtual or override).
-    void get(int& x) {
+    void get(int& x) const {
         boost::contract::check c = boost::contract::public_function(this)
             .precondition([&] {
                 BOOST_CONTRACT_ASSERT(integer());
             })
-            .postcondition([&] {
-                BOOST_CONTRACT_ASSERT(x > 0);
-            });
         ;
         
         x = i_;
@@ -75,11 +77,6 @@ public:
     static int instances() {
         boost::contract::check c = boost::contract::public_function<positive>();
         return instances_;
-    }
-
-    bool integer() const {
-        boost::contract::check c = boost::contract::public_function(this);
-        return integer_;
     }
 
 private:
@@ -101,7 +98,7 @@ public:
         boost::contract::check c = boost::contract::constructor(this)
             .postcondition([&] {
                 BOOST_CONTRACT_ASSERT(!integer());
-                double d; get(d); BOOST_CONTRACT_ASSERT(d == x);
+                { double y; get(y); BOOST_CONTRACT_ASSERT(y == x); }
                 BOOST_CONTRACT_ASSERT(instances() == *old_instances + 1);
             })
         ;
@@ -110,14 +107,11 @@ public:
         ++instances_;
     }
     
-    void get(double& x) {
+    void get(double& x) const {
         boost::contract::check c = boost::contract::public_function(this)
             .precondition([&] {
                 BOOST_CONTRACT_ASSERT(!integer());
             })
-            .postcondition([&] {
-                BOOST_CONTRACT_ASSERT(x > 0);
-            });
         ;
         
         x = d_;
@@ -136,11 +130,11 @@ int main() {
     {
         positive p(123);
         assert(p.instances() == 1);
-        int i = -456; p.get(i); assert(i == 123);
+        { int y = -456; p.get(y); assert(y == 123); }
 
         positive q(1.23);
         assert(q.instances() == 2);
-        double d = -4.56; q.get(d); assert(d == 1.23);
+        { double y = -4.56; q.get(y); assert(y == 1.23); }
     }
     assert(positive::instances() == 0);
     return 0;
