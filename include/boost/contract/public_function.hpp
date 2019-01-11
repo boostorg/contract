@@ -47,6 +47,7 @@ Overloads handle public functions that are static, virtual void, virtual non-voi
 #endif
 #include <boost/preprocessor/control/expr_iif.hpp>
 #include <boost/preprocessor/control/iif.hpp>
+#include <boost/preprocessor/facilities/empty.hpp>
 #include <boost/preprocessor/punctuation/comma_if.hpp>
 
 namespace boost { namespace contract {
@@ -498,7 +499,7 @@ specify_precondition_old_postcondition_except<> public_function(Class* obj) {
     BOOST_CONTRACT_DETAIL_DECL_OVERRIDING_PUBLIC_FUNCTION_Z(z, \
         arity, /* is_friend = */ 0, has_virtual_result, \
         Override, VirtualResult, F, Class, Args, \
-        v, r, f, obj, args \
+        v, r, /* f */ BOOST_PP_EMPTY(), obj, args \
     ) { \
         BOOST_PP_IIF(BOOST_CONTRACT_PUBLIC_FUNCTIONS_IMPL_, \
             { /* extra scope paren to expand STATIC_STATIC emu on same line */ \

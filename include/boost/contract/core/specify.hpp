@@ -300,7 +300,12 @@ public:
             this function allows to optionally specify exception guarantees.
     */
     template<typename F>
-    specify_except postcondition(F const& f) {
+    specify_except postcondition(
+        F const&
+        #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
+            f
+        #endif // Else, unused so unnamed param.
+    ) {
         BOOST_CONTRACT_SPECIFY_POSTCONDITION_IMPL_
     }
     
@@ -400,7 +405,12 @@ public:
             postconditions and exception guarantees.
     */
     template<typename F>
-    specify_postcondition_except<VirtualResult> old(F const& f) {
+    specify_postcondition_except<VirtualResult> old(
+        F const&
+        #ifndef BOOST_CONTRACT_NO_OLDS
+            f
+        #endif // Else, unused so unnamed param.
+    ) {
         BOOST_CONTRACT_SPECIFY_OLD_IMPL_
     }
 
@@ -427,7 +437,12 @@ public:
             this function allows to optionally specify exception guarantees.
     */
     template<typename F>
-    specify_except postcondition(F const& f) {
+    specify_except postcondition(
+        F const&
+        #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
+            f
+        #endif // Else, unused so unnamed param.
+    ) {
         BOOST_CONTRACT_SPECIFY_POSTCONDITION_IMPL_
     }
     
@@ -560,7 +575,12 @@ public:
             postconditions and exception guarantees.
     */
     template<typename F>
-    specify_postcondition_except<VirtualResult> old(F const& f) {
+    specify_postcondition_except<VirtualResult> old(
+        F const&
+        #ifndef BOOST_CONTRACT_NO_OLDS
+            f
+        #endif // Else, unused so unnamed param.
+    ) {
         BOOST_CONTRACT_SPECIFY_OLD_IMPL_
     }
 
@@ -587,7 +607,12 @@ public:
             this function allows to optionally specify exception guarantees.
     */
     template<typename F>
-    specify_except postcondition(F const& f) {
+    specify_except postcondition(
+        F const&
+        #ifndef BOOST_CONTRACT_NO_POSTCONDITIONS
+            f
+        #endif // Else, unused so unnamed param.
+    ) {
         BOOST_CONTRACT_SPECIFY_POSTCONDITION_IMPL_
     }
     

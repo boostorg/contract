@@ -14,7 +14,7 @@ namespace boost { namespace contract { namespace detail {
 
 // Using this instead of std::uncaught_exception() because
 // std::uncaught_exception will be removed in C++20.
-bool uncaught_exception() BOOST_NOEXCEPT {
+inline bool uncaught_exception() BOOST_NOEXCEPT {
     // Alternatively, this could just return `boost::core::uncaught_exceptions()
     // > 0` but that emulates the exception count which is not needed by this
     // lib (the implementation below is simpler and could be faster).

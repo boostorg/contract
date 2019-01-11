@@ -521,7 +521,7 @@ public:
     */
     template<typename T>
     /* implicit */ old_value(
-        T const& old,
+        T const& /* old */,
         typename boost::disable_if<boost::contract::is_old_value_copyable<T>
                 >::type* = 0
     ) {} // Leave ptr_ null (thus no copy of T).
@@ -585,11 +585,12 @@ public:
 
 /** @cond */
 private:
-    explicit old_pointer(virtual_* v, old_value const& old)
-        #ifndef BOOST_CONTRACT_NO_OLDS
-            : v_(v), untyped_copy_(old.untyped_copy_)
-        #endif
-    {}
+    #ifndef BOOST_CONTRACT_NO_OLDS
+        explicit old_pointer(virtual_* v, old_value const& old)
+            : v_(v), untyped_copy_(old.untyped_copy_) {}
+    #else
+        explicit old_pointer(virtual_* /* v */, old_value const& /* old */) {}
+    #endif
     
     template<typename Ptr>
     Ptr get() {
@@ -784,8 +785,8 @@ This function is often only used by the code expanded by
 
 @return True if old values need to be copied, false otherwise.
 */
-inline bool copy_old(virtual_* v) {
-    #ifndef BOOST_CONTRACT_NO_OLDS
+#ifndef BOOST_CONTRACT_NO_OLDS
+    inline bool copy_old(virtual_* v) {
         if(!v) {
             #ifndef BOOST_CONTRACT_ALL_DISABLE_NO_ASSERTION
                 return !boost::contract::detail::checking::already();
@@ -795,10 +796,12 @@ inline bool copy_old(virtual_* v) {
         }
         return v->action_ == boost::contract::virtual_::push_old_init_copy ||
                 v->action_ == boost::contract::virtual_::push_old_ftor_copy;
-    #else
+    }
+#else
+    inline bool copy_old(virtual_* /* v */) {
         return false; // No post checking, so never copy old values.
-    #endif
-}
+    }
+#endif
 
 } } // namespace
 
