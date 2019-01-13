@@ -6,7 +6,11 @@
 
 // Test auto error after post (for free func, but same for all contracts).
 
-#if defined(__cplusplus) && __cplusplus >= 201703L // On C++17 or later.
+#include <boost/config.hpp>
+
+// On C++17 or later.
+#if     (defined(__cplusplus) && __cplusplus >= 201703L) || \
+        !defined(BOOST_NO_CXX17_STD_INVOKE)
     #error "C++17 copy elision invalidates test so forcing expected failure"
 #else
 
