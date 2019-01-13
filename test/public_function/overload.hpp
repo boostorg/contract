@@ -67,7 +67,7 @@ struct b {
         out << "b::f(int[2][3])::body" << std::endl;
     }
     
-    void f(void (*/* x */)(int), boost::contract::virtual_* v = 0) {
+    void f(void (* /* x */)(int), boost::contract::virtual_* v = 0) {
         boost::contract::check c = boost::contract::public_function(v, this)
             .precondition(
                     [] { out << "b::f(void (*)(int))::pre" << std::endl; })

@@ -6,6 +6,9 @@
 
 // Test assertions skipped when operations to check them missing (e.g., `==`).
 
+// C++17 warning from Boost.Bind.
+#define _SILENCE_CXX17_ADAPTOR_TYPEDEFS_DEPRECATION_WARNING
+
 #include <boost/contract/function.hpp>
 #include <boost/contract/check.hpp>
 #include <boost/contract/assert.hpp>

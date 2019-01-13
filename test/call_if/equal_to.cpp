@@ -6,6 +6,9 @@
 
 // Test STL equal_to with call_if.
 
+// C++17 warning from Boost.Bind.
+#define _SILENCE_CXX17_ADAPTOR_TYPEDEFS_DEPRECATION_WARNING
+
 #include "../detail/oteststream.hpp"
 #include <boost/contract/call_if.hpp>
 #include <boost/bind.hpp>
