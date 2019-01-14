@@ -68,7 +68,6 @@ module boost_contract_build {
 rule project_requirements ( subdir ) {
     return
         <bc_hdr>lib:<library>../build//boost_contract
-        <bc_hdr>only:<library>/boost/system//boost_system
         <include>$(subdir)
     ;
 }
