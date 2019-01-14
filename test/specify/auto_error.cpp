@@ -7,10 +7,12 @@
 // Test auto error (for free func, but same for all contracts).
 
 #include <boost/config.hpp>
-
-// On C++17 or later.
+// Not just __cplusplus to detect C++17 as MSVC defines it correctly sometimes.
 #if     (defined(__cplusplus) && __cplusplus >= 201703L) || \
-        !defined(BOOST_NO_CXX17_HDR_OPTIONAL)
+        !defined(BOOST_NO_CXX17_IF_CONSTEXPR)
+    #error "C++17 copy elision invalidates test so forcing expected failure"
+#else
+        
     #error "C++17 copy elision invalidates test so forcing expected failure"
 #else
 
