@@ -53,7 +53,10 @@ int main() {
     ).else_( // Test else (not called).
         boost::bind(eq(), x1, x2) // Compiler-error... but not called.
     );
-    ok.str(""); ok << true << std::endl;
+    ok.str(""); ok
+        << 1 // True instead of 1 gives error on some Clang C++17 compilers.
+        << std::endl
+    ;
     BOOST_TEST(out.eq(ok.str()));
 
     return boost::report_errors();

@@ -45,7 +45,10 @@ int main() {
             boost::bind(eq(), 123, 123) // True.
         ).else_([] { return false; }) // Test else not called.
     << std::endl;
-    ok.str(""); ok << true << std::endl;
+    ok.str(""); ok
+        << 1 // True instead of 1 gives error on some Clang C++17 compilers.
+        << std::endl
+    ;
     BOOST_TEST(out.eq(ok.str()));
     
     out.str("");

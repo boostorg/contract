@@ -43,7 +43,10 @@ int main() {
             boost::bind(std::equal_to<x>(), x1, x2)
         )
     << std::endl;
-    ok.str(""); ok << true << std::endl;
+    ok.str(""); ok
+        << 1 // True instead of 1 gives error on some Clang C++17 compilers.
+        << std::endl
+    ;
     BOOST_TEST(out.eq(ok.str()));
     
     out.str("");
