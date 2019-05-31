@@ -148,7 +148,7 @@ struct a // Test overrides with mixed access levels from different bases.
         out << "a::h::body" << std::endl;
     }
     
-    BOOST_CONTRACT_OVERRIDES(f, g, h);
+    BOOST_CONTRACT_OVERRIDES(f, g, h)
 };
 
 int main() {

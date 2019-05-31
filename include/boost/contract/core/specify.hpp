@@ -42,7 +42,9 @@ specified in that order.
 // is used instead of `check c = ...` but only up to C++17. C++17 strong copy
 // elision on function return values prevents this lib from generating a
 // compile-time error in those cases, but the lib will still generate a run-time
-// error according with ON_MISSING_CHECK_DECL.
+// error according with ON_MISSING_CHECK_DECL. Furthermore, on some C++98
+// compilers, this private copy ctor gives a warning (because of lack of copy
+// optimization on those compilers), this warning can be ignored.
 #if     !defined(BOOST_CONTRACT_NO_CONDITIONS) || \
         defined(BOOST_CONTRACT_STATIC_LINK)
     #define BOOST_CONTRACT_SPECIFY_CLASS_IMPL_(class_type, cond_type) \
@@ -222,9 +224,12 @@ public:
             by this function does not allow to specify any additional contract.
     */
     template<typename F>
-    specify_nothing except(F const& f) {
-        BOOST_CONTRACT_SPECIFY_EXCEPT_IMPL_
-    }
+    specify_nothing except(
+        F const&
+        #ifndef BOOST_CONTRACT_NO_EXCEPTS // Avoid unused param warning.
+            f
+        #endif
+    ) { BOOST_CONTRACT_SPECIFY_EXCEPT_IMPL_ }
 
 /** @cond */
 private:
@@ -326,9 +331,12 @@ public:
             by this function does not allow to specify any additional contract.
     */
     template<typename F>
-    specify_nothing except(F const& f) {
-        BOOST_CONTRACT_SPECIFY_EXCEPT_IMPL_
-    }
+    specify_nothing except(
+        F const&
+        #ifndef BOOST_CONTRACT_NO_EXCEPTS // Avoid unused param warning.
+            f
+        #endif
+    ) { BOOST_CONTRACT_SPECIFY_EXCEPT_IMPL_ }
 
 /** @cond */
 private:
@@ -463,9 +471,12 @@ public:
             by this function does not allow to specify any additional contract.
     */
     template<typename F>
-    specify_nothing except(F const& f) {
-        BOOST_CONTRACT_SPECIFY_EXCEPT_IMPL_
-    }
+    specify_nothing except(
+        F const&
+        #ifndef BOOST_CONTRACT_NO_EXCEPTS // Avoid unused param warning.
+            f
+        #endif
+    ) { BOOST_CONTRACT_SPECIFY_EXCEPT_IMPL_ }
 
 /** @cond */
 private:
@@ -633,9 +644,12 @@ public:
             by this function does not allow to specify any additional contract.
     */
     template<typename F>
-    specify_nothing except(F const& f) {
-        BOOST_CONTRACT_SPECIFY_EXCEPT_IMPL_
-    }
+    specify_nothing except(
+        F const&
+        #ifndef BOOST_CONTRACT_NO_EXCEPTS // Avoid unused param warning.
+            f
+        #endif
+    ) { BOOST_CONTRACT_SPECIFY_EXCEPT_IMPL_ }
 
 /** @cond */
 private:

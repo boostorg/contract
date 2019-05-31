@@ -311,7 +311,7 @@ public:
             "otherwise use old_ptr_if_copyable<T>"
         );
         if(typed_copy_) return &typed_copy_->old();
-        return 0;
+        return static_cast<T const*>(0); // Explicit cast avoids warning.
     }
 
     #ifndef BOOST_CONTRACT_DETAIL_DOXYGEN
@@ -433,7 +433,7 @@ public:
     */
     T const* const operator->() const {
         if(typed_copy_) return &typed_copy_->old();
-        return 0;
+        return static_cast<T const*>(0); // Explicit cast avoids warning.
     }
 
     #ifndef BOOST_CONTRACT_DETAIL_DOXYGEN
@@ -497,7 +497,11 @@ public:
     */
     template<typename T>
     /* implicit */ old_value(
-        T const& old,
+        T const&
+        #ifndef BOOST_CONTRACT_NO_OLDS // Avoid unused param warning.
+            old
+        #endif
+    ,
         typename boost::enable_if<boost::contract::is_old_value_copyable<T>
                 >::type* = 0
     )

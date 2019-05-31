@@ -198,8 +198,12 @@ struct call_if_statement<true, Then, ThenResult> { // Copyable (as *).
             if-statement static predicate is @c true).
     */
     template<bool ElseIfPred, typename ElseIfThen>
-    call_if_statement<true, Then, ThenResult> else_if_c(ElseIfThen const& f)
-            const { return *this; }
+    call_if_statement<true, Then, ThenResult> else_if_c(
+        ElseIfThen const&
+        #ifdef BOOST_CONTRACT_DETAIL_DOXYGEN // Avoid unused param warning.
+            f
+        #endif
+    ) const { return *this; }
 
     /**
     Specify an else-if-branch functor template (using a nullary boolean
@@ -222,8 +226,12 @@ struct call_if_statement<true, Then, ThenResult> { // Copyable (as *).
             if-statement static predicate is @c true).
     */
     template<class ElseIfPred, typename ElseIfThen>
-    call_if_statement<true, Then, ThenResult> else_if(ElseIfThen const& f)
-            const { return *this; }
+    call_if_statement<true, Then, ThenResult> else_if(
+        ElseIfThen const&
+        #ifdef BOOST_CONTRACT_DETAIL_DOXYGEN // Avoid unused param warning.
+            f
+        #endif
+    ) const { return *this; }
     
 private:
     boost::shared_ptr<ThenResult> r_;
@@ -294,9 +302,12 @@ struct call_if_statement<true, Then, void> { // Copyable (no data).
             (because the then-branch functor template calls return void).
     */
     template<bool ElseIfPred, typename ElseIfThen>
-    call_if_statement<true, Then, void> else_if_c(ElseIfThen const& f) const {
-        return *this;
-    }
+    call_if_statement<true, Then, void> else_if_c(
+        ElseIfThen const&
+        #ifdef BOOST_CONTRACT_DETAIL_DOXYGEN // Avoid unused param warning.
+            f
+        #endif
+    ) const { return *this; }
 
     /**
     Specify an else-if-branch functor template (using a nullary boolean
@@ -319,9 +330,12 @@ struct call_if_statement<true, Then, void> { // Copyable (no data).
             (because the then-branch functor template calls return void).
     */
     template<class ElseIfPred, typename ElseIfThen>
-    call_if_statement<true, Then, void> else_if(ElseIfThen const& f) const {
-        return *this;
-    }
+    call_if_statement<true, Then, void> else_if(
+        ElseIfThen const&
+        #ifdef BOOST_CONTRACT_DETAIL_DOXYGEN // Avoid unused param warning.
+            f
+        #endif
+    ) const { return *this; }
 };
 
 /**

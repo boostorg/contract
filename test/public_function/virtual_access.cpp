@@ -81,7 +81,7 @@ struct a // Test overrides with mixed access levels from base.
         ;
         out << "a::f::body" << std::endl;
     }
-    BOOST_CONTRACT_OVERRIDES(f);
+    BOOST_CONTRACT_OVERRIDES(f)
 
     // Following do not override public members so no `override_...` param and
     // they do not actually subcontract.

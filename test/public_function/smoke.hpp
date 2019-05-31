@@ -206,7 +206,7 @@ struct a
         #pragma GCC diagnostic ignored "-Woverloaded-virtual" // For a::f.
     #elif defined(BOOST_CLANG)
         #pragma clang diagnostic push
-        #pragma clang diagnostic ignored "-Wunused-parameter" // For a::f.
+        #pragma clang diagnostic ignored "-Woverloaded-virtual" // For a::f.
     #endif
 
     // Must use virtual_ even if no longer decl virtual for correct overloading.
