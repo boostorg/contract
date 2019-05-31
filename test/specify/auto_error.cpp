@@ -12,9 +12,6 @@
         !defined(BOOST_NO_CXX17_IF_CONSTEXPR)
     #error "C++17 copy elision invalidates test so forcing expected failure"
 #else
-        
-    #error "C++17 copy elision invalidates test so forcing expected failure"
-#else
 
 #include <boost/contract/function.hpp>
 

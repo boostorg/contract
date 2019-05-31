@@ -94,6 +94,8 @@ main file.
             <test name="old-if_copyable_macro"/>
             <toolset name="gcc-4.6*"/>
             <toolset name="gcc-4.7*"/>
+            <toolset name="msvc-10.*"/>
+            <toolset name="msvc-11.*"/>
             <note author="Lorenzo Caminiti">
                 This test fails because this complier does not properly
                 implement SFINAE giving incorrect errors on substitution
@@ -175,6 +177,49 @@ main file.
                 reference to this possible compiler issue online).
                 This is fixed in MSVC 9.0 (but only MSVC 11.0 has adequate
                 lambda function support).
+            </note>
+        </mark-expected-failures>
+        <mark-expected-failures>
+            <test name="call_if-no_equal_call_if"/>
+            <toolset name="msvc-10.0"/>
+            <note author="Lorenzo Caminiti">
+                This test fails because MSVC 10.0 is not able to properly deduce
+                a template specialization.
+                This is fixed in MSVC 11.0.
+            </note>
+        </mark-expected-failures>
+        <mark-expected-failures>
+            <test name="constructor-ifdef_macro"/>
+            <test name="constructor-smoke"/>
+            <toolset name="msvc-10.0"/>
+            <note author="Lorenzo Caminiti">
+                This test fails because of a MSVC 10.0 bug with lambdas within
+                template class initialization list.
+                This can be worked around using a functor bind instead of a
+                lambda, but it is fixed in MSVC 11.0.
+            </note>
+        </mark-expected-failures>
+        <mark-expected-failures>
+            <test name="destructor-smoke"/>
+            <toolset name="msvc-10.0"/>
+            <note author="Lorenzo Caminiti">
+                This test fails because of a MSVC 10.0 bug for which lambdas
+                cannot access typedefs declared within classes.
+                This can be worked around declaring typedefs outside of
+                classes, but it is fixed in MSVC 11.0.
+            </note>
+        </mark-expected-failures>
+        <mark-expected-failures>
+            <test name="disable-no_post_except_lib"/>
+            <test name="disable-no_post_except_unit"/>
+            <test name="disable-nothing_for_pre_prog"/>
+            <test name="disable-other_assertions_lib"/>
+            <test name="disable-other_assertions_prog"/>
+            <test name="disable-other_assertions_unit"/>
+            <toolset name="msvc-10.0"/>
+            <note author="Lorenzo Caminiti">
+                This test fails because of an internal MSVC 10.0 compiler bug.
+                This is fixed in MSVC 11.0.
             </note>
         </mark-expected-failures>
     </library>
