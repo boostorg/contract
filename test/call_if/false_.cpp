@@ -36,7 +36,7 @@ int main() {
             boost::bind(eq(), x1, x1) // Compiler-error... but not called.
         ).else_([] { return false; }) // Test else.
     << std::endl;
-    ok.str(""); ok << false << std::endl;
+    ok.str(""); ok << 0 /* false */ << std::endl;
     BOOST_TEST(out.eq(ok.str()));
 
     out.str("");
@@ -45,7 +45,7 @@ int main() {
             boost::bind(eq(), x1, x2) // Compiler-error... but not called.
         ).else_([] { return true; })
     << std::endl;
-    ok.str(""); ok << true << std::endl;
+    ok.str(""); ok << 1 /* true */ << std::endl;
     BOOST_TEST(out.eq(ok.str()));
     
     out.str("");
@@ -54,7 +54,7 @@ int main() {
             boost::bind(eq(), x1, x2) // Compiler-error...but not called.
         ).else_([] { return true; })
     << std::endl;
-    ok.str(""); ok << true << std::endl;
+    ok.str(""); ok << 1 /* true */ << std::endl;
     BOOST_TEST(out.eq(ok.str()));
 
     return boost::report_errors();

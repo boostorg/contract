@@ -34,7 +34,7 @@ int main() {
     boost::contract::call_if<boost::has_equal_to<int> >(
         boost::bind(eq(), 123, 456) // False.
     ); // Test no else (not called).
-    ok.str(""); ok << false << std::endl;
+    ok.str(""); ok << 0 /* false */ << std::endl;
     BOOST_TEST(out.eq(ok.str()));
 
     out.str("");
@@ -43,7 +43,7 @@ int main() {
     ).else_(
         [] { return false; }
     ); // Test else (not called).
-    ok.str(""); ok << true << std::endl;
+    ok.str(""); ok << 1 /* true */ << std::endl;
     BOOST_TEST(out.eq(ok.str()));
     
     out.str("");
@@ -53,10 +53,7 @@ int main() {
     ).else_( // Test else (not called).
         boost::bind(eq(), x1, x2) // Compiler-error... but not called.
     );
-    ok.str(""); ok
-        << 1 // True instead of 1 gives error on some Clang C++17 compilers.
-        << std::endl
-    ;
+    ok.str(""); ok << 1 /* true */ << std::endl;
     BOOST_TEST(out.eq(ok.str()));
 
     return boost::report_errors();

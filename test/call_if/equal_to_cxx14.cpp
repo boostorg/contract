@@ -27,7 +27,7 @@ int main() {
             std::bind([] (auto a, auto b) { return a == b; }, 123, 456)
         ).else_([] { return true; })
     << std::endl;
-    ok.str(""); ok << false << std::endl;
+    ok.str(""); ok << 0 /* false */ << std::endl;
     BOOST_TEST(out.eq(ok.str()));
 
     out.str("");
@@ -36,7 +36,7 @@ int main() {
             std::bind([] (auto a, auto b) { return a == b; }, x1, x2)
         ).else_([] { return true; })
     << std::endl;
-    ok.str(""); ok << true << std::endl;
+    ok.str(""); ok << 1 /* true */ << std::endl;
     BOOST_TEST(out.eq(ok.str()));
     
     out.str("");
@@ -45,7 +45,7 @@ int main() {
             std::bind([] (auto a, auto b) { return a == b; }, x1, x2)
         ).else_([] { return true; })
     << std::endl;
-    ok.str(""); ok << true << std::endl;
+    ok.str(""); ok << 1 /* true */ << std::endl;
     BOOST_TEST(out.eq(ok.str()));
 
     return boost::report_errors();

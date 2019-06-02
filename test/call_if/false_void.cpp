@@ -44,7 +44,7 @@ int main() {
     ).else_(
         [] { out << true << std::endl; } // Test else.
     );
-    ok.str(""); ok << true << std::endl;
+    ok.str(""); ok << 1 /* true */ << std::endl;
     BOOST_TEST(out.eq(ok.str()));
 
     return boost::report_errors();
