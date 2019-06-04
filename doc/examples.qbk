@@ -28,6 +28,9 @@ A few notable examples:
 * [link Meyer97_stack4_anchor \[Meyer97\] Stack4]: Comparison with Eiffel syntax.
 * [link Cline90_vector_anchor \[Cline90\] Vector]: Comparison with A++ syntax.
 
+Most of the examples listed here use old values and class invariants which are instead not supported by __P0380__.
+Therefore, there is not meaningful example here that can be directly implemented and compared using __P0380__ syntax.
+
 [#N1962_vector_anchor]
 [section \[N1962\] Vector: Contracts for STL vector and comparison with __N1962__ proposed syntax]
 

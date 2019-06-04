@@ -21,6 +21,7 @@
 [def __This_Documentation__ [link boost_contract.getting_started.this_documentation This Documentation]]
 [def __Compilers_and_Platforms__ [link boost_contract.getting_started.compilers_and_platforms Compilers and Platforms]]
 [def __Code_Organization__ [link boost_contract.getting_started.code_organization Code Organization]]
+[def __Build__ [link boost_contract.getting_started.build Build]]
 
 [def __Contract_Programming_Overview__ [link boost_contract.contract_programming_overview Contract Programming Overview]]
 [def __Assertions__ [link boost_contract.contract_programming_overview.assertions Assertions]]

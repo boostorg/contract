@@ -71,12 +71,9 @@ The `pushable` base class is used in this example just to show subcontracting, i
 The authors of this library advocate for contracts to be added to the core language.
 Adding contract programming to the C++ standard has a number of advantages over any library implementation (shorter and more concise syntax to program contracts, specify contracts in declarations instead of definitions, enforce contract constant-correctness, expected faster compile- and run-time, vendors could develop static analysis tools to recognize and check contracts statically when possible, compiler optimizations could be improved based on contract conditions, etc.).
 
-Unfortunately, detailed and complete proposals to add contracts to the C++ standard such as __N1962__ were rejected by the C++ standard committee and it is not clear if the current proposal for adding contracts to C++ __P0380__ will actually be accepted by the standard.
-[footnote
-The authors find attractive the syntax that uses C++11 attributes `[[...]]` to specify contracts as indicated in __P0380__.
-]
-In any case, at least for now __P0380__ only supports pre- and postconditions while missing basic features such as class invariants and old values in postconditions, not to mention the lack of more advanced features like subcontracting.
-All these features are instead supported by this library (see __Feature_Summary__ for a detailed comparison between the features supported by this library and the ones listed in different contract programming proposals, see __Bibliography__ for a list of references considered during the design and implementation of this library, including the vast majority of contract programming proposals submitted to the C++ standard committee).
+The __P0380__ proposal for basic contract programming was accepted and will be included in C++20.
+This is undoubtedly a step in the right direction, but unfortunately __P0380__ only supports pre- and postconditions while missing important features such as class invariants and old values in postconditions, not to mention the lack of more advanced features like subcontracting (more complete proposals like __N1962__ were rejected by the C++ standard committee).
+All contracting programming features are instead supported by this library (see __Feature_Summary__ for a detailed comparison between the features supported by this library and the ones listed in different contract programming proposals, see __Bibliography__ for a list of references considered during the design and implementation of this library, including the vast majority of contract programming proposals submitted to the C++ standard committee).
 
 [endsect]
 

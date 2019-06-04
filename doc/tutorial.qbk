@@ -28,8 +28,8 @@ The name of this local variable is arbitrary, but `c` is often used in this docu
 Furthermore, C++11 `auto` declarations cannot be used here and the [classref boost::contract::check] type must be explicitly specified (otherwise this library will generate a compile-time error prior C++17 and a run-time error post C++17).
 [footnote
 *Rationale:*
-C++17 zero-copy guarantee on function return values skips the trick this library uses to force a compile-time error when `auto` is incorrectly used instead of [classref boost::contract::check].
-The library is still able to generate a run-time error in this case on C++17.
+C++17 guaranteed copy elision on function return values removes the trick this library uses to force a compile-time error when `auto` is incorrectly used instead of [classref boost::contract::check].
+The library still generates a run-time error in this case (also on C++17).
 In any case, after reading this documentation it should be evident to programmers that `auto` should not be used in [classref boost::contract::check] declarations so this misuse of `auto` should not be an issue in practice.
 ]
 The function body is programmed right after the declaration of the RAII object.

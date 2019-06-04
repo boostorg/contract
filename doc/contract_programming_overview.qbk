@@ -371,7 +371,7 @@ The following table compares contract programming features among this library, _
     [Feature]
     [This Library]
     [__N1962__ Proposal (not accepted in C++)]
-    [__P0380__ Proposal (being considered for C++2x)]
+    [C++20 (see __P0380__)]
     [ISE Eiffel 5.4 (see __Meyer97__)]
     [D (see __Bright04__)]
 ][
