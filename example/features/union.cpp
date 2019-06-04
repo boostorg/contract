@@ -25,7 +25,7 @@ public:
     }
 
     // Contracts for constructor, as usual but...
-    explicit positive(int x) : i_(0) {
+    explicit positive(int x) : d_(0) {
         // ...unions cannot have bases so constructor preconditions here.
         boost::contract::constructor_precondition<positive> pre([&] {
             BOOST_CONTRACT_ASSERT(x >= 0);
