@@ -430,7 +430,7 @@ For example (see [@../../example/features/access.cpp =access.cpp=]):
 [import ../example/features/access.cpp]
 [access]
 
-This technique is not used in most examples of this documentation only for brevity, but programmers are encouraged to use it in real code.
+This technique is not used in most examples of this documentation only for brevity, but programmers are encouraged to use it in real production code.
 
 [warning
 Not declaring [classref boost::contract::access] friend of user classes might cause compiler errors on some compilers (e.g., MSVC) because the private members needed to check the contracts will not be accessible.
@@ -483,7 +483,7 @@ When programming custom failure handlers that trow exceptions instead of termina
 * In order to comply with C++ and STL exception safety, destructors should never throw (in fact destructors are implicitly declared `noexcept` since C++11).
 This library passes a [enumref boost::contract::from] parameter to the contract failure handlers for preconditions, postconditions, class invariants, and old value copies at body (see [funcref boost::contract::precondition_failure], [funcref boost::contract::postcondition_failure], [funcref boost::contract::entry_invariant_failure], [funcref boost::contract::exit_invariant_failure], and [funcref boost::contract::old_failure] respectively).
 This [enumref boost::contract::from] parameter indicates if the contract failure occurred in a destructor, constructor, or function call so programmers can use it to code custom contract failure hander functions that never throw from destructors.
-(In the example above, contract failures from destructors are simply ignored even if that is probably never a safe thing to do in real code.)
+(In the example above, contract failures from destructors are simply ignored even if that is probably never a safe thing to do in real production code.)
 * C++ stack-unwinding will execute base class destructors even when the derived class destructor trows an exception.
 Therefore, the contracts of base class destructors will continue to be checked when contract failure handlers are programmed to throw exceptions on contract failures from destructors (yet another reason not to throw exceptions from destructors, not even because of contract failures).
 * Implementation checks can appear in any code, including destructor implementation code, so [funcref boost::contract::check_failure] should also never throw, or implementation checks should never be used in destructors otherwise these destructors will throw (note that [funcref boost::contract::check_failure] does not provide the [enumref boost::contract::from] parameter so it is not possible to differentiate from implementation checks failing from destructors instead than from other parts of the code).

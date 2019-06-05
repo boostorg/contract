@@ -268,7 +268,7 @@ Exception guarantees can also capture old values (see __Old_Values__) but they s
 In any case, exception guarantee assertions should not modify the value of the captured variables (see __Constant_Correctness__).
 
 [note
-In real code, it might be difficult to program meaningful exception guarantees without resorting to expensive old value copies that will slow down execution.
+In real production code, it might be difficult to program meaningful exception guarantees without resorting to expensive old value copies that will slow down execution.
 Therefore, the authors recognize that exception guarantees, even if supported by this library, might not be used often in practice (and they are not used in most of the examples listed in the rest of this documentation).
 In any case, these performance considerations are ultimately left to programmers and their specific application domain.
 ]
