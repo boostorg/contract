@@ -11,7 +11,7 @@ Distributed under the [Boost Software License, Version 1.0](http://www.boost.org
 ### Properties
 
 * C++11 (C++03 possible but not recommended without lambda functions and variadic macros, see documentation for more information).
-* Shared Library / DLL with `BOOST_CONTRACT_DYN_LINK` (static library with `BOOST_CONTRACT_STATIC_LINK` and header-only with `BOOST_CONTRACT_HEADER_ONLY` possible but not recommended, see documentation for more information).
+* Shared Library / DLL with `BOOST_CONTRACT_DYN_LINK` (static library with `BOOST_CONTRACT_STATIC_LINK` and header-only with `BOOST_CONTRACT_HEADER_ONLY` also possible but not recommended, see documentation for more information).
 
 ### Build Status
 

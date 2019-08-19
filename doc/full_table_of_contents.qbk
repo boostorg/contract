@@ -48,7 +48,7 @@ __Advanced__
     __Function_Overloads__
     __Lambdas_Loops_Code_Blocks_and_constexpr__
     __Implementation_Checks__
-    __Old_Value_Copies_at_Body__
+    __Old_Values_Copied_at_Body__
     __Named_Overrides__
     __Access_Specifiers__
     __Throw_on_Failures_and_noexcept__

@@ -18,13 +18,13 @@ In these cases, programmers can declare old values using [classref boost::contra
 
 However, in some other cases it might be desirable to simply skip assertions that use old values when the respective old value types are not copyable, without causing compile-time errors.
 Programmers can do this using [classref boost::contract::old_ptr_if_copyable] instead of [classref boost::contract::old_ptr] and checking if the old value pointer is not null before dereferencing it in postconditions.
-For example, consider the following function template that could in general be instantiated for types `T` that are not copy constructible (that is for which `boost::contract::is_old_value_copyable<T>::value` is `false`, see [@../../example/features/old_if_copyable.cpp =old_if_copyable.cpp=]):
+For example, consider the following function template that could in general be instantiated for types `T` that are not copy constructible (that is for which [classref boost::contract::is_old_value_copyable]`<T>::value` is `false`, see [@../../example/features/old_if_copyable.cpp =old_if_copyable.cpp=]):
 [footnote
 *Rationale:*
 __N1962__ and other proposals to add contracts to C++ do not provide a mechanism to selectively disable copies only for old value types that are not copy constructible.
-However, this library provides such a mechanism to allow to program contracts for template code without necessarily adding extra copy constructible type requirements that would not be present if it were not for copying the old values (so compiling the code with and without contracts will not necessarily alter the type requirements of the program).
-Something similar could be achieved combing C++17 `if constexpr` with __N1962__ or __P0380__ so that old value expressions within template code could be guarded by `if constexpr` statements checking if the old value types are copyable or not.
-For example, assuming old values are added to __P0380__ (using the `oldof(...)` syntax) and that C++17 `if constexpr` can be used within __P0380__ contracts:
+However, this library provides such a mechanism to allow to program contracts for template code without necessarily adding extra copy constructible type requirements that would not be present if it were not for copying old values (so compiling the code with and without contracts will not necessarily alter the type requirements of the program).
+Something similar could be achieved combing C++17 `if constexpr` with __N1962__ or __P0380__ so that old value expressions within template code can be guarded by `if constexpr` statements checking if the old value types are copyable or not.
+For example, assuming old values are added to __P0380__ (using some kind of `oldof(...)` syntax) and that C++17 `if constexpr` can be used within __P0380__ contracts:
 ``
     template<typename T>
     void offset(T& x, int count)
@@ -37,22 +37,46 @@ For example, assuming old values are added to __P0380__ (using the `oldof(...)` 
 [old_if_copyable_offset]
 
 The old value pointer `old_x` is programmed using [classref boost::contract::old_ptr_if_copyable].
-When `T` is copyable, this `boost::contract::old_ptr_if_copyable]<T>` behaves like `boost::contract::old_ptr<T>`.
-When `T` is not copyable instead, `boost::contract::old_ptr_if_copyable<T>` will simply not copy `x` at run-time and leave `old_x` initialized as a null pointer.
-Therefore, [classref boost::contract::old_ptr_if_copyable] objects like `old_x` must be checked to be not null as in `if(old_x) ...` before they are dereferenced in postconditions and exception guarantees.
+When `T` is copyable, [classref boost::contract::old_ptr_if_copyable]`<T>` behaves like [classref boost::contract::old_ptr]`<T>`.
+When `T` is not copyable instead, [classref boost::contract::old_ptr_if_copyable]`<T>` will simply not copy `x` at run-time and leave `old_x` initialized to a null pointer.
+Therefore, [classref boost::contract::old_ptr_if_copyable] objects like `old_x` must be checked to be not null as in `if(old_x) ...` before they are dereferenced in postconditions and exception guarantees (to avoid run-time errors of dereferencing null pointers).
 
-If the above example used [classref boost::contract::old_ptr] instead then this library would have generated a compile-time error when `offset` is instantiated with types `T` that are not copy constructible (but only if `old_x` is actually dereferenced somewhere in the contract assertions using `*old_x ...`, `old_x->...`, etc.).
+If the above example used [classref boost::contract::old_ptr] instead then this library would have generated a compile-time error when `offset` is instantiated with types `T` that are not copy constructible (but only if `old_x` is actually dereferenced somewhere, for example in the contract assertions using `*old_x ...` or `old_x->...`).
+[footnote
+Technically, on C++17 it is possible to use [classref boost::contract::old_ptr] together with `if constexpr` instead of using [classref boost::contract::old_ptr_if_copyable], for example:
+``
+    template<typename T>
+    void offset(T& x, int count) {
+        boost::contract::old_ptr<T> old_x;
+        if constexpr(boost::contract::is_old_value_copyable<T>::value) old_x = BOOST_CONTRACT_OLDOF(x);
+        boost::contract::check c = boost::contract::function()
+            .postcondition([&] {
+                if constexpr(boost::contract::is_old_value_copyable<T>::value) BOOST_CONTRACT_ASSERT(x == *old_x + count);
+            })
+        ;
+
+        x += count;
+    }
+``
+However, the authors find this code less readable and more verbose than its equivalent that uses [classref boost::contract::old_ptr_if_copyable].
+Guarding old value copies and related assertions with `if constexpr` is useful instead when the guard condition checks type requirements more complex than just [classref boost::contract::is_old_value_copyable] (as shown later in this documentation).
+]
 
 When C++11 `auto` declarations are used with [macroref BOOST_CONTRACT_OLDOF], this library always defaults to using the [classref boost::contract::old_ptr] type (because its type requirements are more stringent than [classref boost::contract::old_ptr_if_copyable]).
-If programmers want to relax the copyable type requirement, they must do so explicitly by using [classref boost::contract::old_ptr_if_copyable] instead of using `auto`.
 For example, the following statements are equivalent:
 
     auto old_x = BOOST_CONTRACT_OLDOF(x); // C++11 auto declarations always use `old_ptr` (never `old_ptr_if_copyable`).
     boost::contract::old_ptr<decltype(x)> old_x = BOOST_CONTRACT_OLDOF(x);
 
+If programmers want to relax the copyable type requirement, they must do so explicitly by using the [classref boost::contract::old_ptr_if_copyable] type instead of using `auto` declarations.
+
+[heading Old Value Type Traits]
+
 This library uses [classref boost::contract::is_old_value_copyable] to determine if an old value type is copyable or not, and then [classref boost::contract::old_value_copy] to actually copy the old value.
-By default, `boost::contract::is_old_value_copyable<T>` is equivalent to `boost::is_copy_constructible<T>` and `boost::contract::old_value_copy<T>` is implemented using `T`'s copy constructor.
+
+By default, [classref boost::contract::is_old_value_copyable]`<T>` is equivalent to `boost::is_copy_constructible<T>` and [classref boost::contract::old_value_copy]`<T>` is implemented using `T`'s copy constructor.
 However, these type traits can be specialized by programmers for example to avoid making old value copies of types even when they have a copy constructor (maybe because these copy constructors are too expensive), or to make old value copies for types that do not have a copy constructor, or for any other specific need programmers might have for the types in question.
+
 For example, the following specialization of [classref boost::contract::is_old_value_copyable] intentionally avoids making old value copies for all expressions of type `w` even if that type has a copy constructor (see [@../../example/features/old_if_copyable.cpp =old_if_copyable.cpp=]):
 
 [old_if_copyable_w_decl]
@@ -63,12 +87,9 @@ On the flip side, the following specializations of [classref boost::contract::is
 [old_if_copyable_p_decl]
 [old_if_copyable_p_spec]
 
-[heading No C++11]
-
-In general, `boost::is_copy_constructible` and therefore [classref boost::contract::is_old_value_copyable] require C++11 `decltype` and SFINAE to automatically detect if a given type is not copyable.
-On non-C++11 compilers, it is possible to inherit the old value type from `boost::noncopyable`, or use `BOOST_MOVABLE_BUT_NOT_COPYABLE`, or specialize `boost::is_copy_constructible` (see [@http://www.boost.org/doc/libs/release/libs/type_traits/doc/html/boost_typetraits/reference/is_copy_constructible.html `boost::is_copy_constructible`] documentation for more information).
-Alternatively, it is possible to just specialize [classref boost::contract::is_old_value_copyable].
-For example, for a non-copyable type `n` (see [@../../example/features/old_if_copyable.cpp =old_if_copyable.cpp=]):
+In general, `boost::is_copy_constructible` and therefore [classref boost::contract::is_old_value_copyable] require C++11 `decltype` and SFINAE to automatically detect if a given type is copyable or not.
+On non-C++11 compilers, it is possible to inherit the old value type from `boost::noncopyable`, or use `BOOST_MOVABLE_BUT_NOT_COPYABLE`, or specialize `boost::is_copy_constructible` (see [@http://www.boost.org/doc/libs/release/libs/type_traits/doc/html/boost_typetraits/reference/is_copy_constructible.html `boost::is_copy_constructible`] documentation for more information), or just specialize [classref boost::contract::is_old_value_copyable].
+For example, for a non-copyable type `n` the following code will work also on non-C++11 compilers (see [@../../example/features/old_if_copyable.cpp =old_if_copyable.cpp=]):
 
 [old_if_copyable_n_decl]
 [old_if_copyable_n_spec]
@@ -83,21 +104,20 @@ Some of these type requirements might be necessary only to check the assertions 
 In some cases it might be acceptable, or even desirable, to cause a compile-time error when a program uses types that do not provide all the operations needed to check contract assertions (because it is not possible to fully check the correctness of the program as specified by its contracts).
 In these cases, programmers can specify contract assertions as we have seen so far, compilation will fail if user types do not provide all operations necessary to check the contracts.
 
-However, in some other cases it might be desirable to not augment the type requirements of a program because of contract assertions and to simply skip these assertions when user types do not provide all the operations necessary to check them, without causing compile-time errors.
-Programmers can do this using [funcref boost::contract::condition_if] (or [funcref boost::contract::condition_if_c]).
+However, in some other cases it might be desirable to not augment the type requirements of a program just because of contract assertions and to simply skip assertions when user types do not provide all the operations necessary to check them, without causing compile-time errors.
+Programmers can do this using `if constexpr` on C++17 compilers, and [funcref boost::contract::condition_if] (or [funcref boost::contract::condition_if_c]) on non-C++17 compilers.
 
 For example, let's consider the following `vector<T>` class template equivalent to `std::vector<T>`.
 C++ `std::vector<T>` does not require that its value type parameter `T` has an equality operator `==` (it only requires `T` to be copy constructible, see `std::vector` documentation).
 However, the contracts for the `vector<T>::push_back(value)` public function include a postcondition `back() == value` that introduces the new requirement that `T` must also have an equality operator `==`.
 Programmers can specify this postcondition as usual with `BOOST_CONTRACT_ASSERT(back() == value)` an let the program fail to compile when users instantiate `vector<T>` with a type `T` that does not provide an equality operator `==`.
-Otherwise, programmers can specify this postcondition using [funcref boost::contract::condition_if] to evaluate the asserted condition only for types `T` that have an equality operator `==` (and trivially evaluate to `true` otherwise).
-On C++17 compilers, the same can be achieved using `if constexpr` instead of [funcref boost::contract::condition_if] resulting in a more concise and readable syntax.
+Otherwise, programmers can guard this postcondition using C++17 `if constexpr` to evaluate the asserted condition only for types `T` that have an equality operator `==` and skip it otherwise.
 [footnote
 *Rationale:*
 __N1962__ and other proposals to add contracts to C++ do not provide a mechanism to selectively disable assertions based on their type requirements.
-However, this library provides such a mechanism to allow to program contracts for template code without necessarily adding extra type requirements that would not be present if it was not for the contracts (so compiling the code with and without contracts will not necessarily alter the type requirements of the program).
-Something similar could be achieved combing C++17 `if constexpr` with __N1962__ or __P0380__ so that contract assertions within template code could be guarded by `if constexpr` statements checking related type requirements (__N1962__ already supports `if` statements under the name of /select assertions/, __P0380__ does not so probably `if` statements should be added to __P0380__ as well).
-For example, assuming old values are added to __P0380__ (using the `oldof(...)` syntax) and that C++17 `if constexpr` can be used within __P0380__ contracts:
+However, this library provides such a mechanism to allow to program contracts for template code without necessarily adding extra type requirements that would not be present if it was not for the contracts (so compiling the code with and without contracts will not alter the type requirements of the program).
+Something similar could be achieved combing C++17 `if constexpr` with __N1962__ or __P0380__ so that contract assertions within template code could be guarded by `if constexpr` statements checking the related type requirements (__N1962__ already allows of `if` statements in contracts under the name of /select assertions/, __P0380__ does not so probably `if` statements should be added to __P0380__ as well).
+For example, assuming C++17 `if constexpr` can be used within __P0380__ contracts:
 ``
     template<typename T>
     class vector {
@@ -108,36 +128,38 @@ For example, assuming old values are added to __P0380__ (using the `oldof(...)` 
     };
 ``
 ]
+For example:
+
+    template<typename T>
+    class vector {
+    public:
+        void push_back(T const& value) {
+            boost::contract::check c = boot::contract::public_function(this)
+                .postcondition([&] {
+                    // Guard with `if constexpr` for T without `==`.
+                    if constexpr(boost::has_equal_to<T>::value)
+                        BOOST_CONTRACT_ASSERT(back() == value);
+                })
+            ;
+
+            vect_.push_back(value);
+        }
+
+        /* ... */
+
+More in general, `if constexpr` can be used to guard a mix of both old value copies and contract assertions that introduce specific extra type requirements.
+For example, the following `swap` function can be called on any type `T` that is movable but its old value copies and postcondition assertions are evaluated only for types `T` that are also copyable and have an equality operator `==` (see [@../../example/features/if_constexpr.cpp =if_constexpr.cpp=]):
+
+[import ../example/features/if_constexpr.cpp]
+[if_constexpr]
+
+[heading No `if constexpr` (no C++17)]
+
+On non-C++17 compilers where `if constexpr` is not available, it is possible to use [funcref boost::contract::condition_if] to skip assertions based on type requirements (even if this code is less readable and more verbose than using `if constexpr`).
 For example (see [@../../example/features/condition_if.cpp =condition_if.cpp=]):
 
 [import ../example/features/condition_if.cpp]
-[table
-[[Until C++17 (without `if constexpr`)][Since C++17 (with `if constexpr`)]]
-[[[condition_if]] [``
-template<typename T>
-class vector {
-public:
-    void push_back(T const& value) {
-        boost::contract::check c = boot::contract::public_function(this)
-            .postcondition([&] {
-                // Guard with `if constexpr` for T without `==`.
-                if constexpr(boost::has_equal_to<T>::value)
-                    BOOST_CONTRACT_ASSERT(back() == value);
-            })
-        ;
-
-        vect_.push_back(value);
-    }
-
-
-
-
-
-
-
-    /* ... */
-``]]
-]
+[condition_if]
 
 More in general, [funcref boost::contract::condition_if] is used as follow:
 
@@ -146,15 +168,15 @@ More in general, [funcref boost::contract::condition_if] is used as follow:
     )
 
 Where `Pred` is a nullary boolean meta-function and `cond` is a nullary boolean functor.
-If `Pred::value` is statically evaluated to be `true` at compile-time then `cond()` is called at run-time and its boolean result is returned by the enclosing [classref boost::contract::condition_if] call.
-Otherwise, if `Pred::value` is statically evaluated to be `false` at compile-time then [classref boost::condition_if] trivially returns `true`.
-Therefore, if `cond` is a functor template instantiation (not just a functor) then its call that contains the assertion operations with the extra type requirements (e.g., the equality operator `==`) will not be actually instantiated and compiled unless the compiler determines at compile-time that `Pred::value` is `true` (functor templates like `std::equal_to` and C++14 generic lambdas can be used to program `cond`, but C++11 lambdas cannot).
+If `Pred::value` is statically evaluated to be `true` at compile-time then `cond()` is called at run-time and its boolean result is returned by the enclosing [funcref boost::contract::condition_if] call.
+Otherwise, if `Pred::value` is statically evaluated to be `false` at compile-time then [funcref boost::contract::condition_if] trivially returns `true`.
+Therefore, if `cond` is a functor template instantiation (not just a functor) then its call that contains the assertion operations with the extra type requirements (e.g., the equality operator `==`) will not be actually instantiated and compiled unless the compiler determines at compile-time that `Pred::value` is `true` (when used this way, functor templates like `std::equal_to` and C++14 generic lambdas can be used to program `cond`, but C++11 lambdas cannot).
 
-The [funcref boost::contract::condition_if] function template is a special case of the more general [funcref boost::contract::call_if], specifically `boost::contract::condition_if<Pred>(cond)` is equivalent to `boost::contract::call_if<Pred>(cond).else_([] { return true; })`.
+The [funcref boost::contract::condition_if] function template is a special case of the more general [funcref boost::contract::call_if], specifically [funcref boost::contract::condition_if]`<Pred>(cond)` is logically equivalent to [funcref boost::contract::call_if]`<Pred>(cond).else_([] { return true; })`.
 [footnote
-For optimization reasons, the internal implementation of [funcref boost::contract::condition_if] does not actually use [funcref boost::contract::call_if].
+The internal implementation of [funcref boost::contract::condition_if] is optimized and it does not actually use [funcref boost::contract::call_if].
 ]
-The [funcref boost::contract::call_if] function template accepts a number of optional /else-if/ statements and one optional /else/ statement:
+The [funcref boost::contract::call_if] function template also accepts a number of optional /else-if/ statements and one optional /else/ statement:
 
     boost::contract::call_if<Pred1>(
         t1
@@ -167,29 +189,23 @@ The [funcref boost::contract::call_if] function template accepts a number of opt
     )
 
 Where `Pred1`, `Pred2`, ... are nullary boolean meta-functions and `t1`, `t2`, ..., `e` are nullary functors.
-The return types of the functor calls `t1()`, `t2()`, ..., `e()` must either be all the same (possibly all `void`) or be of types implicitly convertible into one another.
+The return types of the functor calls `t1()`, `t2()`, ..., `e()` must either be all the same (including possibly all `void`) or be of types implicitly convertible into one another.
 At run-time [funcref boost::contract::call_if] will call the functor `t1()`, or `t2()`, ..., or `e()` depending on which meta-function `Pred1::value`, `Pred2::value`, ... is statically evaluated to be `true` or `false` at compile-time, and it will return the value returned by the functor being called. 
-If `t1`, `t2`, ..., `e` are nullary functor template instantiations (not just nullary functors) then their code will only be compiled if the compiler determines they need to be actually called at run-time (so only if the related `Pred1::value`, `Pred2::value`, ... are respectively evaluated to be `true` or `false` at compile-time).
+If `t1`, `t2`, ..., `e` are functor template instantiations (not just functors) then their code will only be compiled if the compiler determines they need to be actually called at run-time (so only if the related `Pred1::value`, `Pred2::value`, ... are respectively evaluated to be `true` or `false` at compile-time).
 All the `else_if<...>(...)` statements are optional.
 The `else_(...)` statement is optional if the functor calls return `void`, otherwise it is required.
 
+In general, [funcref boost::contract::call_if] can be used to program contract assertions that compile and check different functor templates depending on related predicates being statically evaluated to be `true` or `false` at compile-time (but in most cases [funcref boost::contract::condition_if] should be sufficient and less verbose to use).
 The [funcref boost::contract::condition_if_c], [funcref boost::contract::call_if_c], and `.else_if_c` function templates work similarly to their counterparts without the `..._c` postfix seen so far, but they take their predicate template parameters as static boolean values instead of nullary boolean meta-functions.
 
-In general, [funcref boost::contract::call_if] can be used to program contract assertions that compile and check different functor templates depending on related predicates being statically evaluated to be `true` or `false` at compile-time (but in most cases [funcref boost::contract::condition_if] should be sufficient and less verbose to use).
-On compilers that support C++17 `if constexpr` there should be no need to use [funcref boost::contract::condition_if] or [funcref boost::contract::call_if] because `if constexpr` can be used instead (making the code more readable and easier to program).
-
-[heading If-Constexpr Emulation (C++14)]
-
-A part from its use within contracts, on C++14 compilers [funcref boost::contract::call_if] can be used together with C++14 generic lambdas to emulate C++17 `if constexpr`.
-[footnote
-Boost.Hana (`boost::hana::if_`) and probably other approaches can also be used together with generic lambdas to emulate C++17 `if constexpr` on C++14 compilers.
-]
-For example (see [@../../example/features/call_if_cxx14.cpp =call_if_cxx14.cpp=]):
-
 [import ../example/features/call_if_cxx14.cpp]
-[table
-[[Until C++17 (without `if constexpr`)][Since C++17 (with `if constexpr`)]]
-[[[call_if_cxx14]] [``
+On compilers that support C++17 `if constexpr` there should be no need to use [funcref boost::contract::condition_if] or [funcref boost::contract::call_if] because `if constexpr` can be used instead (making the code more readable and easier to program).
+[footnote
+A part from its use within contracts, [funcref boost::contract::call_if] can be used together with C++14 generic lambdas to emulate C++17 `if constexpr` (`boost::hana::if_` and probably other approaches can also be used together with generic lambdas to emulate C++17 `if constexpr` on C++14 compilers).
+For example, the following implementation of `myadvance` will compile since C++14 and it is more concise, easier to read and maintain than the usual implementation of `std::advance` that uses tag dispatching (see [@../../example/features/call_if_cxx14.cpp =call_if_cxx14.cpp=]):
+[call_if_cxx14]
+Of course, since C++17 the implementation that uses `if constexpr` is even more readable and concise:
+``
 template<typename Iter, typename Dist>
 void myadvance(Iter& i, Dist n) {
     if constexpr(is_random_access_iterator<Iter>::value) {
@@ -198,16 +214,13 @@ void myadvance(Iter& i, Dist n) {
         if(n >= 0) while(n--) ++i;
         else while(n++) --i;
     } else if constexpr(is_input_iterator<Iter>::value) {
-        while(n--) ++p;
+        while(n--) ++i;
     } else {
         static_assert(false, "requires at least input iterator");
     }
 }
-``]]
+``
 ]
-
-This implementation is more concise, easier to read and maintain than the usual implementation of `std::advance` that uses tag dispatching.
-Of course the implementation that uses C++17 `if constexpr` is even more readable and concise.
 
 [endsect]
 
@@ -245,7 +258,7 @@ Note that while all public functions can be made to check `const volatile` invar
 That is because both `const` and `volatile` can always be added but never stripped in C++ (a part from forcefully via `const_cast`) but `const` is always automatically added by this library in order to enforce contract constant-correctness (see __Constant_Correctness__).
 That said, it would be too stringent for this library to also automatically add `volatile` and require all functions to check `const volatile` (not just `const`) invariants because only `volatile` members can be accessed from `const volatile` invariants so there could be many `const` (but not `const volatile`) members that are accessible from `const` invariants but not from `const volatile` invariants.
 To avoid this confusion, this library has chosen to draw a clear dichotomy between `const` and `const volatile` invariants so that only volatile public functions check `const volatile` invariants and only non-volatile public functions check `const` (but not `const volatile`) invariants.
-This is simple and should serve most cases.
+This is a clear distinction and it should serve most cases.
 If programmers need non-volatile public functions to also check `const volatile` invariants, they can explicitly do so by calling the `const volatile` invariant function from the `const` invariant function as shown in this documentation.
 ]
 
@@ -254,7 +267,7 @@ If programmers need non-volatile public functions to also check `const volatile`
         void invariant() const volatile { ... }                 // Volatile invariants.
 
         void invariant() const {
-            const_cast<u const volatile*>(this)->invariant();   // Call `const volatile` invariant function above.
+            auto const volatile* cv = this; cv->invariant();    // Call `const volatile` invariant function above.
             ...                                                 // Other non-volatile invariants.
         }
 

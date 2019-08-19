@@ -43,6 +43,7 @@ This library has been developed and tested using:
 * Clang version 3.8.1 on Cygwin (with C++11 features enabled =-std=c++11=).
 
 For information on other compilers and platforms see the library [@http://www.boost.org/development/tests/master/developer/contract.html regression tests].
+The development and maintenance of this library is hosted on [@https://github.com/boostorg/contract GitHub].
 
 [endsect]
 

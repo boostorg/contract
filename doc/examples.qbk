@@ -10,7 +10,7 @@ This section lists some examples taken from different sources discussing contrac
 
 [note
 Some of these examples might be from old code, containing obsolete coding practices, not optimized for execution speed, not complete, and they might be more relevant in the context of programming languages different from C++.
-Nevertheless, programmers are encouraged to review these examples to see a few diverse usages of this library that might be relevant to their needs.
+Nevertheless, programmers are encouraged to review these examples to see a few diverse uses of this library that might be relevant to their needs.
 ]
 
 Sources of the listed examples:
