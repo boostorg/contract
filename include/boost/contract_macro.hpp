@@ -197,8 +197,8 @@ Disable Contract Compilation}).
 
     @see    @RefSect{extras.disable_contract_compilation__macro_interface_,
             Disable Contract Compilation},
-            @RefSect{advanced.old_value_copies_at_body,
-            Old Value Copies at Body}
+            @RefSect{advanced.old_values_copied_at_body,
+            Old Values Copied at Body}
     */
     #define BOOST_CONTRACT_OLD(...)
 

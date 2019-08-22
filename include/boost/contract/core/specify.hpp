@@ -364,7 +364,7 @@ This object is internally constructed by this library when users specify
 contracts calling @RefFunc{boost::contract::function} and similar functions
 (that is why this class does not have a public constructor).
 
-@see    @RefSect{advanced.old_value_copies_at_body, Old Value Copies at Body},
+@see    @RefSect{advanced.old_values_copied_at_body, Old Values Copied at Body},
         @RefSect{tutorial.postconditions, Postconditions},
         @RefSect{tutorial.exception_guarantees, Exception Guarantees}
 
@@ -392,7 +392,7 @@ public:
 
     It should often be sufficient to initialize old value pointers as soon as
     they are declared, without using this function (see
-    @RefSect{advanced.old_value_copies_at_body, Old Value Copies at Body}).
+    @RefSect{advanced.old_values_copied_at_body, Old Values Copied at Body}).
 
     @param f    Nullary functor called by this library @c f() to assign old
                 value copies just before the body is executed but after entry
@@ -510,7 +510,7 @@ contracts calling @RefFunc{boost::contract::function} and similar functions
 (that is why this class does not have a public constructor).
 
 @see    @RefSect{tutorial.preconditions, Preconditions},
-        @RefSect{advanced.old_value_copies_at_body, Old Value Copies at Body},
+        @RefSect{advanced.old_values_copied_at_body, Old Values Copied at Body},
         @RefSect{tutorial.postconditions, Postconditions},
         @RefSect{tutorial.exception_guarantees, Exception Guarantees}
 
@@ -565,7 +565,7 @@ public:
 
     It should often be sufficient to initialize old value pointers as soon as
     they are declared, without using this function (see
-    @RefSect{advanced.old_value_copies_at_body, Old Value Copies at Body}).
+    @RefSect{advanced.old_values_copied_at_body, Old Values Copied at Body}).
 
     @param f    Nullary functor called by this library @c f() to assign old
                 value copies just before the body is executed but after entry

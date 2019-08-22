@@ -28,7 +28,7 @@ public:
     explicit positive(int x) : d_(0) {
         // ...unions cannot have bases so constructor preconditions here.
         boost::contract::constructor_precondition<positive> pre([&] {
-            BOOST_CONTRACT_ASSERT(x >= 0);
+            BOOST_CONTRACT_ASSERT(x > 0);
         });
         boost::contract::old_ptr<int> old_instances =
                 BOOST_CONTRACT_OLDOF(instances());
@@ -60,7 +60,7 @@ public:
     void get(int& x) const {
         boost::contract::check c = boost::contract::public_function(this)
             .postcondition([&] {
-                BOOST_CONTRACT_ASSERT(x >= 0);
+                BOOST_CONTRACT_ASSERT(x > 0);
             })
         ;
         
@@ -84,7 +84,7 @@ public:
     explicit positive(double x) : d_(0) {
         // Unions cannot have bases so constructor preconditions here.
         boost::contract::constructor_precondition<positive> pre([&] {
-            BOOST_CONTRACT_ASSERT(x >= 0);
+            BOOST_CONTRACT_ASSERT(x > 0);
         });
         boost::contract::old_ptr<int> old_instances =
                 BOOST_CONTRACT_OLDOF(instances());
@@ -102,7 +102,7 @@ public:
     void get(double& x) const {
         boost::contract::check c = boost::contract::public_function(this)
             .postcondition([&] {
-                BOOST_CONTRACT_ASSERT(x >= 0);
+                BOOST_CONTRACT_ASSERT(x > 0);
             })
         ;
         
