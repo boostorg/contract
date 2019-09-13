@@ -10,16 +10,17 @@ This section contains notes on all releases of this library (from the latest to 
 
 [section Release 1.0.1]
 
-June 3, 2019
+September 12, 2019
 
-Warnings:
+Cleanups and small fixes:
 
 # Using `std::uncaught_exceptions` on C++17 compilers onward (instead of the now obsolete `std::uncaught_exception`).
 # Fixed a few warnings.
 # Removed linking to Boost.System (Boost.System is now a header-only library).
 # Added this library to Boost's Continuous Integration (CI).
+# Fixed documentation typos.
 
-Released files are part of [@https://www.boost.org/users/history/ Boost 1.71.0].
+Released files are part of [@https://www.boost.org/users/history/ Boost 1.73.0].
 
 [endsect]
 

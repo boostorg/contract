@@ -413,12 +413,13 @@ On MSVC compilers with that bug, an extra (static) member function can be used (
 
 * It should be specified as the /first/ class in the inheritance list (so constructor preconditions are checked before initializing any other base class or data member).
 * Its inheritance access specifier should always be `private` (so this extra base class does not alter the public inheritance tree of its derived classes).
+* It should never be declared as a `virtual` base (because virtual bases are initialized only once across the entire inheritance hierarchy preventing preconditions of other base classes from being checked).
 * It takes the derived class as template parameter.
 [footnote
 *Rationale:*
 The [classref boost::contract::constructor_precondition] takes the derived class as its template parameter (using the Curiously Recursive Template Pattern, CRTP) so the instantiated template type is unique for each derived class.
 This always avoids base class ambiguity resolution errors even when multiple inheritance is used.
-Note that virtual inheritance could not be used instead of the template parameter here to resolve ambiguities (because virtual bases are initialized only once by the outer-most derived class, and that would not allow to properly check preconditions of all base classes).
+Note that, as already mentioned, virtual inheritance could not be used instead of the template parameter here to resolve ambiguities (because virtual bases are initialized only once by the outer-most derived class, and that would not allow to properly check preconditions of all base classes).
 ]
 
 [note
