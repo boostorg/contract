@@ -12,6 +12,7 @@
 #include <boost/detail/lightweight_test.hpp>
 #include <functional> // std::bind for generic lambdas.
 #include <sstream>
+#include <ios>
 
 boost::contract::test::detail::oteststream out;
 
@@ -19,6 +20,8 @@ struct x {}; // Does not have operator==.
 
 int main() {
     std::ostringstream ok;
+    ok << std::boolalpha;
+    out << std::boolalpha;
     x x1, x2;
     
     out.str("");
@@ -27,7 +30,7 @@ int main() {
             std::bind([] (auto a, auto b) { return a == b; }, 123, 456)
         ).else_([] { return true; })
     << std::endl;
-    ok.str(""); ok << 0 /* false */ << std::endl;
+    ok.str(""); ok << false << std::endl;
     BOOST_TEST(out.eq(ok.str()));
 
     out.str("");
@@ -36,7 +39,7 @@ int main() {
             std::bind([] (auto a, auto b) { return a == b; }, x1, x2)
         ).else_([] { return true; })
     << std::endl;
-    ok.str(""); ok << 1 /* true */ << std::endl;
+    ok.str(""); ok << true << std::endl;
     BOOST_TEST(out.eq(ok.str()));
     
     out.str("");
@@ -45,7 +48,7 @@ int main() {
             std::bind([] (auto a, auto b) { return a == b; }, x1, x2)
         ).else_([] { return true; })
     << std::endl;
-    ok.str(""); ok << 1 /* true */ << std::endl;
+    ok.str(""); ok << true << std::endl;
     BOOST_TEST(out.eq(ok.str()));
 
     return boost::report_errors();

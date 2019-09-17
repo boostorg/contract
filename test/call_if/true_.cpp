@@ -12,6 +12,7 @@
 #include <boost/type_traits/has_equal_to.hpp>
 #include <boost/detail/lightweight_test.hpp>
 #include <sstream>
+#include <ios>
 
 boost::contract::test::detail::oteststream out;
 
@@ -28,6 +29,8 @@ struct x {}; // Doest not have operator==.
 
 int main() {
     std::ostringstream ok;
+    ok << std::boolalpha;
+    out << std::boolalpha;
     x x1, x2;;
     
     out.str("");
@@ -36,7 +39,7 @@ int main() {
             boost::bind(eq(), 123, 456) // False.
         ) // Test no else (not called).
     << std::endl;
-    ok.str(""); ok << 0 /* false */ << std::endl;
+    ok.str(""); ok << false << std::endl;
     BOOST_TEST(out.eq(ok.str()));
 
     out.str("");
@@ -45,7 +48,7 @@ int main() {
             boost::bind(eq(), 123, 123) // True.
         ).else_([] { return false; }) // Test else not called.
     << std::endl;
-    ok.str(""); ok << 1 /* true */ << std::endl;
+    ok.str(""); ok << true << std::endl;
     BOOST_TEST(out.eq(ok.str()));
     
     out.str("");
@@ -56,7 +59,7 @@ int main() {
             boost::bind(eq(), x1, x2) // Compiler-error... but not called.
         )
     << std::endl;
-    ok.str(""); ok << 1 /* true */ << std::endl;
+    ok.str(""); ok << true << std::endl;
     BOOST_TEST(out.eq(ok.str()));
 
     return boost::report_errors();
