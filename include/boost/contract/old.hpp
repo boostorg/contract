@@ -300,18 +300,18 @@ public:
     @return A pointer to the old value (null if this old value pointer is null).
             Contract assertions should not change the state of the program so
             this member function is @c const and it returns the old value as a
-            constant pointer to a constant object (see
+            pointer to a constant object (see
             @RefSect{contract_programming_overview.constant_correctness,
             Constant Correctness}).
     */
-    T const* const operator->() const {
+    T const* operator->() const {
         BOOST_STATIC_ASSERT_MSG(
             boost::contract::is_old_value_copyable<T>::value,
             "old_ptr<T> requires T copyble (see is_old_value_copyable<T>), "
             "otherwise use old_ptr_if_copyable<T>"
         );
         if(typed_copy_) return &typed_copy_->old();
-        return static_cast<T const*>(0); // Explicit cast avoids warning.
+        return 0;
     }
 
     #ifndef BOOST_CONTRACT_DETAIL_DOXYGEN
@@ -428,13 +428,13 @@ public:
     @return A pointer to the old value (null if this old value pointer is null).
             Contract assertions should not change the state of the program so
             this member function is @c const and it returns the old value as a
-            constant pointer to a constant object (see
+            pointer to a constant object (see
             @RefSect{contract_programming_overview.constant_correctness,
             Constant Correctness}).
     */
-    T const* const operator->() const {
+    T const* operator->() const {
         if(typed_copy_) return &typed_copy_->old();
-        return static_cast<T const*>(0); // Explicit cast avoids warning.
+        return 0;
     }
 
     #ifndef BOOST_CONTRACT_DETAIL_DOXYGEN
