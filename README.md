@@ -11,7 +11,7 @@ Distributed under the [Boost Software License, Version 1.0](http://www.boost.org
 ### Properties
 
 * C++11 (C++03 possible but not recommended without lambda functions and variadic macros, see documentation for more information).
-* Shared Library / DLL with `BOOST_CONTRACT_DYN_LINK` (static library with `BOOST_CONTRACT_STATIC_LINK` and header-only with `BOOST_CONTRACT_HEADER_ONLY` also possible but not recommended, see documentation for more information).
+* Shared Library / DLL with `BOOST_CONTRACT_DYN_LINK` (static library with `BOOST_CONTRACT_STATIC_LINK`, header-only also possible but not recommended, see `BOOST_CONTRACT_HEADER_ONLY` documentation for more information).
 
 ### Build Status
 
@@ -28,13 +28,14 @@ Branch          | Travis | Appveyor | Coverity Scan | codecov.io | Deps | Docs |
 | `doc`       | Documentation                  |
 | `example`   | Examples                       |
 | `include`   | Header code                    |
+| `meta`      | Integration with Boost         |
 | `src`       | Source code                    |
 | `test`      | Unit tests                     |
 
-### More information
+### More Information
 
 * [Ask questions](http://stackoverflow.com/questions/ask?tags=c%2B%2B,boost,boost-contract).
-* [Report bugs](https://github.com/boostorg/contract/issues): Be sure to mention Boost version, platform and compiler you're using. A small compilable code sample to reproduce the problem is always good as well.
+* [Report bugs](https://github.com/boostorg/contract/issues): Be sure to mention Boost version, platform and compiler you are using. A small compilable code sample to reproduce the problem is always good as well.
 * Submit your patches as pull requests against **develop** branch. Note that by submitting patches you agree to license your modifications under the [Boost Software License, Version 1.0](http://www.boost.org/LICENSE_1_0.txt).
-* Discussions about the library are held on the [Boost developers mailing list](http://www.boost.org/community/groups.html#main). Be sure to read the [discussion policy](http://www.boost.org/community/policy.html) before posting and add the `[contract]` tag at the beginning of the subject line.
+* Discussions about the library are held on the [Boost developers mailing list](http://www.boost.org/community/groups.html#main). Be sure to read the [discussion policy](http://www.boost.org/community/policy.html) before posting and add the `[contract]` text at the beginning of the subject line.
 

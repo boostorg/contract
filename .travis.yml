@@ -179,7 +179,7 @@ jobs:
         - cd $BOOST_ROOT/libs/$SELF
         - ci/travis/codecov.sh
 
-    # takes too long for CI:
+    # takes too long for CI (because lots of tests):
     # - os: linux
     #   env:
     #     - COMMENT=cppcheck
@@ -228,3 +228,4 @@ jobs:
 notifications:
   email:
     false
+
