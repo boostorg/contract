@@ -182,7 +182,11 @@ struct call_if_statement<true, Then, ThenResult> { // Copyable (as *).
             executed).
     */
     template<typename Else>
-    ThenResult else_(Else const& /* f */) const { return *r_; }
+    ThenResult else_(Else const&
+        #ifdef BOOST_CONTRACT_DETAIL_DOXYGEN
+            f
+        #endif
+    ) const { return *r_; }
     
     /**
     Specify an else-if-branch functor template (using a static boolean
@@ -288,7 +292,11 @@ struct call_if_statement<true, Then, void> { // Copyable (no data).
                 return void).
     */
     template<typename Else>
-    void else_(Else const& /* f */) const {}
+    void else_(Else const&
+        #ifdef BOOST_CONTRACT_DETAIL_DOXYGEN
+            f
+        #endif
+    ) const {}
     
     /**
     Specify an else-if-branch functor template (using a static boolean
@@ -381,7 +389,11 @@ struct call_if_statement<false, Then,
                 convertible to) the return type of all other functor template
                 calls specified for this call-if object.
     */
-    explicit call_if_statement(Then const& /* f */) {}
+    explicit call_if_statement(Then const&
+        #ifdef BOOST_CONTRACT_DETAIL_DOXYGEN
+            f
+        #endif
+    ) {}
 
     // Do not provide `operator result_type()` here, require else_ instead.
 

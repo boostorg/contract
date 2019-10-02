@@ -506,7 +506,7 @@ Alternatively, contract assertions can be programmed to throw any other exceptio
 
     if(!``[^['condition]]``) throw ``[^['exception-object]]``;
 
-For example, the following precondition functor throws [classref boost::contract:assertion_failure] (via [macroref BOOST_CONTRACT_ASSERT]) on its first assertion and the user-defined exception `too_large_error` on its second assertion (both exceptions will cause this library to call the customized [funcref boost::contract::precondition_failure] listed above which will in turn re-throw the exceptions up the stack, see [@../../example/features/throw_on_failure.cpp =throw_on_failure.cpp=]):
+For example, the following precondition functor throws [classref boost::contract::assertion_failure] (via [macroref BOOST_CONTRACT_ASSERT]) on its first assertion and the user-defined exception `too_large_error` on its second assertion (both exceptions will cause this library to call the customized [funcref boost::contract::precondition_failure] listed above which will in turn re-throw the exceptions up the stack, see [@../../example/features/throw_on_failure.cpp =throw_on_failure.cpp=]):
 
 [throw_on_failure_class_begin]
 [throw_on_failure_ctor]

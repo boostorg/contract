@@ -809,7 +809,11 @@ This function is usually only called by the code expanded by
                 v->action_ == boost::contract::virtual_::push_old_ftor_copy;
     }
 #else
-    inline bool copy_old(virtual_* /* v */) {
+    inline bool copy_old(virtual_*
+        #ifdef BOOST_CONTRACT_DETAIL_DOXYGEN
+            v
+        #endif
+    ) {
         return false; // No post checking, so never copy old values.
     }
 #endif
