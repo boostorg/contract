@@ -21,5 +21,3 @@ lib boost_contract : contract.cpp : <link>shared ;
 lib boost_contract : contract.cpp : <link>static ;
 
 boost-install boost_contract ;
-
-boost-install boost_contract ;
