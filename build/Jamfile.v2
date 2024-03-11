@@ -4,7 +4,7 @@
 # file LICENSE_1_0.txt or a copy at http://www.boost.org/LICENSE_1_0.txt).
 # See: http://www.boost.org/doc/libs/release/libs/contract/doc/html/index.html
 
-project boost/contract
+project
     : source-location ../src
     : requirements
         <link>shared:<define>BOOST_CONTRACT_DYN_LINK
@@ -19,5 +19,3 @@ project boost/contract
 # If lib as header-only, none of following will be used.
 lib boost_contract : contract.cpp : <link>shared ;
 lib boost_contract : contract.cpp : <link>static ;
-
-boost-install boost_contract ;

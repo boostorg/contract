@@ -4,8 +4,15 @@
 # file LICENSE_1_0.txt or a copy at http://www.boost.org/LICENSE_1_0.txt).
 # See: http://www.boost.org/doc/libs/release/libs/contract/doc/html/index.html
 
+require-b2 5.0.1 ;
+import-search /boost/config/checks ;
 import ../build/boost_contract_build ;
-import ../../config/checks/config : requires ;
+import config : requires ;
+
+project
+    : requirements
+        <source>/boost/iostreams//boost_iostreams
+    ;
 
 test-suite constructor :
     [ boost_contract_build.subdir-run-cxx11 constructor : smoke ]

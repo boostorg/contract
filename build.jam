@@ -1,0 +1,36 @@
+# Copyright René Ferdinand Rivera Morell 2023
+# Distributed under the Boost Software License, Version 1.0.
+# (See accompanying file LICENSE_1_0.txt or copy at
+# http://www.boost.org/LICENSE_1_0.txt)
+
+import project ;
+
+project /boost/contract
+    : common-requirements
+        <include>include
+        <source>/boost/any//boost_any
+        <source>/boost/assert//boost_assert
+        <source>/boost/config//boost_config
+        <source>/boost/core//boost_core
+        <source>/boost/exception//boost_exception
+        <source>/boost/function//boost_function
+        <source>/boost/function_types//boost_function_types
+        <source>/boost/mpl//boost_mpl
+        <source>/boost/optional//boost_optional
+        <source>/boost/preprocessor//boost_preprocessor
+        <source>/boost/smart_ptr//boost_smart_ptr
+        <source>/boost/static_assert//boost_static_assert
+        <source>/boost/thread//boost_thread
+        <source>/boost/type_traits//boost_type_traits
+        <source>/boost/typeof//boost_typeof
+        <source>/boost/utility//boost_utility
+    ;
+
+explicit
+    [ alias boost_contract : build//boost_contract ]
+    [ alias all : boost_contract example test ]
+    ;
+
+call-if : boost-library contract
+    : install boost_contract
+    ;
