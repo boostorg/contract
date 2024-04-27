@@ -49,7 +49,6 @@
 import boost_contract_no ;
 import feature ;
 import testing ;
-import-search /boost/config/checks ;
 import config : requires ;
 
 # Iff "no", link to boost_contract (else, no lib build so don't link to it).
