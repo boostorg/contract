@@ -14,6 +14,7 @@ project
         <link>shared:<define>BOOST_CONTRACT_DYN_LINK
         <link>static:<define>BOOST_CONTRACT_STATIC_LINK
         <threading>single:<define>BOOST_CONTRACT_DISABLE_THREADS
+        <define>BOOST_CONTRACT_NO_LIB=1
 ;
 
 # If lib as header-only, none of following will be used.
