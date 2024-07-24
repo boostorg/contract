@@ -6,6 +6,7 @@
 
 project
     : source-location ../src
+    : common-requirements <library>$(boost_dependencies)
     : requirements
         <link>shared:<define>BOOST_CONTRACT_DYN_LINK
         <link>static:<define>BOOST_CONTRACT_STATIC_LINK

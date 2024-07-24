@@ -5,25 +5,27 @@
 
 require-b2 5.2 ;
 
+constant boost_dependencies :
+    /boost/any//boost_any
+    /boost/assert//boost_assert
+    /boost/config//boost_config
+    /boost/core//boost_core
+    /boost/exception//boost_exception
+    /boost/function//boost_function
+    /boost/function_types//boost_function_types
+    /boost/mpl//boost_mpl
+    /boost/optional//boost_optional
+    /boost/preprocessor//boost_preprocessor
+    /boost/smart_ptr//boost_smart_ptr
+    /boost/static_assert//boost_static_assert
+    /boost/thread//boost_thread
+    /boost/type_traits//boost_type_traits
+    /boost/typeof//boost_typeof
+    /boost/utility//boost_utility ;
+
 project /boost/contract
     : common-requirements
         <include>include
-        <library>/boost/any//boost_any
-        <library>/boost/assert//boost_assert
-        <library>/boost/config//boost_config
-        <library>/boost/core//boost_core
-        <library>/boost/exception//boost_exception
-        <library>/boost/function//boost_function
-        <library>/boost/function_types//boost_function_types
-        <library>/boost/mpl//boost_mpl
-        <library>/boost/optional//boost_optional
-        <library>/boost/preprocessor//boost_preprocessor
-        <library>/boost/smart_ptr//boost_smart_ptr
-        <library>/boost/static_assert//boost_static_assert
-        <library>/boost/thread//boost_thread
-        <library>/boost/type_traits//boost_type_traits
-        <library>/boost/typeof//boost_typeof
-        <library>/boost/utility//boost_utility
     ;
 
 explicit
@@ -34,3 +36,4 @@ explicit
 call-if : boost-library contract
     : install boost_contract
     ;
+
