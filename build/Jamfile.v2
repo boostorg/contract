@@ -6,15 +6,13 @@
 
 project
     : source-location ../src
-    : common-requirements <library>$(boost_dependencies)
-    : requirements
+    : common-requirements
+        <library>$(boost_dependencies)
+        <include>include
         <link>shared:<define>BOOST_CONTRACT_DYN_LINK
         <link>static:<define>BOOST_CONTRACT_STATIC_LINK
         <threading>single:<define>BOOST_CONTRACT_DISABLE_THREADS
     : usage-requirements # Independent from requirements above (need to repeat).
-        <link>shared:<define>BOOST_CONTRACT_DYN_LINK
-        <link>static:<define>BOOST_CONTRACT_STATIC_LINK
-        <threading>single:<define>BOOST_CONTRACT_DISABLE_THREADS
         <define>BOOST_CONTRACT_NO_LIB=1
 ;
 

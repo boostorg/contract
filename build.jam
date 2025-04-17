@@ -24,8 +24,6 @@ constant boost_dependencies :
     /boost/utility//boost_utility ;
 
 project /boost/contract
-    : common-requirements
-        <include>include
     ;
 
 explicit
