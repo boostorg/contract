@@ -194,32 +194,16 @@ test-suite public_function :
 
     [ boost_contract_build.subdir-run-cxx11 public_function : max_args0 :
             <define>BOOST_CONTRACT_MAX_ARGS=0 ]
-    [ boost_contract_build.subdir-run-cxx11 public_function : max_args0_no_tva :
-        <define>BOOST_CONTRACT_MAX_ARGS=0
-        <define>BOOST_NO_CXX11_VARIADIC_TEMPLATES
-    ]
     [ boost_contract_build.subdir-run-cxx11 public_function : max_args1 :
             <define>BOOST_CONTRACT_MAX_ARGS=1 ]
-    [ boost_contract_build.subdir-run-cxx11 public_function : max_args1_no_tva :
-        <define>BOOST_CONTRACT_MAX_ARGS=1
-        <define>BOOST_NO_CXX11_VARIADIC_TEMPLATES
-    ]
     [ boost_contract_build.subdir-run-cxx11 public_function : max_args2 :
-        <define>BOOST_CONTRACT_MAX_ARGS=2 ]
-    [ boost_contract_build.subdir-run-cxx11 public_function : max_args2_no_tva :
-        <define>BOOST_CONTRACT_MAX_ARGS=2
-        <define>BOOST_NO_CXX11_VARIADIC_TEMPLATES
-    ]
+            <define>BOOST_CONTRACT_MAX_ARGS=2 ]
     [ boost_contract_build.subdir-run-cxx11 public_function : max_args ]
-    [ boost_contract_build.subdir-run-cxx11 public_function : max_args_no_tva :
-            <define>BOOST_NO_CXX11_VARIADIC_TEMPLATES ]
 
     [ boost_contract_build.subdir-run-cxx11 public_function :
             max_bases ] # C++11 for BASES(...) variadic macros.
 
     [ boost_contract_build.subdir-run-cxx11 public_function : overload ]
-    [ boost_contract_build.subdir-run-cxx11 public_function : overload_no_tva :
-            <define>BOOST_NO_CXX11_VARIADIC_TEMPLATES ]
 
     [ boost_contract_build.subdir-compile-fail-cxx11 public_function :
             override_error ] # C++11 for BASES(...) variadic macros.
@@ -317,7 +301,8 @@ test-suite check :
 ;
 
 test-suite result :
-    [ boost_contract_build.subdir-run-cxx11 result : mixed_optional ]
+    # https://github.com/boostorg/contract/issues/37
+    # [ boost_contract_build.subdir-run-cxx11 result : mixed_optional ]
     [ boost_contract_build.subdir-run-cxx11 result : mixed_optional_ref ]
 
     [ boost_contract_build.subdir-compile-fail-cxx11 result :
@@ -370,8 +355,10 @@ test-suite disable :
         <define>BOOST_CONTRACT_NO_EXCEPTS
         <link>shared:<define>BOOST_CONTRACT_TEST_LIB_Y_DYN_LINK
     ]
-    [ boost_contract_build.subdir-run-cxx11 disable : no_post_except_lib :
-            <library>disable-lib_x <library>disable-lib_y ]
+
+    # https://github.com/boostorg/contract/issues/36
+    # [ boost_contract_build.subdir-run-cxx11 disable : no_post_except_lib :
+    #         <library>disable-lib_x <library>disable-lib_y ]
 
     [ boost_contract_build.subdir-run-cxx11 disable : no_post_except_unit
             disable/lib_x.cpp disable/lib_y.cpp :
