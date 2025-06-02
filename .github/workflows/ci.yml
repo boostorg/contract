@@ -92,8 +92,9 @@ jobs:
           - { name: Clang w/ sanitizers, sanitize: yes,
               compiler: clang-12,  cxxstd: '11,20',       os: ubuntu-latest, container: 'ubuntu:20.04', stdlib: libc++, install: 'clang-12 libc++-12-dev libc++abi-12-dev' }
 
-          - { name: MacOS w/ clang and sanitizers,
-              compiler: clang,     cxxstd: '11',          os: macos-13, sanitize: yes }
+          # https://github.com/boostorg/contract/issues/38
+          # - { name: MacOS w/ clang and sanitizers,
+          #     compiler: clang,     cxxstd: '11',          os: macos-13, sanitize: yes }
           - { compiler: clang,     cxxstd: '11,20',       os: macos-14 }
           - { compiler: clang,     cxxstd: '11,2b',       os: macos-15 }
 
