@@ -37,7 +37,7 @@ precondition assertion "x < std::numeric_limits<int>::max()" failed: file "intro
 
 Instead, if there is a bug in the implementation of `inc` so that `x` is not incremented by `1` after the execution of the function body then the program will terminate with an error message similar to the following (and it will be evident that the bug is in `inc` body):
 [footnote
-In this example the function body is composed of a single trivial instruction `++x` so it easy to check by visual inspection that it does not contain any bug and it will always increment `x` by `1` thus the function postcondition will never fail.
+In this example the function body is composed of a single trivial instruction `++x` so it is easy to check by visual inspection that it does not contain any bug and it will always increment `x` by `1` thus the function postcondition will never fail.
 In real production code, function bodies are rarely this simple and can hide bugs which make checking postconditions useful.
 ]
 
@@ -45,7 +45,7 @@ In real production code, function bodies are rarely this simple and can hide bug
 postcondition assertion "x == *old_x + 1" failed: file "introduction.cpp", line 20
 ]
 
-By default, when an assertion fails this library prints an error message such the ones above to the standard error `std::cerr` and terminates the program calling `std::terminate` (this behaviour can be customized to take any user-specified action including throwing exceptions, see __Throw_on_Failures__).
+By default, when an assertion fails this library prints an error message such as the ones above to the standard error `std::cerr` and terminates the program calling `std::terminate` (this behaviour can be customized to take any user-specified action including throwing exceptions, see __Throw_on_Failures__).
 Note that the error messages printed by this library contain all the information necessary to easily and uniquely identify the point in the code at which contract assertions fail.
 [footnote
 *Rationale:*
@@ -57,7 +57,7 @@ C++11 lambda functions are necessary to use this library without manually writin
 That said, this library implementation does not use C++11 features and should work on most modern C++ compilers (see __Getting_Started__).
 ]
 
-In addition to contracts for non-member functions as shown the in the example above, this library allows to program contracts for constructors, destructors, and member functions.
+In addition to contracts for non-member functions as shown in the example above, this library allows to program contracts for constructors, destructors, and member functions.
 These can check class invariants and can also /subcontract/ inheriting and extending contracts from base classes (see [@../../example/features/introduction_public.cpp =introduction_public.cpp=] and __Public_Function_Overrides__):
 [footnote
 The `pushable` base class is used in this example just to show subcontracting, it is somewhat arbitrary and it will likely not appear in real production code.

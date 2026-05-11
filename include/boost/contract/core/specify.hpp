@@ -605,7 +605,7 @@ public:
                 by (constant) reference to avoid extra copies).
 
     @return After old values copied at body have been specified, the object
-            returned by this functions allows to optionally specify
+            returned by these functions allows to optionally specify
             postconditions and exception guarantees.
     */
     template<typename F>

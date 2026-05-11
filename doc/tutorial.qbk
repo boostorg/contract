@@ -68,7 +68,7 @@ Preconditions must appear before postconditions and exception guarantees when th
 C++11 lambda functions are convenient to program preconditions, but any other nullary functor can be used (see __No_Lambda_Functions__).
 [footnote
 Lambda functions with no parameters can be programmed in C++11 as `[...] () { ... }` but also equivalently as `[...] { ... }`.
-This second from is often used in this documentation omitting the empty parameter list `()` for brevity.
+This second form is often used in this documentation omitting the empty parameter list `()` for brevity.
 ]
 For example, for [funcref boost::contract::function] (similarly for public functions, instead destructors do not have preconditions and constructors use [classref boost::contract::constructor_precondition], see __Public_Functions__, __Destructors__, and __Constructors__):
 
@@ -193,7 +193,7 @@ Non-void virtual public functions and non-void public function overrides must al
 
 [section Old Values]
 
-When old values are used in postconditions or in exception guarantees, programmes are responsible to declare local variables before the contract and to assign them to related old value expressions using [macroref BOOST_CONTRACT_OLDOF].
+When old values are used in postconditions or in exception guarantees, programmers are responsible to declare local variables before the contract and to assign them to related old value expressions using [macroref BOOST_CONTRACT_OLDOF].
 [footnote
 The name of a local variable that holds an old value is arbitrary, but [^old_['variable-name]] is often used in this documentation.
 ]
@@ -400,7 +400,7 @@ For example (see [@../../example/features/public.cpp =public.cpp=]):
 
 It is not possible to specify preconditions using `.precondition(...)` for constructors (this library will generate a compile-time error if `.precondition(...)` is used on the object returned by [funcref boost::contract::constructor]).
 Constructor preconditions are specified using the [classref boost::contract::constructor_precondition] base class instead (same considerations as the ones made in __Preconditions__ apply also to the precondition functor passed to [classref boost::contract::constructor_precondition]).
-Programmes should not access the object `*this` from constructor preconditions (because the object does not exists yet before the constructor body is executed).
+Programmers should not access the object `*this` from constructor preconditions (because the object does not exist yet before the constructor body is executed).
 [footnote
 See __No_Lambda_Functions__ to enforce this constraint at compile-time (but not recommended because of extra boiler-plate code).
 ]
@@ -531,7 +531,7 @@ At destruction instead (enclosing destructor exit):
 
 # Check static class invariants, by calling [^['type-of]]`(*this)::static_invariant()`.
 # If the destructor body did not throw an exception:
-    # Check postconditions, by calling the nullay functor [^['s]]`()` passed to `.postcondition(`[^['s]]`)`.
+    # Check postconditions, by calling the nullary functor [^['s]]`()` passed to `.postcondition(`[^['s]]`)`.
 # Else (even if destructors should generally be programmed not to throw in C++):
     # Check non-static class invariants, by calling `this->invariant()` (because the object was not successfully destructed).
     # Check exception guarantees, by calling the nullary functor [^['e]]`()` passed to `.except(`[^['e]]`)`.
@@ -629,7 +629,7 @@ Virtual public functions must declare an extra trailing parameter of type [class
 [footnote
 The name of this extra parameter is arbitrary, but `v` is often used in this documentation.
 ]
-This extra parameter is the last parameter and it has a default value so it does not alter the calling interface of the virtual function (callers will rarely, if ever, have to explicitly deal with this extra parameter a part from when manipulating the virtual function type directly for function pointer type-casting, etc.).
+This extra parameter is the last parameter and it has a default value so it does not alter the calling interface of the virtual function (callers will rarely, if ever, have to explicitly deal with this extra parameter apart from when manipulating the virtual function type directly for function pointer type-casting, etc.).
 Programmers must pass the extra virtual parameter as the very first argument to all [macroref BOOST_CONTRACT_OLDOF] and [funcref boost::contract::public_function] calls in the virtual public function definition.
 [footnote
 *Rationale:*

@@ -67,10 +67,10 @@ public:
 };
 @endcode
 
-In real code, programmers will likely chose to declare this class as friend so
+In real code, programmers will likely choose to declare this class as friend so
 to fully control public interfaces of their user-defined classes (this is not
 extensively done in the examples of this documentation only for brevity).
-This class is not intended to be directly used by programmers a part from
+This class is not intended to be directly used by programmers apart from
 being declared as @c friend (and that is why this class does not have any public
 member and it is not copyable).
 

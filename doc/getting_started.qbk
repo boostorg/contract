@@ -6,7 +6,7 @@
 
 [section Getting Started]
 
-This section shows how to setup and start using this library.
+This section shows how to set up and start using this library.
 
 [section This Documentation]
 
@@ -50,7 +50,7 @@ The development and maintenance of this library is hosted on [@https://github.co
 [section Code Organization]
 
 Let [^['boost-root]] be the directory where Boost source files were installed.
-This library flies are organized as follows:
+This library files are organized as follows:
 
 [pre
 ['boost-root]\/libs\/contract        # Directory where this library files are.
@@ -115,7 +115,7 @@ $ cd ['boost-root]\/libs/contract/example
 $ ..\/..\/..\/bjam features-introduction
 ]
 
-To compile and run all this library's tests (this might take while):
+To compile and run all this library's tests (this might take a while):
 
 [pre
 $ cd ['boost-root]\/libs/contract/test
@@ -148,7 +148,7 @@ To compile and run the [@../../example/features/introduction.cpp [^['boost-root]
 >..\\..\\..\\bjam features-introduction
 ]
 
-To compile and run all this library's tests (this might take while):
+To compile and run all this library's tests (this might take a while):
 
 [pre
 >cd ['boost-root]\libs\contract\test

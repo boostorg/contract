@@ -93,7 +93,7 @@ Configure this library compile-time and run-time behaviours.
     @RefMacro{BOOST_CONTRACT_DYN_LINK} (or @c BOOST_ALL_DYN_LINK) and
     @RefMacro{BOOST_CONTRACT_STATIC_LINK}.
     When used as a header-only library, this library code does not have to be
-    compiled separately from user code, this library headers are simply included
+    compiled separately from user code, these library headers are simply included
     and compiled as part of the user program.
     
     @warning    This library is not guaranteed to always work correctly at

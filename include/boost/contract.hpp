@@ -22,7 +22,7 @@ headers are usually not directly included by programmers).
 
 All files under the <c>boost/contract/detail/</c> directory, names within the
 @c boost::contract::detail namespace, names prefixed by
-@c boost_contract_detail... and @c BOOST_CONTRACT_DETAIL... (in any namesapce,
+@c boost_contract_detail... and @c BOOST_CONTRACT_DETAIL... (in any namespace,
 including user's code) are reserved for internal use of this library and should
 never be used directly by programmers.
 

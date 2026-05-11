@@ -143,7 +143,7 @@ specify_precondition_old_postcondition_except<> public_function() {
 
 /**
 Program contracts for public functions that are not static, not virtual, and do
-not not override.
+not override.
 
 This is used to specify preconditions, postconditions, exception guarantees, old
 value copies at body, and check class invariants for public functions that are

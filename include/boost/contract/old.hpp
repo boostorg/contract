@@ -129,7 +129,7 @@ namespace boost { namespace contract {
 Trait to check if an old value type can be copied or not.
 
 By default, this unary boolean meta-function is equivalent to
-@c boost::is_copy_constructible<T> but programmers can chose to specialize it
+@c boost::is_copy_constructible<T> but programmers can choose to specialize it
 for user-defined types (in general some kind of specialization is also needed on
 compilers that do not support C++11, see
 <a href="http://www.boost.org/doc/libs/release/libs/type_traits/doc/html/boost_typetraits/reference/is_copy_constructible.html">
@@ -232,7 +232,7 @@ class old_ptr_if_copyable;
 /**
 Old value pointer that requires the pointed old value type to be copyable.
 
-This pointer can be set to point an actual old value copy using either
+This pointer can be set to point to an actual old value copy using either
 @RefMacro{BOOST_CONTRACT_OLDOF} or @RefFunc{boost::contract::make_old} (that is
 why this class does not have public non-default constructors):
 
@@ -351,7 +351,7 @@ This pointer can be set to point to an actual old value copy using either
 @RefMacro{BOOST_CONTRACT_OLDOF} or @RefFunc{boost::contract::make_old}:
 
 @code
-template<typename T> // Type `T` might or not be copyable.
+template<typename T> // Type `T` might or might not be copyable.
 class u {
 public:
     virtual void f(..., boost::contract::virtual_* v = 0) {
@@ -561,7 +561,7 @@ class old_pointer { // Copyable (as *).
 public:
     /**
     Convert this object to an actual old value pointer for which the old value
-    type @c T might or not be copyable.
+    type @c T might or might not be copyable.
 
     For example, this is implicitly called when assigning or initializing old
     value pointers of type @c boost::contract::old_ptr_if_copyable.

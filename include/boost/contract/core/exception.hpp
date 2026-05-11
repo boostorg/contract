@@ -240,7 +240,7 @@ enum from {
     /** Assertion failed when checking contracts for constructors. */
     from_constructor,
     
-    /** Assertion failed when checking contracts for destructors . */
+    /** Assertion failed when checking contracts for destructors. */
     from_destructor,
     
     /**
@@ -437,7 +437,7 @@ namespace boost { namespace contract {
 /**
 Set failure handler for implementation checks.
 
-Set a new failure handler and returns it.
+Set a new failure handler and return it.
 
 @b Throws: This is declared @c noexcept (or @c throw() before C++11).
 
@@ -502,7 +502,7 @@ inline void check_failure() /* can throw */ {
 /**
 Set failure handler for preconditions.
 
-Set a new failure handler and returns it.
+Set a new failure handler and return it.
 
 @b Throws: This is declared @c noexcept (or @c throw() before C++11).
 
@@ -571,7 +571,7 @@ inline void precondition_failure(from where) /* can throw */ {
 /**
 Set failure handler for postconditions.
 
-Set a new failure handler and returns it.
+Set a new failure handler and return it.
 
 @b Throws: This is declared @c noexcept (or @c throw() before C++11).
 
@@ -641,7 +641,7 @@ inline void postcondition_failure(from where) /* can throw */ {
 /**
 Set failure handler for exception guarantees.
 
-Set a new failure handler and returns it.
+Set a new failure handler and return it.
 
 @b Throws: This is declared @c noexcept (or @c throw() before C++11).
 
@@ -714,7 +714,7 @@ inline void except_failure(from where) /* can throw */ {
 /**
 Set failure handler for old values copied at body.
 
-Set a new failure handler and returns it.
+Set a new failure handler and return it.
 
 @b Throws: This is declared @c noexcept (or @c throw() before C++11).
 
@@ -783,7 +783,7 @@ inline void old_failure(from where) /* can throw */ {
 /**
 Set failure handler for class invariants at entry.
 
-Set a new failure handler and returns it.
+Set a new failure handler and return it.
 
 @b Throws: This is declared @c noexcept (or @c throw() before C++11).
 
@@ -859,7 +859,7 @@ inline void entry_invariant_failure(from where) /* can throw */ {
 /**
 Set failure handler for class invariants at exit.
 
-Set a new failure handler and returns it.
+Set a new failure handler and return it.
 
 @b Throws: This is declared @c noexcept (or @c throw() before C++11).
 

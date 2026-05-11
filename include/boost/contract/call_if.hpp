@@ -260,7 +260,7 @@ Usually this class template is instantiated only via the return value of
 @see    @RefSect{extras.assertion_requirements__templates_,
         Assertion Requirements}
 
-@tparam Then Type of functor template to call when the static predicate if
+@tparam Then Type of functor template to call when the static predicate is
         @c true (as it is for this template specialization).
 */
 template<typename Then>
@@ -452,7 +452,7 @@ struct call_if_statement<false, Then,
     }
     
     /**
-    Specify an else-if-branch functor template (using a nullary boolen
+    Specify an else-if-branch functor template (using a nullary boolean
     meta-function).
 
     @param f    Else-if-branch nullary functor template.

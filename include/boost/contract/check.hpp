@@ -216,7 +216,7 @@ public:
     assignment syntax @c =.
     
     @b Throws:  This can throw in case programmers specify contract failure
-                handlers that throw exceptions instead of terminating te
+                handlers that throw exceptions instead of terminating the
                 program (see
                 @RefSect{advanced.throw_on_failures__and__noexcept__,
                 Throw on Failure}).

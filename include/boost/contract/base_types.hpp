@@ -8,7 +8,7 @@
 // See: http://www.boost.org/doc/libs/release/libs/contract/doc/html/index.html
 
 /** @file
-Specify inheritance form base classes (for subcontracting).
+Specify inheritance from base classes (for subcontracting).
 */
 
 // IMPORTANT: Included by contract_macro.hpp so must #if-guard all its includes.

@@ -56,7 +56,7 @@ Disable Contract Compilation}).
     
     Where:
     
-    @arg    <c><b>f</b></c> is the nullay functor called by this library to
+    @arg    <c><b>f</b></c> is the nullary functor called by this library to
             check preconditions @c f().
             Assertions within this functor are usually programmed using
             @RefMacro{BOOST_CONTRACT_ASSERT}, but any exception thrown by a call
@@ -180,7 +180,7 @@ Disable Contract Compilation}).
     Where:
 
     @arg    <c><b>f</b></c> is the nullary functor called by this library
-            @c f() to assign old value copies just before the body is execute
+            @c f() to assign old value copies just before the body is executed
             but after entry invariants (when they apply) and preconditions are
             checked.
             Old value pointers within this functor call are usually assigned
@@ -327,7 +327,7 @@ Disable Contract Compilation}).
     be copyable:
 
     @code
-    template<typename T> // Type `T` might or not be copyable.
+    template<typename T> // Type `T` might or might not be copyable.
     class u {
     public:
         void f(...) {
@@ -506,8 +506,8 @@ Disable Contract Compilation}).
             invariants for public functions that are not static and not volatile
             (see @RefMacro{BOOST_CONTRACT_STATIC_INVARIANT} and
             @RefMacro{BOOST_CONTRACT_INVARIANT_VOLATILE}).
-            The curly parenthesis are mandatory (rationale: this is so the
-            syntax of this macro resembles mote the syntax of the lambda
+            The curly parentheses are mandatory (rationale: this is so the
+            syntax of this macro resembles more the syntax of the lambda
             functions usually used to specify preconditions, etc.).
             Assertions within this function are usually programmed using
             @RefMacro{BOOST_CONTRACT_ASSERT}, but any exception thrown by a call
@@ -546,7 +546,7 @@ Disable Contract Compilation}).
             invariants for volatile public functions
             (see @RefMacro{BOOST_CONTRACT_INVARIANT} and
             @RefMacro{BOOST_CONTRACT_STATIC_INVARIANT}).
-            The curly parenthesis are mandatory.
+            The curly parentheses are mandatory.
             Assertions within this function are usually programmed using
             @RefMacro{BOOST_CONTRACT_ASSERT}, but any exception thrown by a call
             to this function indicates a contract assertion failure (and will
@@ -585,7 +585,7 @@ Disable Contract Compilation}).
             invariants for static public functions
             (see @RefMacro{BOOST_CONTRACT_INVARIANT} and
             @RefMacro{BOOST_CONTRACT_INVARIANT_VOLATILE}).
-            The curly parenthesis are mandatory.
+            The curly parentheses are mandatory.
             Assertions within this function are usually programmed using
             @RefMacro{BOOST_CONTRACT_ASSERT}, but any exception thrown by a call
             to this function indicates a contract assertion failure (and will

@@ -76,7 +76,7 @@ postconditions and exception guarantees, within classes that have no invariants.
             volatile invariants, see @RefSect{tutorial.class_invariants,
             Class Invariants} and
             @RefSect{extras.volatile_public_functions,
-            Volatile Public Functions}).
+            Volatile Public Functions}.)
 
 @tparam Class   The type of the class containing the destructor declaring the
                 contract.

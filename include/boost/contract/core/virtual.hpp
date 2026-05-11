@@ -63,7 +63,7 @@ This extra parameter must be passed to
 @RefFunc{boost::contract::public_function}, @RefMacro{BOOST_CONTRACT_OLDOF}, and
 all other operations of this library that accept a pointer to
 @RefClass{boost::contract::virtual_}.
-A part from that, this class is not intended to be directly used by programmers
+Apart from that, this class is not intended to be directly used by programmers
 (and that is why this class does not have any public member and it is not
 copyable).
 
